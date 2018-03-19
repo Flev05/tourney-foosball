@@ -22,23 +22,22 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Customer")
+@Table(name = "customer")
 public class Customer implements Serializable {
 
     /** Default value included to remove warning. **/
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
     private int               id;
-
-    @Column(unique = true, nullable = false)
     private String            name;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
 
         return id;
@@ -49,6 +48,7 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "name")
     public String getName() {
 
         return name;

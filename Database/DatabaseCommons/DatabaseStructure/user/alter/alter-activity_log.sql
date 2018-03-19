@@ -1,6 +1,4 @@
--- Booking 1.0
--- ==============
--- Activity (activity code from TRAC) : #
+-- EREBUS 1.0
 -- Execution Schema (Booking): EREBUS-SOFT
 -- Description : table Task and related object creation
 

@@ -1,0 +1,60 @@
+<!--
+  ~ Version: MPL 1.1
+  ~
+  ~ The contents of this file are subject to the Mozilla Public License
+  ~ Version 1.1 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://www.mozilla.org/MPL/
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations under
+  ~ the License.
+  ~
+  ~ The Original Code is ICEfaces 1.5 open source software code, released
+  ~ November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+  ~ Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+  ~ 2004-2011 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+  ~
+  ~ Contributor(s): _____________________.
+  -->
+
+<h:panelGroup xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="dataTableFormId">
+	<p:panelGrid columns="1" styleClass="contentAlignCenter">
+		<p:commandButton icon = "fa fa-plus"
+				title="#{um['i18n.role.new.tooltip']}"
+		        actionListener="#{MB.loadForNew}"/>
+	</p:panelGrid>
+
+	<p:dataTable id="userDataTableId" 
+		var="vo" 
+		value="#{MB.voList}"
+        selectionMode="single"     
+        rowKey="#{vo.id}">
+
+       	<f:facet name="header">
+       		#{um['i18n.role.header.lv']}
+       	</f:facet>
+	
+		<p:ajax event="rowSelect" listener="#{MB.onRowSelect}" />
+     	    		
+       	<p:column rendered="#{UserPermissionMB.developer}" headerText="#{um['i18n.role.company.name']}">
+           	<h:outputText value="#{vo.companyName}"/>
+       	</p:column>
+ 
+       	<p:column headerText="#{um['i18n.role.name']}">
+           	<h:outputText value="#{vo.name}"/>
+       	</p:column>
+       
+   	</p:dataTable>
+		
+</h:form>
+
+</h:panelGroup>
+

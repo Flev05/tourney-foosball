@@ -1,0 +1,92 @@
+<!--
+  ~ Version: MPL 1.1
+  ~
+  ~ The contents of this file are subject to the Mozilla Public License
+  ~ Version 1.1 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://www.mozilla.org/MPL/
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations under
+  ~ the License.
+  ~
+  ~ The Original Code is ICEfaces 1.5 open source software code, released
+  ~ November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+  ~ Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+  ~ 2004-2011 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+  ~
+  ~ Contributor(s): _____________________.
+-->
+
+<h:panelGroup xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<p:panel>
+	<h:form>
+        <h:panelGrid columns="2">
+	        <p:commandButton icon = "fa fa-arrow-left"
+				title="#{um['i18n.button.back.tooltip']}"
+	         	actionListener="#{PermissionDV.backPage}"/>
+         </h:panelGrid>
+   	</h:form>
+</p:panel>
+	
+<h:form id="saveFormId">
+	<p:messages id="failure" showDetail="false" autoUpdate="true" closable="true" />
+   
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+       	<p:commandButton value="#{um['i18n.accept.label']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+       	<p:commandButton value="#{um['i18n.deny.label']}"   type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+	</p:confirmDialog>
+
+	<p:panel header="#{um['i18n.permission.header.dv']}">
+
+		<h:panelGrid columns="2">
+	        <h:outputLabel for="roleId" value="#{um['i18n.table.column.role']}: "/>
+	        <p:selectOneMenu id="roleId" value="#{PermissionDV.vo.roleTypeId}">
+	            <f:selectItems value="#{PermissionDV.roleTypeList}" 
+	                    var="si" 
+	                    itemValue="#{si.id}" 
+	                    itemLabel="#{si.name}" />
+	      	</p:selectOneMenu>
+		
+	        <h:outputLabel for="companyId" value="#{um['i18n.resource.name']}: "/>
+	        <p:selectOneMenu id="companyId" value="#{PermissionDV.vo.resourceId}">
+	            <f:selectItems value="#{PermissionDV.resourceList}" 
+	                    var="si" 
+	                    itemValue="#{si.id}" 
+	                    itemLabel="#{si.name}" />
+	      	</p:selectOneMenu> 
+		
+	        <h:outputLabel for="permissionId" value="#{um['i18n.permission.access.type']}: "/>
+	        <p:selectOneMenu id="permissionId" value="#{PermissionDV.vo.permissionId}">
+	            <f:selectItems value="#{PermissionDV.permissionList}" 
+	                    var="si" 
+	                    itemValue="#{si.id}" 
+	                    itemLabel="#{si.name}" />
+	      	</p:selectOneMenu> 
+      	</h:panelGrid>
+   	</p:panel>
+
+	<p:panel>
+        <h:panelGrid columns="5" styleClass="contentAlignCenter">
+
+			<p:commandButton  icon = "fa fa-save"
+					title="#{um['i18n.button.save.tooltip']}"
+				   	actionListener="#{PermissionDV.save}">
+			</p:commandButton>
+
+			<p:commandButton icon = "fa fa-remove"
+					rendered="#{not PermissionDV.newPermission}"
+					title="#{um['i18n.button.remove.tooltip']}"
+					actionListener="#{PermissionDV.delete}">
+			   	<p:confirm header="#{um['i18n.confirm.title']}" message="#{um['i18n.delete.confirm.message']}" icon="ui-icon-alert" />
+			</p:commandButton>
+				
+		</h:panelGrid >
+	</p:panel>
+</h:form>
+</h:panelGroup>

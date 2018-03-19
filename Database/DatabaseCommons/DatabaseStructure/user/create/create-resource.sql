@@ -1,6 +1,4 @@
--- Booking 1.0
--- ==============
---  EREBUS-SOFT
+-- EREBUS 1.0
 -- Description : table Task and related object creation
 
 -- table

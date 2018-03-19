@@ -21,21 +21,20 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "LogMessage")
+@Table(name = "log_message")
 public class LogMessage implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
     private int id;
-
-    @Column(unique = true, nullable = false)
     private String message;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
@@ -44,6 +43,7 @@ public class LogMessage implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "message")
     public String getMessage() {
         return message;
     }

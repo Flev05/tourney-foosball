@@ -1,5 +1,4 @@
--- Booking 3.0
--- ==============
+-- EREBUS 1.0
 -- Execution Schema (Booking): EREBUS-SOFT
 -- Description : table Task and related object creation
 

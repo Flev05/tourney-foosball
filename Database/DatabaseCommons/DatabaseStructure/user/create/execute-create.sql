@@ -1,4 +1,4 @@
--- Calcio Balilla 1.0
+-- EREBUS 1.0
 
 \i create-activity_log.sql
 \i create-company.sql

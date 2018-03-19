@@ -1,6 +1,4 @@
 -- EREBUS 1.0
--- ==============
-
 -- GUI configuration table to configure the optiona columns in the presence table.  
 -- Example are: extratime, studio, dayoff, ....  
 CREATE TABLE role_type

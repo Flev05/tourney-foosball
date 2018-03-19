@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#addCustomer.xhtml" PATH="/addCustomer.xhtml"
+  SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#addCustomer.xhtml:0" NAME="item"
+   PATH="/addCustomer.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="customerAdded:#{customerManager.addCustomer(name)}:#customers.xhtml"
+    NAME="output" PATH="/customers.xhtml"
+    TARGET="rules:#customers.xhtml"
+    TITLE="#{customerManager.addCustomer(name)}:customerAdded" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="customerDuplicate:#{customerManager.addCustomer(name)}:#duplicate.xhtml"
+    NAME="output1" PATH="/duplicate.xhtml"
+    TARGET="rules:#duplicate.xhtml"
+    TITLE="#{customerManager.addCustomer(name)}:customerDuplicate" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="customerInvalidName:#{customerManager.addCustomer(name)}:#invalidName.xhtml"
+    NAME="output2" PATH="/invalidName.xhtml"
+    TARGET="rules:#invalidName.xhtml"
+    TITLE="#{customerManager.addCustomer(name)}:customerInvalidName" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#customers.xhtml" PATH="/customers.xhtml"
+  SHAPE="272,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#invalidName.xhtml" PATH="/invalidName.xhtml"
+  SHAPE="272,321,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#duplicate.xhtml" PATH="/duplicate.xhtml"
+  SHAPE="272,209,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

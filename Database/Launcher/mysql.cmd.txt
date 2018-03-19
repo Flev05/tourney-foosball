@@ -1,0 +1,11 @@
+REM comando mysql per l'import DB
+
+mysql.exe ^
+--defaults-file="c:\users\lucia_~1\appdata\local\temp\tmpsxgxxn.cnf"  ^
+--protocol=tcp ^
+--host=127.0.0.1 ^
+--user=buslines ^
+--port=3307 ^
+--default-character-set=utf8 ^
+--comments ^
+--database=buslinesdb < "C:\\DATA\\DEVELOP\\GIT\\DB\\buslinesdb-desktop-17-04-2016.sql"

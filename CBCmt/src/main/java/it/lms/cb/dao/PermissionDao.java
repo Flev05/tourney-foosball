@@ -45,15 +45,15 @@ public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
 
         logger.debug("Entering findAllPermission()");
 
-        CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
+        CriteriaQuery<Permission> cq = getCb().createQuery(Permission.class);
 
         Root<Permission> root = cq.from(Permission.class);
         Join<Permission, RoleType> roleTypeJoin = root.join(Permission_.roleType);
 
         cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(roleTypeJoin.get(RoleType_.name)));
+        cq = cq.orderBy(getCb().asc(roleTypeJoin.get(RoleType_.name)));
 
-        TypedQuery<Permission> nq = em.createQuery(cq);
+        TypedQuery<Permission> nq = getEm().createQuery(cq);
 
         List<Permission> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -86,7 +86,7 @@ public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
 
     public Permission findBy(String resourceId, User u) {
 
-        CriteriaQuery<Permission> cq = cb.createQuery(Permission.class);
+        CriteriaQuery<Permission> cq = getCb().createQuery(Permission.class);
 
         Root<Resource> root = cq.from(Resource.class);
         Join<Resource, Permission> permissionJoin = root.join(Resource_.permissions);
@@ -94,14 +94,14 @@ public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
         Join<RoleType, Role> roleJoin = roleTypeJoin.join(RoleType_.roles);
         Join<Role, User> userJoin = roleJoin.join(Role_.users);
 
-        Predicate p = cb.equal(root.get(Resource_.name), resourceId);
-        Predicate q = cb.equal(userJoin.get(User_.id), u.getId());
-        Predicate pAndQ = cb.and(p, q);
+        Predicate p = getCb().equal(root.get(Resource_.name), resourceId);
+        Predicate q = getCb().equal(userJoin.get(User_.id), u.getId());
+        Predicate pAndQ = getCb().and(p, q);
 
         cq = cq.select(permissionJoin);
         cq = cq.where(pAndQ);
 
-        TypedQuery<Permission> nq = em.createQuery(cq);
+        TypedQuery<Permission> nq = getEm().createQuery(cq);
 
         List<Permission> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -121,7 +121,7 @@ public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
 
         String nq = "Permission.findByName";
 
-        TypedQuery<Permission> q = em.createNamedQuery(nq, Permission.class);
+        TypedQuery<Permission> q = getEm().createNamedQuery(nq, Permission.class);
         q.setParameter("name", name);
 
         List<Permission> poList = q.getResultList();

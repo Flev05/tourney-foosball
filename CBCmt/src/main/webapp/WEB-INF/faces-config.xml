@@ -70,6 +70,18 @@
 			<to-view-id>/invalidName.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/main/main.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>logout</from-outcome>
+			<to-view-id>/main/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
 		
 	</navigation-rule>
 

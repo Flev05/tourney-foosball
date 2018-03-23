@@ -90,17 +90,17 @@ public class PersonDao extends BaseJPACrudDao<Person, Integer> {
 
     private Person doGetBy(String firstname, String lastname) {
 
-        CriteriaQuery<Person> cq = cb.createQuery(Person.class);
+        CriteriaQuery<Person> cq = getCb().createQuery(Person.class);
         Root<Person> root = cq.from(Person.class);
 
-        Predicate p1 = cb.equal(root.get(Person_.firstName), firstname);
-        Predicate p2 = cb.equal(root.get(Person_.lastName), lastname);
+        Predicate p1 = getCb().equal(root.get(Person_.firstName), firstname);
+        Predicate p2 = getCb().equal(root.get(Person_.lastName), lastname);
 
         cq = cq.select(root);
 
         cq.where(p1, p2);
 
-        TypedQuery<Person> nq = em.createQuery(cq);
+        TypedQuery<Person> nq = getEm().createQuery(cq);
 
         List<Person> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Person(s)] ";

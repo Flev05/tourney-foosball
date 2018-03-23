@@ -64,21 +64,19 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
     public static String        ALREADY_LOGGED         = "already been authenticated";
 
     protected static String     LOGIN_OK               = "main/main.xhtml";
-    protected static String     LOGOUT                 = "main/login.xhtml";
+    protected static String     LOGOUT                 = "logout";
 
     private boolean             userManagementExpanded = false;
     private boolean             changePasswordExpanded = false;
     private boolean             loginBoxExpanded       = true;
 
     private boolean             developerRendered;
-    private boolean             agencyRendered;
-    private boolean             demoRendered;
 
     private User                user;
     private Company             company;
 
     @Inject
-    UserDao                     dao;
+    private UserDao             userDao;
 
     private boolean             navigatorRendered      = true;
 
@@ -234,18 +232,6 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
         return mb.developerRendered;
     }
 
-    public static boolean isAgencyUser() {
-
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-        return mb.agencyRendered;
-    }
-
-    public static boolean isDemoUserRendered() {
-
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-        return mb.demoRendered;
-    }
-
     public static boolean isRendered(String resource) throws Exception {
 
         UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
@@ -304,7 +290,6 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
     public String logout() {
 
         developerRendered = false;
-        agencyRendered = false;
 
         user = null;
 
@@ -372,13 +357,12 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
         }
     }
 
-    private void prepareUserBean() throws DaoException {
+    private void prepareUserBean() throws Exception {
 
-        company = dao.getCompanyBy(username);
-        user = dao.findUserBy(username);
-        developerRendered = dao.isDeveloperUser(username);
-        agencyRendered = dao.isAgencyUser(username);
-        demoRendered = dao.isDemoUser(username);
+        company = userDao.getCompanyBy(username);
+        String md5Pssword = abstractDoMD5(getPassword());
+        user = userDao.findUserBy(username, md5Pssword);
+        developerRendered = userDao.isDeveloperUser(username);
     }
 
     public boolean rendered(String resourceId) throws Exception {
@@ -425,11 +409,6 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
     public boolean isDeveloper() {
 
         return developerRendered;
-    }
-
-    public boolean isDemoUser() {
-
-        return demoRendered;
     }
 
     private void loadPermission(String resourceId) throws DaoException {
@@ -537,8 +516,9 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
 
     public boolean isUserLogged() {
 
-        HttpServletRequest request = getRequest();
-        return isAlreadyLogged(request);
+        return user != null;
+        // HttpServletRequest request = getRequest(
+        // return isAlreadyLogged(request);
     }
 
     public String getUsername() {
@@ -576,14 +556,14 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
         return doMD5(password2);
     }
 
-    private boolean isAlreadyLogged(HttpServletRequest request) {
-
-        Principal principal = getPrincipal(request);
-        if (principal != null) {
-            // logger.debug("Principal.getName()=" + principal.getName());
-            return true;
-        }
-        return false;
-    }
+    // private boolean isAlreadyLogged(HttpServletRequest request) {
+    //
+    // Principal principal = getPrincipal(request);
+    // if (principal != null) {
+    // logger.debug("Principal.getName()=" + principal.getName());
+    // return true;
+    // }
+    // return false;
+    // }
 
 }

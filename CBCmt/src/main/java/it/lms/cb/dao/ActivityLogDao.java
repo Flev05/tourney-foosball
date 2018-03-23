@@ -72,17 +72,17 @@ public class ActivityLogDao extends BaseJPACrudDao<ActivityLog, Integer> {
 
         logger.debug("Entering findActivityLog()");
 
-        CriteriaQuery<ActivityLog> cq = cb.createQuery(ActivityLog.class);
+        CriteriaQuery<ActivityLog> cq = getCb().createQuery(ActivityLog.class);
 
         Root<ActivityLog> root = cq.from(ActivityLog.class);
 
-        Predicate p1 = cb.between(root.get(ActivityLog_.creationDate), beginDate, endDate);
+        Predicate p1 = getCb().between(root.get(ActivityLog_.creationDate), beginDate, endDate);
 
         cq = cq.select(root);
 
         cq.where(p1);
 
-        TypedQuery<ActivityLog> nq = em.createQuery(cq);
+        TypedQuery<ActivityLog> nq = getEm().createQuery(cq);
 
         List<ActivityLog> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " ActivityLog(s)] ";
@@ -109,7 +109,7 @@ public class ActivityLogDao extends BaseJPACrudDao<ActivityLog, Integer> {
 
         logger.debug("Entering deleteByUser()");
 
-        TypedQuery<ActivityLog> q = em.createNamedQuery("User.deleteByUser", ActivityLog.class);
+        TypedQuery<ActivityLog> q = getEm().createNamedQuery("User.deleteByUser", ActivityLog.class);
         q.setParameter("user", upo);
 
         int recs = q.executeUpdate();

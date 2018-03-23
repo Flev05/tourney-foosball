@@ -45,16 +45,16 @@ public abstract class AbstractRoleDao<PO extends AbstractRole> extends BaseJPACr
 
         logger.debug("Entering findAllRoles()");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
         Join<PO, Company> companyJoin = root.join(AbstractRole_.company);
         Join<PO, RoleType> rtJoin = root.join(AbstractRole_.roleType);
 
         cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(companyJoin.get(Company_.name)), cb.asc(rtJoin.get(RoleType_.name)));
+        cq = cq.orderBy(getCb().asc(companyJoin.get(Company_.name)), getCb().asc(rtJoin.get(RoleType_.name)));
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " PO(s)] ";
@@ -67,17 +67,17 @@ public abstract class AbstractRoleDao<PO extends AbstractRole> extends BaseJPACr
 
         logger.debug("Entering findBy()");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
 
-        Predicate p1 = cb.equal(root.get(AbstractRole_.roleType), roleId);
-        Predicate p2 = cb.equal(root.get(AbstractRole_.company), companyId);
+        Predicate p1 = getCb().equal(root.get(AbstractRole_.roleType), roleId);
+        Predicate p2 = getCb().equal(root.get(AbstractRole_.company), companyId);
 
         cq = cq.select(root);
         cq = cq.where(p1, p2);
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " PO(s)] ";
@@ -90,19 +90,19 @@ public abstract class AbstractRoleDao<PO extends AbstractRole> extends BaseJPACr
 
         logger.debug("Entering findRoleNotDeveloper()");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
         Join<PO, RoleType> rtJoin = root.join(AbstractRole_.roleType);
 
-        Predicate p1 = cb.equal(root.get(AbstractRole_.company), company);
-        Predicate p2 = cb.notEqual(rtJoin.get(RoleType_.name), RoleType.ROLES.DEVELOPER.name());
+        Predicate p1 = getCb().equal(root.get(AbstractRole_.company), company);
+        Predicate p2 = getCb().notEqual(rtJoin.get(RoleType_.name), RoleType.ROLES.DEVELOPER.name());
 
         cq = cq.select(root);
         cq = cq.where(p1, p2);
-        cq = cq.orderBy(cb.asc(root.get(AbstractRole_.name)));
+        cq = cq.orderBy(getCb().asc(root.get(AbstractRole_.name)));
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " PO(s)] ";
@@ -137,21 +137,21 @@ public abstract class AbstractRoleDao<PO extends AbstractRole> extends BaseJPACr
 
         logger.debug("Entering findRolesByRoleType()");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
         Join<PO, RoleType> roleTypeJoin = root.join(AbstractRole_.roleType);
 
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (String key : roleTypes) {
-            predicates.add(cb.equal(roleTypeJoin.get(RoleType_.name), key));
+            predicates.add(getCb().equal(roleTypeJoin.get(RoleType_.name), key));
         }
 
         cq = cq.select(root);
 
-        cq.where(cb.or(predicates.toArray(new Predicate[0])));
+        cq.where(getCb().or(predicates.toArray(new Predicate[0])));
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -224,9 +224,9 @@ public abstract class AbstractRoleDao<PO extends AbstractRole> extends BaseJPACr
      * @param po the company the roles created with
      * @throws DaoException if runtime error
      */
-    public static void addInitialRoles(Company po) throws DaoException {
+    public void addInitialRoles(Company po) throws DaoException {
 
-        List<RoleType> rtList = RoleTypeDao.findInitialRoleTypes();
+        List<RoleType> rtList = findInitialRoleTypes();
 
         for (RoleType rt : rtList) {
             Role rpo = new Role();
@@ -234,8 +234,12 @@ public abstract class AbstractRoleDao<PO extends AbstractRole> extends BaseJPACr
             rpo.setRoleType(rt);
             rpo.setName(rt.getName());
             rpo.setDescription("Role for: " + rt.getName());
-            RoleTypeDao.staticSave(rt);
+            staticSave(rt);
         }
     }
+
+    abstract public void staticSave(RoleType rt);
+
+    abstract public List<RoleType> findInitialRoleTypes() throws DaoException;
 
 }

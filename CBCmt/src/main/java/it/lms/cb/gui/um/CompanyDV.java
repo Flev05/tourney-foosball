@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -53,6 +54,12 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     private static final Logger logger           = LogManager.getLogger(CompanyDV.class);
 
     protected boolean           newCompany       = true;
+
+    @Inject
+    private RoleDao             roleDao;
+
+    @Inject
+    private CompanyDao          cdao;
 
     public CompanyDV() throws Exception {
 
@@ -133,9 +140,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     @Override
     protected void delete(CompanyVO svo) throws Exception {
 
-        CompanyDao dao = new CompanyDao();
-
-        dao.deletePo(svo.getPo());
+        cdao.deletePo(svo.getPo());
     }
 
     @Override
@@ -154,10 +159,9 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         logger.debug("Entering save()");
 
-        RoleDao.addInitialRoles(svo.getPo());
+        roleDao.addInitialRoles(svo.getPo());
 
-        CompanyDao dao = new CompanyDao();
-        dao.save(svo.getPo());
+        cdao.save(svo.getPo());
     }
 
     /**

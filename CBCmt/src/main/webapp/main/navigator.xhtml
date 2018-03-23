@@ -32,18 +32,19 @@
 	
 		<!-- USER section navigator -->
 		<p:tab title="#{um['i18n.user.navigator.label']}" >
-	 
-		   	<p:commandLink value="#{um['i18n.role.roletype.name']}" 		action="#{RoleTypeELV.load}"/>
-		
-		   	<p:commandLink value="#{um['i18n.user.full.role.label']}" 		action="#{FullRoleLV.load}"/>
-		
-		   	<p:commandLink value="#{um['i18n.resource.label']}" 			action="#{ResourceELV.load}"/>
-		
-		   	<p:commandLink value="#{um['i18n.permission.label']}" 			action="#{PermissionLV.load}"/>
-		
-		   	<p:commandLink value="#{um['i18n.user.navigator.lv.label']}" 	action="#{UserLV.load}"/>
-		
-		   	<p:commandLink value="#{um['i18n.user.resetpassword.label']}" 	action="#{ResetPasswordLV.load}"/>
+	 		<h:panelGrid columns="1">	
+			   	<p:commandLink value="#{um['i18n.role.roletype.name']}" 		action="#{RoleTypeELV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.user.full.role.label']}" 		action="#{FullRoleLV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.resource.label']}" 			action="#{ResourceELV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.permission.label']}" 			action="#{PermissionLV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.user.navigator.lv.label']}" 	action="#{UserLV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.user.resetpassword.label']}" 	action="#{ResetPasswordLV.load}"/>
+		   	</h:panelGrid>
 		</p:tab>
 	
 		<!-- USER LOGIN section navigator -->
@@ -52,11 +53,7 @@
 		</p:tab>
 		
 		<p:tab title="#{um['i18n.logout.collapsible.label']}" rendered="#{UserPermissionMB.userLogged}">
-		    <p:commandLink value="#{um['i18n.logout.label']}" action="#{UserPermissionMB.logoutListener}"/>
-		</p:tab>
-	
-		<p:tab title="#{um['i18n.login.area']}" rendered="false">
-			<ui:include src="/login/login-view.xhtml"/>
+		    <p:commandLink value="#{um['i18n.logout.label']}" action="#{UserPermissionMB.logout}"/>
 		</p:tab>
 	
 	</p:accordionPanel>

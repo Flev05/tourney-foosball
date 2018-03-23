@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -34,6 +35,9 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private static Logger logger = LogManager.getLogger(UserDao.class);
 
+    @Inject
+    private PersonDao     pdao;
+
     public UserDao() throws DaoException {
 
         super(User.class);
@@ -41,17 +45,17 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public User getPoBy(String username) throws DaoException {
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
 
-        Predicate p = cb.equal(root.get(User_.username), username);
-        Predicate pAndQ = cb.and(p);
+        Predicate p = getCb().equal(root.get(User_.username), username);
+        Predicate pAndQ = getCb().and(p);
 
         cq = cq.select(root);
         cq = cq.where(pAndQ);
 
-        TypedQuery<User> nq = em.createQuery(cq);
+        TypedQuery<User> nq = getEm().createQuery(cq);
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -76,21 +80,21 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug("Entering findUsersBy()");
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
         Join<Role, RoleType> rtJoin = roleJoin.join(Role_.roleType);
 
-        Predicate p1 = cb.equal(roleJoin.get(Role_.id), br.getId());
-        Predicate p2 = cb.equal(roleJoin.get(Role_.company), company);
-        Predicate p3 = cb.equal(rtJoin.get(RoleType_.name), roleType);
+        Predicate p1 = getCb().equal(roleJoin.get(Role_.id), br.getId());
+        Predicate p2 = getCb().equal(roleJoin.get(Role_.company), company);
+        Predicate p3 = getCb().equal(rtJoin.get(RoleType_.name), roleType);
 
         cq = cq.select(root);
         cq = cq.where(p1, p2, p3);
-        cq = cq.orderBy(cb.asc(root.get(User_.username)));
+        cq = cq.orderBy(getCb().asc(root.get(User_.username)));
 
-        TypedQuery<User> nq = em.createQuery(cq);
+        TypedQuery<User> nq = getEm().createQuery(cq);
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -120,16 +124,16 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug("Entering findUserBy(" + username + "," + md5Password + ")");
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
 
-        Predicate p = cb.equal(root.get(User_.username), username);
-        Predicate q = cb.equal(root.get(User_.password), md5Password);
-        Predicate pAndQ = cb.and(p, q);
+        Predicate p = getCb().equal(root.get(User_.username), username);
+        Predicate q = getCb().equal(root.get(User_.password), md5Password);
+        Predicate pAndQ = getCb().and(p, q);
         cq.select(root).where(pAndQ);
 
-        TypedQuery<User> nq = em.createQuery(cq);
+        TypedQuery<User> nq = getEm().createQuery(cq);
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -145,7 +149,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public User getUserById(Integer userId) throws DaoException {
 
-        logger.debug("Entering findUserBy(" + userId + ")");
+        logger.debug("Entering getUserById(" + userId + ")");
 
         User po = super.findById(userId);
 
@@ -155,50 +159,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     public User getDeveloperUser() throws DaoException {
 
         return findDeveloperUsers().get(0);
-    }
-
-    public static boolean isDemoUser(User user) throws DaoException {
-
-        UserDao dao = new UserDao();
-
-        List<String> rtList = new ArrayList<String>();
-        rtList.add(RoleType.ROLES.DEMO.name());
-
-        List<Role> poList = dao.getRolesBy(user, rtList);
-
-        if (poList.isEmpty()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static User getDemoUser() throws DaoException {
-
-        UserDao dao = new UserDao();
-
-        List<String> rtList = new ArrayList<String>();
-        rtList.add(RoleType.ROLES.DEMO.name());
-
-        List<User> poList = dao.findUserByRoleType(rtList);
-
-        if (poList.isEmpty()) {
-            return null;
-        }
-
-        return poList.get(0);
-    }
-
-    public boolean isDemoUser(String username) throws DaoException {
-
-        if (DataAccessUtils.isLiveEnv()) {
-            return false;
-        }
-
-        UserDao dao = new UserDao();
-        User user = dao.getPoBy(username);
-
-        return isDemoUser(user);
     }
 
     public List<User> findDeveloperUsers() throws DaoException {
@@ -244,19 +204,19 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         List<String> roles = new ArrayList<String>();
         roles.add(RoleType.getOwnerRoleType());
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
         Join<Role, RoleType> roleTypeJoin = roleJoin.join(Role_.roleType);
 
         Predicate p1 = roleTypeJoin.get(RoleType_.name).in(roles);
-        Predicate p2 = cb.equal(roleJoin.get(Role_.company), company);
+        Predicate p2 = getCb().equal(roleJoin.get(Role_.company), company);
 
         cq = cq.select(root);
         cq = cq.where(p1, p2);
 
-        TypedQuery<User> nq = em.createQuery(cq);
+        TypedQuery<User> nq = getEm().createQuery(cq);
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -267,7 +227,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private List<User> findUserByRoleType(List<String> roleList) throws DaoException {
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
@@ -278,7 +238,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         cq = cq.select(root);
         cq = cq.where(p);
 
-        TypedQuery<User> nq = em.createQuery(cq);
+        TypedQuery<User> nq = getEm().createQuery(cq);
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -321,7 +281,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public boolean isDeveloperUser(String username) throws DaoException {
 
-        List<String> rtList = new ArrayList<String>();
+        List<String> rtList = new ArrayList<>();
         rtList.add(RoleType.ROLES.DEVELOPER.name());
         return isUserBelongingTo(username, rtList);
     }
@@ -342,23 +302,23 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
             userIdSet.add(po.getId());
         });
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
         Join<Role, RoleType> roleTypeJoin = roleJoin.join(Role_.roleType);
 
-        Predicate p1 = cb.equal(root.get(User_.username), username);
+        Predicate p1 = getCb().equal(root.get(User_.username), username);
 
         Predicate p2 = roleTypeJoin.get(RoleType_.name).in(rtList);
 
         Predicate in = root.get(User_.id).in(userIdSet);
-        Predicate notIn = cb.not(in);
+        Predicate notIn = getCb().not(in);
 
         cq = cq.select(root);
         cq = cq.where(p1, p2, notIn);
 
-        TypedQuery<User> tq = em.createQuery(cq);
+        TypedQuery<User> tq = getEm().createQuery(cq);
 
         List<User> poList = tq.getResultList();
         logger.debug("Found " + poList.size() + " User record(s)");
@@ -385,21 +345,21 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
             roleList.add(s);
         }
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
         Join<Role, RoleType> roleTypeJoin = roleJoin.join(Role_.roleType);
 
-        Predicate p = cb.equal(root.get(User_.username), username);
+        Predicate p = getCb().equal(root.get(User_.username), username);
 
         Predicate q = roleTypeJoin.get(RoleType_.name).in(roleList);
 
-        Predicate pAndQ = cb.and(p, q);
+        Predicate pAndQ = getCb().and(p, q);
         cq = cq.select(root);
         cq = cq.where(pAndQ);
 
-        TypedQuery<User> nq = em.createQuery(cq);
+        TypedQuery<User> nq = getEm().createQuery(cq);
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -416,18 +376,18 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug("Entering getCompanyBy()");
 
-        CriteriaQuery<Company> cq = cb.createQuery(Company.class);
+        CriteriaQuery<Company> cq = getCb().createQuery(Company.class);
         Root<Company> root = cq.from(Company.class);
 
         Join<Company, Role> roleJoin = root.join(Company_.roles);
 
         Join<Role, User> userJoin = roleJoin.join(Role_.users);
 
-        Predicate p = cb.equal(userJoin.get(User_.username), username);
+        Predicate p = getCb().equal(userJoin.get(User_.username), username);
         cq = cq.select(root);
         cq = cq.where(p);
 
-        TypedQuery<Company> tq = em.createQuery(cq);
+        TypedQuery<Company> tq = getEm().createQuery(cq);
 
         List<Company> poList = tq.getResultList();
         logger.debug("Found " + poList.size() + " Company record(s)");
@@ -448,7 +408,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
             userIdList.add(po.getId());
         });
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
@@ -456,16 +416,16 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         Join<Role, Company> companyJoin = roleJoin.join(Role_.company);
 
         Predicate in = root.get(User_.id).in(userIdList);
-        Predicate p1 = cb.not(in);
+        Predicate p1 = getCb().not(in);
 
-        Predicate p2 = cb.equal(companyJoin.get(Company_.id), company.getId());
-        Predicate p3 = cb.notEqual(roleTypeJoin.get(RoleType_.name), RoleType.ROLES.DEVELOPER.name());
+        Predicate p2 = getCb().equal(companyJoin.get(Company_.id), company.getId());
+        Predicate p3 = getCb().notEqual(roleTypeJoin.get(RoleType_.name), RoleType.ROLES.DEVELOPER.name());
 
         cq = cq.select(root);
         cq = cq.where(p1, p2, p3);
-        cq = cq.orderBy(cb.asc(root.get(User_.username)));
+        cq = cq.orderBy(getCb().asc(root.get(User_.username)));
 
-        TypedQuery<User> tq = em.createQuery(cq);
+        TypedQuery<User> tq = getEm().createQuery(cq);
 
         List<User> poList = tq.getResultList();
         logger.debug("Found " + poList.size() + " User record(s)");
@@ -483,12 +443,12 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug("Entering findAllUsers()");
 
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
-        cq = cq.orderBy(cb.asc(root.get(User_.username)));
+        cq = cq.orderBy(getCb().asc(root.get(User_.username)));
 
-        TypedQuery<User> tq = em.createQuery(cq);
+        TypedQuery<User> tq = getEm().createQuery(cq);
 
         List<User> poList = tq.getResultList();
         logger.debug("Found " + poList.size() + " User record(s)");
@@ -522,8 +482,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void save(User po, Set<Role> roleSet) throws DaoException {
 
-        PersonDao pdao = new PersonDao();
-
         pdao.save(po.getPerson());
 
         po.setRoles(roleSet);
@@ -535,15 +493,14 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         }
     }
 
-    public static void addToDefaultUsers(AbstractRole rpo) throws DaoException {
+    public void addToDefaultUsers(AbstractRole rpo) throws DaoException {
 
         logger.debug("Entering addToDefaultUsers()");
 
         Company company = rpo.getCompany();
 
-        UserDao dao = new UserDao();
-        List<User> devUsers = dao.findDeveloperUsers();
-        List<User> ownerUsers = dao.findOwnerUsersOf(company);
+        List<User> devUsers = findDeveloperUsers();
+        List<User> ownerUsers = findOwnerUsersOf(company);
 
         List<User> allUsers = new ArrayList<>();
         allUsers.addAll(devUsers);
@@ -553,7 +510,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         for (User upo : allUsers) {
             upo.getRoles().add(role);
-            dao.updatePo(upo);
+            updatePo(upo);
         }
     }
 
@@ -578,20 +535,20 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private List<Role> getRolesBy(User upo, List<String> rtList) throws DaoException {
 
-        CriteriaQuery<Role> cq = cb.createQuery(Role.class);
+        CriteriaQuery<Role> cq = getCb().createQuery(Role.class);
 
         Root<User> root = cq.from(User.class);
         Join<User, Role> roleJoin = root.join(User_.roles);
         Join<Role, RoleType> roleTypeJoin = roleJoin.join(Role_.roleType);
 
-        Predicate p = cb.equal(root.get(User_.id), upo == null ? null : upo.getId());
+        Predicate p = getCb().equal(root.get(User_.id), upo == null ? null : upo.getId());
         Predicate q = roleTypeJoin.get(RoleType_.name).in(rtList);
 
-        Predicate pAndQ = cb.and(p, q);
+        Predicate pAndQ = getCb().and(p, q);
         cq = cq.select(roleJoin);
         cq = cq.where(pAndQ);
 
-        TypedQuery<Role> nq = em.createQuery(cq);
+        TypedQuery<Role> nq = getEm().createQuery(cq);
 
         List<Role> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";

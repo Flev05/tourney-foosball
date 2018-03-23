@@ -58,8 +58,8 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
     @Override
     public void backPage(ActionEvent event) throws Exception {
 
-        List<CompanyVO> voList = loadAll();
-        setVoList(voList);
+        // List<CompanyVO> voList = loadAll();
+        // setVoList(voList);
     }
 
     public void selectListener(CompanyVO row) {
@@ -107,7 +107,7 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
     @Override
     protected void navigateTo() throws Exception {
 
-        UserPermissionMB.showView(getViewPath());
+        // UserPermissionMB.showView(getViewPath());
     }
 
     @Override
@@ -123,15 +123,15 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
     }
 
     @Override
-    protected List<CompanyVO> loadAll() throws Exception {
+    protected String loadAll(List<CompanyVO> voList) throws Exception {
 
         logger.debug("Entering loadAll()");
 
-        List<CompanyVO> voList = loadAllCompany();
+        voList = loadAllCompany();
 
         navigateTo();
 
-        return voList;
+        return getViewPath();
     }
 
     private List<CompanyVO> loadAllCompany() throws Exception {

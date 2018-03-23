@@ -87,7 +87,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
 
         mb.loadSelectedRow(vo);
 
-        mb.showView();
+        // mb.showView();
     }
 
     public static UserVO showLoadForNewVo(BackPageInterface bpi) throws Exception {
@@ -98,7 +98,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
 
         UserVO vo = mb.prepareNewVo();
 
-        mb.showView();
+        // mb.showView();
 
         return vo;
     }
@@ -197,10 +197,10 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
         return vo;
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected UserVO loadSelectedRow(UserVO uvo) throws Exception {
@@ -373,7 +373,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
     }
 
     @Override
-    protected List<UserVO> loadAll() throws Exception {
+    protected String loadAll(List<UserVO> voList) throws Exception {
 
         return null;
     }

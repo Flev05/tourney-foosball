@@ -68,7 +68,7 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
         mb.resetSelectedRow();
 
-        mb.showView();
+        // mb.showView();
     }
 
     public boolean isButtonEnabled() {
@@ -84,7 +84,7 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
         RoleTypeVO cvo = new RoleTypeVO();
 
-        showView();
+        // showView();
 
         return cvo;
     }
@@ -144,13 +144,13 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
     }
 
     @Override
-    protected List<RoleTypeVO> loadAll() throws Exception {
+    protected String loadAll(List<RoleTypeVO> voList) throws Exception {
 
-        List<RoleTypeVO> voList = loadRoleType();
+        voList = loadRoleType();
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 
     private List<RoleTypeVO> loadRoleType() throws Exception {
@@ -175,15 +175,15 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
         return voList;
     }
 
-    private void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // private void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected void navigateTo() throws Exception {
 
-        showView();
+        // showView();
     }
 
     @Override

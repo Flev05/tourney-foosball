@@ -33,7 +33,7 @@ public class CommonUtil {
     public static final long      MONTH_IN_MILLI    = 2592000000L;                           // = 30*24*3600*1000 = one
                                                                                              // day in milliseconds;
 
-    private static final String   UM_BOUNDLE        = "it.lms.um.resources.messages";
+    private static final String   UM_BOUNDLE        = "it.lms.cb.gui.um.resources.messages";
     private static final int      MAX_MESSAGE_LEN   = 4096;
 
     private static final int      M                 = 24;

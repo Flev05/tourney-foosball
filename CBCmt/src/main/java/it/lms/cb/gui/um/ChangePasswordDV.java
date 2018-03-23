@@ -69,7 +69,7 @@ public class ChangePasswordDV extends UserDV {
         ChangePasswordDV mb = (ChangePasswordDV) DataAccessUtils.getManagedBean(beanName);
 
         mb.loadSelectedRow(vo);
-        mb.showView();
+        // mb.showView();
     }
 
     /**
@@ -81,15 +81,15 @@ public class ChangePasswordDV extends UserDV {
 
         prepareChangePassword();
 
-        showView();
+        // showView();
 
         logger.debug("Exiting loadForChangePassword()");
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected String getViewPath() {

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * BaseHibernateCrudDao Class. Root(base) class to manage data access using Hibernate to perform CRUD operations on only
  * one entity.
  */
-public class BaseJPACrudDao<PO, ID extends Serializable> {
+public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
 
     private static Logger     logger = LogManager.getLogger(BaseJPACrudDao.class);
 
@@ -30,6 +30,10 @@ public class BaseJPACrudDao<PO, ID extends Serializable> {
     protected EntityManager   em;
 
     protected CriteriaBuilder cb;
+
+    public BaseJPACrudDao() {
+
+    }
 
     public BaseJPACrudDao(Class<PO> entityClass) {
 

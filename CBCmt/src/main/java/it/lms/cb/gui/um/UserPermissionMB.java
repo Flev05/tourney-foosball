@@ -26,14 +26,12 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
-import javax.servlet.ServletException;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Hex;
@@ -59,71 +57,75 @@ import it.lms.cb.po.User;
 @SessionScoped
 public class UserPermissionMB extends NavigationMB implements Serializable {
 
-    private static final long    serialVersionUID       = 1L;
-    private static final Logger  logger                 = LogManager.getLogger(UserPermissionMB.class);
-    public static final String   beanName               = "UserPermissionMB";
+    private static final long   serialVersionUID       = 1L;
+    private static final Logger logger                 = LogManager.getLogger(UserPermissionMB.class);
+    public static final String  beanName               = "UserPermissionMB";
 
-    public static String         ALREADY_LOGGED         = "already been authenticated";
+    public static String        ALREADY_LOGGED         = "already been authenticated";
 
-    protected static String      LOGIN_OK               = "login-ok";
-    protected static String      LOGOUT                 = "logout";
+    protected static String     LOGIN_OK               = "main/main.xhtml";
+    protected static String     LOGOUT                 = "main/login.xhtml";
 
-    private boolean              userManagementExpanded = false;
-    private boolean              changePasswordExpanded = false;
-    private boolean              loginBoxExpanded       = true;
+    private boolean             userManagementExpanded = false;
+    private boolean             changePasswordExpanded = false;
+    private boolean             loginBoxExpanded       = true;
 
-    private boolean              developerRendered;
-    private boolean              agencyRendered;
-    private boolean              demoRendered;
+    private boolean             developerRendered;
+    private boolean             agencyRendered;
+    private boolean             demoRendered;
 
-    private User                 user;
-    private Company              company;
+    private User                user;
+    private Company             company;
 
-    private boolean              navigatorRendered      = true;
+    @Inject
+    UserDao                     dao;
 
-    protected String             username;
-    protected String             password;
+    private boolean             navigatorRendered      = true;
 
-    private Permission           permission;
+    protected String            username;
+    protected String            password;
 
-    private List<LoginInterface> loginCallBackList;
+    private Permission          permission;
+
+    // private List<LoginInterface> loginCallBackList;
     // private String queryParams;
 
-    private String               selectedIncludePath;
-    private String               layoutPage;
+    // private String selectedIncludePath;
+    // private String layoutPage;
 
     public UserPermissionMB() throws Exception {
 
         super(beanName);
         logger.debug("Entering UserNavigationMB()");
-        loginCallBackList = new ArrayList<>();
+        // loginCallBackList = new ArrayList<>();
+
     }
 
-    public static void registerLoginInterface(LoginInterface li, String layoutPage, String initialIncludePath)
-            throws DaoException {
+    // public static void registerLoginInterface(LoginInterface li, String layoutPage, String initialIncludePath)
+    // throws DaoException {
+    //
+    // logger.debug(printSessionId() + "Entering registerLoginInterface(). layoutPage=" + layoutPage
+    // + ", initialIncludePath=" + initialIncludePath);
 
-        logger.debug(printSessionId() + "Entering registerLoginInterface(). layoutPage=" + layoutPage
-                + ", initialIncludePath=" + initialIncludePath);
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
 
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    // doSetLayout(mb, layoutPage);
 
-        doSetLayout(mb, layoutPage);
+    // if (!mb.loginCallBackList.contains(li)) {
+    // mb.loginCallBackList.add(li);
+    // }
 
-        if (!mb.loginCallBackList.contains(li)) {
-            mb.loginCallBackList.add(li);
-        }
+    // mb.selectedIncludePath = initialIncludePath;
+    // }
 
-        mb.selectedIncludePath = initialIncludePath;
-    }
-
-    public static void setLayout(String layoutPage) throws DaoException {
-
-        logger.debug(printSessionId() + "Entering setLayout(), layoutPage=" + layoutPage);
-
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-
-        doSetLayout(mb, layoutPage);
-    }
+    // public static void setLayout(String layoutPage) throws DaoException {
+    //
+    // logger.debug(printSessionId() + "Entering setLayout(), layoutPage=" + layoutPage);
+    //
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    //
+    // doSetLayout(mb, layoutPage);
+    // }
 
     public static void doLogin(ActionEvent av, String username, String password) throws Exception {
 
@@ -133,52 +135,52 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
 
         mb.setUsername(username);
         mb.setPassword(password);
-        mb.loginListener(av);
+        mb.doLogin();
     }
 
-    public static void doLogout() throws Exception {
+    // public static void doLogout() throws Exception {
+    //
+    // logger.debug(printSessionId() + "Entering doLogout()");
+    //
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    //
+    // mb.logoutListener(null);
+    // }
 
-        logger.debug(printSessionId() + "Entering doLogout()");
+    // private static void doSetLayout(UserPermissionMB mb, String layoutPage) {
+    //
+    // mb.layoutPage = layoutPage;
+    // }
 
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    // public static void showView(String toPath) {
 
-        mb.logoutListener(null);
-    }
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    //
+    // showView(mb.layoutPage, toPath);
+    // }
 
-    private static void doSetLayout(UserPermissionMB mb, String layoutPage) {
-
-        mb.layoutPage = layoutPage;
-    }
-
-    public static void showView(String toPath) {
-
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-
-        showView(mb.layoutPage, toPath);
-    }
-
-    private static void showView(String layoutPage, String toPath) {
-
-        HttpServletRequest request = getRequest();
-
-        StringBuilder cp = new StringBuilder(request.getContextPath());
-
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-        mb.selectedIncludePath = toPath;
-        logger.debug("selectedIncludePath=" + mb.selectedIncludePath);
-
-        cp.append(layoutPage);
-
-        String path = cp.toString();
-
-        logger.debug("Template=" + path);
-
-        try {
-            redirectTo(path);
-        } catch (Exception e) {
-            logger.error("Unable to redirect to path: " + path, e);
-        }
-    }
+    // private static void showView(String layoutPage, String toPath) {
+    //
+    // HttpServletRequest request = getRequest();
+    //
+    // StringBuilder cp = new StringBuilder(request.getContextPath());
+    //
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    // mb.selectedIncludePath = toPath;
+    // logger.debug("selectedIncludePath=" + mb.selectedIncludePath);
+    //
+    // cp.append(layoutPage);
+    //
+    // String path = cp.toString();
+    //
+    // logger.debug("Template=" + path);
+    //
+    // try {
+    // redirectTo(path);
+    // } catch (Exception e) {
+    // logger.error("Unable to redirect to path: " + path, e);
+    // }
+    // }
 
     public static void mobileShowView(String toPath) {
 
@@ -251,63 +253,55 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
         return mb.rendered(resource);
     }
 
-    public static String getSelectedIncludePath() {
+    // public static String getSelectedIncludePath() {
+    //
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    // logger.debug(printSessionId() + "Entering getSelectedIncludePath()=" + mb.selectedIncludePath);
+    // return mb.selectedIncludePath;
+    // }
 
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-        logger.debug(printSessionId() + "Entering getSelectedIncludePath()=" + mb.selectedIncludePath);
-        return mb.selectedIncludePath;
-    }
+    // public static void setSelectedIncludePath(String path) {
+    //
+    // UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
+    // mb.selectedIncludePath = path;
+    // }
 
-    public static void setSelectedIncludePath(String path) {
-
-        UserPermissionMB mb = (UserPermissionMB) DataAccessUtils.getManagedBean(beanName);
-        mb.selectedIncludePath = path;
-    }
-
-    public void loginListener(ActionEvent av) {
+    public String login() {
 
         logger.debug("Entering loginListener(ActionEvent)");
         try {
-            if (login() == null) {
+            if (doLogin() == null) {
                 logger.error("Login failed");
-                return;
+                return "/main/login.xhtml";
             }
         } catch (NullPointerException e) {
             logger.error("Unable to Login", e);
             throw e;
         } catch (Exception e) {
             logger.error("Login failed", e);
-            return;
+            return "/main/login.xhtml";
         }
-        try {
 
-            for (LoginInterface li : loginCallBackList) {
-                String cc = isDeveloperUser() ? null : company.getCompanyCode();
-                li.onUserLogin(getUser(), cc);
-            }
-
-        } catch (Exception e) {
-            logger.error("Login failed", e);
-        }
+        return "/main/main.xhtml";
     }
 
-    public void logoutListener(ActionEvent av) {
+    // public void logoutListener(ActionEvent av) {
+    //
+    // logger.debug("Entering logoutListener(ActionEvent)");
+    // try {
+    //
+    // for (LoginInterface li : loginCallBackList) {
+    // li.onUserLogout(getUser());
+    // }
+    //
+    // logout();
+    //
+    // } catch (Exception e) {
+    // logger.error("Logout failed", e);
+    // }
+    // }
 
-        logger.debug("Entering logoutListener(ActionEvent)");
-        try {
-
-            for (LoginInterface li : loginCallBackList) {
-                li.onUserLogout(getUser());
-            }
-
-            logout();
-
-        } catch (Exception e) {
-            logger.error("Logout failed", e);
-        }
-    }
-
-    protected String logout() {
+    public String logout() {
 
         developerRendered = false;
         agencyRendered = false;
@@ -327,9 +321,9 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
         return LOGOUT;
     }
 
-    protected String login() throws Exception {
+    private String doLogin() throws Exception {
 
-        logger.debug("Entering login() [username=" + username + ", password=" + password + "]");
+        logger.debug("Entering doLogin() [username=" + username + ", password=" + password + "]");
 
         HttpServletRequest request = getRequest();
 
@@ -348,7 +342,7 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
 
             logger.debug("Calling HttpServletRequest.login(" + username + ", " + md5Pssword + ")...");
 
-            request.login(username, md5Pssword);
+            // request.login(username, md5Pssword);
 
             String message = "HttpServletRequest.login(" + username + ", " + password + ") successful";
             logger.debug(message);
@@ -357,17 +351,17 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
 
             logger.debug("Exiting login() [username=" + username + ", password=" + password + "], return " + LOGIN_OK);
             return LOGIN_OK;
-        } catch (ServletException e) {
-            String err = e.getMessage();
-            if (err.contains(ALREADY_LOGGED)) {
-                return LOGIN_OK;
-            }
-            logger.error("Login failed", e);
-            CommonUtil.showLoginValidationError(CommonMessages.I18N_LOGIN_ERROR_MESSAGE);
-            return null;
-        } catch (NullPointerException e) {
-            logger.error("Unable to Login", e);
-            throw e;
+            // } catch (ServletException e) {
+            // String err = e.getMessage();
+            // if (err.contains(ALREADY_LOGGED)) {
+            // return LOGIN_OK;
+            // }
+            // logger.error("Login failed", e);
+            // CommonUtil.showLoginValidationError(CommonMessages.I18N_LOGIN_ERROR_MESSAGE);
+            // return null;
+            // } catch (NullPointerException e) {
+            // logger.error("Unable to Login", e);
+            // throw e;
         } catch (Exception e) {
 
             logger.error("Login failed", e);
@@ -379,8 +373,6 @@ public class UserPermissionMB extends NavigationMB implements Serializable {
     }
 
     private void prepareUserBean() throws DaoException {
-
-        UserDao dao = new UserDao();
 
         company = dao.getCompanyBy(username);
         user = dao.findUserBy(username);

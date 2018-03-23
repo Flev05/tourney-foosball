@@ -246,5 +246,4 @@ public abstract class AbstractMB extends BaseBean implements Serializable {
 
         this.toggleOnInput = toggleOnInput;
     }
-
 }

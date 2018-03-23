@@ -68,7 +68,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         CompanyVO vo = openForNewVo();
 
-        mb.showView();
+        // mb.showView();
 
         return vo;
     }
@@ -94,13 +94,13 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         mb.loadSelectedRow(vo);
 
-        mb.showView();
+        // mb.showView();
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     public boolean isNewCompany() {
 
@@ -125,7 +125,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     }
 
     @Override
-    protected List<CompanyVO> loadAll() throws Exception {
+    protected String loadAll(List<CompanyVO> voList) throws Exception {
 
         return null;
     }

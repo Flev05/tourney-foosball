@@ -29,7 +29,6 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.lms.cb.dao.DataAccessUtils;
 import it.lms.cb.dao.UserDao;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.cb.po.Company;
@@ -75,16 +74,16 @@ public class ResetPasswordLV extends UserLV {
         return vo;
     }
 
-    public static void showReloadAll() throws Exception {
-
-        ResetPasswordLV mb = (ResetPasswordLV) DataAccessUtils.getManagedBean(beanName);
-
-        List<UserVO> voList = mb.loadAll();
-        mb.setVoList(voList);
-    }
+    // public static void showReloadAll() throws Exception {
+    //
+    // ResetPasswordLV mb = (ResetPasswordLV) DataAccessUtils.getManagedBean(beanName);
+    //
+    // List<UserVO> voList = mb.loadAll();
+    // mb.setVoList(voList);
+    // }
 
     @Override
-    protected List<UserVO> loadAll() throws Exception {
+    protected String loadAll(List<UserVO> voList) throws Exception {
 
         logger.debug("Entering loadAll()");
 
@@ -99,18 +98,18 @@ public class ResetPasswordLV extends UserLV {
             urboList = dao.findUsersBy(company);
         }
 
-        List<UserVO> voList = prepareUserVoList(urboList);
+        voList = prepareUserVoList(urboList);
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 
-    @Override
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // @Override
+    // protected void showView() throws Exception {
+    //
+    // // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected String getViewPath() {

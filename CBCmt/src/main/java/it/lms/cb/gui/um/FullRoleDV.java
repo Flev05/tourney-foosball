@@ -61,7 +61,7 @@ public class FullRoleDV extends AbstractRoleDV<RoleVO> {
 
         RoleVO vo = mb.prepareNewVo();
 
-        mb.showView();
+        // mb.showView();
 
         mb.setVo(vo);
 
@@ -74,7 +74,7 @@ public class FullRoleDV extends AbstractRoleDV<RoleVO> {
 
         mb.loadSelectedRow(vo);
 
-        mb.showView();
+        // mb.showView();
 
         mb.setVo(vo);
 

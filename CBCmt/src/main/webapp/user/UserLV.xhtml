@@ -25,38 +25,46 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:form id="dataTableFormId">
-	<p:panelGrid columns="1" styleClass="contentAlignCenter">
-		<p:commandButton icon = "fa fa-plus"
-				title="#{um['i18n.user.navigator.new.tooltip']}"
-		        actionListener="#{UserLV.loadForNew}"/>
-	</p:panelGrid>
+<ui:composition template="/layout/template.xhtml">
 
-	<p:dataTable id="userDataTableId"
-		var="vo" 
-		value="#{UserLV.voList}"
-        selectionMode="single"     
-        rowKey="#{vo.id}">
+<ui:define name="body">
 
-       <f:facet name="header">
-       		#{um['i18n.user.lv.synopsis']}
-       </f:facet>
+	<h:form id="dataTableFormId">
+		<p:panelGrid columns="1" styleClass="contentAlignCenter">
+			<p:commandButton icon = "fa fa-plus"
+					title="#{um['i18n.user.navigator.new.tooltip']}"
+			        actionListener="#{UserLV.loadForNew}"/>
+		</p:panelGrid>
 	
-		<p:ajax event="rowSelect" listener="#{UserLV.onRowSelect}" />
-     	    		
-       <p:column headerText="#{um['i18n.person.firstname.column']}">
-           	<h:outputText id="firstname"  value="#{vo.firstname}"/>
-       </p:column>
-       
-       <p:column headerText="#{um['i18n.person.lastname.column']}">
-           	<h:outputText id="lastname"  value="#{vo.lastname}"/>
-       </p:column>
-
-       <p:column headerText="#{um['i18n.table.column.username']}">
-        	<h:outputText id="username" value="#{vo.username}"/>
-       </p:column>
-   </p:dataTable>
+		<p:dataTable id="userDataTableId"
+			var="vo" 
+			value="#{UserLV.voList}"
+	        selectionMode="single"     
+	        rowKey="#{vo.id}">
+	
+	       <f:facet name="header">
+	       		#{um['i18n.user.lv.synopsis']}
+	       </f:facet>
 		
-</h:form>
+			<p:ajax event="rowSelect" listener="#{UserLV.onRowSelect}" />
+	     	    		
+	       <p:column headerText="#{um['i18n.person.firstname.column']}">
+	           	<h:outputText id="firstname"  value="#{vo.firstname}"/>
+	       </p:column>
+	       
+	       <p:column headerText="#{um['i18n.person.lastname.column']}">
+	           	<h:outputText id="lastname"  value="#{vo.lastname}"/>
+	       </p:column>
+	
+	       <p:column headerText="#{um['i18n.table.column.username']}">
+	        	<h:outputText id="username" value="#{vo.username}"/>
+	       </p:column>
+	   </p:dataTable>
+			
+	</h:form>
+</ui:define>
+
+</ui:composition>
+
 </h:panelGroup>
 

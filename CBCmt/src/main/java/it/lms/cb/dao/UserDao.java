@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
@@ -28,6 +29,7 @@ import it.lms.cb.po.Role_;
 import it.lms.cb.po.User;
 import it.lms.cb.po.User_;
 
+@Stateless
 public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private static Logger logger = LogManager.getLogger(UserDao.class);

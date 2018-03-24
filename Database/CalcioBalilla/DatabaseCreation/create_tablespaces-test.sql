@@ -6,12 +6,12 @@
 \set TS_INDEX "CalcioBalillaTestIndex"
 
 -- UFFICIO
-\set TS_DATA_LOCATION  '\'D:/luciano/Deploy/DB/calciobalillatest/data\''
-\set TS_INDEX_LOCATION '\'D:/luciano/Deploy/DB/calciobalillatest/index\''
+-- \set TS_DATA_LOCATION  '\'D:/luciano/Deploy/DB/calciobalillatest/data\''
+-- \set TS_INDEX_LOCATION '\'D:/luciano/Deploy/DB/calciobalillatest/index\''
 
 -- DESKTOP HP
--- \set TS_DATA_LOCATION  '\'C:/DATA/TOOLS/DB/TableSpaces/calciobalillatest/data\''
--- \set TS_INDEX_LOCATION '\'C:/DATA/TOOLS/DB/TableSpaces/calciobalillatest/index\''
+\set TS_DATA_LOCATION  '\'C:/DATA/TOOLS/DB/TableSpaces/calciobalillatest/data\''
+\set TS_INDEX_LOCATION '\'C:/DATA/TOOLS/DB/TableSpaces/calciobalillatest/index\''
 
 -- LAPTOP LENOVO
 -- \set TS_DATA_LOCATION  '\'C:/views/tablespaces/calciobalillatest/data\''

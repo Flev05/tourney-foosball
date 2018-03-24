@@ -22,8 +22,6 @@
 
 		<class>it.lms.cb.po.AbstractCompany</class>
 		<class>it.lms.cb.po.Company</class>
-		<class>it.lms.cb.po.Ipg</class>
-		<class>it.lms.cb.po.IpgCompany</class>
 		
 		<class>it.lms.cb.cmt.model.Customer</class>
 		<class>it.lms.cb.cmt.model.LogMessage</class>

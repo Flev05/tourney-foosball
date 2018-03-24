@@ -9,6 +9,8 @@
 \i insert-company.sql
 \i insert-company_ipg.sql
 
+\i insert-roles.sql
+
 \i insert-user.sql
 
 \i insert-user_roles.sql

@@ -90,7 +90,7 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
 
         mb.setVo(vo);
 
-        mb.showView();
+        // mb.showView();
 
         return vo;
     }
@@ -107,7 +107,7 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
 
         mb.loadSelectedRow(vo);
 
-        mb.showView();
+        // mb.showView();
 
         return vo;
     }
@@ -221,10 +221,10 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
         vo.setResourceId(vo.getResourceId());
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected String getViewPath() {
@@ -262,15 +262,15 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
     }
 
     @Override
-    protected List<PermissionVO> loadAll() throws Exception {
+    protected String loadAll(List<PermissionVO> voList) throws Exception {
 
-        return null;
+        return getViewPath();
     }
 
     @Override
     protected void navigateTo() throws Exception {
 
-        PermissionLV.showReloadAll();
+        // PermissionLV.showReloadAll();
     }
 
     @Override

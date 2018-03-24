@@ -31,7 +31,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
-import it.lms.cb.dao.DataAccessUtils;
 import it.lms.cb.dao.PermissionDao;
 import it.lms.cb.gui.mb.AbstractListViewMB;
 import it.lms.cb.gui.vo.PermissionVO;
@@ -57,12 +56,12 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
         logger.debug("Entering PermissionLV()");
     }
 
-    public static void showReloadAll() throws Exception {
-
-        PermissionLV mb = (PermissionLV) DataAccessUtils.getManagedBean(beanName);
-        List<PermissionVO> voList = mb.loadAll();
-        mb.setVoList(voList);
-    }
+    // public static void showReloadAll() throws Exception {
+    //
+    // PermissionLV mb = (PermissionLV) DataAccessUtils.getManagedBean(beanName);
+    // List<PermissionVO> voList = mb.loadAll();
+    // mb.setVoList(voList);
+    // }
 
     public void selectListener(SelectEvent event) {
 
@@ -81,10 +80,10 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
         return PERMISSION_LV;
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected PermissionVO getViewObject(SelectEvent event) {
@@ -115,12 +114,12 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
     }
 
     @Override
-    protected List<PermissionVO> loadAll() throws Exception {
+    protected String loadAll(List<PermissionVO> voList) throws Exception {
 
         PermissionDao dao = new PermissionDao();
 
         List<Permission> roleList = dao.findAllPermission();
-        List<PermissionVO> voList = new ArrayList<>();
+        voList = new ArrayList<>();
 
         for (Permission p : roleList) {
             PermissionVO vo = new PermissionVO(p);
@@ -131,14 +130,14 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
             vo.setPermissionId(p.getAccessType());
         }
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 
     @Override
     protected void navigateTo() throws Exception {
 
-        showView();
+        // showView();
     }
 }

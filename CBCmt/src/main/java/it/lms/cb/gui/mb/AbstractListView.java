@@ -27,7 +27,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import it.lms.cb.dao.DaoException;
-import it.lms.cb.gui.um.UserPermissionMB;
 import it.lms.cb.po.AbstractPO;
 
 /**
@@ -54,7 +53,7 @@ public abstract class AbstractListView<PO extends AbstractPO> extends AbstractEd
     @Override
     public void backPage(ActionEvent event) throws Exception {
 
-        UserPermissionMB.showView(getViewPath());
+        // UserPermissionMB.showView(getViewPath());
     }
 
     @Override

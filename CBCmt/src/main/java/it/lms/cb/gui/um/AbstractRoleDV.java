@@ -172,13 +172,13 @@ public abstract class AbstractRoleDV<RVO extends RoleVO> extends AbstractDetailV
         vo.setCompanyId(vo.getCompanyId());
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
-    protected List<RVO> loadAll() throws Exception {
+    protected String loadAll(List<RVO> voList) throws Exception {
 
         return null;
     }
@@ -186,7 +186,7 @@ public abstract class AbstractRoleDV<RVO extends RoleVO> extends AbstractDetailV
     @Override
     protected void navigateTo() throws Exception {
 
-        FullRoleLV.showReloadAll();
+        // FullRoleLV.showReloadAll();
     }
 
     @Override

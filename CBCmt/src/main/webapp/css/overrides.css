@@ -1,0 +1,296 @@
+/*
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations under
+ * the License.
+ *
+ * The Original Code is ICEfaces 1.5 open source software code, released
+ * November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+ * Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+ * 2004-2011 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+ *
+ * Contributor(s): _____________________.
+ 
+ * Colori: fuxia=#FF00FF  
+ * Colori: blue=#0000FF  
+ */
+  
+.usernameBox {
+	width: 50mm;
+	border: 1px solid black;
+    left: 2mm;
+	font: bold; 
+	font-size: 20px;
+    padding-left: 1mm;
+    margin-left: 1mm;
+}
+
+.usernameText {
+	font: normal; 
+	font-size: 20px;
+	text-align: left;
+	left: 1mm; 
+	padding-left: 1mm;
+}
+ 
+.bookingDescriptionTextArea {
+	width: 100mm;
+	overflow: auto;
+	height:10mm;
+}
+
+.recurrenceGuide{    
+	margin: 0;
+	color: black;
+    border: 1px solid #d9d9d9;
+    text-align: center;
+    padding: 4px 0px;
+}
+
+.conditions {
+	height: 150px;
+	max-height: 150px;
+	overflow: auto;
+	margin-bottom: 10px;
+}
+.navigatorAccordionText {
+	font-size: 80%;
+}
+ 
+html {
+    overflow: scroll;
+}
+
+body  {
+    font-size: 14px;
+ 	color: blue;
+   	background-color: #ffffff;
+}
+ 
+ul {
+    margin-left: 0px;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+    padding-left: 0px;
+    padding-bottom: 3px;
+}
+
+h2 {
+    font: 18px tahoma;
+    color: #646464;
+}
+
+tbody.ui-datatable-data > tr > td.recurrenceGuide {
+    border-color:inherit;
+    border-style:solid;
+    border-width:1px;
+    padding:4px 10px;
+    text-align: center;
+}
+
+.textEntryInputTable {
+	width: 100mm;
+}
+
+.companyTextBox {
+	width: 80mm;
+}
+.companyUrlTextBox {
+	width: 120mm;
+}
+
+.ui-panel .ui-panel-content {
+	border: 0;
+	background: none;
+	padding: 0;
+}
+
+.ui-datatable table
+{
+	width: auto;
+	margin: 0 auto;
+	background: white;
+	text-shadow: none;
+}
+
+.ui-datatable .bookingCartTable table
+{
+	width: 100%;
+	margin: 0 auto;
+}
+
+#clientTabSet tr > td > table > tbody > tr > td {
+	border-style: none;
+	text-align: right;
+}
+
+#clientTabSet\3a tabSetFormId\3a j_idt167_data > tr > td > table > tbody > tr > td:nth-child(1), 
+#clientTabSet\3a tabSetFormId\3a j_idt166_data > tr > td > table > tbody > tr > td:nth-child(2)
+{
+	width: 25mm;
+	text-align: right;
+}
+
+#lineConfigDVFormId\3a fullGridId > tbody > tr > td:nth-child(1),
+#trattaDVFormId  table > tbody > tr > td:nth-child(1) {
+	text-align: right;
+}
+
+#lineConfigDVFormId\3a departureTimeId_input,
+#lineConfigDVFormId\3a arrivalTimeId_input,
+#dataTableFormId\3a bookingDataTableId\3a ticketId,
+#trattaDVFormId\3a departureTimeId_input,
+#trattaDVFormId\3a arrivalTimeId_input,
+#dataTableFormId\3a bookingDataTableId\3a tostopId {
+	width: 25mm;
+}
+
+#dataTableFormId\3a bookingDataTableId\3a roundtripId {
+	width: 25mm;
+}
+
+#lineConfigDVFormId\3a maxBookableInputTextId_input {
+	text-align: left;
+}
+
+#searchFormId\3a fullTariffId_input,
+#searchFormId\3a reducedTariffId_input,
+#trattaDVFormId\3a reducedAgeId_input
+{
+	width: 10mm;
+	text-align: left;
+}
+
+.tariffTextEntryInputTable,
+#bookingLimitFormId\3a bookingDateDateId,
+#backFormId\3a fromDateId_input,
+#backFormId\3a toDateId_input
+{
+	width: 22mm;
+}
+ 
+#loginFormId tr.ui-widget-content > td > input:nth-child(1)
+{
+	text-align: left;
+	width: 50mm;
+}
+
+#searchTabSetId\3a searchFormId\3a tariffDataTableId_content,
+#beforePayId > tbody > tr:nth-child(1)
+{
+	border: none;
+}
+
+#mainLayoutId > div > div:nth-child(3) > table > tbody > tr > td:nth-child(1) {
+	vertical-align: top;
+	width: 65mm;
+}
+#mainLayoutId > div > div:nth-child(3) > table > tbody > tr > td:nth-child(2) {
+	vertical-align: top;
+}
+
+.configFromExcelAlignCenter tr > td {
+	text-align: center;
+}
+.searchEngineAlignCenter  {
+	text-align: center;
+	color: blue;
+}
+
+#clientTabSet\3a tabSetFormId  div.ui-datatable-header.ui-widget-header.ui-corner-top > table > tbody  td {
+	border: none;
+}
+
+.decrementIconClassName {
+	background-image: url(../../common/images/minus-fuxia-16x16.png) !important;
+}
+
+.incrementIconClassName {
+    background-image: url(../../common/images/plus-fuxia-16x16.png) !important;
+}
+
+.prevDayIcon{
+    background-image: url(../../common/images/prev-24x24.png) !important;
+}
+.nextDayIcon{
+    background-image: url(../../common/images/next-24x24.png) !important;
+}
+
+#mainLayoutId > div > footer > p {
+	-webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
+
+.fromToComboBox {
+	width: 80mm;
+}
+.bookingBlockMessage {
+	text-align: center;
+	width:125mm;
+}
+
+
+.calendarClass input {
+	width: 20mm;
+}
+ 
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th {
+    padding: 1px 2px;
+    overflow: hidden;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.noHeader.ui-datatable table thead tr 
+{
+    display: none;
+}
+.noHeader.ui-datatable table tbody,
+.noHeader.ui-datatable table tr,
+.noHeader.ui-datatable table tr td
+{
+    border: none;
+}
+
+#j_idt253\3a beforePayId > tbody > tr:nth-child(2) > td,
+#beforePayId > tbody > tr  > td {
+	border: none;
+}
+
+.ui-datatable.ui-widget.borderless thead th,
+.ui-datatable.ui-widget.borderless tbody,
+.ui-datatable.ui-widget.borderless tbody tr,
+.ui-datatable.ui-widget.borderless tbody td {
+    border-style: none;
+	border: none;
+}
+
+.ui-wizard-step-title {
+    font-size: 14px;
+    margin: 0 3px 0 0;
+    padding: .4em;
+    float: left;
+}
+
+#j_idt265\3a demoFormId\3a fullPanelId_content > table > tbody > tr:nth-child(4) > td:nth-child(1)
+{
+	width: 20mm;
+}
+
+.ui-widget-content {
+    border: 1px solid #a8a8a8;
+    background: #fff;
+    color: #4f4f4f;
+}
+
+ 

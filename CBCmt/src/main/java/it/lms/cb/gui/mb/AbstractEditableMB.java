@@ -240,13 +240,9 @@ public abstract class AbstractEditableMB<VO extends AbstractVO> extends Abstract
         this.startPage = startPage;
     }
 
-    public void load(ActionEvent event) {
+    public String load() throws Exception {
 
-        logger.debug("Entering load()");
-
-        reLoad();
-
-        logger.debug("Exiting load()");
+        return reLoad();
     }
 
     /**
@@ -445,7 +441,7 @@ public abstract class AbstractEditableMB<VO extends AbstractVO> extends Abstract
 
     protected abstract void save(VO vo) throws Exception;
 
-    protected abstract List<VO> loadAll() throws Exception;
+    protected abstract String loadAll(List<VO> voList) throws Exception;
 
     protected abstract void navigateTo() throws Exception;
 
@@ -453,13 +449,9 @@ public abstract class AbstractEditableMB<VO extends AbstractVO> extends Abstract
 
     protected abstract void validate(VO vo) throws Exception;
 
-    protected void reLoad() {
+    protected String reLoad() throws Exception {
 
-        try {
-            voList = loadAll();
-        } catch (Exception e) {
-            logger.error("Load all failed.", e);
-        }
+        return loadAll(voList);
     }
 
     protected void resetSelectedRow() {

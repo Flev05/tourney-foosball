@@ -20,21 +20,36 @@ import org.apache.log4j.Logger;
  * BaseHibernateCrudDao Class. Root(base) class to manage data access using Hibernate to perform CRUD operations on only
  * one entity.
  */
-public class BaseJPACrudDao<PO, ID extends Serializable> {
+public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
 
-    private static Logger     logger = LogManager.getLogger(BaseJPACrudDao.class);
+    private static Logger   logger = LogManager.getLogger(BaseJPACrudDao.class);
 
-    protected Class<PO>       entityClass;
+    private Class<PO>       entityClass;
 
     @PersistenceContext
-    protected EntityManager   em;
+    private EntityManager   em;
 
-    protected CriteriaBuilder cb;
+    private CriteriaBuilder cb     = null;
 
-    public BaseJPACrudDao(Class<PO> entityClass) {
+    public BaseJPACrudDao() {
+
+    }
+
+    protected BaseJPACrudDao(Class<PO> entityClass) {
 
         this.entityClass = entityClass;
+        // cb = em.getCriteriaBuilder();
+    }
+
+    protected CriteriaBuilder getCb() {
+
         cb = em.getCriteriaBuilder();
+        return cb;
+    }
+
+    protected EntityManager getEm() {
+
+        return em;
     }
 
     private void makePersistent(PO entity) {
@@ -90,11 +105,11 @@ public class BaseJPACrudDao<PO, ID extends Serializable> {
 
     protected List<PO> findAllOrderByAsc(String fieldName) {
 
-        CriteriaQuery<PO> cq = cb.createQuery(entityClass);
+        CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
         Root<PO> root = cq.from(entityClass);
 
         cq.select(root);
-        cq.orderBy(cb.asc(root.get(fieldName)));
+        cq.orderBy(getCb().asc(root.get(fieldName)));
 
         TypedQuery<PO> nq = em.createQuery(cq);
 
@@ -107,11 +122,11 @@ public class BaseJPACrudDao<PO, ID extends Serializable> {
 
     protected List<PO> findAllOrderByDesc(String fieldName) {
 
-        CriteriaQuery<PO> cq = cb.createQuery(entityClass);
+        CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
         Root<PO> root = cq.from(entityClass);
 
         cq.select(root);
-        cq.orderBy(cb.desc(root.get(fieldName)));
+        cq.orderBy(getCb().desc(root.get(fieldName)));
 
         TypedQuery<PO> nq = em.createQuery(cq);
 
@@ -134,11 +149,11 @@ public class BaseJPACrudDao<PO, ID extends Serializable> {
 
         logger.debug("Entering getPoByPk(" + name + ")");
 
-        CriteriaQuery<PO> cq = cb.createQuery(entityClass);
+        CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
 
         Root<PO> root = cq.from(entityClass);
 
-        Predicate p = cb.equal(root.get(pk), name);
+        Predicate p = getCb().equal(root.get(pk), name);
         cq.select(root).where(p);
 
         TypedQuery<PO> nq = em.createQuery(cq);

@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -48,9 +49,12 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
     private static final long   serialVersionUID = 1L;
     public static final String  beanName         = "RoleTypeELV";
-    private static final String MAIN_VIEW_LV     = "/common/user/" + beanName + ".xhtml";
+    private static final String MAIN_VIEW_LV     = "/user/" + beanName + ".xhtml";
 
     private static final Logger logger           = LogManager.getLogger(RoleTypeELV.class);
+
+    @Inject
+    private RoleTypeDao         dao;
 
     public RoleTypeELV() throws Exception {
 
@@ -68,7 +72,7 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
         mb.resetSelectedRow();
 
-        mb.showView();
+        // mb.showView();
     }
 
     public boolean isButtonEnabled() {
@@ -84,7 +88,7 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
         RoleTypeVO cvo = new RoleTypeVO();
 
-        showView();
+        // showView();
 
         return cvo;
     }
@@ -95,7 +99,6 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
         vo.setSelected(false);
         RoleType po = getVo().getPo();
         try {
-            RoleTypeDao dao = new RoleTypeDao();
             dao.deletePo(po);
         } catch (Exception e) {
             String err = "Delete STOP " + po.getName() + " failed.";
@@ -131,7 +134,6 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
         logger.debug("Entering save()");
 
-        RoleTypeDao dao = new RoleTypeDao();
         dao.save(svo.getPo());
     }
 
@@ -144,13 +146,13 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
     }
 
     @Override
-    protected List<RoleTypeVO> loadAll() throws Exception {
+    protected String loadAll(List<RoleTypeVO> voList) throws Exception {
 
-        List<RoleTypeVO> voList = loadRoleType();
+        voList = loadRoleType();
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 
     private List<RoleTypeVO> loadRoleType() throws Exception {
@@ -164,7 +166,6 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
 
         List<RoleTypeVO> voList = new ArrayList<>();
 
-        RoleTypeDao dao = new RoleTypeDao();
         List<RoleType> boList = dao.findAllRoleTypes();
 
         for (RoleType po : boList) {
@@ -175,15 +176,15 @@ public class RoleTypeELV extends AbstractEditableListViewMB<RoleTypeVO> {
         return voList;
     }
 
-    private void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // private void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected void navigateTo() throws Exception {
 
-        showView();
+        // showView();
     }
 
     @Override

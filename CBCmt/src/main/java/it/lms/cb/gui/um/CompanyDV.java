@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -54,6 +55,12 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
     protected boolean           newCompany       = true;
 
+    @Inject
+    private RoleDao             roleDao;
+
+    @Inject
+    private CompanyDao          cdao;
+
     public CompanyDV() throws Exception {
 
         super(beanName);
@@ -68,7 +75,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         CompanyVO vo = openForNewVo();
 
-        mb.showView();
+        // mb.showView();
 
         return vo;
     }
@@ -94,13 +101,13 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         mb.loadSelectedRow(vo);
 
-        mb.showView();
+        // mb.showView();
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     public boolean isNewCompany() {
 
@@ -125,7 +132,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     }
 
     @Override
-    protected List<CompanyVO> loadAll() throws Exception {
+    protected String loadAll(List<CompanyVO> voList) throws Exception {
 
         return null;
     }
@@ -133,9 +140,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     @Override
     protected void delete(CompanyVO svo) throws Exception {
 
-        CompanyDao dao = new CompanyDao();
-
-        dao.deletePo(svo.getPo());
+        cdao.deletePo(svo.getPo());
     }
 
     @Override
@@ -154,10 +159,9 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         logger.debug("Entering save()");
 
-        RoleDao.addInitialRoles(svo.getPo());
+        roleDao.addInitialRoles(svo.getPo());
 
-        CompanyDao dao = new CompanyDao();
-        dao.save(svo.getPo());
+        cdao.save(svo.getPo());
     }
 
     /**

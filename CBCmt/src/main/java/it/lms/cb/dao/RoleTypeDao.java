@@ -4,6 +4,7 @@ package it.lms.cb.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
@@ -17,6 +18,7 @@ import org.apache.log4j.Logger;
 import it.lms.cb.po.RoleType;
 import it.lms.cb.po.RoleType_;
 
+@Stateless
 public class RoleTypeDao extends BaseJPACrudDao<RoleType, Integer> {
 
     private static Logger logger = LogManager.getLogger(RoleTypeDao.class);
@@ -42,13 +44,11 @@ public class RoleTypeDao extends BaseJPACrudDao<RoleType, Integer> {
         return poList;
     }
 
-    public static List<RoleType> findInitialRoleTypes() throws DaoException {
-
-        RoleTypeDao dao = new RoleTypeDao();
+    public List<RoleType> findInitialRoleTypes() throws DaoException {
 
         List<String> irt = RoleType.initialRoleTypes();
 
-        return dao.findRoleTypes(irt);
+        return findRoleTypes(irt);
     }
 
     /**
@@ -89,20 +89,20 @@ public class RoleTypeDao extends BaseJPACrudDao<RoleType, Integer> {
 
     public List<RoleType> findRoleTypes(List<String> roleTypeNames) throws DaoException {
 
-        CriteriaQuery<RoleType> cq = cb.createQuery(RoleType.class);
+        CriteriaQuery<RoleType> cq = getCb().createQuery(RoleType.class);
 
         Root<RoleType> root = cq.from(RoleType.class);
 
         List<Predicate> predicates = new ArrayList<Predicate>();
         for (String key : roleTypeNames) {
-            predicates.add(cb.equal(root.get(RoleType_.name), key));
+            predicates.add(getCb().equal(root.get(RoleType_.name), key));
         }
 
         cq = cq.select(root);
 
-        cq.where(cb.or(predicates.toArray(new Predicate[0])));
+        cq.where(getCb().or(predicates.toArray(new Predicate[0])));
 
-        TypedQuery<RoleType> nq = em.createQuery(cq);
+        TypedQuery<RoleType> nq = getEm().createQuery(cq);
 
         List<RoleType> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
@@ -111,10 +111,9 @@ public class RoleTypeDao extends BaseJPACrudDao<RoleType, Integer> {
         return poList;
     }
 
-    public static void staticSave(RoleType po) throws DaoException {
+    public void staticSave(RoleType po) throws DaoException {
 
-        RoleTypeDao dao = new RoleTypeDao();
-        dao.save(po);
+        save(po);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

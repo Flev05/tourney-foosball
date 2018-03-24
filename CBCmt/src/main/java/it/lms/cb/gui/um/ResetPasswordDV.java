@@ -59,13 +59,13 @@ public class ResetPasswordDV extends ChangePasswordDV {
 
         mb.bpi = bpi;
 
-        mb.showView();
+        // mb.showView();
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected String getViewPath() {
@@ -76,7 +76,7 @@ public class ResetPasswordDV extends ChangePasswordDV {
     @Override
     protected void navigateTo() throws Exception {
 
-        ResetPasswordLV.showReloadAll();
+        // ResetPasswordLV.showReloadAll();
     }
 
     @Override

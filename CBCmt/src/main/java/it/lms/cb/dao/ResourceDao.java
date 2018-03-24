@@ -81,7 +81,7 @@ public class ResourceDao extends BaseJPACrudDao<Resource, Integer> {
 
         String nq = "Resource.findByName";
 
-        TypedQuery<Resource> q = em.createNamedQuery(nq, Resource.class);
+        TypedQuery<Resource> q = getEm().createNamedQuery(nq, Resource.class);
         q.setParameter("name", name);
 
         List<Resource> poList = q.getResultList();

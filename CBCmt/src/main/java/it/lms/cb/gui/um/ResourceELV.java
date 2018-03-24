@@ -68,7 +68,7 @@ public class ResourceELV extends AbstractEditableListViewMB<ResourceVO> {
 
         mb.resetSelectedRow();
 
-        mb.showView();
+        // mb.showView();
     }
 
     public boolean isButtonEnabled() {
@@ -84,7 +84,7 @@ public class ResourceELV extends AbstractEditableListViewMB<ResourceVO> {
 
         ResourceVO cvo = new ResourceVO();
 
-        showView();
+        // showView();
 
         return cvo;
     }
@@ -144,13 +144,13 @@ public class ResourceELV extends AbstractEditableListViewMB<ResourceVO> {
     }
 
     @Override
-    protected List<ResourceVO> loadAll() throws Exception {
+    protected String loadAll(List<ResourceVO> voList) throws Exception {
 
-        List<ResourceVO> voList = loadAllResource();
+        voList = loadAllResource();
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 
     private List<ResourceVO> loadAllResource() throws Exception, DaoException {
@@ -168,15 +168,15 @@ public class ResourceELV extends AbstractEditableListViewMB<ResourceVO> {
         return voList;
     }
 
-    private void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // private void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected void navigateTo() throws Exception {
 
-        showView();
+        // showView();
     }
 
     @Override

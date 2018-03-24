@@ -55,14 +55,14 @@ public abstract class AbstractRoleLV<RVO extends RoleVO> extends AbstractListVie
         }
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected void navigateTo() throws Exception {
 
-        showView();
+        // showView();
     }
 }

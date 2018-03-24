@@ -58,16 +58,16 @@ public abstract class AbstractEditableListViewMB<VO extends AbstractVO> extends 
         this.buttonColspan = buttonColspan;
     }
 
-    public void load(ActionEvent event) {
+    @Override
+    public String load() throws Exception {
 
         logger.debug("Entering load()");
-
-        super.load(event);
 
         buttonColspan = false;
         loadForNewIsActive = false;
 
         logger.debug("Exiting load()");
+        return super.load();
     }
 
     /**

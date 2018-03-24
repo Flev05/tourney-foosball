@@ -53,15 +53,15 @@ public abstract class AbstractCompanyDao<PO extends AbstractCompany> extends Bas
 
         logger.debug("Entering findByEmail()");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
 
-        Predicate emailWhereClause = cb.equal(root.get(Company_.companyEmail), email);
+        Predicate emailWhereClause = getCb().equal(root.get(Company_.companyEmail), email);
 
         cq.select(root).where(emailWhereClause);
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " PO(s)] ";
@@ -76,14 +76,14 @@ public abstract class AbstractCompanyDao<PO extends AbstractCompany> extends Bas
 
     public PO getByCompanyCode(String companyCode) {
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
 
-        Predicate p = cb.equal(root.get(AbstractCompany_.companyCode), companyCode);
+        Predicate p = getCb().equal(root.get(AbstractCompany_.companyCode), companyCode);
         cq.select(root).where(p);
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Link(s)] ";
@@ -136,19 +136,19 @@ public abstract class AbstractCompanyDao<PO extends AbstractCompany> extends Bas
 
         logger.debug("Entering getAllCompanyBy()");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
         Root<PO> root = cq.from(this.po);
 
         Join<PO, Role> roleJoin = root.join(Company_.roles);
 
         Join<Role, User> userJoin = roleJoin.join(Role_.users);
 
-        Predicate p = cb.equal(userJoin.get(User_.username), username);
+        Predicate p = getCb().equal(userJoin.get(User_.username), username);
         cq = cq.select(root);
         cq = cq.distinct(true);
         cq = cq.where(p);
 
-        TypedQuery<PO> tq = em.createQuery(cq);
+        TypedQuery<PO> tq = getEm().createQuery(cq);
 
         List<PO> poList = tq.getResultList();
         logger.debug("Found " + poList.size() + " record(s)");
@@ -196,14 +196,14 @@ public abstract class AbstractCompanyDao<PO extends AbstractCompany> extends Bas
 
         logger.debug("Entering getPoByPk(" + name + ")");
 
-        CriteriaQuery<PO> cq = cb.createQuery(this.po);
+        CriteriaQuery<PO> cq = getCb().createQuery(this.po);
 
         Root<PO> root = cq.from(this.po);
 
-        Predicate p = cb.equal(root.get(Company_.name), name);
+        Predicate p = getCb().equal(root.get(Company_.name), name);
         cq.select(root).where(p);
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+        TypedQuery<PO> nq = getEm().createQuery(cq);
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Link(s)] ";

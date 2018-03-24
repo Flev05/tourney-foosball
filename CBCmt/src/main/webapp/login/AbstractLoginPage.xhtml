@@ -37,7 +37,7 @@
     	<p:inputText id="usernameId"
                 value="#{MB.username}" 
 				title="#{um['i18n.username.label']}"
-                actionListener="#{MB.loginListener}" 
+                action="#{MB.login}" 
               	required="true"
               	requiredMessage="#{um['i18n.user.name.message']}" />
 
@@ -45,14 +45,14 @@
     	<p:password id="password-id"
                 value="#{MB.password}" 
 				title="#{um['i18n.password.label']}"
-				actionListener="#{MB.loginListener}" 
+				action="#{MB.login}" 
               	required="false"
               	requiredMessage="#{um['i18n.user.password.message']}"/>
 
 		<f:facet name="footer">
 			<p:commandButton id="loginButtonId"
 				icon="ui-icon-check"
-				actionListener="#{MB.loginListener}" 
+				action="#{MB.login}" 
 				value="#{um['i18n.login.button.label']}" 
 				title="#{um['i18n.login.button.title']}"
 				ajax="false"/>
@@ -61,5 +61,4 @@
   	</p:panelGrid>
 
 	<script type="text/javascript">document.getElementById('loginFormId:usernameId').focus();</script>       		
-
 </h:form>

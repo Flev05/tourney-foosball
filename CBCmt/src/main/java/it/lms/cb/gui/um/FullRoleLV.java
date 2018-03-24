@@ -31,7 +31,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
-import it.lms.cb.dao.DataAccessUtils;
 import it.lms.cb.dao.RoleDao;
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.po.Role;
@@ -54,12 +53,12 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
         super(beanName);
     }
 
-    public static void showReloadAll() throws Exception {
-
-        FullRoleLV mb = (FullRoleLV) DataAccessUtils.getManagedBean(beanName);
-        List<RoleVO> voList = mb.loadAll();
-        mb.setVoList(voList);
-    }
+    // public static void showReloadAll() throws Exception {
+    //
+    // FullRoleLV mb = (FullRoleLV) DataAccessUtils.getManagedBean(beanName);
+    // List<RoleVO> voList = mb.loadAll();
+    // mb.setVoList(voList);
+    // }
 
     public void selectListener(SelectEvent event) {
 
@@ -78,10 +77,10 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
         return ROLE_LV;
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
     protected RoleVO getViewObject(SelectEvent event) {
@@ -107,14 +106,14 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
     }
 
     @Override
-    protected List<RoleVO> loadAll() throws Exception {
+    protected String loadAll(List<RoleVO> voList) throws Exception {
 
         RoleDao dao = new RoleDao();
 
         List<Role> roleList;
         roleList = dao.findAllRoles();
 
-        List<RoleVO> voList = new ArrayList<>();
+        voList = new ArrayList<>();
 
         for (Role r : roleList) {
             RoleVO vo = new RoleVO(r);
@@ -124,8 +123,8 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
             vo.setCompanyId(r.getCompany().getId());
         }
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 }

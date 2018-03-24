@@ -43,4 +43,18 @@ public class RoleDao extends AbstractRoleDao<Role> {
 
         return role;
     }
+
+    @Override
+    public void staticSave(RoleType rt) {
+
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public List<RoleType> findInitialRoleTypes() throws DaoException {
+
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

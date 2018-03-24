@@ -36,7 +36,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
-import it.lms.cb.dao.DataAccessUtils;
 import it.lms.cb.dao.UserDao;
 import it.lms.cb.gui.mb.AbstractListViewMB;
 import it.lms.cb.gui.vo.UserVO;
@@ -73,22 +72,21 @@ public class UserLV extends AbstractListViewMB<UserVO> {
     @Override
     public void backPage(ActionEvent event) throws Exception {
 
-        UserLV mb = (UserLV) DataAccessUtils.getManagedBean(beanName);
-        List<UserVO> voList = mb.loadAll();
-        mb.setVoList(voList);
+        // UserLV mb = (UserLV) DataAccessUtils.getManagedBean(beanName);
+        // List<UserVO> voList = mb.loadAll();
+        // mb.setVoList(voList);
     }
 
-    protected void showView() throws Exception {
-
-        UserPermissionMB.showView(getViewPath());
-    }
+    // protected void showView() throws Exception {
+    //
+    // UserPermissionMB.showView(getViewPath());
+    // }
 
     @Override
-    protected List<UserVO> loadAll() throws Exception {
+    protected String loadAll(List<UserVO> voList) throws Exception {
 
         logger.debug("Entering loadAll()");
 
-        List<UserVO> voList;
         if (UserPermissionMB.isDeveloperUser()) {
             voList = loadUsers();
         } else {
@@ -99,9 +97,9 @@ public class UserLV extends AbstractListViewMB<UserVO> {
 
         setVoList(voList);
 
-        showView();
+        // showView();
 
-        return voList;
+        return getViewPath();
     }
 
     @Override
@@ -182,7 +180,7 @@ public class UserLV extends AbstractListViewMB<UserVO> {
     @Override
     protected void navigateTo() throws Exception {
 
-        showView();
+        // showView();
     }
 
     @Override

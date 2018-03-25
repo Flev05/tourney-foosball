@@ -1,0 +1,72 @@
+<!--
+  ~ Version: MPL 1.1
+  ~
+  ~ The contents of this file are subject to the Mozilla Public License
+  ~ Version 1.1 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://www.mozilla.org/MPL/
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations under
+  ~ the License.
+  ~
+  ~ The Original Code is ICEfaces 1.5 open source software code, released
+  ~ November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+  ~ Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+  ~ 2004-2011 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+  ~
+  ~ Contributor(s): _____________________.
+  -->
+
+<h:panelGroup
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition template="/main/template.xhtml">
+<ui:define name="page-content">
+
+<p:panel styleClass="textAlignCenter">
+	<h:outputText value="#{um['i18n.company.dv.synopsis']}"/>
+</p:panel>
+	
+<p:panel>
+    <h:panelGrid columns="1" styleClass="contentAlignCenter">
+		<p:commandButton icon="fa fa-arrow-left"
+			value="#{um['i18n.button.back.label']}"
+			title="#{um['i18n.button.back.tooltip']}"
+			actionListener="#{CompanyDV.backPage}" />
+    </h:panelGrid>
+</p:panel>
+		
+<h:form id="saveFormId">   
+	<ui:include src="AbstractCompanyDV.xhtml">
+	    <ui:param name="MB" value="#{CompanyDV}" />
+	</ui:include>	
+ 
+	<p:panel>
+	    <h:panelGrid columns="2" styleClass="contentAlignCenter">
+
+			<p:commandButton rendered="#{not CompanyDV.newCompany}"
+					icon="fa fa-remove"
+					title="#{um['i18n.button.remove.tooltip']}"
+					actionListener="#{CompanyDV.delete}">
+			   	<p:confirm header="#{um['i18n.confirm.title']}" message="#{um['i18n.delete.confirm.message']}" icon="ui-icon-alert" />
+			</p:commandButton>
+
+	        <p:commandButton icon="fa fa-save"
+					title="#{um['i18n.button.save.tooltip']}"
+	               	actionListener="#{CompanyDV.save}"
+	               	update="saveFormId">
+	        </p:commandButton>
+	    </h:panelGrid>
+	</p:panel>
+</h:form>	   
+
+</ui:define>
+</ui:composition>
+
+</h:panelGroup>
+

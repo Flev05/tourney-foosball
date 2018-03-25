@@ -1,0 +1,60 @@
+<!--
+  ~ Version: MPL 1.1
+  ~
+  ~ The contents of this file are subject to the Mozilla Public License
+  ~ Version 1.1 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://www.mozilla.org/MPL/
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations under
+  ~ the License.
+  ~
+  ~ The Original Code is ICEfaces 1.5 open source software code, released
+  ~ November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+  ~ Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+  ~ 2004-2011 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+  ~
+  ~ Contributor(s): _____________________.
+  -->
+
+<h:panelGroup xmlns="http://www.w3.org/1999/xhtml"
+          	xmlns:h="http://java.sun.com/jsf/html"
+      		xmlns:p="http://primefaces.org/ui"
+          	id="navigationMenuForm">
+
+<!-- SEARCH section navigator -->
+<h:form id="loginFormId">     
+	<p:accordionPanel activeIndex="#{UserPermissionMB.activeIndex}">
+	
+		<!-- USER section navigator -->
+		<p:tab title="#{um['i18n.user.navigator.label']}" >
+	 		<h:panelGrid columns="1">	
+			   	<p:commandLink value="#{um['i18n.role.roletype.name']}" 		action="#{RoleTypeELV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.user.full.role.label']}" 		action="#{FullRoleLV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.resource.label']}" 			action="#{ResourceELV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.permission.label']}" 			action="#{PermissionLV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.user.navigator.lv.label']}" 	action="#{UserLV.load}"/>
+			
+			   	<p:commandLink value="#{um['i18n.user.resetpassword.label']}" 	action="#{ResetPasswordLV.load}"/>
+		   	</h:panelGrid>
+		</p:tab>
+	
+		<!-- USER LOGIN section navigator -->
+		<p:tab title="#{um['i18n.mypassword.label']}" >
+		    <p:commandLink value="#{um['i18n.user.navigator.changepassword.label']}" action="#{ChangePasswordDV.loadForChangePassword}"/>
+		</p:tab>
+		
+		<p:tab title="#{um['i18n.logout.collapsible.label']}" rendered="#{UserPermissionMB.userLogged}">
+		    <p:commandLink value="#{um['i18n.logout.label']}" action="#{UserPermissionMB.logout}"/>
+		</p:tab>
+	
+	</p:accordionPanel>
+</h:form>
+</h:panelGroup>
+

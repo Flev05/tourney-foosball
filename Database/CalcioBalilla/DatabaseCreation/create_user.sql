@@ -5,3 +5,4 @@
 \set DB_USERNAME calciobalilla
 \set DB_PASSWORD '\'calciobalilla\''
 \i ../../DatabaseCommons/DatabaseCreation/user-create_user.sql
+

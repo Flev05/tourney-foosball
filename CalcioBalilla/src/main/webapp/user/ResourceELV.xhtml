@@ -1,0 +1,111 @@
+<!--
+  ~ Version: MPL 1.1
+  ~
+  ~ The contents of this file are subject to the Mozilla Public License
+  ~ Version 1.1 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://www.mozilla.org/MPL/
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations under
+  ~ the License.
+  ~
+  ~ The Original Code is ICEfaces 1.5 open source software code, released
+  ~ November 5, 2006. The Initial Developer of the Original Code is ICEsoft
+  ~ Technologies Canada, Corp. Portions created by ICEsoft are Copyright (C)
+  ~ 2004-2011 ICEsoft Technologies Canada, Corp. All Rights Reserved.
+  ~
+  ~ Contributor(s): _____________________.
+  -->
+
+<!--
+In this demonstration,  and  are
+used to build an application menubar. The menuItem selection events
+are shown but could easily be made to invoke application logic.
+-->
+
+<h:panelGroup xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ann="http://www.icesoft.com/icefaces/component/annotated">
+
+<ui:composition template="/main/template.xhtml">
+<ui:define name="page-content">
+
+<h:form id="saveFormId">
+	
+<p:messages id="failure" showDetail="false" autoUpdate="true" closable="true" />
+
+<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+   	<p:commandButton value="#{um['i18n.accept.label']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+   	<p:commandButton value="#{um['i18n.deny.label']}"   type="button" styleClass="ui-confirmdialog-no"  icon="ui-icon-close" />
+</p:confirmDialog>
+
+<p:panel>
+	<h:panelGrid columns="1" styleClass="contentAlignCenter">
+	    <p:commandButton icon = "fa fa-plus" actionListener="#{ResourceELV.loadForNew}"/>
+    </h:panelGrid>
+               
+	<p:dataTable id="dataTableId" 
+			var="vo" 
+			value="#{ResourceELV.voList}"
+          	rows="30"
+          	paginator="true"
+           	rowsPerPageTemplate="30,50,100"
+	   		selectionMode="single"
+          	rowKey="#{vo.id}">
+
+   		<p:ajax event="rowSelect" listener="#{ResourceELV.onRowSelect}" update="dataTableId"/>
+
+        <f:facet name="header">
+        	#{um['i18n.resource.header']}
+        </f:facet>
+ 
+		<p:column headerText="#{um['i18n.table.column.name']}">
+			<h:outputText rendered="#{not vo.selected}" 	value="#{vo.name}" />
+			<p:inputText  rendered="#{vo.selected}" 		value="#{vo.name}" style="width: 50mm; text-align: center;"/>
+		</p:column>
+	     
+		<p:column headerText="#{um['i18n.user.description']}">
+			<h:outputText rendered="#{not vo.selected}" 	value="#{vo.description}" />
+			<p:inputText  rendered="#{vo.selected}" 		value="#{vo.description}" style="width: 100mm; text-align: center;"/>
+		</p:column>
+	     
+		<p:column rendered="#{ResourceELV.buttonColspan}" headerText="#{um['i18n.button.cancelshortcut.label']}">
+        	<p:commandButton rendered="#{vo.selected}"
+        		icon="fa fa-undo" 
+        		actionListener="#{ResourceELV.rollback}"
+        		title="#{um['i18n.button.cancel.label']}"
+        		update="dataTableId"/>
+		</p:column>
+		
+		<p:column rendered="#{ResourceELV.buttonColspan}" headerText="#{um['i18n.button.saveshortcut.label']}">
+        	<p:commandButton rendered="#{vo.selected}"
+        		icon="saveIconClassName" 
+        		actionListener="#{ResourceELV.save}"
+        		title="#{um['i18n.button.save.label']}"
+        		update="dataTableId"/>
+		</p:column>
+		
+		<p:column rendered="#{ResourceELV.buttonColspan}" headerText="#{um['i18n.button.removeshortcut.label']}">
+			<p:commandButton rendered="#{vo.selected}" 
+               		actionListener="#{ResourceELV.delete}"
+               		icon="fa fa-remove"
+               		title="#{um['i18n.button.delete.label']}"
+               		update="dataTableId">
+           		
+           		<p:confirm header="#{um['i18n.confirm.title']}" message="#{um['i18n.delete.confirm.message']}" icon="ui-icon-alert" />
+           	</p:commandButton>
+		</p:column>
+	</p:dataTable>
+</p:panel>
+</h:form>
+
+</ui:define>
+</ui:composition>	
+
+</h:panelGroup>
+

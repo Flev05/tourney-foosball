@@ -9,8 +9,12 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<properties>
+        <project.artifactId>CBCmt</project.artifactId>
+    </properties>
+    
 	<groupId>it.lms.cb</groupId>
-	<artifactId>CbCmt</artifactId>
+	<artifactId>${project.artifactId}</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>CalcioBalillaCmt</name>

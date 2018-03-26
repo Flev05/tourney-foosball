@@ -35,6 +35,7 @@ import it.lms.cb.dao.DataAccessUtils;
 import it.lms.cb.dao.RoleDao;
 import it.lms.cb.gui.mb.AbstractDetailViewMB;
 import it.lms.cb.gui.mb.BackPageInterface;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.mb.CommonUtil;
 import it.lms.cb.gui.um.resources.CommonMessages;
 import it.lms.cb.gui.vo.CompanyVO;
@@ -64,7 +65,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     public CompanyDV() throws Exception {
 
         super(beanName);
-        logger.debug("Entering CompanyDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering CompanyDV()");
     }
 
     public static CompanyVO openForNewVo(BackPageInterface bpi) throws Exception {
@@ -122,7 +123,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     @Override
     protected CompanyVO loadSelectedRow(CompanyVO vo) throws Exception {
 
-        logger.debug("Entering loadSelectedRow()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
 
         newCompany = false;
 
@@ -148,7 +149,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         if (getVo().getName().equals("")) {
             String err = "Validation failed.";
-            logger.error(err);
+            logger.error(BaseBean.printSessionId() + err);
             CommonUtil.showValidationError(CommonMessages.I18N_SAVE_MESSAGE);
             throw new Exception(err);
         }
@@ -157,7 +158,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     @Override
     protected void save(CompanyVO svo) throws Exception {
 
-        logger.debug("Entering save()");
+        logger.debug(BaseBean.printSessionId() + "Entering save()");
 
         roleDao.addInitialRoles(svo.getPo());
 
@@ -170,7 +171,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
     @Override
     protected CompanyVO prepareNewVo() throws Exception {
 
-        logger.debug("Entering prepareNewVo()");
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
 
         try {
 
@@ -181,7 +182,7 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
             vo.setSelected(false);
             return vo;
         } catch (Exception e) {
-            logger.error("Navigation to VehicleTypeDV failed", e);
+            logger.error(BaseBean.printSessionId() + "prepareNewVo failed", e);
             throw e;
         }
     }
@@ -196,5 +197,4 @@ public class CompanyDV extends AbstractDetailViewMB<CompanyVO> {
 
         return DETAIL_VIEW_PATH;
     }
-
 }

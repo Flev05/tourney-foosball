@@ -27,6 +27,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -38,6 +39,7 @@ import it.lms.cb.dao.ResourceDao;
 import it.lms.cb.dao.RoleTypeDao;
 import it.lms.cb.gui.mb.AbstractDetailViewMB;
 import it.lms.cb.gui.mb.BackPageInterface;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.PermissionVO;
 import it.lms.cb.po.Permission;
 import it.lms.cb.po.Resource;
@@ -68,10 +70,17 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
     private RoleType            selectedRoleType;
     private Resource            selectedResource;
 
+    @Inject
+    private PermissionDao       pdao;
+    @Inject
+    private ResourceDao         rdao;
+
+    private RoleTypeDao         rtdao            = new RoleTypeDao();
+
     public PermissionDV() throws Exception {
 
         super(beanName);
-        logger.debug("Entering PermissionDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering PermissionDV()");
         newPermission = false;
         roleTypeList = new ArrayList<>();
         resourceList = new ArrayList<>();
@@ -155,6 +164,8 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
     @Override
     protected PermissionVO prepareNewVo() throws Exception {
 
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
+
         PermissionVO vo = new PermissionVO();
 
         vo.setRoleTypeId(0);
@@ -172,6 +183,7 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
     @Override
     protected PermissionVO loadSelectedRow(PermissionVO vo) throws Exception {
 
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
         prepareRoleComboBox(vo);
 
         prepareResourceComboBox(vo);
@@ -183,7 +195,6 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
 
     private void prepareRoleComboBox(PermissionVO vo) throws DaoException {
 
-        RoleTypeDao rtdao = new RoleTypeDao();
         roleTypePoList = rtdao.findAllRoleTypes();
 
         roleTypeList.clear();
@@ -198,8 +209,7 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
 
     private void prepareResourceComboBox(PermissionVO vo) throws DaoException {
 
-        ResourceDao cdao = new ResourceDao();
-        resourcePoList = cdao.findAllRoles();
+        resourcePoList = rdao.findAllRoles();
 
         resourceList.clear();
         for (Resource r : resourcePoList) {
@@ -235,14 +245,13 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
     @Override
     protected void delete(PermissionVO vo) throws Exception {
 
-        PermissionDao dao = new PermissionDao();
-
-        dao.deletePo(vo.getPo());
+        pdao.deletePo(vo.getPo());
     }
 
     @Override
     protected void save(PermissionVO vo) throws Exception {
 
+        logger.debug(BaseBean.printSessionId() + "Entering save()");
         Permission p = vo.getPo();
 
         roleTypePoList.stream().filter(po -> po.getId().equals(vo.getRoleTypeId())).forEach(po -> {
@@ -257,8 +266,7 @@ public class PermissionDV extends AbstractDetailViewMB<PermissionVO> {
 
         p.setAccessType(vo.getPermissionId());
 
-        PermissionDao dao = new PermissionDao();
-        dao.save(p);
+        pdao.save(p);
     }
 
     @Override

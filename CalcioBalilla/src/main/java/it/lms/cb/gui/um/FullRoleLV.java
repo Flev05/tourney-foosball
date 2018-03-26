@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
 import it.lms.cb.dao.RoleDao;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.po.Role;
 
@@ -63,11 +64,11 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
     public void selectListener(SelectEvent event) {
 
         RoleVO row = getViewObject(event);
-        logger.debug("Selected row is: " + row);
+        logger.debug(BaseBean.printSessionId() + "Selected row is: " + row);
         try {
             loadSelectedRow(row);
         } catch (Exception e) {
-            logger.error("Load selected row failed", e);
+            logger.error(BaseBean.printSessionId() + "Load selected row failed", e);
         }
     }
 
@@ -93,7 +94,7 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
     @Override
     protected RoleVO prepareNewVo() throws Exception {
 
-        logger.debug("Entering prepareNewVo()");
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
 
         RoleVO vo = FullRoleDV.showLoadForNewVo();
         return vo;
@@ -108,6 +109,7 @@ public class FullRoleLV extends AbstractRoleLV<RoleVO> {
     @Override
     protected String loadAll(List<RoleVO> voList) throws Exception {
 
+        logger.debug(BaseBean.printSessionId() + "Entering loadAll()");
         RoleDao dao = new RoleDao();
 
         List<Role> roleList;

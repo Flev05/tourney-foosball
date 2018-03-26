@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
 import it.lms.cb.gui.mb.AbstractListViewMB;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.RoleVO;
 
 /**
@@ -41,17 +42,17 @@ public abstract class AbstractRoleLV<RVO extends RoleVO> extends AbstractListVie
 
         super(bn);
 
-        logger.debug("Entering FullRoleLV()");
+        logger.debug(BaseBean.printSessionId() + "Entering FullRoleLV()");
     }
 
     public void selectListener(SelectEvent event) {
 
         RVO row = getViewObject(event);
-        logger.debug("Selected row is: " + row);
+        logger.debug(BaseBean.printSessionId() + "Selected row is: " + row);
         try {
             loadSelectedRow(row);
         } catch (Exception e) {
-            logger.error("Load selected row failed", e);
+            logger.error(BaseBean.printSessionId() + "Load selected row failed", e);
         }
     }
 

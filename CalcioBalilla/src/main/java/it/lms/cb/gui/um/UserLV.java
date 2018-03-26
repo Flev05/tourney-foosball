@@ -39,6 +39,7 @@ import org.primefaces.event.SelectEvent;
 
 import it.lms.cb.dao.UserDao;
 import it.lms.cb.gui.mb.AbstractListViewMB;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.cb.po.Person;
 import it.lms.cb.po.User;
@@ -63,14 +64,14 @@ public class UserLV extends AbstractListViewMB<UserVO> {
 
         this(beanName);
 
-        logger.debug("Entering UserLV()");
+        logger.debug(BaseBean.printSessionId() + "Entering UserLV()");
     }
 
     protected UserLV(String bn) throws Exception {
 
         super(bn);
 
-        logger.debug("Entering UserLV()");
+        logger.debug(BaseBean.printSessionId() + "Entering UserLV()");
     }
 
     @Override
@@ -89,7 +90,7 @@ public class UserLV extends AbstractListViewMB<UserVO> {
     @Override
     protected String loadAll(List<UserVO> voList) throws Exception {
 
-        logger.debug("Entering loadAll()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadAll()");
 
         if (UserPermissionMB.isDeveloperUser()) {
             voList = loadUsers();
@@ -116,14 +117,14 @@ public class UserLV extends AbstractListViewMB<UserVO> {
      */
     public void loadForNew(ActionEvent event) {
 
-        logger.debug("Entering loadForNew()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadForNew()");
 
         resetSelectedRow();
 
         try {
             setVo(prepareNewVo());
         } catch (Exception e) {
-            logger.error("Prepare for new failed.", e);
+            logger.error(BaseBean.printSessionId() + "Prepare for new failed.", e);
             return;
         }
 
@@ -133,11 +134,11 @@ public class UserLV extends AbstractListViewMB<UserVO> {
     public void selectListener(SelectEvent event) {
 
         UserVO row = getViewObject(event);
-        logger.debug("Selected row is: " + row.getUsername());
+        logger.debug(BaseBean.printSessionId() + "Selected row is: " + row.getUsername());
         try {
             loadSelectedRow(row);
         } catch (Exception e) {
-            logger.error("Load selected row failed", e);
+            logger.error(BaseBean.printSessionId() + "Load selected row failed", e);
         }
     }
 
@@ -153,13 +154,13 @@ public class UserLV extends AbstractListViewMB<UserVO> {
     @Override
     protected UserVO prepareNewVo() throws Exception {
 
-        logger.debug("Entering prepareNewVo()");
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
 
         try {
             UserVO vo = UserDV.showLoadForNewVo(this);
             return vo;
         } catch (Exception e) {
-            logger.error("Navigation to MaintenanceDV failed", e);
+            logger.error(BaseBean.printSessionId() + "Navigation to MaintenanceDV failed", e);
             throw e;
         }
     }
@@ -167,14 +168,14 @@ public class UserLV extends AbstractListViewMB<UserVO> {
     @Override
     protected UserVO loadSelectedRow(UserVO vo) throws Exception {
 
-        logger.debug("Entering loadSelectedRow()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
 
         try {
             vo.setSelected(false);
             UserDV.showLoadSelectedRow(this, vo);
 
         } catch (Exception e) {
-            logger.error("Navigation to UserDV failed", e);
+            logger.error(BaseBean.printSessionId() + "Navigation to UserDV failed", e);
         }
         return vo;
     }
@@ -224,5 +225,4 @@ public class UserLV extends AbstractListViewMB<UserVO> {
 
         return voList;
     }
-
 }

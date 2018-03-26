@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import it.lms.cb.dao.DaoException;
 import it.lms.cb.dao.DataAccessUtils;
 import it.lms.cb.dao.UserDao;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.mb.CommonUtil;
 import it.lms.cb.gui.um.resources.CommonMessages;
 import it.lms.cb.gui.vo.UserVO;
@@ -55,13 +56,13 @@ public class ChangePasswordDV extends UserDV {
     protected ChangePasswordDV(String bn) throws Exception {
 
         super(bn);
-        logger.debug("Entering ChangePasswordDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering ChangePasswordDV()");
     }
 
     public ChangePasswordDV() throws Exception {
 
         this(beanName);
-        logger.debug("Entering ChangePasswordDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering ChangePasswordDV()");
     }
 
     public static void showLoadSelectedRow(UserVO vo) throws Exception {
@@ -77,13 +78,13 @@ public class ChangePasswordDV extends UserDV {
      */
     public void loadForChangePassword(ActionEvent event) throws Exception {
 
-        logger.debug("Entering loadForChangePassword()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadForChangePassword()");
 
         prepareChangePassword();
 
         // showView();
 
-        logger.debug("Exiting loadForChangePassword()");
+        logger.debug(BaseBean.printSessionId() + "Exiting loadForChangePassword()");
     }
 
     // protected void showView() throws Exception {
@@ -119,7 +120,7 @@ public class ChangePasswordDV extends UserDV {
     @Override
     protected UserVO loadSelectedRow(UserVO uvo) throws Exception {
 
-        logger.debug("Entering loadSelectedRow()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
 
         setVo(uvo);
 
@@ -129,7 +130,7 @@ public class ChangePasswordDV extends UserDV {
     @Override
     protected void validate(UserVO vo) throws Exception {
 
-        logger.debug("Entering validate()");
+        logger.debug(BaseBean.printSessionId() + "Entering validate()");
 
         String md5 = UserPermissionMB.doMD5(vo.getRetypePassword());
 
@@ -137,13 +138,13 @@ public class ChangePasswordDV extends UserDV {
             CommonUtil.showValidationError(CommonMessages.I18N_UNMATCHED_PWD_MESSAGE);
 
             String err = "oldPassword=" + vo.getPassword() + " typed password=" + vo.getRetypePassword();
-            logger.error(err);
+            logger.error(BaseBean.printSessionId() + err);
             throw new Exception(err);
         }
 
         if (!isConfirmedPassword()) {
             String err = "Confirmation failed.";
-            logger.error(err);
+            logger.error(BaseBean.printSessionId() + err);
             throw new Exception(err);
         }
     }
@@ -154,7 +155,7 @@ public class ChangePasswordDV extends UserDV {
     @Override
     protected void save(UserVO vo) throws Exception {
 
-        logger.debug("Entering save()");
+        logger.debug(BaseBean.printSessionId() + "Entering save()");
 
         String md5 = UserPermissionMB.doMD5(vo.getNewPassword());
 
@@ -184,7 +185,7 @@ public class ChangePasswordDV extends UserDV {
      */
     private boolean isConfirmedPassword() throws UnsupportedEncodingException {
 
-        logger.debug("Entering isConfirmedPassword()");
+        logger.debug(BaseBean.printSessionId() + "Entering isConfirmedPassword()");
 
         if (!getVo().getNewPassword().equals(getVo().getConfirmPassword())) {
             CommonUtil.showValidationError(CommonMessages.I18N_CONFIRM_PWD_MESSAGE);

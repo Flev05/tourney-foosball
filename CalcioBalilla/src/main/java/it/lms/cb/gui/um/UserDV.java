@@ -41,6 +41,7 @@ import it.lms.cb.dao.RoleDao;
 import it.lms.cb.dao.UserDao;
 import it.lms.cb.gui.mb.AbstractDetailViewMB;
 import it.lms.cb.gui.mb.BackPageInterface;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.mb.CommonUtil;
 import it.lms.cb.gui.um.resources.CommonMessages;
 import it.lms.cb.gui.vo.RoleVO;
@@ -77,13 +78,13 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
     public UserDV() throws Exception {
 
         this(beanName);
-        logger.debug("Entering UserDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering UserDV()");
     }
 
     public UserDV(String beanName) throws Exception {
 
         super(beanName);
-        logger.debug("Entering UserDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering UserDV()");
         roleSet = new HashSet<>();
     }
 
@@ -113,7 +114,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
 
     public static void addDescription(String description) {
 
-        logger.debug("Entering addDescription()");
+        logger.debug(BaseBean.printSessionId() + "Entering addDescription()");
 
         UserDV mb = (UserDV) DataAccessUtils.getManagedBean(beanName);
 
@@ -169,7 +170,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
     @Override
     protected UserVO loadSelectedRow(UserVO uvo) throws Exception {
 
-        logger.debug("Entering loadSelectedRow()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
 
         uvo = loadSelectedRowLocal(uvo);
 
@@ -205,7 +206,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
     @Override
     protected void validate(UserVO vo) throws Exception {
 
-        logger.debug("Entering validate()");
+        logger.debug(BaseBean.printSessionId() + "Entering validate()");
 
         String err = doValidate(vo);
 
@@ -248,7 +249,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
     @Override
     protected void save(UserVO vo) throws Exception {
 
-        logger.debug("Entering save()");
+        logger.debug(BaseBean.printSessionId() + "Entering save()");
 
         User upo = vo.getPo();
 
@@ -304,7 +305,7 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
 
     private UserVO loadSelectedRowLocal(UserVO uvo) throws Exception {
 
-        logger.debug("Entering loadSelectedRowLocal()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRowLocal()");
 
         selectedRoles = new ArrayList<>();
 
@@ -381,5 +382,4 @@ public class UserDV extends AbstractDetailViewMB<UserVO> {
         }
         return true;
     }
-
 }

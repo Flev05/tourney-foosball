@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -33,6 +34,7 @@ import org.primefaces.event.SelectEvent;
 
 import it.lms.cb.dao.PermissionDao;
 import it.lms.cb.gui.mb.AbstractListViewMB;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.PermissionVO;
 import it.lms.cb.po.Permission;
 
@@ -49,11 +51,14 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
 
     private static final Logger   logger           = LogManager.getLogger(PermissionLV.class);
 
+    @Inject
+    private PermissionDao         dao;
+
     public PermissionLV() throws Exception {
 
         super(beanName);
 
-        logger.debug("Entering PermissionLV()");
+        logger.debug(BaseBean.printSessionId() + "Entering PermissionLV()");
     }
 
     // public static void showReloadAll() throws Exception {
@@ -66,11 +71,11 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
     public void selectListener(SelectEvent event) {
 
         PermissionVO row = getViewObject(event);
-        logger.debug("Selected row is: " + row);
+        logger.debug(BaseBean.printSessionId() + "Selected row is: " + row);
         try {
             loadSelectedRow(row);
         } catch (Exception e) {
-            logger.error("Load selected row failed", e);
+            logger.error(BaseBean.printSessionId() + "Load selected row failed", e);
         }
     }
 
@@ -96,13 +101,13 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
     @Override
     protected PermissionVO prepareNewVo() throws Exception {
 
-        logger.debug("Entering prepareNewVo()");
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
 
         try {
             PermissionVO vo = PermissionDV.showLoadForNewVo(this);
             return vo;
         } catch (Exception e) {
-            logger.error("Navigation to MaintenanceDV failed", e);
+            logger.error(BaseBean.printSessionId() + "Navigation to MaintenanceDV failed", e);
             throw e;
         }
     }
@@ -116,7 +121,7 @@ public class PermissionLV extends AbstractListViewMB<PermissionVO> {
     @Override
     protected String loadAll(List<PermissionVO> voList) throws Exception {
 
-        PermissionDao dao = new PermissionDao();
+        logger.debug(BaseBean.printSessionId() + "Entering loadAll()");
 
         List<Permission> roleList = dao.findAllPermission();
         voList = new ArrayList<>();

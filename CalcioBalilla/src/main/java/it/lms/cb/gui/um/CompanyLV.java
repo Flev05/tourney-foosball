@@ -34,6 +34,7 @@ import org.primefaces.event.SelectEvent;
 
 import it.lms.cb.dao.CompanyDao;
 import it.lms.cb.gui.mb.AbstractListViewMB;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.CompanyVO;
 import it.lms.cb.po.Company;
 
@@ -69,7 +70,7 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
         try {
             loadSelectedRow(row);
         } catch (Exception e) {
-            logger.error("Navigation to CompanyLV failed", e);
+            logger.error(BaseBean.printSessionId() + "Navigation to CompanyLV failed", e);
         }
     }
 
@@ -79,13 +80,13 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
     @Override
     protected CompanyVO prepareNewVo() throws Exception {
 
-        logger.debug("Entering prepareNewVo()");
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
 
         try {
             CompanyVO vo = CompanyDV.openForNewVo(this);
             return vo;
         } catch (Exception e) {
-            logger.error("Navigation to CompanyLV failed", e);
+            logger.error(BaseBean.printSessionId() + "Navigation to CompanyLV failed", e);
             throw e;
         }
     }
@@ -93,13 +94,13 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
     @Override
     protected CompanyVO loadSelectedRow(CompanyVO vo) throws Exception {
 
-        logger.debug("Entering loadSelectedRow()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
 
         try {
             vo.setSelected(false);
             CompanyDV.openSelectedRow(this, vo);
         } catch (Exception e) {
-            logger.error("Navigation to CompanyLV failed", e);
+            logger.error(BaseBean.printSessionId() + "Navigation to CompanyLV failed", e);
         }
         return vo;
     }
@@ -125,7 +126,7 @@ public class CompanyLV extends AbstractListViewMB<CompanyVO> {
     @Override
     protected String loadAll(List<CompanyVO> voList) throws Exception {
 
-        logger.debug("Entering loadAll()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadAll()");
 
         voList = loadAllCompany();
 

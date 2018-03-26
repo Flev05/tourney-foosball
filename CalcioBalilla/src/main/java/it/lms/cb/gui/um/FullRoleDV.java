@@ -28,6 +28,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import it.lms.cb.dao.DataAccessUtils;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.po.Role;
 
@@ -52,7 +53,7 @@ public class FullRoleDV extends AbstractRoleDV<RoleVO> {
     protected FullRoleDV(String bn) throws Exception {
 
         super(bn);
-        logger.debug("Entering FullRoleDV()");
+        logger.debug(BaseBean.printSessionId() + "Entering FullRoleDV()");
     }
 
     public static RoleVO showLoadForNewVo() throws Exception {
@@ -96,7 +97,7 @@ public class FullRoleDV extends AbstractRoleDV<RoleVO> {
     @Override
     protected void delete(RoleVO vo) throws Exception {
 
-        logger.debug("Entering delete()");
+        logger.debug(BaseBean.printSessionId() + "Entering delete()");
 
         Role po = (Role) vo.getPo();
 
@@ -106,7 +107,7 @@ public class FullRoleDV extends AbstractRoleDV<RoleVO> {
     @Override
     protected void save(RoleVO vo) throws Exception {
 
-        logger.debug("Entering save()");
+        logger.debug(BaseBean.printSessionId() + "Entering save()");
 
         Role rpo = (Role) vo.getPo();
 

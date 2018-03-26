@@ -34,6 +34,7 @@ import it.lms.cb.dao.DaoException;
 import it.lms.cb.dao.RoleDao;
 import it.lms.cb.dao.RoleTypeDao;
 import it.lms.cb.gui.mb.AbstractDetailViewMB;
+import it.lms.cb.gui.mb.BaseBean;
 import it.lms.cb.gui.mb.CommonUtil;
 import it.lms.cb.gui.um.resources.CommonMessages;
 import it.lms.cb.gui.vo.RoleVO;
@@ -109,7 +110,7 @@ public abstract class AbstractRoleDV<RVO extends RoleVO> extends AbstractDetailV
     @Override
     protected RVO prepareNewVo() throws Exception {
 
-        logger.debug("Entering prepareNewVo()");
+        logger.debug(BaseBean.printSessionId() + "Entering prepareNewVo()");
 
         RVO vo = newRoleVO();
 
@@ -132,7 +133,7 @@ public abstract class AbstractRoleDV<RVO extends RoleVO> extends AbstractDetailV
     @Override
     protected RVO loadSelectedRow(RVO vo) throws Exception {
 
-        logger.debug("Entering loadSelectedRow()");
+        logger.debug(BaseBean.printSessionId() + "Entering loadSelectedRow()");
 
         newRole = false;
 
@@ -192,7 +193,7 @@ public abstract class AbstractRoleDV<RVO extends RoleVO> extends AbstractDetailV
     @Override
     protected void validate(RVO vo) throws Exception {
 
-        logger.debug("Entering validate()");
+        logger.debug(BaseBean.printSessionId() + "Entering validate()");
 
         roleTypePoList.stream().filter(po -> po.getId().equals(vo.getRoleId())).forEach(po -> {
             selectedRoleType = po;

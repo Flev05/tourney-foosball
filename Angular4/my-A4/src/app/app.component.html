@@ -1,3 +1,6 @@
 <div style = "width:100%;">
-    Main component:
+    <ul *ngFor = "let dd of httpdd">
+        <li>Name : {{dd.name}}</li>
+        <li>Address: {{dd.address.city}}, ZipCode: {{dd.address.ZipCode}}</li>
+    </ul>
 </div>

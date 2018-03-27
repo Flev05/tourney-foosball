@@ -11,10 +11,13 @@ export class AppComponent {
   title = 'Luciano Angular 4 Project!';
  
   constructor(private http: Http) {}
+  httpdata;
   ngOnInit() {
       this.http.get("http://jsonplaceholder.typicode.com/users").
       map((response) => response.json()).
-      subscribe((data) => console.log(data))
+      subscribe((data) => {this.displaydata(data);})
   }
+
+  displaydata(data) {this.httpdata = data;}
  
 }

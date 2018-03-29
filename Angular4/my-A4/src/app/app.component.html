@@ -1,6 +1,8 @@
-<div style = "width:100%;">
-    <ul *ngFor = "let dd of httpdd">
-        <li>Name : {{dd.name}}</li>
-        <li>Address: {{dd.address.city}}, ZipCode: {{dd.address.ZipCode}}</li>
-    </ul>
-</div>
+<form #userlogin = "ngForm" (ngSubmit) = "onClickSubmit(userlogin.value)" >
+    <input type = "text" name = "emailid" placeholder = "emailid" ngModel>
+    <br/>
+    <input type = "password" name = "passwd" placeholder = "passwd" ngModel>
+    <br/>
+    <input type = "submit" value = "submit">
+ </form>
+ 

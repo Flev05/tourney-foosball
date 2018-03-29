@@ -46,6 +46,7 @@ build.metadata
 **/Servers/
 **/.checkstyle
 **/bin/
+**/node_modules/
 **/gradle.properties
 **/local.properties
 

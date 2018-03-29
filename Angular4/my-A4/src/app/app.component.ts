@@ -20,4 +20,7 @@ export class AppComponent {
 
   displaydata(data) {this.httpdata = data;}
  
+  onClickSubmit(data) {
+    alert("Entered Email id : " + data.emailid);
+ }
 }

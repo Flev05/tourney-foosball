@@ -1,0 +1,46 @@
+<hr>
+<form #userlogin="ngForm" (ngSubmit)="onClickSubmit(userlogin.value)">
+  <table class="areaLogin">
+    <thead>
+      <tr>
+        <td colspan="2">AREA LOGIN</td>
+      </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td>  
+              <input type="submit" class="forsubmit" value="Log In">
+              <nav>
+                <a routerLink="/heroes">Heroes</a>
+              </nav>
+            </td>
+          </tr>
+          <tr *ngIf = "isLoginOk">
+              <td colspan="2" style="color: green;">  
+                  <span *ngIf = "isLoginOk;then loginOk else loginKo"></span>
+                  <ng-template #loginOk>Login successful</ng-template>
+                  <ng-template #loginKo>Login failed</ng-template>
+              </td>
+            </tr>
+      </tfoot>
+    <tbody>
+      <tr>
+        <td>
+          <label for="usernameId">Username</label>
+        </td>
+        <td>
+          <input id="usernameId" type="text" name="emailid" placeholder="emailid" ngModel>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="passwordId">Password</label>
+        </td>
+        <td>
+          <input id="passwordId" type="password" name="passwd" placeholder="passwd" ngModel>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+ 

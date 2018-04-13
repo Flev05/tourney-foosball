@@ -21,6 +21,8 @@ import { AuthService }            from './login/auth.service';
 
 import { DialogService }          from './dialog.service';
 import { HttpClientModule }       from '@angular/common/http';
+import { UserListViewComponent } from './user-list-view/user-list-view.component';
+import { UserDetailViewComponent } from './user-detail-view/user-detail-view.component';
 
 @NgModule({
   imports: [
@@ -38,7 +40,9 @@ import { HttpClientModule }       from '@angular/common/http';
     AppComponent,
     ComposeMessageComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    UserListViewComponent,
+    UserDetailViewComponent
   ],
   providers: [
     AuthGuard,

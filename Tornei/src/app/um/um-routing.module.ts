@@ -8,7 +8,7 @@ import { ManageHeroesComponent }    from './um-heroes.component';
 
 import { AuthGuard }                from '../login/auth-guard.service';
 
-const adminRoutes: Routes = [
+const umRoutes: Routes = [
   {
     path: '',
     component: UmComponent,
@@ -29,7 +29,7 @@ const adminRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forChild(adminRoutes)
+    RouterModule.forChild(umRoutes)
   ],
   exports: [
     RouterModule

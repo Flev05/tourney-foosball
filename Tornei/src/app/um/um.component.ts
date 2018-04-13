@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService }        from '../login/auth.service';
-import { User }               from '../login/user';
 
 @Component({
   template:  `
@@ -13,16 +11,5 @@ import { User }               from '../login/user';
     <router-outlet></router-outlet>
   `
 })
-export class UmComponent implements OnInit {
-  users: User[];
-  
-  constructor(public authService: AuthService ) { 
-  }
-
-  ngOnInit() {
-    this.authService.getUsers().subscribe((users) => {
-      this.users = users;
-    });
-  }
-
+export class UmComponent   {
 }

@@ -1,23 +1,23 @@
 import { NgModule }       from '@angular/core';
 import { CommonModule }   from '@angular/common';
+import { FormsModule }    from '@angular/forms';
 
 import { UmComponent }            from './um.component';
-import { UmDashboardComponent }   from './um-dashboard.component';
-import { ManageCrisesComponent }  from './um-crises.component';
-import { ManageHeroesComponent }  from './um-heroes.component';
+import { UserListViewComponent }   from './um-lv.component';
+import { UserDetailViewComponent }  from './um-dv.component';
 
 import { UmRoutingModule }        from './um-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     UmRoutingModule
   ],
   declarations: [
     UmComponent,
-    UmDashboardComponent,
-    ManageCrisesComponent,
-    ManageHeroesComponent
+    UserListViewComponent,
+    UserDetailViewComponent
   ]
 })
 export class UmModule {}

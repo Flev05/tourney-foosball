@@ -7,13 +7,13 @@ import 'rxjs/add/operator/map';
 
 @Component({
   template:  `
-
+    <h1>User list view</h1>
     <ul>
       <li *ngFor="let u of users">{{ u.id }} {{ u.username }} {{ u.firstname }} {{ u.lastname }}</li>
     </ul>
   `
 })
-export class UmDashboardComponent implements OnInit {
+export class UserListViewComponent implements OnInit {
   
   users: User[];
   

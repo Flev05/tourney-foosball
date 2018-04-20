@@ -10,19 +10,16 @@ import { AuthGuard }                from './login/auth-guard.service';
 import { SelectivePreloadingStrategy } from './selective-preloading-strategy';
 import { LoginComponent }       from './login/login.component';
 import { UmModule }             from './um/um.module';
-import { UmComponent }             from './um/um.component';
 
 const appRoutes: Routes = [
+  { path: '',   redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'session', component: LoginComponent },
-
-  // { path: 'um', component: UmComponent  },
   {
     path: 'um',
     loadChildren: 'app/um/um.module#UmModule',
     canLoad: [AuthGuard]
   },
-  { path: '',   redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

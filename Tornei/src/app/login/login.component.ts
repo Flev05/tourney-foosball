@@ -6,25 +6,29 @@ import { AuthService }        from './auth.service';
 import { User }               from './user';
 
 @Component({
-  template: `
-    <h2>Login State: {{message}}</h2>
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 
-    <p *ngIf="authService.isLoggedIn">
-      <button (click)="logout()" >Logout</button>
-      <button (click)="logout()" >Change Password</button>
-    </p>
+  // template: `
+  //   <h2>Login State: {{message}}</h2>
+
+  //   <p *ngIf="authService.isLoggedIn">
+  //     <button (click)="logout()" >Logout</button>
+  //     <button (click)="logout()" >Change Password</button>
+  //   </p>
     
-    <form *ngIf="!authService.isLoggedIn" #userlogin = "ngForm" (ngSubmit) = "login(userlogin.value)" >
-      <input type = "text" name = "username" placeholder = "username" ngModel>
-      <br/>
-      <input type = "password" name = "password" placeholder = "password" ngModel>
-      <br/>
-      <input type = "submit" value = "Login">
-    </form>
-    `
+  //   <form *ngIf="!authService.isLoggedIn" #userlogin = "ngForm" (ngSubmit) = "login(userlogin.value)" >
+  //     <input type = "text" name = "username" placeholder = "username" ngModel>
+  //     <br/>
+  //     <input type = "password" name = "password" placeholder = "password" ngModel>
+  //     <br/>
+  //     <input type = "submit" value = "Login">
+  //   </form>
+  //   `
 })
 export class LoginComponent {
   message: string;
+  loginData = new User( 5,  "smartino",   'Stella', "Martino" );
  
   constructor(public authService: AuthService, public router: Router) {
     this.setMessage();
@@ -34,10 +38,10 @@ export class LoginComponent {
     this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out');
   }
 
-  login(data) {
+  login() {
     this.message = 'Trying to log in ... ';
 
-    this.authService.login(data.username).subscribe((users) => {
+    this.authService.login(this.loginData.username).subscribe((users) => {
 
       const found =  users.length!==0;
 

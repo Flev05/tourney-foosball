@@ -1,0 +1,42 @@
+<div class="container" [hidden]="submitted">
+    <h1>User detail view</h1>
+    <form #userForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+            <label>User ID: {{model.id}}</label>
+        </div>
+
+        <div class="form-group">
+            <label for="usernameId">Username</label>
+            <input type="text" class="form-control" id="usernameId" required
+                [(ngModel)]="model.username" name="username"
+                #nametrv="ngModel">
+        </div>
+        <div [hidden]="nametrv.valid || nametrv.pristine"
+            class="alert alert-danger">
+            User Name is required
+        </div>
+      
+        <div class="form-group">
+            <label for="firstnameId">Nome</label>
+            <input type="text" class="form-control" id="firstnameId" required
+                [(ngModel)]="model.firstname" name="firstname">
+        </div>
+    
+        <div class="form-group">
+            <label for="lastnameId">Cognome</label>
+            <input type="text" class="form-control" id="lastnameId" required
+                [(ngModel)]="model.lastname" name="lastname">
+        </div>
+
+        <div class="form-group">
+            <label for="roleId">Ruoli</label>
+            <select class="form-control" id="roleId" required>
+                <option *ngFor="let r of roles" [value]="r">{{r}}</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success" [disabled]="!userForm.form.valid">Salva</button>
+        <button type="button" class="btn btn-default" (click)="newUser(); userForm.reset()">New User</button>
+    </form>
+</div>

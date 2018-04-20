@@ -42,9 +42,7 @@ import { AuthService }            from './login/auth.service';
           InMemoryDataService, { dataEncapsulation: false }
         ),
         AppRoutingModule,
-        MenubarDemoModule,
-        LoginComponent,
-        PageNotFoundComponent
+        MenubarDemoModule
     ],
     providers: [
         AuthGuard,

@@ -9,7 +9,6 @@ import { AuthGuard }                from './login/auth-guard.service';
 
 import { SelectivePreloadingStrategy } from './selective-preloading-strategy';
 import { LoginComponent }       from './login/login.component';
-import { UmModule }             from './um/um.module';
 
 const appRoutes: Routes = [
   { path: '',   redirectTo: '/login', pathMatch: 'full' },
@@ -25,7 +24,6 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    UmModule,
     RouterModule.forRoot(
       appRoutes,
       {

@@ -2,23 +2,11 @@ import { Component }    from '@angular/core';
 import { Router }       from '@angular/router';
 import { AuthService }  from './login/auth.service';
 
-import {MenubarModule}  from 'primeng/menubar';
-import {MenuItem}       from 'primeng/components/common/api';
-
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  // template: `
-  //   <h1 class="title">Utenti</h1>
-  //   <nav *ngIf="authService.isLoggedIn">
-  //     <a routerLink="/um"  routerLinkActive="active">Utenti e Ruoli</a>
-  //     <a routerLink="/session" routerLinkActive="active">Sessione</a>
-  //   </nav>
-  //   <router-outlet></router-outlet>
-  // `
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  items: MenuItem[];
 
     constructor(public authService: AuthService) {
     }

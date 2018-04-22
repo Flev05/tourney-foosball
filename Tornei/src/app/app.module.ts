@@ -13,13 +13,14 @@ import { AppComponent }            from './app.component';
 import { AppRoutingModule }        from './app-routing.module';
 
 import { ComposeMessageComponent } from './compose-message.component';
-import { LoginComponent }          from './login/login.component';
 import { PageNotFoundComponent }   from './not-found.component';
 
 import { AuthGuard }              from './login/auth-guard.service';
 import { AuthService }            from './login/auth.service';
 
 import { DialogService }          from './dialog.service';
+import { LoginModule }            from './login/login.module';
+import { UmModule }               from './um/um.module';
 
 @NgModule({
   imports: [
@@ -30,14 +31,15 @@ import { DialogService }          from './dialog.service';
     BrowserAnimationsModule,
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
-    )
+    ),
+    LoginModule,
+    UmModule,
   ],
   declarations: [
     AppComponent,
     ComposeMessageComponent,
-    LoginComponent,
     PageNotFoundComponent
-  ],
+    ],
   providers: [
     AuthGuard,
     AuthService,

@@ -6,25 +6,9 @@ import { AuthService }        from './auth.service';
 import { User }               from './user';
 
 @Component({
+  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
-
-  // template: `
-  //   <h2>Login State: {{message}}</h2>
-
-  //   <p *ngIf="authService.isLoggedIn">
-  //     <button (click)="logout()" >Logout</button>
-  //     <button (click)="logout()" >Change Password</button>
-  //   </p>
-    
-  //   <form *ngIf="!authService.isLoggedIn" #userlogin = "ngForm" (ngSubmit) = "login(userlogin.value)" >
-  //     <input type = "text" name = "username" placeholder = "username" ngModel>
-  //     <br/>
-  //     <input type = "password" name = "password" placeholder = "password" ngModel>
-  //     <br/>
-  //     <input type = "submit" value = "Login">
-  //   </form>
-  //   `
 })
 export class LoginComponent {
   message: string;

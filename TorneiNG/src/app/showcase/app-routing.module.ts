@@ -6,8 +6,10 @@ import { HomeComponent } from './components/home/home.component';
     imports: [
         RouterModule.forRoot([
             {path: '', component: HomeComponent},
-            {path: 'setup', loadChildren: './components/setup/setup.module#SetupModule'},
-            {path: 'autocomplete', loadChildren: './components/autocomplete/autocompletedemo.module#AutoCompleteDemoModule'},
+            {path: 'demo', loadChildren: './components/demo/demo.module#DemoModule'},
+            {path: 'owner', loadChildren: './components/owner/owner.module#OwnerModule'},
+            {path: 'login', loadChildren: './components/login/login.module#LoginModule'},
+            {path: 'support', loadChildren: './components/support/support.module#SupportModule'},
             {path: 'blockui', loadChildren: './components/blockui/blockuidemo.module#BlockUIDemoModule'},
             {path: 'breadcrumb', loadChildren: './components/breadcrumb/breadcrumbdemo.module#BreadcrumbDemoModule'},
             {path: 'button', loadChildren: './components/button/buttondemo.module#ButtonDemoModule'},

@@ -1,0 +1,81 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Versione DEMO online</span>
+        <span>Permette la gestione temporanea di un torneo</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <h3 style="margin-top:0px">Introduzione</h3>
+    <span>La versione DEMO permette la gestione locale al proprio browser di qualsiasi tipo di torneo.
+            La limitazione della versione è relativa alla persistenza del torneo creato.
+            I dati inseriti sono temporanei e volatili, durano fino allo spegnimento del browser o del PC.
+            Dopo di che tutti i dati inseriti sono persi e dovranno essere reinseriti se si vuole gestire lo stesso torneo.
+            Per la persistenza dei dati nel tempo, bisogna usare la versione Proprietaria del programma come descritto al link 
+        <a class="home-button" [routerLink]="['/owner']">
+            Versione Proprietaria
+        </a>
+    </span>
+
+    <h3>Nuovo torneo</h3>
+    <p>Prima di tutto deve essere creato un nuovo torneo</p>
+    <p>Accedendo alla sezione Tornei a sinistra, si crea un nuovo torneno compilando i campi della vista 
+            corrispondente.
+        </p>
+    <p>Devono essere inserite le seguenti informazioni:</p>
+    <ul>
+        <li>Nome del torneo</li>
+        <li>Tipologia</li>
+        <li>Struttura</li>
+        <li>Squadre</li>
+    </ul>
+                            
+    <h4>Nome torneo</h4>
+    <p>Il nome del torneo deve essere univoco all'interno della stessa sessione della DEMO.
+        Per esempio, se volete gestire due tornei in contemporanea, dovete scegliere due nomi diversi 
+        per ciascuno torneo: torneo-1 e torneo-2
+    </p>
+ 
+    <h4>Tipologia</h4>
+ 
+    <p>Un torneo è caratterizzato da una delle seguenti tipologie:</p>
+    <ul>
+        <li>A tempo</li>
+        <li>A punteggio</li>
+    </ul>
+    <p>Se a tempo, devono essere definiti:</p>
+    <ul>
+        <li>La durata  in minuti della partita</li>
+        <li>I tempi di cui è composta la partita: I tempo, II tempo, ecc</li>
+        <li>La durata in minuti di ciascun tempo</li>
+        <li>La durata in minuti dell'intervallo tra un tempo e l'altro</li>
+        <li>Il punteggio per la vittoria, pareggio e sconfitta</li>
+    </ul>
+            
+    <p>Se a punteggio, devono essere definiti:</p>
+    <ul>
+        <li>Il punteggio della vittoria, del pareggio e della sconfitta</li>
+        <li>Se esiste il golden goal, il punteggio della vittoria e sconfitta </li>
+        <li>Se esiste il Tie Break, il distacco per la vittoria </li>
+    </ul>
+                        
+    <h4>Struttura</h4>
+    <p>Per struttura si intende definire come il torneo si svolgerà. 
+        Può essere una delle seguenti o un combinazione di essi:</p>
+    <ul>
+        <li>Solo Adndata / Andata e ritorno</li>
+        <li>A gironi</li>
+        <li>Con Play Off</li>
+        <li>Fase eliminatoria</li>
+        <li>Fase finali</li>
+    </ul>
+    
+    <h4>Squadre</h4>
+    <p>Infine deve essere inserita la tipologia delle squadre che si affrontano nel torneo</p>
+    <p>Deve essere fornito:</p>
+    <ul>
+        <li>Il numero di squadre complessive che compone il torneo</li>
+        <li>Il numero di componenti all'interno della singola squadra</li>
+    </ul>
+    <p>Dopo di che devono essere inseriti i nomi delle squadre e per ciascuna di esse i nomi dei componenti</p>
+</div>

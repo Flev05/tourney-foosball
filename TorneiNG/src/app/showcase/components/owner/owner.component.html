@@ -23,16 +23,77 @@
         Qui potete configurare tutti i tornei che volete partendo dalla creazione, alla modifica e 
         alla gestione durante lo svolgimento del torneo.
     </p>
-    <p>
-        L'accesso alla pagina
-        <a class="home-button" [routerLink]="['/login']">
-            Login
-        </a>
-    </p>
+    <p>L'accesso alla pagina nella form sotto</p>
+</div>
 
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>
+
+    <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+        <p-panel>
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Username *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['username'].valid&&userform.controls['username'].dirty">
+                            <i class="fa fa-close"></i>
+                            La username è obbligatoria
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Password *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(6)"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="userform.controls['password'].errors['required']">La password è obbligatoria</span>
+                            <span *ngIf="userform.controls['password'].errors['minlength']">Almento 6 caratteri</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"></div>
+                    <div class="ui-grid-col-6">
+                        <button pButton type="submit" label="Login" [disabled]="!userform.valid"></button>
+                    </div>
+                    <div class="ui-grid-col-4"></div>
+                </div>
+                <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                    Form Submitted
+                    <br>
+                    {{diagnostic}}
+                </div>
+            </div>
+        </p-panel>
+
+    </form>    
+</div>
+<div class="content-section documentation">
     <h4>Configurazione</h4>
     <p>La configurazione è la prima parte di preparazione per un nuovo torneo.
-        L'utente deve inserire tutti i dati relativi al torneo
+            L'utente deve inserire tutti i dati relativi al torneo
     </p>
-
-</div>
+    <p>In questa fase il proprietario o responsabile del torneo deve inserire tutte le informazioni
+        inerenti il torneo come descritto nella pagina della DEMO 
+        <a class="home-button" [routerLink]="['/demo']">
+            Versione DEMO
+        </a>            
+    </p>
+    <p>Terminata la definizione del torneo, occorre diffondere il codice di accesso ai partecipanti al gioco.
+        Se in fase di inserimento dei dati, nella sezione di compilazione delle squadre, viene fornito un 
+        indirizzo email, il sistema invia in automatico il codice alla mail box indicata.
+        Se la email non viene fornita, il gestore del torneo deve inviare il codice di accesso per altri canali:
+        per telefono, cartaceo, o altro.
+    </p>
+</div>    

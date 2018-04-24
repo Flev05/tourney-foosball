@@ -1,42 +1,57 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Login</span>
-        <span>Inserisci le tue credenziali di accesso</span>
+        <span class="feature-title">Tempo reale</span>
+        <span>Pagina per la consultazione in tempo reale dello svolgimento del torneo</span>
     </div>
+</div>
+
+<div class="content-section documentation">
+    <h3 style="margin-top:0px">Introduzione</h3>
+
+    <p>Da questa pagina è possibile consultare lo svolgimento del torneo in tempo reale.
+        La funzionalità è di interesse soprattutto per i partecipanti che desiderano
+        avere l'informazione sulle posizioni di classifica il più presto possibile
+    </p>
+    <p>Per poter visualizzare i risultati o la classifica del proprio torneo, il partecipante deve essere
+        in possesso del codice torneo di accesso al torneo di interesse
+    </p>
+
+    <h4>Codice di accesso</h4>
+    <p>Il codice torneo viene generato automaticamente dal sistema e consegnato al gestore del torneo
+        al momento della creazione.
+        Deve essere cura del gestore diffondere o consegnare personalmente il codice torneo a ciascun partecipante
+        con le indicazioni su come accedere e consultare le strutture del torneo
+    </p>
+
+    <h4>Accesso</h4>
+    <p>Per la consultazione in tempo reale, il partecipante deve:</p>
+    <ul>
+        <li>Accedere alla pagina di login del programma dei torneiNG al link 
+            <a href="http://www.calciobalillapregnana.it">www.calciobalillapregnana.it</a> 
+        </li>
+        <li>Inserire il codice torneo nella casella</li>
+        <li>Click sul bottone Accedi</li>
+        <li>Navigare sulla classifica o sulle partite di interesse</li>
+    </ul>        
 </div>
 
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>
 
     <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
-        <p-panel header="Form Login">
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <p-panel>
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-2">
-                        Username *:
+                        Codice Torneo:
                     </div>
                     <div class="ui-grid-col-6">
-                        <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
+                        <input pInputText type="text" formControlName="codiceTorneo" placeholder="Obbligatorio"/>
                     </div>
                     <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['username'].valid&&userform.controls['username'].dirty">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['codiceTorneo'].valid&&userform.controls['codiceTorneo'].dirty">
                             <i class="fa fa-close"></i>
-                            il cognone è obbligatorio
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
-                        Password *:
-                    </div>
-                    <div class="ui-grid-col-6">
-                        <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(6)"/>
-                    </div>
-                    <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty">
-                            <i class="fa fa-close"></i>
-                            <span *ngIf="userform.controls['password'].errors['required']">La password è obbligatoria</span>
-                            <span *ngIf="userform.controls['password'].errors['minlength']">Almento 6 caratteri</span>
+                            Il codice torneo è obbligatorio
                         </div>
                     </div>
                 </div>
@@ -44,14 +59,14 @@
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-2"></div>
                     <div class="ui-grid-col-6">
-                        <button pButton type="submit" label="Login" [disabled]="!userform.valid"></button>
+                        <button pButton type="submit" label="Accedi" [disabled]="!userform.valid"></button>
                     </div>
-                    <div class="ui-grid-col-4"></div>
                 </div>
-                <div style="text-align:center;margin-top:20px" *ngIf="submitted">
-                    Form Submitted
-                    <br>
-                    {{diagnostic}}
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!logged">
+                        <i class="fa fa-close"></i>
+                        Accesso fallito
+                    </div>
                 </div>
             </div>
         </p-panel>
@@ -59,5 +74,13 @@
     </form>    
 </div>
 
+<div class="content-section documentation">
+    <h4>Consultazione svolgimento</h4>
+    <p>Una volta effettuato l'accesso con successo, potete consultare in tempo reale:</p>
+    <ul>
+        <li>I risultati delle partite</li>
+        <li>La classifica</li>
+    </ul>        
+</div>
 
         

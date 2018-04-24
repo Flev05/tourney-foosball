@@ -12,20 +12,23 @@ export class Login implements OnInit {
     userform: FormGroup;
     
     submitted: boolean;
+    logged: boolean;
  
     constructor(private fb: FormBuilder) {}
     
     ngOnInit() {
+        this.logged = true;
         this.userform = this.fb.group({
-            'username': new FormControl('', Validators.required),
-            'password': new FormControl('', [Validators.required, Validators.minLength(6)]),
+            'codiceTorneo': new FormControl('', Validators.required),
         });        
     }
     
     onSubmit(value: string) {
         this.submitted = true;
+        this.logged = !this.logged;
         this.msgs = [];
-        this.msgs.push({severity:'info', summary:'OK', detail:'Login effettuato'});
+        this.msgs.push({severity:'info', summary:'OK', detail:'Accesso effettuato'});
+
     }
     
     get diagnostic() { return JSON.stringify(this.userform.value); }

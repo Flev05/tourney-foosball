@@ -34,44 +34,24 @@
             <a id="menu_input" #inputmenutitle [class.active-menuitem]="inputmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === inputmenutitle.id ? null : inputmenutitle.id)">
                 <img src="assets/showcase/images/icons/input-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/input.svg" class="layout-menu-icon-inactive"/>
-                <span>Tornei</span>
+                <span>Settings</span>
             </a>
             <div [ngClass]="{submenushow: (inputmenutitle.id == activeMenuId), 'submenuhide': (inputmenutitle.id != activeMenuId)}">                
-                <a [routerLink]="['/autocomplete']" (click)="menuActive = false">&#9679; AutoComplete</a>
-                <a [routerLink]="['/selectbutton']" (click)="menuActive = false">&#9679; SelectButton</a>
-                <a [routerLink]="['/togglebutton']" (click)="menuActive = false">&#9679; ToggleButton</a>
-                <a [routerLink]="['/tristatecheckbox']" (click)="menuActive = false">&#9679; TriCheckbox</a>
+                <a [routerLink]="['/autocomplete']" (click)="menuActive = false">&#9679; Clienti</a>
+                <a [routerLink]="['/selectbutton']" (click)="menuActive = false">&#9679; Utenti</a>
+                <a [routerLink]="['/togglebutton']" (click)="menuActive = false">&#9679; Reset Password</a>
             </div>
 
             <a id="button_menutitle" #buttonmenutitle [class.active-menuitem]="buttonmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === buttonmenutitle.id ? null : buttonmenutitle.id)">
                 <img src="assets/showcase/images/icons/button-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/button.svg" class="layout-menu-icon-inactive"/>
-                <span>Risultati</span>
+                <span>Tornei</span>
             </a>
             <div [ngClass]="{'submenushow': (buttonmenutitle.id == activeMenuId), 'submenuhide': (buttonmenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/button']" (click)="menuActive = false">&#9679; Button</a>
-                <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; SplitButton</a>
-            </div>
-
-            <a id="data_menutitle" #datamenutitle [class.active-menuitem]="datamenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === datamenutitle.id ? null : datamenutitle.id)">
-                <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
-                <span>Classifiche</span>
-            </a>
-            <div [ngClass]="{'submenushow': (datamenutitle.id == activeMenuId), 'submenuhide': (datamenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/carousel']" (click)="menuActive = false">&#9679; Carousel</a>
-                <a [routerLink]="['/treetable']" (click)="menuActive = false">&#9679; TreeTable</a>
-            </div>
-
-            <a id="menu_chart" #chartmenutitle [class.active-menuitem]="chartmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === chartmenutitle.id ? null : chartmenutitle.id)">
-                <img src="assets/showcase/images/icons/charts-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/charts.svg" class="layout-menu-icon-inactive"/>
-                <span>Squadre</span>
-            </a>
-            <div [ngClass]="{'submenushow': (chartmenutitle.id == activeMenuId), 'submenuhide': (chartmenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/chart']" (click)="menuActive = false">&#9679; ChartModel</a>
-                <a [routerLink]="['/chart/bar']" (click)="menuActive = false">&#9679; Bar</a>
-                <a [routerLink]="['/chart/doughnut']" (click)="menuActive = false">&#9679; Doughnut</a>
+                <a [routerLink]="['/button']" (click)="menuActive = false">&#9679; Configurazione</a>
+                <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; Calendario</a>
+                <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; Risultati</a>
+                <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; Classifica</a>
             </div>
         </div>
     </div>

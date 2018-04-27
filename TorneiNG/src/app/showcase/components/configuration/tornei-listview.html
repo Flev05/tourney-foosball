@@ -1,0 +1,56 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Configurazione</span>
+        <span>Pagina per la creazione e configurazione dei tornei</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <h3 style="margin-top:0px">Introduzione</h3>
+
+    <p>Vista elenco dei tornei esistenti di proprietà dell'utente connesso.
+    </p>
+    <p>La vista contiene l'elenco dei tornei già creati. Con un click sull'ultima 
+        colonna della riga, si accede alla vista di dettaglio corrispondente in cui si possono 
+        modificare i dati esistenti o rimuovere l'intero torneo
+    </p>
+
+    <h4>Creazione nuovo torneo</h4>
+    <p>Con il bottone CREA si può crere un nuovo torneo. Con un click sul bottone CREA si apre
+        la vista di dettaglio di un torneo vuota in cui inserire tutti i dati obbligatori, contrassegnati
+        con un asterisco (*) e alla fine salvare.
+    </p>
+</div>
+
+<div class="content-section implementation">
+    <p-table [columns]="cols" [value]="cars" selectionMode="single" [(selection)]="selectedCar" 
+            (onRowSelect)="onRowSelect($event)" [paginator]="true" [rows]="15">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+                <td>
+                    <button pButton icon="fa-search" routerLink="/detail/{{rowData.vin}}"></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button type="button" pButton icon="fa-plus" (click)="showDialogToAdd()" label="Nuovo Torneo"></button>
+            </div>
+        </ng-template>        
+    </p-table>
+
+</div>
+ 

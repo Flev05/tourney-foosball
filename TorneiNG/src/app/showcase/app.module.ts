@@ -13,6 +13,10 @@ import { CarService } from './service/carservice';
 import { CountryService } from './service/countryservice';
 import { EventService } from './service/eventservice';
 import { NodeService } from './service/nodeservice';
+import { InputTextModule }  from 'primeng/inputtext';
+import { ButtonModule }  from 'primeng/button';
+import { TableModule }  from 'primeng/table';
+import { DialogModule }  from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -22,9 +26,13 @@ import { NodeService } from './service/nodeservice';
   imports: [
     BrowserModule,
     FormsModule,
+    TableModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
+    InputTextModule,
+    DialogModule,
+    ButtonModule,
     BrowserAnimationsModule
   ],
   providers: [

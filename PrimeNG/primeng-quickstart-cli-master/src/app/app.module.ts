@@ -8,25 +8,11 @@ import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 
-import { AppRoutingModule } from './app-routing.module';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './login/in-memory-data.service';
-
-import { MenubarDemoModule }  from './menubar/menubardemo.module';
-
 import { AppComponent } from './app.component';
-
-import { LoginComponent }          from './login/login.component';
-import { PageNotFoundComponent }   from './not-found.component';
-
-import { AuthGuard }              from './login/auth-guard.service';
-import { AuthService }            from './login/auth.service';
 
 @NgModule({
     declarations: [
-        AppComponent,
-        LoginComponent,
-        PageNotFoundComponent
+        AppComponent
     ],
     imports: [
         BrowserModule,
@@ -36,18 +22,9 @@ import { AuthService }            from './login/auth.service';
         HttpClientModule,
         InputTextModule,
         DialogModule,
-        ButtonModule,
-        BrowserAnimationsModule,
-        HttpClientInMemoryWebApiModule.forRoot(
-          InMemoryDataService, { dataEncapsulation: false }
-        ),
-        AppRoutingModule,
-        MenubarDemoModule
+        ButtonModule
     ],
-    providers: [
-        AuthGuard,
-        AuthService
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,15 +1,15 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
-import {Login} from './login';
+import {Progress} from './progress';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{path:'',component: Login}
+			{path:'',component: Progress}
 		])
 	],
 	exports: [
 		RouterModule
 	]
 })
-export class LoginRoutingModule {}
+export class ProgressRoutingModule {}

@@ -3,9 +3,9 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import {Message,SelectItem} from '../../../components/common/api';
 
 @Component({
-    templateUrl: './login.html'
+    templateUrl: './progress.html'
 })
-export class Login implements OnInit {
+export class Progress implements OnInit {
     
     msgs: Message[] = [];
     

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
-import { Car } from '../../components/domain/car';
-import { CarService } from '../../service/carservice';
+import { Torneo } from '../../domain/torneo';
+import { TorneoService } from '../../service/torneoservice';
 
 @Component({
     templateUrl: './tornei-detailview.html',
@@ -17,37 +17,34 @@ import { CarService } from '../../service/carservice';
 })
 export class TorneiDetailView implements OnInit {
 
-    selectedCar: Car;
-    cars: Car[];
-    newCar: boolean;
+    selectedTorneo: Torneo;
 
     constructor(
         private route: ActivatedRoute,
-        private carService: CarService,
+        private torneoService: TorneoService,
         private location: Location
     ) {}
 
     ngOnInit() {
-        this.getCar();
+
+        this.getTorneo();
     }
 
-    getCar(): void {
-        this.carService.getCarsSmall().then(cars => this.cars = cars);
-        const vin = this.route.snapshot.paramMap.get('vin');
+    getTorneo(): void {
+        this.selectedTorneo = this.torneoService.selectedTorneo;
+    }
 
-        console.log("Vin=" + vin);
-
-        this.selectedCar = this.cars.find( car => car.vin == vin);
-
-        console.log("SelectedCar=" + this.selectedCar);
-      }
-
-    save() {
-        console.log("Saving car: " + this.selectedCar);
+    save(): void {
+        if(this.torneoService.newTorneo) {
+            this.torneoService.addTorneo(this.selectedTorneo).subscribe(() => this.goBack());  
+        } else  {
+            this.torneoService.updateTorneo(this.selectedTorneo).subscribe(() => this.goBack());
+        }
     }
 
     delete() {
-        console.log("Deleting car: " + this.selectedCar);
+        this.torneoService.deleteTorneo(this.selectedTorneo)
+          .subscribe(() => this.goBack());
     }
 
     goBack(): void {

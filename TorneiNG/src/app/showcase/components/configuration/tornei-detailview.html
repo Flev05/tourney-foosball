@@ -1,14 +1,14 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Vista di dettaglio</span>
-        <span>Creare o modifiselectedCare il torneo selezionato</span>
+        <span>Creare o modificare il torneo selezionato</span>
     </div>
 </div>
 
 <div class="content-section documentation">
     <h3 style="margin-top:0px">Introduzione</h3>
 
-    <p>Vista di dettaglio di un tornei.
+    <p>Vista di dettaglio di un torneo.
         Da questa vista potete creare un nuovo torneo, modifiselectedCare o rimuovere uno esistente
         Per utenti non connessi, ovvero non in possesso di un account, si possono creare
         nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
@@ -27,7 +27,7 @@
         I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
     </p>
 
-    <h4>ModifiselectedCare un torneo</h4>
+    <h4>Modificare un torneo</h4>
     <p>Si possono modifiselectedCare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
         non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
         essere svuotati.
@@ -44,34 +44,34 @@
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="vin">Vin</label>
+                <label for="id">Id</label>
             </div>
             <div class="ui-g-8">
-                <input pInputText id="vin" [(ngModel)]="selectedCar.vin" />
+                <input pInputText id="id" [(ngModel)]="selectedTorneo.id" />
             </div>
         </div>
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="year">Year</label>
+                <label for="name">Nome</label>
             </div>
             <div class="ui-g-8">
-                <input pInputText id="year" [(ngModel)]="selectedCar.year" />
+                <input pInputText id="name" [(ngModel)]="selectedTorneo.name" />
             </div>
         </div>
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="brand">Brand</label>
+                <label for="when">Data</label>
             </div>
             <div class="ui-g-8">
-                <input pInputText id="brand" [(ngModel)]="selectedCar.brand" />
+                <input pInputText id="when" [(ngModel)]="selectedTorneo.when" />
             </div>
         </div>
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="color">Color</label>
+                <label for="address">Indirizzo</label>
             </div>
             <div class="ui-g-8">
-                <input pInputText id="color" [(ngModel)]="selectedCar.color" />
+                <input pInputText id="address" [(ngModel)]="selectedTorneo.address" />
             </div>
         </div>
     </div>

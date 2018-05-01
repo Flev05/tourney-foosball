@@ -29,7 +29,7 @@ export class TableCrudDemo implements OnInit {
     constructor(private carService: CarService) { }
 
     ngOnInit() {
-        this.carService.getCarsSmall().then(cars => this.cars = cars);
+        this.carService.getCarsMedium().then(cars => this.cars = cars);
 
         this.cols = [
             { field: 'vin', header: 'Vin' },

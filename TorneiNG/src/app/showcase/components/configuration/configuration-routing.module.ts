@@ -7,7 +7,7 @@ import {TorneiDetailView} from './tornei-detailview';
 	imports: [
 		RouterModule.forChild([
 			{ path: '', component: TorneiListView },
-			{ path: 'dv/:vin', component: TorneiDetailView },
+			{ path: 'dv', component: TorneiDetailView },
 		])
 	],
 	exports: [

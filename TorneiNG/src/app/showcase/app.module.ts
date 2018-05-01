@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
 import { CarService } from './service/carservice';
+import { TorneoService } from './service/torneoservice';
+
 import { CountryService } from './service/countryservice';
 import { EventService } from './service/eventservice';
 import { NodeService } from './service/nodeservice';
@@ -17,6 +19,9 @@ import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService }  from './domain/in-memory-data.service';
+import { UserInMemoryDataService }  from './domain/user-in-memory-data.service';
 
 @NgModule({
   declarations: [
@@ -33,11 +38,17 @@ import { DialogModule }  from 'primeng/dialog';
     InputTextModule,
     DialogModule,
     ButtonModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    ),
+    // HttpClientInMemoryWebApiModule.forRoot(
+    //   UserInMemoryDataService, { dataEncapsulation: false }
+    // )
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy },
-      CarService,CountryService,EventService,NodeService
+      TorneoService,CarService,CountryService,EventService,NodeService
   ],
   bootstrap: [AppComponent]
 })

@@ -2,85 +2,65 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Car } from '../../components/domain/car';
-import { CarService } from '../../service/carservice';
+import { Torneo } from '../../domain/torneo';
+import { TorneoService } from '../../service/torneoservice';
 
 @Component({
-    templateUrl: './tornei-listview.html',
-    styles: [`        
-        .ui-g label {
-          font-weight: bold;
-          margin-top: .25em;
-          display: block;
-        }
-  `]
+    templateUrl: './tornei-listview.html'
 })
 export class TorneiListView implements OnInit {
 
-    displayDialog: boolean;
+    selectedTorneo: Torneo;
 
-    car: Car = {};
-
-    selectedCar: Car;
-
-    newCar: boolean;
-
-    cars: Car[];
+    tornei: Torneo[];
 
     cols: any[];
 
-    constructor(private carService: CarService, public router: Router) { }
+    constructor(private carService: TorneoService, public router: Router) { 
+        console.log("TorneiListView.constructor()");
+    }
 
     ngOnInit() {
-        this.carService.getCarsSmall().then(cars => this.cars = cars);
+        console.log("TorneiListView.ngOnInit()");
+
+        this.carService.loadTorneoSmall().subscribe(cs => this.tornei = cs);
+
+        this.carService.newTorneo = false;
+
+        // for (let entry of this.tornei) {
+        //     console.log("List View tornei: " + entry.name + ")");
+        // }
 
         this.cols = [
-            { field: 'vin', header: 'TorneoId' },
-            { field: 'year', header: 'Anno' },
-            { field: 'brand', header: 'Marchio' },
-            { field: 'color', header: 'Colore' }
+            { field: 'id', header: 'Id' },
+            { field: 'name', header: 'Nome' },
+            { field: 'when', header: 'Data' },
+            { field: 'address', header: 'Indirizzo' }
         ];
     }
 
-    showDialogToAdd() {
-        this.newCar = true;
-        this.car = {};
-        this.displayDialog = true;
-    }
-
-    save() {
-        let cars = [...this.cars];
-        if (this.newCar)
-            cars.push(this.car);
-        else
-            cars[this.cars.indexOf(this.selectedCar)] = this.car;
-
-        this.cars = cars;
-        this.car = null;
-        this.displayDialog = false;
-    }
-
-    delete() {
-        let index = this.cars.indexOf(this.selectedCar);
-        this.cars = this.cars.filter((val, i) => i != index);
-        this.car = null;
-        this.displayDialog = false;
+    create() {
+        this.selectedTorneo={id: 0, name: "<Nome Torneo>", when: "<data inizio torneo>", address: "<indirizzo luogo torneo>"};
+        this.carService.selectedTorneo = this.selectedTorneo;
+        this.carService.newTorneo = true;
+        this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        const vin = event.data.vin;
+        this.carService.selectedTorneo = this.cloneTorneo(event.data);
+        this.carService.newTorneo = false;
 
-        let redirect = '/configuration/dv/' + vin ;
-        this.router.navigate([redirect]);
-
-        // this.newCar = false;
-        // this.car = this.cloneCar(event.data);
-        // this.displayDialog = true;
+        this.gotoDetailView();
     }
   
-    cloneCar(c: Car): Car {
+    private gotoDetailView() {
+        let redirect = '/configuration/dv';
+        this.router.navigate([redirect]);
+    }
+
+    cloneTorneo(c: Torneo): Torneo {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

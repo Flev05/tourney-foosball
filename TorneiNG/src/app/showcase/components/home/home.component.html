@@ -7,7 +7,7 @@
             Versione DEMO
         </a>
         <a class="home-button" [routerLink]="['/owner']">
-            Versione Proprietario
+            Versione Proprietaria
         </a>
     </div>
 
@@ -44,11 +44,30 @@
                 <span class="feature-name">Eliminazione diretta</span>
                 <p>Tornei ad eliminazione diretta a partire dai sedicesimi di finale o da altro numero configurabile dal gestore del torneo</p>
             </div>
+
             <div class="ui-g-12 ui-md-4">
-                <img src="assets/showcase/images/home/icon-templates.svg" />
-                <span class="feature-name">Mobile</span>
+                <img src="assets/showcase/images/home/icon-community.svg" />
+                <span class="feature-name">Demo</span>
+                <p>Versione DEMO online. Permette la gestione temporanea di un torneo senza persistenza
+                    <a [routerLink]="['/demo']">Leggi tutto...</a>
+                </p>
+            </div>            
+
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-component.svg" />
+                <span class="feature-name">Proprietaria</span>
+                <p>Versione Proprietaria. Permette la gestione persistente di qualsiasi numero di tornei con persistenza
+                    <a [routerLink]="['/owner']">Leggi tutto...</a>
+                </p>
+            </div>            
+
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-mobile.svg" />
+                <span class="feature-name">Tempo Reale</span>
                 <p>Consultazione in tempo reale. Puoi seguire da Computer o Smart Phone 
-                    i risultati e le classifiche delle gare in corso</p>
+                    i risultati e le classifiche delle gare in corso
+                    <a [routerLink]="['/realtime']">Leggi tutto...</a>
+                </p>
             </div>            
         </div>
     </div>

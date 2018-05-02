@@ -17,20 +17,24 @@
             </li>
 
             <li>
-                <a href="#" [routerLink]="['/demo']">Demo</a>
-            </li>
-            
-            <li>
-                <a [routerLink]="['/owner']">Proprietario</a>
-            </li>
-            <li>
-                <a [routerLink]="['/progress']">Svolgimento</a>
+                <a href="#" [routerLink]="['/']">Chi siamo</a>
             </li>
         </ul>
     </div>
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
         <div class="layout-menu">
+            <a id="menu_home" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
+                <img src="assets/showcase/images/icons/menu-active.svg" class="layout-menu-icon-active"/>
+                <img src="assets/showcase/images/icons/menu.svg" class="layout-menu-icon-inactive"/>
+                <span>HOME</span>
+            </a>
+            <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
+                <a [routerLink]="['/demo']" (click)="menuActive = false">&#9679; Demo</a>
+                <a [routerLink]="['/owner']" (click)="menuActive = false">&#9679; Proprietaria</a>
+                <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
+            </div>
+          
             <a id="menu_input" #inputmenutitle [class.active-menuitem]="inputmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === inputmenutitle.id ? null : inputmenutitle.id)">
                 <img src="assets/showcase/images/icons/input-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/input.svg" class="layout-menu-icon-inactive"/>
@@ -48,7 +52,7 @@
                 <span>Tornei</span>
             </a>
             <div [ngClass]="{'submenushow': (datamenutitle.id == activeMenuId), 'submenuhide': (datamenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/configuration']" (click)="menuActive = false">&#9679; Configurazione</a>
+                <a [routerLink]="['/tornei']" (click)="menuActive = false">&#9679; Tornei</a>
                 <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; Calendario</a>
                 <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; Risultati</a>
                 <a [routerLink]="['/splitbutton']" (click)="menuActive = false">&#9679; Classifica</a>

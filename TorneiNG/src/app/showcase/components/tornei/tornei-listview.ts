@@ -56,7 +56,7 @@ export class TorneiListView implements OnInit {
     }
   
     private gotoDetailView() {
-        let redirect = '/configuration/dv';
+        let redirect = '/tornei/dv';
         this.router.navigate([redirect]);
     }
 

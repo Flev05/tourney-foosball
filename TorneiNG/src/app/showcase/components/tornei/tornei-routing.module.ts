@@ -14,4 +14,4 @@ import {TorneiDetailView} from './tornei-detailview';
 		RouterModule
 	]
 })
-export class ConfigurationRoutingModule {}
+export class TorneiRoutingModule {}

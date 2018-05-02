@@ -1,8 +1,8 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
-import {Progress} from './progress';
-import {ProgressRoutingModule} from './progress-routing.module';
+import {Realtime} from './realtime';
+import {RealtimeRoutingModule} from './realtime-routing.module';
 import {GrowlModule} from '../../../components/growl/growl';
 import {PanelModule} from '../../../components/panel/panel';
 import {DropdownModule} from '../../../components/dropdown/dropdown';
@@ -17,7 +17,7 @@ import {CodeHighlighterModule} from '../../../components/codehighlighter/codehig
 		CommonModule,
         FormsModule,
         ReactiveFormsModule,
-		ProgressRoutingModule,
+		RealtimeRoutingModule,
         GrowlModule,
         PanelModule,
         DropdownModule,
@@ -28,7 +28,7 @@ import {CodeHighlighterModule} from '../../../components/codehighlighter/codehig
         CodeHighlighterModule
 	],
 	declarations: [
-		Progress
+		Realtime
 	]
 })
-export class ProgressModule {}
+export class RealtimeModule {}

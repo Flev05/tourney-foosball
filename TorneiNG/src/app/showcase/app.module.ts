@@ -41,10 +41,7 @@ import { UserInMemoryDataService }  from './domain/user-in-memory-data.service';
     BrowserAnimationsModule,
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
-    ),
-    // HttpClientInMemoryWebApiModule.forRoot(
-    //   UserInMemoryDataService, { dataEncapsulation: false }
-    // )
+    )
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy },

@@ -1,15 +1,15 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
-import {Progress} from './progress';
+import {Realtime} from './realtime';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{path:'',component: Progress}
+			{path:'', component: Realtime}
 		])
 	],
 	exports: [
 		RouterModule
 	]
 })
-export class ProgressRoutingModule {}
+export class RealtimeRoutingModule {}

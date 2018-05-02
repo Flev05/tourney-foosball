@@ -4,7 +4,7 @@ import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 
-import {ConfigurationRoutingModule} from './configuration-routing.module';
+import {TorneiRoutingModule} from './tornei-routing.module';
 import {GrowlModule} from '../../../components/growl/growl';
 import {PanelModule} from '../../../components/panel/panel';
 import {DropdownModule} from '../../../components/dropdown/dropdown';
@@ -23,7 +23,7 @@ import {TorneiDetailView} from './tornei-detailview';
 		CommonModule,
         FormsModule,
         ReactiveFormsModule,
-		ConfigurationRoutingModule,
+		TorneiRoutingModule,
         GrowlModule,
         PanelModule,
         DropdownModule,
@@ -41,4 +41,4 @@ import {TorneiDetailView} from './tornei-detailview';
 		TorneiDetailView
 	]
 })
-export class ConfigurationModule {}
+export class TorneiModule {}

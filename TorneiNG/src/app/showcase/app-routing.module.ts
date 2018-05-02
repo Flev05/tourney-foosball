@@ -8,8 +8,8 @@ import { HomeComponent } from './components/home/home.component';
             {path: '', component: HomeComponent},
             {path: 'demo', loadChildren: './components/demo/demo.module#DemoModule'},
             {path: 'owner', loadChildren: './components/owner/owner.module#OwnerModule'},
-            {path: 'progress', loadChildren: './components/progress/progress.module#ProgressModule'},
-            {path: 'configuration', loadChildren: './components/configuration/configuration.module#ConfigurationModule'},
+            {path: 'realtime', loadChildren: './components/realtime/realtime.module#RealtimeModule'},
+            {path: 'tornei', loadChildren: './components/tornei/tornei.module#TorneiModule'},
         ])    
     ],
     exports: [RouterModule]

@@ -8,15 +8,16 @@
 <div class="content-section documentation">
     <h3 style="margin-top:0px">Introduzione</h3>
 
-    <p>Per cliente si intende chiunque abbia acquistato il diritto di utilizzare 
-        il programma TorneiNG come proprietario e quindi i possesso di tutte le feature del sistema.
+    <p>Per cliente si intende chiunque, persona fisica o società, abbia acquisito il diritto di utilizzare 
+        il programma TorneiNG come proprietario e quindi in possesso di tutte le feature del sistema.
+        Non è un cliente il classico utente anonimo che usa il sistema per una DEMO al a solo scopo di apprendimento
     </p>
 
     <p>Vista elenco dei Clienti esistenti di proprietà dell'utente connesso.
     </p>
     <p>La vista contiene l'elenco dei Clienti già creati. Con un click sull'ultima 
         colonna della riga, si accede alla vista di dettaglio corrispondente in cui si possono 
-        modificare i dati esistenti o rimuovere l'intero Cliente
+        modificare i dati esistenti o rimuovere il Cliente
     </p>
 
     <h4>Creazione nuovo Cliente</h4>
@@ -26,9 +27,9 @@
     </p>
 </div>
 
-<p-table [columns]="cols" [value]="clients" 
+<p-table [columns]="cols" [value]="companies" 
     selectionMode="single" 
-    [(selection)]="selectedCar" 
+    [(selection)]="selectedCompany" 
     (onRowSelect)="onRowSelect($event)" 
     [paginator]="true" 
     [rows]="15">
@@ -51,7 +52,7 @@
 
     <ng-template pTemplate="summary" let-rowData>
         <div style="text-align:left">
-            <button type="button" pButton icon="fa-plus" (click)="create()" label="Nuovo Torneo"></button>
+            <button type="button" pButton icon="fa-plus" (click)="create()" label="Nuovo Cliente"></button>
         </div>
     </ng-template>        
 </p-table>

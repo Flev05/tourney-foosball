@@ -1,7 +1,11 @@
 export interface Company
 {
     id?: number;
-    name? : string;
-    when?  : string;
+    firstname? : string;
+    lastname? : string;
+    businessName?  : string;
     address?  : string;
+    zipCode?  : string;
+    email?  : string;
+    phoneNumber?  : string;
 }

@@ -12,7 +12,7 @@ export class CompanyListView implements OnInit {
 
     selectedCompany: Company;
 
-    clients: Company[];
+    companies: Company[];
 
     cols: any[];
 
@@ -23,20 +23,28 @@ export class CompanyListView implements OnInit {
     ngOnInit() {
         console.log("CompanyListView.ngOnInit()");
 
-        this.companyService.loadCompanySmall().subscribe(cs => this.clients = cs);
+        this.companyService.loadCompanySmall().subscribe(cs => this.companies = cs);
 
         this.companyService.newCompany = false;
 
         this.cols = [
             { field: 'id', header: 'Id' },
-            { field: 'name', header: 'Nome' },
-            { field: 'when', header: 'Data' },
-            { field: 'address', header: 'Indirizzo' }
+            { field: 'fistrname', header: 'Nome' },
+            { field: 'lastname', header: 'Cognome' },
+            { field: 'email', header: 'E-mail' }
         ];
     }
 
     create() {
-        this.selectedCompany={id: 0, name: "<Nome Company>", when: "<data inizio torneo>", address: "<indirizzo luogo torneo>"};
+        this.selectedCompany={id: 0
+            , firstname: "<Nome Cliente>"
+            , lastname: "<Cognome Cliente>"
+            , businessName: "<Ragione Sociale>"
+            , address: "<Indirizzo residenza>"
+            , zipCode: "<Codice Postale>"
+            , email: "<E-mail>"
+            , phoneNumber: "<Numero di cellulare>"
+        };
         this.companyService.selectedCompany = this.selectedCompany;
         this.companyService.newCompany = true;
         this.gotoDetailView();

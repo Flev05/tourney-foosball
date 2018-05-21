@@ -4,7 +4,6 @@ import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 
-import {CompanyRoutingModule} from './company-routing.module';
 import {GrowlModule} from '../../../components/growl/growl';
 import {PanelModule} from '../../../components/panel/panel';
 import {DropdownModule} from '../../../components/dropdown/dropdown';
@@ -15,6 +14,7 @@ import {TabViewModule} from '../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../components/codehighlighter/codehighlighter';
 import { SliderModule } from '../../../components/slider/slider';
 
+import {CompanyRoutingModule} from './company-routing.module';
 import {CompanyListView} from './company-listview';
 import {CompanyDetailView} from './company-detailview';
 

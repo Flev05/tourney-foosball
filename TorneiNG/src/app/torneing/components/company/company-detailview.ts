@@ -21,7 +21,7 @@ export class CompanyDetailView implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private clientService: CompanyService,
+        private companyService: CompanyService,
         private location: Location
     ) {}
 
@@ -31,19 +31,19 @@ export class CompanyDetailView implements OnInit {
     }
 
     getCompany(): void {
-        this.selectedCompany = this.clientService.selectedCompany;
+        this.selectedCompany = this.companyService.selectedCompany;
     }
 
     save(): void {
-        if(this.clientService.newCompany) {
-            this.clientService.addCompany(this.selectedCompany).subscribe(() => this.goBack());  
+        if(this.companyService.newCompany) {
+            this.companyService.addCompany(this.selectedCompany).subscribe(() => this.goBack());  
         } else  {
-            this.clientService.updateCompany(this.selectedCompany).subscribe(() => this.goBack());
+            this.companyService.updateCompany(this.selectedCompany).subscribe(() => this.goBack());
         }
     }
 
     delete() {
-        this.clientService.deleteCompany(this.selectedCompany)
+        this.companyService.deleteCompany(this.selectedCompany)
           .subscribe(() => this.goBack());
     }
 

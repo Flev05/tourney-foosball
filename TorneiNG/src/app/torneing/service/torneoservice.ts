@@ -95,32 +95,5 @@ export class TorneoService {
     private log(message: string) {
         console.log('TorneoService: ' + message);
     }
-    
-    // getCarsSmall() {
-    //     return this.http.get<any>('assets/showcase/data/tornei-small.json')
-    //       .toPromise()
-    //       .then(res => <Torneo[]>res.data)
-    //       .then(data => { return data; });
-    //   }
-  
-    //   getCarsMedium() {
-    //     return this.http.get<any>('assets/showcase/data/tornei-medium.json')
-    //       .toPromise()
-    //       .then(res => <Torneo[]>res.data)
-    //       .then(data => { return data; });
-    //   }
-  
-    //     getCarsLarge() {
-    //   return this.http.get<any>('assets/showcase/data/tornei-large.json')
-    //     .toPromise()
-    //     .then(res => <Torneo[]>res.data)
-    //     .then(data => { return data; });
-    // }
 
-    // getCarsHuge() {
-    //   return this.http.get<any>('assets/showcase/data/tornei-huge.json')
-    //     .toPromise()
-    //     .then(res => <Torneo[]>res.data)
-    //     .then(data => { return data; });
-    // }
 }

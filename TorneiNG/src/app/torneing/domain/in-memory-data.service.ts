@@ -11,9 +11,32 @@ export class InMemoryDataService implements InMemoryDbService {
         {id: 2, name: 'Festa Dell Unità 2018', when: '2018-06-16', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'},
         {id: 3, name: 'Coppa CSI 2018', when: '2018-03-01 15:30:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'},
       ];
-      const users = [
-        { id: 1, username: 'lmartino', firstname: 'Luciano', lastname: 'Martino',
-          ruoli: [
+
+      const roles = [
+        {
+          id: 1, rolename: 'Developer', description: 'Il costruttore'
+        },
+        {
+          id: 2, rolename: 'Owner', description: 'Il proprietario'
+        },
+        {
+          id: 3, rolename: 'Admin', description: 'L\'amministratore'
+        },
+        {
+          id: 4, rolename: 'User', description: 'L\'utilizzatore'
+        }
+      ];
+
+      const userng = [
+        { id: 1
+          , firstname: 'Luciano'
+          , lastname: 'Martino'
+          , username: 'lmartino'
+          , password: 'pippo'
+          , address: 'Via Nilde Iotti, 8 - 20010 Pregnana Milanase (MI)'
+          , email: 'luciano.martino@gmail.com'
+          , phoneNumber: '339 78 58 194'
+          , roles: [
             {
               id: 1, rolename: 'Developer', description: ''
             },
@@ -28,8 +51,15 @@ export class InMemoryDataService implements InMemoryDbService {
             }
           ]
         },
-        { id: 2, username: 'rbergamaschi', firstname: 'Roberto', lastname: 'Bergamaschi',
-          ruoli: [
+        { id: 2 
+        , firstname: 'Roberto'
+        , lastname: 'Bergamaschi'
+        , username: 'rbergamaschi'
+        , password: 'pippo'
+        , address: 'Via Novara, 46 - 20010 Pregnana Milanase (MI)'
+        , email: 'gino.eolo@gmail.com'
+        , phoneNumber: '339 78 58 194'
+        , roles: [
             {
               id: 2, rolename: 'Owner', description: 'Il proprietario'
             },
@@ -38,29 +68,49 @@ export class InMemoryDataService implements InMemoryDbService {
             }
           ]
         },
-        { id: 3, username: 'vbergamaschi', firstname: 'Valter', lastname: 'Bergamaschi',
-          ruoli: [
+        { id: 3 
+        , firstname: 'Valter'
+        , lastname: 'Bergamaschi'
+        , username: 'vbergamaschi'
+        , password: 'pippo'
+        , address: 'Via Novara, 46 - 20010 Pregnana Milanase (MI)'
+        , email: 'gino.eolo@gmail.com'
+        , phoneNumber: '339 78 58 194'
+        , roles: [
             {
-              id: 3, rolename: 'Admin', description: 'Amministratore di sistema'
+              id: 4, rolename: 'User', description: 'Amministratore di sistema'
             }
           ]
         },
-        { id: 4, username: 'vmartino', firstname: 'Vito', lastname: 'Martino',
-          ruoli: [
-            {
-              id: 4, rolename: 'User', description: ''
-            }
-          ]
-        },
-        { id: 5, username: 'linamiele', firstname: 'Line', lastname: 'Miele',
-          ruoli: [
-            {
-              id: 4, rolename: 'User', description: ''
-            }
-          ]
-        }
       ];
 
-    return {tornei, users};
+      const clients = [
+        {id: 1
+          , firstname: 'Luciano'
+          , lastname: 'Martino'
+          , businessName: ''
+          , address: 'Via Nilde Iotti, 8 - 20010 Pregnana Milanese (MI)'
+          , companyEmail: 'luciano.martino@gmail.com'
+          , phoneNumber: '339 78 58 194'
+        },
+        {id: 2
+          , firstname: ''
+          , lastname: ''
+          , businessName: 'ASD Aurora Pregnana'
+          , address: 'Via Roma, 100 - 20010 Pregnana Milanese (MI)'
+          , companyEmail: 'info@asdaurorapregnana.it'
+          , phoneNumber: '02 23 33 44 55'
+        },
+        {id: 3
+          , firstname: 'Roberto'
+          , lastname: 'Bergamaschi'
+          , businessName: ''
+          , address: 'Via Novara, 26 - 20010 Pregnana Milanese (MI)'
+          , companyEmail: 'gino.eolo@gmail.com'
+          , phoneNumber: '333 33 44 555'
+        },
+      ];
+
+    return {tornei, userng, clients, roles};
   }
 }

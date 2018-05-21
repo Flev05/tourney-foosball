@@ -28,21 +28,18 @@ export class CompanyListView implements OnInit {
         this.companyService.newCompany = false;
 
         this.cols = [
-            { field: 'id', header: 'Id' },
-            { field: 'fistrname', header: 'Nome' },
-            { field: 'lastname', header: 'Cognome' },
-            { field: 'email', header: 'E-mail' }
+            { field: 'firstname',    header: 'Nome' },
+            { field: 'lastname',     header: 'Cognome' },
+            { field: 'businessName', header: 'Ragione Sociale' },
+            { field: 'phoneNumber',  header: 'Telefono' }
         ];
     }
 
     create() {
-        this.selectedCompany={id: 0
-            , firstname: "<Nome Cliente>"
+        this.selectedCompany={
+              firstname: "<Nome Cliente>"
             , lastname: "<Cognome Cliente>"
             , businessName: "<Ragione Sociale>"
-            , address: "<Indirizzo residenza>"
-            , zipCode: "<Codice Postale>"
-            , email: "<E-mail>"
             , phoneNumber: "<Numero di cellulare>"
         };
         this.companyService.selectedCompany = this.selectedCompany;
@@ -60,7 +57,7 @@ export class CompanyListView implements OnInit {
     }
   
     private gotoDetailView() {
-        let redirect = '/client/dv';
+        let redirect = '/company/dv';
         this.router.navigate([redirect]);
     }
 

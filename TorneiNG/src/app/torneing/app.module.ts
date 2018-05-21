@@ -11,6 +11,8 @@ import { HomeComponent } from './components/home/home.component';
 
 import { TorneoService } from './service/torneoservice';
 import { CompanyService } from './service/companyservice';
+import { UserngService } from './service/userngservice';
+import { RoleService } from './service/roleservice';
 
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
@@ -18,7 +20,6 @@ import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './domain/in-memory-data.service';
-import { UserInMemoryDataService }  from './domain/user-in-memory-data.service';
 
 @NgModule({
   declarations: [
@@ -42,8 +43,10 @@ import { UserInMemoryDataService }  from './domain/user-in-memory-data.service';
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }
-      ,TorneoService
-      ,CompanyService
+      , TorneoService
+      , CompanyService
+      , UserngService
+      , RoleService
   ],
   bootstrap: [AppComponent]
 })

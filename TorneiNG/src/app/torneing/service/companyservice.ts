@@ -15,15 +15,11 @@ const httpOptions = {
 
 @Injectable()
 export class CompanyService {
-    private torneoUrl = 'api/tornei';  // URL to web api
+    private clientsUrl = 'api/clients';  // URL to web api
 
     selectedCompany : Company;
 
-    tornei: Company[];
-
     newCompany : boolean = false;
-
-    firstTime : boolean = true;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of CompanyService");
@@ -31,7 +27,7 @@ export class CompanyService {
 
     loadCompanySmall (): Observable<Company[]> {
  
-        return this.http.get<Company[]>(this.torneoUrl)
+        return this.http.get<Company[]>(this.clientsUrl)
         .pipe(
             tap(_ => this.log(`fetched all tornei`)),
             catchError(this.handleError('loadCompanySmall', []))
@@ -40,7 +36,7 @@ export class CompanyService {
 
     /** GET hero by id. Will 404 if id not found */
     getCompany(id: number): Observable<Company> {
-        const url = `${this.torneoUrl}/${id}`;
+        const url = `${this.clientsUrl}/${id}`;
         return this.http.get<Company>(url).pipe(
             tap(_ => this.log(`fetched Company id=${id}`)),
             catchError(this.handleError<Company>(`getCompany id=${id}`))
@@ -48,28 +44,28 @@ export class CompanyService {
     }
 
     /** POST: add a new torneo to the server */
-    addCompany (torneo: Company): Observable<Company> {
-        return this.http.post<Company>(this.torneoUrl, torneo, httpOptions).pipe(
-            tap((torneo: Company) => this.log(`added Company w/ id=${torneo.id}`)),
+    addCompany (company: Company): Observable<Company> {
+        return this.http.post<Company>(this.clientsUrl, company, httpOptions).pipe(
+            tap((company: Company) => this.log(`added Company w/ id=${company.id}`)),
             catchError(this.handleError<Company>('addCompany'))
         );
     }
 
     /** PUT: update the torneo on the server */
-    updateCompany (torneo: Company ): Observable<Company> {
-        const id =  torneo.id;
-        const url = `${this.torneoUrl}/${torneo.id}`;
+    updateCompany (company: Company ): Observable<Company> {
+        const id =  company.id;
+        const url = `${this.clientsUrl}/${company.id}`;
 
-        return this.http.put(url, torneo, httpOptions).pipe(
+        return this.http.put(url, company, httpOptions).pipe(
             tap(_ => this.log(`updated Company id=${id}`)),
             catchError(this.handleError<Company>('updateCompany'))
         );
     }
     
     /** DELETE: delete the torneo from the server */
-    deleteCompany (torneo: Company | number): Observable<Company> {
-        const id = typeof torneo === 'number' ? torneo : torneo.id;
-        const url = `${this.torneoUrl}/${id}`;
+    deleteCompany (company: Company | number): Observable<Company> {
+        const id = typeof company === 'number' ? company : company.id;
+        const url = `${this.clientsUrl}/${id}`;
 
         return this.http.delete<Company>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Company id=${id}`)),
@@ -91,36 +87,8 @@ export class CompanyService {
         };
       }
       
-    /** Log a HeroService message with the MessageService */
+    /** Log a CompanyService message with the MessageService */
     private log(message: string) {
-        console.log('ClientService: ' + message);
+        console.log('CompanyService: ' + message);
     }
-    
-    // getCarsSmall() {
-    //     return this.http.get<any>('assets/showcase/data/tornei-small.json')
-    //       .toPromise()
-    //       .then(res => <Company[]>res.data)
-    //       .then(data => { return data; });
-    //   }
-  
-    //   getCarsMedium() {
-    //     return this.http.get<any>('assets/showcase/data/tornei-medium.json')
-    //       .toPromise()
-    //       .then(res => <Company[]>res.data)
-    //       .then(data => { return data; });
-    //   }
-  
-    //     getCarsLarge() {
-    //   return this.http.get<any>('assets/showcase/data/tornei-large.json')
-    //     .toPromise()
-    //     .then(res => <Company[]>res.data)
-    //     .then(data => { return data; });
-    // }
-
-    // getCarsHuge() {
-    //   return this.http.get<any>('assets/showcase/data/tornei-huge.json')
-    //     .toPromise()
-    //     .then(res => <Company[]>res.data)
-    //     .then(data => { return data; });
-    // }
 }

@@ -1,12 +1,9 @@
--- EREBUS 1.0
+-- Tourney 1.0
 
-\i create-activity_log.sql
-\i create-company.sql
+\i create-location.sql
 
-\i create-company_ipg.sql
-\i create-ipg.sql
+\i create-client.sql
 
-\i create-person.sql
 \i create-permission.sql
 \i create-resource.sql
 

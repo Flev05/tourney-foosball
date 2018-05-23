@@ -1,4 +1,4 @@
--- EREBUS 3.0
+-- Tourney 1.0
 -- ==============
 
 DELETE FROM IPG;

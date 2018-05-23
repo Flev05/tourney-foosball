@@ -1,4 +1,4 @@
--- Calcio Balilla 1.0
+-- Tourney 1.0
 -- ==============
 
 SELECT pg_catalog.setval('permission_id_seq', 1, false);

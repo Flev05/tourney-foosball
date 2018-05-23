@@ -1,4 +1,4 @@
--- Calcio Balilla 1.0
+-- Tourney 1.0
 -- ==============
 
 -- Definition of the user role relations

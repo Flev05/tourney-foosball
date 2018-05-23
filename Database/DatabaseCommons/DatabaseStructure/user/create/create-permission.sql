@@ -1,5 +1,4 @@
--- EREBUS 1.0
--- Execution Schema (Booking): EREBUS-SOFT
+-- Tourney 1.0
 -- Description : table Task and related object creation
 
 -- table

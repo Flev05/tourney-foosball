@@ -1,8 +1,8 @@
--- EREBUS 1.0
+-- Tourney 1.0
 
-\i alter-ipg.sql
-\i alter-company.sql
-\i alter-company_ipg.sql
+\i alter-location.sql
+
+\i alter-client.sql
 
 \i alter-resource.sql
 
@@ -12,6 +12,3 @@
 \i alter-user_role.sql
 
 \i alter-permission.sql
-
-\i alter-activity_log.sql
-\i alter-person.sql

@@ -84,7 +84,7 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       ];
 
-      const clients = [
+      const companies = [
         {id: 1
           , firstname: 'Luciano'
           , lastname: 'Martino'
@@ -111,6 +111,6 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       ];
 
-    return {tornei, userng, clients, roles};
+    return {tornei, userng, companies, roles};
   }
 }

@@ -42,6 +42,7 @@ build.metadata
 **/target/
 **/.gradle/
 **/.idea/
+**/.tern-project
 **/RemoteSystemsTempFiles/
 **/Servers/
 **/.checkstyle
@@ -49,6 +50,7 @@ build.metadata
 **/node_modules/
 **/WebContent/
 **/webapp/
+**/tourney-ws/
 **/gradle.properties
 **/local.properties
 

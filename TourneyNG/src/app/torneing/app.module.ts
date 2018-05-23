@@ -37,9 +37,9 @@ import { InMemoryDataService }  from './domain/in-memory-data.service';
     DialogModule,
     ButtonModule,
     BrowserAnimationsModule,
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false }
-    )
+    // HttpClientInMemoryWebApiModule.forRoot(
+    //   InMemoryDataService, { dataEncapsulation: false }
+    // )
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }

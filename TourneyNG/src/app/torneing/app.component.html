@@ -40,7 +40,7 @@
                 <span>Admin</span>
             </a>
             <div [ngClass]="{submenushow: (inputmenutitle.id == activeMenuId), 'submenuhide': (inputmenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/company']" (click)="menuActive = false">&#9679; Clienti</a>
+                <a [routerLink]="['/companies']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a [routerLink]="['/userng']" (click)="menuActive = false">&#9679; Utenti</a>
                 <a [routerLink]="['/password']" (click)="menuActive = false">&#9679; Reset Password</a>
             </div>

@@ -6,12 +6,12 @@
 \set TS_INDEX "TourneyTestIndex"
 
 -- UFFICIO
--- \set TS_DATA_LOCATION  '\'D:/luciano/Deploy/DB/tourneytest/data\''
--- \set TS_INDEX_LOCATION '\'D:/luciano/Deploy/DB/tourneytest/index\''
+\set TS_DATA_LOCATION  '\'D:/luciano/Deploy/DB/tourney/test/data\''
+\set TS_INDEX_LOCATION '\'D:/luciano/Deploy/DB/tourney/test/index\''
 
 -- DESKTOP HP
-\set TS_DATA_LOCATION  '\'C:/DATA/TOOLS/DB/TableSpaces/tourneytest/data\''
-\set TS_INDEX_LOCATION '\'C:/DATA/TOOLS/DB/TableSpaces/tourneytest/index\''
+-- \set TS_DATA_LOCATION  '\'C:/DATA/TOOLS/DB/TableSpaces/tourneytest/data\''
+-- \set TS_INDEX_LOCATION '\'C:/DATA/TOOLS/DB/TableSpaces/tourneytest/index\''
 
 -- LAPTOP LENOVO
 -- \set TS_DATA_LOCATION  '\'C:/views/tablespaces/tourneytest/data\''

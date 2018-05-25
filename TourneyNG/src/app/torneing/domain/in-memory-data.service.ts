@@ -6,7 +6,7 @@ import { of } from 'rxjs/observable/of';
 
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
-      const tornei = [
+      const tourneys = [
         {id: 1, name: 'Summer week 2018', when: '2018-05-01 13:45:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'},
         {id: 2, name: 'Festa Dell Unità 2018', when: '2018-06-16', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'},
         {id: 3, name: 'Coppa CSI 2018', when: '2018-03-01 15:30:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'},
@@ -84,13 +84,13 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       ];
 
-      const companies = [
+      const clients = [
         {id: 1
           , firstname: 'Luciano'
           , lastname: 'Martino'
           , businessName: ''
           , address: 'Via Nilde Iotti, 8 - 20010 Pregnana Milanese (MI)'
-          , companyEmail: 'luciano.martino@gmail.com'
+          , email: 'luciano.martino@gmail.com'
           , phoneNumber: '339 78 58 194'
         },
         {id: 2
@@ -98,7 +98,7 @@ export class InMemoryDataService implements InMemoryDbService {
           , lastname: ''
           , businessName: 'ASD Aurora Pregnana'
           , address: 'Via Roma, 100 - 20010 Pregnana Milanese (MI)'
-          , companyEmail: 'info@asdaurorapregnana.it'
+          , email: 'info@asdaurorapregnana.it'
           , phoneNumber: '02 23 33 44 55'
         },
         {id: 3
@@ -106,11 +106,11 @@ export class InMemoryDataService implements InMemoryDbService {
           , lastname: 'Bergamaschi'
           , businessName: ''
           , address: 'Via Novara, 26 - 20010 Pregnana Milanese (MI)'
-          , companyEmail: 'gino.eolo@gmail.com'
+          , email: 'gino.eolo@gmail.com'
           , phoneNumber: '333 33 44 555'
         },
       ];
 
-    return {tornei, userng, companies, roles};
+    return {tourneys, userng, clients, roles};
   }
 }

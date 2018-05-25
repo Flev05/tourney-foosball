@@ -11,4 +11,4 @@
 
 \i create_db-test.sql
 
-\i create_schema-booking-test.sql
+\i create_schema-tourney-test.sql

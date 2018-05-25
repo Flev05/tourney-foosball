@@ -15,16 +15,14 @@ import javax.persistence.criteria.Root;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.lms.cb.po.Permission;
-import it.lms.cb.po.Permission_;
-import it.lms.cb.po.Resource;
-import it.lms.cb.po.Resource_;
-import it.lms.cb.po.Role;
-import it.lms.cb.po.RoleType;
-import it.lms.cb.po.RoleType_;
-import it.lms.cb.po.Role_;
-import it.lms.cb.po.User;
-import it.lms.cb.po.User_;
+import it.lms.tourney.po.Permission;
+import it.lms.tourney.po.Permission_;
+import it.lms.tourney.po.Resource;
+import it.lms.tourney.po.Resource_;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.User_;
 
 @Stateless
 public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
@@ -50,10 +48,10 @@ public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
         CriteriaQuery<Permission> cq = getCb().createQuery(Permission.class);
 
         Root<Permission> root = cq.from(Permission.class);
-        Join<Permission, RoleType> roleTypeJoin = root.join(Permission_.roleType);
+        Join<Permission, Role> roleJoin = root.join(Permission_.role);
 
         cq = cq.select(root);
-        cq = cq.orderBy(getCb().asc(roleTypeJoin.get(RoleType_.name)));
+        cq = cq.orderBy(getCb().asc(roleJoin.get(Role_.name)));
 
         TypedQuery<Permission> nq = getEm().createQuery(cq);
 
@@ -92,8 +90,7 @@ public class PermissionDao extends BaseJPACrudDao<Permission, Integer> {
 
         Root<Resource> root = cq.from(Resource.class);
         Join<Resource, Permission> permissionJoin = root.join(Resource_.permissions);
-        Join<Permission, RoleType> roleTypeJoin = permissionJoin.join(Permission_.roleType);
-        Join<RoleType, Role> roleJoin = roleTypeJoin.join(RoleType_.roles);
+        Join<Permission, Role> roleJoin = permissionJoin.join(Permission_.role);
         Join<Role, User> userJoin = roleJoin.join(Role_.users);
 
         Predicate p = getCb().equal(root.get(Resource_.name), resourceId);

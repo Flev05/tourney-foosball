@@ -13,15 +13,14 @@ import javax.persistence.criteria.Root;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.lms.cb.po.AbstractCompany;
-import it.lms.cb.po.AbstractCompany_;
-import it.lms.cb.po.Company_;
-import it.lms.cb.po.Role;
-import it.lms.cb.po.Role_;
-import it.lms.cb.po.User;
-import it.lms.cb.po.User_;
+import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Company_;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.User_;
 
-public abstract class AbstractCompanyDao<PO extends AbstractCompany> extends BaseJPACrudDao<PO, Integer> {
+public abstract class AbstractCompanyDao<PO extends Client> extends BaseJPACrudDao<PO, Integer> {
 
     private static Logger logger = LogManager.getLogger(AbstractCompanyDao.class);
     private Class<PO>     po;
@@ -80,7 +79,7 @@ public abstract class AbstractCompanyDao<PO extends AbstractCompany> extends Bas
 
         Root<PO> root = cq.from(this.po);
 
-        Predicate p = getCb().equal(root.get(AbstractCompany_.companyCode), companyCode);
+        Predicate p = getCb().equal(root.get(Company_.companyCode), companyCode);
         cq.select(root).where(p);
 
         TypedQuery<PO> nq = getEm().createQuery(cq);

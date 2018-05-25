@@ -7,11 +7,11 @@ import { HomeComponent } from './components/home/home.component';
         RouterModule.forRoot([
             {path: '', component: HomeComponent},
             {path: 'demo',     loadChildren: './components/demo/demo.module#DemoModule'},
-            {path: 'owner',    loadChildren: './components/owner/owner.module#OwnerModule'},
+            {path: 'lease',    loadChildren: './components/lease/lease.module#LeaseModule'},
             {path: 'realtime', loadChildren: './components/realtime/realtime.module#RealtimeModule'},
-            {path: 'companies',  loadChildren: './components/company/company.module#CompanyModule'},
-            {path: 'userng',    loadChildren: './components/userng/userng.module#UserngModule'},
-            {path: 'tornei',   loadChildren: './components/tornei/tornei.module#TorneiModule'},
+            {path: 'clients',   loadChildren: './components/client/client.module#ClientModule'},
+            {path: 'userng',   loadChildren: './components/userng/userng.module#UserngModule'},
+            {path: 'tourney',  loadChildren: './components/tourney/tourney.module#TourneyModule'},
         ])    
     ],
     exports: [RouterModule]

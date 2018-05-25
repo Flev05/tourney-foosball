@@ -4,9 +4,9 @@
 -- table
 CREATE TABLE permission
 (
-	id 				serial NOT NULL,
-  	access_type 	character(2) NOT NULL,
-  	role_type_id 	integer NOT NULL,
-  	resource_id 	integer NOT NULL
+	id 			serial NOT NULL,
+  	access_type character(2) NOT NULL,
+  	role_id 	integer NOT NULL,
+  	resource_id	integer NOT NULL
 );
 

@@ -1,8 +1,8 @@
+-- Tourney 1.0
+-- psql -d tourneydbtest -U tourney -f insert-all.sql
 
 \i insert-location.sql
 \i insert-ipg.sql
-
-\i insert-role_type.sql
 
 \i insert-resource.sql
 \i insert-permission.sql

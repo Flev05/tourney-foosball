@@ -9,8 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
-import { TorneoService } from './service/torneoservice';
-import { CompanyService } from './service/companyservice';
+import { TourneyService } from './service/tourneyservice';
+import { ClientService } from './service/clientservice';
 import { UserngService } from './service/userngservice';
 import { RoleService } from './service/roleservice';
 
@@ -43,8 +43,8 @@ import { InMemoryDataService }  from './domain/in-memory-data.service';
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }
-      , TorneoService
-      , CompanyService
+      , TourneyService
+      , ClientService
       , UserngService
       , RoleService
   ],

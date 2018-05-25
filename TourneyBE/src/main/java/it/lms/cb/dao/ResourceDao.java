@@ -12,8 +12,8 @@ import javax.persistence.TypedQuery;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.lms.cb.po.Resource;
-import it.lms.cb.po.RoleType_;
+import it.lms.tourney.po.Resource;
+import it.lms.tourney.po.Role_;
 
 @Stateless
 public class ResourceDao extends BaseJPACrudDao<Resource, Integer> {
@@ -166,7 +166,7 @@ public class ResourceDao extends BaseJPACrudDao<Resource, Integer> {
 
     private List<Resource> findAllPo() throws DaoException {
 
-        List<Resource> poList = findAllOrderByAsc(RoleType_.name.getName());
+        List<Resource> poList = findAllOrderByAsc(Role_.name.getName());
 
         if (poList == null || poList.size() == 0) {
             logger.error("Unable to find a Resource in the DB");

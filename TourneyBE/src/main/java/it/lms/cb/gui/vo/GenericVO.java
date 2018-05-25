@@ -1,7 +1,7 @@
 
 package it.lms.cb.gui.vo;
 
-import it.lms.cb.po.AbstractPO;
+import it.lms.tourney.po.AbstractPO;
 
 /**
  * The View Object to represent a row in the table on the GUI

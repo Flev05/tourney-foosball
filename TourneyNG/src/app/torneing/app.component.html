@@ -30,7 +30,7 @@
             </a>
             <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
                 <a [routerLink]="['/demo']" (click)="menuActive = false">&#9679; Demo</a>
-                <a [routerLink]="['/owner']" (click)="menuActive = false">&#9679; Proprietaria</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
                 <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
             </div>
           
@@ -40,18 +40,18 @@
                 <span>Admin</span>
             </a>
             <div [ngClass]="{submenushow: (inputmenutitle.id == activeMenuId), 'submenuhide': (inputmenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/companies']" (click)="menuActive = false">&#9679; Clienti</a>
+                <a *ngIf="userLogged" [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a [routerLink]="['/userng']" (click)="menuActive = false">&#9679; Utenti</a>
                 <a [routerLink]="['/password']" (click)="menuActive = false">&#9679; Reset Password</a>
             </div>
 
-            <a id="data_menutitle" #datamenutitle [class.active-menuitem]="datamenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === datamenutitle.id ? null : datamenutitle.id)">
+            <a *ngIf="userLogged" id="data_menutitle" #datamenutitle [class.active-menuitem]="datamenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === datamenutitle.id ? null : datamenutitle.id)">
                 <img src="assets/showcase/images/icons/button-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/button.svg" class="layout-menu-icon-inactive"/>
                 <span>Tornei</span>
             </a>
-            <div [ngClass]="{'submenushow': (datamenutitle.id == activeMenuId), 'submenuhide': (datamenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/tornei']" (click)="menuActive = false">&#9679; Tornei</a>
+            <div *ngIf="userLogged" [ngClass]="{'submenushow': (datamenutitle.id == activeMenuId), 'submenuhide': (datamenutitle.id != activeMenuId)}">
+                <a [routerLink]="['/tourney']" (click)="menuActive = false">&#9679; Tornei</a>
                 <a [routerLink]="['/calendario']" (click)="menuActive = false">&#9679; Calendario</a>
                 <a [routerLink]="['/risultati']" (click)="menuActive = false">&#9679; Risultati</a>
                 <a [routerLink]="['/classifica']" (click)="menuActive = false">&#9679; Classifica</a>

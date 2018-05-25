@@ -7,8 +7,8 @@ ALTER TABLE ONLY permission
     ADD CONSTRAINT permission_id_pk PRIMARY KEY (id); 
 
 ALTER TABLE ONLY permission
-    ADD CONSTRAINT permission_role_type_id_fk 
-    FOREIGN KEY (role_type_id) REFERENCES role_type(id)
+    ADD CONSTRAINT permission_role_id_fk 
+    FOREIGN KEY (role_id) REFERENCES role(id)
   	ON UPDATE NO ACTION 
   	ON DELETE NO ACTION 
   	DEFERRABLE INITIALLY IMMEDIATE;

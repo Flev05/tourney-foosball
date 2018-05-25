@@ -1,7 +1,7 @@
 
 package it.lms.cb.gui.vo;
 
-import it.lms.cb.po.Resource;
+import it.lms.tourney.po.Resource;
 
 /**
  * The View Object to represent a row in the table of the presences

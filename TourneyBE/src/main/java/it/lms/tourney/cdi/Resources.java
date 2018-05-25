@@ -14,14 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.lms.tourney.cdi;
 
-import java.util.logging.Logger;
+package it.lms.tourney.cdi;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
@@ -31,6 +33,7 @@ import javax.persistence.PersistenceContext;
  * </p>
  *
  * <pre>
+ * 
  * &#064;Inject
  * private EntityManager em;
  * </pre>
@@ -43,7 +46,12 @@ public class Resources {
 
     @Produces
     public Logger produceLog(InjectionPoint injectionPoint) {
-        return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+
+        Logger logger = LogManager.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+
+        // return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+
+        return logger;
     }
 
 }

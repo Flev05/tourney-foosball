@@ -11,21 +11,16 @@
 
 		<jta-data-source>java:/TourneyDS</jta-data-source>
 		
-		<class>it.lms.cb.po.RoleType</class>
-		<class>it.lms.cb.po.AbstractRole</class>
-		<class>it.lms.cb.po.Role</class>
-		<class>it.lms.cb.po.User</class>
-		<class>it.lms.cb.po.Resource</class>
-		<class>it.lms.cb.po.Permission</class>
-		<class>it.lms.cb.po.Person</class>
-		<class>it.lms.cb.po.ActivityLog</class>
+		<class>it.lms.tourney.po.Location</class>
+		<class>it.lms.tourney.po.Ipg</class>
 
-		<class>it.lms.cb.po.AbstractCompany</class>
-		<class>it.lms.cb.po.Company</class>
+		<class>it.lms.tourney.po.User</class>
+		<class>it.lms.tourney.po.Role</class>
+		<class>it.lms.tourney.po.Resource</class>
+		<class>it.lms.tourney.po.Permission</class>
+
+		<class>it.lms.tourney.po.Client</class>
 		
-		<class>it.lms.cb.cmt.model.Customer</class>
-		<class>it.lms.cb.cmt.model.LogMessage</class>
-									
 		<properties>
             <property name="hibernate.dialect" 		value="org.hibernate.dialect.PostgreSQL9Dialect"/>
             <property name="hibernate.show_sql" 	value="false"/>

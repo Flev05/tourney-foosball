@@ -1,0 +1,116 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista di dettaglio</span>
+        <span>Creare o modificare il Cliente selezionato</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <h3 style="margin-top:0px">Introduzione</h3>
+
+    <p>Premessa: per cliente si intende chiunque, persona fisica o società, abbia acquisito il diritto di utilizzare 
+            il programma TorneiNG come proprietario e quindi in possesso di tutte le feature del sistema.
+            Non è un cliente il classico utente anonimo che usa il sistema per una DEMO al a solo scopo di apprendimento
+        </p>
+    
+    <p>Vista di dettaglio di un Cliente.
+        Da questa vista potete creare un nuovo cliente, modificare o rimuovere uno esistente
+        Per utenti non connessi, ovvero non in possesso di un account, si possono creare
+        nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
+        tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
+        inseriti saranno persi.
+        Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
+        nella pagina         
+        <a class="home-button" [routerLink]="['/owner']">
+            Versione Proprietario
+        </a>
+    </p>
+
+    <h4>Creare un nuovo Cliente</h4>
+    <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
+        il bottone Salva
+        I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+    </p>
+
+    <h4>Modificare un cliente esistente</h4>
+    <p>Si possono modifiselectedCare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
+        non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+        essere svuotati.
+        Alla fine dell'operazione salvare con il bottone Salva
+    </p>
+    <h4>Rimuovere un cliente esistente</h4>
+    <p>Si può rimuovere un Società esistente con il bottore Rimuovi.
+        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il Società
+        sarà rimosso dal sistema.
+    </p>
+</div>
+
+<div class="content-section implementation">
+    <div class="ui-g ui-fluid">
+            
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="name">Nome</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="name" [(ngModel)]="selectedClient.firstname" />
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="name">Cognome</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="name" [(ngModel)]="selectedClient.lastname" />
+            </div>
+        </div>
+        
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="businessName">Ragione sociale</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="businessName" [(ngModel)]="selectedClient.businessName" />
+            </div>
+        </div>
+
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="address">Indirizzo*</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="address" [(ngModel)]="selectedClient.address" />
+            </div>
+        </div>
+
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="companyEmail">E-mail*</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="companyEmail" [(ngModel)]="selectedClient.email" />
+            </div>
+        </div>        
+
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="phoneNumber">Telefono*</label>
+            </div>
+            <div class="ui-g-8">
+                <input pInputText id="phoneNumber" [(ngModel)]="selectedClient.phoneNumber" />
+            </div>
+        </div>        
+    </div>
+
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa-back"  (click)="goBack()" label="Indietro"></button>
+        <button type="button" pButton icon="fa-check" (click)="save()"   label="Salva"></button>
+        <button type="button" pButton icon="fa-close" (click)="delete()" label="Rimuovi"></button>
+    </div>
+    <p>I campi contrassegnati con * sono obbligatori</p>
+    <p>Se si sta creando un nuovo cliente di tipo persona fisica, 
+            deve essere inserito Nome e Cognome altrimenti la Ragione sociale.
+    </p>
+                
+</div>
+ 

@@ -8,16 +8,16 @@ import javax.ejb.TransactionAttributeType;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.lms.cb.po.Company;
+import it.lms.tourney.po.Client;
 
 @Stateless
-public class CompanyDao extends AbstractCompanyDao<Company> {
+public class CompanyDao extends AbstractCompanyDao<Client> {
 
     private static Logger logger = LogManager.getLogger(CompanyDao.class);
 
     public CompanyDao() throws DaoException {
 
-        super(Company.class);
+        super(Client.class);
     }
 
     /**
@@ -29,7 +29,7 @@ public class CompanyDao extends AbstractCompanyDao<Company> {
      * @throws DaoException if a problem occurs during the insert operation
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void save(Company po) throws DaoException {
+    public void save(Client po) throws DaoException {
 
         logger.debug("Entering save()");
 
@@ -38,7 +38,7 @@ public class CompanyDao extends AbstractCompanyDao<Company> {
             return;
         }
 
-        Company mpo = merge(po);
+        Client mpo = merge(po);
         update(mpo);
     }
 
@@ -49,16 +49,16 @@ public class CompanyDao extends AbstractCompanyDao<Company> {
      * @throws DaoException if any error
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void deletePo(Company po) throws DaoException {
+    public void deletePo(Client po) throws DaoException {
 
-        Company mpo = merge(po);
+        Client mpo = merge(po);
         delete(mpo);
     }
 
-    public static Company getCompanyById(Integer id) throws DaoException {
+    public static Client getCompanyById(Integer id) throws DaoException {
 
         CompanyDao dao = new CompanyDao();
-        Company cpo = dao.getById(id);
+        Client cpo = dao.getById(id);
 
         return cpo;
     }

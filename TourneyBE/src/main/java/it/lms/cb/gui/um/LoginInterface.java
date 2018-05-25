@@ -3,7 +3,7 @@ package it.lms.cb.gui.um;
 
 import java.io.Serializable;
 
-import it.lms.cb.po.User;
+import it.lms.tourney.po.User;
 
 public interface LoginInterface extends Serializable {
 

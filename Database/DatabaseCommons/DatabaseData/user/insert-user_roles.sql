@@ -7,3 +7,8 @@ insert into user_role values (DEFAULT
 	, (select id from ROLE where name='DEVELOPER')
 );
  
+insert into user_role values (DEFAULT
+	, (select id from USER_TABLE where username='demo')
+	, (select id from ROLE where name='DEMO')
+);
+ 

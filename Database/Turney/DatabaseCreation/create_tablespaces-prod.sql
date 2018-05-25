@@ -6,8 +6,8 @@
 \set TS_INDEX "TourneyIndex"
 
 -- UFFICIO
-\set TS_DATA_LOCATION  '\'D:/luciano/Deploy/DB/tourney/data\''
-\set TS_INDEX_LOCATION '\'D:/luciano/Deploy/DB/tourney/index\''
+\set TS_DATA_LOCATION  '\'D:/luciano/Deploy/DB/tourney/prod/data\''
+\set TS_INDEX_LOCATION '\'D:/luciano/Deploy/DB/tourney/prod/index\''
 
 -- LAPTOP LENOVO
 -- \set TS_DATA_LOCATION  '\'C:/views/tablespaces/tourney/data\''

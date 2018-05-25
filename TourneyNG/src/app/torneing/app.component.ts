@@ -34,13 +34,15 @@ import {trigger,state,style,transition,animate} from '@angular/animations';
 export class AppComponent implements OnInit{
     
     menuActive: boolean;
+    userLogged: boolean = true;
     
     activeMenuId: string;
     
     notification: boolean = false;
     
     ngOnInit() {
-      setTimeout(()=>this.notification = true , 1000)
+      setTimeout(()=>this.notification = true , 1000);
+        this.userLogged=true;
     }
     
     changeTheme(event: Event, theme: string) {

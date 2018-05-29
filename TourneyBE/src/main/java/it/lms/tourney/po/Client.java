@@ -33,6 +33,7 @@ public class Client extends AbstractPO implements Serializable {
     public Client() {
 
         super();
+        location = new Location();
     }
 
     @Override

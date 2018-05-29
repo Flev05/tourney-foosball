@@ -22,47 +22,84 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.log4j.Logger;
+
 import it.lms.tourney.po.Client;
-import it.lms.tourney.po.Company_;
+import it.lms.tourney.po.Client_;
 
 @ApplicationScoped
 public class ClientRepository {
 
     @Inject
+    private Logger        log;
+
+    @Inject
     private EntityManager em;
 
-    public Client findById(Long id) {
+    public Client findById(Integer id) {
 
         return em.find(Client.class, id);
     }
 
     public Client findByEmail(String email) {
 
+        log.debug("Entering findByEmail(" + email + ")");
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
         Root<Client> root = criteria.from(Client.class);
 
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).where(cb.equal(member.get(Member_.email), email));
-        criteria.select(root).where(cb.equal(root.get(Company_.companyEmail), email));
-        return em.createQuery(criteria).getSingleResult();
+        Predicate p = cb.equal(root.get(Client_.email), email);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Client> cq = em.createQuery(criteria);
+
+        return cq.getSingleResult();
     }
 
     public List<Client> findAllOrderedByName() {
 
+        log.debug("Entering findAllOrderedByName()");
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Client> cq = cb.createQuery(Client.class);
+        Root<Client> member = cq.from(Client.class);
+
+        cq = cq.select(member);
+        cq = cq.orderBy(cb.asc(member.get(Client_.firstname)), cb.asc(member.get(Client_.lastname)));
+
+        TypedQuery<Client> tq = em.createQuery(cq);
+
+        List<Client> resultList = tq.getResultList();
+
+        log.debug("[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    public Client getById(Integer id) {
+
+        log.debug("Entering getById(" + id + ")");
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
         Root<Client> root = criteria.from(Client.class);
 
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
-        criteria.select(root).orderBy(cb.asc(root.get(Company_.name)));
-        return em.createQuery(criteria).getResultList();
+        Predicate p = cb.equal(root.get(Client_.id), id);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Client> cq = em.createQuery(criteria);
+
+        return cq.getSingleResult();
     }
 }

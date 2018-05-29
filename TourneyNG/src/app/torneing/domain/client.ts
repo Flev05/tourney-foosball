@@ -1,3 +1,5 @@
+import { Location } from './location';
+
 export interface Client
 {
     id?             : number;
@@ -5,6 +7,8 @@ export interface Client
     lastname?       : string;
     businessName?   : string;
     address?        : string;
-    email?          : string;
     phoneNumber?    : string;
+    email?          : string;
+    siteUrl?        : string;
+    // locations?      : Location;
 }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Roles } from '../domain/roles';
+import { Role } from '../domain/role';
 import { isUndefined } from 'util';
 
 const httpOptions = {
@@ -21,9 +21,9 @@ export class RoleService {
         console.log("Constructor of RoleService");
     }
 
-    loadRolesSmall (): Observable<Roles[]> {
+    loadRolesSmall (): Observable<Role[]> {
  
-        return this.http.get<Roles[]>(this.apiUrl)
+        return this.http.get<Role[]>(this.apiUrl)
         .pipe(
             tap(_ => this.log(`fetched all Roles`)),
             catchError(this.handleError('loadRolesSmall', []))

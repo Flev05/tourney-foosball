@@ -10,17 +10,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.lms.tourney.po.Client;
-import it.lms.tourney.po.Company_;
 import it.lms.tourney.po.Role;
-import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.User_;
 
@@ -161,32 +157,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         }
 
         return true;
-    }
-
-    public Client getCompanyBy(String username) {
-
-        logger.debug("Entering getCompanyBy()");
-
-        CriteriaQuery<Client> cq = getCb().createQuery(Client.class);
-        Root<Client> root = cq.from(Client.class);
-
-        Join<Client, Role> roleJoin = root.join(Company_.roles);
-
-        Join<Role, User> userJoin = roleJoin.join(Role_.users);
-
-        Predicate p = getCb().equal(userJoin.get(User_.username), username);
-        cq = cq.select(root);
-        cq = cq.where(p);
-
-        TypedQuery<Client> tq = getEm().createQuery(cq);
-
-        List<Client> poList = tq.getResultList();
-        logger.debug("Found " + poList.size() + " Company record(s)");
-        if (poList.isEmpty()) {
-            return null;
-        }
-
-        return poList.get(0);
     }
 
     /**

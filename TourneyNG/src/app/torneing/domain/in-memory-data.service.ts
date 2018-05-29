@@ -14,16 +14,16 @@ export class InMemoryDataService implements InMemoryDbService {
 
       const roles = [
         {
-          id: 1, rolename: 'Developer', description: 'Il costruttore'
+          id: 1, name: 'Developer', description: 'Il costruttore'
         },
         {
-          id: 2, rolename: 'Owner', description: 'Il proprietario'
+          id: 2, name: 'Owner', description: 'Il proprietario'
         },
         {
-          id: 3, rolename: 'Admin', description: 'L\'amministratore'
+          id: 3, name: 'Admin', description: 'L\'amministratore'
         },
         {
-          id: 4, rolename: 'User', description: 'L\'utilizzatore'
+          id: 4, name: 'User', description: 'L\'utilizzatore'
         }
       ];
 
@@ -38,16 +38,16 @@ export class InMemoryDataService implements InMemoryDbService {
           , phoneNumber: '339 78 58 194'
           , roles: [
             {
-              id: 1, rolename: 'Developer', description: ''
+              id: 1, name: 'Developer', description: ''
             },
             {
-              id: 2, rolename: 'Owner', description: ''
+              id: 2, name: 'Owner', description: ''
             },
             {
-              id: 3, rolename: 'Admin', description: ''
+              id: 3, name: 'Admin', description: ''
             },
             {
-              id: 4, rolename: 'User', description: ''
+              id: 4, name: 'User', description: ''
             }
           ]
         },
@@ -61,10 +61,10 @@ export class InMemoryDataService implements InMemoryDbService {
         , phoneNumber: '339 78 58 194'
         , roles: [
             {
-              id: 2, rolename: 'Owner', description: 'Il proprietario'
+              id: 2, name: 'Owner', description: 'Il proprietario'
             },
             {
-              id: 3, rolename: 'Admin', description: 'Amministratore di sistema'
+              id: 3, name: 'Admin', description: 'Amministratore di sistema'
             }
           ]
         },
@@ -78,7 +78,7 @@ export class InMemoryDataService implements InMemoryDbService {
         , phoneNumber: '339 78 58 194'
         , roles: [
             {
-              id: 4, rolename: 'User', description: 'Amministratore di sistema'
+              id: 4, name: 'User', description: 'Amministratore di sistema'
             }
           ]
         },

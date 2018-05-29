@@ -7,7 +7,9 @@ import javax.persistence.Column;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 
-public class AbstractPO implements Serializable {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public abstract class AbstractPO implements Serializable {
 
     private static final long     serialVersionUID = 1L;
 
@@ -22,7 +24,6 @@ public class AbstractPO implements Serializable {
     public static final String    FULL_DATE_FORMAT = DATE_FORMAT + " " + TIME_FORMAT; // "dd/MM/yyyy HH:mm:ss";
 
     public static final long      DAY_IN_MILLI     = 86400000L;                       // = 24*3600*1000 = one day in
-                                                                                      // milliseconds;
 
     public AbstractPO() {
 
@@ -76,6 +77,7 @@ public class AbstractPO implements Serializable {
         return id;
     }
 
+    @JsonIgnore
     public boolean isSelected() {
 
         return selected;
@@ -86,6 +88,7 @@ public class AbstractPO implements Serializable {
         this.selected = selected;
     }
 
+    @JsonIgnore
     public boolean isSelectAll() {
 
         return selectAll;
@@ -96,6 +99,7 @@ public class AbstractPO implements Serializable {
         this.selectAll = selectAll;
     }
 
+    @JsonIgnore
     public boolean isEnabled() {
 
         return enabled;

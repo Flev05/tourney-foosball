@@ -17,43 +17,49 @@
 
 package it.lms.tourney.dao;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
-import javax.enterprise.inject.Produces;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.persistence.EntityManager;
+
+import org.apache.log4j.Logger;
 
 import it.lms.tourney.po.Client;
 
-@RequestScoped
-public class ClientListProducer {
+// The @Stateless annotation eliminates the need for manual transaction demarcation
+@Stateless
+public class ClientDao {
 
     @Inject
-    private ClientRepository companyRepository;
+    private Logger           log;
 
-    private List<Client>     companies;
+    @Inject
+    private EntityManager    em;
 
-    // @Named provides access the return value via the EL variable name "companies" in the UI (e.g.
-    // Facelets or JSP view)
-    @Produces
-    @Named
-    public List<Client> getCompanies() {
+    @Inject
+    private Event<Client>    clientEventSrc;
 
-        return companies;
+    @Inject
+    private ClientRepository cr;
+
+    public void save(Client client) throws Exception {
+
+        log.debug("Entering save(" + client.getFirstname() + " " + client.getLastname() + " " + client.getBusinessName()
+                + ")");
+
+        em.persist(client);
+
+        clientEventSrc.fire(client);
     }
 
-    public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Client c) {
+    public void delete(Integer id) throws Exception {
 
-        retrieveAllCompaniesOrderedByName();
-    }
+        log.debug("Entering delete(" + id + ")");
 
-    @PostConstruct
-    public void retrieveAllCompaniesOrderedByName() {
+        Client client = cr.getById(id);
 
-        companies = companyRepository.findAllOrderedByName();
+        em.remove(client);
+
+        clientEventSrc.fire(client);
     }
 }

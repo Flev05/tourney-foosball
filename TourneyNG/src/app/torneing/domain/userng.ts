@@ -1,14 +1,24 @@
-import { Roles } from './roles';
+import { Role } from './role';
+import { Location } from './location';
+import { Client } from './client';
 
 export interface Userng
 {
     id?             : number;
     firstname?      : string;
-    lastname?       : string;
-    username?       : string;
     password?       : string;
+
     address?        : string;
     email?          : string;
     phoneNumber?    : string;
-    roles?          : [ Roles ];
+
+    lastname?       : string;
+    username?       : string;
+
+    description?    : string;
+
+    client?         : Client;
+    locations?      : Location;
+
+    roles?          : [ Role ];
 }

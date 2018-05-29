@@ -5,7 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Userng } from '../../domain/userng';
 import { UserngService } from '../../service/userngservice';
 import { RoleService } from '../../service/roleservice';
-import { Roles } from '../../domain/roles';
+
+import { Role } from '../../domain/role';
 
 @Component({
     templateUrl: './userng-detailview.html',
@@ -22,9 +23,9 @@ export class UserngDetailView implements OnInit {
     selectedUserng: Userng;
     cols: any[];
 
-    roles : Roles[];
+    roles : Role[];
     
-    selectedRoles: Roles[];
+    selectedRoles: Role[];
 
     constructor(
         private route: ActivatedRoute,

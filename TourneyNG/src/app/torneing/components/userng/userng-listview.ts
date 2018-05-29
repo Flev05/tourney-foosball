@@ -28,10 +28,10 @@ export class UserngListView implements OnInit {
         this.userngService.newUserng = false;
 
         this.cols = [
-            { field: 'firstname',    header: 'Nome' },
-            { field: 'lastname',     header: 'Cognome' },
-            { field: 'username', header: 'username' },
-            { field: 'phoneNumber',  header: 'Telefono' }
+            { field: 'firstname',   header: 'Nome' },
+            { field: 'lastname',    header: 'Cognome' },
+            { field: 'username',    header: 'username' },
+            { field: 'phoneNumber', header: 'Telefono' }
         ];
     }
 

@@ -31,8 +31,10 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -42,7 +44,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import it.lms.tourney.dao.ClientRegistration;
+import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.ClientRepository;
 import it.lms.tourney.po.Client;
 
@@ -51,7 +53,7 @@ import it.lms.tourney.po.Client;
  * <p/>
  * This class produces a RESTful service to read/write the contents of the members table.
  */
-@Path("/companies")
+@Path("/clients")
 @RequestScoped
 public class ClientResourceRESTService {
 
@@ -65,11 +67,13 @@ public class ClientResourceRESTService {
     private ClientRepository repository;
 
     @Inject
-    ClientRegistration       registration;
+    private ClientDao        clientDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Client> listAllCompanies() {
+    public List<Client> listAllClients() {
+
+        log.debug("GET: listAllClients()");
 
         return repository.findAllOrderedByName();
     }
@@ -77,31 +81,89 @@ public class ClientResourceRESTService {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Client lookupMemberById(@PathParam("id") long id) {
+    public Client lookupClientById(@PathParam("id") Integer id) {
 
-        Client company = repository.findById(id);
-        if (company == null) {
+        log.debug("GET: lookupClientById(" + id + ")");
+
+        Client client = repository.findById(id);
+        if (client == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return company;
+        return client;
     }
 
     /**
-     * Creates a new company from the values provided. Performs validation, and will return a JAX-RS response with
-     * either 200 ok, or with a map of fields, and related errors.
+     * Creates a new client from the values provided. Performs validation, and will return a JAX-RS response with either
+     * 200 ok, or with a map of fields, and related errors.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createMember(Client company) {
+    public Response createClient(Client client) {
 
-        Response.ResponseBuilder builder = null;
+        log.debug("POST: createClient(" + client.getId() + ")");
 
+        // Validates client using bean validation
+        validateClient(client);
+
+        Response.ResponseBuilder builder = inserOrUpdate(client);
+
+        return builder.build();
+    }
+
+    /**
+     * Updates the received client found in the database. Performs validation, and will return a JAX-RS response with
+     * either 200 ok, or with a map of fields, and related errors.
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateClient(Client client) {
+
+        log.debug("PUT: updateClient(" + client.getId() + ")");
+
+        Response.ResponseBuilder builder = inserOrUpdate(client);
+
+        return builder.build();
+    }
+
+    /**
+     * Removes a the received client from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteClient(@PathParam("id") Integer id) {
+
+        log.debug("DELETE: deleteClient(" + id + ")");
+
+        Response.ResponseBuilder builder;
         try {
-            // Validates company using bean validation
-            validateMember(company);
 
-            registration.register(company);
+            clientDao.delete(id);
+
+            // Create an "ok" response
+            builder = Response.ok();
+
+        } catch (Exception e) {
+            // Handle generic exceptions
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("error", e.getMessage());
+            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+        }
+        return builder.build();
+    }
+
+    private Response.ResponseBuilder inserOrUpdate(Client client) {
+
+        log.debug("Entering inserOrUpdate()");
+
+        Response.ResponseBuilder builder;
+        try {
+
+            clientDao.save(client);
 
             // Create an "ok" response
             builder = Response.ok();
@@ -119,36 +181,35 @@ public class ClientResourceRESTService {
             responseObj.put("error", e.getMessage());
             builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
         }
-
-        return builder.build();
+        return builder;
     }
 
     /**
      * <p>
-     * Validates the given Company variable and throws validation exceptions based on the type of error. If the error is
+     * Validates the given Client variable and throws validation exceptions based on the type of error. If the error is
      * standard bean validation errors then it will throw a ConstraintValidationException with the set of the
      * constraints violated.
      * </p>
      * <p>
-     * If the error is caused because an existing company with the same email is registered it throws a regular
+     * If the error is caused because an existing client with the same email is registered it throws a regular
      * validation exception so that it can be interpreted separately.
      * </p>
      *
-     * @param company Company to be validated
+     * @param client Client to be validated
      * @throws ConstraintViolationException If Bean Validation errors exist
-     * @throws ValidationException If company with the same email already exists
+     * @throws ValidationException If client with the same email already exists
      */
-    private void validateMember(Client company) throws ConstraintViolationException, ValidationException {
+    private void validateClient(Client client) throws ConstraintViolationException, ValidationException {
 
         // Create a bean validator and check for issues.
-        Set<ConstraintViolation<Client>> violations = validator.validate(company);
+        Set<ConstraintViolation<Client>> violations = validator.validate(client);
 
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
         }
 
         // Check the uniqueness of the email address
-        if (emailAlreadyExists(company.getEmail())) {
+        if (emailAlreadyExists(client.getEmail())) {
             throw new ValidationException("Unique Email Violation");
         }
     }
@@ -174,20 +235,20 @@ public class ClientResourceRESTService {
     }
 
     /**
-     * Checks if a company with the same email address is already registered. This is the only way to easily capture the
-     * "@UniqueConstraint(columnNames = "email")" constraint from the Company class.
+     * Checks if a client with the same email address is already registered. This is the only way to easily capture the
+     * "@UniqueConstraint(columnNames = "email")" constraint from the Client class.
      *
      * @param email The email to check
      * @return True if the email already exists, and false otherwise
      */
     private boolean emailAlreadyExists(String email) {
 
-        Client company = null;
+        Client client = null;
         try {
-            company = repository.findByEmail(email);
+            client = repository.findByEmail(email);
         } catch (NoResultException e) {
             // ignore
         }
-        return company != null;
+        return client != null;
     }
 }

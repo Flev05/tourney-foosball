@@ -9,10 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "location")
-public class Location extends AbstractPO implements Serializable {
+@XmlRootElement
+@Table(name = "country", uniqueConstraints = @UniqueConstraint(columnNames = "city"))
+public class Country extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +25,7 @@ public class Location extends AbstractPO implements Serializable {
     private String            zipCode;
     private String            countryCode;
 
-    public Location() {
+    public Country() {
 
     }
 

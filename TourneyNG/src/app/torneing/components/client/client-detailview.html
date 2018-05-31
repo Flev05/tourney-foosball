@@ -6,7 +6,6 @@
 </div>
 
 <div class="content-section documentation">
-    <h3 style="margin-top:0px">Introduzione</h3>
 
     <p>Premessa: per cliente si intende chiunque, persona fisica o società, abbia acquisito il diritto di utilizzare 
             il programma TorneiNG come proprietario e quindi in possesso di tutte le feature del sistema.
@@ -22,7 +21,7 @@
         Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
         nella pagina         
         <a class="home-button" [routerLink]="['/owner']">
-            Versione Proprietario
+            Versione Noleggio
         </a>
     </p>
 
@@ -50,7 +49,7 @@
             
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="name">Nome</label>
+                <label for="name">Nome**</label>
             </div>
             <div class="ui-g-8">
                 <input pInputText id="name" [(ngModel)]="selectedClient.firstname" />
@@ -58,7 +57,7 @@
         </div>
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="name">Cognome</label>
+                <label for="name">Cognome**</label>
             </div>
             <div class="ui-g-8">
                 <input pInputText id="name" [(ngModel)]="selectedClient.lastname" />
@@ -67,7 +66,7 @@
         
         <div class="ui-g-12">
             <div class="ui-g-4">
-                <label for="businessName">Ragione sociale</label>
+                <label for="businessName">Ragione Sociale**</label>
             </div>
             <div class="ui-g-8">
                 <input pInputText id="businessName" [(ngModel)]="selectedClient.businessName" />
@@ -80,6 +79,17 @@
             </div>
             <div class="ui-g-8">
                 <input pInputText id="address" [(ngModel)]="selectedClient.address" />
+            </div>
+        </div>
+
+        <div class="ui-g-12">
+            <div class="ui-g-4">
+                <label for="country-id">Comune di residenza*</label>
+            </div>
+            <div class="ui-g-8">
+                <p-autoComplete id="country-id" [(ngModel)]="country" [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="search($event)" field="city" [size]="30"
+                    placeholder="Comuni" [minLength]="1"></p-autoComplete>
             </div>
         </div>
 
@@ -107,8 +117,8 @@
         <button type="button" pButton icon="fa-check" (click)="save()"   label="Salva"></button>
         <button type="button" pButton icon="fa-close" (click)="delete()" label="Rimuovi"></button>
     </div>
-    <p>I campi contrassegnati con * sono obbligatori</p>
-    <p>Se si sta creando un nuovo cliente di tipo persona fisica, 
+    <p>* Sono campi obbligatori</p>
+    <p>** Se si sta creando un nuovo cliente di tipo persona fisica, 
             deve essere inserito Nome e Cognome altrimenti la Ragione sociale.
     </p>
                 

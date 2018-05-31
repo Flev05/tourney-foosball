@@ -38,7 +38,7 @@ public class User extends AbstractPO implements Serializable {
     private String            description;
 
     private Client            client;
-    private Location          location;
+    private Country          location;
 
     private Set<Role>         roles;
 
@@ -160,12 +160,12 @@ public class User extends AbstractPO implements Serializable {
     // bi-directional many-to-one association to Location
     @ManyToOne
     @JoinColumn(name = "location_id")
-    public Location getLocation() {
+    public Country getLocation() {
 
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(Country location) {
 
         this.location = location;
     }

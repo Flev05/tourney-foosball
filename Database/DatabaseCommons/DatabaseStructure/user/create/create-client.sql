@@ -16,7 +16,7 @@ CREATE TABLE client
 	
 	, site_url			character varying(1024)  		-- the the client site URL
 
-  	, location_id		integer NOT NULL
+  	, country_id		integer NOT NULL
 );
   
   

@@ -10,7 +10,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'lease',    loadChildren: './components/lease/lease.module#LeaseModule'},
             {path: 'realtime', loadChildren: './components/realtime/realtime.module#RealtimeModule'},
             {path: 'clients',   loadChildren: './components/client/client.module#ClientModule'},
-            {path: 'userng',   loadChildren: './components/userng/userng.module#UserngModule'},
+            {path: 'users',   loadChildren: './components/userng/userng.module#UserngModule'},
             {path: 'tourney',  loadChildren: './components/tourney/tourney.module#TourneyModule'},
         ])    
     ],

@@ -13,6 +13,7 @@ import {ButtonModule} from '../../../components/button/button';
 import {TabViewModule} from '../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../components/codehighlighter/codehighlighter';
 import { SliderModule } from '../../../components/slider/slider';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 
 import {ClientRoutingModule} from './client-routing.module';
 import {ClientListView} from './client-listview';
@@ -34,7 +35,8 @@ import {ClientDetailView} from './client-detailview';
         CodeHighlighterModule,
         TableModule,
         DialogModule,
-		SliderModule
+        SliderModule,
+        AutoCompleteModule
 	],
 	declarations: [
 		ClientListView,

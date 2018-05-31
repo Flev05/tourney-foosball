@@ -42,7 +42,7 @@ public class ClientRepository {
     @Inject
     private EntityManager em;
 
-    public Client findById(Integer id) {
+    public Client getById(Integer id) {
 
         return em.find(Client.class, id);
     }
@@ -71,10 +71,10 @@ public class ClientRepository {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Client> cq = cb.createQuery(Client.class);
-        Root<Client> member = cq.from(Client.class);
+        Root<Client> root = cq.from(Client.class);
 
-        cq = cq.select(member);
-        cq = cq.orderBy(cb.asc(member.get(Client_.firstname)), cb.asc(member.get(Client_.lastname)));
+        cq = cq.select(root);
+        cq = cq.orderBy(cb.asc(root.get(Client_.firstname)), cb.asc(root.get(Client_.lastname)));
 
         TypedQuery<Client> tq = em.createQuery(cq);
 
@@ -85,21 +85,21 @@ public class ClientRepository {
         return resultList;
     }
 
-    public Client getById(Integer id) {
-
-        log.debug("Entering getById(" + id + ")");
-
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
-        Root<Client> root = criteria.from(Client.class);
-
-        Predicate p = cb.equal(root.get(Client_.id), id);
-
-        criteria = criteria.select(root);
-        criteria = criteria.where(p);
-
-        TypedQuery<Client> cq = em.createQuery(criteria);
-
-        return cq.getSingleResult();
-    }
+    // public Client getById(Integer id) {
+    //
+    // log.debug("Entering getById(" + id + ")");
+    //
+    // CriteriaBuilder cb = em.getCriteriaBuilder();
+    // CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+    // Root<Client> root = criteria.from(Client.class);
+    //
+    // Predicate p = cb.equal(root.get(Client_.id), id);
+    //
+    // criteria = criteria.select(root);
+    // criteria = criteria.where(p);
+    //
+    // TypedQuery<Client> cq = em.createQuery(criteria);
+    //
+    // return cq.getSingleResult();
+    // }
 }

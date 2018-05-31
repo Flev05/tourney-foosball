@@ -53,14 +53,12 @@ export class ClientService {
 
     /** PUT: update the torneo on the server */
     updateClient (client: Client ): Observable<Client> {
-        const id =  client.id;
-        // const url = `${this.clientUrl}/${client.id}`;
         const url = `${this.clientUrl}`;
-
+        
         console.log(client);
 
         return this.http.put(url, client, httpOptions).pipe(
-            tap(_ => this.log(`updated Client id=${id}`)),
+            tap(_ => this.log(`updated Client id=${client.id}`)),
             catchError(this.handleError<Client>('updateClient'))
         );
     }

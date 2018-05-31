@@ -85,7 +85,7 @@ public class ClientResourceRESTService {
 
         log.debug("GET: lookupClientById(" + id + ")");
 
-        Client client = repository.findById(id);
+        Client client = repository.getById(id);
         if (client == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -101,12 +101,12 @@ public class ClientResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createClient(Client client) {
 
-        log.debug("POST: createClient(" + client.getId() + ")");
+        log.debug("POST: createClient(" + client + ")");
 
         // Validates client using bean validation
         validateClient(client);
 
-        Response.ResponseBuilder builder = inserOrUpdate(client);
+        Response.ResponseBuilder builder = insert(client);
 
         return builder.build();
     }
@@ -122,7 +122,7 @@ public class ClientResourceRESTService {
 
         log.debug("PUT: updateClient(" + client.getId() + ")");
 
-        Response.ResponseBuilder builder = inserOrUpdate(client);
+        Response.ResponseBuilder builder = update(client);
 
         return builder.build();
     }
@@ -156,14 +156,42 @@ public class ClientResourceRESTService {
         return builder.build();
     }
 
-    private Response.ResponseBuilder inserOrUpdate(Client client) {
+    private Response.ResponseBuilder insert(Client client) {
 
-        log.debug("Entering inserOrUpdate()");
+        log.debug("Entering insert()");
 
         Response.ResponseBuilder builder;
         try {
 
-            clientDao.save(client);
+            clientDao.insert(client);
+
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce) {
+            // Handle bean validation issues
+            builder = createViolationResponse(ce.getConstraintViolations());
+        } catch (ValidationException e) {
+            // Handle the unique constrain violation
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("email", "Email taken");
+            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+        } catch (Exception e) {
+            // Handle generic exceptions
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("error", e.getMessage());
+            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+        }
+        return builder;
+    }
+
+    private Response.ResponseBuilder update(Client client) {
+
+        log.debug("Entering update()");
+
+        Response.ResponseBuilder builder;
+        try {
+
+            clientDao.update(client);
 
             // Create an "ok" response
             builder = Response.ok();

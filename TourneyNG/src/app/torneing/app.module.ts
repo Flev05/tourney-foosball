@@ -9,17 +9,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
-import { TourneyService } from './service/tourneyservice';
-import { ClientService } from './service/clientservice';
-import { UserngService } from './service/userngservice';
-import { RoleService } from './service/roleservice';
-
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './domain/in-memory-data.service';
+
+import { TourneyService } from './service/tourneyservice';
+import { ClientService } from './service/clientservice';
+import { UserngService } from './service/userngservice';
+import { RoleService } from './service/roleservice';
+import { CountryService } from './service/countryservice';
+
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { InMemoryDataService }  from './domain/in-memory-data.service';
       , ClientService
       , UserngService
       , RoleService
+      , CountryService
   ],
   bootstrap: [AppComponent]
 })

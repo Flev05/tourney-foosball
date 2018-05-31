@@ -1,6 +1,6 @@
 -- Tourney 1.0
 
-ALTER TABLE ONLY location
-ADD CONSTRAINT location_id_pk PRIMARY KEY (id) ; 
+ALTER TABLE ONLY country
+ADD CONSTRAINT country_id_pk PRIMARY KEY (id) ; 
 
-ALTER TABLE location OWNER TO :SCHEMA_USER_NAME;
+ALTER TABLE country OWNER TO :SCHEMA_USER_NAME;

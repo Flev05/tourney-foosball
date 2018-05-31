@@ -42,12 +42,23 @@ public class ClientDao {
     @Inject
     private ClientRepository cr;
 
-    public void save(Client client) throws Exception {
+    public void insert(Client client) throws Exception {
+
+        log.debug("Entering insert(" + client.getFirstname() + " " + client.getLastname() + " "
+                + client.getBusinessName() + ")");
+
+        em.persist(client);
+
+        clientEventSrc.fire(client);
+    }
+
+    public void update(Client client) throws Exception {
 
         log.debug("Entering save(" + client.getFirstname() + " " + client.getLastname() + " " + client.getBusinessName()
                 + ")");
 
-        em.persist(client);
+        Client cpo = em.merge(client);
+        em.persist(cpo);
 
         clientEventSrc.fire(client);
     }

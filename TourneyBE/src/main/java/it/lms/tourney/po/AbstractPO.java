@@ -13,8 +13,13 @@ public abstract class AbstractPO implements Serializable {
 
     private static final long     serialVersionUID = 1L;
 
+    @JsonIgnore
     private boolean               selected         = false;
+
+    @JsonIgnore
     private boolean               enabled          = true;
+
+    @JsonIgnore
     private boolean               selectAll        = false;
 
     private Integer               id               = 0;
@@ -36,6 +41,7 @@ public abstract class AbstractPO implements Serializable {
         return "id=" + id;
     }
 
+    @JsonIgnore
     public boolean isNull() {
 
         if (id == null || id == 0) {
@@ -110,6 +116,7 @@ public abstract class AbstractPO implements Serializable {
         this.enabled = enabled;
     }
 
+    @JsonIgnore
     public Integer purgeDigit(String field) {
 
         if (field == null || field.equals("")) {

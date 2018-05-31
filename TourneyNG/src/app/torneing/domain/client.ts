@@ -1,4 +1,4 @@
-import { Location } from './location';
+import { Country } from './country';
 
 export interface Client
 {
@@ -10,5 +10,5 @@ export interface Client
     phoneNumber?    : string;
     email?          : string;
     siteUrl?        : string;
-    // locations?      : Location;
+    country?        : Country;
 }

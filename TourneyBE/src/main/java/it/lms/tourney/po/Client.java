@@ -11,9 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "client")
+@XmlRootElement
+@Table(name = "client", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Client extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,12 +31,12 @@ public class Client extends AbstractPO implements Serializable {
 
     private String            siteUrl;
 
-    private Location          location;
+    private Country           country;
 
     public Client() {
 
         super();
-        location = new Location();
+        // location = new Location();
     }
 
     @Override
@@ -41,7 +44,7 @@ public class Client extends AbstractPO implements Serializable {
 
         return "Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName=" + businessName
                 + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl
-                + ", location=" + location + "]";
+                + ", country=" + country + "]";
     }
 
     @Override
@@ -141,14 +144,14 @@ public class Client extends AbstractPO implements Serializable {
 
     // bi-directional many-to-one association to Location
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    public Location getLocation() {
+    @JoinColumn(name = "country_id")
+    public Country getCountry() {
 
-        return location;
+        return country;
     }
 
-    public void setLocation(Location location) {
+    public void setCountry(Country country) {
 
-        this.location = location;
+        this.country = country;
     }
 }

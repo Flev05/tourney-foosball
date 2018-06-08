@@ -7,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Userng } from '../domain/userng';
-import { isUndefined } from 'util';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -43,7 +42,7 @@ export class UserngService {
         );
     }
 
-    /** POST: add a new torneo to the server */
+    /** POST: add a new User to the server */
     addUserng (userng: Userng): Observable<Userng> {
         return this.http.post<Userng>(this.apiUrl, userng, httpOptions).pipe(
             tap((userng: Userng) => this.log(`added Userng w/ id=${userng.id}`)),
@@ -51,7 +50,7 @@ export class UserngService {
         );
     }
 
-    /** PUT: update the torneo on the server */
+    /** PUT: update the User on the server */
     updateUserng (userng: Userng ): Observable<Userng> {
         const id =  userng.id;
         const url = `${this.apiUrl}/${userng.id}`;
@@ -62,7 +61,7 @@ export class UserngService {
         );
     }
     
-    /** DELETE: delete the torneo from the server */
+    /** DELETE: delete the User from the server */
     deleteUserng (userng: Userng | number): Observable<Userng> {
         const id = typeof userng === 'number' ? userng : userng.id;
         const url = `${this.apiUrl}/${id}`;

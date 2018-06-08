@@ -16,6 +16,7 @@ import { DialogModule }  from 'primeng/dialog';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './domain/in-memory-data.service';
 
+import { LoginService } from './service/loginservice';
 import { TourneyService } from './service/tourneyservice';
 import { ClientService } from './service/clientservice';
 import { UserngService } from './service/userngservice';
@@ -45,6 +46,7 @@ import { CountryService } from './service/countryservice';
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }
+      , LoginService
       , TourneyService
       , ClientService
       , UserngService

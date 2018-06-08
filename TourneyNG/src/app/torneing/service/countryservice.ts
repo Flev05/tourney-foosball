@@ -43,7 +43,7 @@ export class CountryService {
         );
     }
 
-    /** POST: add a new torneo to the server */
+    /** POST: add a new Country to the server */
     addCountry (country: Country): Observable<Country> {
         return this.http.post<Country>(this.countryUrl, country, httpOptions).pipe(
             tap((country: Country) => this.log(`added Country w/ id=${country.id}`)),
@@ -51,7 +51,7 @@ export class CountryService {
         );
     }
 
-    /** PUT: update the torneo on the server */
+    /** PUT: update the Country on the server */
     updateCountry (country: Country ): Observable<Country> {
         const id =  country.id;
         // const url = `${this.countryUrl}/${country.id}`;
@@ -65,7 +65,7 @@ export class CountryService {
         );
     }
     
-    /** DELETE: delete the torneo from the server */
+    /** DELETE: delete the Country from the server */
     deleteCountry (country: Country | number): Observable<Country> {
         const id = typeof country === 'number' ? country : country.id;
         const url = `${this.countryUrl}/${id}`;

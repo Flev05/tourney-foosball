@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {trigger,state,style,transition,animate} from '@angular/animations';
+import { LoginService } from './service/loginservice';
 
 @Component({
   selector: 'app-root',
@@ -34,15 +35,19 @@ import {trigger,state,style,transition,animate} from '@angular/animations';
 export class AppComponent implements OnInit{
     
     menuActive: boolean;
-    userLogged: boolean = true;
+    userLogged: boolean = false;
     
     activeMenuId: string;
     
     notification: boolean = false;
     
+    constructor(public loginService: LoginService) {
+
+    }
+
     ngOnInit() {
-      setTimeout(()=>this.notification = true , 1000);
-        this.userLogged=true;
+        setTimeout(()=>this.notification = true , 1000);
+        this.userLogged=false;
     }
     
     changeTheme(event: Event, theme: string) {

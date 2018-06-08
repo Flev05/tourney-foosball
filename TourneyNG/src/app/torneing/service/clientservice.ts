@@ -43,7 +43,7 @@ export class ClientService {
         );
     }
 
-    /** POST: add a new torneo to the server */
+    /** POST: add a new Client to the server */
     addClient (client: Client): Observable<Client> {
         return this.http.post<Client>(this.clientUrl, client, httpOptions).pipe(
             tap((client: Client) => this.log(`added Client w/ id=${client.id}`)),
@@ -51,7 +51,7 @@ export class ClientService {
         );
     }
 
-    /** PUT: update the torneo on the server */
+    /** PUT: update the Client on the server */
     updateClient (client: Client ): Observable<Client> {
         const url = `${this.clientUrl}`;
         
@@ -63,7 +63,7 @@ export class ClientService {
         );
     }
     
-    /** DELETE: delete the torneo from the server */
+    /** DELETE: delete the Client from the server */
     deleteClient (client: Client | number): Observable<Client> {
         const id = typeof client === 'number' ? client : client.id;
         const url = `${this.clientUrl}/${id}`;

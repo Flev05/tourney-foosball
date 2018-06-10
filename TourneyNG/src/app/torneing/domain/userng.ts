@@ -4,8 +4,8 @@ import { Client } from './client';
 
 export interface Userng
 {
-    id?              : number;
-    firstname?       : string;
+    id?             : number;
+    firstname?      : string;
     lastname?       : string;
     username?       : string;
     password?       : string;

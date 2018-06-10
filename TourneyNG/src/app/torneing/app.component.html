@@ -23,7 +23,8 @@
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
         <div class="layout-menu">
-            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
+            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
+                    (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
                 <img src="assets/showcase/images/icons/menu-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/menu.svg" class="layout-menu-icon-inactive"/>
                 <span>HOME</span>
@@ -33,8 +34,11 @@
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
                 <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
             </div>
-          
-            <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
+        </div>
+   
+        <div *ngIf="userLogged==true" class="layout-menu">
+            <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
+                    (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
                 <span>Admin</span>
@@ -43,8 +47,11 @@
                 <a [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a [routerLink]="['/users']" (click)="menuActive = false">&#9679; Utenti</a>
             </div>
-
-            <a id="tourney-id" #tourneymenutitle [class.active-menuitem]="tourneymenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
+        </div>
+   
+        <div class="layout-menu">
+            <a id="tourney-id" #tourneymenutitle [class.active-menuitem]="tourneymenutitle.id == activeMenuId" 
+                    (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
                 <img src="assets/showcase/images/icons/file-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/file.svg" class="layout-menu-icon-inactive"/>
                 <span>Tornei</span>
@@ -55,6 +62,9 @@
                 <a [routerLink]="['/risultati']" (click)="menuActive = false">&#9679; Risultati</a>
                 <a [routerLink]="['/classifica']" (click)="menuActive = false">&#9679; Classifica</a>
             </div>
+        </div>
+   
+        <div class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>

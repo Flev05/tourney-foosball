@@ -46,12 +46,12 @@ import { CountryService } from './service/countryservice';
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }
-      , LoginService
       , TourneyService
       , ClientService
       , UserngService
       , RoleService
       , CountryService
+      , LoginService
   ],
   bootstrap: [AppComponent]
 })

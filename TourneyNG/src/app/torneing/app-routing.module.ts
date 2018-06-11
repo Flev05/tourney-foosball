@@ -6,12 +6,13 @@ import { HomeComponent } from './components/home/home.component';
     imports: [
         RouterModule.forRoot([
             {path: '', component: HomeComponent},
-            {path: 'demo',     loadChildren: './components/demo/demo.module#DemoModule'},
-            {path: 'lease',    loadChildren: './components/lease/lease.module#LeaseModule'},
-            {path: 'realtime', loadChildren: './components/realtime/realtime.module#RealtimeModule'},
+            {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
+            {path: 'lease',     loadChildren: './components/lease/lease.module#LeaseModule'},
+            {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
             {path: 'clients',   loadChildren: './components/client/client.module#ClientModule'},
-            {path: 'users',   loadChildren: './components/userng/userng.module#UserngModule'},
-            {path: 'tourney',  loadChildren: './components/tourney/tourney.module#TourneyModule'},
+            {path: 'users',     loadChildren: './components/userng/userng.module#UserngModule'},
+            {path: 'tourney',   loadChildren: './components/tourney/tourney.module#TourneyModule'},
+            {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},
         ])    
     ],
     exports: [RouterModule]

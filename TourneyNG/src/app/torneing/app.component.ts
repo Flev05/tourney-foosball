@@ -35,19 +35,17 @@ import { LoginService } from './service/loginservice';
 export class AppComponent implements OnInit{
     
     menuActive: boolean;
-    userLogged: boolean = false;
     
     activeMenuId: string;
     
     notification: boolean = false;
     
-    constructor(public loginService: LoginService) {
-
-    }
+    constructor(
+        private loginService: LoginService
+    ) {}
 
     ngOnInit() {
         setTimeout(()=>this.notification = true , 1000);
-        this.userLogged=false;
     }
     
     changeTheme(event: Event, theme: string) {
@@ -62,7 +60,12 @@ export class AppComponent implements OnInit{
     }
     
     closeNotification(event) {
-      this.notification = false;
-      event.preventDefault();
+        this.notification = false;
+        event.preventDefault();
     }
-}
+
+    logout(event) {
+        this.menuActive = false;
+        this.loginService.sendLogout().subscribe();  
+    }
+  }

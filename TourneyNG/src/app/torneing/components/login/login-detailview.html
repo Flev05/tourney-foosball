@@ -1,0 +1,89 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Pagina di login</span>
+        <span>Login utente</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>La login è necessaria per accedere ai servizi di gestione del torneo. Se l'utente non effettua la login,
+        può continuare a utilizzare il sistema nella sua parte in sola lettura ma non può creare un nuovo torneo.
+        Può accedere alla sezione dei tornei e vedere i risultati e le classifiche di tornei esistenti già
+        terminati e a quelli in corso di svolgimento se ha il codice di accesso.
+    </p>
+    
+    <h4>Utente DEMO</h4>
+    <p>Il sistema mette a disposizione di chiunque un utente di default, utente demo con password demo, che permette di 
+        utilizzare quasi tutte le funzionalità previste tranne la persistenza dei dati che saranno persi allo scadere della
+        sessione applicativa di trenta minuti. Come descritto meglio nel link:
+        <a class="home-button" [routerLink]="['/demo']">
+            Versione Demo
+        </a>
+    </p>
+
+    <h4>Login</h4>
+    <p>Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sotto.
+        Se non avete credenziali dedicate, potete utilizzare l'utente demo ed imparare l'uso del sistema e
+        solo in un secondo momento potete noleggiarlo per il periodo desiderato.
+        Per maggiori dettagli, si veda il link:
+        <a class="home-button" [routerLink]="['/lease']">
+            Versione Noleggio
+        </a>
+    </p>
+</div>
+
+<div class="content-section implementation">
+
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+            <p-panel header="Validate">
+                <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2">
+                            Username *:
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
+                        </div>
+                        <div class="ui-grid-col-4">
+                            <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['username'].valid&&userform.controls['username'].dirty">
+                                <i class="fa fa-close"></i>
+                                La Username è obbligatoria
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2">
+                            Password *:
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(8)"/>
+                        </div>
+                        <div class="ui-grid-col-4">
+                            <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty">
+                                <i class="fa fa-close"></i>
+                                <span *ngIf="userform.controls['password'].errors['required']">La Password è obbligatoria</span>
+                                <span *ngIf="userform.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2"></div>
+                        <div class="ui-grid-col-6">
+                            <button pButton type="submit" label="Login" [disabled]="!userform.valid"></button>
+                        </div>
+                        <div class="ui-grid-col-4"></div>
+                    </div>
+                    <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                        Login
+                        <br>
+                        {{diagnostic}}
+                    </div>
+                </div>
+            </p-panel>
+        </form>                
+</div>
+ 

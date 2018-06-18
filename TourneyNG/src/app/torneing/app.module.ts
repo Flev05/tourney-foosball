@@ -40,9 +40,9 @@ import { CountryService } from './service/countryservice';
     DialogModule,
     ButtonModule,
     BrowserAnimationsModule,
-    // HttpClientInMemoryWebApiModule.forRoot(
-    //   InMemoryDataService, { dataEncapsulation: false }
-    // )
+    HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    )
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }

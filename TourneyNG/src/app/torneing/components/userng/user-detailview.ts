@@ -9,7 +9,7 @@ import { RoleService } from '../../service/roleservice';
 import { Role } from '../../domain/role';
 
 @Component({
-    templateUrl: './userng-detailview.html',
+    templateUrl: './user-detailview.html',
     styles: [`        
         .ui-g label {
           font-weight: bold;
@@ -18,9 +18,9 @@ import { Role } from '../../domain/role';
         }
   `]
 })
-export class UserngDetailView implements OnInit {
+export class UserDetailView implements OnInit {
 
-    selectedUserng: Userng;
+    selectedUser: Userng;
     cols: any[];
 
     roles : Role[];
@@ -47,21 +47,21 @@ export class UserngDetailView implements OnInit {
     }
 
     getUserng(): void {
-        this.selectedUserng = this.userngService.selectedUserng;
+        this.selectedUser = this.userngService.selectedUser;
 
-        this.selectedRoles = this.selectedUserng.roles;
+        this.selectedRoles = this.selectedUser.roles;
     }
 
     save(): void {
-        if(this.userngService.newUserng) {
-            this.userngService.addUserng(this.selectedUserng).subscribe(() => this.goBack());  
+        if(this.userngService.newUser) {
+            this.userngService.addUser(this.selectedUser).subscribe(() => this.goBack());  
         } else  {
-            this.userngService.updateUserng(this.selectedUserng).subscribe(() => this.goBack());
+            this.userngService.updateUser(this.selectedUser).subscribe(() => this.goBack());
         }
     }
 
     delete() {
-        this.userngService.deleteUserng(this.selectedUserng)
+        this.userngService.deleteUser(this.selectedUser)
           .subscribe(() => this.goBack());
     }
 

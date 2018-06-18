@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {trigger,state,style,transition,animate} from '@angular/animations';
+import { Router } from '@angular/router';
 import { LoginService } from './service/loginservice';
 
 @Component({
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit{
     
     constructor(
         private loginService: LoginService
+        ,private router: Router
     ) {}
 
     ngOnInit() {
@@ -66,6 +68,11 @@ export class AppComponent implements OnInit{
 
     logout(event) {
         this.menuActive = false;
-        this.loginService.sendLogout().subscribe();  
+        this.loginService.sendLogout().subscribe(() => this.goHome());  
+    }
+
+    goHome(): void {
+        let redirect = '';
+        this.router.navigate([redirect]);
     }
   }

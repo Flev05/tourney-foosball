@@ -46,6 +46,7 @@
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a [routerLink]="['/users']" (click)="menuActive = false">&#9679; Utenti</a>
+                <a [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Password</a>
             </div>
         </div>
    
@@ -64,7 +65,7 @@
             </div>
         </div>
    
-        <div class="layout-menu">
+        <div *ngIf="!loginService.userLogged" class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
@@ -72,8 +73,18 @@
             </a>
             <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/login']" (click)="menuActive = false">&#9679; Login</a>
+            </div>
+        </div>
+
+        <div *ngIf="loginService.userLogged" class="layout-menu">
+            <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
+                <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
+                <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
+                <span>Login</span>
+            </a>
+            <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
                 <a *ngIf="loginService.userLogged" (click)="logout($event)">&#9679; Logout</a>
-                <a *ngIf="loginService.userLogged" [routerLink]="['/password']" (click)="menuActive = false">&#9679; Password</a>
+                <a *ngIf="loginService.userLogged" [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
             </div>
         </div>
     </div>

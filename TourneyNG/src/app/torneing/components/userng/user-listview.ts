@@ -6,26 +6,26 @@ import { Userng } from '../../domain/userng';
 import { UserngService } from '../../service/userngservice';
 
 @Component({
-    templateUrl: './userng-listview.html'
+    templateUrl: './user-listview.html'
 })
-export class UserngListView implements OnInit {
+export class UserListView implements OnInit {
 
-    selectedUserng: Userng;
+    selectedUser: Userng;
 
-    usersng: Userng[];
+    users: Userng[];
 
     cols: any[];
 
     constructor(private userngService: UserngService, public router: Router) { 
-        console.log("UserngListView.constructor()");
+        console.log("UserListView.constructor()");
     }
 
     ngOnInit() {
-        console.log("UserngListView.ngOnInit()");
+        console.log("UserListView.ngOnInit()");
 
-        this.userngService.loadUserngSmall().subscribe(cs => this.usersng = cs);
+        this.userngService.loadUserSmall().subscribe(cs => this.users = cs);
 
-        this.userngService.newUserng = false;
+        this.userngService.newUser = false;
 
         this.cols = [
             { field: 'firstname',   header: 'Nome' },
@@ -36,32 +36,32 @@ export class UserngListView implements OnInit {
     }
 
     create() {
-        this.selectedUserng={
-              firstname: "<Nome Cliente>"
-            , lastname: "<Cognome Cliente>"
+        this.selectedUser={
+              firstname: "<Nome User>"
+            , lastname: "<Cognome User>"
             , username: "<Username"
             , phoneNumber: "<Numero di cellulare>"
         };
-        this.userngService.selectedUserng = this.selectedUserng;
-        this.userngService.newUserng = true;
+        this.userngService.selectedUser = this.selectedUser;
+        this.userngService.newUser = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        this.userngService.selectedUserng = this.cloneUserng(event.data);
-        this.userngService.newUserng = false;
+        this.userngService.selectedUser = this.cloneUser(event.data);
+        this.userngService.newUser = false;
 
         this.gotoDetailView();
     }
   
     private gotoDetailView() {
-        let redirect = '/userng/dv';
+        let redirect = '/users/userdv';
         this.router.navigate([redirect]);
     }
 
-    cloneUserng(c: Userng): Userng {
+    cloneUser(c: Userng): Userng {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

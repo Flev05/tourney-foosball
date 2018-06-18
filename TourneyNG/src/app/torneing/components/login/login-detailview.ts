@@ -16,7 +16,7 @@ import {Message,SelectItem} from '../../../components/common/api';
           display: block;
         }
         .ui-g-4 {
-            width: 30mm;
+            width: 25mm;
         }
   `]
 })
@@ -37,10 +37,12 @@ export class LoginDetailView implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.formLogin = {"username":"", "password" : ""};
+        this.formLogin = {"id":1, "username":"", "password" : ""};
+
+        const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
 
         this.userform = this.fb.group({
-            'username': new FormControl('', Validators.required),
+            'username': new FormControl(username, Validators.required),
             'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
         });
 
@@ -48,16 +50,22 @@ export class LoginDetailView implements OnInit {
 
     onSubmit(value: string) {
         this.submitted = true;
-        this.msgs = [];
-        this.msgs.push({severity:'info', summary:'Success', detail:'Form Submitted'});
 
         this.formLogin.username = this.userform.get('username').value;
         this.formLogin.password = this.userform.get('password').value;
 
-        this.loginService.sendLogin(this.formLogin).subscribe(() => this.goHome());  
+        this.loginService.sendLogin(this.formLogin).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
+    }
+    
+    next(n:any) {
     }
 
-    goHome(): void {
+    onError(n:any) {
+        this.msgs = [];
+        this.msgs.push({severity:'error', summary:'Errore', detail:'Login fallito'});
+    }
+
+    onComplete() {
         let redirect = '';
         this.router.navigate([redirect]);
     }

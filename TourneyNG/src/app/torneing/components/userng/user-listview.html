@@ -28,9 +28,9 @@
     </p>
 </div>
 
-<p-table [columns]="cols" [value]="usersng" 
+<p-table [columns]="cols" [value]="users" 
     selectionMode="single" 
-    [(selection)]="selectedUserng" 
+    [(selection)]="selectedUser" 
     (onRowSelect)="onRowSelect($event)" 
     [paginator]="true" 
     [rows]="15">

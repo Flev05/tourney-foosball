@@ -14,16 +14,19 @@ import {TabViewModule} from '../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../components/codehighlighter/codehighlighter';
 import { SliderModule } from '../../../components/slider/slider';
 
-import {UserngRoutingModule} from './userng-routing.module';
-import {UserngListView} from './userng-listview';
-import {UserngDetailView} from './userng-detailview';
+import {UserRoutingModule} from './user-routing.module';
+import {UserListView} from './user-listview';
+import {UserDetailView} from './user-detailview';
+import {UserChangePassword} from './user-changepassword';
+import {UserResetPasswordLv} from './user-reset-password-lv';
+import {UserResetPasswordDv} from './user-reset-password-dv';
 
 @NgModule({
 	imports: [
 		CommonModule,
         FormsModule,
         ReactiveFormsModule,
-		UserngRoutingModule,
+		UserRoutingModule,
         GrowlModule,
         PanelModule,
         DropdownModule,
@@ -34,11 +37,14 @@ import {UserngDetailView} from './userng-detailview';
         CodeHighlighterModule,
         TableModule,
         DialogModule,
-		SliderModule
+        SliderModule,
 	],
 	declarations: [
-		UserngListView,
-		UserngDetailView
+		UserListView,
+		UserDetailView,
+        UserChangePassword,
+        UserResetPasswordLv,
+        UserResetPasswordDv,
 	]
 })
-export class UserngModule {}
+export class UserModule {}

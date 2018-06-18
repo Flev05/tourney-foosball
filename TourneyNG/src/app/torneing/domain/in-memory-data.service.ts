@@ -12,7 +12,30 @@ export class InMemoryDataService implements InMemoryDbService {
         {id: 3, name: 'Coppa CSI 2018', when: '2018-03-01 15:30:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'},
       ];
 
-      const roles = [
+      const login = [
+      { id: 1
+          , username: 'lmartino'
+          , password: 'pippo0000'
+      }];
+
+      const logout = [
+      { id: 1
+          , username: 'lmartino'
+          , password: 'pippo0000'
+      }];
+      const changePassword = [
+      { id: 1
+          , username: 'lmartino'
+          , password: 'pippo0000'
+      }];
+      
+      const resetPassword = [
+      { id: 1
+          , username: 'lmartino'
+          , password: 'pippo0000'
+      }];
+      
+        const roles = [
         {
           id: 1, name: 'Developer', description: 'Il costruttore'
         },
@@ -144,6 +167,7 @@ export class InMemoryDataService implements InMemoryDbService {
           , countryCode: 'IT'
         },
       ];
-      return {tourneys, userng, clients, roles, countries};
+
+      return {login, logout, tourneys, userng, clients, roles, countries, changePassword, resetPassword};
   }
 }

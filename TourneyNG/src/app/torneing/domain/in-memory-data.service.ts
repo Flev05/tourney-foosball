@@ -7,9 +7,9 @@ import { of } from 'rxjs/observable/of';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
-        {id: 1, name: 'Summer week 2018', when: '2018-05-01 13:45:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'},
-        {id: 2, name: 'Festa Dell Unità 2018', when: '2018-06-16', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'},
-        {id: 3, name: 'Coppa CSI 2018', when: '2018-03-01 15:30:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'},
+        {id: 1, name: 'Summer week 2018', date: new Date('2018-05-01'), time: new Date('2018-05-01 13:45:00'), address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'},
+        {id: 2, name: 'Festa Dell Unità 2018', date: new Date('2018-06-16'), time: new Date('2018-06-16 19:30:00'), address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'},
+        {id: 3, name: 'Coppa CSI 2018', date: new Date('2018-03-01'), time: new Date('2018-03-01 20:00:00'), address: 'Via De Sanctis, 33 - 20010 Assago (MI)'},
       ];
 
       const login = [

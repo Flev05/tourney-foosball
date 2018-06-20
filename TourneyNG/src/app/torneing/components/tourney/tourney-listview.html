@@ -1,23 +1,51 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Configurazione</span>
+        <span class="feature-title">Configurazione Tornei</span>
         <span>Pagina per la creazione e configurazione dei tornei</span>
     </div>
 </div>
 
 <div class="content-section documentation">
-
-    <p>Vista elenco dei tornei esistenti di proprietà dell'utente connesso.
+    <h4>Premessa</h4>
+    <p>Estono due tipi di utenti:</p>
+    <ul>
+        <li>Utenti anonimi</li>
+        <li>Utenti con account</li>
+    </ul>
+    
+    <h4>Utenti anonimi</h4>
+    <p>Gli utenti anonimi possono solo consultare i torni già esistenti ma non possono in nessun modo modificarne i contenuti.
+        Essi possono navigare le strutture di un torneo lasciato volutamente pubblico da parte del proprietaro che lo creò
+        o che è in corso di svolgimento. Tuttavia l'utente anonimo può creare un suo nuovo torneo e gestirlo in tutte le sue
+        parti tranne per la persistenza dei dati che inserisce che andranno persi al momento della scadenza della sessione applicativa
     </p>
-    <p>La vista contiene l'elenco dei tornei già creati. Con un click sull'ultima 
-        colonna della riga, si accede alla vista di dettaglio corrispondente in cui si possono 
-        modificare i dati esistenti o rimuovere l'intero torneo
+
+    <h4>Utenti con account</h4>
+    <p>L'utente in possesso di un account con diritti di amministrazione può fare tutto ciò che fa un utente anonimo con persistenza
+        dei dati nel DB di TourneyNG e può modificare i dati di un suo toneo esistente, per esempio per 
+        modificare la configurazione dei contenuti o semplicemente per aggiornare i risultari di un incontro.
+    </p>
+    
+    <h4>Vista elenco tornei</h4>
+    <p>La vista contiene l'elenco dei tornei già creati e pubblicati dal proprietario. Il proprietario o responsabile di un torneo
+        può scegliere a sua discrezione se rendere visibile a chiunque il proprio torneo o limitarlo solo a quelli in possesso delle
+        credenziali di accesso: login o codice di accesso del torneo.
     </p>
 
-    <h4>Creazione nuovo torneo</h4>
-    <p>Con il bottone CREA si può crere un nuovo torneo. Con un click su si esso si apre
+    <h4>Creare un nuovo torneo</h4>
+    <p>Con il bottone Nuovo Torneo si può crere un nuovo torneo. Con un click su si esso si apre
         la vista di dettaglio di un torneo vuota in cui inserire tutti i dati obbligatori, contrassegnati
         con un asterisco (*) e alla fine salvare.
+    </p>
+
+    <h4>Modificare un torneo esistente</h4>
+    <p>Con un click sulla riga, si accede alla vista di dettaglio corrispondente in cui si possono 
+            modificare i dati esistenti
+    </p>
+
+    <h4>Rimuovere un torneo esistente</h4>
+    <p>Per rimuovere un torneo esistene bisogna comunque accedere alla vista di dettaglio del torneo selezionato e da lì 
+        rimuovere il torneo con il bottone corrispondente
     </p>
 </div>
 

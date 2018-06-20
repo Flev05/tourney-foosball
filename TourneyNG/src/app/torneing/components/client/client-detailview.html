@@ -1,30 +1,12 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Vista di dettaglio</span>
-        <span>Creare o modificare il Cliente selezionato</span>
+        <span>Vista per la gestione di un nuovo cliente o già esistente</span>
     </div>
 </div>
 
 <div class="content-section documentation">
-
-    <p>Premessa: per cliente si intende chiunque, persona fisica o società, abbia acquisito il diritto di utilizzare 
-            il programma TorneiNG come proprietario e quindi in possesso di tutte le feature del sistema.
-            Non è un cliente il classico utente anonimo che usa il sistema per una DEMO al a solo scopo di apprendimento
-        </p>
-    
-    <p>Vista di dettaglio di un Cliente.
-        Da questa vista potete creare un nuovo cliente, modificare o rimuovere uno esistente
-        Per utenti non connessi, ovvero non in possesso di un account, si possono creare
-        nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
-        tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
-        inseriti saranno persi.
-        Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
-        nella pagina         
-        <a class="home-button" [routerLink]="['/owner']">
-            Versione Noleggio
-        </a>
-    </p>
-
+ 
     <h4>Creare un nuovo Cliente</h4>
     <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
         il bottone Salva
@@ -32,14 +14,15 @@
     </p>
 
     <h4>Modificare un cliente esistente</h4>
-    <p>Si possono modifiselectedCare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
+    <p>Si possono modificare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
         non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
         essere svuotati.
         Alla fine dell'operazione salvare con il bottone Salva
     </p>
+
     <h4>Rimuovere un cliente esistente</h4>
     <p>Si può rimuovere un Società esistente con il bottore Rimuovi.
-        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il Società
+        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il cliente
         sarà rimosso dal sistema.
     </p>
 </div>

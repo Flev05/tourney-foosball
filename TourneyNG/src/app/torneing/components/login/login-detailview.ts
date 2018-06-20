@@ -26,7 +26,7 @@ export class LoginDetailView implements OnInit {
 
     msgs: Message[] = [];
 
-    userform: FormGroup;
+    loginformGroup: FormGroup;
 
     submitted: boolean;
 
@@ -41,7 +41,7 @@ export class LoginDetailView implements OnInit {
 
         const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
 
-        this.userform = this.fb.group({
+        this.loginformGroup = this.fb.group({
             'username': new FormControl(username, Validators.required),
             'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
         });
@@ -51,8 +51,8 @@ export class LoginDetailView implements OnInit {
     onSubmit(value: string) {
         this.submitted = true;
 
-        this.formLogin.username = this.userform.get('username').value;
-        this.formLogin.password = this.userform.get('password').value;
+        this.formLogin.username = this.loginformGroup.get('username').value;
+        this.formLogin.password = this.loginformGroup.get('password').value;
 
         this.loginService.sendLogin(this.formLogin).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
     }
@@ -70,5 +70,5 @@ export class LoginDetailView implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    get diagnostic() { return JSON.stringify(this.userform.value); }
+    get diagnostic() { return JSON.stringify(this.loginformGroup.value); }
 }

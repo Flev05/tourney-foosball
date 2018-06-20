@@ -46,8 +46,8 @@ export class ClientDetailView implements OnInit {
         this.filteredCountriesSingle =this.filterCountry(query, this.countries);
     }
 
+    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
     filterCountry(query, countries: Country[]) : Country[] {
-        //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
         let filtered : Country[] = [];
         for(let i = 0; i < countries.length; i++) {
             let country = countries[i];

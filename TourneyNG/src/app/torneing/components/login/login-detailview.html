@@ -37,55 +37,55 @@
 
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
-            <p-panel header="Form Login">
-                <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-2">
-                            Username *:
-                        </div>
-                        <div class="ui-grid-col-6">
-                            <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
-                        </div>
-                        <div class="ui-grid-col-4">
-                            <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['username'].valid&&userform.controls['username'].dirty">
-                                <i class="fa fa-close"></i>
-                                La Username è obbligatoria
-                            </div>
+    <form [formGroup]="loginformGroup" (ngSubmit)="onSubmit(loginformGroup.value)">
+        <p-panel header="Form Login">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Username *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!loginformGroup.controls['username'].valid&&loginformGroup.controls['username'].dirty">
+                            <i class="fa fa-close"></i>
+                            La Username è obbligatoria
                         </div>
                     </div>
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-2">
-                            Password *:
-                        </div>
-                        <div class="ui-grid-col-6">
-                            <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(8)"/>
-                        </div>
-                        <div class="ui-grid-col-4">
-                            <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty">
-                                <i class="fa fa-close"></i>
-                                <span *ngIf="userform.controls['password'].errors['required']">La Password è obbligatoria</span>
-                                <span *ngIf="userform.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-2"></div>
-                        <div class="ui-grid-col-6">
-                            <button pButton type="submit" label="Login" [disabled]="!userform.valid"></button>
-                        </div>
-                        <div class="ui-grid-col-4"></div>
-                    </div>
-
-                    <!-- <div style="text-align:center;margin-top:20px" *ngIf="submitted">
-                        Login
-                        <br>
-                        {{diagnostic}}
-                    </div> -->
-
                 </div>
-            </p-panel>
-        </form>                
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Password *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(8)"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!loginformGroup.controls['password'].valid&&loginformGroup.controls['password'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="loginformGroup.controls['password'].errors['required']">La Password è obbligatoria</span>
+                            <span *ngIf="loginformGroup.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"></div>
+                    <div class="ui-grid-col-6">
+                        <button pButton type="submit" icon="fa-check" label="Login" [disabled]="!loginformGroup.valid"></button>
+                    </div>
+                    <div class="ui-grid-col-4"></div>
+                </div>
+
+                <!-- <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                    Login
+                    <br>
+                    {{diagnostic}}
+                </div> -->
+
+            </div>
+        </p-panel>
+    </form>                
 </div>
  

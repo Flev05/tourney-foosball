@@ -8,7 +8,7 @@
 <div class="content-section documentation">
 
     <p>Vista di dettaglio di un torneo.
-        Da questa vista potete creare un nuovo torneo, modifiselectedCare o rimuovere uno esistente
+        Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno esistente
         Per utenti non connessi, ovvero non in possesso di un account, si possono creare
         nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
         tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
@@ -40,46 +40,87 @@
 </div>
 
 <div class="content-section implementation">
-    <div class="ui-g ui-fluid">
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="id">Id</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="id" [(ngModel)]="selectedTorneo.id" />
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="name">Nome</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="name" [(ngModel)]="selectedTorneo.name" />
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="when">Data</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="when" [(ngModel)]="selectedTorneo.when" />
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="address">Indirizzo</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="address" [(ngModel)]="selectedTorneo.address" />
-            </div>
-        </div>
-    </div>
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" pButton icon="fa-back" (click)="goBack()" label="Indietro"></button>
-        <button type="button" pButton icon="fa-check" (click)="save()" label="Salva"></button>
-        <button type="button" pButton icon="fa-close" (click)="delete()" label="Rimuovi"></button>
-    </div>
+        <button pButton type="button" icon="fa-arrow-left" (click)="goBack()" label="Indietro"></button>
+    </div>                  
+    
+    <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
+        <p-panel header="Vista di dettaglio torneo">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Nome Torneo:
+                    </div>
+                    <div class="ui-grid-col-6">                                
+                        <input pInputText type="text" formControlName="name"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['name'].valid&&tourneyFormGroup.controls['name'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="tourneyFormGroup.controls['name'].errors['required']">Il nome del torneo è obbligatorio</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Indirizzo:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="text" formControlName="address"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['address'].valid&&tourneyFormGroup.controls['address'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="tourneyFormGroup.controls['address'].errors['required']">L'indirizzo è obbligatorio</span>
+                        </div>
+                    </div>
+                </div>
+                            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Data:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <p-calendar formControlName="date"></p-calendar>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['date'].valid&&tourneyFormGroup.controls['date'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="tourneyFormGroup.controls['date'].errors['required']">Il giorno del torneo è obbligatorio</span>
+                        </div>
+                    </div>
+                </div>
+                            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Ora:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <p-calendar formControlName="time" [timeOnly]="true"></p-calendar> 
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['time'].valid&&tourneyFormGroup.controls['time'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="tourneyFormGroup.controls['time'].errors['required']">L'ora di inizio torneo è obbligatoria</span>
+                        </div>
+                    </div>
+                </div>
+                                    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"></div>
+                    <div class="ui-grid-col-6">
+                        <button pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
+                        <button pButton type="button" icon="fa-close" (click)="delete()" label="Rimuovi"></button>
+                    </div>
+                    <div class="ui-grid-col-4">
+                    </div>
+                </div>
+            </div>
+        </p-panel>
+    </form>   
 
 </div>
  

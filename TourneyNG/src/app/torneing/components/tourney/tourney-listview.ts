@@ -27,20 +27,16 @@ export class TourneyListView implements OnInit {
 
         this.carService.newTourney = false;
 
-        // for (let entry of this.tourney) {
-        //     console.log("List View tourney: " + entry.name + ")");
-        // }
-
         this.cols = [
-            { field: 'id', header: 'Id' },
             { field: 'name', header: 'Nome' },
-            { field: 'when', header: 'Data' },
+            { field: 'date', header: 'Data' },
+            { field: 'time', header: 'Ora' },
             { field: 'address', header: 'Indirizzo' }
         ];
     }
 
     create() {
-        this.selectedTourney={id: 0, name: "<Nome Tourney>", when: "<data inizio torneo>", address: "<indirizzo luogo torneo>"};
+        this.selectedTourney={id: 0, name: "", address: ""};
         this.carService.selectedTourney = this.selectedTourney;
         this.carService.newTourney = true;
         this.gotoDetailView();

@@ -14,6 +14,7 @@ import {ButtonModule} from '../../../components/button/button';
 import {TabViewModule} from '../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../components/codehighlighter/codehighlighter';
 import { SliderModule } from '../../../components/slider/slider';
+import {CalendarModule} from 'primeng/calendar';
 
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
@@ -34,7 +35,8 @@ import {TourneyDetailView} from './tourney-detailview';
         CodeHighlighterModule,
         TableModule,
         DialogModule,
-		SliderModule
+        SliderModule,
+        CalendarModule
 	],
 	declarations: [
 		TourneyListView,

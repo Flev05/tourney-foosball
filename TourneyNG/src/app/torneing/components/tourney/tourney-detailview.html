@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Vista di dettaglio</span>
-        <span>Creare o modificare il torneo selezionato</span>
+        <span>Creare o modificare un torneo</span>
     </div>
 </div>
 
@@ -43,7 +43,7 @@
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button pButton type="button" icon="fa-arrow-left" (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
     
     <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
@@ -83,8 +83,11 @@
                     <div class="ui-grid-col-2">
                         Data:
                     </div>
-                    <div class="ui-grid-col-6">
-                        <p-calendar formControlName="date"></p-calendar>
+                    <div class="date-width">
+                        <input pInputText type="text" formControlName="date"/>                       
+                    </div>
+                    <div class="ui-grid-col-2">
+                            (gg-mm-aaaa)
                     </div>
                     <div class="ui-grid-col-4">
                         <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['date'].valid&&tourneyFormGroup.controls['date'].dirty">
@@ -98,8 +101,11 @@
                     <div class="ui-grid-col-2">
                         Ora:
                     </div>
-                    <div class="ui-grid-col-6">
-                        <p-calendar formControlName="time" [timeOnly]="true"></p-calendar> 
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="time"/>
+                    </div>
+                    <div class="ui-grid-col-2">
+                            (hh:mm)
                     </div>
                     <div class="ui-grid-col-4">
                         <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['time'].valid&&tourneyFormGroup.controls['time'].dirty">

@@ -7,9 +7,166 @@ import { of } from 'rxjs/observable/of';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
-        {id: 1, name: 'Summer week 2018', date: new Date('2018-05-01'), time: new Date('2018-05-01 13:45:00'), address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'},
-        {id: 2, name: 'Festa Dell Unità 2018', date: new Date('2018-06-16'), time: new Date('2018-06-16 19:30:00'), address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'},
-        {id: 3, name: 'Coppa CSI 2018', date: new Date('2018-03-01'), time: new Date('2018-03-01 20:00:00'), address: 'Via De Sanctis, 33 - 20010 Assago (MI)'},
+        {id: 1, name: 'Summer week 2018', date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+            , calendars: [
+              {id: 1, name: 'Turno 1.1', date: '01-05-2018', time: '13:45'
+              , meetings: [
+                  {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "SALEMI", score1:7, score2:3}
+                , {id:2, team1: "Maldive", team2: "B&B", score1:7, score2:3}
+                , {id:3, team1: "Poeti", team2: "GROOT", score1:6, score2:7}
+                , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:1, score2:7}
+                , {id:5, team1: "Attenti a quei 2", team2: "Quota Drone", score1:7, score2:5}
+              ]
+            },
+            {id: 2, name: 'Turno 1.2', date: '08-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "Maldive", score1:7, score2:1}
+              , {id:2, team1: "SALEMI", team2: "Attenti a quei 2", score1:4, score2:7}
+              , {id:3, team1: "Poeti", team2: "Fialette", score1:7, score2:2}
+              , {id:4, team1: "GROOT", team2: "MINGA BUN", score1:7, score2:5}
+              , {id:5, team1: "B&B", team2: "Quota Drone", score1:0, score2:7}
+            ]
+          },
+          {id: 3, name: 'Turno 1.3', date: '17-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "Maldive", score1:7, score2:0}
+              , {id:2, team1: "SALEMI", team2: "GROOT", score1:7, score2:0}
+              , {id:3, team1: "Poeti", team2: "Attenti a quei 2", score1:2, score2:7}
+              , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:2, score2:7}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:0}
+            ]
+          },
+          {id: 4, name: 'Turno 1.4', date: '24-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "SALEMI", score1:6, score2:7}
+              , {id:2, team1: "Maldive", team2: "GROOT", score1:6, score2:7}
+              , {id:3, team1: "MINGA BUN", team2: "Attenti a quei 2", score1:1, score2:7}
+              , {id:4, team1: "Fialette", team2: "Poeti", score1:7, score2:2}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+            ]
+          },
+        ]
+        },
+        {id: 2, name: 'Festa Dell Unità 2018', date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+            , calendars: [
+              {id: 1, name: 'Turno 2.1', date: '01-05-2018', time: '13:45'
+              , meetings: [
+                  {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "SALEMI", score1:7, score2:3}
+                , {id:2, team1: "Maldive", team2: "B&B", score1:2, score2:7}
+                , {id:3, team1: "Poeti", team2: "GROOT", score1:7, score2:2}
+                , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:7, score2:0}
+                , {id:5, team1: "Attenti a quei 2", team2: "Quota Drone", score1:7, score2:0}
+              ]
+            },
+            {id: 2, name: 'Turno 2.2', date: '08-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "Maldive", score1:7, score2:2}
+              , {id:2, team1: "SALEMI", team2: "Attenti a quei 2", score1:7, score2:4}
+              , {id:3, team1: "Poeti", team2: "Fialette", score1:1, score2:7}
+              , {id:4, team1: "GROOT", team2: "MINGA BUN", score1:1, score2:7}
+              , {id:5, team1: "B&B", team2: "Quota Drone", score1:5, score2:7}
+            ]
+          },
+          {id: 3, name: 'Turno 2.3', date: '17-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "Maldive", score1:1, score2:7}
+              , {id:2, team1: "SALEMI", team2: "GROOT", score1:7, score2:6}
+              , {id:3, team1: "Poeti", team2: "Attenti a quei 2", score1:7, score2:4}
+              , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:7, score2:1}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:2}
+            ]
+          },
+          {id: 4, name: 'Turno 2.4', date: '24-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "SALEMI", score1:7, score2:1}
+              , {id:2, team1: "Maldive", team2: "GROOT", score1:1, score2:7}
+              , {id:3, team1: "MINGA BUN", team2: "Attenti a quei 2", score1:5, score2:7}
+              , {id:4, team1: "Fialette", team2: "Poeti", score1:5, score2:7}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:2}
+            ]
+          },
+        ]
+        },
+        {id: 3, name: 'Coppa CSI 2018', date: '01-03-2018', time: '20:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'
+            , calendars: [
+              {id: 1, name: 'Turno 3.1', date: '01-05-2018', time: '13:45'
+              , meetings: [
+                  {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "SALEMI", score1:7, score2:1}
+                , {id:2, team1: "Maldive", team2: "B&B", score1:5, score2:7}
+                , {id:3, team1: "Poeti", team2: "GROOT", score1:4, score2:7}
+                , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:4, score2:7}
+                , {id:5, team1: "Attenti a quei 2", team2: "Quota Drone", score1:7, score2:3}
+              ]
+            },
+            {id: 2, name: 'Turno 3.2', date: '08-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "Maldive", score1:7, score2:3}
+              , {id:2, team1: "SALEMI", team2: "Attenti a quei 2", score1:1, score2:7}
+              , {id:3, team1: "Poeti", team2: "Fialette", score1:0, score2:7}
+              , {id:4, team1: "GROOT", team2: "MINGA BUN", score1:7, score2:0}
+              , {id:5, team1: "B&B", team2: "Quota Drone", score1:7, score2:2}
+            ]
+          },
+          {id: 3, name: 'Turno 3.3', date: '17-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "Maldive", score1:7, score2:1}
+              , {id:2, team1: "SALEMI", team2: "GROOT", score1:6, score2:7}
+              , {id:3, team1: "Poeti", team2: "Attenti a quei 2", score1:5, score2:7}
+              , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:4, score2:7}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:4, score2:7}
+            ]
+          },
+          {id: 4, name: 'Turno 3.4', date: '24-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "SALEMI", score1:7, score2:5}
+              , {id:2, team1: "Maldive", team2: "GROOT", score1:7, score2:3}
+              , {id:3, team1: "MINGA BUN", team2: "Attenti a quei 2", score1:1, score2:7}
+              , {id:4, team1: "Fialette", team2: "Poeti", score1:0, score2:7}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+            ]
+          },
+        ]
+      },
+        {id: 4, name: 'Festa dello Sport 2018', date: '15-06-2018', time: '19:30', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+            , calendars: [
+              {id: 1, name: 'Turno 4.1', date: '01-05-2018', time: '13:45'
+              , meetings: [
+                  {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "SALEMI", score1:7, score2:3}
+                , {id:2, team1: "Maldive", team2: "B&B", score1:5, score2:7}
+                , {id:3, team1: "Poeti", team2: "GROOT", score1:5, score2:7}
+                , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:7, score2:5}
+                , {id:5, team1: "Attenti a quei 2", team2: "Quota Drone", score1:7, score2:5}
+              ]
+            },
+            {id: 2, name: 'Turno 4.2', date: '08-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Luciano Martino - Salvatore Amoroso", team2: "Maldive", score1:7, score2:3}
+              , {id:2, team1: "SALEMI", team2: "Attenti a quei 2", score1:7, score2:1}
+              , {id:3, team1: "Poeti", team2: "Fialette", score1:4, score2:7}
+              , {id:4, team1: "GROOT", team2: "MINGA BUN", score1:2, score2:7}
+              , {id:5, team1: "B&B", team2: "Quota Drone", score1:7, score2:2}
+            ]
+          },
+          {id: 3, name: 'Turno 4.3', date: '17-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "Maldive", score1:5, score2:7}
+              , {id:2, team1: "SALEMI", team2: "GROOT", score1:6, score2:7}
+              , {id:3, team1: "Poeti", team2: "Attenti a quei 2", score1:2, score2:7}
+              , {id:4, team1: "Fialette", team2: "MINGA BUN", score1:1, score2:7}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+            ]
+          },
+          {id: 4, name: 'Turno 4.4', date: '24-05-2018', time: '21:00'
+            , meetings: [
+                {id:1, team1: "Quota Drone", team2: "SALEMI", score1:7, score2:4}
+              , {id:2, team1: "Maldive", team2: "GROOT", score1:1, score2:7}
+              , {id:3, team1: "MINGA BUN", team2: "Attenti a quei 2", score1:5, score2:7}
+              , {id:4, team1: "Fialette", team2: "Poeti", score1:6, score2:7}
+              , {id:5, team1: "B&B", team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+            ]
+          },
+        ]
+      },
       ];
 
       const login = [
@@ -168,6 +325,15 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       ];
 
-      return {login, logout, tourneys, userng, clients, roles, countries, changePassword, resetPassword};
+      return {login
+        , logout
+        , tourneys
+        , userng
+        , clients
+        , roles
+        , countries
+        , changePassword
+        , resetPassword
+      };
   }
 }

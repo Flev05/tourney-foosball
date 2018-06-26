@@ -36,7 +36,7 @@ export class TourneyListView implements OnInit {
     }
 
     create() {
-        this.selectedTourney={id: 0, name: "", address: ""};
+        this.selectedTourney={id: 0, name: "", address: "", calendars:[{}]};
         this.carService.selectedTourney = this.selectedTourney;
         this.carService.newTourney = true;
         this.gotoDetailView();

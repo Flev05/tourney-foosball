@@ -17,6 +17,12 @@ import {CalendarModule} from 'primeng/calendar';
           margin-top: .25em;
           display: block;
         }
+        .date-width {
+            width: 30mm;
+        }
+        .time-width {
+            width: 20mm;
+        }
   `]
 })
 export class TourneyDetailView implements OnInit {
@@ -61,7 +67,7 @@ export class TourneyDetailView implements OnInit {
         let invalidDate = new Date();
         invalidDate.setDate(today.getDate() - 1);
         this.invalidDates = [today,invalidDate];
-        
+
         this.selectedTourney = this.tourneyService.selectedTourney;
 
         this.tourneyFormGroup = this.fb.group({

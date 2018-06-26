@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
+import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule }  from 'primeng/dialog';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './domain/in-memory-data.service';
@@ -33,6 +34,7 @@ import { CountryService } from './service/countryservice';
     BrowserModule,
     FormsModule,
     TableModule,
+    OrderListModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,

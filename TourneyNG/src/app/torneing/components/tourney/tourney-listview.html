@@ -57,6 +57,9 @@
     [rows]="15">
 
     <ng-template pTemplate="header" let-columns>
+        <div style="text-align:left">
+            <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Torneo" ></button>
+        </div>
         <tr>
             <th *ngFor="let col of columns">
                 {{col.header}}
@@ -74,7 +77,7 @@
 
     <ng-template pTemplate="summary" let-rowData>
         <div style="text-align:left">
-            <button type="button" pButton icon="fa-plus" (click)="create()" label="Nuovo Torneo"></button>
+            <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Torneo" ></button>
         </div>
     </ng-template>        
 </p-table>

@@ -1,7 +1,10 @@
+import { Calendar } from './calendar';
+
 export interface Tourney {
     id?: number;
     name? : string;
-    date? : Date;
-    time? : Date;
+    date? : string;
+    time? : string;
     address? : string;
+    calendars?: [ Calendar ]
 }

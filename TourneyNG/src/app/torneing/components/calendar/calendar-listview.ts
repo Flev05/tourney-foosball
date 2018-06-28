@@ -34,7 +34,7 @@ export class CalendarListView implements OnInit {
         this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
 
         this.cols = [
-            { field: 'name', header: 'Torneo' },
+            { field: 'tourneyName', header: 'Torneo' },
             { field: 'date', header: 'Data' },
             { field: 'time', header: 'Ora' },
             { field: 'address', header: 'Indirizzo' }
@@ -49,7 +49,7 @@ export class CalendarListView implements OnInit {
         this.gotoDetailView();
     }
   
-    private gotoDetailView() {
+    protected gotoDetailView() {
         let redirect = '/calendar/dv';
         this.router.navigate([redirect]);
     }

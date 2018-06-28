@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Calendar } from '../../domain/calendar';
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
+import { CalendarListView } from '../calendar/calendar-listview';
 
 @Component({
     templateUrl: './result-listview.html',
@@ -16,49 +17,15 @@ import { TourneyService } from '../../service/tourneyservice';
         }
     `]
 })
-export class ResultListView implements OnInit {
-
-    selectedTourney: Tourney;
-
-    tourneys: Tourney[];
-
-    cols: any[];
-
-    constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("ResultListView.constructor()");
-    }
-
-    ngOnInit() {
-        console.log("ResultListView.ngOnInit()");
-
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
-
-        this.cols = [
-            { field: 'name', header: 'Torneo' },
-            { field: 'date', header: 'Data' },
-            { field: 'time', header: 'Ora' },
-            { field: 'address', header: 'Indirizzo' }
-        ];
-    }
+export class ResultListView extends CalendarListView {
 
     onRowSelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedTourney = this.cloneResult(event.data);
-
+        super.onRowSelect(event);
         this.gotoDetailView();
     }
   
-    private gotoDetailView() {
+    protected gotoDetailView() {
         let redirect = '/result/dv';
         this.router.navigate([redirect]);
-    }
-
-    cloneResult(c: Tourney): Tourney {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
-        }
-        return car;
     }
 }

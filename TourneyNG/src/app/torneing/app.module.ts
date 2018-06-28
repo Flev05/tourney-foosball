@@ -23,7 +23,8 @@ import { ClientService } from './service/clientservice';
 import { UserngService } from './service/userngservice';
 import { RoleService } from './service/roleservice';
 import { CountryService } from './service/countryservice';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -31,23 +32,25 @@ import { CountryService } from './service/countryservice';
     HomeComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    TableModule,
-    OrderListModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    InputTextModule,
-    DialogModule,
-    ButtonModule,
-    BrowserAnimationsModule,
-    HttpClientInMemoryWebApiModule.forRoot(
+     BrowserModule
+    ,FormsModule
+    ,TableModule
+    ,OrderListModule
+    ,ReactiveFormsModule
+    ,AppRoutingModule
+    ,HttpClientModule
+    ,InputTextModule
+    ,DialogModule
+    ,ButtonModule
+    ,BrowserAnimationsModule
+    ,ConfirmDialogModule
+    ,HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
     )
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }
+      , ConfirmationService
       , TourneyService
       , ClientService
       , UserngService

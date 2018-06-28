@@ -15,6 +15,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},
             {path: 'calendar',  loadChildren: './components/calendar/calendar.module#CalendarModule'},
             {path: 'result',    loadChildren: './components/result/result.module#ResultModule'},
+            {path: 'classification', loadChildren: './components/classification/classification.module#ClassificationModule'},
         ])    
     ],
     exports: [RouterModule]

@@ -54,12 +54,12 @@
                         Nome Torneo:
                     </div>
                     <div class="ui-grid-col-6">                                
-                        <input pInputText type="text" formControlName="name"/>
+                        <input pInputText type="text" formControlName="tourneyName"/>
                     </div>
                     <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['name'].valid&&tourneyFormGroup.controls['name'].dirty">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['tourneyName'].valid&&tourneyFormGroup.controls['tourneyName'].dirty">
                             <i class="fa fa-close"></i>
-                            <span *ngIf="tourneyFormGroup.controls['name'].errors['required']">Il nome del torneo è obbligatorio</span>
+                            <span *ngIf="tourneyFormGroup.controls['tourneyName'].errors['required']">Il nome del torneo è obbligatorio</span>
                         </div>
                     </div>
                 </div>
@@ -116,12 +116,11 @@
                 </div>
                                     
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2"></div>
-                    <div class="ui-grid-col-6">
-                        <button pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
-                        <button pButton type="button" icon="fa-close" (click)="delete()" label="Rimuovi"></button>
+                    <div class="ui-grid-col-2">
+                        <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
                     </div>
-                    <div class="ui-grid-col-4">
+                    <div class="ui-grid-col-2">
+                        <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!tourneyFormGroup.valid"></button>
                     </div>
                 </div>
             </div>

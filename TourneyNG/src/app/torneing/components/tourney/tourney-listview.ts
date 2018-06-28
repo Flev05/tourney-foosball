@@ -28,7 +28,7 @@ export class TourneyListView implements OnInit {
         this.carService.newTourney = false;
 
         this.cols = [
-            { field: 'name', header: 'Nome' },
+            { field: 'tourneyName', header: 'Nome' },
             { field: 'date', header: 'Data' },
             { field: 'time', header: 'Ora' },
             { field: 'address', header: 'Indirizzo' }
@@ -36,7 +36,7 @@ export class TourneyListView implements OnInit {
     }
 
     create() {
-        this.selectedTourney={id: 0, name: "", address: "", calendars:[{}]};
+        this.selectedTourney={id: 0, tourneyName: "", address: "", rounds:[{}]};
         this.carService.selectedTourney = this.selectedTourney;
         this.carService.newTourney = true;
         this.gotoDetailView();

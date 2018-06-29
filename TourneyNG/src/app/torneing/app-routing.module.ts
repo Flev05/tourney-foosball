@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'clients',   loadChildren: './components/client/client.module#ClientModule'},
             {path: 'users',     loadChildren: './components/userng/user.module#UserModule'},
             {path: 'tourney',   loadChildren: './components/tourney/tourney.module#TourneyModule'},
+            {path: 'round',     loadChildren: './components/round/round.module#RoundModule'},
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},
             {path: 'calendar',  loadChildren: './components/calendar/calendar.module#CalendarModule'},
             {path: 'result',    loadChildren: './components/result/result.module#ResultModule'},

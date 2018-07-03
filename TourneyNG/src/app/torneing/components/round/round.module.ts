@@ -16,8 +16,8 @@ import {CodeHighlighterModule} from '../../../components/codehighlighter/codehig
 import { SliderModule } from '../../../components/slider/slider';
 import {OrderListModule} from 'primeng/orderlist';
 
+import {RoundTourneyListView} from './tourney-listview';
 import {RoundListView} from './round-listview';
-import {RoundDetailView} from './round-detailview';
 
 @NgModule({
 	imports: [
@@ -39,8 +39,8 @@ import {RoundDetailView} from './round-detailview';
 		RoundRoutingModule,
 	],
 	declarations: [
-		RoundListView,
-		RoundDetailView
+		RoundTourneyListView,
+		RoundListView
 	]
 })
 export class RoundModule {}

@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Calendar } from '../../domain/calendar';
+ 
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
-import { CalendarListView } from '../calendar/calendar-listview';
+import { TourneyListView } from '../calendar/tourney-listview';
 
 @Component({
-    templateUrl: './result-listview.html',
+    templateUrl: './tourney-listview.html',
     styles: [`        
         .ui-table table {
             border-collapse: collapse;
@@ -17,7 +17,7 @@ import { CalendarListView } from '../calendar/calendar-listview';
         }
     `]
 })
-export class ResultListView extends CalendarListView {
+export class RoundTourneyListView extends TourneyListView {
 
     onRowSelect(event) {
         super.onRowSelect(event);
@@ -25,7 +25,7 @@ export class ResultListView extends CalendarListView {
     }
   
     protected gotoDetailView() {
-        let redirect = '/result/dv';
+        let redirect = '/round/dv';
         this.router.navigate([redirect]);
     }
 }

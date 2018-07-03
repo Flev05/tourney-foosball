@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
- 
 import { Tourney } from '../../domain/tourney';
+import { Calendar } from '../../domain/calendar';
+import { Meeting } from '../../domain/meeting';
 import { TourneyService } from '../../service/tourneyservice';
-import { CalendarListView } from '../calendar/calendar-listview';
+import { CalendarDetailView } from '../calendar/calendar-detailview';
 
 @Component({
     templateUrl: './round-listview.html',
@@ -15,12 +16,19 @@ import { CalendarListView } from '../calendar/calendar-listview';
             width: auto;
             table-layout: fixed;
         }
-    `]
+  `]
 })
-export class RoundListView extends CalendarListView {
+export class RoundListView extends CalendarDetailView {
+    constructor( public router: Router) { 
+        super(null, null);
+        console.log("CalTourneyListView.constructor()");
+    }
 
     onRowSelect(event) {
-        super.onRowSelect(event);
+        console.log(event.data);
+
+        this.tourneyService.selectedTourney = this.cloneCalendar(event.data);
+
         this.gotoDetailView();
     }
   
@@ -29,3 +37,4 @@ export class RoundListView extends CalendarListView {
         this.router.navigate([redirect]);
     }
 }
+

@@ -7,7 +7,7 @@ import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 
 @Component({
-    templateUrl: './calendar-listview.html',
+    templateUrl: './tourney-listview.html',
     styles: [`        
         .ui-table table {
             border-collapse: collapse;
@@ -16,7 +16,7 @@ import { TourneyService } from '../../service/tourneyservice';
         }
     `]
 })
-export class CalendarListView implements OnInit {
+export class CalTourneyListView implements OnInit {
 
     selectedTourney: Tourney;
 
@@ -25,11 +25,11 @@ export class CalendarListView implements OnInit {
     cols: any[];
 
     constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("CalendarListView.constructor()");
+        console.log("CalTourneyListView.constructor()");
     }
 
     ngOnInit() {
-        console.log("CalendarListView.ngOnInit()");
+        console.log("CalTourneyListView.ngOnInit()");
 
         this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
 

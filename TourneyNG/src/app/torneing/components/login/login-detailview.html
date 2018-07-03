@@ -1,36 +1,8 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Pagina di login</span>
-        <span>Login utente</span>
+        <span class="feature-title">Login</span>
+        <span>Login nel sistema di gestione tornei</span>
     </div>
-</div>
-
-<div class="content-section documentation">
-
-    <p>La login è necessaria per accedere ai servizi di gestione del torneo. Se l'utente non effettua la login,
-        può continuare a utilizzare il sistema nella sua parte in sola lettura ma non può creare un nuovo torneo.
-        Può accedere alla sezione dei tornei e vedere i risultati e le classifiche di tornei esistenti già
-        terminati e a quelli in corso di svolgimento se ha il codice di accesso.
-    </p>
-    
-    <h4>Utente DEMO</h4>
-    <p>Il sistema mette a disposizione di chiunque un utente di default, utente demo con password demo, che permette di 
-        utilizzare quasi tutte le funzionalità previste tranne la persistenza dei dati che saranno persi allo scadere della
-        sessione applicativa di trenta minuti. Come descritto meglio nel link:
-        <a class="home-button" [routerLink]="['/demo']">
-            Versione Demo
-        </a>
-    </p>
-
-    <h4>Login</h4>
-    <p>Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sotto.
-        Se non avete credenziali dedicate, potete utilizzare l'utente demo ed imparare l'uso del sistema e
-        solo in un secondo momento potete noleggiarlo per il periodo desiderato.
-        Per maggiori dettagli, si veda il link:
-        <a class="home-button" [routerLink]="['/lease']">
-            Versione Noleggio
-        </a>
-    </p>
 </div>
 
 <div class="content-section implementation">
@@ -88,4 +60,20 @@
         </p-panel>
     </form>                
 </div>
- 
+
+<div class="content-section documentation">
+    <p>Pagina di login per chi è già in possesso di credenziali per accedere al sistema 
+        di gestione dei tornei.
+        Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sopra.</p>
+    <p>
+        Se non disponete di credenziali, potete continuare ad utilizzare il sistema come utente anonimo.
+        Imparate l'uso del sistema e solo in un secondo momento potete noleggiarlo per il periodo desiderato.
+    </p>
+    <p>
+        Per maggiori dettagli sul noleggio, si veda il link:
+        <a class="home-button" [routerLink]="['/lease']">
+            Versione Noleggio
+        </a>
+    </p>
+</div>
+

@@ -1,16 +1,18 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Vista di dettaglio</span>
-        <span>Classifica torneo</span>
+        <span class="feature-title">Classifica</span>
+        <span>{{selectedTourney.tourneyName}}</span>
     </div>
 </div>
 
 <div class="content-section documentation">
 
-    <p>Vista di dettaglio classifica di un torneo.
-        Da questa vista potete vedere classifica corrente del torneo selezionato girone per girone.
+    <p>Vista di dettaglio classifica del torneo: {{selectedTourney.tourneyName}}</p>
+    
+    <p>Da questa vista potete vedere classifica corrente del torneo selezionato girone per girone.
         La classifica si riferisce a ciascun girone di cui è composto il torneo. 
-
+    </p>
+    <p>
         La vista elenco prevede delle maschere dalle quali è possibile impostare criteri di ricerca del torneo 
         di interesse. Una volta selezionato il torneo, si accede alla corrispondente vista di dettaglio della
         classifica, girone per girone, in cui sono visualizzati in forma tabellare tutte le classifiche

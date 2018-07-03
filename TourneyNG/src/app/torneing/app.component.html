@@ -36,17 +36,18 @@
             </div>
         </div>
    
-        <div *ngIf="loginService.userLogged" class="layout-menu">
+        <div class="layout-menu">
             <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
-                <span>Admin</span>
+                <span>Amministrazione</span>
             </a>
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a [routerLink]="['/users']" (click)="menuActive = false">&#9679; Utenti</a>
                 <a [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Password</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
    
@@ -55,7 +56,7 @@
                     (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
                 <img src="assets/showcase/images/icons/file-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/file.svg" class="layout-menu-icon-inactive"/>
-                <span>Tornei</span>
+                <span>Consultazione</span>
             </a>
             <div [ngClass]="{'submenushow': (tourneymenutitle.id == activeMenuId), 'submenuhide': (tourneymenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/tourney']" (click)="menuActive = false">&#9679; Tornei</a>
@@ -63,6 +64,7 @@
                 <a [routerLink]="['/calendar']" (click)="menuActive = false">&#9679; Calendario</a>
                 <a [routerLink]="['/result']" (click)="menuActive = false">&#9679; Risultati</a>
                 <a [routerLink]="['/classification']" (click)="menuActive = false">&#9679; Classifica</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
    
@@ -74,6 +76,7 @@
             </a>
             <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/login']" (click)="menuActive = false">&#9679; Login</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
 

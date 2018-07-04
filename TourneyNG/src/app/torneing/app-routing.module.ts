@@ -7,10 +7,15 @@ import { HomeComponent } from './components/home/home.component';
         RouterModule.forRoot([
             {path: '', component: HomeComponent},
             {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
-            {path: 'lease',     loadChildren: './components/lease/lease.module#LeaseModule'},
             {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
-            {path: 'clients',   loadChildren: './components/client/client.module#ClientModule'},
-            {path: 'users',     loadChildren: './components/userng/user.module#UserModule'},
+
+            // Admin Section
+            {path: 'admintourney',   loadChildren: './components/admin/tourney/tourney.module#TourneyModule'},
+            {path: 'clients',   loadChildren: './components/admin/client/client.module#ClientModule'},
+            {path: 'users',     loadChildren: './components/admin/userng/user.module#UserModule'},
+            {path: 'lease',     loadChildren: './components/admin/lease/lease.module#LeaseModule'},
+
+            // Presentation Section
             {path: 'tourney',   loadChildren: './components/tourney/tourney.module#TourneyModule'},
             {path: 'round',     loadChildren: './components/round/round.module#RoundModule'},
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},

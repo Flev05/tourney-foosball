@@ -1,6 +1,6 @@
 import {Component,OnInit} from '@angular/core';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-import {Message,SelectItem} from '../../../components/common/api';
+import {Message,SelectItem} from '../../../../components/common/api';
 
 @Component({
     templateUrl: './lease.component.html'

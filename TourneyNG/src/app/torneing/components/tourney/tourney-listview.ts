@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 
+const redirect = '/tourney/dv';
+
 @Component({
     templateUrl: './tourney-listview.html'
 })
@@ -52,7 +54,6 @@ export class TourneyListView implements OnInit {
     }
   
     private gotoDetailView() {
-        let redirect = '/tourney/dv';
         this.router.navigate([redirect]);
     }
 

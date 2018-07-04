@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
-import { Userng } from '../../domain/userng';
-import { UserngService } from '../../service/userngservice';
-import { RoleService } from '../../service/roleservice';
+import { Userng } from '../../../domain/userng';
+import { UserngService } from '../../../service/userngservice';
+import { RoleService } from '../../../service/roleservice';
 
-import { Role } from '../../domain/role';
+import { Role } from '../../../domain/role';
 
 @Component({
     templateUrl: './user-detailview.html',

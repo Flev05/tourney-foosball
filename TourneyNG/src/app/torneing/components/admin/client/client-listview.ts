@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Client } from '../../domain/client';
-import { ClientService } from '../../service/clientservice';
+import { Client } from '../../../domain/client';
+import { ClientService } from '../../../service/clientservice';
 
 @Component({
     templateUrl: './client-listview.html'

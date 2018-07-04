@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-
-import { Client } from '../../domain/client';
-import { ClientService } from '../../service/clientservice';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-import { CountryService } from '../../service/countryservice';
-import { Country } from '../../domain/country';
+
+import { Client } from '../../../domain/client';
+import { ClientService } from '../../../service/clientservice';
+import { CountryService } from '../../../service/countryservice';
+import { Country } from '../../../domain/country';
 
 @Component({
     templateUrl: './client-detailview.html',

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import {Message,SelectItem} from '../../../components/common/api';
-import { Password } from '../../domain/password';
-import { UserngService } from '../../service/userngservice';
-import { LoginService } from '../../service/loginservice';
+import {Message,SelectItem} from '../../../../components/common/api';
+import { Password } from '../../../domain/password';
+import { UserngService } from '../../../service/userngservice';
+import { LoginService } from '../../../service/loginservice';
 
 @Component({
     templateUrl: './user-changepassword.html',

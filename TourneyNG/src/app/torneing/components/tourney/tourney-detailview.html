@@ -1,41 +1,14 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Vista di dettaglio</span>
-        <span>Creare o modificare un torneo</span>
+        <span class="feature-title">Torneo</span>
+        <span>{{selectedTourney.tourneyName}}</span>
     </div>
 </div>
 
 <div class="content-section documentation">
 
-    <p>Vista di dettaglio di un torneo.
-        Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno esistente
-        Per utenti non connessi, ovvero non in possesso di un account, si possono creare
-        nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
-        tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
-        inseriti saranno persi.
-        Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
-        nella pagina         
-        <a class="home-button" [routerLink]="['/owner']">
-            Versione Noleggio
-        </a>
-    </p>
-
-    <h4>Creare un nuovo torneo</h4>
-    <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-        il bottone Salva
-        I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
-    </p>
-
-    <h4>Modificare un torneo</h4>
-    <p>Si possono modifiselectedCare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
-        non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-        essere svuotati.
-        Alla fine dell'operazione salvare con il bottone Salva
-    </p>
-    <h4>Rimuovere un torneo</h4>
-    <p>Si può rimuovere un torneo esistente con il bottore Rimuovi.
-        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il torneo
-        sarà rimosso dal sistema.
+    <p>Vista di dettaglio del torneo {{selectedTourney.tourneyName}}.
+        Da questa vista potete visualizzare i dettagli del torneo selezionato
     </p>
 </div>
 
@@ -112,15 +85,6 @@
                             <i class="fa fa-close"></i>
                             <span *ngIf="tourneyFormGroup.controls['time'].errors['required']">L'ora di inizio torneo è obbligatoria</span>
                         </div>
-                    </div>
-                </div>
-                                    
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
-                        <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
-                    </div>
-                    <div class="ui-grid-col-2">
-                        <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!tourneyFormGroup.valid"></button>
                     </div>
                 </div>
             </div>

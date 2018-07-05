@@ -1,13 +1,13 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
+import {ResultTourneyListView} from './tourney-listview';
 import {ResultListView} from './result-listview';
-import {ResultDetailView} from './result-detailview';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: '', component: ResultListView },
-			{ path: 'dv', component: ResultDetailView },
+			{ path: '', component: ResultTourneyListView },
+			{ path: 'lv', component: ResultListView },
 		])
 	],
 	exports: [

@@ -32,22 +32,33 @@
             <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
                 <a [routerLink]="['/demo']" (click)="menuActive = false">&#9679; Demo</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
-                <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
             </div>
         </div>
-   
+
         <div class="layout-menu">
             <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
-                <span>Gestione</span>
+                <span>Admin</span>
             </a>
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
-                <a [routerLink]="['/adminround']" (click)="menuActive = false">&#9679; Gironi</a>
                 <a [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a [routerLink]="['/users']" (click)="menuActive = false">&#9679; Utenti</a>
+            </div>
+        </div>
+    
+    
+        <div class="layout-menu">
+            <a id="manager-id" #managermenutitle [class.active-menuitem]="managermenutitle.id == activeMenuId"
+                    (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
+                <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
+                <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
+                <span>Gestione</span>
+            </a>
+            <div [ngClass]="{submenushow: (managermenutitle.id == activeMenuId), 'submenuhide': (managermenutitle.id != activeMenuId)}">
+                <a [routerLink]="['/managertourney']" (click)="menuActive = false">&#9679; Tornei</a>
+                <a [routerLink]="['/managerround']" (click)="menuActive = false">&#9679; Gironi</a>
                 <a [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Password</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
@@ -64,10 +75,11 @@
                 <a [routerLink]="['/tourney']" (click)="menuActive = false">&#9679; Tornei</a>
                 <a [routerLink]="['/round']" (click)="menuActive = false">&#9679; Gironi</a>
                 <a [routerLink]="['/calendar']" (click)="menuActive = false">&#9679; Calendario</a>
-                <a [routerLink]="['/playoff']" (click)="menuActive = false">&#9679; Play Off</a>
-                <a [routerLink]="['/elimination']" (click)="menuActive = false">&#9679; Eliminazione</a>
                 <a [routerLink]="['/result']" (click)="menuActive = false">&#9679; Risultati</a>
                 <a [routerLink]="['/classification']" (click)="menuActive = false">&#9679; Classifica</a>
+                <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
+                <a [routerLink]="['/playoff']" (click)="menuActive = false">&#9679; Play Off</a>
+                <a [routerLink]="['/elimination']" (click)="menuActive = false">&#9679; Eliminazione</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>

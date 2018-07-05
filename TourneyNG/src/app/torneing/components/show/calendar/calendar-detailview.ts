@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { Tourney } from '../../domain/tourney';
-import { Round } from '../../domain/round';
-import { Calendar } from '../../domain/calendar';
-import { Meeting } from '../../domain/meeting';
-import { TourneyService } from '../../service/tourneyservice';
+import { Tourney } from '../../../domain/tourney';
+import { Round } from '../../../domain/round';
+import { Calendar } from '../../../domain/calendar';
+import { Meeting } from '../../../domain/meeting';
+import { TourneyService } from '../../../service/tourneyservice';
 
 @Component({
     templateUrl: './calendar-detailview.html',
@@ -26,8 +26,8 @@ export class CalendarDetailView implements OnInit {
     rows: any[] = [];
 
     constructor(
-        private tourneyService: TourneyService,
-        private location: Location
+        protected tourneyService: TourneyService,
+        protected location: Location
     ) {}
 
     ngOnInit() {

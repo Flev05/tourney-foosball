@@ -5,10 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import {ConfirmationService} from 'primeng/api';
 
-import {Message,SelectItem} from '../../../components/common/api';
+import {Message,SelectItem} from '../../../../components/common/api';
 
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
+import { Tourney } from '../../../domain/tourney';
+import { TourneyService } from '../../../service/tourneyservice';
 
 @Component({
     templateUrl: './tourney-detailview.html',

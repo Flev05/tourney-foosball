@@ -5,15 +5,15 @@ import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 
 import {RoundRoutingModule} from './round-routing.module';
-import {GrowlModule} from '../../../components/growl/growl';
-import {PanelModule} from '../../../components/panel/panel';
-import {DropdownModule} from '../../../components/dropdown/dropdown';
-import {InputTextModule} from '../../../components/inputtext/inputtext';
-import {InputTextareaModule} from '../../../components/inputtextarea/inputtextarea';
-import {ButtonModule} from '../../../components/button/button';
-import {TabViewModule} from '../../../components/tabview/tabview';
-import {CodeHighlighterModule} from '../../../components/codehighlighter/codehighlighter';
-import { SliderModule } from '../../../components/slider/slider';
+import {GrowlModule} from '../../../../components/growl/growl';
+import {PanelModule} from '../../../../components/panel/panel';
+import {DropdownModule} from '../../../../components/dropdown/dropdown';
+import {InputTextModule} from '../../../../components/inputtext/inputtext';
+import {InputTextareaModule} from '../../../../components/inputtextarea/inputtextarea';
+import {ButtonModule} from '../../../../components/button/button';
+import {TabViewModule} from '../../../../components/tabview/tabview';
+import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
+import { SliderModule } from '../../../../components/slider/slider';
 import {OrderListModule} from 'primeng/orderlist';
 
 import {RoundTourneyListView} from './tourney-listview';

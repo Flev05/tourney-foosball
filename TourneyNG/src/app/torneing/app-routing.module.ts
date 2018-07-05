@@ -16,12 +16,14 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'lease',     loadChildren: './components/admin/lease/lease.module#LeaseModule'},
 
             // Presentation Section
-            {path: 'tourney',   loadChildren: './components/tourney/tourney.module#TourneyModule'},
-            {path: 'round',     loadChildren: './components/round/round.module#RoundModule'},
+            {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
+            {path: 'round',     loadChildren: './components/show/round/round.module#RoundModule'},
+            {path: 'calendar',  loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
+            {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},
+            {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},
+
+            // Login Section
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},
-            {path: 'calendar',  loadChildren: './components/calendar/calendar.module#CalendarModule'},
-            {path: 'result',    loadChildren: './components/result/result.module#ResultModule'},
-            {path: 'classification', loadChildren: './components/classification/classification.module#ClassificationModule'},
         ])    
     ],
     exports: [RouterModule]

@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Calendar } from '../../domain/calendar';
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
-import { TourneyListView } from '../calendar/tourney-listview';
+import { Calendar } from '../../../domain/calendar';
+import { Tourney } from '../../../domain/tourney';
+import { TourneyService } from '../../../service/tourneyservice';
+import { CalTourneyListView } from '../calendar/tourney-listview';
+
+const redirect = '/result/lv';
 
 @Component({
-    templateUrl: './result-listview.html',
+    templateUrl: './tourney-listview.html',
     styles: [`        
         .ui-table table {
             border-collapse: collapse;
@@ -17,7 +19,7 @@ import { TourneyListView } from '../calendar/tourney-listview';
         }
     `]
 })
-export class ResultListView extends TourneyListView {
+export class ResultTourneyListView extends CalTourneyListView {
 
     onRowSelect(event) {
         super.onRowSelect(event);
@@ -25,7 +27,6 @@ export class ResultListView extends TourneyListView {
     }
   
     protected gotoDetailView() {
-        let redirect = '/result/dv';
         this.router.navigate([redirect]);
     }
 }

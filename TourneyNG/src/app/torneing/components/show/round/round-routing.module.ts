@@ -7,7 +7,7 @@ import {RoundListView} from './round-listview';
 	imports: [
 		RouterModule.forChild([
 			{ path: '', component: RoundTourneyListView },
-			{ path: 'dv', component: RoundListView },
+			{ path: 'lv', component: RoundListView },
 		])
 	],
 	exports: [

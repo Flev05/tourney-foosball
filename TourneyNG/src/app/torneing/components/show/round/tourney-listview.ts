@@ -3,9 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
  
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
-import { TourneyListView } from '../calendar/tourney-listview';
+import { Tourney } from '../../../domain/tourney';
+import { TourneyService } from '../../../service/tourneyservice';
+import { CalTourneyListView } from '../calendar/tourney-listview';
+
+const redirect = '/round/lv';
 
 @Component({
     templateUrl: './tourney-listview.html',
@@ -17,7 +19,7 @@ import { TourneyListView } from '../calendar/tourney-listview';
         }
     `]
 })
-export class RoundTourneyListView extends TourneyListView {
+export class RoundTourneyListView extends CalTourneyListView {
 
     onRowSelect(event) {
         super.onRowSelect(event);
@@ -25,7 +27,6 @@ export class RoundTourneyListView extends TourneyListView {
     }
   
     protected gotoDetailView() {
-        let redirect = '/round/dv';
         this.router.navigate([redirect]);
     }
 }

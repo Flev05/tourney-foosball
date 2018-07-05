@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
+import { Tourney } from '../../../domain/tourney';
+import { TourneyService } from '../../../service/tourneyservice';
 
 const redirect = '/tourney/dv';
 

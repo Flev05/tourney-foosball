@@ -5,19 +5,19 @@ import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 
 import {ResultRoutingModule} from './result-routing.module';
-import {GrowlModule} from '../../../components/growl/growl';
-import {PanelModule} from '../../../components/panel/panel';
-import {DropdownModule} from '../../../components/dropdown/dropdown';
-import {InputTextModule} from '../../../components/inputtext/inputtext';
-import {InputTextareaModule} from '../../../components/inputtextarea/inputtextarea';
-import {ButtonModule} from '../../../components/button/button';
-import {TabViewModule} from '../../../components/tabview/tabview';
-import {CodeHighlighterModule} from '../../../components/codehighlighter/codehighlighter';
-import { SliderModule } from '../../../components/slider/slider';
+import {GrowlModule} from '../../../../components/growl/growl';
+import {PanelModule} from '../../../../components/panel/panel';
+import {DropdownModule} from '../../../../components/dropdown/dropdown';
+import {InputTextModule} from '../../../../components/inputtext/inputtext';
+import {InputTextareaModule} from '../../../../components/inputtextarea/inputtextarea';
+import {ButtonModule} from '../../../../components/button/button';
+import {TabViewModule} from '../../../../components/tabview/tabview';
+import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
+import { SliderModule } from '../../../../components/slider/slider';
 import {OrderListModule} from 'primeng/orderlist';
 
+import {ResultTourneyListView} from './tourney-listview';
 import {ResultListView} from './result-listview';
-import {ResultDetailView} from './result-detailview';
 
 @NgModule({
 	imports: [
@@ -39,8 +39,8 @@ import {ResultDetailView} from './result-detailview';
 		ResultRoutingModule,
 	],
 	declarations: [
-		ResultListView,
-		ResultDetailView
+		ResultTourneyListView,
+		ResultListView
 	]
 })
 export class ResultModule {}

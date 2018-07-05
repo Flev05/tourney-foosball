@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Calendar } from '../../domain/calendar';
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
+import { Classification } from '../../../domain/classification';
+import { Tourney } from '../../../domain/tourney';
+import { TourneyService } from '../../../service/tourneyservice';
 
 @Component({
-    templateUrl: './tourney-listview.html',
+    templateUrl: './classification-listview.html',
     styles: [`        
         .ui-table table {
             border-collapse: collapse;
@@ -16,7 +16,7 @@ import { TourneyService } from '../../service/tourneyservice';
         }
     `]
 })
-export class CalTourneyListView implements OnInit {
+export class ClassificationListView implements OnInit {
 
     selectedTourney: Tourney;
 
@@ -25,11 +25,11 @@ export class CalTourneyListView implements OnInit {
     cols: any[];
 
     constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("CalTourneyListView.constructor()");
+        console.log("ClassificationListView.constructor()");
     }
 
     ngOnInit() {
-        console.log("CalTourneyListView.ngOnInit()");
+        console.log("ClassificationListView.ngOnInit()");
 
         this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
 
@@ -44,17 +44,17 @@ export class CalTourneyListView implements OnInit {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedTourney = this.cloneCalendar(event.data);
+        this.tourneyService.selectedTourney = this.cloneClassification(event.data);
 
         this.gotoDetailView();
     }
   
     protected gotoDetailView() {
-        let redirect = '/calendar/dv';
+        let redirect = '/classification/dv';
         this.router.navigate([redirect]);
     }
 
-    cloneCalendar(c: Tourney): Tourney {
+    cloneClassification(c: Tourney): Tourney {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { Tourney } from '../../domain/tourney';
-import { Round } from '../../domain/round';
-import { Classification } from '../../domain/classification';
-import { Meeting } from '../../domain/meeting';
-import { TourneyService } from '../../service/tourneyservice';
+import { Tourney } from '../../../domain/tourney';
+import { Round } from '../../../domain/round';
+import { Classification } from '../../../domain/classification';
+import { Meeting } from '../../../domain/meeting';
+import { TourneyService } from '../../../service/tourneyservice';
 
 @Component({
     templateUrl: './classification-detailview.html',

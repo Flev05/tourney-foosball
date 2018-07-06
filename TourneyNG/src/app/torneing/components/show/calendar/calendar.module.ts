@@ -16,7 +16,7 @@ import {CodeHighlighterModule} from '../../../../components/codehighlighter/code
 import { SliderModule } from '../../../../components/slider/slider';
 import {OrderListModule} from 'primeng/orderlist';
 
-import {CalTourneyListView} from './tourney-listview';
+import {CalendarTourneyListView} from './tourney-listview';
 import {CalendarDetailView} from './calendar-detailview';
 
 @NgModule({
@@ -39,7 +39,7 @@ import {CalendarDetailView} from './calendar-detailview';
 		CalendarRoutingModule,
 	],
 	declarations: [
-		CalTourneyListView,
+		CalendarTourneyListView,
 		CalendarDetailView
 	]
 })

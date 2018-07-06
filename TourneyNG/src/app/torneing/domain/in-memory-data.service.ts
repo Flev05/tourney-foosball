@@ -455,9 +455,49 @@ export class InMemoryDataService implements InMemoryDbService {
               ,{ id : 7, teamName: "ORATORIO ZIBIDO E", points: 23, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
               }
-            ]
+            ]            
           }        
         ]
+        ,playoffs: [
+            {roundName:"OPEN A FASI FINALI", direction: "SOLO ANDATA"
+              , calendars: [
+                {id: 1, meetingName: 'GIORNATA 1a Giornata'
+                  , meetings: [
+                     {id:1, team1: "VIRTUS BOVISIO GIALLA", team2: "AICS FIGINO A", date: '07/03/2018', time: '21:15', address: 'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB',  score1:5, score2:4}
+                     ,{id:2, team1: "OSM ASSAGO GRANATA", team2: "AICS FIGINO C", date: '08/03/2018', time: '21:30', address: 'Campo:VIA C.A.DALLA CHIESA 2 20090 ASSAGO MI',  score1:6, score2:3}
+                     ,{id:3, team1: "OSM ASSAGO BLU", team2: "AURORA PREGNANA BLU", date: '08/03/2018', time: '21:30', address: 'Campo:VIA C.A.DALLA CHIESA 2 20090 ASSAGO MI',  score1:5, score2:4}
+                     ,{id:4, team1: "AIROLDI ORIGGIO BIANCA", team2: "AURORA PREGNANA", date: '08/03/2018', time: '21:00', address: 'VIA PIANTANIDA 26 21040 ORIGGIO VA',  score1:3, score2:6}
+                    ]
+                },
+                {id: 2, meetingName: 'GIORNATA 2a Giornata'
+                  , meetings: [
+                     {id:1, team1: "VIRTUS BOVISIO GIALLA", team2: "OSM ASSAGO GRANATA", date: '14/03/2018', time: '21:15', address: 'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB',  score1:7, score2:2}
+                     ,{id:2, team1: "AICS FIGINO A", team2: "AICS FIGINO C", date: '15/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:8, score2:1}
+                     ,{id:3, team1: "OSM ASSAGO BLU", team2: "AIROLDI ORIGGIO BIANCA", date: '14/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:4, score2:5}
+                     ,{id:4, team1: "AURORA PREGNANA BLU", team2: "AURORA PREGNANA", date: '14/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:4, score2:5}
+                    ]
+                },
+                {id: 3, meetingName: 'GIORNATA 3a Giornata'
+                  , meetings: [
+                     {id:1, team1: "AICS FIGINO C", team2: "VIRTUS BOVISIO GIALLA", date: '22/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:1, score2:8}
+                     ,{id:2, team1: "AICS FIGINO A", team2: "OSM ASSAGO GRANATA", date: '23/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:7, score2:2}
+                     ,{id:3, team1: "AURORA PREGNANA", team2: "OSM ASSAGO BLU", date: '21/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:3, score2:6}
+                     ,{id:3, team1: "AURORA PREGNANA BLU", team2: "AIROLDI ORIGGIO BIANCA", date: '21/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:7, score2:2}
+                    ]
+                },
+                {id: 4, meetingName: 'GIORNATA Finale 3° e 4° Posto'
+                  , meetings: [
+                     {id:1, team1: "ORATORIO ZIBIDO D", team2: "OSM ASSAGO BLU", date: '09/04/2018', time: '21:15', address: 'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI',  score1:6, score2:3}
+                    ]
+                },
+                {id: 5, meetingName: 'GIORNATA Finale 1° e 2° Posto'
+                  , meetings: [
+                     {id:1, team1: "ORATORIO ZIBIDO G", team2: "VIRTUS BOVISIO GIALLA", date: '09/04/2018', time: '21:15', address: 'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI',  score1:5, score2:4}
+                    ]
+                },
+              ]
+            }
+          ]
         },
         {id: 4, tourneyName: 'Festa dello Sport 2018', date: '15-06-2018', time: '19:30', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
           , rounds: [ 

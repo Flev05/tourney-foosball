@@ -6,7 +6,7 @@ import { Calendar } from '../../../domain/calendar';
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
 
-const redirect = '/calendar/dv';
+const redirect = '/calendar/lv';
 
 @Component({
     templateUrl: './tourney-listview.html',
@@ -18,22 +18,22 @@ const redirect = '/calendar/dv';
         }
     `]
 })
-export class CalTourneyListView implements OnInit {
+export class CalendarTourneyListView implements OnInit {
 
     selectedTourney: Tourney;
 
-    tourneys: Tourney[];
+    protected tourneys: Tourney[];
 
     cols: any[];
 
-    constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("CalTourneyListView.constructor()");
+    constructor(protected tourneyService: TourneyService, public router: Router) { 
+        console.log("CalendarTourneyListView.constructor()");
     }
 
     ngOnInit() {
-        console.log("CalTourneyListView.ngOnInit()");
+        console.log("CalendarTourneyListView.ngOnInit()");
 
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
+        this.loadTourney();
 
         this.cols = [
             { field: 'tourneyName', header: 'Torneo' },
@@ -41,6 +41,11 @@ export class CalTourneyListView implements OnInit {
             { field: 'time', header: 'Ora' },
             { field: 'address', header: 'Indirizzo' }
         ];
+    }
+
+    protected loadTourney() {
+        console.log("Entering CalendarTourneyListView.loadTourney()");
+        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
     }
 
     onRowSelect(event) {

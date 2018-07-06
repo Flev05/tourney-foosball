@@ -1,13 +1,13 @@
 import {NgModule}     		from '@angular/core';
 import {RouterModule} 		from '@angular/router'
-import {CalTourneyListView}	from './tourney-listview';
+import {CalendarTourneyListView}	from './tourney-listview';
 import {CalendarDetailView}	from './calendar-detailview';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: '', component: CalTourneyListView },
-			{ path: 'dv', component: CalendarDetailView },
+			{ path: '', component: CalendarTourneyListView },
+			{ path: 'lv', component: CalendarDetailView },
 		])
 	],
 	exports: [

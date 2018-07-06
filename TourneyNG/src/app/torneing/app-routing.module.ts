@@ -21,6 +21,8 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'calendar',  loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
             {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},
             {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},
+            {path: 'playoff', loadChildren: './components/show/playoff/playoff.module#PlayoffModule'},
+            {path: 'elimination', loadChildren: './components/show/elimination/elimination.module#EliminationModule'},
 
             // Login Section
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},

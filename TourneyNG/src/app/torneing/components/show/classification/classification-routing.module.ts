@@ -1,13 +1,13 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
+import {ClassificationTourneyListView} from './tourney-listview';
 import {ClassificationListView} from './classification-listview';
-import {ClassificationDetailView} from './classification-detailview';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: '', component: ClassificationListView },
-			{ path: 'dv', component: ClassificationDetailView },
+			{ path: '', component: ClassificationTourneyListView },
+			{ path: 'lv', component: ClassificationListView },
 		])
 	],
 	exports: [

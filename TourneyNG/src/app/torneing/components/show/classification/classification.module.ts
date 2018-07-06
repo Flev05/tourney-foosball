@@ -16,8 +16,8 @@ import {CodeHighlighterModule} from '../../../../components/codehighlighter/code
 import { SliderModule } from '../../../../components/slider/slider';
 import {OrderListModule} from 'primeng/orderlist';
 
+import {ClassificationTourneyListView} from './tourney-listview';
 import {ClassificationListView} from './classification-listview';
-import {ClassificationDetailView} from './classification-detailview';
 
 @NgModule({
 	imports: [
@@ -39,8 +39,8 @@ import {ClassificationDetailView} from './classification-detailview';
 		ClassificationRoutingModule,
 	],
 	declarations: [
-		ClassificationListView,
-		ClassificationDetailView
+		ClassificationTourneyListView,
+		ClassificationListView
 	]
 })
 export class ClassificationModule {}

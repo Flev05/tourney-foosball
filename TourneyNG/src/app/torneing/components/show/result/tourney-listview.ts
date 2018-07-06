@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Calendar } from '../../../domain/calendar';
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
-import { CalTourneyListView } from '../calendar/tourney-listview';
+import { CalendarTourneyListView } from '../calendar/tourney-listview';
 
 const redirect = '/result/lv';
 
@@ -19,7 +19,7 @@ const redirect = '/result/lv';
         }
     `]
 })
-export class ResultTourneyListView extends CalTourneyListView {
+export class ResultTourneyListView extends CalendarTourneyListView {
 
     onRowSelect(event) {
         super.onRowSelect(event);

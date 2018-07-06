@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
-import { Classification } from '../../../domain/classification';
 import { Tourney } from '../../../domain/tourney';
+import { Round } from '../../../domain/round';
+import { Classification } from '../../../domain/classification';
+import { Meeting } from '../../../domain/meeting';
 import { TourneyService } from '../../../service/tourneyservice';
 
 @Component({
@@ -14,51 +15,81 @@ import { TourneyService } from '../../../service/tourneyservice';
             width: auto;
             table-layout: fixed;
         }
-    `]
+        .ui-table .ui-table-thead > tr > th, .ui-table .ui-table-tbody > tr > td, .ui-table .ui-table-tfoot > tr > td {
+            padding: .25em .5em;
+            text-align: center;
+        }
+  `]
 })
 export class ClassificationListView implements OnInit {
 
     selectedTourney: Tourney;
 
-    tourneys: Tourney[];
+    rounds: [Round];
 
-    cols: any[];
+    rows: any[] = [];
 
-    constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("ClassificationListView.constructor()");
-    }
+    constructor(
+        private tourneyService: TourneyService,
+        private location: Location
+    ) {}
 
     ngOnInit() {
-        console.log("ClassificationListView.ngOnInit()");
+        this.selectedTourney = this.tourneyService.selectedTourney;
+        this.rounds = this.selectedTourney.rounds;
 
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
-
-        this.cols = [
-            { field: 'tourneyName', header: 'Torneo' },
-            { field: 'date', header: 'Data' },
-            { field: 'time', header: 'Ora' },
-            { field: 'address', header: 'Indirizzo' }
-        ];
+        this.updateRowGroupMetaData();
     }
 
-    onRowSelect(event) {
-        console.log(event.data);
+    updateRowGroupMetaData() {
 
-        this.tourneyService.selectedTourney = this.cloneClassification(event.data);
+        let row : number = 0;
 
-        this.gotoDetailView();
-    }
-  
-    protected gotoDetailView() {
-        let redirect = '/classification/dv';
-        this.router.navigate([redirect]);
-    }
+        var roundMap: Map<string, Meeting> = new Map<string, Meeting>();
 
-    cloneClassification(c: Tourney): Tourney {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
+        for (let i = 0; i < this.rounds.length; i++) {
+            
+            let round : Round = this.rounds[i];
+
+            let len = round.classification.length;
+
+            for (let j = 0; j < len; j++) {
+                
+                let cla : Classification = round.classification[j];
+                let currentKey = this.makeKey(round);  
+
+                console.log(currentKey + " rowspan=" + len);
+
+                this.rows.push(cla);
+                this.rows[row].roundName = round.roundName + "(" + round.direction + ")";    
+                this.rows[row].teamName = cla.teamName;    
+                if(!roundMap.has(currentKey)) {
+                    roundMap.set(currentKey, cla);
+                    this.rows[row].rowspanSize = len;
+                } else {
+                    this.rows[row].rowspanSize = undefined;
+                }
+
+                this.rows[row].points = cla.points;
+                this.rows[row].played = cla.played;
+                this.rows[row].won = cla.won;
+                this.rows[row].lost = cla.lost;
+                this.rows[row].goalsDone = cla.goalsDone;
+                this.rows[row].goalsConceded = cla.goalsConceded;
+                this.rows[row].penalty = cla.penalty;
+                this.rows[row].goalsDiff = cla.goalsDiff;
+                
+                row++;
+            }
         }
-        return car;
+    }
+
+    makeKey( round : Round) : string {
+        let key = round.roundName + "(" + round.direction + ")";
+        return key;
+    }
+
+    goBack(): void {
+        this.location.back();
     }
 }

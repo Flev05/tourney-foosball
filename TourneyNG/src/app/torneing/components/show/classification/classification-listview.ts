@@ -62,7 +62,7 @@ export class ClassificationListView implements OnInit {
 
                 this.rows.push(cla);
                 this.rows[row].roundName = round.roundName + "(" + round.direction + ")";    
-                this.rows[row].teamName = cla.teamName;    
+                this.rows[row].teamName = cla.team.teamName;    
                 if(!roundMap.has(currentKey)) {
                     roundMap.set(currentKey, cla);
                     this.rows[row].rowspanSize = len;

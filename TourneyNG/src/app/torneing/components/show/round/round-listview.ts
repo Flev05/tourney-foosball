@@ -21,21 +21,6 @@ const redirect = '/round/dv';
   `]
 })
 export class RoundListView extends CalendarDetailView {
-    // constructor(
-    //     protected tourneyService: TourneyService,
-    //     protected location: Location,
-    //     private router: Router )  
-    // {
-    //     super(tourneyService,location);
-    // }
-
-    // ngOnInit() {
-    //     super.ngOnInit();
-    //     this.gotoDetailView();
-    // }
-
-    // protected gotoDetailView() {
-    //     this.router.navigate([redirect]);
-    // }
+ 
 }
 

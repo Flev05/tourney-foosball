@@ -67,8 +67,8 @@ export class CalendarDetailView implements OnInit {
                         this.rows[row].rowspanSize = undefined;
                     }
 
-                    this.rows[row].team1 = m.team1;
-                    this.rows[row].team2 = m.team2;
+                    this.rows[row].teamName1 = m.team1.teamName;
+                    this.rows[row].teamName2 = m.team2.teamName;
                     
                     this.rows[row].date = m.date;    
                     this.rows[row].time = m.time;    

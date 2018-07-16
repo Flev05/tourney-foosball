@@ -1,7 +1,9 @@
+import { Team } from './team';
+
 export interface Classification
 {
     id?     : number;
-    teamName?  : string;
+    team?  : Team;
     points?  : number;
     played?  : number;
     won?  : number;

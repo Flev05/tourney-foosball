@@ -13,11 +13,53 @@ export class InMemoryDataService implements InMemoryDbService {
                 , calendars: [
                     {id: 1, meetingName: 'Turno 1'
                     , meetings: [
-                        {id:1, team1: "SALLUC", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                      , {id:2, team1: "PAGA TEAM", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "I DISPERATI", score1:7, score2:3}
-                      , {id:3, team1: "FAMA TEAM", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "ARMA TEAM", score1:6, score2:7}
-                      , {id:4, team1: "Atletico Mica Tanto", date: '01-05-2018', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', time: '13:45', team2: "LE PANCHE", score1:1, score2:7}
-                      , {id:5, team1: "ELEVEN", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "I RHODENSI", score1:7, score2:5}
+                        {id:1
+                          , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                          , team1: {teamName:"SALLUC"
+                              , palyers: [
+                                {firstname:"Salvatore", lastname:"Amoroso"}
+                                ,{firstname:"Luciano", lastname:"Martino"}
+                            ]}
+                          , team2: {teamName:"SALEMI"
+                            , palyers: [
+                                {firstname:"Salvatore", lastname:"Cavaliere"}
+                              ,{firstname:"Emilio", lastname:"Cattaneo"}
+                          ]}
+                          , score1:7, score2:3}
+                      , {id:2, team1: {teamName:"PAGA TEAM"
+                            , palyers: [
+                                {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                              ,{firstname:"Samuele", lastname:"Paganotti"}
+                          ]} 
+                          , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                          , team2: {teamName:"I DISPERATI"
+                          , palyers: [
+                              {firstname:"Valter", lastname:"Begamaschi"}
+                            ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                          ]}
+                        , score1:7, score2:3}
+                      , {id:3, team1: {teamName:"FAMA TEAM"
+                        , palyers: [
+                            {firstname:"Riccardo", lastname:"Fabbro"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                        ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"ARMA TEAM"
+                      , palyers: [
+                          {firstname:"Riccardo", lastname:"Armadillo"}
+                        ,{firstname:"Tommaso", lastname:"Armadillo"}
+                      ]}
+                      , score1:6, score2:7}
+                      , {id:4, team1:{teamName:"Atletico Mica Tanto"
+                      , palyers: [
+                          {firstname:"Micol", lastname:"Micol"}
+                        ,{firstname:"Tommaso", lastname:"Tommaso"}
+                      ]} 
+                      , date: '01-05-2018', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', time: '13:45'
+                      , team2: "LE PANCHE", score1:1, score2:7}
+                      , {id:5, team1: "ELEVEN"
+                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: "I RHODENSI", score1:7, score2:5}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'

@@ -28,27 +28,58 @@ export class EliminationListView extends CalendarDetailView {
         super.ngOnInit();
 
         this.data = [{
-            label: 'Finale: ORATORIO ZIBIDO G Vs VIRTUS BOVISIO GIALLA',
+            label: 'Finale:',
+            expanded: true,
             children: [
                 {
-                    label: 'Semifinali:',
-                    children: [
-                        {
-                            label: 'ORATORIO ZIBIDO G'
-                        },
-                        {
+                    label: 'Belgio',
+                    expanded: true,
+                    children: [{expanded: true
+                        ,children: [{expanded: true
+                                ,label: 'Belgio'
+                            }
+                            ,{expanded: true
+                                ,label: 'Brasile'
+                            }
+                            ,{expanded: true
+                                ,label: 'Francia'
+                            }
+                            ,{expanded: true
+                                ,label: 'Uruguay'
+                            }
+                        ]
+                        }
+                        ,{  expanded: true,
                             label: 'VIRTUS BOVISIO GIALLA'
                         }
                     ]
                 },
                 {
-                    label: 'Child 2',
-                    children: [
-                        {
-                            label: 'Child 2.1'
-                        },
-                        {
-                            label: 'Child 2.2'
+                    label: 'Inghilterra'
+                    ,expanded: true
+                    ,children: [{expanded: true
+                        ,children: [{expanded: true
+                                ,label: 'Inghilterra'
+                            }
+                            ,{expanded: true
+                                ,label: 'Svezia'
+                            }
+                        ]
+                        }
+                    ]
+                }
+                ,{
+                    label: 'Russia'
+                    ,expanded: true
+                    ,children: [{expanded: true
+                        ,children: [
+                            {expanded: true
+                                ,label: 'Russia'
+                            }
+                            ,{expanded: true
+                                ,label: 'Portogallo'
+                            }
+                        ]
                         }
                     ]
                 }

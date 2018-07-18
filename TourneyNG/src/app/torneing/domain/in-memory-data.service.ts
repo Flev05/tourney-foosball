@@ -56,37 +56,198 @@ export class InMemoryDataService implements InMemoryDbService {
                         ,{firstname:"Tommaso", lastname:"Tommaso"}
                       ]} 
                       , date: '01-05-2018', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', time: '13:45'
-                      , team2: "LE PANCHE", score1:1, score2:7}
-                      , {id:5, team1: "ELEVEN"
+                      , team2: {teamName:"LE PANCHE"
+                      , palyers: [
+                          {firstname:"Toto", lastname:"Toto"}
+                        ,{firstname:"Roberto", lastname:"Franzosi"}
+                      ]}
+                      , score1:1, score2:7}
+                      , {id:5, team1: {teamName:"ELEVEN"
+                      , palyers: [
+                          {firstname:"Raimondo", lastname:"Brancaccio"}
+                        ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                      ]}
                       , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
-                      , team2: "I RHODENSI", score1:7, score2:5}
+                      , team2: {teamName:"I RHODENSI"
+                      , palyers: [
+                          {firstname:"Simone", lastname:"Castronuovo"}
+                        ,{firstname:"Andrea", lastname:"Castronuovo"}
+                      ]}
+                      , score1:7, score2:5}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'
                   , meetings: [
-                      {id:1, team1: "SALLUC", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "PAGA TEAM", score1:7, score2:1}
-                    , {id:2, team1: "SALEMI", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "ELEVEN", score1:4, score2:7}
-                    , {id:3, team1: "FAMA TEAM", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Atletico Mica Tanto", score1:7, score2:2}
-                    , {id:4, team1: "ARMA TEAM", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "LE PANCHE", score1:7, score2:5}
-                    , {id:5, team1: "I DISPERATI", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "I RHODENSI", score1:0, score2:7}
+                      {id:1, team1: {teamName:"SALLUC"
+                        , palyers: [
+                          {firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}
+                      , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"PAGA TEAM"
+                        , palyers: [
+                            {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                          ,{firstname:"Samuele", lastname:"Paganotti"}
+                      ]}
+                      , score1:7, score2:1}
+                    , {id:2, team1: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ELEVEN"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                    ]}
+                    , score1:4, score2:7}
+                    , {id:3, team1: {teamName:"FAMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Fabbro"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Atletico Mica Tanto"
+                    , palyers: [
+                        {firstname:"Micol", lastname:"Micol"}
+                      ,{firstname:"Tommaso", lastname:"Tommaso"}
+                    ]}
+                    , score1:7, score2:2}
+                    , {id:4, team1: {teamName:"ARMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Armadillo"}
+                      ,{firstname:"Tommaso", lastname:"Armadillo"}
+                    ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"LE PANCHE"
+                    , palyers: [
+                        {firstname:"Toto", lastname:"Toto"}
+                      ,{firstname:"Roberto", lastname:"Franzosi"}
+                    ]}
+                    , score1:7, score2:5}
+                    , {id:5, team1: {teamName:"I DISPERATI"
+                    , palyers: [
+                        {firstname:"Valter", lastname:"Begamaschi"}
+                      ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                    ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"I RHODENSI"
+                    , palyers: [
+                        {firstname:"Simone", lastname:"Castronuovo"}
+                      ,{firstname:"Andrea", lastname:"Castronuovo"}
+                    ]}, score1:0, score2:7}
                   ]
                 },
                 {id: 3, meetingName: 'Turno 3'
                   , meetings: [
-                      {id:1, team1: "I RHODENSI", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "PAGA TEAM", score1:7, score2:0}
-                    , {id:2, team1: "SALEMI", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "ARMA TEAM", score1:7, score2:0}
-                    , {id:3, team1: "FAMA TEAM", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "ELEVEN", score1:2, score2:7}
-                    , {id:4, team1: "Atletico Mica Tanto", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "LE PANCHE", score1:2, score2:7}
-                    , {id:5, team1: "I DISPERATI", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "SALLUC", score1:7, score2:0}
+                      {id:1, team1: {teamName:"I RHODENSI"
+                      , palyers: [
+                          {firstname:"Simone", lastname:"Castronuovo"}
+                        ,{firstname:"Andrea", lastname:"Castronuovo"}
+                      ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"PAGA TEAM"
+                      , palyers: [
+                          {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                        ,{firstname:"Samuele", lastname:"Paganotti"}
+                    ]}, score1:7, score2:0}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"ARMA TEAM"
+                  , palyers: [
+                      {firstname:"Riccardo", lastname:"Armadillo"}
+                    ,{firstname:"Tommaso", lastname:"Armadillo"}
+                  ]}
+                  , score1:7, score2:0}
+                    , {id:3, team1: {teamName:"FAMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Fabbro"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ELEVEN"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                    ]}
+                    , score1:2, score2:7}
+                    , {id:4, team1: {teamName:"Atletico Mica Tanto"
+                    , palyers: [
+                        {firstname:"Micol", lastname:"Micol"}
+                      ,{firstname:"Tommaso", lastname:"Tommaso"}
+                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: "LE PANCHE"
+                    , score1:2, score2:7}
+                    , {id:5, team1: {teamName:"I DISPERATI"
+                    , palyers: [
+                        {firstname:"Valter", lastname:"Begamaschi"}
+                      ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"SALLUC"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:0}
                   ]
                 },
                 {id: 4, meetingName: 'Turno 4'
                   , meetings: [
-                      {id:1, team1: "I RHODENSI", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:6, score2:7}
-                    , {id:2, team1: "PAGA TEAM", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "ARMA TEAM", score1:6, score2:7}
-                    , {id:3, team1: "LE PANCHE", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "ELEVEN", score1:1, score2:7}
-                    , {id:4, team1: "Atletico Mica Tanto", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "FAMA TEAM", score1:7, score2:2}
-                    , {id:5, team1: "I DISPERATI", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "SALLUC", score1:7, score2:1}
+                      {id:1, team1: {teamName:"I RHODENSI"
+                      , palyers: [
+                          {firstname:"Simone", lastname:"Castronuovo"}
+                        ,{firstname:"Andrea", lastname:"Castronuovo"}
+                      ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:6, score2:7}
+                    , {id:2, team1: {teamName:"PAGA TEAM"
+                    , palyers: [
+                        {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                      ,{firstname:"Samuele", lastname:"Paganotti"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"ARMA TEAM"
+                  , palyers: [
+                      {firstname:"Riccardo", lastname:"Armadillo"}
+                    ,{firstname:"Tommaso", lastname:"Armadillo"}
+                  ]}
+                  , score1:6, score2:7}
+                    , {id:3, team1: {teamName:"LE PANCHE"
+                    , palyers: [
+                        {firstname:"Toto", lastname:"Toto"}
+                      ,{firstname:"Roberto", lastname:"Franzosi"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ELEVEN"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                    ]}
+                    , score1:1, score2:7}
+                    , {id:4, team1: {teamName:"Atletico Mica Tanto"
+                    , palyers: [
+                        {firstname:"Micol", lastname:"Micol"}
+                      ,{firstname:"Tommaso", lastname:"Tommaso"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"FAMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Fabbro"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}, score1:7, score2:2}
+                    , {id:5, team1: {teamName:"I DISPERATI"
+                    , palyers: [
+                        {firstname:"Valter", lastname:"Begamaschi"}
+                      ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"SALLUC"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:1}
                   ]
                 },            
               ]
@@ -126,38 +287,232 @@ export class InMemoryDataService implements InMemoryDbService {
                 , calendars: [
                     {id: 1, meetingName: 'Turno 1'
                     , meetings: [
-                        {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                      , {id:2, team1: "Maldive", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "B&B", score1:2, score2:7}
-                      , {id:3, team1: "Poeti", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:7, score2:2}
-                      , {id:4, team1: "Fialette", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:0}
-                      , {id:5, team1: "Attenti a quei 2", date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:0}
+                        {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                        , palyers: [
+                          {firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}
+                        , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"SALEMI"
+                        , palyers: [
+                            {firstname:"Salvatore", lastname:"Cavaliere"}
+                          ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ]}
+                        , score1:7, score2:3}
+                      , {id:2, team1: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"B&B"
+                        , palyers: [
+                            {firstname:"Roberto", lastname:"Bergamaschi"}
+                          ,{firstname:"Valter", lastname:"Bergamaschi"}
+                      ]}
+                      , score1:2, score2:7}
+                      , {id:3, team1: {teamName:"Poeti"
+                        , palyers: [
+                            {firstname:"Raimondo", lastname:"Francaccio"}
+                          ,{firstname:"Andrea", lastname:"Procopio"}
+                      ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"GROOT"
+                        , palyers: [
+                            {firstname:"Jacopo", lastname:"Meravglia"}
+                          ,{firstname:"Alessandro", lastname:"Scalise"}
+                      ]}
+                      , score1:7, score2:2}
+                      , {id:4, team1: {teamName:"Fialette"
+                        , palyers: [
+                            {firstname:"Orlando", lastname:"Zambrella"}
+                          ,{firstname:"Gianfranco", lastname:"Elia"}
+                      ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"MINGA BUN"
+                      , palyers: [
+                            {firstname:"Antonio", lastname:"Pietroforte"}
+                          ,{firstname:"Mirco", lastname:"Pietroforte"}
+                      ]}
+                      , score1:7, score2:0}
+                      , {id:5, team1: {teamName:"Attenti a quei 2"
+                        , palyers: [
+                              {firstname:"Andrea", lastname:"Melidona"}
+                            ,{firstname:"Giuseppe", lastname:"Melidona"}
+                        ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Quota Drone"
+                        , palyers: [
+                            {firstname:"Enrico", lastname:"Chiminelli"}
+                          ,{firstname:"Fabio", lastname:"Chiminelli"}
+                      ]}
+                      , score1:7, score2:0}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'
                   , meetings: [
-                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:7, score2:2}
-                    , {id:2, team1: "SALEMI", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:4}
-                    , {id:3, team1: "Poeti", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Fialette", score1:1, score2:7}
-                    , {id:4, team1: "GROOT", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:1, score2:7}
-                    , {id:5, team1: "B&B", date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:5, score2:7}
+                      {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , score1:7, score2:2}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:7, score2:4}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}
+                    , score1:1, score2:7}
+                    , {id:4, team1: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:1, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Quota Drone"
+                  , palyers: [
+                      {firstname:"Enrico", lastname:"Chiminelli"}
+                    ,{firstname:"Fabio", lastname:"Chiminelli"}
+                ]}, score1:5, score2:7}
                   ]
                 },
                 {id: 3, meetingName: 'Turno 3'
                   , meetings: [
-                      {id:1, team1: "Quota Drone", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:1, score2:7}
-                    , {id:2, team1: "SALEMI", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:7, score2:6}
-                    , {id:3, team1: "Poeti", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:4}
-                    , {id:4, team1: "Fialette", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:1}
-                    , {id:5, team1: "B&B", date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:2}
+                      {id:1, team1: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , score1:1, score2:7}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:7, score2:6}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:7, score2:4}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:7, score2:1}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:2}
                   ]
                 },
                 {id: 4, meetingName: 'Turno 4'
                   , meetings: [
-                      {id:1, team1: "Quota Drone", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:1}
-                    , {id:2, team1: "Maldive", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:1, score2:7}
-                    , {id:3, team1: "MINGA BUN", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:5, score2:7}
-                    , {id:4, team1: "Fialette", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Poeti", score1:5, score2:7}
-                    , {id:5, team1: "B&B", date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:2}
+                      {id:1, team1: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:7, score2:1}
+                    , {id:2, team1: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:1, score2:7}
+                    , {id:3, team1: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:5, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, score1:5, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:2}
                   ]
                 },
               ]
@@ -202,38 +557,238 @@ export class InMemoryDataService implements InMemoryDbService {
                 , calendars: [
                     {id: 1, meetingName: 'Turno 1'
                     , meetings: [
-                        {id:1, team1: "SALLUC", date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                      , {id:2, team1: "PAGA TEAM", date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "I DISPERATI", score1:7, score2:3}
-                      , {id:3, team1: "FAMA TEAM", date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "ARMA TEAM", score1:6, score2:7}
-                      , {id:4, team1: "Atletico Mica Tanto", date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "LE PANCHE", score1:1, score2:7}
-                      , {id:5, team1: "ELEVEN", date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "I RHODENSI", score1:7, score2:5}
+                        {id:1, team1: {teamName:"SALLUC"
+                        , palyers: [
+                          {firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"SALEMI"
+                        , palyers: [
+                            {firstname:"Salvatore", lastname:"Cavaliere"}
+                          ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ]}
+                        , score1:7, score2:3}
+                      , {id:2, team1: {teamName:"PAGA TEAM"
+                      , palyers: [
+                          {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                        ,{firstname:"Samuele", lastname:"Paganotti"}
+                    ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"I DISPERATI"
+                      , palyers: [
+                          {firstname:"Valter", lastname:"Begamaschi"}
+                        ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                      ]}, score1:7, score2:3}
+                      , {id:3, team1: {teamName:"FAMA TEAM"
+                      , palyers: [
+                          {firstname:"Riccardo", lastname:"Fabbro"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}
+                      , date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"ARMA TEAM"
+                      , palyers: [
+                          {firstname:"Riccardo", lastname:"Armadillo"}
+                        ,{firstname:"Tommaso", lastname:"Armadillo"}
+                      ]}
+                      , score1:6, score2:7}
+                      , {id:4, team1: {teamName:"Atletico Mica Tanto"
+                      , palyers: [
+                          {firstname:"Micol", lastname:"Micol"}
+                        ,{firstname:"Tommaso", lastname:"Tommaso"}
+                      ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"LE PANCHE"
+                      , palyers: [
+                          {firstname:"Toto", lastname:"Toto"}
+                        ,{firstname:"Roberto", lastname:"Franzosi"}
+                      ]}
+                      , score1:1, score2:7}
+                      , {id:5, team1: {teamName:"ELEVEN"
+                      , palyers: [
+                          {firstname:"Raimondo", lastname:"Brancaccio"}
+                        ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                      ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"I RHODENSI"
+                      , palyers: [
+                          {firstname:"Simone", lastname:"Castronuovo"}
+                        ,{firstname:"Andrea", lastname:"Castronuovo"}
+                      ]}, score1:7, score2:5}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'
                   , meetings: [
-                      {id:1, team1: "SALLUC", date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "PAGA TEAM", score1:7, score2:1}
-                    , {id:2, team1: "SALEMI", date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "ELEVEN", score1:4, score2:7}
-                    , {id:3, team1: "FAMA TEAM", date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Atletico Mica Tanto", score1:7, score2:2}
-                    , {id:4, team1: "ARMA TEAM", date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "LE PANCHE", score1:7, score2:5}
-                    , {id:5, team1: "I DISPERATI", date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "I RHODENSI", score1:0, score2:7}
+                      {id:1, team1: {teamName:"SALLUC"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}, date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"PAGA TEAM"
+                    , palyers: [
+                        {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                      ,{firstname:"Samuele", lastname:"Paganotti"}
+                  ]}
+                    , score1:7, score2:1}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ELEVEN"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                    ]}
+                    , score1:4, score2:7}
+                    , {id:3, team1: {teamName:"FAMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Fabbro"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                    , date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Atletico Mica Tanto"
+                    , palyers: [
+                        {firstname:"Micol", lastname:"Micol"}
+                      ,{firstname:"Tommaso", lastname:"Tommaso"}
+                    ]}
+                    , score1:7, score2:2}
+                    , {id:4, team1: {teamName:"ARMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Armadillo"}
+                      ,{firstname:"Tommaso", lastname:"Armadillo"}
+                    ]}, date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"LE PANCHE"
+                    , palyers: [
+                        {firstname:"Toto", lastname:"Toto"}
+                      ,{firstname:"Roberto", lastname:"Franzosi"}
+                    ]}
+                    , score1:7, score2:5}
+                    , {id:5, team1: {teamName:"I DISPERATI"
+                    , palyers: [
+                        {firstname:"Valter", lastname:"Begamaschi"}
+                      ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                    ]}, date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"I RHODENSI"
+                    , palyers: [
+                        {firstname:"Simone", lastname:"Castronuovo"}
+                      ,{firstname:"Andrea", lastname:"Castronuovo"}
+                    ]}, score1:0, score2:7}
                   ]
                 },
                 {id: 3, meetingName: 'Turno 3'
                   , meetings: [
-                      {id:1, team1: "I RHODENSI", date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "PAGA TEAM", score1:7, score2:0}
-                    , {id:2, team1: "SALEMI", date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "ARMA TEAM", score1:7, score2:0}
-                    , {id:3, team1: "FAMA TEAM", date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "ELEVEN", score1:2, score2:7}
-                    , {id:4, team1: "Atletico Mica Tanto", date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "LE PANCHE", score1:2, score2:7}
-                    , {id:5, team1: "I DISPERATI", date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "SALLUC", score1:7, score2:0}
+                      {id:1, team1: {teamName:"I RHODENSI"
+                      , palyers: [
+                          {firstname:"Simone", lastname:"Castronuovo"}
+                        ,{firstname:"Andrea", lastname:"Castronuovo"}
+                      ]}, date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"PAGA TEAM"
+                        , palyers: [
+                            {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                          ,{firstname:"Samuele", lastname:"Paganotti"}
+                      ]}, score1:7, score2:0}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ARMA TEAM"
+                      , palyers: [
+                          {firstname:"Riccardo", lastname:"Armadillo"}
+                        ,{firstname:"Tommaso", lastname:"Armadillo"}
+                      ]}, score1:7, score2:0}
+                    , {id:3, team1: {teamName:"FAMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Fabbro"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                    , date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ELEVEN"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                    ]}
+                    , score1:2, score2:7}
+                    , {id:4, team1: {teamName:"Atletico Mica Tanto"
+                    , palyers: [
+                        {firstname:"Micol", lastname:"Micol"}
+                      ,{firstname:"Tommaso", lastname:"Tommaso"}
+                    ]}, date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"LE PANCHE"
+                    , palyers: [
+                        {firstname:"Toto", lastname:"Toto"}
+                      ,{firstname:"Roberto", lastname:"Franzosi"}
+                    ]}
+                    , score1:2, score2:7}
+                    , {id:5, team1: {teamName:"I DISPERATI"
+                          , palyers: [
+                              {firstname:"Valter", lastname:"Begamaschi"}
+                            ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                          ]}, date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                          , team2: {teamName:"SALLUC"
+                          , palyers: [
+                            {firstname:"Salvatore", lastname:"Amoroso"}
+                            ,{firstname:"Luciano", lastname:"Martino"}
+                        ]}
+                        , score1:7, score2:0}
                   ]
                 },
                 {id: 4, meetingName: 'Turno 4'
                   , meetings: [
-                      {id:1, team1: "I RHODENSI", date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:6, score2:7}
-                    , {id:2, team1: "PAGA TEAM", date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "ARMA TEAM", score1:6, score2:7}
-                    , {id:3, team1: "LE PANCHE", date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "ELEVEN", score1:1, score2:7}
-                    , {id:4, team1: "Atletico Mica Tanto", date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "FAMA TEAM", score1:7, score2:2}
-                    , {id:5, team1: "I DISPERATI", date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "SALLUC", score1:7, score2:1}
+                      {id:1, team1: {teamName:"I RHODENSI"
+                      , palyers: [
+                          {firstname:"Simone", lastname:"Castronuovo"}
+                        ,{firstname:"Andrea", lastname:"Castronuovo"}
+                      ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:6, score2:7}
+                    , {id:2, team1: {teamName:"PAGA TEAM"
+                    , palyers: [
+                        {firstname:"Massilìmiliano", lastname:"Paganotti"}
+                      ,{firstname:"Samuele", lastname:"Paganotti"}
+                  ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"ARMA TEAM"
+                  , palyers: [
+                      {firstname:"Riccardo", lastname:"Armadillo"}
+                    ,{firstname:"Tommaso", lastname:"Armadillo"}
+                  ]}
+                  , score1:6, score2:7}
+                    , {id:3, team1: {teamName:"LE PANCHE"
+                    , palyers: [
+                        {firstname:"Toto", lastname:"Toto"}
+                      ,{firstname:"Roberto", lastname:"Franzosi"}
+                    ]}
+                    , date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"ELEVEN"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Fabrizio", lastname:"Fabrizio"}
+                    ]}
+                    , score1:1, score2:7}
+                    , {id:4, team1: {teamName:"Atletico Mica Tanto"
+                    , palyers: [
+                        {firstname:"Micol", lastname:"Micol"}
+                      ,{firstname:"Tommaso", lastname:"Tommaso"}
+                    ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"FAMA TEAM"
+                    , palyers: [
+                        {firstname:"Riccardo", lastname:"Fabbro"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                    , score1:7, score2:2}
+                    , {id:5, team1: {teamName:"I DISPERATI"
+                    , palyers: [
+                        {firstname:"Valter", lastname:"Begamaschi"}
+                      ,{firstname:"Giorgio", lastname:"Begamaschi"}
+                    ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"SALLUC"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:1}
                   ]
                 },            
               ]
@@ -274,38 +829,225 @@ export class InMemoryDataService implements InMemoryDbService {
                 , calendars: [
                     {id: 1, meetingName: 'Turno 1'
                     , meetings: [
-                        {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                      , {id:2, team1: "Maldive", date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "B&B", score1:2, score2:7}
-                      , {id:3, team1: "Poeti", date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:7, score2:2}
-                      , {id:4, team1: "Fialette", date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:0}
-                      , {id:5, team1: "Attenti a quei 2", date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:0}
+                        {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                        , palyers: [
+                          {firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}
+                        , date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"SALEMI"
+                        , palyers: [
+                            {firstname:"Salvatore", lastname:"Cavaliere"}
+                          ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ]}
+                        , score1:7, score2:3}
+                      , {id:2, team1:{teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"B&B"
+                      , palyers: [
+                          {firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Valter", lastname:"Bergamaschi"}
+                    ]}
+                      , score1:2, score2:7}
+                      , {id:3, team1: {teamName:"Poeti"
+                      , palyers: [
+                          {firstname:"Raimondo", lastname:"Francaccio"}
+                        ,{firstname:"Andrea", lastname:"Procopio"}
+                    ]}, date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"GROOT"
+                      , palyers: [
+                          {firstname:"Jacopo", lastname:"Meravglia"}
+                        ,{firstname:"Alessandro", lastname:"Scalise"}
+                    ]}
+                      , score1:7, score2:2}
+                      , {id:4, team1: {teamName:"Fialette"
+                      , palyers: [
+                          {firstname:"Orlando", lastname:"Zambrella"}
+                        ,{firstname:"Gianfranco", lastname:"Elia"}
+                    ]}, date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, score1:7, score2:0}
+                      , {id:5, team1: {teamName:"Attenti a quei 2"
+                      , palyers: [
+                            {firstname:"Andrea", lastname:"Melidona"}
+                          ,{firstname:"Giuseppe", lastname:"Melidona"}
+                      ]}, date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}
+                      , score1:7, score2:0}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'
                     , meetings: [
-                        {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:7, score2:2}
-                      , {id:2, team1: "SALEMI", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:4}
-                      , {id:3, team1: "Poeti", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Fialette", score1:1, score2:7}
-                      , {id:4, team1: "GROOT", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:1, score2:7}
-                      , {id:5, team1: "B&B", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:5, score2:7}
+                        {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                        , palyers: [
+                          {firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}
+                        , date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"Maldive"
+                        , palyers: [
+                            {firstname:"Savino", lastname:"Caporale"}
+                          ,{firstname:"Pino", lastname:"Felini"}
+                      ]}
+                        , score1:7, score2:2}
+                      , {id:2, team1: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:7, score2:4}
+                      , {id:3, team1: {teamName:"Poeti"
+                      , palyers: [
+                          {firstname:"Raimondo", lastname:"Francaccio"}
+                        ,{firstname:"Andrea", lastname:"Procopio"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Fialette"
+                      , palyers: [
+                          {firstname:"Orlando", lastname:"Zambrella"}
+                        ,{firstname:"Gianfranco", lastname:"Elia"}
+                    ]}
+                      , score1:1, score2:7}
+                      , {id:4, team1: {teamName:"GROOT"
+                      , palyers: [
+                          {firstname:"Jacopo", lastname:"Meravglia"}
+                        ,{firstname:"Alessandro", lastname:"Scalise"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, score1:1, score2:7}
+                      , {id:5, team1: {teamName:"B&B"
+                      , palyers: [
+                          {firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Valter", lastname:"Bergamaschi"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}, score1:5, score2:7}
                     ]
                   },
                   {id: 3, meetingName: 'Turno 3'
                     , meetings: [
-                        {id:1, team1: "Quota Drone", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:1, score2:7}
-                      , {id:2, team1: "SALEMI", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:7, score2:6}
-                      , {id:3, team1: "Poeti", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:4}
-                      , {id:4, team1: "Fialette", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:1}
-                      , {id:5, team1: "B&B", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:2}
+                        {id:1, team1: {teamName:"Quota Drone"
+                        , palyers: [
+                            {firstname:"Enrico", lastname:"Chiminelli"}
+                          ,{firstname:"Fabio", lastname:"Chiminelli"}
+                      ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"Maldive"
+                        , palyers: [
+                            {firstname:"Savino", lastname:"Caporale"}
+                          ,{firstname:"Pino", lastname:"Felini"}
+                      ]}
+                        , score1:1, score2:7}
+                      , {id:2, team1: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"GROOT"
+                      , palyers: [
+                          {firstname:"Jacopo", lastname:"Meravglia"}
+                        ,{firstname:"Alessandro", lastname:"Scalise"}
+                    ]}
+                      , score1:7, score2:6}
+                      , {id:3, team1: {teamName:"Poeti"
+                      , palyers: [
+                          {firstname:"Raimondo", lastname:"Francaccio"}
+                        ,{firstname:"Andrea", lastname:"Procopio"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:7, score2:4}
+                      , {id:4, team1: {teamName:"Fialette"
+                      , palyers: [
+                          {firstname:"Orlando", lastname:"Zambrella"}
+                        ,{firstname:"Gianfranco", lastname:"Elia"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, score1:7, score2:1}
+                      , {id:5, team1: {teamName:"B&B"
+                      , palyers: [
+                          {firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Valter", lastname:"Bergamaschi"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                      , score1:7, score2:2}
                     ]
                   },
                   {id: 4, meetingName: 'Turno 4'
                     , meetings: [
-                        {id:1, team1: "Quota Drone", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:1}
-                      , {id:2, team1: "Maldive", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:1, score2:7}
-                      , {id:3, team1: "MINGA BUN", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:5, score2:7}
-                      , {id:4, team1: "Fialette", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Poeti", score1:5, score2:7}
-                      , {id:5, team1: "B&B", date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:2}
+                        {id:1, team1: {teamName:"Quota Drone"
+                        , palyers: [
+                            {firstname:"Enrico", lastname:"Chiminelli"}
+                          ,{firstname:"Fabio", lastname:"Chiminelli"}
+                      ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"SALEMI"
+                        , palyers: [
+                            {firstname:"Salvatore", lastname:"Cavaliere"}
+                          ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ]}
+                        , score1:7, score2:1}
+                      , {id:2, team1: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                      , palyers: [
+                          {firstname:"Jacopo", lastname:"Meravglia"}
+                        ,{firstname:"Alessandro", lastname:"Scalise"}
+                    ]}
+                    , score1:1, score2:7}
+                      , {id:3, team1: {teamName:"MINGA BUN"
+                      , palyers: [
+                            {firstname:"Antonio", lastname:"Pietroforte"}
+                          ,{firstname:"Mirco", lastname:"Pietroforte"}
+                      ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                      , palyers: [
+                            {firstname:"Andrea", lastname:"Melidona"}
+                          ,{firstname:"Giuseppe", lastname:"Melidona"}
+                      ]}, score1:5, score2:7}
+                      , {id:4, team1: {teamName:"Fialette"
+                      , palyers: [
+                          {firstname:"Orlando", lastname:"Zambrella"}
+                        ,{firstname:"Gianfranco", lastname:"Elia"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, score1:5, score2:7}
+                      , {id:5, team1: {teamName:"B&B"
+                      , palyers: [
+                          {firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Valter", lastname:"Bergamaschi"}
+                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                      , score1:7, score2:2}
                     ]
                   },
               ]
@@ -341,7 +1083,6 @@ export class InMemoryDataService implements InMemoryDbService {
                   penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
                 }
               ]
-
             }  
           ]
         },
@@ -351,51 +1092,284 @@ export class InMemoryDataService implements InMemoryDbService {
                 , calendars: [
                   {id: 1, meetingName: 'GIORNATA 01'
                   , meetings: [
-                       {id:1, team1: "VIRTUS BOVISIO GIALLA", team2: "SOLAROSPORT", date: '25/10/2017', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:5, score2:4}
-                      ,{id:2, team1: "ORATORIO ZIBIDO G", team2: "ORATORIO ZIBIDO E", date: '24/10/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:6, score2:3}
-                      ,{id:3, team1: "AURORA PREGNANA", team2: "AIROLDI ORIGGIO BIANCA", date: '25/10/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:3, score2:6}
+                       {id:1, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                        , palyers: [
+                          {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                          ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                          ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                      ]}
+                       , team2: {teamName:"SOLAROSPORT"
+                       , palyers: [
+                         {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                         ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                         ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                         ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                     ]}
+                       , date: '25/10/2017', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:5, score2:4}
+                      ,{id:2, team1: {teamName:"ORATORIO ZIBIDO G"
+                      , palyers: [
+                        {firstname:"Mimmo", lastname:"Santoro"}
+                        ,{firstname:"Pancrazio", lastname:"Santoro"}
+                        ,{firstname:"moglie", lastname:"Santoro"}
+                        ,{firstname:"figlia", lastname:"Santoro"}
+                    ]}, team2: {teamName:"ORATORIO ZIBIDO E"
+                      , palyers: [
+                        {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                        ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                        ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                    ]}, date: '24/10/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:6, score2:3}
+                      ,{id:3, team1: {teamName:"AURORA PREGNANA"
+                        , palyers: [
+                          {firstname:"Luciano", lastname:"Martino"}
+                          ,{firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                          ,{firstname:"Emilio", lastname:"Cattaneo"}
+                          ,{firstname:"Salvatore", lastname:"Cavaliere"}
+                          ,{firstname:"Giannicola", lastname:"Alberghina"}
+                      ]}
+                      , team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                        , palyers: [
+                          {firstname:"aobNome1", lastname:"aobCognome1"}
+                          ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                          ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                      ]}
+                      , date: '25/10/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:3, score2:6}
                     ]
                 },
                 {id: 2, meetingName: 'GIORNATA 02'
                 , meetings: [
-                   {id:1, team1: "AIROLDI ORIGGIO BIANCA", team2: "AICS FIGINO A", date: '03/11/2017', time: '21:15', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:3, score2:6}
-                  ,{id:2, team1: "ORATORIO ZIBIDO E", team2: "AURORA PREGNANA", date: '04/12/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:3, score2:6}
-                  ,{id:3, team1: "SOLAROSPORT", team2: "ORATORIO ZIBIDO G", date: '05/12/2017', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:3, score2:6}
+                   {id:1, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                   , palyers: [
+                     {firstname:"aobNome1", lastname:"aobCognome1"}
+                     ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                     ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                 ]}, team2: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}
+                 , date: '03/11/2017', time: '21:15', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:3, score2:6}
+                  ,{id:2, team1: {teamName:"ORATORIO ZIBIDO E"
+                  , palyers: [
+                    {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                    ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                    ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                ]}, team2: {teamName:"AURORA PREGNANA"
+                , palyers: [
+                  {firstname:"Luciano", lastname:"Martino"}
+                  ,{firstname:"Salvatore", lastname:"Amoroso"}
+                  ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                  ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                  ,{firstname:"Giuseppe", lastname:"Lombardo"}
+              ]}, date: '04/12/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:3, score2:6}
+                  ,{id:3, team1: {teamName:"SOLAROSPORT"
+                  , palyers: [
+                    {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                    ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                    ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                    ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                ]}, team2: {teamName:"ORATORIO ZIBIDO G"
+                , palyers: [
+                  {firstname:"Mimmo", lastname:"Santoro"}
+                  ,{firstname:"Pancrazio", lastname:"Santoro"}
+                  ,{firstname:"moglie", lastname:"Santoro"}
+                  ,{firstname:"figlia", lastname:"Santoro"}
+              ]}, date: '05/12/2017', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:3, score2:6}
                 ]
               },
               {id: 3, meetingName: 'GIORNATA 03'
                 , meetings: [
-                  {id:1, team1: "ORATORIO ZIBIDO E", team2: "AIROLDI ORIGGIO BIANCA", date: '07/11/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:9, score2:0}
-                  ,{id:2, team1: "AURORA PREGNANA", team2: "SOLAROSPORT", date: '08/11/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:7, score2:2}
-                  ,{id:3, team1: "AICS FIGINO A", team2: "ORATORIO ZIBIDO E", date: '09/11/2017', time: '21:00', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
+                  {id:1, team1: {teamName:"ORATORIO ZIBIDO E"
+                  , palyers: [
+                    {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                    ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                    ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                , palyers: [
+                  {firstname:"aobNome1", lastname:"aobCognome1"}
+                  ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                  ,{firstname:"aobNome3", lastname:"aobCognome3"}
+              ]}, date: '07/11/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:9, score2:0}
+                  ,{id:2, team1: "AURORA PREGNANA", team2: {teamName:"SOLAROSPORT"
+                  , palyers: [
+                    {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                    ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                    ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                    ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                ]}, date: '08/11/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:7, score2:2}
+                  ,{id:3, team1: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}, team2: {teamName:"ORATORIO ZIBIDO E"
+                  , palyers: [
+                    {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                    ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                    ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                ]}, date: '09/11/2017', time: '21:00', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
                 ]
               },
               {id: 4, meetingName: 'GIORNATA 04'
                 , meetings: [
-                    {id:1, team1: "ORATORIO ZIBIDO G", team2: "VIRTUS BOVISIO GIALLA", date: '14/11/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:1, score2:8}
-                    ,{id:2, team1: "SOLAROSPORT", team2: "AICS FIGINO A", date: '14/11/2017', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:1, score2:8}
-                    ,{id:3, team1: "VIRTUS BOVISIO GIALLA", team2: "AURORA PREGNANA", date: '14/11/2017', time: '21:00', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:7, score2:2}
+                    {id:1, team1: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, date: '14/11/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:1, score2:8}
+                    ,{id:2, team1: {teamName:"SOLAROSPORT"
+                    , palyers: [
+                      {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                      ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                      ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                      ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                  ]}, team2: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}, date: '14/11/2017', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:1, score2:8}
+                    ,{id:3, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, team2: {teamName:"AURORA PREGNANA"
+                  , palyers: [
+                    {firstname:"Luciano", lastname:"Martino"}
+                    ,{firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ,{firstname:"Andrea", lastname:"Poocopio"}
+                    ,{firstname:"Alessandro", lastname:"Scalise"}
+                ]}, date: '14/11/2017', time: '21:00', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:7, score2:2}
                   ]
               },
               {id: 5, meetingName: 'GIORNATA 05'
                 , meetings: [
-                    {id:1, team1: "AURORA PREGNANA", team2: "ORATORIO ZIBIDO G", date: '22/11/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:4, score2:5}
-                    ,{id:2, team1: "AICS FIGINO A", team2: "VIRTUS BOVISIO GIALLA", date: '23/11/2017', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:4, score2:5}
-                    ,{id:3, team1: "AIROLDI ORIGGIO BIANCA", team2: "SOLAROSPORT", date: '24/11/2017', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:7, score2:2}
+                    {id:1, team1: {teamName:"AURORA PREGNANA"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Giannicola", lastname:"Alberghina"}
+                      ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                  ]}, team2: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, date: '22/11/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:4, score2:5}
+                    ,{id:2, team1: {teamName:"AICS FIGINO A"
+                    , palyers: [
+                      {firstname:"afaNome1", lastname:"afaCognome1"}
+                      ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                      ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                  ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, date: '23/11/2017', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:4, score2:5}
+                    ,{id:3, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                    , palyers: [
+                      {firstname:"aobNome1", lastname:"aobCognome1"}
+                      ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                      ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                  ]}, team2: {teamName:"SOLAROSPORT"
+                    , palyers: [
+                      {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                      ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                      ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                      ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                  ]}, date: '24/11/2017', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:7, score2:2}
                   ]
               },
               {id: 6, meetingName: 'GIORNATA 06'
                 , meetings: [
-                    {id:1, team1: "	SOLAROSPORT", team2: "ORATORIO ZIBIDO E", date: '28/11/2017', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:7, score2:2}
-                    ,{id:2, team1: "VIRTUS BOVISIO GIALLA", team2: "AIROLDI ORIGGIO BIANCA", date: '29/11/2017', time: '21:15', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:7, score2:2}
-                    ,{id:3, team1: "ORATORIO ZIBIDO G", team2: "AICS FIGINO A", date: '28/11/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
+                    {id:1, team1: "	SOLAROSPORT", team2: {teamName:"ORATORIO ZIBIDO E"
+                    , palyers: [
+                      {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                      ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                      ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                  ]}, date: '28/11/2017', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:7, score2:2}
+                    ,{id:2, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                  , palyers: [
+                    {firstname:"aobNome1", lastname:"aobCognome1"}
+                    ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                    ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                ]}, date: '29/11/2017', time: '21:15', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:7, score2:2}
+                    ,{id:3, team1: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, team2: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}, date: '28/11/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
                   ]
               },
               {id: 7, meetingName: 'GIORNATA 07'
                 , meetings: [
-                    {id:1, team1: "AICS FIGINO A", team2: "AURORA PREGNANA", date: '14/12/2017', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:6, score2:3}
-                    ,{id:2, team1: "AIROLDI ORIGGIO BIANCA", team2: "ORATORIO ZIBIDO G", date: '15/12/2017', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:1, score2:8}
-                    ,{id:3, team1: "ORATORIO ZIBIDO E", team2: "VIRTUS BOVISIO GIALLA", date: '12/12/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
+                    {id:1, team1: {teamName:"AICS FIGINO A"
+                    , palyers: [
+                      {firstname:"afaNome1", lastname:"afaCognome1"}
+                      ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                      ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                  ]}
+                    , team2: {teamName:"AURORA PREGNANA"
+                    , palyers: [
+                        {firstname:"Luciano", lastname:"Martino"}
+                        ,{firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Andrea", lastname:"Procopio"}
+                        ,{firstname:"Alessandro", lastname:"Scalise"}
+                        ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                        ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                    ]}
+                    , date: '14/12/2017', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:6, score2:3}
+                    ,{id:2, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                    , palyers: [
+                      {firstname:"aobNome1", lastname:"aobCognome1"}
+                      ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                      ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                  ]}, team2: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, date: '15/12/2017', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:1, score2:8}
+                    ,{id:3, team1: {teamName:"ORATORIO ZIBIDO E"
+                    , palyers: [
+                      {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                      ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                      ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                  ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, date: '12/12/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
                   ]
               },
             ]
@@ -403,7 +1377,12 @@ export class InMemoryDataService implements InMemoryDbService {
               { id : 1, teamName: "ORATORIO ZIBIDO G", points : 78, played : 12, won : 12, lost : 0,
                 penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
               }
-              ,{ id : 2, teamName: "VIRTUS BOVISIO GIALLA", points : 70, played : 12, won : 10, lost  : 2,
+              ,{ id : 2, teamName: {teamName:"VIRTUS BOVISIO GIALLA"
+              , palyers: [
+                {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+            ]}, points : 70, played : 12, won : 10, lost  : 2,
                 penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
               }
               ,{ id : 3, teamName: "AICS FIGINO A", points : 62, played : 12, won : 7, lost  : 5,
@@ -427,51 +1406,295 @@ export class InMemoryDataService implements InMemoryDbService {
               , calendars: [
                   {id: 1, meetingName: 'GIORNATA 01'
                   , meetings: [
-                       {id:1, team1: "SOLAROSPORT", team2: "VIRTUS BOVISIO GIALLA", date: '09/01/2018', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:2, score2:7}
-                      ,{id:2, team1: "ORATORIO ZIBIDO E", team2: "ORATORIO ZIBIDO G", date: '09/01/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:1, score2:8}
-                      ,{id:3, team1: "AIROLDI ORIGGIO BIANCA", team2: "AURORA PREGNANA", date: '12/01/2018', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:7, score2:2}
+                       {id:1, team1: {teamName:"SOLAROSPORT"
+                       , palyers: [
+                         {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                         ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                         ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                         ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                     ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                       , palyers: [
+                         {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                         ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                         ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                     ]}, date: '09/01/2018', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:2, score2:7}
+                      ,{id:2, team1: {teamName:"ORATORIO ZIBIDO E"
+                      , palyers: [
+                        {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                        ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                        ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                    ]}
+                      , team2: {teamName:"ORATORIO ZIBIDO G"
+                      , palyers: [
+                        {firstname:"Mimmo", lastname:"Santoro"}
+                        ,{firstname:"Pancrazio", lastname:"Santoro"}
+                        ,{firstname:"moglie", lastname:"Santoro"}
+                        ,{firstname:"figlia", lastname:"Santoro"}
+                    ]}
+                      , date: '09/01/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:1, score2:8}
+                      ,{id:3, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                      , palyers: [
+                        {firstname:"aobNome1", lastname:"aobCognome1"}
+                        ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                        ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                    ]}
+                      , team2: {teamName:"AURORA PREGNANA"
+                      , palyers: [
+                        {firstname:"Luciano", lastname:"Martino"}
+                        ,{firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                        ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                        ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                    ]}
+                      , date: '12/01/2018', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:7, score2:2}
                     ]
                 },
                 {id: 2, meetingName: 'GIORNATA 02'
                 , meetings: [
-                   {id:1, team1: "AICS FIGINO A", team2: "AIROLDI ORIGGIO BIANCA", date: '18/01/2018', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:6, score2:3}
-                  ,{id:2, team1: "AURORA PREGNANA", team2: "ORATORIO ZIBIDO E", date: '17/01/2018', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:9, score2:0}
-                  ,{id:3, team1: "ORATORIO ZIBIDO G", team2: "SOLAROSPORT", date: '18/01/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
+                   {id:1, team1: {teamName:"AICS FIGINO A"
+                   , palyers: [
+                     {firstname:"afaNome1", lastname:"afaCognome1"}
+                     ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                     ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                 ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                   , palyers: [
+                     {firstname:"aobNome1", lastname:"aobCognome1"}
+                     ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                     ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                 ]}, date: '18/01/2018', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:6, score2:3}
+                  ,{id:2, team1: {teamName:"AURORA PREGNANA"
+                  , palyers: [
+                    {firstname:"Luciano", lastname:"Martino"}
+                    ,{firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                    ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                ]}, team2: {teamName:"ORATORIO ZIBIDO E"
+                  , palyers: [
+                    {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                    ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                    ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                ]}, date: '17/01/2018', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:9, score2:0}
+                  ,{id:3, team1: {teamName:"ORATORIO ZIBIDO G"
+                  , palyers: [
+                    {firstname:"Mimmo", lastname:"Santoro"}
+                    ,{firstname:"Pancrazio", lastname:"Santoro"}
+                    ,{firstname:"moglie", lastname:"Santoro"}
+                    ,{firstname:"figlia", lastname:"Santoro"}
+                ]}, team2: {teamName:"SOLAROSPORT"
+                  , palyers: [
+                    {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                    ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                    ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                    ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                ]}, date: '18/01/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
                 ]
               },
               {id: 3, meetingName: 'GIORNATA 03'
                 , meetings: [
-                  {id:1, team1: "VIRTUS BOVISIO GIALLA", team2: "ORATORIO ZIBIDO G", date: '24/01/2018', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:4, score2:5}
-                  ,{id:2, team1: "SOLAROSPORT", team2: "AURORA PREGNANA", date: '23/01/2018', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:6, score2:3}
-                  ,{id:3, team1: "AICS FIGINO A", team2: "ORATORIO ZIBIDO E", date: '23/01/2018', time: '21:30', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:3, score2:6}
+                  {id:1, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                  , palyers: [
+                    {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                    ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                    ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                ]}, team2: {teamName:"ORATORIO ZIBIDO G"
+                , palyers: [
+                  {firstname:"Mimmo", lastname:"Santoro"}
+                  ,{firstname:"Pancrazio", lastname:"Santoro"}
+                  ,{firstname:"moglie", lastname:"Santoro"}
+                  ,{firstname:"figlia", lastname:"Santoro"}
+              ]}, date: '24/01/2018', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:4, score2:5}
+                  ,{id:2, team1: {teamName:"SOLAROSPORT"
+                  , palyers: [
+                    {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                    ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                    ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                    ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                ]}, team2: {teamName:"AURORA PREGNANA"
+                , palyers: [
+                  {firstname:"Luciano", lastname:"Martino"}
+                  ,{firstname:"Salvatore", lastname:"Amoroso"}
+                  ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                  ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                  ,{firstname:"Giuseppe", lastname:"Lombardo"}
+              ]}, date: '23/01/2018', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:6, score2:3}
+                  ,{id:3, team1: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}, team2: {teamName:"ORATORIO ZIBIDO E"
+                  , palyers: [
+                    {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                    ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                    ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                ]}, date: '23/01/2018', time: '21:30', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:3, score2:6}
                 ]
               },
               {id: 4, meetingName: 'GIORNATA 04'
                 , meetings: [
-                    {id:1, team1: "AIROLDI ORIGGIO BIANCA", team2: "ORATORIO ZIBIDO E", date: '02/02/2018', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:8, score2:1}
-                    ,{id:2, team1: "AICS FIGINO A", team2: "SOLAROSPORT", date: '01/02/2018', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:7, score2:2}
-                    ,{id:3, team1: "AURORA PREGNANA", team2: "VIRTUS BOVISIO GIALLA", date: '31/01/2018', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:2, score2:7}
+                    {id:1, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                    , palyers: [
+                      {firstname:"aobNome1", lastname:"aobCognome1"}
+                      ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                      ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                  ]}, team2: {teamName:"ORATORIO ZIBIDO E"
+                    , palyers: [
+                      {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                      ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                      ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                  ]}, date: '02/02/2018', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:8, score2:1}
+                    ,{id:2, team1: {teamName:"AICS FIGINO A"
+                    , palyers: [
+                      {firstname:"afaNome1", lastname:"afaCognome1"}
+                      ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                      ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                  ]}, team2: {teamName:"SOLAROSPORT"
+                    , palyers: [
+                      {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                      ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                      ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                      ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                  ]}, date: '01/02/2018', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:7, score2:2}
+                    ,{id:3, team1: {teamName:"AURORA PREGNANA"
+                    , palyers: [
+                      {firstname:"Luciano", lastname:"Martino"}
+                      ,{firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                  ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, date: '31/01/2018', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:2, score2:7}
                   ]
               },
               {id: 5, meetingName: 'GIORNATA 05'
                 , meetings: [
-                    {id:1, team1: "ORATORIO ZIBIDO G", team2: "AURORA PREGNANA", date: '06/02/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:6, score2:3}
-                    ,{id:2, team1: "VIRTUS BOVISIO GIALLA", team2: "AICS FIGINO A", date: '07/02/2018', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:7, score2:2}
-                    ,{id:3, team1: "SOLAROSPORT", team2: "AIROLDI ORIGGIO BIANCA", date: '06/02/2018', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:1, score2:8}
+                    {id:1, team1: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, team2: {teamName:"AURORA PREGNANA"
+                  , palyers: [
+                    {firstname:"Luciano", lastname:"Martino"}
+                    ,{firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                    ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                ]}, date: '06/02/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:6, score2:3}
+                    ,{id:2, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, team2: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}, date: '07/02/2018', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:7, score2:2}
+                    ,{id:3, team1: {teamName:"SOLAROSPORT"
+                    , palyers: [
+                      {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                      ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                      ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                      ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                  ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                  , palyers: [
+                    {firstname:"aobNome1", lastname:"aobCognome1"}
+                    ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                    ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                ]}, date: '06/02/2018', time: '21:00', address:'VIA S.PAOLO, 6 20020 SOLARO MI', score1:1, score2:8}
                   ]
               },
               {id: 6, meetingName: 'GIORNATA 06'
                 , meetings: [
-                    {id:1, team1: "ORATORIO ZIBIDO E", team2: "SOLAROSPORT", date: '13/02/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:4, score2:5}
-                    ,{id:2, team1: "AIROLDI ORIGGIO BIANCA", team2: "VIRTUS BOVISIO GIALLA", date: '16/02/2018', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:3, score2:6}
-                    ,{id:3, team1: "AICS FIGINO A", team2: "ORATORIO ZIBIDO G", date: '15/02/2018', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:4, score2:5}
+                    {id:1, team1: {teamName:"ORATORIO ZIBIDO E"
+                    , palyers: [
+                      {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                      ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                      ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                  ]}, team2: {teamName:"SOLAROSPORT"
+                    , palyers: [
+                      {firstname:"solaroNome1", lastname:"solaroCognome1"}
+                      ,{firstname:"solaroNome2", lastname:"solaroCognome2"}
+                      ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
+                      ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
+                  ]}, date: '13/02/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:4, score2:5}
+                    ,{id:2, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                    , palyers: [
+                      {firstname:"aobNome1", lastname:"aobCognome1"}
+                      ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                      ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                  ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, date: '16/02/2018', time: '21:00', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:3, score2:6}
+                    ,{id:3, team1: {teamName:"AICS FIGINO A"
+                    , palyers: [
+                      {firstname:"afaNome1", lastname:"afaCognome1"}
+                      ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                      ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                  ]}, team2: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, date: '15/02/2018', time: '21:00', address:'VIA ZANZOTTERA 32 20153 MILANO MI', score1:4, score2:5}
                   ]
               },
               {id: 7, meetingName: 'GIORNATA 07'
                 , meetings: [
-                    {id:1, team1: "AURORA PREGNANA", team2: "AICS FIGINO A", date: '21/02/2018', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:3, score2:6}
-                    ,{id:2, team1: "ORATORIO ZIBIDO G", team2: "AIROLDI ORIGGIO BIANCA", date: '20/02/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
-                    ,{id:3, team1: "VIRTUS BOVISIO GIALLA", team2: "ORATORIO ZIBIDO E", date: '21/02/2018', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:7, score2:2}
+                    {id:1, team1: {teamName:"AURORA PREGNANA"
+                    , palyers: [
+                      {firstname:"Luciano", lastname:"Martino"}
+                      ,{firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                      ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                  ]}, team2: {teamName:"AICS FIGINO A"
+                  , palyers: [
+                    {firstname:"afaNome1", lastname:"afaCognome1"}
+                    ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                    ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                ]}, date: '21/02/2018', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:3, score2:6}
+                    ,{id:2, team1: {teamName:"ORATORIO ZIBIDO G"
+                    , palyers: [
+                      {firstname:"Mimmo", lastname:"Santoro"}
+                      ,{firstname:"Pancrazio", lastname:"Santoro"}
+                      ,{firstname:"moglie", lastname:"Santoro"}
+                      ,{firstname:"figlia", lastname:"Santoro"}
+                  ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                  , palyers: [
+                    {firstname:"aobNome1", lastname:"aobCognome1"}
+                    ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                    ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                ]}, date: '20/02/2018', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:7, score2:2}
+                    ,{id:3, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}, team2: {teamName:"ORATORIO ZIBIDO E"
+                  , palyers: [
+                    {firstname:"ozeNome1", lastname:"ozeCognome1"}
+                    ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
+                    ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
+                ]}, date: '21/02/2018', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:7, score2:2}
                   ]
               },
             ]
@@ -505,36 +1728,199 @@ export class InMemoryDataService implements InMemoryDbService {
               , calendars: [
                 {id: 1, meetingName: 'GIORNATA 1a Giornata'
                   , meetings: [
-                     {id:1, team1: "VIRTUS BOVISIO GIALLA", team2: "AICS FIGINO A", date: '07/03/2018', time: '21:15', address: 'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB',  score1:5, score2:4}
-                     ,{id:2, team1: "OSM ASSAGO GRANATA", team2: "AICS FIGINO C", date: '08/03/2018', time: '21:30', address: 'Campo:VIA C.A.DALLA CHIESA 2 20090 ASSAGO MI',  score1:6, score2:3}
-                     ,{id:3, team1: "OSM ASSAGO BLU", team2: "AURORA PREGNANA BLU", date: '08/03/2018', time: '21:30', address: 'Campo:VIA C.A.DALLA CHIESA 2 20090 ASSAGO MI',  score1:5, score2:4}
-                     ,{id:4, team1: "AIROLDI ORIGGIO BIANCA", team2: "AURORA PREGNANA", date: '08/03/2018', time: '21:00', address: 'VIA PIANTANIDA 26 21040 ORIGGIO VA',  score1:3, score2:6}
+                     {id:1, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                     , palyers: [
+                       {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                       ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                       ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                   ]}, team2: {teamName:"AICS FIGINO A"
+                   , palyers: [
+                     {firstname:"afaNome1", lastname:"afaCognome1"}
+                     ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                     ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                 ]}, date: '07/03/2018', time: '21:15', address: 'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB',  score1:5, score2:4}
+                     ,{id:2, team1: {teamName:{teamName:"OSM ASSAGO GRANATA"
+                      , palyers: [
+                        {firstname:"oagNome1", lastname:"oagCognome1"}
+                        ,{firstname:"oagNome2", lastname:"oagCognome2"}
+                        ,{firstname:"oagNome3", lastname:"oagCognome3"}
+                    ]}
+                      , palyers: [
+                        {firstname:"oagNome1", lastname:"oagCognome1"}
+                        ,{firstname:"oagNome2", lastname:"oagCognome2"}
+                        ,{firstname:"oagNome3", lastname:"oagCognome3"}
+                    ]}
+                     , team2: {teamName:"AICS FIGINO C"
+                     , palyers: [
+                        {firstname:"afcNome1", lastname:"afcCognome1"}
+                        ,{firstname:"afcNome2", lastname:"afcCognome2"}
+                        ,{firstname:"afcNome3", lastname:"afcCognome3"}
+                    ]}, date: '08/03/2018', time: '21:30', address: 'Campo:VIA C.A.DALLA CHIESA 2 20090 ASSAGO MI',  score1:6, score2:3}
+                     ,{id:3, team1: {teamName:"OSM ASSAGO BLU"
+                     , palyers: [
+                       {firstname:"oabNome1", lastname:"oabCognome1"}
+                       ,{firstname:"oabNome2", lastname:"oabCognome2"}
+                       ,{firstname:"oabNome3", lastname:"oabCognome3"}
+                   ]}
+                     , team2: {teamName:"AURORA PREGNANA BLU"
+                     , palyers: [
+                       {firstname:"Salvatore", lastname:"De Luca"}
+                       ,{firstname:"Jacopo", lastname:"Meraviglia"}
+                       ,{firstname:"Valter", lastname:"Bergamaschi"}
+                       ,{firstname:"Nino", lastname:"Scarpaci"}
+                       ,{firstname:"Andrea", lastname:"Melidona"}
+                       ,{firstname:"Savino", lastname:"Caporale"}
+                   ]}
+                     , date: '08/03/2018', time: '21:30', address: 'Campo:VIA C.A.DALLA CHIESA 2 20090 ASSAGO MI',  score1:5, score2:4}
+                     ,{id:4, team1: {teamName:"AIROLDI ORIGGIO BIANCA"
+                     , palyers: [
+                       {firstname:"aobNome1", lastname:"aobCognome1"}
+                       ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                       ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                   ]}, team2: {teamName:"AURORA PREGNANA"
+                     , palyers: [
+                       {firstname:"Luciano", lastname:"Martino"}
+                       ,{firstname:"Salvatore", lastname:"Amoroso"}
+                       ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                       ,{firstname:"Emilio", lastname:"Cattaneo"}
+                       ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                       ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                   ]}, date: '08/03/2018', time: '21:00', address: 'VIA PIANTANIDA 26 21040 ORIGGIO VA',  score1:3, score2:6}
                     ]
                 },
                 {id: 2, meetingName: 'GIORNATA 2a Giornata'
                   , meetings: [
-                     {id:1, team1: "VIRTUS BOVISIO GIALLA", team2: "OSM ASSAGO GRANATA", date: '14/03/2018', time: '21:15', address: 'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB',  score1:7, score2:2}
-                     ,{id:2, team1: "AICS FIGINO A", team2: "AICS FIGINO C", date: '15/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:8, score2:1}
-                     ,{id:3, team1: "OSM ASSAGO BLU", team2: "AIROLDI ORIGGIO BIANCA", date: '14/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:4, score2:5}
-                     ,{id:4, team1: "AURORA PREGNANA BLU", team2: "AURORA PREGNANA", date: '14/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:4, score2:5}
+                     {id:1, team1: {teamName:"VIRTUS BOVISIO GIALLA"
+                     , palyers: [
+                       {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                       ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                       ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                   ]}, team2: {teamName:"OSM ASSAGO GRANATA"
+                   , palyers: [
+                     {firstname:"oagNome1", lastname:"oagCognome1"}
+                     ,{firstname:"oagNome2", lastname:"oagCognome2"}
+                     ,{firstname:"oagNome3", lastname:"oagCognome3"}
+                 ]}, date: '14/03/2018', time: '21:15', address: 'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB',  score1:7, score2:2}
+                     ,{id:2, team1: {teamName:"AICS FIGINO A"
+                     , palyers: [
+                       {firstname:"afaNome1", lastname:"afaCognome1"}
+                       ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                       ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                   ]}, team2: {teamName:"AICS FIGINO C"
+                   , palyers: [
+                     {firstname:"afcNome1", lastname:"afcCognome1"}
+                     ,{firstname:"afcNome2", lastname:"afcCognome2"}
+                     ,{firstname:"afcNome3", lastname:"afcCognome3"}
+                 ]}, date: '15/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:8, score2:1}
+                     ,{id:3, team1: {teamName:"OSM ASSAGO BLU"
+                     , palyers: [
+                       {firstname:"oabNome1", lastname:"oabCognome1"}
+                       ,{firstname:"oabNome2", lastname:"oabCognome2"}
+                       ,{firstname:"oabNome3", lastname:"oabCognome3"}
+                   ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                     , palyers: [
+                       {firstname:"aobNome1", lastname:"aobCognome1"}
+                       ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                       ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                   ]}, date: '14/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:4, score2:5}
+                     ,{id:4, team1: {teamName:"AURORA PREGNANA BLU"
+                     , palyers: [
+                       {firstname:"Salvatore", lastname:"De Luca"}
+                       ,{firstname:"Jacopo", lastname:"Meraviglia"}
+                       ,{firstname:"Valter", lastname:"Bergamaschi"}
+                       ,{firstname:"Pino", lastname:"Felini"}
+                       ,{firstname:"Marco", lastname:"Laratta"}
+                       ,{firstname:"Savino", lastname:"Caporale"}
+                   ]}
+                     , team2: {teamName:"AURORA PREGNANA"
+                      , palyers: [
+                        {firstname:"Luciano", lastname:"Martino"}
+                        ,{firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                        ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                        ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                    ]}, date: '14/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:4, score2:5}
                     ]
                 },
                 {id: 3, meetingName: 'GIORNATA 3a Giornata'
                   , meetings: [
-                     {id:1, team1: "AICS FIGINO C", team2: "VIRTUS BOVISIO GIALLA", date: '22/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:1, score2:8}
-                     ,{id:2, team1: "AICS FIGINO A", team2: "OSM ASSAGO GRANATA", date: '23/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:7, score2:2}
-                     ,{id:3, team1: "AURORA PREGNANA", team2: "OSM ASSAGO BLU", date: '21/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:3, score2:6}
-                     ,{id:3, team1: "AURORA PREGNANA BLU", team2: "AIROLDI ORIGGIO BIANCA", date: '21/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:7, score2:2}
+                     {id:1, team1: {teamName:"AICS FIGINO C"
+                     , palyers: [
+                       {firstname:"afcNome1", lastname:"afcCognome1"}
+                       ,{firstname:"afcNome2", lastname:"afcCognome2"}
+                       ,{firstname:"afcNome3", lastname:"afcCognome3"}
+                   ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                     , palyers: [
+                       {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                       ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                       ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                   ]}, date: '22/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:1, score2:8}
+                     ,{id:2, team1: {teamName:"AICS FIGINO A"
+                     , palyers: [
+                       {firstname:"afaNome1", lastname:"afaCognome1"}
+                       ,{firstname:"afaNome2", lastname:"afaCognome2"}
+                       ,{firstname:"afaNome3", lastname:"afaCognome3"}
+                   ]}, team2: {teamName:"OSM ASSAGO GRANATA"
+                     , palyers: [
+                       {firstname:"oagNome1", lastname:"oagCognome1"}
+                       ,{firstname:"oagNome2", lastname:"oagCognome2"}
+                       ,{firstname:"oagNome3", lastname:"oagCognome3"}
+                   ]}, date: '23/03/2018', time: '21:00', address: 'VIA ZANZOTTERA 32 20153 MILANO MI',  score1:7, score2:2}
+                     ,{id:3, team1: {teamName:"AURORA PREGNANA"
+                     , palyers: [
+                       {firstname:"Luciano", lastname:"Martino"}
+                       ,{firstname:"Salvatore", lastname:"Amoroso"}
+                       ,{firstname:"Roberto", lastname:"Bergamaschi"}
+                       ,{firstname:"Emilio", lastname:"Cattaneo"}
+                       ,{firstname:"Raimondo", lastname:"Brancaccio"}
+                       ,{firstname:"Giuseppe", lastname:"Lombardo"}
+                   ]}, team2: {teamName:"OSM ASSAGO BLU"
+                    , palyers: [
+                      {firstname:"oabNome1", lastname:"oabCognome1"}
+                      ,{firstname:"oabNome2", lastname:"oabCognome2"}
+                      ,{firstname:"oabNome3", lastname:"oabCognome3"}
+                  ]}, date: '21/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:3, score2:6}
+                     ,{id:3, team1: {teamName:"AURORA PREGNANA BLU"
+                     , palyers: [
+                       {firstname:"Salvatore", lastname:"De Luca"}
+                       ,{firstname:"Leo", lastname:"Leo"}
+                       ,{firstname:"Valter", lastname:"Bergamaschi"}
+                       ,{firstname:"Pino", lastname:"Felini"}
+                       ,{firstname:"Savino", lastname:"Caporale"}
+                       ,{firstname:"Carlo", lastname:"Carli"}
+                   ]}, team2: {teamName:"AIROLDI ORIGGIO BIANCA"
+                   , palyers: [
+                     {firstname:"aobNome1", lastname:"aobCognome1"}
+                     ,{firstname:"aobNome2", lastname:"aobCognome2"}
+                     ,{firstname:"aobNome3", lastname:"aobCognome3"}
+                 ]}, date: '21/03/2018', time: '21:00', address: 'Via Roma 110, 20010 - Pregnana Milanese (MI)',  score1:7, score2:2}
                     ]
                 },
                 {id: 4, meetingName: 'GIORNATA Finale 3° e 4° Posto'
                   , meetings: [
-                     {id:1, team1: "ORATORIO ZIBIDO D", team2: "OSM ASSAGO BLU", date: '09/04/2018', time: '21:15', address: 'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI',  score1:6, score2:3}
+                     {id:1, team1: "ORATORIO ZIBIDO D", team2: {teamName:"OSM ASSAGO BLU"
+                     , palyers: [
+                       {firstname:"oabNome1", lastname:"oabCognome1"}
+                       ,{firstname:"oabNome2", lastname:"oabCognome2"}
+                       ,{firstname:"oabNome3", lastname:"oabCognome3"}
+                   ]}, date: '09/04/2018', time: '21:15', address: 'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI',  score1:6, score2:3}
                     ]
                 },
                 {id: 5, meetingName: 'GIORNATA Finale 1° e 2° Posto'
                   , meetings: [
-                     {id:1, team1: "ORATORIO ZIBIDO G", team2: "VIRTUS BOVISIO GIALLA", date: '09/04/2018', time: '21:15', address: 'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI',  score1:5, score2:4}
+                     {id:1, team1: {teamName:"ORATORIO ZIBIDO G"
+                     , palyers: [
+                       {firstname:"Mimmo", lastname:"Santoro"}
+                       ,{firstname:"Pancrazio", lastname:"Santoro"}
+                       ,{firstname:"moglie", lastname:"Santoro"}
+                       ,{firstname:"figlia", lastname:"Santoro"}
+                   ]}, team2: {teamName:"VIRTUS BOVISIO GIALLA"
+                     , palyers: [
+                       {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                       ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                       ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                   ]}, date: '09/04/2018', time: '21:15', address: 'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI',  score1:5, score2:4}
                     ]
                 },
               ]
@@ -547,38 +1933,230 @@ export class InMemoryDataService implements InMemoryDbService {
                   , calendars: [
                     {id: 1, meetingName: 'Turno 1'
                     , meetings: [
-                        {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                      , {id:2, team1: "Maldive", date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "B&B", score1:5, score2:7}
-                      , {id:3, team1: "Poeti", date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:5, score2:7}
-                      , {id:4, team1: "Fialette", date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:5}
-                      , {id:5, team1: "Attenti a quei 2", date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:5}
+                        {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                        , palyers: [
+                          {firstname:"Salvatore", lastname:"Amoroso"}
+                          ,{firstname:"Luciano", lastname:"Martino"}
+                      ]}
+                        , date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                        , team2: {teamName:"SALEMI"
+                        , palyers: [
+                            {firstname:"Salvatore", lastname:"Cavaliere"}
+                          ,{firstname:"Emilio", lastname:"Cattaneo"}
+                      ]}
+                        , score1:7, score2:3}
+                      , {id:2, team1: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"B&B"
+                      , palyers: [
+                          {firstname:"Roberto", lastname:"Bergamaschi"}
+                        ,{firstname:"Valter", lastname:"Bergamaschi"}
+                    ]}
+                      , score1:5, score2:7}
+                      , {id:3, team1: {teamName:"Poeti"
+                      , palyers: [
+                          {firstname:"Raimondo", lastname:"Francaccio"}
+                        ,{firstname:"Andrea", lastname:"Procopio"}
+                    ]}, date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"GROOT"
+                      , palyers: [
+                          {firstname:"Jacopo", lastname:"Meravglia"}
+                        ,{firstname:"Alessandro", lastname:"Scalise"}
+                    ]}
+                      , score1:5, score2:7}
+                      , {id:4, team1: {teamName:"Fialette"
+                      , palyers: [
+                          {firstname:"Orlando", lastname:"Zambrella"}
+                        ,{firstname:"Gianfranco", lastname:"Elia"}
+                    ]}, date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, score1:7, score2:5}
+                      , {id:5, team1: {teamName:"Attenti a quei 2"
+                      , palyers: [
+                            {firstname:"Andrea", lastname:"Melidona"}
+                          ,{firstname:"Giuseppe", lastname:"Melidona"}
+                      ]}, date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}
+                      , score1:7, score2:5}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'
                   , meetings: [
-                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:7, score2:3}
-                    , {id:2, team1: "SALEMI", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:1}
-                    , {id:3, team1: "Poeti", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Fialette", score1:4, score2:7}
-                    , {id:4, team1: "GROOT", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:2, score2:7}
-                    , {id:5, team1: "B&B", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:2}
+                      {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                      , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2:{teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , score1:7, score2:3}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:7, score2:1}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}
+                    , score1:4, score2:7}
+                    , {id:4, team1: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:2, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Quota Drone"
+                  , palyers: [
+                      {firstname:"Enrico", lastname:"Chiminelli"}
+                    ,{firstname:"Fabio", lastname:"Chiminelli"}
+                ]}
+                  , score1:7, score2:2}
                   ]
                 },
                 {id: 3, meetingName: 'Turno 3'
                   , meetings: [
-                      {id:1, team1: "Quota Drone", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:5, score2:7}
-                    , {id:2, team1: "SALEMI", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:6, score2:7}
-                    , {id:3, team1: "Poeti", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:2, score2:7}
-                    , {id:4, team1: "Fialette", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:1, score2:7}
-                    , {id:5, team1: "B&B", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                      {id:1, team1: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , score1:5, score2:7}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:6, score2:7}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:2, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:1, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:1}
                   ]
                 },
                 {id: 4, meetingName: 'Turno 4'
                   , meetings: [
-                      {id:1, team1: "Quota Drone", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:4}
-                    , {id:2, team1: "Maldive", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:1, score2:7}
-                    , {id:3, team1: "MINGA BUN", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:5, score2:7}
-                    , {id:4, team1: "Fialette", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Poeti", score1:6, score2:7}
-                    , {id:5, team1: "B&B", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALLUC", score1:7, score2:1}
+                      {id:1, team1: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:7, score2:4}
+                    , {id:2, team1: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:1, score2:7}
+                    , {id:3, team1: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:5, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, score1:6, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"SALLUC"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:1}
                   ]
                 },
               ]
@@ -619,38 +2197,223 @@ export class InMemoryDataService implements InMemoryDbService {
                 , calendars: [
                   {id: 1, meetingName: 'Turno 1'
                   , meetings: [
-                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                    , {id:2, team1: "Maldive", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "B&B", score1:5, score2:7}
-                    , {id:3, team1: "Poeti", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:5, score2:7}
-                    , {id:4, team1: "Fialette", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:5}
-                    , {id:5, team1: "Attenti a quei 2", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:5}
+                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:7, score2:3}
+                    , {id:2, team1: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}
+                    , score1:5, score2:7}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:5, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:7, score2:5}
+                    , {id:5, team1: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}
+                    , score1:7, score2:5}
                   ]
                 },
                 {id: 2, meetingName: 'Turno 2'
                 , meetings: [
-                    {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:7, score2:3}
-                  , {id:2, team1: "SALEMI", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:1}
-                  , {id:3, team1: "Poeti", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Fialette", score1:4, score2:7}
-                  , {id:4, team1: "GROOT", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:2, score2:7}
-                  , {id:5, team1: "B&B", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:2}
+                    {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2:{teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , score1:7, score2:3}
+                  , {id:2, team1: {teamName:"SALEMI"
+                  , palyers: [
+                      {firstname:"Salvatore", lastname:"Cavaliere"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                ]}
+                  , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:7, score2:1}
+                  , {id:3, team1: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Fialette"
+                  , palyers: [
+                      {firstname:"Orlando", lastname:"Zambrella"}
+                    ,{firstname:"Gianfranco", lastname:"Elia"}
+                ]}
+                  , score1:4, score2:7}
+                  , {id:4, team1: {teamName:"GROOT"
+                  , palyers: [
+                      {firstname:"Jacopo", lastname:"Meravglia"}
+                    ,{firstname:"Alessandro", lastname:"Scalise"}
+                ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                , palyers: [
+                      {firstname:"Antonio", lastname:"Pietroforte"}
+                    ,{firstname:"Mirco", lastname:"Pietroforte"}
+                ]}, score1:2, score2:7}
+                  , {id:5, team1: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                , team2: {teamName:"Quota Drone"
+                , palyers: [
+                    {firstname:"Enrico", lastname:"Chiminelli"}
+                  ,{firstname:"Fabio", lastname:"Chiminelli"}
+              ]}
+                , score1:7, score2:2}
                 ]
               },
               {id: 3, meetingName: 'Turno 3'
                 , meetings: [
-                    {id:1, team1: "Quota Drone", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:5, score2:7}
-                  , {id:2, team1: "SALEMI", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:6, score2:7}
-                  , {id:3, team1: "Poeti", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:2, score2:7}
-                  , {id:4, team1: "Fialette", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:1, score2:7}
-                  , {id:5, team1: "B&B", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                    {id:1, team1: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , score1:5, score2:7}
+                  , {id:2, team1: {teamName:"SALEMI"
+                  , palyers: [
+                      {firstname:"Salvatore", lastname:"Cavaliere"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                ]}
+                  , date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2:{teamName:"GROOT"
+                  , palyers: [
+                      {firstname:"Jacopo", lastname:"Meravglia"}
+                    ,{firstname:"Alessandro", lastname:"Scalise"}
+                ]}
+                  , score1:6, score2:7}
+                  , {id:3, team1: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                , palyers: [
+                      {firstname:"Andrea", lastname:"Melidona"}
+                    ,{firstname:"Giuseppe", lastname:"Melidona"}
+                ]}, score1:2, score2:7}
+                  , {id:4, team1: {teamName:"Fialette"
+                  , palyers: [
+                      {firstname:"Orlando", lastname:"Zambrella"}
+                    ,{firstname:"Gianfranco", lastname:"Elia"}
+                ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                , palyers: [
+                      {firstname:"Antonio", lastname:"Pietroforte"}
+                    ,{firstname:"Mirco", lastname:"Pietroforte"}
+                ]}, score1:1, score2:7}
+                  , {id:5, team1: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                  , palyers: [
+                    {firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Luciano", lastname:"Martino"}
+                ]}
+                  , score1:7, score2:1}
                 ]
               },
               {id: 4, meetingName: 'Turno 4'
                 , meetings: [
-                    {id:1, team1: "Quota Drone", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:4}
-                  , {id:2, team1: "Maldive", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:1, score2:7}
-                  , {id:3, team1: "MINGA BUN", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:5, score2:7}
-                  , {id:4, team1: "Fialette", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Poeti", score1:6, score2:7}
-                  , {id:5, team1: "B&B", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                    {id:1, team1: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , score1:7, score2:4}
+                  , {id:2, team1: {teamName:"Maldive"
+                  , palyers: [
+                      {firstname:"Savino", lastname:"Caporale"}
+                    ,{firstname:"Pino", lastname:"Felini"}
+                ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                , team2:{teamName:"GROOT"
+                , palyers: [
+                    {firstname:"Jacopo", lastname:"Meravglia"}
+                  ,{firstname:"Alessandro", lastname:"Scalise"}
+              ]}
+                , score1:1, score2:7}
+                  , {id:3, team1: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:5, score2:7}
+                  , {id:4, team1: {teamName:"Fialette"
+                  , palyers: [
+                      {firstname:"Orlando", lastname:"Zambrella"}
+                    ,{firstname:"Gianfranco", lastname:"Elia"}
+                ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                , palyers: [
+                    {firstname:"Raimondo", lastname:"Francaccio"}
+                  ,{firstname:"Andrea", lastname:"Procopio"}
+              ]}, score1:6, score2:7}
+                  , {id:5, team1: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                  , palyers: [
+                    {firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Luciano", lastname:"Martino"}
+                ]}
+                  , score1:7, score2:1}
                 ]
               },
             ]
@@ -691,38 +2454,229 @@ export class InMemoryDataService implements InMemoryDbService {
               , calendars: [
                   {id: 1, meetingName: 'Turno 1'
                   , meetings: [
-                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                    , {id:2, team1: "Maldive", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "B&B", score1:5, score2:7}
-                    , {id:3, team1: "Poeti", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:5, score2:7}
-                    , {id:4, team1: "Fialette", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:5}
-                    , {id:5, team1: "Attenti a quei 2", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:5}
+                      {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:7, score2:3}
+                    , {id:2, team1: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}
+                  , score1:5, score2:7}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:5, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                      , palyers: [
+                          {firstname:"Orlando", lastname:"Zambrella"}
+                        ,{firstname:"Gianfranco", lastname:"Elia"}
+                    ]}
+                    , date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, score1:7, score2:5}
+                    , {id:5, team1: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}
+                    , score1:7, score2:5}
                   ]
                 },
                 {id: 2, meetingName: 'Turno 2'
                 , meetings: [
-                    {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:7, score2:3}
-                  , {id:2, team1: "SALEMI", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:1}
-                  , {id:3, team1: "Poeti", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Fialette", score1:4, score2:7}
-                  , {id:4, team1: "GROOT", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:2, score2:7}
-                  , {id:5, team1: "B&B", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:2}
+                    {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , score1:7, score2:3}
+                  , {id:2, team1: {teamName:"SALEMI"
+                  , palyers: [
+                      {firstname:"Salvatore", lastname:"Cavaliere"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                ]}
+                  , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:7, score2:1}
+                  , {id:3, team1: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Fialette"
+                  , palyers: [
+                      {firstname:"Orlando", lastname:"Zambrella"}
+                    ,{firstname:"Gianfranco", lastname:"Elia"}
+                ]}
+                  , score1:4, score2:7}
+                  , {id:4, team1: {teamName:"GROOT"
+                  , palyers: [
+                      {firstname:"Jacopo", lastname:"Meravglia"}
+                    ,{firstname:"Alessandro", lastname:"Scalise"}
+                ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                , palyers: [
+                      {firstname:"Antonio", lastname:"Pietroforte"}
+                    ,{firstname:"Mirco", lastname:"Pietroforte"}
+                ]}, score1:2, score2:7}
+                  , {id:5, team1: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                , team2: {teamName:"Quota Drone"
+                , palyers: [
+                    {firstname:"Enrico", lastname:"Chiminelli"}
+                  ,{firstname:"Fabio", lastname:"Chiminelli"}
+              ]}
+                , score1:7, score2:2}
                 ]
               },
               {id: 3, meetingName: 'Turno 3'
                 , meetings: [
-                    {id:1, team1: "Quota Drone", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:5, score2:7}
-                  , {id:2, team1: "SALEMI", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:6, score2:7}
-                  , {id:3, team1: "Poeti", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:2, score2:7}
-                  , {id:4, team1: "Fialette", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:1, score2:7}
-                  , {id:5, team1: "B&B", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                    {id:1, team1: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}
+                    , score1:5, score2:7}
+                  , {id:2, team1: {teamName:"SALEMI"
+                  , palyers: [
+                      {firstname:"Salvatore", lastname:"Cavaliere"}
+                    ,{firstname:"Emilio", lastname:"Cattaneo"}
+                ]}
+                  , date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"GROOT"
+                  , palyers: [
+                      {firstname:"Jacopo", lastname:"Meravglia"}
+                    ,{firstname:"Alessandro", lastname:"Scalise"}
+                ]}
+                  , score1:6, score2:7}
+                  , {id:3, team1: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                , palyers: [
+                      {firstname:"Andrea", lastname:"Melidona"}
+                    ,{firstname:"Giuseppe", lastname:"Melidona"}
+                ]}, score1:2, score2:7}
+                  , {id:4, team1: {teamName:"Fialette"
+                  , palyers: [
+                      {firstname:"Orlando", lastname:"Zambrella"}
+                    ,{firstname:"Gianfranco", lastname:"Elia"}
+                ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                , palyers: [
+                      {firstname:"Antonio", lastname:"Pietroforte"}
+                    ,{firstname:"Mirco", lastname:"Pietroforte"}
+                ]}, score1:1, score2:7}
+                  , {id:5, team1: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                  , palyers: [
+                    {firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Luciano", lastname:"Martino"}
+                ]}
+                  , score1:7, score2:1}
                 ]
               },
               {id: 4, meetingName: 'Turno 4'
                 , meetings: [
-                    {id:1, team1: "Quota Drone", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:4}
-                  , {id:2, team1: "Maldive", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:1, score2:7}
-                  , {id:3, team1: "MINGA BUN", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:5, score2:7}
-                  , {id:4, team1: "Fialette", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Poeti", score1:6, score2:7}
-                  , {id:5, team1: "B&B", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                    {id:1, team1: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , score1:7, score2:4}
+                  , {id:2, team1: {teamName:"Maldive"
+                  , palyers: [
+                      {firstname:"Savino", lastname:"Caporale"}
+                    ,{firstname:"Pino", lastname:"Felini"}
+                ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                , team2: {teamName:"GROOT"
+                , palyers: [
+                    {firstname:"Jacopo", lastname:"Meravglia"}
+                  ,{firstname:"Alessandro", lastname:"Scalise"}
+              ]}
+                , score1:1, score2:7}
+                  , {id:3, team1: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:5, score2:7}
+                  , {id:4, team1: {teamName:"Fialette"
+                  , palyers: [
+                      {firstname:"Orlando", lastname:"Zambrella"}
+                    ,{firstname:"Gianfranco", lastname:"Elia"}
+                ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                , palyers: [
+                    {firstname:"Raimondo", lastname:"Francaccio"}
+                  ,{firstname:"Andrea", lastname:"Procopio"}
+              ]}, score1:6, score2:7}
+                  , {id:5, team1: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                  , palyers: [
+                    {firstname:"Salvatore", lastname:"Amoroso"}
+                    ,{firstname:"Luciano", lastname:"Martino"}
+                ]}
+                  , score1:7, score2:1}
                 ]
               },
             ]
@@ -763,38 +2717,226 @@ export class InMemoryDataService implements InMemoryDbService {
               , calendars: [
                   {id: 1, meetingName: 'Turno 1'
                   , meetings: [
-                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:3}
-                    , {id:2, team1: "Maldive", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "B&B", score1:5, score2:7}
-                    , {id:3, team1: "Poeti", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:5, score2:7}
-                    , {id:4, team1: "Fialette", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:7, score2:5}
-                    , {id:5, team1: "Attenti a quei 2", date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:5}
+                      {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                      , date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:7, score2:3}
+                    , {id:2, team1: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"B&B"
+                  , palyers: [
+                      {firstname:"Roberto", lastname:"Bergamaschi"}
+                    ,{firstname:"Valter", lastname:"Bergamaschi"}
+                ]}
+                  , score1:5, score2:7}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:5, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:7, score2:5}
+                    , {id:5, team1: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, date: '01-05-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Quota Drone"
+                    , palyers: [
+                        {firstname:"Enrico", lastname:"Chiminelli"}
+                      ,{firstname:"Fabio", lastname:"Chiminelli"}
+                  ]}
+                    , score1:7, score2:5}
                   ]
                 },
                 {id: 2, meetingName: 'Turno 2'
                   , meetings: [
-                      {id:1, team1: "Luciano Martino - Salvatore Amoroso", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:7, score2:3}
-                    , {id:2, team1: "SALEMI", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:7, score2:1}
-                    , {id:3, team1: "Poeti", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Fialette", score1:4, score2:7}
-                    , {id:4, team1: "GROOT", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:2, score2:7}
-                    , {id:5, team1: "B&B", date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Quota Drone", score1:7, score2:2}
+                      {id:1, team1: {teamName:"Luciano Martino - Salvatore Amoroso"
+                      , palyers: [
+                        {firstname:"Salvatore", lastname:"Amoroso"}
+                        ,{firstname:"Luciano", lastname:"Martino"}
+                    ]}
+                      , date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Maldive"
+                        , palyers: [
+                            {firstname:"Savino", lastname:"Caporale"}
+                          ,{firstname:"Pino", lastname:"Felini"}
+                      ]}, score1:7, score2:3}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:7, score2:1}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}
+                    , score1:4, score2:7}
+                    , {id:4, team1: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:2, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"Quota Drone"
+                  , palyers: [
+                      {firstname:"Enrico", lastname:"Chiminelli"}
+                    ,{firstname:"Fabio", lastname:"Chiminelli"}
+                ]}
+                  , score1:7, score2:2}
                   ]
                 },
                 {id: 3, meetingName: 'Turno 3'
                   , meetings: [
-                      {id:1, team1: "Quota Drone", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Maldive", score1:5, score2:7}
-                    , {id:2, team1: "SALEMI", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:6, score2:7}
-                    , {id:3, team1: "Poeti", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:2, score2:7}
-                    , {id:4, team1: "Fialette", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "MINGA BUN", score1:1, score2:7}
-                    , {id:5, team1: "B&B", date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                      {id:1, team1: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"Maldive"
+                      , palyers: [
+                          {firstname:"Savino", lastname:"Caporale"}
+                        ,{firstname:"Pino", lastname:"Felini"}
+                    ]}
+                      , score1:5, score2:7}
+                    , {id:2, team1: {teamName:"SALEMI"
+                    , palyers: [
+                        {firstname:"Salvatore", lastname:"Cavaliere"}
+                      ,{firstname:"Emilio", lastname:"Cattaneo"}
+                  ]}
+                    , date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                    , score1:6, score2:7}
+                    , {id:3, team1: {teamName:"Poeti"
+                    , palyers: [
+                        {firstname:"Raimondo", lastname:"Francaccio"}
+                      ,{firstname:"Andrea", lastname:"Procopio"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  , palyers: [
+                        {firstname:"Andrea", lastname:"Melidona"}
+                      ,{firstname:"Giuseppe", lastname:"Melidona"}
+                  ]}, score1:2, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  , palyers: [
+                        {firstname:"Antonio", lastname:"Pietroforte"}
+                      ,{firstname:"Mirco", lastname:"Pietroforte"}
+                  ]}, score1:1, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:1}
                   ]
                 },
                 {id: 4, meetingName: 'Turno 4'
                   , meetings: [
-                      {id:1, team1: "Quota Drone", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "SALEMI", score1:7, score2:4}
-                    , {id:2, team1: "Maldive", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "GROOT", score1:1, score2:7}
-                    , {id:3, team1: "MINGA BUN", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Attenti a quei 2", score1:5, score2:7}
-                    , {id:4, team1: "Fialette", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Poeti", score1:6, score2:7}
-                    , {id:5, team1: "B&B", date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: "Luciano Martino - Salvatore Amoroso", score1:7, score2:1}
+                      {id:1, team1: {teamName:"Quota Drone"
+                      , palyers: [
+                          {firstname:"Enrico", lastname:"Chiminelli"}
+                        ,{firstname:"Fabio", lastname:"Chiminelli"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                      , team2: {teamName:"SALEMI"
+                      , palyers: [
+                          {firstname:"Salvatore", lastname:"Cavaliere"}
+                        ,{firstname:"Emilio", lastname:"Cattaneo"}
+                    ]}
+                      , score1:7, score2:4}
+                    , {id:2, team1: {teamName:"Maldive"
+                    , palyers: [
+                        {firstname:"Savino", lastname:"Caporale"}
+                      ,{firstname:"Pino", lastname:"Felini"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                  , team2: {teamName:"GROOT"
+                    , palyers: [
+                        {firstname:"Jacopo", lastname:"Meravglia"}
+                      ,{firstname:"Alessandro", lastname:"Scalise"}
+                  ]}
+                  , score1:1, score2:7}
+                    , {id:3, team1: {teamName:"MINGA BUN"
+                    , palyers: [
+                          {firstname:"Antonio", lastname:"Pietroforte"}
+                        ,{firstname:"Mirco", lastname:"Pietroforte"}
+                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , palyers: [
+                          {firstname:"Andrea", lastname:"Melidona"}
+                        ,{firstname:"Giuseppe", lastname:"Melidona"}
+                    ]}, score1:5, score2:7}
+                    , {id:4, team1: {teamName:"Fialette"
+                    , palyers: [
+                        {firstname:"Orlando", lastname:"Zambrella"}
+                      ,{firstname:"Gianfranco", lastname:"Elia"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                  , palyers: [
+                      {firstname:"Raimondo", lastname:"Francaccio"}
+                    ,{firstname:"Andrea", lastname:"Procopio"}
+                ]}, score1:6, score2:7}
+                    , {id:5, team1: {teamName:"B&B"
+                    , palyers: [
+                        {firstname:"Roberto", lastname:"Bergamaschi"}
+                      ,{firstname:"Valter", lastname:"Bergamaschi"}
+                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                    , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
+                    , palyers: [
+                      {firstname:"Salvatore", lastname:"Amoroso"}
+                      ,{firstname:"Luciano", lastname:"Martino"}
+                  ]}
+                    , score1:7, score2:1}
                 ]
               },
             ]

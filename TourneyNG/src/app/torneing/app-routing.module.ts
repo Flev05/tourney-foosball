@@ -23,6 +23,9 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},
             {path: 'playoff', loadChildren: './components/show/playoff/playoff.module#PlayoffModule'},
             {path: 'elimination', loadChildren: './components/show/elimination/elimination.module#EliminationModule'},
+            {path: 'team', loadChildren: './components/show/team/team.module#TeamModule'},
+            {path: 'match', loadChildren: './components/show/match/match.module#MatchModule'},
+            {path: 'player', loadChildren: './components/show/player/player.module#PlayerModule'},
 
             // Login Section
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},

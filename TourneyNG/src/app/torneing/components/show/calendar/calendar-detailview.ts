@@ -19,7 +19,7 @@ import { TourneyService } from '../../../service/tourneyservice';
 })
 export class CalendarDetailView implements OnInit {
 
-    selectedTourney: Tourney;
+    protected selectedTourney: Tourney;
 
     rounds: [Round];
 
@@ -37,7 +37,7 @@ export class CalendarDetailView implements OnInit {
         this.updateRowGroupMetaData();
     }
 
-    updateRowGroupMetaData() {
+   protected updateRowGroupMetaData() {
 
         let row : number = 0;
 

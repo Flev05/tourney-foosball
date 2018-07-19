@@ -1,0 +1,48 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Partite</span>
+        <span>Partite del torneo</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Vista elenco di tutte le partite che compongono il torneo.
+    </p>
+</div>
+
+<div class="content-section implementation">    
+    <p-table [value]="rows" [responsive]="true">
+        <ng-template pTemplate="caption">
+            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
+            {{selectedTourney.tourneyName}} - {{selectedTourney.date}} {{selectedTourney.time}}
+        </ng-template>
+
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col style="width: auto;">
+                <col style="width: auto;">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Squadra 1</th>
+                <th>Squadra 2</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                <td colspan="2">
+                    <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.meetingName}}</span>
+                </td>
+            </tr>            
+            <tr>
+                <td>{{rowData.teamName1}}</td>
+                <td>{{rowData.teamName2}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
+    

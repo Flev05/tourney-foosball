@@ -24,14 +24,16 @@ export class PlayoffListView extends CalendarDetailView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.playoffs = this.selectedTourney.playoffs;
 
         console.log("PlayoffListView.ngOnInit() playoffs=" + this.playoffs);
-
-        this.loadRowGroupMetaData();
     }
 
-    loadRowGroupMetaData() {
+    updateRowGroupMetaData() {
+
+        if(this.selectedTourney.playoffs==undefined) {
+            return;
+        }
+        this.playoffs = this.selectedTourney.playoffs;
 
         let row : number = 0;
 

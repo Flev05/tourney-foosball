@@ -40,10 +40,10 @@ import {EliminationListView} from './elimination-listview';
         SliderModule,
         EliminationRoutingModule,
         OrganizationChartModule,
-	],
-	declarations: [
-		EliminationTourneyListView,
-		EliminationListView
-	]
+    ],
+    declarations: [
+      EliminationTourneyListView,
+      EliminationListView
+    ]
 })
 export class EliminationModule {}

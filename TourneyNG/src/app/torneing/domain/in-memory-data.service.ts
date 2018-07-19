@@ -8,6 +8,46 @@ export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
         {id: 1, tourneyName: 'Summer week 2018', date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+            ,teams: [
+              {teamName:"SALLUC"}
+              ,{teamName:"SALEMI"}
+              ,{teamName:"PAGA TEAM"}
+              ,{teamName:"FAMA TEAM"}
+              ,{teamName:"ARMA TEAM"}
+              ,{teamName:"ELEVEN"}
+              ,{teamName:"I DISPERATI"}
+              ,{teamName:"MIRO TEAM"}
+              ,{teamName:"MALDIVE"}
+              ,{teamName:"LE PANCHE"}
+              ,{teamName:"I RHODENSI"}
+            ]
+            ,players:[
+               {firstname:"Salvatore", lastname:"Amoroso"}
+              ,{firstname:"Luciano", lastname:"Martino"}
+              ,{firstname:"Salvatore", lastname:"Cavaliere"}
+              ,{firstname:"Emilio", lastname:"Cattaneo"}
+              ,{firstname:"Massilìmiliano", lastname:"Paganotti"}
+              ,{firstname:"Samuele", lastname:"Paganotti"}
+              ,{firstname:"Roberto", lastname:"Begamaschi"}
+              ,{firstname:"Valter", lastname:"Begamaschi"}
+              ,{firstname:"Riccardo", lastname:"Armadillo"}
+              ,{firstname:"Tommaso", lastname:"Armadillo"}
+              ,{firstname:"Raimondo", lastname:"Brancaccio"}
+              ,{firstname:"Simone", lastname:"Castronuovo"}
+              ,{firstname:"Riccardo", lastname:"Fabbro"}
+              ,{firstname:"Roberto", lastname:"Franzosi"}
+              ,{firstname:"Jacopo", lastname:"Meravglia"}
+              ,{firstname:"Alessandro", lastname:"Scalise"}
+              ,{firstname:"Orlando", lastname:"Zambrella"}
+              ,{firstname:"Gianfranco", lastname:"Elia"}
+              ,{firstname:"Antonio", lastname:"Pietroforte"}
+              ,{firstname:"Mirco", lastname:"Pietroforte"}
+              ,{firstname:"Andrea", lastname:"Melidona"}
+              ,{firstname:"Giuseppe", lastname:"Melidona"}
+              ,{firstname:"Enrico", lastname:"Chiminelli"}
+              ,{firstname:"Savino", lastname:"Caporale"}
+              ,{firstname:"Pino", lastname:"Felini"}
+            ]            
             , rounds: [ 
               {roundName:"Girone A", direction:'ANDATA'
                 , calendars: [
@@ -252,37 +292,37 @@ export class InMemoryDataService implements InMemoryDbService {
                 },            
               ]
               ,classification: [
-                { id : 1, teamName: "I RHODENSI", points : 78, played : 12, won : 12, lost : 0,
+                { id : 1, team: {teamName: "I RHODENSI"}, points : 78, played : 12, won : 12, lost : 0,
                   penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
                 }
-                ,{ id : 2, teamName: "PAGA TEAM", points : 70, played : 12, won : 10, lost  : 2,
+                ,{ id : 2, team: {teamName: "PAGA TEAM"}, points : 70, played : 12, won : 10, lost  : 2,
                   penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
                 }
-                ,{ id : 3, teamName: "LE PANCHE", points : 62, played : 12, won : 7, lost  : 5,
+                ,{ id : 3, team: {teamName: "LE PANCHE"}, points : 62, played : 12, won : 7, lost  : 5,
                   penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
                 }
-                ,{ id : 4, teamName: "Atletico Mica Tanto", points : 58, played : 12, won : 6, lost  : 6,
+                ,{ id : 4, team: {teamName: "Atletico Mica Tanto"}, points : 58, played : 12, won : 6, lost  : 6,
                   penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
                 }
-                ,{ id : 5, teamName: "I DISPERATI", points : 50, played : 12, won : 4, lost  : 8,
+                ,{ id : 5, team: {teamName: "I DISPERATI"}, points : 50, played : 12, won : 4, lost  : 8,
                   penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
                 }
-                ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+                ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                   penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
                 }
-                ,{ id : 7, teamName: "ARMA TEAM", points: 23, played : 12, won : 0, lost  : 12,
+                ,{ id : 7, team: {teamName: "ARMA TEAM"}, points: 23, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
                 }
-                ,{ id : 8, teamName: "ELEVEN", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 8, team: {teamName: "ELEVEN"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 9, teamName: "FAMA TEAM", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 9, team: {teamName: "FAMA TEAM"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+                ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                   penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
                 }
-              ]            }
+              ]}
             ,{roundName:"Girone B", direction:'ANDATA'
                 , calendars: [
                     {id: 1, meetingName: 'Turno 1'
@@ -517,39 +557,107 @@ export class InMemoryDataService implements InMemoryDbService {
                 },
               ]
               ,classification: [
-                { id : 1, teamName: "I RHODENSI", points : 78, played : 12, won : 12, lost : 0,
+                { id : 1, team: {teamName: "I RHODENSI"}, points : 78, played : 12, won : 12, lost : 0,
                   penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
                 }
-                ,{ id : 2, teamName: "PAGA TEAM", points : 70, played : 12, won : 10, lost  : 2,
+                ,{ id : 2, team: {teamName: "PAGA TEAM"}, points : 70, played : 12, won : 10, lost  : 2,
                   penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
                 }
-                ,{ id : 3, teamName: "LE PANCHE", points : 62, played : 12, won : 7, lost  : 5,
+                ,{ id : 3, team: {teamName: "LE PANCHE"}, points : 62, played : 12, won : 7, lost  : 5,
                   penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
                 }
-                ,{ id : 4, teamName: "Atletico Mica Tanto", points : 58, played : 12, won : 6, lost  : 6,
+                ,{ id : 4, team: {teamName: "Atletico Mica Tanto"}, points : 58, played : 12, won : 6, lost  : 6,
                   penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
                 }
-                ,{ id : 5, teamName: "I DISPERATI", points : 50, played : 12, won : 4, lost  : 8,
+                ,{ id : 5, team: {teamName: "I DISPERATI"}, points : 50, played : 12, won : 4, lost  : 8,
                   penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
                 }
-                ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+                ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                   penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
                 }
-                ,{ id : 7, teamName: "ARMA TEAM", points: 23, played : 12, won : 0, lost  : 12,
+                ,{ id : 7, team: {teamName: "ARMA TEAM"}, points: 23, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
                 }
-                ,{ id : 8, teamName: "ELEVEN", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 8, team: {teamName: "ELEVEN"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 9, teamName: "FAMA TEAM", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 9, team: {teamName: "FAMA TEAM"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+                ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                   penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
                 }
               ]              
             }  
         ]
+        ,eliminations: [{
+          expanded: true
+          ,type: 'leaf'
+          ,label: 'Francia-Croazia 4-2'
+          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+          ,children:[{
+              label: 'Francia-Belgio 1-0'
+              ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+              ,expanded: true,
+                  children: [{expanded: true
+                      ,label: 'Francia-Uruguay 2-0'
+                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,children: [{expanded: true
+                          ,label: 'Francia-Argentina 4-3'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }
+                      ,{expanded: true
+                          ,label: 'Uruguay-Portogallo 2-1'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }
+                  ]}
+                  ,{expanded: true
+                      ,label: 'Brasile-Belgio 1-2'
+                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,children: [{expanded: true
+                          ,label: 'Belgio-Giappone 3-2'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }
+                      ,{expanded: true
+                          ,label: 'Brasile-Messico 3-0'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }
+                  ]}
+              ]
+          }
+          ,{
+              label: 'Croazia-Inghilterra 2-1'
+              ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+              ,expanded: true
+              ,children: [
+                  {expanded: true
+                      ,label: 'Croazia-Russia 5-3'
+                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,children: [{expanded: true
+                          ,label: 'Croazia-Danimarca 5-4'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }
+                      ,{expanded: true
+                          ,label: 'Russia-Spagna 5-3'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }]
+                  }
+                  ,{expanded: true
+                      ,label: 'Inghilterra-Svezia 2-0'
+                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,children: [{expanded: true
+                          ,label: 'Inghilterra-Colombia 2-0'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }
+                      ,{expanded: true
+                          ,label: 'Svezia-Svizzera 1-0'
+                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      }]
+                  }
+              ]                     
+          }
+      ]}
+      ]
       }, 
       {id: 2, tourneyName: 'Festa Dell Unità 2018', date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
             , rounds: [ 
@@ -793,34 +901,34 @@ export class InMemoryDataService implements InMemoryDbService {
                 },            
               ]
               ,classification: [
-                { id : 1, teamName: "I RHODENSI", points : 78, played : 12, won : 12, lost : 0,
+                { id : 1, team: {teamName: "I RHODENSI"}, points : 78, played : 12, won : 12, lost : 0,
                   penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
                 }
-                ,{ id : 2, teamName: "PAGA TEAM", points : 70, played : 12, won : 10, lost  : 2,
+                ,{ id : 2, team: {teamName: "PAGA TEAM"}, points : 70, played : 12, won : 10, lost  : 2,
                   penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
                 }
-                ,{ id : 3, teamName: "LE PANCHE", points : 62, played : 12, won : 7, lost  : 5,
+                ,{ id : 3, team: {teamName: "LE PANCHE"}, points : 62, played : 12, won : 7, lost  : 5,
                   penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
                 }
-                ,{ id : 4, teamName: "Atletico Mica Tanto", points : 58, played : 12, won : 6, lost  : 6,
+                ,{ id : 4, team: {teamName: "Atletico Mica Tanto"}, points : 58, played : 12, won : 6, lost  : 6,
                   penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
                 }
-                ,{ id : 5, teamName: "I DISPERATI", points : 50, played : 12, won : 4, lost  : 8,
+                ,{ id : 5, team: {teamName: "I DISPERATI"}, points : 50, played : 12, won : 4, lost  : 8,
                   penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
                 }
-                ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+                ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                   penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
                 }
-                ,{ id : 7, teamName: "ARMA TEAM", points: 23, played : 12, won : 0, lost  : 12,
+                ,{ id : 7, team: {teamName: "ARMA TEAM"}, points: 23, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
                 }
-                ,{ id : 8, teamName: "ELEVEN", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 8, team: {teamName: "ELEVEN"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 9, teamName: "FAMA TEAM", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 9, team: {teamName: "FAMA TEAM"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+                ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                   penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
                 }
               ]
@@ -1052,34 +1160,34 @@ export class InMemoryDataService implements InMemoryDbService {
                   },
               ]
               ,classification: [
-                { id : 1, teamName: "Quota Drone", points : 78, played : 12, won : 12, lost : 0,
+                { id : 1, team: {teamName: "Quota Drone"}, points : 78, played : 12, won : 12, lost : 0,
                   penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
                 }
-                ,{ id : 2, teamName: "Maldive", points : 70, played : 12, won : 10, lost  : 2,
+                ,{ id : 2, team: {teamName: "Maldive"}, points : 70, played : 12, won : 10, lost  : 2,
                   penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
                 }
-                ,{ id : 3, teamName: "MINGA BUN", points : 62, played : 12, won : 7, lost  : 5,
+                ,{ id : 3, team: {teamName: "MINGA BUN"}, points : 62, played : 12, won : 7, lost  : 5,
                   penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
                 }
-                ,{ id : 4, teamName: "Fialette", points : 58, played : 12, won : 6, lost  : 6,
+                ,{ id : 4, team: {teamName: "Fialette"}, points : 58, played : 12, won : 6, lost  : 6,
                   penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
                 }
-                ,{ id : 5, teamName: "B&B", points : 50, played : 12, won : 4, lost  : 8,
+                ,{ id : 5, team: {teamName: "B&B"}, points : 50, played : 12, won : 4, lost  : 8,
                   penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
                 }
-                ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+                ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                   penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
                 }
-                ,{ id : 7, teamName: "GROOT", points: 23, played : 12, won : 0, lost  : 12,
+                ,{ id : 7, team: {teamName: "GROOT"}, points: 23, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
                 }
-                ,{ id : 8, teamName: "Attenti a quei 2", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 8, team: {teamName: "Attenti a quei 2"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 9, teamName: "Poeti", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 9, team: {teamName: "Poeti"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+                ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                   penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
                 }
               ]
@@ -1374,30 +1482,31 @@ export class InMemoryDataService implements InMemoryDbService {
               },
             ]
             ,classification: [
-              { id : 1, teamName: "ORATORIO ZIBIDO G", points : 78, played : 12, won : 12, lost : 0,
+              { id : 1, team: {teamName: "ORATORIO ZIBIDO G"}, points : 78, played : 12, won : 12, lost : 0,
                 penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
               }
-              ,{ id : 2, teamName: {teamName:"VIRTUS BOVISIO GIALLA"
-              , palyers: [
-                {firstname:"vbgNome1", lastname:"vbgCognome1"}
-                ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
-                ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
-            ]}, points : 70, played : 12, won : 10, lost  : 2,
+              ,{id : 2, team: {teamName:"VIRTUS BOVISIO GIALLA"
+                    , palyers: [
+                      {firstname:"vbgNome1", lastname:"vbgCognome1"}
+                      ,{firstname:"vbgNome2", lastname:"vbgCognome2"}
+                      ,{firstname:"vbgNome3", lastname:"vbgCognome3"}
+                  ]}
+                , points : 70, played : 12, won : 10, lost  : 2,
                 penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
               }
-              ,{ id : 3, teamName: "AICS FIGINO A", points : 62, played : 12, won : 7, lost  : 5,
+              ,{ id : 3, team: {teamName: "AICS FIGINO A"}, points : 62, played : 12, won : 7, lost  : 5,
                 penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
               }
-              ,{ id : 4, teamName: "AIROLDI ORIGGIO BIANCA", points : 58, played : 12, won : 6, lost  : 6,
+              ,{ id : 4, team: {teamName: "AIROLDI ORIGGIO BIANCA"}, points : 58, played : 12, won : 6, lost  : 6,
                 penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
               }
-              ,{ id : 5, teamName: "AURORA PREGNANA", points : 50, played : 12, won : 4, lost  : 8,
+              ,{ id : 5, team: {teamName: "AURORA PREGNANA"}, points : 50, played : 12, won : 4, lost  : 8,
                 penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
               }
-              ,{ id : 6, teamName: "SOLAROSPORT", points : 37, played : 12, won : 3, lost  : 9,
+              ,{ id : 6, team: {teamName: "SOLAROSPORT"}, points : 37, played : 12, won : 3, lost  : 9,
                 penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
               }
-              ,{ id : 7, teamName: "ORATORIO ZIBIDO E", points: 23, played : 12, won : 0, lost  : 12,
+              ,{ id : 7, team: {teamName: "ORATORIO ZIBIDO E"}, points: 23, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
               }
             ]
@@ -1699,25 +1808,25 @@ export class InMemoryDataService implements InMemoryDbService {
               },
             ]
             ,classification: [
-              { id : 1, teamName: "ORATORIO ZIBIDO G", points : 78, played : 12, won : 12, lost : 0,
+              { id : 1, team: {teamName: "ORATORIO ZIBIDO G"}, points : 78, played : 12, won : 12, lost : 0,
                 penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
               }
-              ,{ id : 2, teamName: "VIRTUS BOVISIO GIALLA", points : 70, played : 12, won : 10, lost  : 2,
+              ,{ id : 2, team: {teamName: "VIRTUS BOVISIO GIALLA"}, points : 70, played : 12, won : 10, lost  : 2,
                 penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
               }
-              ,{ id : 3, teamName: "AICS FIGINO A", points : 62, played : 12, won : 7, lost  : 5,
+              ,{ id : 3, team: {teamName: "AICS FIGINO A"}, points : 62, played : 12, won : 7, lost  : 5,
                 penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
               }
-              ,{ id : 4, teamName: "AIROLDI ORIGGIO BIANCA", points : 58, played : 12, won : 6, lost  : 6,
+              ,{ id : 4, team: {teamName: "AIROLDI ORIGGIO BIANCA"}, points : 58, played : 12, won : 6, lost  : 6,
                 penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
               }
-              ,{ id : 5, teamName: "AURORA PREGNANA", points : 50, played : 12, won : 4, lost  : 8,
+              ,{ id : 5, team: {teamName: "AURORA PREGNANA"}, points : 50, played : 12, won : 4, lost  : 8,
                 penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
               }
-              ,{ id : 6, teamName: "SOLAROSPORT", points : 37, played : 12, won : 3, lost  : 9,
+              ,{ id : 6, team: {teamName: "SOLAROSPORT"}, points : 37, played : 12, won : 3, lost  : 9,
                 penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
               }
-              ,{ id : 7, teamName: "ORATORIO ZIBIDO E", points: 23, played : 12, won : 0, lost  : 12,
+              ,{ id : 7, team: {teamName: "ORATORIO ZIBIDO E"}, points: 23, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
               }
             ]            
@@ -1899,7 +2008,13 @@ export class InMemoryDataService implements InMemoryDbService {
                 },
                 {id: 4, meetingName: 'GIORNATA Finale 3° e 4° Posto'
                   , meetings: [
-                     {id:1, team1: "ORATORIO ZIBIDO D", team2: {teamName:"OSM ASSAGO BLU"
+                     {id:1, team1: {teamName:"ORATORIO ZIBIDO D"
+                      , palyers: [
+                        {firstname:"azdNome1", lastname:"azdCognome1"}
+                        ,{firstname:"azdNome2", lastname:"azdCognome2"}
+                        ,{firstname:"azdNome3", lastname:"azdCognome3"}
+                    ]}
+                     , team2: {teamName:"OSM ASSAGO BLU"
                      , palyers: [
                        {firstname:"oabNome1", lastname:"oabCognome1"}
                        ,{firstname:"oabNome2", lastname:"oabCognome2"}
@@ -1946,27 +2061,27 @@ export class InMemoryDataService implements InMemoryDbService {
                       ]}
                         , score1:7, score2:3}
                       , {id:2, team1: {teamName:"Maldive"
-                      , palyers: [
-                          {firstname:"Savino", lastname:"Caporale"}
-                        ,{firstname:"Pino", lastname:"Felini"}
-                    ]}
+                        , palyers: [
+                            {firstname:"Savino", lastname:"Caporale"}
+                          ,{firstname:"Pino", lastname:"Felini"}
+                      ]}
                       , date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"B&B"
-                      , palyers: [
-                          {firstname:"Roberto", lastname:"Bergamaschi"}
-                        ,{firstname:"Valter", lastname:"Bergamaschi"}
-                    ]}
+                        , palyers: [
+                            {firstname:"Roberto", lastname:"Bergamaschi"}
+                          ,{firstname:"Valter", lastname:"Bergamaschi"}
+                      ]}
                       , score1:5, score2:7}
                       , {id:3, team1: {teamName:"Poeti"
                       , palyers: [
-                          {firstname:"Raimondo", lastname:"Francaccio"}
-                        ,{firstname:"Andrea", lastname:"Procopio"}
-                    ]}, date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
+                            {firstname:"Raimondo", lastname:"Francaccio"}
+                          ,{firstname:"Andrea", lastname:"Procopio"}
+                      ]}, date: '15-06-2018', time: '13:45', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"GROOT"
                       , palyers: [
-                          {firstname:"Jacopo", lastname:"Meravglia"}
-                        ,{firstname:"Alessandro", lastname:"Scalise"}
-                    ]}
+                            {firstname:"Jacopo", lastname:"Meravglia"}
+                          ,{firstname:"Alessandro", lastname:"Scalise"}
+                      ]}
                       , score1:5, score2:7}
                       , {id:4, team1: {teamName:"Fialette"
                       , palyers: [
@@ -1986,8 +2101,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , palyers: [
                           {firstname:"Enrico", lastname:"Chiminelli"}
                         ,{firstname:"Fabio", lastname:"Chiminelli"}
-                    ]}
-                      , score1:7, score2:5}
+                    ]}, score1:7, score2:5}
                     ]
                   },
                   {id: 2, meetingName: 'Turno 2'
@@ -2161,34 +2275,34 @@ export class InMemoryDataService implements InMemoryDbService {
                 },
               ]
               ,classification: [
-                { id : 1, teamName: "Quota Drone", points : 78, played : 12, won : 12, lost : 0,
+                { id : 1, team: {teamName: "Quota Drone"}, points : 78, played : 12, won : 12, lost : 0,
                   penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
                 }
-                ,{ id : 2, teamName: "Maldive", points : 70, played : 12, won : 10, lost  : 2,
+                ,{ id : 2, team: {teamName: "Maldive"}, points : 70, played : 12, won : 10, lost  : 2,
                   penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
                 }
-                ,{ id : 3, teamName: "MINGA BUN", points : 62, played : 12, won : 7, lost  : 5,
+                ,{ id : 3, team: {teamName: "MINGA BUN"}, points : 62, played : 12, won : 7, lost  : 5,
                   penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
                 }
-                ,{ id : 4, teamName: "Fialette", points : 58, played : 12, won : 6, lost  : 6,
+                ,{ id : 4, team: {teamName: "Fialette"}, points : 58, played : 12, won : 6, lost  : 6,
                   penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
                 }
-                ,{ id : 5, teamName: "B&B", points : 50, played : 12, won : 4, lost  : 8,
+                ,{ id : 5, team: {teamName: "B&B"}, points : 50, played : 12, won : 4, lost  : 8,
                   penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
                 }
-                ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+                ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                   penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
                 }
-                ,{ id : 7, teamName: "GROOT", points: 23, played : 12, won : 0, lost  : 12,
+                ,{ id : 7, team: {teamName: "GROOT"}, points: 23, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
                 }
-                ,{ id : 8, teamName: "Attenti a quei 2", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 8, team: {teamName: "Attenti a quei 2"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 9, teamName: "Poeti", points: 12, played : 12, won : 0, lost  : 12,
+                ,{ id : 9, team: {teamName: "Poeti"}, points: 12, played : 12, won : 0, lost  : 12,
                   penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
                 }
-                ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+                ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                   penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
                 }
               ]
@@ -2418,34 +2532,34 @@ export class InMemoryDataService implements InMemoryDbService {
               },
             ]
             ,classification: [
-              { id : 1, teamName: "Quota Drone", points : 78, played : 12, won : 12, lost : 0,
+              { id : 1, team: {teamName: "Quota Drone"}, points : 78, played : 12, won : 12, lost : 0,
                 penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
               }
-              ,{ id : 2, teamName: "Maldive", points : 70, played : 12, won : 10, lost  : 2,
+              ,{ id : 2, team: {teamName: "Maldive"}, points : 70, played : 12, won : 10, lost  : 2,
                 penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
               }
-              ,{ id : 3, teamName: "MINGA BUN", points : 62, played : 12, won : 7, lost  : 5,
+              ,{ id : 3, team: {teamName: "MINGA BUN"}, points : 62, played : 12, won : 7, lost  : 5,
                 penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
               }
-              ,{ id : 4, teamName: "Fialette", points : 58, played : 12, won : 6, lost  : 6,
+              ,{ id : 4, team: {teamName: "Fialette"}, points : 58, played : 12, won : 6, lost  : 6,
                 penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
               }
-              ,{ id : 5, teamName: "B&B", points : 50, played : 12, won : 4, lost  : 8,
+              ,{ id : 5, team: {teamName: "B&B"}, points : 50, played : 12, won : 4, lost  : 8,
                 penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
               }
-              ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+              ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                 penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
               }
-              ,{ id : 7, teamName: "GROOT", points: 23, played : 12, won : 0, lost  : 12,
+              ,{ id : 7, team: {teamName: "GROOT"}, points: 23, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
               }
-              ,{ id : 8, teamName: "Attenti a quei 2", points: 12, played : 12, won : 0, lost  : 12,
+              ,{ id : 8, team: {teamName: "Attenti a quei 2"}, points: 12, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
               }
-              ,{ id : 9, teamName: "Poeti", points: 12, played : 12, won : 0, lost  : 12,
+              ,{ id : 9, team: {teamName: "Poeti"}, points: 12, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
               }
-              ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+              ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                 penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
               }
             ]          
@@ -2681,34 +2795,34 @@ export class InMemoryDataService implements InMemoryDbService {
               },
             ]
             ,classification: [
-              { id : 1, teamName: "Quota Drone", points : 78, played : 12, won : 12, lost : 0,
+              { id : 1, team: {teamName: "Quota Drone"}, points : 78, played : 12, won : 12, lost : 0,
                 penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
               }
-              ,{ id : 2, teamName: "Maldive", points : 70, played : 12, won : 10, lost  : 2,
+              ,{ id : 2, team: {teamName: "Maldive"}, points : 70, played : 12, won : 10, lost  : 2,
                 penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
               }
-              ,{ id : 3, teamName: "MINGA BUN", points : 62, played : 12, won : 7, lost  : 5,
+              ,{ id : 3, team: {teamName: "MINGA BUN"}, points : 62, played : 12, won : 7, lost  : 5,
                 penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
               }
-              ,{ id : 4, teamName: "Fialette", points : 58, played : 12, won : 6, lost  : 6,
+              ,{ id : 4, team: {teamName: "Fialette"}, points : 58, played : 12, won : 6, lost  : 6,
                 penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
               }
-              ,{ id : 5, teamName: "B&B", points : 50, played : 12, won : 4, lost  : 8,
+              ,{ id : 5, team: {teamName: "B&B"}, points : 50, played : 12, won : 4, lost  : 8,
                 penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
               }
-              ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+              ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                 penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
               }
-              ,{ id : 7, teamName: "GROOT", points: 23, played : 12, won : 0, lost  : 12,
+              ,{ id : 7, team: {teamName: "GROOT"}, points: 23, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
               }
-              ,{ id : 8, teamName: "Attenti a quei 2", points: 12, played : 12, won : 0, lost  : 12,
+              ,{ id : 8, team: {teamName: "Attenti a quei 2"}, points: 12, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
               }
-              ,{ id : 9, teamName: "Poeti", points: 12, played : 12, won : 0, lost  : 12,
+              ,{ id : 9, team: {teamName: "Poeti"}, points: 12, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
               }
-              ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+              ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                 penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
               }
             ]          
@@ -2941,34 +3055,34 @@ export class InMemoryDataService implements InMemoryDbService {
               },
             ]
             ,classification: [
-              { id : 1, teamName: "Quota Drone", points : 78, played : 12, won : 12, lost : 0,
+              { id : 1, team: {teamName: "Quota Drone"}, points : 78, played : 12, won : 12, lost : 0,
                 penalty : 0, goalsDone : 927, goalsConceded : 704, goalsDiff : 0
               }
-              ,{ id : 2, teamName: "Maldive", points : 70, played : 12, won : 10, lost  : 2,
+              ,{ id : 2, team: {teamName: "Maldive"}, points : 70, played : 12, won : 10, lost  : 2,
                 penalty  : 0, goalsDone : 1135, goalsConceded : 892, goalsDiff : 0
               }
-              ,{ id : 3, teamName: "MINGA BUN", points : 62, played : 12, won : 7, lost  : 5,
+              ,{ id : 3, team: {teamName: "MINGA BUN"}, points : 62, played : 12, won : 7, lost  : 5,
                 penalty  : 0, goalsDone : 1046, goalsConceded : 912, goalsDiff : 0
               }
-              ,{ id : 4, teamName: "Fialette", points : 58, played : 12, won : 6, lost  : 6,
+              ,{ id : 4, team: {teamName: "Fialette"}, points : 58, played : 12, won : 6, lost  : 6,
                 penalty  : 0, goalsDone : 969, goalsConceded : 951, goalsDiff : 0
               }
-              ,{ id : 5, teamName: "B&B", points : 50, played : 12, won : 4, lost  : 8,
+              ,{ id : 5, team: {teamName: "B&B"}, points : 50, played : 12, won : 4, lost  : 8,
                 penalty  : 0, goalsDone : 937, goalsConceded : 1014, goalsDiff : 0
               }
-              ,{ id : 6, teamName: "SALEMI", points : 37, played : 12, won : 3, lost  : 9,
+              ,{ id : 6, team: {teamName: "SALEMI"}, points : 37, played : 12, won : 3, lost  : 9,
                 penalty  : 0, goalsDone : 696, goalsConceded : 837, goalsDiff : 0
               }
-              ,{ id : 7, teamName: "GROOT", points: 23, played : 12, won : 0, lost  : 12,
+              ,{ id : 7, team: {teamName: "GROOT"}, points: 23, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 580, goalsConceded: 908, goalsDiff : 0
               }
-              ,{ id : 8, teamName: "Attenti a quei 2", points: 12, played : 12, won : 0, lost  : 12,
+              ,{ id : 8, team: {teamName: "Attenti a quei 2"}, points: 12, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
               }
-              ,{ id : 9, teamName: "Poeti", points: 12, played : 12, won : 0, lost  : 12,
+              ,{ id : 9, team: {teamName: "Poeti"}, points: 12, played : 12, won : 0, lost  : 12,
                 penalty  : 0, goalsDone: 58, goalsConceded: 98, goalsDiff : 0
               }
-              ,{ id : 10, teamName: "SALLUC", points: 120, played : 12, won : 11, lost  : 1,
+              ,{ id : 10, team: {teamName: "SALLUC"}, points: 120, played : 12, won : 11, lost  : 1,
                 penalty  : 0, goalsDone: 858, goalsConceded: 298, goalsDiff : 0
               }
             ]

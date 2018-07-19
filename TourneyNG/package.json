@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "angular-in-memory-web-api": "^0.5.4",
+    "ngx-perfect-scrollbar": "^6.2.0",
     "npm": "^6.0.0",
     "primeng": "^5.2.5"
   }

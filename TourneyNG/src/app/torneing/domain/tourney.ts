@@ -2,6 +2,7 @@ import { Round } from './round';
 import { Country } from './country';
 import { Team } from './team';
 import { Player } from './player';
+import {TreeNode} from 'primeng/api';
 
 export interface Tourney {
     id?: number;
@@ -22,6 +23,7 @@ export interface Tourney {
     pointsGoldenGoalLose? : number;
     rounds?: [ Round ];
     playoffs?: [ Round ];
+    eliminations?: [ TreeNode ];
     teams?: [ Team ];
     players?: [ Player ];
 }

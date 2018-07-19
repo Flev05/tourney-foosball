@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 
 import { Tourney } from '../../../domain/tourney';
 import { Round } from '../../../domain/round';
+import { CalendarDetailView } from '../calendar/calendar-detailview';
 import { Classification } from '../../../domain/classification';
 import { Meeting } from '../../../domain/meeting';
 import { TourneyService } from '../../../service/tourneyservice';
@@ -21,7 +22,7 @@ import { TourneyService } from '../../../service/tourneyservice';
         }
   `]
 })
-export class ClassificationListView implements OnInit {
+export class ClassificationListView extends CalendarDetailView {
 
     selectedTourney: Tourney;
 
@@ -29,19 +30,12 @@ export class ClassificationListView implements OnInit {
 
     rows: any[] = [];
 
-    constructor(
-        private tourneyService: TourneyService,
-        private location: Location
-    ) {}
-
     ngOnInit() {
-        this.selectedTourney = this.tourneyService.selectedTourney;
-        this.rounds = this.selectedTourney.rounds;
-
-        this.updateRowGroupMetaData();
+        super.ngOnInit();
     }
-
+    
     updateRowGroupMetaData() {
+        this.rounds = this.selectedTourney.rounds;
 
         let row : number = 0;
 

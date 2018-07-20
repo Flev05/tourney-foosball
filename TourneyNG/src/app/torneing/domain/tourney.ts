@@ -17,8 +17,10 @@ export interface Tourney {
     playoff? : boolean;
     elimination? : boolean;
     isScoreType? : boolean;
+    pointsForWin? : number;
+    pointsForLose? : number;
+    pointsForParity? : number;
     goldenGol?: boolean;
-    pointsToWin? : number;
     pointsGoldenGoalWin? : number;
     pointsGoldenGoalLose? : number;
     rounds?: [ Round ];

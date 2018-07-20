@@ -29,12 +29,15 @@ import { TourneyService } from '../../../service/tourneyservice';
 })
 export class TourneyDetailView implements OnInit {
     selectedTourney: Tourney;
-
     msgs: Message[] = [];
 
     tourneyFormGroup: FormGroup;
 
     submitted: boolean;
+
+    goldenGol: string = "yes";
+    phase:     string = "round";
+    isOnTime:  string = "yes";
 
     constructor(
         private fb: FormBuilder,

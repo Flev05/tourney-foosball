@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Tourney } from '../domain/tourney';
+import { Meeting } from '../domain/meeting';
 import { isUndefined } from 'util';
 
 const httpOptions = {
@@ -21,6 +22,7 @@ const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
 export class TourneyService {
 
     selectedTourney : Tourney;
+    selectedMeeting : Meeting;
 
     tourneys: Tourney[];
 

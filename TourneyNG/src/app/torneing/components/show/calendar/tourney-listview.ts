@@ -20,8 +20,6 @@ const redirect = '/calendar/lv';
 })
 export class CalendarTourneyListView implements OnInit {
 
-    selectedTourney: Tourney;
-
     protected tourneys: Tourney[];
 
     cols: any[];
@@ -51,7 +49,7 @@ export class CalendarTourneyListView implements OnInit {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedTourney = this.cloneCalendar(event.data);
+        this.tourneyService.selectedTourney = this.cloneTourney(event.data);
 
         this.gotoDetailView();
     }
@@ -60,7 +58,7 @@ export class CalendarTourneyListView implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    cloneCalendar(c: Tourney): Tourney {
+    cloneTourney(c: Tourney): Tourney {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

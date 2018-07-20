@@ -18,6 +18,7 @@ import {OrderListModule} from 'primeng/orderlist';
 
 import {MatchTourneyListView} from './tourney-listview';
 import {MatchListView} from './match-listview';
+import {MeetingListView} from './meeting-listview';
 
 @NgModule({
 	imports: [
@@ -40,6 +41,7 @@ import {MatchListView} from './match-listview';
 	],
 	declarations: [
 		MatchTourneyListView,
+		MeetingListView,
 		MatchListView
 	]
 })

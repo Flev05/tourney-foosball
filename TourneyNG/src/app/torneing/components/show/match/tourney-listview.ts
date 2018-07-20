@@ -7,7 +7,7 @@ import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
 import { CalendarTourneyListView } from '../calendar/tourney-listview';
 
-const redirect = '/match/lv';
+const redirect = '/match/meetinglv';
 
 @Component({
     templateUrl: './tourney-listview.html',

@@ -13,5 +13,5 @@ export interface Meeting
     team2?   : Team;
     score1?  : string;
     score2?  : string;
-    matches?: [ Match ];
+    matches? : [ Match ];
 }

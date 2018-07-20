@@ -1,0 +1,111 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Incontri</span>
+        <span>Vista elenco incontri {{selectedTourney.tourneyName}}</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Vista degli incontri previsti per un torneo dalla quale accedere alle partite.
+        Da questa vista si accede ai turni, organizzati per gironi, tra le squadre del torneo.
+        Ogni turno presenta, in forma tabellare, il nome del turno, la data e ora dell'incontro e
+        e le squadre che disputano le partite. 
+        Selezionando una coppia di squadre si accede alla vista elenco delle partite previste fra le 2 squadre.
+    </p>
+</div>
+
+
+<!-- <p-table [columns]="cols" [value]="rows" 
+        selectionMode="single" 
+        (onRowSelect)="onRowSelect($event)"
+        [(selection)]="selectedMeeting" 
+        dataKey="vin">
+    <ng-template pTemplate="caption">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
+        {{selectedTourney.tourneyName}} - {{selectedTourney.date}} {{selectedTourney.time}}
+    </ng-template>
+        
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Squadra 1</th>
+            <th>Squadra 2</th>
+            <th>Reti</th>
+            <th>Reti</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td>{{rowData.teamName1}}</td>
+            <td>{{rowData.teamName2}}</td>
+            <td style="text-align: center;">{{rowData.score1}}</td>
+            <td style="text-align: center;">{{rowData.score2}}</td>
+        </tr>
+
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table> -->
+
+    
+<p-table [columns]="cols" [value]="rows" 
+    selectionMode="single" 
+    [(selection)]="selectedTourney" 
+    (onRowSelect)="onRowSelect($event)" 
+    [paginator]="true" 
+    [rows]="15">
+
+    <ng-template pTemplate="caption">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
+        {{selectedTourney.tourneyName}} - {{selectedTourney.date}} {{selectedTourney.time}}
+    </ng-template>
+
+
+    <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+            <col style="width: auto;">
+            <col style="width: auto;">
+            <col style="width: 15mm;">
+            <col style="width: 15mm;">
+        </colgroup>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Squadra 1</th>
+            <th>Squadra 2</th>
+            <th>Reti</th>
+            <th>Reti</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData>
+
+        <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+            <td colspan="4">
+                <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.meetingName}}</span>
+            </td>
+        </tr>            
+
+        <tr [pSelectableRow]="rowData">
+            <td>{{rowData.teamName1}}</td>
+            <td>{{rowData.teamName2}}</td>
+            <td style="text-align: center;">{{rowData.score1}}</td>
+            <td style="text-align: center;">{{rowData.score2}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+ 

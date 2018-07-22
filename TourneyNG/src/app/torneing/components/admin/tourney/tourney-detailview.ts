@@ -63,6 +63,9 @@ export class TourneyDetailView implements OnInit {
             this.typologies = t;
         });
 
+        let teamNo = this.selectedTourney.teams==undefined?0:this.selectedTourney.teams.length;
+        let maxTeamNo=this.selectedTourney.maxTeamNo==undefined?100:this.selectedTourney.maxTeamNo;
+
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedTourney.address, Validators.compose([Validators.required])),
@@ -73,6 +76,9 @@ export class TourneyDetailView implements OnInit {
             'criteria': new FormControl(this.selectedTourney.criteria),
             'gender': new FormControl(this.selectedTourney.gender),
             'phases': new FormControl(this.selectedTourney.phases),
+            'roundNo': new FormControl(this.selectedTourney.roundNo),
+            'maxTeamNo': new FormControl(maxTeamNo),
+            'teamNo': new FormControl(teamNo),
         });
     }
 
@@ -109,14 +115,30 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.criteria = this.tourneyFormGroup.get('criteria').value;
         this.selectedTourney.gender = this.tourneyFormGroup.get('gender').value;
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
+        this.selectedTourney.teamNo = this.tourneyFormGroup.get('teamNo').value;
+        this.selectedTourney.maxTeamNo = this.tourneyFormGroup.get('maxTeamNo').value;
+        this.selectedTourney.roundNo = this.tourneyFormGroup.get('roundNo').value;
 
-        console.log("selectedTourney: " + this.selectedTourney);
+        console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 
         if(this.tourneyService.newTourney) {
             this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
         } else  {
             this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
         }
+    }
+
+    containsRound() : boolean{
+        let phases = this.tourneyFormGroup.get('phases').value;
+
+        console.log("selectedTourney.phases: " + phases);
+
+        for(let i=0; i<phases.length; i++ ) {
+            if(phases[i].toLowerCase().indexOf('round') == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     delete() {

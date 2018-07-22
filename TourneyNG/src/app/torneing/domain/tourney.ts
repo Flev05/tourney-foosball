@@ -18,11 +18,11 @@ export interface Tourney {
     criteria?: string;
     gender?: string;
     phases?: [string];
-    
-    round? : boolean;
-    playoff? : boolean;
-    elimination? : boolean;
-    isScoreType? : boolean;
+
+    teamNo?: number;
+    maxTeamNo?: number;
+    roundNo?: number;
+
     pointsForWin? : number;
     pointsForLose? : number;
     pointsForParity? : number;

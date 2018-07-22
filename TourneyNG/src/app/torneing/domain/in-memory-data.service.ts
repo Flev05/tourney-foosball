@@ -12,6 +12,8 @@ export class InMemoryDataService implements InMemoryDbService {
           ,gender:"tourney"
           ,phases:["round", "elimination"]
           ,typology:{name:"Calcio Balilla", code:"cb"}
+          ,maxTeamNo:32
+          ,roundNo:2
           ,teams: [
               {teamName:"SALLUC"}
               ,{teamName:"SALEMI"}

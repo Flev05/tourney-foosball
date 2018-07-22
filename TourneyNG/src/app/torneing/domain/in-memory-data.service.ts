@@ -8,7 +8,11 @@ export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
         {id: 1, tourneyName: 'Summer week 2018', date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
-            ,teams: [
+          ,criteria:"points"
+          ,gender:"tourney"
+          ,phases:["round", "elimination"]
+          ,typology:{name:"Calcio Balilla", code:"cb"}
+          ,teams: [
               {teamName:"SALLUC"}
               ,{teamName:"SALEMI"}
               ,{teamName:"PAGA TEAM"}
@@ -54,6 +58,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     {id: 1, meetingName: 'Turno 1'
                     , meetings: [
                         {id:1
+                          
                           , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                           , team1: {teamName:"SALLUC"
                               , players: [
@@ -660,6 +665,10 @@ export class InMemoryDataService implements InMemoryDbService {
       ]
       }, 
       {id: 2, tourneyName: 'Festa Dell Unità 2018', date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+            ,criteria:"points"
+            ,gender:"tourney"
+            ,phases:["round", "elimination"]
+            ,typology:{name:"Calcio Balilla", code:"cb"}
             , rounds: [ 
                 {roundName:"Girone A", direction:'ANDATA'
                 , calendars: [
@@ -1195,7 +1204,11 @@ export class InMemoryDataService implements InMemoryDbService {
           ]
         },
         {id: 3, tourneyName: 'Campionato CSI 2017/2018', date: '25/10/2017', time: '20:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'
-          , rounds: [ 
+              ,criteria:"points"
+              ,gender:"championship"
+              ,phases:["round", "playoff", "elimination"]              
+              ,typology:{name:"Calcio Balilla", code:"cb"}
+              , rounds: [ 
               {roundName: "OPEN A GIRONE A", direction: "ANDATA"
                 , calendars: [
                   {id: 1, meetingName: 'GIORNATA 01'
@@ -2100,7 +2113,11 @@ export class InMemoryDataService implements InMemoryDbService {
           ]
         },
         {id: 4, tourneyName: 'Festa dello Sport 2018', date: '15-06-2018', time: '19:30', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
-          , rounds: [ 
+              ,criteria:"points"
+              ,gender:"tourney"
+              ,phases:["round", "elimination"]
+              ,typology:{name:"Calcio Balilla", code:"cb"}
+              ,rounds: [ 
               {roundName:"Girone A", direction: "SOLO ANDATA"
                   , calendars: [
                     {id: 1, meetingName: 'Turno 1'
@@ -3303,6 +3320,13 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       ];
 
+      const typologies = [
+            {name:"Calcio Balilla", code:"cb"}
+            ,{name:"Calcio a 5", code:"c5"}
+            ,{name:"Palla Canestro", code:"basket"}
+            ,{name:"Palla Volo", code:"volley"}
+          ]  ;
+
       return {login
         , logout
         , tourneys
@@ -3312,6 +3336,7 @@ export class InMemoryDataService implements InMemoryDbService {
         , countries
         , changePassword
         , resetPassword
+        , typologies
       };
   }
 }

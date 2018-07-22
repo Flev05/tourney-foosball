@@ -70,7 +70,8 @@
                 <label for="country-id">Comune di residenza*</label>
             </div>
             <div class="ui-g-8">
-                <p-autoComplete id="country-id" [(ngModel)]="country" [suggestions]="filteredCountriesSingle" 
+                <p-autoComplete id="country-id" [(ngModel)]="country" 
+                    [suggestions]="filteredCountriesSingle" 
                     (completeMethod)="search($event)" field="city" [size]="30"
                     placeholder="Comuni" [minLength]="1"></p-autoComplete>
             </div>

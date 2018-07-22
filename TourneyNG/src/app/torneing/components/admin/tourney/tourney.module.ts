@@ -1,10 +1,10 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
-import { TableModule }  from 'primeng/table';
-import { DialogModule }  from 'primeng/dialog';
+import {TableModule}  from 'primeng/table';
+import {DialogModule}  from 'primeng/dialog';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 
-import {TourneyRoutingModule} from './tourney-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
 import {DropdownModule} from '../../../../components/dropdown/dropdown';
@@ -13,30 +13,34 @@ import {InputTextareaModule} from '../../../../components/inputtextarea/inputtex
 import {ButtonModule} from '../../../../components/button/button';
 import {TabViewModule} from '../../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
-import { SliderModule } from '../../../../components/slider/slider';
+import {SliderModule} from '../../../../components/slider/slider';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {CheckboxModule} from 'primeng/checkbox';
 
-import {CalendarModule} from 'primeng/calendar';
-
+import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 
 @NgModule({
 	imports: [
-		CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-		TourneyRoutingModule,
-        GrowlModule,
-        PanelModule,
-        DropdownModule,
-        InputTextModule,
-        InputTextareaModule,
-        ButtonModule,
-        TabViewModule,
-        CodeHighlighterModule,
-        TableModule,
-        DialogModule,
-        SliderModule,
+		CommonModule
+        ,FormsModule
+        ,ReactiveFormsModule
+		,TourneyRoutingModule
+        ,GrowlModule
+        ,PanelModule
+        ,DropdownModule
+        ,InputTextModule
+        ,InputTextareaModule
+        ,ButtonModule
+        ,TabViewModule
+        ,CodeHighlighterModule
+        ,TableModule
+        ,DialogModule
+        ,SliderModule
+        ,AutoCompleteModule
+        ,RadioButtonModule
+        ,CheckboxModule
 	],
 	declarations: [
 		TourneyListView,

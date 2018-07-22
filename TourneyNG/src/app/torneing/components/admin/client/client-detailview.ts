@@ -30,13 +30,13 @@ export class ClientDetailView implements OnInit {
         private route: ActivatedRoute,
         private location: Location,
         private clientService: ClientService,
-        private locationService: CountryService,
+        private countryService: CountryService,
     ) {}
 
     ngOnInit() {
 
         this.getClient();
-        this.locationService.loadCountries().subscribe(data => {
+        this.countryService.loadCountries().subscribe(data => {
             this.countries = data;
         });
     }

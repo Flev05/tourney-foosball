@@ -50,10 +50,10 @@
         <p-panel header="Vista di dettaglio torneo">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div class="ui-grid-col-3">
                         Nome Torneo:
                     </div>
-                    <div class="ui-grid-col-6">                                
+                    <div class="ui-grid-col-5">                                
                         <input pInputText type="text" formControlName="tourneyName"/>
                     </div>
                     <div class="ui-grid-col-4">
@@ -65,10 +65,10 @@
                 </div>
                 
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div class="ui-grid-col-3">
                         Indirizzo:
                     </div>
-                    <div class="ui-grid-col-6">
+                    <div class="ui-grid-col-5">
                         <input pInputText type="text" formControlName="address"/>
                     </div>
                     <div class="ui-grid-col-4">
@@ -80,11 +80,23 @@
                 </div>
                             
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div class="ui-grid-col-3">
+                        <label for="country-id">Comune</label>
+                    </div>
+                    <div class="ui-grid-col-5">
+                        <p-autoComplete id="country-id" formControlName="country" 
+                            [suggestions]="filteredCountriesSingle" 
+                            (completeMethod)="search($event)" field="city"
+                            placeholder="Comuni" [minLength]="1"></p-autoComplete>
+                    </div>
+                </div>
+            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
                         Data:
                     </div>
                     <div class="date-width">
-                        <input pInputText type="text" formControlName="date"/>                       
+                        <input pInputText type="text" formControlName="date"/>       
                     </div>
                     <div class="ui-grid-col-2">
                             (gg-mm-aaaa)
@@ -98,7 +110,7 @@
                 </div>
                             
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div class="ui-grid-col-3">
                         Ora:
                     </div>
                     <div class="time-width">
@@ -114,7 +126,88 @@
                         </div>
                     </div>
                 </div>
-                                    
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Tipologia:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-dropdown [options]="typologies" formControlName="typology" optionLabel="name"></p-dropdown>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Criterio:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-radioButton name="criteriaGroupname" 
+                            label="A tempo" 
+                            value="time" 
+                            formControlName="criteria">
+                        </p-radioButton>
+                        <p-radioButton name="criteriaGroupname" 
+                            label="Punteggio" 
+                            value="points" 
+                            formControlName="criteria">
+                        </p-radioButton>
+                    </div>
+                </div>
+                                        
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Torneo o Campionato:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-radioButton name="genderGroupName" 
+                            label="Torneo" 
+                            value="tourney" 
+                            formControlName="gender">
+                        </p-radioButton>
+                        <p-radioButton name="genderGroupName" 
+                            label="Campionato" 
+                            value="championship" 
+                            formControlName="gender">
+                        </p-radioButton>
+                    </div>
+                </div>                                    
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Fasi campionato/torneo:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-checkbox  name="onTimeGroupname" label="Gironi"       
+                            value="round"      
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox >
+                        <p-checkbox *ngIf="tourneyFormGroup.controls['gender'].value=='championship'" name="onTimeGroupname" label="Play Off"     
+                            value="playoff"     
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox >
+                        <p-checkbox  name="onTimeGroupname" label="Eliminatorie" 
+                            value="elimination" 
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox >
+                    </div>
+                </div>
+
+                <div *ngIf="tourneyFormGroup.controls['phases'].value=='round'" class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Fasi torneo:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-checkbox  name="onTimeGroupname" label="Gironi"       
+                            value="round"       
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox> 
+                        <p-checkbox  name="onTimeGroupname" label="Eliminatorie" 
+                            value="elimination" 
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox>
+                    </div>
+                </div>
+
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-2">
                         <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>

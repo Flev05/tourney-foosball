@@ -44,6 +44,7 @@ import { ConfirmationService } from 'primeng/api';
     ,ButtonModule
     ,BrowserAnimationsModule
     ,ConfirmDialogModule
+    
     ,HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
     )

@@ -16,6 +16,7 @@ import {CodeHighlighterModule} from '../../../../components/codehighlighter/code
 import { SliderModule } from '../../../../components/slider/slider';
 
 import {RadioButtonModule} from 'primeng/radiobutton';
+import {CheckboxModule} from 'primeng/checkbox';
 
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
@@ -37,7 +38,8 @@ import {TourneyDetailView} from './tourney-detailview';
         TableModule,
         DialogModule,
         SliderModule,
-        RadioButtonModule
+        RadioButtonModule,
+        CheckboxModule
 	],
 	declarations: [
 		TourneyListView,

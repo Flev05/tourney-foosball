@@ -8,7 +8,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
-import { isUndefined } from 'util';
+import { Typology } from '../domain/typology';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,6 +17,7 @@ const httpOptions = {
 const tourneyUrl = 'api/tourneys';  // URL to web api
 const tourneyPlayoffUrl = 'api/tourneys';  // URL to web api
 const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
+const typologiesUrl = 'api/typologies';  // URL to web api
 
 @Injectable()
 export class TourneyService {
@@ -40,6 +41,15 @@ export class TourneyService {
         .pipe(
             tap(_ => this.log(`fetched all tourneys`)),
             catchError(this.handleError('loadTourneySmall', []))
+          );
+    }
+
+    loadTypologies (): Observable<Typology[]> {
+ 
+        return this.http.get<Typology[]>(typologiesUrl)
+        .pipe(
+            tap(_ => this.log(`fetched all typologies of the tourney`)),
+            catchError(this.handleError('loadTypologies', []))
           );
     }
 

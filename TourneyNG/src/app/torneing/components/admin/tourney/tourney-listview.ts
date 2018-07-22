@@ -18,16 +18,16 @@ export class TourneyListView implements OnInit {
 
     cols: any[];
 
-    constructor(private carService: TourneyService, public router: Router) { 
+    constructor(private tourneyService: TourneyService, public router: Router) { 
         console.log("TourneyListView.constructor()");
     }
 
     ngOnInit() {
         console.log("TourneyListView.ngOnInit()");
 
-        this.carService.loadTourneySmall().subscribe(cs => this.tourneys = cs);
+        this.tourneyService.loadTourneySmall().subscribe(cs => this.tourneys = cs);
 
-        this.carService.newTourney = false;
+        this.tourneyService.newTourney = false;
 
         this.cols = [
             { field: 'tourneyName', header: 'Nome' },
@@ -38,17 +38,17 @@ export class TourneyListView implements OnInit {
     }
 
     create() {
-        this.selectedTourney={id: 0, tourneyName: "", address: "", rounds:[{}]};
-        this.carService.selectedTourney = this.selectedTourney;
-        this.carService.newTourney = true;
+        this.selectedTourney={id: 0, tourneyName: "", address: "", rounds:[{}], phases:[""]};
+        this.tourneyService.selectedTourney = this.selectedTourney;
+        this.tourneyService.newTourney = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        this.carService.selectedTourney = this.cloneTourney(event.data);
-        this.carService.newTourney = false;
+        this.tourneyService.selectedTourney = this.cloneTourney(event.data);
+        this.tourneyService.newTourney = false;
 
         this.gotoDetailView();
     }

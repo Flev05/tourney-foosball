@@ -3,6 +3,7 @@ import { Country } from './country';
 import { Team } from './team';
 import { Player } from './player';
 import {TreeNode} from 'primeng/api';
+import { Typology } from './typology';
 
 export interface Tourney {
     id?: number;
@@ -11,8 +12,13 @@ export interface Tourney {
     time? : string;
     address? : string;
     country? : Country;
-    tourneyTypes? : [string];
-    tourneyType? : string;
+    
+    typology? : Typology;
+
+    criteria?: string;
+    gender?: string;
+    phases?: [string];
+    
     round? : boolean;
     playoff? : boolean;
     elimination? : boolean;

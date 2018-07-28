@@ -1,7 +1,6 @@
 import { InMemoryDbService, RequestInfo } from 'angular-in-memory-web-api';
  
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 
 
 export class InMemoryDataService implements InMemoryDbService {

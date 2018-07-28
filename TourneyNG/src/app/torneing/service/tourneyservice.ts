@@ -6,17 +6,23 @@ import { Observable ,  of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Tourney } from '../domain/tourney';
-import { isUndefined } from 'util';
+import { Meeting } from '../domain/meeting';
+import { Typology } from '../domain/typology';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
+const tourneyUrl = 'api/tourneys';  // URL to web api
+const tourneyPlayoffUrl = 'api/tourneys';  // URL to web api
+const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
+const typologiesUrl = 'api/typologies';  // URL to web api
+
 @Injectable()
 export class TourneyService {
-    private tourneyUrl = 'api/tourneys';  // URL to web api
 
     selectedTourney : Tourney;
+    selectedMeeting : Meeting;
 
     tourneys: Tourney[];
 
@@ -30,16 +36,43 @@ export class TourneyService {
 
     loadTourneySmall (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(this.tourneyUrl)
+        return this.http.get<Tourney[]>(tourneyUrl)
         .pipe(
             tap(_ => this.log(`fetched all tourneys`)),
             catchError(this.handleError('loadTourneySmall', []))
           );
     }
 
+    loadTypologies (): Observable<Typology[]> {
+ 
+        return this.http.get<Typology[]>(typologiesUrl)
+        .pipe(
+            tap(_ => this.log(`fetched all typologies of the tourney`)),
+            catchError(this.handleError('loadTypologies', []))
+          );
+    }
+
+    loadTourneyPlayoff (): Observable<Tourney[]> {
+ 
+        return this.http.get<Tourney[]>(tourneyPlayoffUrl)
+        .pipe(
+            tap(_ => this.log(`fetched all Playoff tourneys`)),
+            catchError(this.handleError('loadTourneyPlayoff', []))
+          );
+    }
+
+    loadTourneyElimination (): Observable<Tourney[]> {
+ 
+        return this.http.get<Tourney[]>(tourneyEliminationUrl)
+        .pipe(
+            tap(_ => this.log(`fetched all Elimination tourneys`)),
+            catchError(this.handleError('loadTourneyElimination', []))
+          );
+    }
+
     /** GET hero by id. Will 404 if id not found */
     getTourney(id: number): Observable<Tourney> {
-        const url = `${this.tourneyUrl}/${id}`;
+        const url = `${tourneyUrl}/${id}`;
         return this.http.get<Tourney>(url).pipe(
             tap(_ => this.log(`fetched Tourney id=${id}`)),
             catchError(this.handleError<Tourney>(`getTourney id=${id}`))
@@ -48,7 +81,7 @@ export class TourneyService {
 
     /** POST: add a new tourney to the server */
     addTourney (tourney: Tourney): Observable<Tourney> {
-        return this.http.post<Tourney>(this.tourneyUrl, tourney, httpOptions).pipe(
+        return this.http.post<Tourney>(tourneyUrl, tourney, httpOptions).pipe(
             tap((tourney: Tourney) => this.log(`added Tourney w/ id=${tourney.id}`)),
             catchError(this.handleError<Tourney>('addTourney'))
         );
@@ -57,7 +90,7 @@ export class TourneyService {
     /** PUT: update the tourney on the server */
     updateTourney (tourney: Tourney ): Observable<Tourney> {
         const id =  tourney.id;
-        const url = `${this.tourneyUrl}/${tourney.id}`;
+        const url = `${tourneyUrl}/${tourney.id}`;
 
         return this.http.put(url, tourney, httpOptions).pipe(
             tap(_ => this.log(`updated Tourney id=${id}`)),
@@ -68,7 +101,7 @@ export class TourneyService {
     /** DELETE: delete the tourney from the server */
     deleteTourney (tourney: Tourney | number): Observable<Tourney> {
         const id = typeof tourney === 'number' ? tourney : tourney.id;
-        const url = `${this.tourneyUrl}/${id}`;
+        const url = `${tourneyUrl}/${id}`;
 
         return this.http.delete<Tourney>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Tourney id=${id}`)),

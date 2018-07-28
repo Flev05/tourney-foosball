@@ -1,0 +1,151 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Torneo</span>
+        <span>{{selectedTourney.tourneyName}}</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Vista di dettaglio del torneo {{selectedTourney.tourneyName}}.
+        Da questa vista potete visualizzare i dettagli del torneo selezionato
+    </p>
+</div>
+
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+    
+    <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
+        <p-panel header="Vista di dettaglio torneo">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Nome Torneo:
+                    </div>
+                    <div class="ui-grid-col-6">                                
+                        <input pInputText type="text" formControlName="tourneyName" disabled="true"/>
+                    </div>
+                </div>
+                
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Indirizzo:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="text" formControlName="address" disabled="true"/>
+                    </div>
+                </div>
+                            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Data:
+                    </div>
+                    <div class="date-width">
+                        <input pInputText type="text" formControlName="date"  disabled="true"/>                       
+                    </div>
+                </div>
+                            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Ora:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="time"  disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Tipo torneo:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="tourneyType"  disabled="true"/>
+                    </div>
+                </div>
+    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Fasi:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-checkbox  name="onTimeGroupname" label="Gironi"   value="round"   [(ngModel)]="phase"></p-checkbox >
+                        <p-checkbox  name="onTimeGroupname" label="Play Off" value="playoff" [(ngModel)]="phase"></p-checkbox >
+                        <p-checkbox  name="onTimeGroupname" label="Eliminatorie" value="elimination" [(ngModel)]="phase"></p-checkbox >
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        A tempo/A punti:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-radioButton name="onTimeGroupname" label="Tempo" value="yes" [(ngModel)]="isOnTime"></p-radioButton>
+                        <p-radioButton name="onTimeGroupname" label="Punti" value="no" [(ngModel)]="isOnTime"></p-radioButton>
+                    </div>
+                </div>
+                    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti per la vittoria:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="pointsForWin"  disabled="true"/>
+                    </div>
+                </div>
+                            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti per la sconfitta:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="pointsForLose"  disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti per il pareggio:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="pointsForParity"  disabled="true"/>
+                    </div>
+                </div>
+    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Golden Goal:
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-radioButton name="goldenGoalGroupname" label="Si" value="yes" [(ngModel)]="goldenGol"></p-radioButton>
+                        <p-radioButton name="goldenGoalGroupname" label="No" value="no" [(ngModel)]="goldenGol"></p-radioButton>
+                    </div>
+                </div>
+                                
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti al Golden Goal per la vittoria:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="pointsGoldenGoalWin"  disabled="true"/>
+                    </div>
+                </div>                          
+                                                        
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti al Golden Goal per la sconfitta:
+                    </div>
+                    <div class="time-width">
+                        <input pInputText type="text" formControlName="pointsGoldenGoalLose"  disabled="true"/>
+                    </div>
+                </div>                          
+                                                        
+            </div>
+        </p-panel>
+    </form>   
+
+</div>
+ 

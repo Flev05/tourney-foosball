@@ -1,0 +1,51 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Play off</span>
+        <span>Vista elenco dei tornei dai quali si accede ai play off</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <p>La vista elenco prevede delle maschere dalle quali è possibile impostare criteri di ricerca del torneo 
+        di interesse.
+    </p>
+    <p>Una volta selezionato il torneo, si accede alla corrispondente vista elenco dei
+        play off, se previsti, di cui è costituito il torneo.
+        Se un torneo non prevede i play off, la vista elenco della prossima pagina sarà vuota.
+    </p>
+</div>
+
+<p-table [columns]="cols" [value]="tourneys" 
+    selectionMode="single" 
+    [(selection)]="selectedTourney" 
+    (onRowSelect)="onRowSelect($event)" 
+    [paginator]="true" 
+    [rows]="15">
+
+    <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+            <col style="width: auto;">
+            <col style="width: 30mm;">
+            <col style="width: 20mm;">
+            <col style="width: auto;">
+        </colgroup>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+ 
+ 

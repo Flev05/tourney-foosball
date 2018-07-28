@@ -1,0 +1,104 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Gestione Tornei</span>
+        <span>Vista elenco tornei</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <h4>Premessa</h4>
+    <p>Per gestire un torneo bisogna essere un utente del Sistema.</p>
+    <p>Esistono due tipi di utenti:</p>
+    <ul>
+        <li>Utenti anonimi</li>
+        <li>Utenti con account</li>
+    </ul>
+    
+    <h4>Utenti anonimi</h4>
+    <p>Un utente anonimo è un utente qualsiasi che si connette al sistema TourneyNG senza effettuare alcuna forma 
+        di login, egli può disporre o non disporre affatto di alcun account di sistema.
+        Gli utenti anonimi possono consultare tornei già esistenti, quelli creati da altri utenti che pubblicano i loro tornei,
+        ma non possono in nessun modo modificarne i contenuti, a meno che non si tratti di un torneo di sessione.
+    </p>
+
+    <p>Un torneo di sessione, nasce e muore all'interno di una sessione utente. La sessione utente può durare anche 
+        indefinitamente se il browser non viene utilizzato continuamente e non viene abbandonato per più di mezz'ora. 
+        Se il browser resta inutilizzato per più di mezzora o se il PC, portatile o altro device viene spento, 
+        la sessione utente preesistente scade e viene iniziata una nuova che non ha niente in comune con quella precedente.
+    </p>
+
+    <p>Durante la sessione, l'utente anonimo dispone di tutte le funzionalità del sistema, ma non appena scade la sessione, 
+        perde tutto il lavoro fatto. I dati dell'utente anonimo sono si fatto volatili e non sono salvati sul database di 
+        TourneyNG, pertanto sono visibili ed utilizzabili per tutta la durata della sessione ma non appena scade non sono 
+        più recuperabili.
+    </p>
+        
+    <h4>Utenti con account</h4>
+    <p>L'utente in possesso di un account con diritti di amministrazione può fare tutto ciò che fa un utente anonimo 
+        ma con il grande valore aggiunto della persistenza dei dati nel Data Base di TourneyNG 
+        con possibilità di modificare i dati di un suo torneo esistente, per esempio per 
+        modificare la configurazione dei contenuti o semplicemente per aggiornare i risultari di un incontro.
+    </p>
+    <p>Per procurarsi un account si rimanda alla pagina di introduzione relativa al noleggio:
+        <a [routerLink]="['/lease']">
+            Versione Noleggio
+        </a>
+    </p>
+    
+    <h4>Vista elenco tornei</h4>
+    <p>La vista contiene l'elenco dei tornei già creati e pubblicati dal proprietario. Il proprietario o responsabile di un torneo
+        può scegliere a sua discrezione se rendere visibile a chiunque il proprio torneo o limitarlo solo a quelli in possesso delle
+        credenziali di accesso: login o codice di accesso del torneo.
+    </p>
+
+    <h4>Creare un nuovo torneo</h4>
+    <p>Con il bottone Nuovo Torneo si può crere un nuovo torneo. Con un click su si esso si apre
+        la vista di dettaglio di un torneo vuota in cui inserire tutti i dati obbligatori, contrassegnati
+        con un asterisco (*) e alla fine salvare.
+    </p>
+
+    <h4>Modificare un torneo esistente</h4>
+    <p>Con un click sulla riga, si accede alla vista di dettaglio corrispondente in cui si possono 
+            modificare i dati esistenti
+    </p>
+
+    <h4>Rimuovere un torneo esistente</h4>
+    <p>Per rimuovere un torneo esistene bisogna comunque accedere alla vista di dettaglio del torneo selezionato e da lì 
+        rimuovere il torneo con il bottone corrispondente
+    </p>
+</div>
+
+<p-table [columns]="cols" [value]="tourneys" 
+    selectionMode="single" 
+    [(selection)]="selectedTourney" 
+    (onRowSelect)="onRowSelect($event)" 
+    [paginator]="true" 
+    [rows]="15">
+
+    <ng-template pTemplate="header" let-columns>
+        <div style="text-align:left">
+            <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Torneo" ></button>
+        </div>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData>
+        <div style="text-align:left">
+            <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Torneo" ></button>
+        </div>
+    </ng-template>        
+</p-table>
+ 
+ 

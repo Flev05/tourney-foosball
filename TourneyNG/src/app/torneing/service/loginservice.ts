@@ -13,60 +13,83 @@ const httpOptions = {
 
 @Injectable()
 export class LoginService {
-    private apiUrl = 'api/login';  // URL to web api
+    private loginUrl = 'api/login';  // URL to web server api
+    private logoutUrl = 'api/logout';  // URL to web server api
 
     selectedLogin : Login;
 
-    newLogin : boolean = false;
+    userLogged: boolean = true;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of LoginService");
+        this.userLogged=undefined;
     }
 
-    loadLoginSmall (): Observable<Login[]> {
- 
-        return this.http.get<Login[]>(this.apiUrl)
-        .pipe(
-            tap(_ => this.log(`fetched all Login`)),
-            catchError(this.handleError('loadLoginSmall', []))
-          );
-    }
+    /** PUT: send the request login to the server */
+    sendLogin (login: Login ): Observable<Login> {
+        const id =  login.id;
+        const url = `${this.loginUrl}/${id}`;
 
-    /** GET hero by id. Will 404 if id not found */
-    getLogin(id: number): Observable<Login> {
-        const url = `${this.apiUrl}/${id}`;
-        return this.http.get<Login>(url).pipe(
-            tap(_ => this.log(`fetched Login id=${id}`)),
-            catchError(this.handleError<Login>(`getLogin id=${id}`))
-        );
-    }
-
-    /** PUT: update the Login on the server */
-    updateLogin (login: Login ): Observable<Login> {
-        const url = `${this.apiUrl}`;
+        this.userLogged=true;
+        this.selectedLogin=login;
 
         return this.http.put(url, login, httpOptions).pipe(
-            tap(_ => this.log(`updated Login url=${url}`)),
-            catchError(this.handleError<Login>('updateLogin'))
+            tap(_ => this.log(`sendLogin url=${url}  successful`) ),
+            catchError(this.handleLoginError<Login>('sendLogin'))
         );
     }
   
-    private handleError<T> (operation = 'operation', result?: T) {
+    /** PUT: send the request logout to the server */
+    sendLogout (): Observable<Login> {
+        const id =  this.selectedLogin.id;
+        const url = `${this.logoutUrl}/${id}`;
+
+        this.userLogged=undefined;
+
+        return this.http.put(url, this.selectedLogin, httpOptions).pipe(
+            tap(_ => this.log(`sendLogout url=${url} successful`) ),
+            catchError(this.handleLogoutError<Login>('sendLogout'))
+        );
+    }
+  
+    private handleLoginError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
+
+            console.error("Entering handleLoginError()"); // log to console instead
       
-          // TODO: send the error to remote logging infrastructure
-          console.error(error); // log to console instead
+            this.userLogged=undefined;
+        
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
       
-          // TODO: better job of transforming error for user consumption
-          this.log(`${operation} failed: ${error.message}`);
+            // TODO: better job of transforming error for user consumption
+            this.log(`${operation} failed: ${error.message}`);
       
-          // Let the app keep running by returning an empty result.
-          return of(result as T);
+            // Let the app keep running by returning an empty result.
+            return of(result as T);
         };
       }
       
-    /** Log a HeroService message with the MessageService */
+      private handleLogoutError<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+
+            console.error("Entering handleLogoutError()"); // log to console instead
+      
+            this.userLogged=undefined;
+        
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+      
+            // TODO: better job of transforming error for user consumption
+            this.log(`${operation} failed: ${error.message}`);
+      
+            // Let the app keep running by returning an empty result.
+            return of(result as T);
+        };
+      }
+      
+    /** Log a LoginService message with the MessageService */
     private log(message: string) {
-        console.log('ClientService: ' + message);
+        console.log('LoginService: ' + message);
     }
 }

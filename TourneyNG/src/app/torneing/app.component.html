@@ -32,11 +32,10 @@
             <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
                 <a [routerLink]="['/demo']" (click)="menuActive = false">&#9679; Demo</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
-                <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
             </div>
         </div>
-   
-        <div *ngIf="userLogged==true" class="layout-menu">
+
+        <div class="layout-menu">
             <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
@@ -48,23 +47,47 @@
                 <a [routerLink]="['/users']" (click)="menuActive = false">&#9679; Utenti</a>
             </div>
         </div>
+    
+    
+        <div class="layout-menu">
+            <a id="manager-id" #managermenutitle [class.active-menuitem]="managermenutitle.id == activeMenuId"
+                    (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
+                <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
+                <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
+                <span>Gestione</span>
+            </a>
+            <div [ngClass]="{submenushow: (managermenutitle.id == activeMenuId), 'submenuhide': (managermenutitle.id != activeMenuId)}">
+                <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
+                <a [routerLink]="['/adminround']" (click)="menuActive = false">&#9679; Gironi</a>
+                <a [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Password</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
+            </div>
+        </div>
    
         <div class="layout-menu">
             <a id="tourney-id" #tourneymenutitle [class.active-menuitem]="tourneymenutitle.id == activeMenuId" 
                     (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
                 <img src="assets/showcase/images/icons/file-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/file.svg" class="layout-menu-icon-inactive"/>
-                <span>Tornei</span>
+                <span>Consultazione</span>
             </a>
             <div [ngClass]="{'submenushow': (tourneymenutitle.id == activeMenuId), 'submenuhide': (tourneymenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/tourney']" (click)="menuActive = false">&#9679; Tornei</a>
-                <a [routerLink]="['/calendario']" (click)="menuActive = false">&#9679; Calendario</a>
-                <a [routerLink]="['/risultati']" (click)="menuActive = false">&#9679; Risultati</a>
-                <a [routerLink]="['/classifica']" (click)="menuActive = false">&#9679; Classifica</a>
+                <a [routerLink]="['/round']" (click)="menuActive = false">&#9679; Gironi</a>
+                <a [routerLink]="['/calendar']" (click)="menuActive = false">&#9679; Calendario</a>
+                <a [routerLink]="['/result']" (click)="menuActive = false">&#9679; Risultati</a>
+                <a [routerLink]="['/classification']" (click)="menuActive = false">&#9679; Classifica</a>
+                <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a>
+                <a [routerLink]="['/playoff']" (click)="menuActive = false">&#9679; Play Off</a>
+                <a [routerLink]="['/elimination']" (click)="menuActive = false">&#9679; Eliminatorie</a>
+                <a [routerLink]="['/team']" (click)="menuActive = false">&#9679; Squadre</a>
+                <a [routerLink]="['/match']" (click)="menuActive = false">&#9679; Partite</a>
+                <a [routerLink]="['/player']" (click)="menuActive = false">&#9679; Giocatori</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
    
-        <div class="layout-menu">
+        <div *ngIf="!loginService.userLogged" class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
@@ -72,7 +95,19 @@
             </a>
             <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/login']" (click)="menuActive = false">&#9679; Login</a>
-                <a [routerLink]="['/password']" (click)="menuActive = false">&#9679; Reset Password</a>
+                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
+            </div>
+        </div>
+
+        <div *ngIf="loginService.userLogged" class="layout-menu">
+            <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
+                <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
+                <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
+                <span>Login</span>
+            </a>
+            <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
+                <a *ngIf="loginService.userLogged" (click)="logout($event)">&#9679; Logout</a>
+                <a *ngIf="loginService.userLogged" [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
             </div>
         </div>
     </div>

@@ -49,7 +49,6 @@ build.metadata
 **/bin/
 **/node_modules/
 **/WebContent/
-**/webapp/
 **/tourney-ws/
 **/gradle.properties
 **/local.properties

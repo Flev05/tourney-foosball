@@ -6,7 +6,6 @@ import { Observable ,  of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Client } from '../domain/client';
-import { isUndefined } from 'util';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

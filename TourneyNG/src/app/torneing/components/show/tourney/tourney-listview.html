@@ -1,0 +1,41 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Tornei</span>
+        <span>Vista elenco tornei</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <p>La vista contiene l'elenco di tutti i tornei esistenti e pubblicati dal proprietario. 
+        Il proprietario o responsabile di un torneo può scegliere a sua discrezione se rendere 
+        visibile a chiunque il proprio torneo o limitarlo solo a quelli in possesso delle
+        credenziali di accesso: login o codice di accesso del torneo.
+    </p>
+</div>
+
+<p-table [columns]="cols" [value]="tourneys" 
+    selectionMode="single" 
+    [(selection)]="selectedTourney" 
+    (onRowSelect)="onRowSelect($event)" 
+    [paginator]="true" 
+    [rows]="15">
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>
+ 
+ 

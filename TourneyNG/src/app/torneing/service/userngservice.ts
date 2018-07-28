@@ -6,6 +6,7 @@ import { Observable ,  of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Userng } from '../domain/userng';
+import { Password } from '../domain/password';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,63 +15,86 @@ const httpOptions = {
 @Injectable()
 export class UserngService {
     private apiUrl = 'api/userng';  // URL to web api
+    private changePasswordUrl = 'api/changePassword';  // URL to web api
+    private resetPasswordUrl = 'api/resetPassword';  // URL to web api
 
-    selectedUserng : Userng;
+    selectedUser : Userng;
 
-    newUserng : boolean = false;
+    newUser : boolean = false;
 
     constructor(private http: HttpClient) { 
-        console.log("Constructor of UserngService");
+        console.log("Constructor of UserService");
     }
 
-    loadUserngSmall (): Observable<Userng[]> {
+    loadUserSmall (): Observable<Userng[]> {
  
         return this.http.get<Userng[]>(this.apiUrl)
         .pipe(
-            tap(_ => this.log(`fetched all Userng`)),
-            catchError(this.handleError('loadUserngSmall', []))
+            tap(_ => this.log(`fetched all User`)),
+            catchError(this.handleError('loadUserSmall', []))
           );
     }
 
     /** GET hero by id. Will 404 if id not found */
-    getUserng(id: number): Observable<Userng> {
+    getUser(id: number): Observable<Userng> {
         const url = `${this.apiUrl}/${id}`;
         return this.http.get<Userng>(url).pipe(
-            tap(_ => this.log(`fetched Userng id=${id}`)),
-            catchError(this.handleError<Userng>(`getUserng id=${id}`))
+            tap(_ => this.log(`fetched User id=${id}`)),
+            catchError(this.handleError<Userng>(`getUser id=${id}`))
         );
     }
 
     /** POST: add a new User to the server */
-    addUserng (userng: Userng): Observable<Userng> {
+    addUser (userng: Userng): Observable<Userng> {
         return this.http.post<Userng>(this.apiUrl, userng, httpOptions).pipe(
-            tap((userng: Userng) => this.log(`added Userng w/ id=${userng.id}`)),
-            catchError(this.handleError<Userng>('addUserng'))
+            tap((userng: Userng) => this.log(`added User w/ id=${userng.id}`)),
+            catchError(this.handleError<Userng>('addUser'))
         );
     }
 
     /** PUT: update the User on the server */
-    updateUserng (userng: Userng ): Observable<Userng> {
+    updateUser (userng: Userng ): Observable<Userng> {
         const id =  userng.id;
         const url = `${this.apiUrl}/${userng.id}`;
 
         return this.http.put(url, userng, httpOptions).pipe(
-            tap(_ => this.log(`updated Userng id=${id}`)),
-            catchError(this.handleError<Userng>('updateUserng'))
+            tap(_ => this.log(`updated User id=${id}`)),
+            catchError(this.handleError<Userng>('updateUser'))
         );
     }
     
     /** DELETE: delete the User from the server */
-    deleteUserng (userng: Userng | number): Observable<Userng> {
+    deleteUser (userng: Userng | number): Observable<Userng> {
         const id = typeof userng === 'number' ? userng : userng.id;
         const url = `${this.apiUrl}/${id}`;
 
         return this.http.delete<Userng>(url, httpOptions).pipe(
-            tap(_ => this.log(`deleted Userng id=${id}`)),
-            catchError(this.handleError<Userng>('deleteClient'))
+            tap(_ => this.log(`deleted User id=${id}`)),
+            catchError(this.handleError<Userng>('deleteUser'))
         );
     }
 
+    /** PUT: changePassword the User on the server */
+    changePassword (userng: Password ): Observable<Userng> {
+        const username =  userng.username;
+        const url = `${this.changePasswordUrl}`;
+
+        return this.http.put(url, userng, httpOptions).pipe(
+            tap(_ => this.log(`Change password, username=${username}`)),
+            catchError(this.handleError<Userng>('changePassword'))
+        );
+    }
+    
+    /** PUT: resetPassword the User on the server */
+    resetPassword (userng: Password ): Observable<Userng> {
+        const url = `${this.resetPasswordUrl}`;
+
+        return this.http.put(url, userng, httpOptions).pipe(
+            tap(_ => this.log(`Reset password, username=${userng.username}`)),
+            catchError(this.handleError<Userng>('resetPassword'))
+        );
+    }
+    
     private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
       

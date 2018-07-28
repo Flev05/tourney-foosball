@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
+import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule }  from 'primeng/dialog';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './domain/in-memory-data.service';
@@ -22,7 +23,8 @@ import { ClientService } from './service/clientservice';
 import { UserngService } from './service/userngservice';
 import { RoleService } from './service/roleservice';
 import { CountryService } from './service/countryservice';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -30,28 +32,32 @@ import { CountryService } from './service/countryservice';
     HomeComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    TableModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    InputTextModule,
-    DialogModule,
-    ButtonModule,
-    BrowserAnimationsModule,
-    // HttpClientInMemoryWebApiModule.forRoot(
-    //   InMemoryDataService, { dataEncapsulation: false }
-    // )
+     BrowserModule
+    ,FormsModule
+    ,TableModule
+    ,OrderListModule
+    ,ReactiveFormsModule
+    ,AppRoutingModule
+    ,HttpClientModule
+    ,InputTextModule
+    ,DialogModule
+    ,ButtonModule
+    ,BrowserAnimationsModule
+    ,ConfirmDialogModule
+    
+    ,HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    )
   ],
   providers: [
       { provide: LocationStrategy, useClass: HashLocationStrategy }
-      , LoginService
+      , ConfirmationService
       , TourneyService
       , ClientService
       , UserngService
       , RoleService
       , CountryService
+      , LoginService
   ],
   bootstrap: [AppComponent]
 })

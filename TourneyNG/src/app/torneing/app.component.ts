@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {trigger,state,style,transition,animate} from '@angular/animations';
+import { Router } from '@angular/router';
 import { LoginService } from './service/loginservice';
 
 @Component({
@@ -35,19 +36,18 @@ import { LoginService } from './service/loginservice';
 export class AppComponent implements OnInit{
     
     menuActive: boolean;
-    userLogged: boolean = false;
     
     activeMenuId: string;
     
     notification: boolean = false;
     
-    constructor(public loginService: LoginService) {
-
-    }
+    constructor(
+        private loginService: LoginService
+        ,private router: Router
+    ) {}
 
     ngOnInit() {
         setTimeout(()=>this.notification = true , 1000);
-        this.userLogged=false;
     }
     
     changeTheme(event: Event, theme: string) {
@@ -62,7 +62,17 @@ export class AppComponent implements OnInit{
     }
     
     closeNotification(event) {
-      this.notification = false;
-      event.preventDefault();
+        this.notification = false;
+        event.preventDefault();
     }
-}
+
+    logout(event) {
+        this.menuActive = false;
+        this.loginService.sendLogout().subscribe(() => this.goHome());  
+    }
+
+    goHome(): void {
+        let redirect = '';
+        this.router.navigate([redirect]);
+    }
+  }

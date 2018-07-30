@@ -45,6 +45,12 @@ export class TourneyDetailView implements OnInit {
 
     gender: string = "tourney";
 
+    levels= [{label:"Quarti",value:4}
+        ,{label:"Ottavi",value:8}
+        ,{label:"Sedicesimi",value:16}
+    ];
+    eliminationLevel:number=4;
+
     constructor(
         private fb: FormBuilder,
         private location: Location,
@@ -63,8 +69,7 @@ export class TourneyDetailView implements OnInit {
             this.typologies = t;
         });
 
-        let teamNo = this.selectedTourney.teams==undefined?0:this.selectedTourney.teams.length;
-        let maxTeamNo=this.selectedTourney.maxTeamNo==undefined?100:this.selectedTourney.maxTeamNo;
+        let teamNo = this.selectedTourney.teams==undefined||this.selectedTourney.teams==[]?this.selectedTourney.teamNo:this.selectedTourney.teams.length;
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -73,12 +78,21 @@ export class TourneyDetailView implements OnInit {
             'date': new FormControl(this.selectedTourney.date, Validators.compose([Validators.required])),
             'time': new FormControl(this.selectedTourney.time, Validators.compose([Validators.required])),
             'typology': new FormControl(this.selectedTourney.typology),
-            'criteria': new FormControl(this.selectedTourney.criteria),
+
+            'terminationType': new FormControl(this.selectedTourney.terminationType),
+            'raceDuration': new FormControl(this.selectedTourney.raceDuration),
+            'pointsForWin': new FormControl(this.selectedTourney.pointsForWin),
+            'pointsForParity': new FormControl(this.selectedTourney.pointsForParity),
+            'pointsForDefeat': new FormControl(this.selectedTourney.pointsForDefeat),
+            'goldenGoal': new FormControl(this.selectedTourney.goldenGoal),
+            'pointsGoldenGoalWin': new FormControl(this.selectedTourney.pointsGoldenGoalWin),
+            'pointsGoldenGoalDefeat': new FormControl(this.selectedTourney.pointsGoldenGoalDefeat),
+
             'gender': new FormControl(this.selectedTourney.gender),
             'phases': new FormControl(this.selectedTourney.phases),
             'roundNo': new FormControl(this.selectedTourney.roundNo),
-            'maxTeamNo': new FormControl(maxTeamNo),
             'teamNo': new FormControl(teamNo),
+            'eliminationLevel': new FormControl(this.selectedTourney.eliminationLevel),
         });
     }
 
@@ -100,7 +114,13 @@ export class TourneyDetailView implements OnInit {
     }
 
     doDelete() {
-        this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+        console.log("doDelete(): " + this.selectedTourney.tourneyName);
+        let popup = 'Sicuro di voler rimuovere il torneo: ';
+
+        if(confirm(popup + this.selectedTourney.tourneyName + "?")) {
+            this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+            console.log("Rimosso il torneo: " + this.selectedTourney.tourneyName);
+          }
     }
 
     onSubmit(value: string) {
@@ -112,12 +132,21 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.date = this.tourneyFormGroup.get('date').value;
         this.selectedTourney.time = this.tourneyFormGroup.get('time').value;
         this.selectedTourney.typology = this.tourneyFormGroup.get('typology').value;
-        this.selectedTourney.criteria = this.tourneyFormGroup.get('criteria').value;
+        
+        this.selectedTourney.terminationType = this.tourneyFormGroup.get('terminationType').value;
+        this.selectedTourney.raceDuration = this.tourneyFormGroup.get('raceDuration').value;
+        this.selectedTourney.pointsForWin = this.tourneyFormGroup.get('pointsForWin').value;
+        this.selectedTourney.pointsForParity = this.tourneyFormGroup.get('pointsForParity').value;
+        this.selectedTourney.pointsForDefeat = this.tourneyFormGroup.get('pointsForDefeat').value;
+        this.selectedTourney.goldenGoal = this.tourneyFormGroup.get('goldenGoal').value;
+        this.selectedTourney.pointsGoldenGoalWin = this.tourneyFormGroup.get('pointsGoldenGoalWin').value;
+        this.selectedTourney.pointsGoldenGoalDefeat = this.tourneyFormGroup.get('pointsGoldenGoalDefeat').value;
+
         this.selectedTourney.gender = this.tourneyFormGroup.get('gender').value;
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
         this.selectedTourney.teamNo = this.tourneyFormGroup.get('teamNo').value;
-        this.selectedTourney.maxTeamNo = this.tourneyFormGroup.get('maxTeamNo').value;
         this.selectedTourney.roundNo = this.tourneyFormGroup.get('roundNo').value;
+        this.selectedTourney.eliminationLevel = this.tourneyFormGroup.get('eliminationLevel').value;
 
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 
@@ -128,13 +157,13 @@ export class TourneyDetailView implements OnInit {
         }
     }
 
-    containsRound() : boolean{
+    containsPhase(value: string) : boolean{
         let phases = this.tourneyFormGroup.get('phases').value;
 
         console.log("selectedTourney.phases: " + phases);
 
         for(let i=0; i<phases.length; i++ ) {
-            if(phases[i].toLowerCase().indexOf('round') == 0) {
+            if(phases[i].toLowerCase().indexOf(value) == 0) {
                 return true;
             }
         }

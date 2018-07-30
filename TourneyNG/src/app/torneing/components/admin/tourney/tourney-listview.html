@@ -5,6 +5,7 @@
     </div>
 </div>
 
+<p-fieldset legend="Istruzioni" [toggleable]="true">
 <div class="content-section documentation">
     <h4>Premessa</h4>
     <p>Per gestire un torneo bisogna essere un utente del Sistema.</p>
@@ -67,6 +68,7 @@
         rimuovere il torneo con il bottone corrispondente
     </p>
 </div>
+</p-fieldset>
 
 <p-table [columns]="cols" [value]="tourneys" 
     selectionMode="single" 

@@ -5,6 +5,7 @@
     </div>
 </div>
 
+<p-fieldset legend="Istruzioni" [toggleable]="true">
 <div class="content-section documentation">
 
     <p>Vista di dettaglio di un torneo.
@@ -38,16 +39,20 @@
         sarà rimosso dal sistema.
     </p>
 </div>
+</p-fieldset>
 
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
+    <h4><span>{{selectedTourney.tourneyName}}</span></h4>
+    
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
     
     <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
-        <p-panel header="Vista di dettaglio torneo">
+        <p-tabView>
+            <p-tabPanel header="Anagrafica">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
@@ -135,52 +140,183 @@
                         <p-dropdown [options]="typologies" formControlName="typology" optionLabel="name"></p-dropdown>
                     </div>
                 </div>
+            </div>
+            </p-tabPanel>
 
-                <div class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Massimo numero di squadre:
-                    </div>
-                    <div class="ui-grid-col-2">
-                        <input pInputText type="text" formControlName="maxTeamNo"/>
-                    </div>
-                </div>
+            <p-tabPanel header="Caratteristiche">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
                 <div class="ui-grid-row" >
                     <div class="ui-grid-col-3">
                         Numero squadre:
                     </div>
-                    <div class="ui-grid-col-2">
-                        <input pInputText type="text" formControlName="teamNo" disabled="true"/>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="teamNo" tooltipPosition="right"
+                            pTooltip="Indicativo, il numero effettivo di squadre è determinato da quelle realmente inserite">
+                        </p-spinner>
                     </div>
                 </div>
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Criterio:
+                        Durata gara:
                     </div>
-                    <div class="ui-grid-col-4">
-                        <p-radioButton name="criteriaGroupname" 
-                            label="A tempo" 
-                            value="time" 
-                            formControlName="criteria">
-                        </p-radioButton>
-                        <p-radioButton name="criteriaGroupname" 
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare se le gare terminano a tempo o a punteggio">
+                        <p-radioButton name="terminationTypeGroupname" 
                             label="A punti" 
                             value="points" 
-                            formControlName="criteria">
+                            formControlName="terminationType">
+                        </p-radioButton>
+                        <p-radioButton name="terminationTypeGroupname" 
+                            label="A tempo" 
+                            value="time" 
+                            formControlName="terminationType">
                         </p-radioButton>
                     </div>
                 </div>
-                                        
+
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Torneo o Campionato:
+                        Punti alla vittoria:
                     </div>
-                    <div class="ui-grid-col-4">
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="teamPointsForWin" tooltipPosition="right"
+                            pTooltip="Punti guadagnati per la squadra alla vincita della singola gara"></p-spinner>
+                    </div>
+                </div>
+    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti alla sconfitta:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="teamPointsForDefeat" tooltipPosition="right"
+                            pTooltip="Punti guadagnati per la squadra alla perdita della singola gara"></p-spinner>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti al pareggio:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="teamPointsForParity" tooltipPosition="right"
+                            pTooltip="Punti guadagnati per la squadra al pareggio della singola gara"></p-spinner>
+                    </div>
+                </div>
+                                                            
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Tempo di gara:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="raceDuration" tooltipPosition="right"
+                            pTooltip="Indicare il tempo di durata in minuti della singola gara"></p-spinner>
+                    </div>
+                </div>
+                
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='points'"  class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti per vincere:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsForWin" tooltipPosition="right"
+                        pTooltip="Quanti punti segnare per vincere la singola gara"></p-spinner>
+                    </div>
+                </div>
+
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti sconfitta:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsForDefeat" tooltipPosition="right"
+                        pTooltip="Punti alla perdita della singola gara"></p-spinner>
+                    </div>
+                </div>
+
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Punti per il pareggio:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsForParity" tooltipPosition="right"
+                        pTooltip="Punti in caso di pareggio della singola gara"></p-spinner>
+                    </div>
+                </div>
+
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='points'" class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Golden goal:
+                    </div>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare se è previsto il golden goal in caso di parità ad un punto dalla vincita">
+                        <p-radioButton name="goldeGoalGroupname" 
+                            label="Si" 
+                            value="true" 
+                            formControlName="goldenGoal">
+                        </p-radioButton>
+                        <p-radioButton name="goldeGoalGroupname" 
+                            label="No" 
+                            value="false" 
+                            formControlName="goldenGoal">
+                        </p-radioButton>
+                    </div>
+                </div>
+                            
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='points'" class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Punti vittoria:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsForWin" tooltipPosition="right"
+                            pTooltip="Punti alla vincita"></p-spinner>
+                    </div>             
+                </div>             
+
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='points'" class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Punti sconfitta:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsForDefeat" tooltipPosition="right"
+                            pTooltip="Punti alla sconfitta"></p-spinner>
+                    </div>
+                </div>             
+
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='points'&&tourneyFormGroup.controls['goldenGoal'].value=='true'" 
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Punti vittoria al goldel goal:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsGoldenGoalWin" tooltipPosition="right"
+                        pTooltip="Punti alla vincita al golden goal"></p-spinner>
+                    </div>                
+                </div>                
+
+                <div *ngIf="tourneyFormGroup.controls['terminationType'].value=='points'&&tourneyFormGroup.controls['goldenGoal'].value=='true'"
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Punti sconfitta al goldel goal:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsGoldenGoalDefeat" tooltipPosition="right"
+                        pTooltip="Punti alla sconfitta al golden goal"></p-spinner>
+                    </div>                            
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3" >
+                        Competizione:
+                    </div>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare la tipologia della competizione, se semplice torneo o campionato">
                         <p-radioButton name="genderGroupName" 
                             label="Torneo" 
                             value="tourney" 
-                            formControlName="gender">
+                            formControlName="gender">  
                         </p-radioButton>
                         <p-radioButton name="genderGroupName" 
                             label="Campionato" 
@@ -192,9 +328,10 @@
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Fasi campionato/torneo:
+                        Fasi svolgimento:
                     </div>
-                    <div class="ui-grid-col-4">
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare le fasi di cui è composta la competizione">
                         <p-checkbox  name="phasesGroupname" label="Gironi"       
                             value="round"      
                             [formControl]="tourneyFormGroup.controls['phases']">
@@ -209,27 +346,52 @@
                         </p-checkbox >
                     </div>
                 </div>
-
     
-                <div *ngIf="containsRound()" class="ui-grid-row" >
+                <div *ngIf="containsPhase('round')" class="ui-grid-row" >
                     <div class="ui-grid-col-3">
                         Numero gironi:
                     </div>
-                    <div class="ui-grid-col-2">
-                        <input pInputText type="text" formControlName="roundNo"/>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="roundNo" tooltipPosition="right"
+                        pTooltip="Il numero effettivo di gironi deve essere inserito a questo livello"></p-spinner>
                     </div>
                 </div>
 
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
-                        <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
+                <div *ngIf="containsPhase('elimination')" class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Possibili eliminatorie:
                     </div>
-                    <div class="ui-grid-col-2">
-                        <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!tourneyFormGroup.valid"></button>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Le possibili eliminatorie sono calcolate automaticamente dal sistema in funzione del numero di squadre e numero di gironi configurati">
+                        <p-radioButton *ngFor="let l of levels" 
+                            name="eliminationGroupName" 
+                            [label]="l.label" 
+                            [value]="l.value" 
+                            formControlName="eliminationLevel">
+                        </p-radioButton>
                     </div>
+                </div>                    
+            </div>
+            </p-tabPanel>
+
+            <p-tabPanel header="Struttura">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            </div>
+            </p-tabPanel>            
+
+        </p-tabView>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
+                </div>
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!tourneyFormGroup.valid"></button>
                 </div>
             </div>
-        </p-panel>
+        </div>
+
     </form>   
 
 </div>

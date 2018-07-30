@@ -2,7 +2,7 @@ import { Round } from './round';
 import { Country } from './country';
 import { Team } from './team';
 import { Player } from './player';
-import {TreeNode} from 'primeng/api';
+import { TreeNode } from 'primeng/api';
 import { Typology } from './typology';
 
 export interface Tourney {
@@ -15,20 +15,28 @@ export interface Tourney {
     
     typology? : Typology;
 
-    criteria?: string;
+    terminationType?: string;
+    raceDuration?: number;
+
     gender?: string;
     phases?: [string];
 
+    teamPointsForWin?: number;
+    teamPointsForDefeat?: number;
+    teamPointsForPartity?: number;
+
     teamNo?: number;
-    maxTeamNo?: number;
     roundNo?: number;
+    eliminationLevel?: number;
 
     pointsForWin? : number;
-    pointsForLose? : number;
+    pointsForDefeat? : number;
     pointsForParity? : number;
-    goldenGol?: boolean;
+    
+    goldenGoal?: boolean;
     pointsGoldenGoalWin? : number;
-    pointsGoldenGoalLose? : number;
+    pointsGoldenGoalDefeat? : number;
+
     rounds?: [ Round ];
     playoffs?: [ Round ];
     eliminations?: [ TreeNode ];

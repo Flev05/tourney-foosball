@@ -15,6 +15,7 @@ export class TourneyListView implements OnInit {
     selectedTourney: Tourney;
 
     tourneys: Tourney[];
+    toggleable: boolean = false;
 
     cols: any[];
 

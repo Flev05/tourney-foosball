@@ -8,11 +8,23 @@ export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
         {id: 1, tourneyName: 'Summer week 2018', date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
-          ,criteria:"points"
+          ,duration:"points"
           ,gender:"tourney"
           ,phases:["round", "elimination"]
+          ,terminationType:"points"
+          ,raceDuration:7
+          ,teamPointsForWin:3
+          ,teamPointsForDefeat:0
+          ,teamPointsForParity:1
+          ,pointsForWin:3
+          ,pointsForDefeat:0
+          ,pointsForParity:1
+          ,goldenGoal:"true"
+          ,pointsGoldenGoalWin:2
+          ,pointsGoldenGoalDefeat:1
+          ,eliminationLevel:4
           ,typology:{name:"Calcio Balilla", code:"cb"}
-          ,maxTeamNo:32
+          ,teamNo:32
           ,roundNo:2
           ,teams: [
               {teamName:"SALLUC"}
@@ -667,10 +679,24 @@ export class InMemoryDataService implements InMemoryDbService {
       ]
       }, 
       {id: 2, tourneyName: 'Festa Dell Unità 2018', date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
-            ,criteria:"points"
+            ,duration:"points"
             ,gender:"tourney"
             ,phases:["round", "elimination"]
+            ,terminationType:"points"
+            ,raceDuration:7
+            ,teamPointsForWin:1
+            ,teamPointsForDefeat:0
+            ,teamPointsForParity:0
+            ,pointsForWin:3
+            ,pointsForDefeat:0
+            ,pointsForParity:1
+            ,goldenGoal:"true"            
+            ,pointsGoldenGoalWin:2
+            ,pointsGoldenGoalDefeat:1            
+            ,eliminationLevel:8  
             ,typology:{name:"Calcio Balilla", code:"cb"}
+            ,teamNo:38
+            ,roundNo:5  
             , rounds: [ 
                 {roundName:"Girone A", direction:'ANDATA'
                 , calendars: [
@@ -1206,10 +1232,24 @@ export class InMemoryDataService implements InMemoryDbService {
           ]
         },
         {id: 3, tourneyName: 'Campionato CSI 2017/2018', date: '25/10/2017', time: '20:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'
-              ,criteria:"points"
+              ,duration:"points"
               ,gender:"championship"
-              ,phases:["round", "playoff", "elimination"]              
+              ,phases:["round", "playoff", "elimination"]       
+              ,terminationType:"points"
+              ,raceDuration:7
+              ,teamPointsForWin:1
+              ,teamPointsForDefeat:0
+              ,teamPointsForParity:0
+              ,pointsForWin:3
+              ,pointsForDefeat:0
+              ,pointsForParity:1
+              ,goldenGoal:"true"              
+              ,pointsGoldenGoalWin:2
+              ,pointsGoldenGoalDefeat:1         
+              ,eliminationLevel:16              
               ,typology:{name:"Calcio Balilla", code:"cb"}
+              ,teamNo:67
+              ,roundNo:7    
               , rounds: [ 
               {roundName: "OPEN A GIRONE A", direction: "ANDATA"
                 , calendars: [
@@ -2115,10 +2155,24 @@ export class InMemoryDataService implements InMemoryDbService {
           ]
         },
         {id: 4, tourneyName: 'Festa dello Sport 2018', date: '15-06-2018', time: '19:30', address: 'Via Gallarate, 33 - 20010 Pregnana Milanese (MI)'
-              ,criteria:"points"
+              ,duration:"points"
               ,gender:"tourney"
               ,phases:["round", "elimination"]
+              ,terminationType:"points"
+              ,raceDuration:7
+              ,teamPointsForWin:3
+              ,teamPointsForDefeat:0
+              ,teamPointsForParity:1
+              ,pointsForWin:3
+              ,pointsForDefeat:0
+              ,pointsForParity:1
+              ,goldenGoal:"true"              
+              ,pointsGoldenGoalWin:2
+              ,pointsGoldenGoalDefeat:1                  
+              ,eliminationLevel:8
               ,typology:{name:"Calcio Balilla", code:"cb"}
+              ,teamNo:48
+              ,roundNo:8    
               ,rounds: [ 
               {roundName:"Girone A", direction: "SOLO ANDATA"
                   , calendars: [

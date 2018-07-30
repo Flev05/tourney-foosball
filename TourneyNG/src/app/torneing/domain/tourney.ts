@@ -4,6 +4,9 @@ import { Team } from './team';
 import { Player } from './player';
 import { TreeNode } from 'primeng/api';
 import { Typology } from './typology';
+import { RoundConfig } from './round-config';
+import { PlayoffConfig } from './playoff-config';
+import { EliminationConfig } from './elimination-config';
 
 export interface Tourney {
     id?: number;
@@ -42,4 +45,8 @@ export interface Tourney {
     eliminations?: [ TreeNode ];
     teams?: [ Team ];
     players?: [ Player ];
+
+    roundConfig?: RoundConfig;
+    playoffConfig?: PlayoffConfig;
+    eliminationConfig?: EliminationConfig;
 }

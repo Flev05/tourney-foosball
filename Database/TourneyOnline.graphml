@@ -45,7 +45,7 @@
 		</data>
 		<node id="n0">
 			<data key="d2">
-				<y:RectD X="-265.25" Y="-114.25" Width="125" Height="172"/>
+				<y:RectD X="-303.788165985208" Y="-178.25" Width="202.07633197041594" Height="300"/>
 			</data>
 			<data key="d4">
 				<uml:UMLNodeStyle fill="{y:GraphMLReference 1}" highlightFill="{y:GraphMLReference 2}">
@@ -56,12 +56,20 @@
 									<sys:String>name</sys:String>
 									<sys:String>startDate</sys:String>
 									<sys:String>endDate</sys:String>
+									<sys:String>matchWinnerScores</sys:String>
+									<sys:String>matchWinnerGoldenGoalScores</sys:String>
+									<sys:String>matchLoserGoldenGoalScores</sys:String>
+									<sys:String>matchBalanceScores</sys:String>
+									<sys:String>matchWinnerTieBreakScores</sys:String>
+									<sys:String>matchLoserTieBreakScores</sys:String>
+									<sys:String>matchLoserScores</sys:String>
 								</x:Array>
 							</uml:UMLClassModel.attributes>
 							<uml:UMLClassModel.operations>
 								<x:Array Type="sys:Object">
 									<sys:String>create</sys:String>
 									<sys:String>update</sys:String>
+									<sys:String>delete</sys:String>
 								</x:Array>
 							</uml:UMLClassModel.operations>
 						</uml:UMLClassModel>
@@ -353,7 +361,7 @@
 								<x:Array Type="sys:Object">
 									<sys:String>date</sys:String>
 									<sys:String>time</sys:String>
-									<sys:String></sys:String>
+									<sys:String>state</sys:String>
 									<sys:String></sys:String>
 									<sys:String>score1</sys:String>
 									<sys:String>score2</sys:String>
@@ -387,7 +395,7 @@
 						<uml:UMLClassModel stereotype="" constraint="" className="Calendar" attributesOpen="true" operationsOpen="true">
 							<uml:UMLClassModel.attributes>
 								<x:Array Type="sys:Object">
-									<sys:String>name</sys:String>
+									<sys:String>id</sys:String>
 								</x:Array>
 							</uml:UMLClassModel.attributes>
 							<uml:UMLClassModel.operations>
@@ -408,14 +416,17 @@
 		</node>
 		<node id="n11">
 			<data key="d2">
-				<y:RectD X="-1051.75" Y="30.25" Width="125" Height="140"/>
+				<y:RectD X="-1051.75" Y="30.25" Width="125" Height="172"/>
 			</data>
 			<data key="d4">
 				<uml:UMLNodeStyle fill="{y:GraphMLReference 3}" highlightFill="{y:GraphMLReference 4}">
 					<uml:UMLNodeStyle.model>
 						<uml:UMLClassModel stereotype="" constraint="" className="Match" attributesOpen="true" operationsOpen="true">
 							<uml:UMLClassModel.attributes>
-								<x:Array Type="sys:Object"/>
+								<x:Array Type="sys:Object">
+									<sys:String>score1</sys:String>
+									<sys:String>score2</sys:String>
+								</x:Array>
 							</uml:UMLClassModel.attributes>
 							<uml:UMLClassModel.operations>
 								<x:Array Type="sys:Object">
@@ -581,7 +592,7 @@
 		<edge id="e20" source="n11" target="n3" sourceport="p1" targetport="p6">
 			<data key="d7">
 				<x:List>
-					<y:Bend Location="-838.7657480314961,100.25"/>
+					<y:Bend Location="-838.7657480314961,116.25"/>
 				</x:List>
 			</data>
 			<data key="d8">

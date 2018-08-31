@@ -5,7 +5,7 @@ import { RoundConfig } from './round-config';
 
 export interface Round extends RoundConfig {
     id?: number;
-    roundName?: string;
+    name?: string;
 
     direction?: string;
     teams?: [ Team ];

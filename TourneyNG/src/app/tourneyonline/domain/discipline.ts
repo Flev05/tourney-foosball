@@ -1,4 +1,4 @@
-export interface Typology {
+export interface Discipline {
     name? : string;
     code? : string;
 }

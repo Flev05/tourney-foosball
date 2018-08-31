@@ -52,7 +52,7 @@ export class PlayoffListView extends CalendarDetailView {
                 for(let k = 0; k < len; k++ ) {
                     let m : Meeting = cal.meetings[k];
                     this.rows.push(m);
-                    this.rows[row].roundName = round.roundName ;    
+                    this.rows[row].roundName = round.name ;    
                     this.rows[row].meetingName = cal.meetingName;    
                     if(!roundMap.has(currentKey)) {
                         roundMap.set(currentKey, m);
@@ -78,7 +78,7 @@ export class PlayoffListView extends CalendarDetailView {
     }
     
     makeKey( round : Round, cal : Calendar) : string {
-        let key = round.roundName + " - " + cal.meetingName;
+        let key = round.name + " - " + cal.meetingName;
         return key;
     }
 

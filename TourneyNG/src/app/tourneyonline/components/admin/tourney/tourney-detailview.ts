@@ -10,7 +10,7 @@ import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
 import { CountryService } from '../../../service/countryservice';
 import { Country } from '../../../domain/country';
-import { Typology } from '../../../domain/typology';
+import { Discipline } from '../../../domain/discipline';
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -41,7 +41,7 @@ export class TourneyDetailView implements OnInit {
     countries: Country[];
     filteredCountriesSingle: Country[];
 
-    typologies: Typology[];
+    typologies: Discipline[];
 
     gender: string = "tourney";
 
@@ -65,7 +65,7 @@ export class TourneyDetailView implements OnInit {
         this.countryService.loadCountries().subscribe(c => {
             this.countries = c;
         });
-        this.tourneyService.loadTypologies().subscribe(t => {
+        this.tourneyService.loadDisciplines().subscribe(t => {
             this.typologies = t;
         });
 
@@ -81,9 +81,9 @@ export class TourneyDetailView implements OnInit {
             'country': new FormControl(this.selectedTourney.country),
             'date': new FormControl(this.selectedTourney.date, Validators.compose([Validators.required])),
             'time': new FormControl(this.selectedTourney.time, Validators.compose([Validators.required])),
-            'typology': new FormControl(this.selectedTourney.typology),
+            'typology': new FormControl(this.selectedTourney.discipline),
 
-            'terminationType': new FormControl(this.selectedTourney.terminationType),
+            'terminationType': new FormControl(this.selectedTourney.tourneyType),
             'raceDuration': new FormControl(this.selectedTourney.raceDuration),
             'pointsForWin': new FormControl(this.selectedTourney.pointsForWin),
             'pointsForParity': new FormControl(this.selectedTourney.pointsForParity),
@@ -135,9 +135,9 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.country = this.tourneyFormGroup.get('country').value;
         this.selectedTourney.date = this.tourneyFormGroup.get('date').value;
         this.selectedTourney.time = this.tourneyFormGroup.get('time').value;
-        this.selectedTourney.typology = this.tourneyFormGroup.get('typology').value;
+        this.selectedTourney.discipline = this.tourneyFormGroup.get('typology').value;
         
-        this.selectedTourney.terminationType = this.tourneyFormGroup.get('terminationType').value;
+        this.selectedTourney.tourneyType = this.tourneyFormGroup.get('terminationType').value;
         this.selectedTourney.raceDuration = this.tourneyFormGroup.get('raceDuration').value;
         this.selectedTourney.pointsForWin = this.tourneyFormGroup.get('pointsForWin').value;
         this.selectedTourney.pointsForParity = this.tourneyFormGroup.get('pointsForParity').value;

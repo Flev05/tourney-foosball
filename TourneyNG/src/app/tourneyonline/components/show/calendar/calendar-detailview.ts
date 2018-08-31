@@ -58,7 +58,7 @@ export class CalendarDetailView implements OnInit {
                 for(let k = 0; k < len; k++ ) {
                     let m : Meeting = cal.meetings[k];
                     this.rows.push(m);
-                    this.rows[row].roundName = round.roundName + "(" + round.direction + ")";    
+                    this.rows[row].roundName = round.name + "(" + round.direction + ")";    
                     this.rows[row].meetingName = cal.meetingName;    
                     if(!roundMap.has(currentKey)) {
                         roundMap.set(currentKey, m);
@@ -84,7 +84,7 @@ export class CalendarDetailView implements OnInit {
     }
 
     makeKey( round : Round, cal : Calendar) : string {
-        let key = round.roundName + "(" + round.direction + ") - " + cal.meetingName;
+        let key = round.name + "(" + round.direction + ") - " + cal.meetingName;
         return key;
     }
 

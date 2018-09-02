@@ -32,6 +32,8 @@ import { Discipline } from '../../../domain/discipline';
 export class TourneyDetailView implements OnInit {
     selectedTourney: Tourney;
 
+    tourneyDate: Date;
+
     msgs: Message[] = [];
 
     tourneyFormGroup: FormGroup;
@@ -41,7 +43,7 @@ export class TourneyDetailView implements OnInit {
     countries: Country[];
     filteredCountriesSingle: Country[];
 
-    typologies: Discipline[];
+    disciplies: Discipline[];
 
     gender: string = "tourney";
 
@@ -50,6 +52,8 @@ export class TourneyDetailView implements OnInit {
         ,{label:"Sedicesimi",value:16}
     ];
     eliminationLevel:number=4;
+
+    it: any;
 
     constructor(
         private fb: FormBuilder,
@@ -66,7 +70,7 @@ export class TourneyDetailView implements OnInit {
             this.countries = c;
         });
         this.tourneyService.loadDisciplines().subscribe(t => {
-            this.typologies = t;
+            this.disciplies = t;
         });
 
         let teamNo = 
@@ -75,22 +79,35 @@ export class TourneyDetailView implements OnInit {
         ?this.selectedTourney.teamNo
         :this.selectedTourney.teams.length;
 
+        this.tourneyDate= new Date(this.selectedTourney.dateInMillis);
+
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedTourney.address, Validators.compose([Validators.required])),
             'country': new FormControl(this.selectedTourney.country),
-            'date': new FormControl(this.selectedTourney.date, Validators.compose([Validators.required])),
-            'time': new FormControl(this.selectedTourney.time, Validators.compose([Validators.required])),
-            'typology': new FormControl(this.selectedTourney.discipline),
 
-            'terminationType': new FormControl(this.selectedTourney.tourneyType),
+            'date': new FormControl(this.tourneyDate),
+
+            'discipline': new FormControl(this.selectedTourney.discipline),
+
+            'tourneyType': new FormControl(this.selectedTourney.tourneyType),
             'raceDuration': new FormControl(this.selectedTourney.raceDuration),
+            
             'pointsForWin': new FormControl(this.selectedTourney.pointsForWin),
             'pointsForParity': new FormControl(this.selectedTourney.pointsForParity),
             'pointsForDefeat': new FormControl(this.selectedTourney.pointsForDefeat),
+            
+            'matchWinnerScores': new FormControl(this.selectedTourney.matchWinnerScores),
+            'matchLoserScores': new FormControl(this.selectedTourney.matchLoserScores),
+            'matchBalanceScores': new FormControl(this.selectedTourney.matchBalanceScores),
+
             'goldenGoal': new FormControl(this.selectedTourney.goldenGoal),
             'pointsGoldenGoalWin': new FormControl(this.selectedTourney.pointsGoldenGoalWin),
             'pointsGoldenGoalDefeat': new FormControl(this.selectedTourney.pointsGoldenGoalDefeat),
+
+            'tieBreak': new FormControl(this.selectedTourney.tieBreak),
+            'pointsTieBreakWin': new FormControl(this.selectedTourney.pointsTieBreakWin),
+            'pointsTieBreakDefeat': new FormControl(this.selectedTourney.pointsTieBreakDefeat),
 
             'gender': new FormControl(this.selectedTourney.gender),
             'phases': new FormControl(this.selectedTourney.phases),
@@ -98,6 +115,29 @@ export class TourneyDetailView implements OnInit {
             'teamNo': new FormControl(teamNo),
             'eliminationLevel': new FormControl(this.selectedTourney.eliminationLevel),
         });
+
+        this.it = {
+        	firstDayOfWeek: 1,
+        	dayNames: [ "domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato" ],
+        	dayNamesShort: [ "dom","lun","mar","mer","gio","ven","sab" ],
+        	dayNamesMin: [ "D","L","M","M","G","V","S" ],
+            monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre"
+            ,"Novembre","Dicembre" ],
+        	monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic" ],
+            today: 'Oggi',
+            clear: 'Clear'
+        };
+        
+        let today = new Date();
+        let month = today.getMonth();
+        let year = today.getFullYear();
+        let prevMonth = (month === 0) ? 11 : month -1;
+        let prevYear = (prevMonth === 11) ? year - 1 : year;
+        let nextMonth = (month === 11) ? 0 : month + 1;
+        let nextYear = (nextMonth === 0) ? year + 1 : year;
+        
+        let invalidDate = new Date();
+        invalidDate.setDate(today.getDate() - 1);
     }
 
     search(event) {
@@ -133,18 +173,26 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.tourneyName = this.tourneyFormGroup.get('tourneyName').value;
         this.selectedTourney.address = this.tourneyFormGroup.get('address').value;
         this.selectedTourney.country = this.tourneyFormGroup.get('country').value;
-        this.selectedTourney.date = this.tourneyFormGroup.get('date').value;
-        this.selectedTourney.time = this.tourneyFormGroup.get('time').value;
-        this.selectedTourney.discipline = this.tourneyFormGroup.get('typology').value;
+
+        this.tourneyDate = this.tourneyFormGroup.get('date').value;
+        this.selectedTourney.dateInMillis = this.tourneyDate.getMilliseconds();
+
+        this.selectedTourney.discipline = this.tourneyFormGroup.get('discipline').value;
         
-        this.selectedTourney.tourneyType = this.tourneyFormGroup.get('terminationType').value;
+        this.selectedTourney.tourneyType = this.tourneyFormGroup.get('tourneyType').value;
         this.selectedTourney.raceDuration = this.tourneyFormGroup.get('raceDuration').value;
+
         this.selectedTourney.pointsForWin = this.tourneyFormGroup.get('pointsForWin').value;
         this.selectedTourney.pointsForParity = this.tourneyFormGroup.get('pointsForParity').value;
         this.selectedTourney.pointsForDefeat = this.tourneyFormGroup.get('pointsForDefeat').value;
+
         this.selectedTourney.goldenGoal = this.tourneyFormGroup.get('goldenGoal').value;
         this.selectedTourney.pointsGoldenGoalWin = this.tourneyFormGroup.get('pointsGoldenGoalWin').value;
         this.selectedTourney.pointsGoldenGoalDefeat = this.tourneyFormGroup.get('pointsGoldenGoalDefeat').value;
+
+        this.selectedTourney.tieBreak = this.tourneyFormGroup.get('tieBreak').value;
+        this.selectedTourney.pointsTieBreakWin = this.tourneyFormGroup.get('pointsTieBreakWin').value;
+        this.selectedTourney.pointsTieBreakDefeat = this.tourneyFormGroup.get('pointsTieBreakDefeat').value;
 
         this.selectedTourney.gender = this.tourneyFormGroup.get('gender').value;
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;

@@ -8,12 +8,12 @@ import { RoundConfig } from './round-config';
 import { PlayoffConfig } from './playoff-config';
 import { EliminationConfig } from './elimination-config';
 import { TourneyType } from './tourneyType';
+import { Time } from '@angular/common';
 
 export interface Tourney {
     id?: number;
     tourneyName? : string;
-    date? : string;
-    time? : string;
+    dateInMillis? : number;
     address? : string;
     country? : Country;
     
@@ -25,9 +25,9 @@ export interface Tourney {
     gender?: string;
     phases?: [string];
 
-    teamPointsForWin?: number;
-    teamPointsForDefeat?: number;
-    teamPointsForPartity?: number;
+    matchWinnerScores?: number;
+    matchLoserScores?: number;
+    matchBalanceScores?: number;
 
     teamNo?: number;
     roundNo?: number;
@@ -40,6 +40,10 @@ export interface Tourney {
     goldenGoal?: boolean;
     pointsGoldenGoalWin? : number;
     pointsGoldenGoalDefeat? : number;
+
+    tieBreak?: boolean;
+    pointsTieBreakWin? : number;
+    pointsTieBreakDefeat? : number;
 
     rounds?: [ Round ];
     playoffs?: [ Round ];

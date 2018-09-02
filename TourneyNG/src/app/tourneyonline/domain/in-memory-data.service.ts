@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
-        {id: 1, tourneyName: 'Summer week 2018', date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+        {id: 1, tourneyName: 'Summer week 2018', dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
           ,duration:"points"
           ,gender:"tourney"
           ,phases:["round", "elimination"]
@@ -72,7 +72,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , meetings: [
                         {id:1
                           
-                          , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                          , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                           , team1: {teamName:"SALLUC"
                               , players: [
                                 {firstname:"Salvatore", lastname:"Amoroso"}
@@ -89,7 +89,7 @@ export class InMemoryDataService implements InMemoryDbService {
                                 {firstname:"Massilìmiliano", lastname:"Paganotti"}
                               ,{firstname:"Samuele", lastname:"Paganotti"}
                           ]} 
-                          , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                          , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                           , team2: {teamName:"I DISPERATI"
                           , players: [
                               {firstname:"Valter", lastname:"Begamaschi"}
@@ -101,7 +101,7 @@ export class InMemoryDataService implements InMemoryDbService {
                             {firstname:"Riccardo", lastname:"Fabbro"}
                           ,{firstname:"Luciano", lastname:"Martino"}
                         ]}
-                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"ARMA TEAM"
                       , players: [
                           {firstname:"Riccardo", lastname:"Armadillo"}
@@ -113,7 +113,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Micol", lastname:"Micol"}
                         ,{firstname:"Tommaso", lastname:"Tommaso"}
                       ]} 
-                      , date: '01-05-2018', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', time: '13:45'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"LE PANCHE"
                       , players: [
                           {firstname:"Toto", lastname:"Toto"}
@@ -125,7 +125,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Raimondo", lastname:"Brancaccio"}
                         ,{firstname:"Fabrizio", lastname:"Fabrizio"}
                       ]}
-                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"I RHODENSI"
                       , players: [
                           {firstname:"Simone", lastname:"Castronuovo"}
@@ -141,7 +141,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Salvatore", lastname:"Amoroso"}
                           ,{firstname:"Luciano", lastname:"Martino"}
                       ]}
-                      , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"PAGA TEAM"
                         , players: [
                             {firstname:"Massilìmiliano", lastname:"Paganotti"}
@@ -153,7 +153,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Salvatore", lastname:"Cavaliere"}
                         ,{firstname:"Emilio", lastname:"Cattaneo"}
                     ]}
-                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ELEVEN"
                     , players: [
                         {firstname:"Raimondo", lastname:"Brancaccio"}
@@ -177,7 +177,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Riccardo", lastname:"Armadillo"}
                       ,{firstname:"Tommaso", lastname:"Armadillo"}
                     ]}
-                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"LE PANCHE"
                     , players: [
                         {firstname:"Toto", lastname:"Toto"}
@@ -188,7 +188,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Valter", lastname:"Begamaschi"}
                       ,{firstname:"Giorgio", lastname:"Begamaschi"}
-                    ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"I RHODENSI"
                     , players: [
                         {firstname:"Simone", lastname:"Castronuovo"}
@@ -202,7 +202,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Simone", lastname:"Castronuovo"}
                         ,{firstname:"Andrea", lastname:"Castronuovo"}
-                      ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"PAGA TEAM"
                       , players: [
                           {firstname:"Massilìmiliano", lastname:"Paganotti"}
@@ -212,7 +212,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Salvatore", lastname:"Cavaliere"}
                       ,{firstname:"Emilio", lastname:"Cattaneo"}
-                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                   , team2: {teamName:"ARMA TEAM"
                   , players: [
                       {firstname:"Riccardo", lastname:"Armadillo"}
@@ -223,7 +223,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Riccardo", lastname:"Fabbro"}
                       ,{firstname:"Luciano", lastname:"Martino"}
-                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ELEVEN"
                     , players: [
                         {firstname:"Raimondo", lastname:"Brancaccio"}
@@ -234,14 +234,14 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Micol", lastname:"Micol"}
                       ,{firstname:"Tommaso", lastname:"Tommaso"}
-                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: "LE PANCHE"
                     , score1:2, score2:7}
                     , {id:5, team1: {teamName:"I DISPERATI"
                     , players: [
                         {firstname:"Valter", lastname:"Begamaschi"}
                       ,{firstname:"Giorgio", lastname:"Begamaschi"}
-                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"SALLUC"
                     , players: [
                       {firstname:"Salvatore", lastname:"Amoroso"}
@@ -256,7 +256,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Simone", lastname:"Castronuovo"}
                         ,{firstname:"Andrea", lastname:"Castronuovo"}
-                      ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"SALEMI"
                       , players: [
                           {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -267,7 +267,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Massilìmiliano", lastname:"Paganotti"}
                       ,{firstname:"Samuele", lastname:"Paganotti"}
-                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                   , team2: {teamName:"ARMA TEAM"
                   , players: [
                       {firstname:"Riccardo", lastname:"Armadillo"}
@@ -278,7 +278,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Toto", lastname:"Toto"}
                       ,{firstname:"Roberto", lastname:"Franzosi"}
-                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ELEVEN"
                     , players: [
                         {firstname:"Raimondo", lastname:"Brancaccio"}
@@ -289,7 +289,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Micol", lastname:"Micol"}
                       ,{firstname:"Tommaso", lastname:"Tommaso"}
-                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"FAMA TEAM"
                     , players: [
                         {firstname:"Riccardo", lastname:"Fabbro"}
@@ -299,7 +299,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Valter", lastname:"Begamaschi"}
                       ,{firstname:"Giorgio", lastname:"Begamaschi"}
-                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"SALLUC"
                     , players: [
                       {firstname:"Salvatore", lastname:"Amoroso"}
@@ -350,7 +350,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Salvatore", lastname:"Amoroso"}
                           ,{firstname:"Luciano", lastname:"Martino"}
                       ]}
-                        , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                        , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                         , team2: {teamName:"SALEMI"
                         , players: [
                             {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -362,7 +362,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Savino", lastname:"Caporale"}
                         ,{firstname:"Pino", lastname:"Felini"}
                     ]}
-                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"B&B"
                         , players: [
                             {firstname:"Roberto", lastname:"Bergamaschi"}
@@ -374,7 +374,7 @@ export class InMemoryDataService implements InMemoryDbService {
                             {firstname:"Raimondo", lastname:"Francaccio"}
                           ,{firstname:"Andrea", lastname:"Procopio"}
                       ]}
-                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"GROOT"
                         , players: [
                             {firstname:"Jacopo", lastname:"Meravglia"}
@@ -386,7 +386,7 @@ export class InMemoryDataService implements InMemoryDbService {
                             {firstname:"Orlando", lastname:"Zambrella"}
                           ,{firstname:"Gianfranco", lastname:"Elia"}
                       ]}
-                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"MINGA BUN"
                       , players: [
                             {firstname:"Antonio", lastname:"Pietroforte"}
@@ -398,7 +398,7 @@ export class InMemoryDataService implements InMemoryDbService {
                               {firstname:"Andrea", lastname:"Melidona"}
                             ,{firstname:"Giuseppe", lastname:"Melidona"}
                         ]}
-                      , date: '01-05-2018', time: '13:45', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"Quota Drone"
                         , players: [
                             {firstname:"Enrico", lastname:"Chiminelli"}
@@ -413,7 +413,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                         {firstname:"Salvatore", lastname:"Amoroso"}
                         ,{firstname:"Luciano", lastname:"Martino"}
-                    ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"Maldive"
                     , players: [
                         {firstname:"Savino", lastname:"Caporale"}
@@ -425,7 +425,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Salvatore", lastname:"Cavaliere"}
                       ,{firstname:"Emilio", lastname:"Cattaneo"}
                   ]}
-                    , date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
                     , players: [
                           {firstname:"Andrea", lastname:"Melidona"}
                         ,{firstname:"Giuseppe", lastname:"Melidona"}
@@ -434,7 +434,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Raimondo", lastname:"Francaccio"}
                       ,{firstname:"Andrea", lastname:"Procopio"}
-                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"Fialette"
                     , players: [
                         {firstname:"Orlando", lastname:"Zambrella"}
@@ -445,7 +445,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Jacopo", lastname:"Meravglia"}
                       ,{firstname:"Alessandro", lastname:"Scalise"}
-                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
                   , players: [
                         {firstname:"Antonio", lastname:"Pietroforte"}
                       ,{firstname:"Mirco", lastname:"Pietroforte"}
@@ -454,7 +454,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Roberto", lastname:"Bergamaschi"}
                       ,{firstname:"Valter", lastname:"Bergamaschi"}
-                  ]}, date: '08-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Quota Drone"
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Quota Drone"
                   , players: [
                       {firstname:"Enrico", lastname:"Chiminelli"}
                     ,{firstname:"Fabio", lastname:"Chiminelli"}
@@ -467,7 +467,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Enrico", lastname:"Chiminelli"}
                         ,{firstname:"Fabio", lastname:"Chiminelli"}
-                    ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"Maldive"
                       , players: [
                           {firstname:"Savino", lastname:"Caporale"}
@@ -479,7 +479,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Salvatore", lastname:"Cavaliere"}
                       ,{firstname:"Emilio", lastname:"Cattaneo"}
                   ]}
-                    , date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"GROOT"
                     , players: [
                         {firstname:"Jacopo", lastname:"Meravglia"}
@@ -490,7 +490,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Raimondo", lastname:"Francaccio"}
                       ,{firstname:"Andrea", lastname:"Procopio"}
-                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
                   , players: [
                         {firstname:"Andrea", lastname:"Melidona"}
                       ,{firstname:"Giuseppe", lastname:"Melidona"}
@@ -499,7 +499,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Orlando", lastname:"Zambrella"}
                       ,{firstname:"Gianfranco", lastname:"Elia"}
-                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
                   , players: [
                         {firstname:"Antonio", lastname:"Pietroforte"}
                       ,{firstname:"Mirco", lastname:"Pietroforte"}
@@ -508,7 +508,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Roberto", lastname:"Bergamaschi"}
                       ,{firstname:"Valter", lastname:"Bergamaschi"}
-                  ]}, date: '17-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
                     , players: [
                       {firstname:"Salvatore", lastname:"Amoroso"}
@@ -523,7 +523,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Enrico", lastname:"Chiminelli"}
                         ,{firstname:"Fabio", lastname:"Chiminelli"}
-                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"SALEMI"
                       , players: [
                           {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -535,7 +535,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Savino", lastname:"Caporale"}
                       ,{firstname:"Pino", lastname:"Felini"}
                   ]}
-                    , date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"GROOT"
                     , players: [
                         {firstname:"Jacopo", lastname:"Meravglia"}
@@ -546,7 +546,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                           {firstname:"Antonio", lastname:"Pietroforte"}
                         ,{firstname:"Mirco", lastname:"Pietroforte"}
-                    ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
                     , players: [
                           {firstname:"Andrea", lastname:"Melidona"}
                         ,{firstname:"Giuseppe", lastname:"Melidona"}
@@ -555,7 +555,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Orlando", lastname:"Zambrella"}
                       ,{firstname:"Gianfranco", lastname:"Elia"}
-                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
                   , players: [
                       {firstname:"Raimondo", lastname:"Francaccio"}
                     ,{firstname:"Andrea", lastname:"Procopio"}
@@ -564,7 +564,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Roberto", lastname:"Bergamaschi"}
                       ,{firstname:"Valter", lastname:"Bergamaschi"}
-                  ]}, date: '24-05-2018', time: '21:00', address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+                  ]}, dateInMillis: 0, address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
                     , players: [
                       {firstname:"Salvatore", lastname:"Amoroso"}
@@ -612,64 +612,64 @@ export class InMemoryDataService implements InMemoryDbService {
           expanded: true
           ,type: 'leaf'
           ,label: 'Francia-Croazia 4-2'
-          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
           ,children:[{
               label: 'Francia-Belgio 1-0'
-              ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+              ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
               ,expanded: true,
                   children: [{expanded: true
                       ,label: 'Francia-Uruguay 2-0'
-                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       ,children: [{expanded: true
                           ,label: 'Francia-Argentina 4-3'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }
                       ,{expanded: true
                           ,label: 'Uruguay-Portogallo 2-1'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }
                   ]}
                   ,{expanded: true
                       ,label: 'Brasile-Belgio 1-2'
-                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       ,children: [{expanded: true
                           ,label: 'Belgio-Giappone 3-2'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }
                       ,{expanded: true
                           ,label: 'Brasile-Messico 3-0'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }
                   ]}
               ]
           }
           ,{
               label: 'Croazia-Inghilterra 2-1'
-              ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+              ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
               ,expanded: true
               ,children: [
                   {expanded: true
                       ,label: 'Croazia-Russia 5-3'
-                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       ,children: [{expanded: true
                           ,label: 'Croazia-Danimarca 5-4'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }
                       ,{expanded: true
                           ,label: 'Russia-Spagna 5-3'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }]
                   }
                   ,{expanded: true
                       ,label: 'Inghilterra-Svezia 2-0'
-                      ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                      ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       ,children: [{expanded: true
                           ,label: 'Inghilterra-Colombia 2-0'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }
                       ,{expanded: true
                           ,label: 'Svezia-Svizzera 1-0'
-                          ,data: {date:"18/07/2018", location:"San Pietro Burgo"}
+                          ,data: {dateInMillis: 0, location:"San Pietro Burgo"}
                       }]
                   }
               ]                     
@@ -677,7 +677,7 @@ export class InMemoryDataService implements InMemoryDbService {
       ]}
       ]
       }, 
-      {id: 2, tourneyName: 'Festa Dell Unità 2018', date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+      {id: 2, tourneyName: 'Festa Dell Unità 2018', dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
             ,duration:"points"
             ,gender:"tourney"
             ,phases:["round", "elimination"]
@@ -705,7 +705,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         , players: [
                           {firstname:"Salvatore", lastname:"Amoroso"}
                           ,{firstname:"Luciano", lastname:"Martino"}
-                      ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                         , team2: {teamName:"SALEMI"
                         , players: [
                             {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -716,7 +716,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Massilìmiliano", lastname:"Paganotti"}
                         ,{firstname:"Samuele", lastname:"Paganotti"}
-                    ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"I DISPERATI"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"I DISPERATI"
                       , players: [
                           {firstname:"Valter", lastname:"Begamaschi"}
                         ,{firstname:"Giorgio", lastname:"Begamaschi"}
@@ -726,7 +726,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Riccardo", lastname:"Fabbro"}
                         ,{firstname:"Luciano", lastname:"Martino"}
                       ]}
-                      , date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"ARMA TEAM"
                       , players: [
                           {firstname:"Riccardo", lastname:"Armadillo"}
@@ -737,7 +737,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Micol", lastname:"Micol"}
                         ,{firstname:"Tommaso", lastname:"Tommaso"}
-                      ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"LE PANCHE"
                       , players: [
                           {firstname:"Toto", lastname:"Toto"}
@@ -748,7 +748,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Raimondo", lastname:"Brancaccio"}
                         ,{firstname:"Fabrizio", lastname:"Fabrizio"}
-                      ]}, date: '16-06-2018', time: '19:30', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"I RHODENSI"
                       , players: [
                           {firstname:"Simone", lastname:"Castronuovo"}
@@ -762,7 +762,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                         {firstname:"Salvatore", lastname:"Amoroso"}
                         ,{firstname:"Luciano", lastname:"Martino"}
-                    ]}, date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"PAGA TEAM"
                     , players: [
                         {firstname:"Massilìmiliano", lastname:"Paganotti"}
@@ -774,7 +774,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Salvatore", lastname:"Cavaliere"}
                       ,{firstname:"Emilio", lastname:"Cattaneo"}
                   ]}
-                    , date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ELEVEN"
                     , players: [
                         {firstname:"Raimondo", lastname:"Brancaccio"}
@@ -786,7 +786,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Riccardo", lastname:"Fabbro"}
                       ,{firstname:"Luciano", lastname:"Martino"}
                     ]}
-                    , date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"Atletico Mica Tanto"
                     , players: [
                         {firstname:"Micol", lastname:"Micol"}
@@ -797,7 +797,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Riccardo", lastname:"Armadillo"}
                       ,{firstname:"Tommaso", lastname:"Armadillo"}
-                    ]}, date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"LE PANCHE"
                     , players: [
                         {firstname:"Toto", lastname:"Toto"}
@@ -808,7 +808,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Valter", lastname:"Begamaschi"}
                       ,{firstname:"Giorgio", lastname:"Begamaschi"}
-                    ]}, date: '23-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"I RHODENSI"
                     , players: [
                         {firstname:"Simone", lastname:"Castronuovo"}
@@ -822,7 +822,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Simone", lastname:"Castronuovo"}
                         ,{firstname:"Andrea", lastname:"Castronuovo"}
-                      ]}, date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"PAGA TEAM"
                         , players: [
                             {firstname:"Massilìmiliano", lastname:"Paganotti"}
@@ -833,7 +833,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Salvatore", lastname:"Cavaliere"}
                       ,{firstname:"Emilio", lastname:"Cattaneo"}
                   ]}
-                    , date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ARMA TEAM"
                       , players: [
                           {firstname:"Riccardo", lastname:"Armadillo"}
@@ -844,7 +844,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Riccardo", lastname:"Fabbro"}
                       ,{firstname:"Luciano", lastname:"Martino"}
                     ]}
-                    , date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ELEVEN"
                     , players: [
                         {firstname:"Raimondo", lastname:"Brancaccio"}
@@ -855,7 +855,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Micol", lastname:"Micol"}
                       ,{firstname:"Tommaso", lastname:"Tommaso"}
-                    ]}, date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"LE PANCHE"
                     , players: [
                         {firstname:"Toto", lastname:"Toto"}
@@ -866,7 +866,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           , players: [
                               {firstname:"Valter", lastname:"Begamaschi"}
                             ,{firstname:"Giorgio", lastname:"Begamaschi"}
-                          ]}, date: '27-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                          ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                           , team2: {teamName:"SALLUC"
                           , players: [
                             {firstname:"Salvatore", lastname:"Amoroso"}
@@ -881,7 +881,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Simone", lastname:"Castronuovo"}
                         ,{firstname:"Andrea", lastname:"Castronuovo"}
-                      ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"SALEMI"
                       , players: [
                           {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -892,7 +892,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Massilìmiliano", lastname:"Paganotti"}
                       ,{firstname:"Samuele", lastname:"Paganotti"}
-                  ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                  ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                   , team2: {teamName:"ARMA TEAM"
                   , players: [
                       {firstname:"Riccardo", lastname:"Armadillo"}
@@ -904,7 +904,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"Toto", lastname:"Toto"}
                       ,{firstname:"Roberto", lastname:"Franzosi"}
                     ]}
-                    , date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"ELEVEN"
                     , players: [
                         {firstname:"Raimondo", lastname:"Brancaccio"}
@@ -915,7 +915,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Micol", lastname:"Micol"}
                       ,{firstname:"Tommaso", lastname:"Tommaso"}
-                    ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"FAMA TEAM"
                     , players: [
                         {firstname:"Riccardo", lastname:"Fabbro"}
@@ -926,7 +926,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     , players: [
                         {firstname:"Valter", lastname:"Begamaschi"}
                       ,{firstname:"Giorgio", lastname:"Begamaschi"}
-                    ]}, date: '30-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"SALLUC"
                     , players: [
                       {firstname:"Salvatore", lastname:"Amoroso"}
@@ -978,7 +978,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Salvatore", lastname:"Amoroso"}
                           ,{firstname:"Luciano", lastname:"Martino"}
                       ]}
-                        , date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                         , team2: {teamName:"SALEMI"
                         , players: [
                             {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -990,7 +990,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Savino", lastname:"Caporale"}
                         ,{firstname:"Pino", lastname:"Felini"}
                     ]}
-                      , date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"B&B"
                       , players: [
                           {firstname:"Roberto", lastname:"Bergamaschi"}
@@ -1001,7 +1001,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Raimondo", lastname:"Francaccio"}
                         ,{firstname:"Andrea", lastname:"Procopio"}
-                    ]}, date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"GROOT"
                       , players: [
                           {firstname:"Jacopo", lastname:"Meravglia"}
@@ -1012,7 +1012,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Orlando", lastname:"Zambrella"}
                         ,{firstname:"Gianfranco", lastname:"Elia"}
-                    ]}, date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
                     , players: [
                           {firstname:"Antonio", lastname:"Pietroforte"}
                         ,{firstname:"Mirco", lastname:"Pietroforte"}
@@ -1021,7 +1021,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                             {firstname:"Andrea", lastname:"Melidona"}
                           ,{firstname:"Giuseppe", lastname:"Melidona"}
-                      ]}, date: '16-06-2018', time: '20:45', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"Quota Drone"
                       , players: [
                           {firstname:"Enrico", lastname:"Chiminelli"}
@@ -1037,7 +1037,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           {firstname:"Salvatore", lastname:"Amoroso"}
                           ,{firstname:"Luciano", lastname:"Martino"}
                       ]}
-                        , date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                        , dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                         , team2: {teamName:"Maldive"
                         , players: [
                             {firstname:"Savino", lastname:"Caporale"}
@@ -1048,7 +1048,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Salvatore", lastname:"Cavaliere"}
                         ,{firstname:"Emilio", lastname:"Cattaneo"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
                     , players: [
                           {firstname:"Andrea", lastname:"Melidona"}
                         ,{firstname:"Giuseppe", lastname:"Melidona"}
@@ -1057,7 +1057,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Raimondo", lastname:"Francaccio"}
                         ,{firstname:"Andrea", lastname:"Procopio"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"Fialette"
                       , players: [
                           {firstname:"Orlando", lastname:"Zambrella"}
@@ -1068,7 +1068,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Jacopo", lastname:"Meravglia"}
                         ,{firstname:"Alessandro", lastname:"Scalise"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
                     , players: [
                           {firstname:"Antonio", lastname:"Pietroforte"}
                         ,{firstname:"Mirco", lastname:"Pietroforte"}
@@ -1077,7 +1077,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Roberto", lastname:"Bergamaschi"}
                         ,{firstname:"Valter", lastname:"Bergamaschi"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Quota Drone"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Quota Drone"
                     , players: [
                         {firstname:"Enrico", lastname:"Chiminelli"}
                       ,{firstname:"Fabio", lastname:"Chiminelli"}
@@ -1090,7 +1090,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         , players: [
                             {firstname:"Enrico", lastname:"Chiminelli"}
                           ,{firstname:"Fabio", lastname:"Chiminelli"}
-                      ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                         , team2: {teamName:"Maldive"
                         , players: [
                             {firstname:"Savino", lastname:"Caporale"}
@@ -1101,7 +1101,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Salvatore", lastname:"Cavaliere"}
                         ,{firstname:"Emilio", lastname:"Cattaneo"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"GROOT"
                       , players: [
                           {firstname:"Jacopo", lastname:"Meravglia"}
@@ -1112,7 +1112,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Raimondo", lastname:"Francaccio"}
                         ,{firstname:"Andrea", lastname:"Procopio"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
                     , players: [
                           {firstname:"Andrea", lastname:"Melidona"}
                         ,{firstname:"Giuseppe", lastname:"Melidona"}
@@ -1121,7 +1121,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Orlando", lastname:"Zambrella"}
                         ,{firstname:"Gianfranco", lastname:"Elia"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"MINGA BUN"
                     , players: [
                           {firstname:"Antonio", lastname:"Pietroforte"}
                         ,{firstname:"Mirco", lastname:"Pietroforte"}
@@ -1130,7 +1130,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Roberto", lastname:"Bergamaschi"}
                         ,{firstname:"Valter", lastname:"Bergamaschi"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
                       , players: [
                         {firstname:"Salvatore", lastname:"Amoroso"}
@@ -1145,7 +1145,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         , players: [
                             {firstname:"Enrico", lastname:"Chiminelli"}
                           ,{firstname:"Fabio", lastname:"Chiminelli"}
-                      ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                         , team2: {teamName:"SALEMI"
                         , players: [
                             {firstname:"Salvatore", lastname:"Cavaliere"}
@@ -1156,7 +1156,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Savino", lastname:"Caporale"}
                         ,{firstname:"Pino", lastname:"Felini"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                     , team2: {teamName:"GROOT"
                       , players: [
                           {firstname:"Jacopo", lastname:"Meravglia"}
@@ -1167,7 +1167,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                             {firstname:"Antonio", lastname:"Pietroforte"}
                           ,{firstname:"Mirco", lastname:"Pietroforte"}
-                      ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
+                      ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Attenti a quei 2"
                       , players: [
                             {firstname:"Andrea", lastname:"Melidona"}
                           ,{firstname:"Giuseppe", lastname:"Melidona"}
@@ -1176,7 +1176,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Orlando", lastname:"Zambrella"}
                         ,{firstname:"Gianfranco", lastname:"Elia"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)', team2: {teamName:"Poeti"
                     , players: [
                         {firstname:"Raimondo", lastname:"Francaccio"}
                       ,{firstname:"Andrea", lastname:"Procopio"}
@@ -1185,7 +1185,7 @@ export class InMemoryDataService implements InMemoryDbService {
                       , players: [
                           {firstname:"Roberto", lastname:"Bergamaschi"}
                         ,{firstname:"Valter", lastname:"Bergamaschi"}
-                    ]}, date: '16-06-2018', time: '21:00', address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
+                    ]}, dateInMillis: 0, address: 'Via Gallarate 22 - 20010 Pregnana Milanese (MI)'
                       , team2: {teamName:"Luciano Martino - Salvatore Amoroso"
                       , players: [
                         {firstname:"Salvatore", lastname:"Amoroso"}
@@ -1230,7 +1230,7 @@ export class InMemoryDataService implements InMemoryDbService {
             }  
           ]
         },
-        {id: 3, tourneyName: 'Campionato CSI 2017/2018', date: '25/10/2017', time: '20:00', address: 'Via De Sanctis, 33 - 20010 Assago (MI)'
+        {id: 3, tourneyName: 'Campionato CSI 2017/2018', dateInMillis: 0, address: 'Via De Sanctis, 33 - 20010 Assago (MI)'
               ,duration:"points"
               ,gender:"championship"
               ,phases:["round", "playoff", "elimination"]       
@@ -1267,7 +1267,7 @@ export class InMemoryDataService implements InMemoryDbService {
                          ,{firstname:"solaroNome3", lastname:"solaroCognome3"}
                          ,{firstname:"solaroNome4", lastname:"solaroCognome4"}
                      ]}
-                       , date: '25/10/2017', time: '21:15', address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:5, score2:4}
+                       , dateInMillis: 0, address:'VIA C.CANTU\' , 2/A 20813 BOVISIO MASCIAGO MB', score1:5, score2:4}
                       ,{id:2, team1: {teamName:"ORATORIO ZIBIDO G"
                       , players: [
                         {firstname:"Mimmo", lastname:"Santoro"}
@@ -1279,7 +1279,7 @@ export class InMemoryDataService implements InMemoryDbService {
                         {firstname:"ozeNome1", lastname:"ozeCognome1"}
                         ,{firstname:"ozeNome2", lastname:"ozeCognome2"}
                         ,{firstname:"ozeNome3", lastname:"ozeCognome3"}
-                    ]}, date: '24/10/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:6, score2:3}
+                    ]}, dateInMillis: 0, address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:6, score2:3}
                       ,{id:3
                       ,team1: {teamName:"AURORA PREGNANA"
                         , players: [
@@ -1338,7 +1338,7 @@ export class InMemoryDataService implements InMemoryDbService {
                           , score1:5, score2:9
                         }
                     ]
-                    , date: '25/10/2017', time: '21:00', address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:3, score2:6}
+                    , dateInMillis: 0, address:'Via Roma 110, 20010 - Pregnana Milanese (MI)', score1:3, score2:6}
                     ]
                 },
                 {id: 2, meetingName: 'GIORNATA 02'
@@ -1354,7 +1354,7 @@ export class InMemoryDataService implements InMemoryDbService {
                     ,{firstname:"afaNome2", lastname:"afaCognome2"}
                     ,{firstname:"afaNome3", lastname:"afaCognome3"}
                 ]}
-                 , date: '03/11/2017', time: '21:15', address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:3, score2:6}
+                 , dateInMillis: 0, address:'VIA PIANTANIDA 26 21040 ORIGGIO VA', score1:3, score2:6}
                   ,{id:2, team1: {teamName:"ORATORIO ZIBIDO E"
                   , players: [
                     {firstname:"ozeNome1", lastname:"ozeCognome1"}
@@ -1368,7 +1368,7 @@ export class InMemoryDataService implements InMemoryDbService {
                   ,{firstname:"Emilio", lastname:"Cattaneo"}
                   ,{firstname:"Raimondo", lastname:"Brancaccio"}
                   ,{firstname:"Giuseppe", lastname:"Lombardo"}
-              ]}, date: '04/12/2017', time: '21:30', address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:3, score2:6}
+              ]}, dateInMillis: 0, address:'VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI', score1:3, score2:6}
                   ,{id:3, team1: {teamName:"SOLAROSPORT"
                   , players: [
                     {firstname:"solaroNome1", lastname:"solaroCognome1"}

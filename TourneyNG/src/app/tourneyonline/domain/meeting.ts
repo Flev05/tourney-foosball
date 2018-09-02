@@ -5,6 +5,7 @@ import { Match } from './match';
 export interface Meeting
 {
     id?      : number;
+    name?    : string;
     date?    : string;
     time?    : string;
     address? : string;

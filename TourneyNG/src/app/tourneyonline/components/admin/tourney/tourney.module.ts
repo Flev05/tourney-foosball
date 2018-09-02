@@ -1,10 +1,15 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
+
+import {AutoCompleteModule} from 'primeng/autocomplete';
 import {TableModule}  from 'primeng/table';
 import {DialogModule}  from 'primeng/dialog';
-import {AutoCompleteModule} from 'primeng/autocomplete';
 import {SpinnerModule} from 'primeng/spinner';
+import {CheckboxModule} from 'primeng/checkbox';
+import {FieldsetModule} from 'primeng/fieldset';
+import {TooltipModule} from 'primeng/tooltip';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
@@ -15,10 +20,7 @@ import {ButtonModule} from '../../../../components/button/button';
 import {TabViewModule} from '../../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
 import {SliderModule} from '../../../../components/slider/slider';
-import {RadioButtonModule} from 'primeng/radiobutton';
-import {CheckboxModule} from 'primeng/checkbox';
-import {FieldsetModule} from 'primeng/fieldset';
-import {TooltipModule} from 'primeng/tooltip';
+import {CalendarModule} from '../../../../components/calendar/calendar';
 
 import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
@@ -47,6 +49,7 @@ import {TourneyDetailView} from './tourney-detailview';
         ,SpinnerModule
         ,FieldsetModule
         ,TooltipModule
+        ,CalendarModule
 	],
 	declarations: [
 		TourneyListView,

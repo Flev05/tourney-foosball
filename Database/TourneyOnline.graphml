@@ -41,6 +41,12 @@
 			<yjs:Arrow x:Key="7" stroke="BLACK" fill="BLACK"/>
 			<yjs:PolylineEdgeStyle x:Key="8" sourceArrow="{y:GraphMLReference 6}"/>
 			<yjs:PolylineEdgeStyle x:Key="9" targetArrow="{y:GraphMLReference 7}"/>
+			<y:SmartEdgeLabelModelParameter x:Key="10" Distance="5">
+				<y:SmartEdgeLabelModelParameter.Model>
+					<y:SmartEdgeLabelModel/>
+				</y:SmartEdgeLabelModelParameter.Model>
+			</y:SmartEdgeLabelModelParameter>
+			<yjs:PolylineEdgeStyle x:Key="11" targetArrow="{y:GraphMLReference 7}"/>
 		</y:SharedData>
 	</data>
 	<graph id="G" edgedefault="directed">
@@ -49,7 +55,7 @@
 		</data>
 		<node id="n0">
 			<data key="d2">
-				<y:RectD X="-303.81828888222026" Y="-210.25" Width="202.13657776444035" Height="364"/>
+				<y:RectD X="-236.81828888222026" Y="-130.75" Width="202.13657776444035" Height="428"/>
 			</data>
 			<data key="d4">
 				<uml:UMLNodeStyle fill="{y:GraphMLReference 1}" highlightFill="{y:GraphMLReference 2}">
@@ -67,10 +73,13 @@
 									<sys:String>matchWinnerTieBreakScores</sys:String>
 									<sys:String>matchLoserTieBreakScores</sys:String>
 									<sys:String>matchLoserScores</sys:String>
-									<sys:String>roundMatchNo</sys:String>
-									<sys:String>playoffMatchNo</sys:String>
-									<sys:String>eliminatoryMatchNo</sys:String>
+									<sys:String>roundMatchsNo</sys:String>
+									<sys:String>playoffMatchsNo</sys:String>
+									<sys:String>eliminatoryMatchsNo</sys:String>
 									<sys:String><![CDATA[roundtrip: boolean]]></sys:String>
+									<sys:String>teamsNo</sys:String>
+									<sys:String>roundNo</sys:String>
+									<sys:String>playoffNo</sys:String>
 								</x:Array>
 							</uml:UMLClassModel.attributes>
 							<uml:UMLClassModel.operations>
@@ -89,6 +98,7 @@
 			<port name="p2"/>
 			<port name="p3"/>
 			<port name="p4"/>
+			<port name="p5"/>
 		</node>
 		<node id="n1">
 			<data key="d2">
@@ -161,6 +171,7 @@
 			<port name="p1"/>
 			<port name="p2"/>
 			<port name="p3"/>
+			<port name="p4"/>
 		</node>
 		<node id="n3">
 			<data key="d2">
@@ -212,7 +223,7 @@
 		</node>
 		<node id="n4">
 			<data key="d2">
-				<y:RectD X="-572.25" Y="-358.75" Width="125" Height="156"/>
+				<y:RectD X="-198.25000000000009" Y="-358.75" Width="125" Height="156"/>
 			</data>
 			<data key="d4">
 				<uml:UMLNodeStyle fill="{y:GraphMLReference 1}" highlightFill="{y:GraphMLReference 2}">
@@ -304,6 +315,7 @@
 			</port>
 			<port name="p2"/>
 			<port name="p3"/>
+			<port name="p4"/>
 		</node>
 		<node id="n7">
 			<data key="d2">
@@ -338,6 +350,7 @@
 			<port name="p1"/>
 			<port name="p2"/>
 			<port name="p3"/>
+			<port name="p4"/>
 		</node>
 		<node id="n8">
 			<data key="d2">
@@ -365,6 +378,7 @@
 			</data>
 			<port name="p0"/>
 			<port name="p1"/>
+			<port name="p2"/>
 		</node>
 		<node id="n9">
 			<data key="d2">
@@ -446,6 +460,38 @@
 									<sys:String>scored</sys:String>
 									<sys:String>conceded</sys:String>
 									<sys:String>diff</sys:String>
+								</x:Array>
+							</uml:UMLClassModel.attributes>
+							<uml:UMLClassModel.operations>
+								<x:Array Type="sys:Object">
+									<sys:String>create</sys:String>
+									<sys:String>update</sys:String>
+									<sys:String>delete</sys:String>
+								</x:Array>
+							</uml:UMLClassModel.operations>
+						</uml:UMLClassModel>
+					</uml:UMLNodeStyle.model>
+				</uml:UMLNodeStyle>
+			</data>
+			<port name="p0"/>
+			<port name="p1"/>
+			<port name="p2"/>
+			<port name="p3"/>
+			<port name="p4"/>
+		</node>
+		<node id="n12">
+			<data key="d2">
+				<y:RectD X="-418.65914444111013" Y="-358.75" Width="125" Height="188"/>
+			</data>
+			<data key="d4">
+				<uml:UMLNodeStyle fill="#FF607D8B" highlightFill="#FFA3F1BB">
+					<uml:UMLNodeStyle.model>
+						<uml:UMLClassModel stereotype="" constraint="" className="nextTurnConfig" attributesOpen="true" operationsOpen="true">
+							<uml:UMLClassModel.attributes>
+								<x:Array Type="sys:Object">
+									<sys:String><![CDATA[id: number]]></sys:String>
+									<sys:String><![CDATA[position: number]]></sys:String>
+									<sys:String>roundName</sys:String>
 								</x:Array>
 							</uml:UMLClassModel.attributes>
 							<uml:UMLClassModel.operations>
@@ -629,7 +675,7 @@
 		<edge id="e13" source="n0" target="n4" sourceport="p4" targetport="p0">
 			<data key="d7">
 				<x:List>
-					<y:Bend Location="-202.75000000000006,-280.75"/>
+					<y:Bend Location="-135.75000000000009,-193.75"/>
 				</x:List>
 			</data>
 			<data key="d8">
@@ -785,6 +831,93 @@
 		<edge id="e23" source="n9" target="n2" sourceport="p6" targetport="p3">
 			<data key="d8">
 				<y:GraphMLReference ResourceKey="8"/>
+			</data>
+		</edge>
+		<edge id="e24" source="n12" target="n0" sourceport="p0" targetport="p5">
+			<data key="d8">
+				<yjs:PolylineEdgeStyle sourceArrow="{y:GraphMLReference 6}"/>
+			</data>
+		</edge>
+		<edge id="e25" source="n12" target="n2" sourceport="p1" targetport="p4">
+			<data key="d6">
+				<x:List>
+					<y:Label LayoutParameter="{y:GraphMLReference 10}">
+						<y:Label.Text>rounds</y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle textFill="BLACK">
+								<yjs:DefaultLabelStyle.font>
+									<yjs:Font fontSize="12"/>
+								</yjs:DefaultLabelStyle.font>
+							</yjs:DefaultLabelStyle>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d7">
+				<x:List>
+					<y:Bend Location="-356.15914444111013,-57"/>
+				</x:List>
+			</data>
+			<data key="d8">
+				<y:GraphMLReference ResourceKey="11"/>
+			</data>
+		</edge>
+		<edge id="e26" source="n12" target="n6" sourceport="p2" targetport="p4">
+			<data key="d6">
+				<x:List>
+					<y:Label LayoutParameter="{y:GraphMLReference 10}">
+						<y:Label.Text>playoffs</y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle textFill="BLACK">
+								<yjs:DefaultLabelStyle.font>
+									<yjs:Font fontSize="12"/>
+								</yjs:DefaultLabelStyle.font>
+							</yjs:DefaultLabelStyle>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d7">
+				<x:List>
+					<y:Bend Location="-356.15914444111013,145"/>
+				</x:List>
+			</data>
+			<data key="d8">
+				<y:GraphMLReference ResourceKey="11"/>
+			</data>
+		</edge>
+		<edge id="e27" source="n12" target="n7" sourceport="p3" targetport="p4">
+			<data key="d6">
+				<x:List>
+					<y:Label LayoutParameter="{y:GraphMLReference 10}">
+						<y:Label.Text>eliminatories</y:Label.Text>
+						<y:Label.Style>
+							<yjs:DefaultLabelStyle textFill="BLACK">
+								<yjs:DefaultLabelStyle.font>
+									<yjs:Font fontSize="12"/>
+								</yjs:DefaultLabelStyle.font>
+							</yjs:DefaultLabelStyle>
+						</y:Label.Style>
+					</y:Label>
+				</x:List>
+			</data>
+			<data key="d7">
+				<x:List>
+					<y:Bend Location="-356.15914444111013,339.75"/>
+				</x:List>
+			</data>
+			<data key="d8">
+				<y:GraphMLReference ResourceKey="11"/>
+			</data>
+		</edge>
+		<edge id="e28" source="n12" target="n8" sourceport="p4" targetport="p2">
+			<data key="d7">
+				<x:List>
+					<y:Bend Location="-356.15914444111013,526"/>
+				</x:List>
+			</data>
+			<data key="d8">
+				<y:GraphMLReference ResourceKey="11"/>
 			</data>
 		</edge>
 	</graph>

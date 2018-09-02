@@ -39,6 +39,8 @@ export class TourneyDetailView implements OnInit {
     phase:     string = "round";
     isOnTime:  string = "yes";
 
+    tourneyDate: Date;
+
     constructor(
         private fb: FormBuilder,
         private route: ActivatedRoute,
@@ -51,31 +53,17 @@ export class TourneyDetailView implements OnInit {
 
         this.selectedTourney = this.tourneyService.selectedTourney;
 
+        this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
+
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedTourney.address, Validators.compose([Validators.required])),
-            'date': new FormControl(this.selectedTourney.date, Validators.compose([Validators.required])),
-            'time': new FormControl(this.selectedTourney.time, Validators.compose([Validators.required])),
+            'date': new FormControl(this.tourneyDate),
         });
     }
 
     doDelete() {
         this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
-    }
-
-    onSubmit(value: string) {
-        this.submitted = true;
-
-        this.selectedTourney.tourneyName = this.tourneyFormGroup.get('tourneyName').value;
-        this.selectedTourney.address = this.tourneyFormGroup.get('address').value;
-        this.selectedTourney.date = this.tourneyFormGroup.get('date').value;
-        this.selectedTourney.time = this.tourneyFormGroup.get('time').value;
-
-        if(this.tourneyService.newTourney) {
-            this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
-        } else  {
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
-        }
     }
 
     delete() {

@@ -104,8 +104,8 @@
                     <div class="ui-grid-col-3">
                         Data e ora:
                     </div>
-                    <div class="date-width">
-                        <p-calendar formControlName="date" [locale]="it" dateFormat="dd/mm/yyyy" showTime="true">
+                    <div class="ui-grid-col-3">
+                        <p-calendar formControlName="date" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
                         </p-calendar>
                     </div>
                 </div>
@@ -114,8 +114,8 @@
                     <div class="ui-grid-col-3">
                         Disciplina:
                     </div>
-                    <div class="ui-grid-col-4">
-                        <p-dropdown [options]="typologies" formControlName="discipline" optionLabel="name"></p-dropdown>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown [options]="disciplines" formControlName="discipline" optionLabel="name"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -137,13 +137,13 @@
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Durata gara:
+                        Gara a punti o a tempo:
                     </div>
                     <div class="ui-grid-col-4" tooltipPosition="right"
                             pTooltip="Indicare se le gare terminano a tempo o a punteggio">
                         <p-radioButton name="tourneyTypeGroupname" 
                             label="A punti" 
-                            value="points" 
+                            value="score" 
                             formControlName="tourneyType">
                         </p-radioButton>
                         <p-radioButton name="tourneyTypeGroupname" 
@@ -160,7 +160,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
-                            pTooltip="Punti guadagnati per la squadra alla vincita della singola gara">
+                            pTooltip="Punti assegnati alla squadra per la vincita della singola gara">
                         </p-spinner>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
-                            pTooltip="Punti guadagnati per la squadra alla perdita della singola gara">
+                            pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
                         </p-spinner>
                     </div>
                 </div>
@@ -182,7 +182,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
-                            pTooltip="Punti guadagnati per la squadra al pareggio della singola gara">
+                            pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
                         </p-spinner>
                     </div>
                 </div>
@@ -198,13 +198,13 @@
                     </div>
                 </div>
                 
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='points'"  class="ui-grid-row">
+                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Punti per vincere:
+                        Punti necessari per vincere:
                     </div>
                     <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForWin" tooltipPosition="right"
-                            pTooltip="Quanti punti segnare per vincere la singola gara">
+                        <p-spinner formControlName="pointsNeedeToWin" tooltipPosition="right"
+                            pTooltip="Punti da segnare per aggiudicarsi la vincita nei tornei a punti">
                         </p-spinner>
                     </div>
                 </div>
@@ -230,90 +230,29 @@
                         </p-spinner>
                     </div>
                 </div>
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='points'" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Golden goal:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare se è previsto il golden goal in caso di parità ad un punto dalla vincita">
-                        <p-radioButton name="goldeGoalGroupname" 
-                            label="Si" 
-                            value="true" 
-                            formControlName="goldenGoal">
-                        </p-radioButton>
-                        <p-radioButton name="goldeGoalGroupname" 
-                            label="No" 
-                            value="false" 
-                            formControlName="goldenGoal">
-                        </p-radioButton>
-                    </div>
-                </div>
                             
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='points'" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Punti vittoria:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForWin" tooltipPosition="right"
-                            pTooltip="Punti alla vincita">
-                        </p-spinner>
-                    </div>             
-                </div>             
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='points'" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Punti sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForDefeat" tooltipPosition="right"
-                            pTooltip="Punti alla sconfitta">
-                        </p-spinner>
-                    </div>
-                </div>             
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='points'&&tourneyFormGroup.controls['goldenGoal'].value=='true'" 
+                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" 
                     class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Punti vittoria al goldel goal:
+                        Vittoria goldel goal/tie break:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="pointsGoldenGoalWin" tooltipPosition="right"
-                            pTooltip="Punti alla vincita al golden goal">
+                            pTooltip="Punti assegnati in caso di vincita al golden goal o tie break">
                         </p-spinner>
                     </div>                
                 </div>                
 
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='points'&&tourneyFormGroup.controls['goldenGoal'].value=='true'"
+                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
                     class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Punti sconfitta al goldel goal:
+                        Sconfitta al goldel goal/tie break:
                     </div>
                     <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsGoldenGoalDefeat" tooltipPosition="right"
-                            pTooltip="Punti alla sconfitta al golden goal">
-                        </p-spinner>
+                        <input formControlName="pointsGoldenGoalDefeat" tooltipPosition="right"
+                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">                        
                     </div>                            
-                </div>
-
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3" >
-                        Competizione:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare la tipologia della competizione, se semplice torneo o campionato">
-                        <p-radioButton name="genderGroupName" 
-                            label="Torneo" 
-                            value="tourney" 
-                            formControlName="gender">  
-                        </p-radioButton>
-                        <p-radioButton name="genderGroupName" 
-                            label="Campionato" 
-                            value="championship" 
-                            formControlName="gender">
-                        </p-radioButton>
-                    </div>
-                </div>                                    
+                </div>                                
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">

@@ -11,6 +11,8 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { CountryService } from '../../../service/countryservice';
 import { Country } from '../../../domain/country';
 import { Discipline } from '../../../domain/discipline';
+import { TourneyType } from '../../../domain/tourneyType';
+
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -43,7 +45,7 @@ export class TourneyDetailView implements OnInit {
     countries: Country[];
     filteredCountriesSingle: Country[];
 
-    disciplies: Discipline[];
+    disciplines: Discipline[];
 
     gender: string = "tourney";
 
@@ -65,12 +67,16 @@ export class TourneyDetailView implements OnInit {
 
     ngOnInit() {
 
+        console.log("TourneyDetailView.ngOnInit() ");
+
+        let today = new Date();
+
         this.selectedTourney = this.tourneyService.selectedTourney;
         this.countryService.loadCountries().subscribe(c => {
             this.countries = c;
         });
         this.tourneyService.loadDisciplines().subscribe(t => {
-            this.disciplies = t;
+            this.disciplines = t;
         });
 
         let teamNo = 
@@ -79,7 +85,19 @@ export class TourneyDetailView implements OnInit {
         ?this.selectedTourney.teamNo
         :this.selectedTourney.teams.length;
 
-        this.tourneyDate= new Date(this.selectedTourney.dateInMillis);
+        if(this.tourneyService.newTourney) {
+            this.tourneyDate = today;
+            this.selectedTourney.tourneyType = TourneyType.Score;
+            this.selectedTourney.matchBalanceScores = 0;
+            this.selectedTourney.matchLoserScores = 0;
+            this.selectedTourney.matchWinnerScores = 3;
+            this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
+            this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
+            this.selectedTourney.phases.push("round");
+            this.selectedTourney.phases.push("elimination");
+        } else {
+            this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
+        }
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -93,23 +111,15 @@ export class TourneyDetailView implements OnInit {
             'tourneyType': new FormControl(this.selectedTourney.tourneyType),
             'raceDuration': new FormControl(this.selectedTourney.raceDuration),
             
-            'pointsForWin': new FormControl(this.selectedTourney.pointsForWin),
-            'pointsForParity': new FormControl(this.selectedTourney.pointsForParity),
-            'pointsForDefeat': new FormControl(this.selectedTourney.pointsForDefeat),
+            'pointsNeededToWin': new FormControl(this.selectedTourney.pointsNeededToWin),
             
             'matchWinnerScores': new FormControl(this.selectedTourney.matchWinnerScores),
             'matchLoserScores': new FormControl(this.selectedTourney.matchLoserScores),
             'matchBalanceScores': new FormControl(this.selectedTourney.matchBalanceScores),
 
-            'goldenGoal': new FormControl(this.selectedTourney.goldenGoal),
-            'pointsGoldenGoalWin': new FormControl(this.selectedTourney.pointsGoldenGoalWin),
-            'pointsGoldenGoalDefeat': new FormControl(this.selectedTourney.pointsGoldenGoalDefeat),
+            'pointsGoldenGoalTieBreakWin': new FormControl(this.selectedTourney.pointsGoldenGoalTieBreakWin),
+            'pointsGoldenGoalTieBreakDefeat': new FormControl(this.selectedTourney.pointsGoldenGoalTieBreakDefeat),
 
-            'tieBreak': new FormControl(this.selectedTourney.tieBreak),
-            'pointsTieBreakWin': new FormControl(this.selectedTourney.pointsTieBreakWin),
-            'pointsTieBreakDefeat': new FormControl(this.selectedTourney.pointsTieBreakDefeat),
-
-            'gender': new FormControl(this.selectedTourney.gender),
             'phases': new FormControl(this.selectedTourney.phases),
             'roundNo': new FormControl(this.selectedTourney.roundNo),
             'teamNo': new FormControl(teamNo),
@@ -128,7 +138,6 @@ export class TourneyDetailView implements OnInit {
             clear: 'Clear'
         };
         
-        let today = new Date();
         let month = today.getMonth();
         let year = today.getFullYear();
         let prevMonth = (month === 0) ? 11 : month -1;
@@ -138,6 +147,7 @@ export class TourneyDetailView implements OnInit {
         
         let invalidDate = new Date();
         invalidDate.setDate(today.getDate() - 1);
+
     }
 
     search(event) {
@@ -163,7 +173,7 @@ export class TourneyDetailView implements OnInit {
 
         if(confirm(popup + this.selectedTourney.tourneyName + "?")) {
             this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
-            console.log("Rimosso il torneo: " + this.selectedTourney.tourneyName);
+            // console.log("Rimosso il torneo: " + this.selectedTourney.tourneyName);
           }
     }
 
@@ -182,19 +192,11 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.tourneyType = this.tourneyFormGroup.get('tourneyType').value;
         this.selectedTourney.raceDuration = this.tourneyFormGroup.get('raceDuration').value;
 
-        this.selectedTourney.pointsForWin = this.tourneyFormGroup.get('pointsForWin').value;
-        this.selectedTourney.pointsForParity = this.tourneyFormGroup.get('pointsForParity').value;
-        this.selectedTourney.pointsForDefeat = this.tourneyFormGroup.get('pointsForDefeat').value;
+        this.selectedTourney.pointsNeededToWin = this.tourneyFormGroup.get('pointsNeededToWin').value;
 
-        this.selectedTourney.goldenGoal = this.tourneyFormGroup.get('goldenGoal').value;
-        this.selectedTourney.pointsGoldenGoalWin = this.tourneyFormGroup.get('pointsGoldenGoalWin').value;
-        this.selectedTourney.pointsGoldenGoalDefeat = this.tourneyFormGroup.get('pointsGoldenGoalDefeat').value;
+        this.selectedTourney.pointsGoldenGoalTieBreakWin = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakWin').value;
+        this.selectedTourney.pointsGoldenGoalTieBreakDefeat = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakDefeat').value;
 
-        this.selectedTourney.tieBreak = this.tourneyFormGroup.get('tieBreak').value;
-        this.selectedTourney.pointsTieBreakWin = this.tourneyFormGroup.get('pointsTieBreakWin').value;
-        this.selectedTourney.pointsTieBreakDefeat = this.tourneyFormGroup.get('pointsTieBreakDefeat').value;
-
-        this.selectedTourney.gender = this.tourneyFormGroup.get('gender').value;
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
         this.selectedTourney.teamNo = this.tourneyFormGroup.get('teamNo').value;
         this.selectedTourney.roundNo = this.tourneyFormGroup.get('roundNo').value;
@@ -212,7 +214,7 @@ export class TourneyDetailView implements OnInit {
     containsPhase(value: string) : boolean{
         let phases = this.tourneyFormGroup.get('phases').value;
 
-        console.log("selectedTourney.phases: " + phases);
+        // console.log("selectedTourney.phases: " + phases);
 
         for(let i=0; i<phases.length; i++ ) {
             if(phases[i].toLowerCase().indexOf(value) == 0) {

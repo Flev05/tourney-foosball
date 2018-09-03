@@ -22,28 +22,19 @@ export interface Tourney {
     tourneyType?: TourneyType;
     raceDuration?: number;
 
-    gender?: string;
     phases?: [string];
 
     matchWinnerScores?: number;
     matchLoserScores?: number;
     matchBalanceScores?: number;
 
+    pointsNeededToWin? : number;
+    pointsGoldenGoalTieBreakWin? : number;
+    pointsGoldenGoalTieBreakDefeat? : number;
+
     teamNo?: number;
     roundNo?: number;
     eliminationLevel?: number;
-
-    pointsForWin? : number;
-    pointsForDefeat? : number;
-    pointsForParity? : number;
-    
-    goldenGoal?: boolean;
-    pointsGoldenGoalWin? : number;
-    pointsGoldenGoalDefeat? : number;
-
-    tieBreak?: boolean;
-    pointsTieBreakWin? : number;
-    pointsTieBreakDefeat? : number;
 
     rounds?: [ Round ];
     playoffs?: [ Round ];

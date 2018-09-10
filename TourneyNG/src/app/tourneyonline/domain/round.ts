@@ -1,7 +1,7 @@
-import { Calendar } from './calendar';
 import { Classification } from './classification';
 import { Team } from './team';
 import { RoundConfig } from './round-config';
+import { Meeting } from './meeting';
 
 export interface Round extends RoundConfig {
     id?: number;
@@ -9,6 +9,6 @@ export interface Round extends RoundConfig {
 
     direction?: string;
     teams?: [ Team ];
-    calendars?: [ Calendar ];
+    calendars?: [ Meeting ];
     classification?: [ Classification ];
 }

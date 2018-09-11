@@ -1,6 +1,6 @@
-import { MeetingConfig } from './meeting-config';
+import { NextRoundConfig } from './next-round-config';
 
-export interface EliminationConfig extends MeetingConfig {
+export interface EliminationConfig extends NextRoundConfig {
 
    roundTrip?: boolean;
 }

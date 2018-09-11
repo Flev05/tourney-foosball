@@ -1,4 +1,4 @@
-export interface MeetingConfig {
+export interface NextRoundConfig {
 
     racesNo?: number;
     atBestOf?: boolean;

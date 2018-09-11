@@ -44,7 +44,7 @@
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>{{selectedTourney.tourneyName}}</span></h4>
+    <h4><span>Torneo {{selectedTourney.tourneyName}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -130,6 +130,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="teamNo" tooltipPosition="right"
+                            [min]="1"
                             pTooltip="Indicativo, il numero effettivo di squadre è determinato da quelle realmente inserite">
                         </p-spinner>
                     </div>
@@ -160,6 +161,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
+                            [min]="1"
                             pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
                         </p-spinner>
                     </div>
@@ -171,6 +173,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
+                            [min]="0"
                             pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
                         </p-spinner>
                     </div>
@@ -182,6 +185,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
+                            [min]="0"
                             pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
                         </p-spinner>
                     </div>
@@ -193,6 +197,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="raceDuration" tooltipPosition="right"
+                            [min]="1"
                             pTooltip="Indicare il tempo di durata in minuti della singola gara">
                         </p-spinner>
                     </div>
@@ -203,7 +208,8 @@
                         Punti necessari per vincere:
                     </div>
                     <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsNeedeToWin" tooltipPosition="right"
+                        <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
+                            [min]="1"
                             pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
                         </p-spinner>
                     </div>
@@ -215,6 +221,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="pointsForDefeat" tooltipPosition="right"
+                            [min]="0"
                             pTooltip="Punti alla perdita della singola gara">
                         </p-spinner>
                     </div>
@@ -226,6 +233,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="pointsForParity" tooltipPosition="right"
+                            [min]="0"
                             pTooltip="Punti in caso di pareggio della singola gara">
                         </p-spinner>
                     </div>
@@ -237,7 +245,8 @@
                         Vittoria goldel goal/tie break:
                     </div>
                     <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsGoldenGoalWin" tooltipPosition="right"
+                        <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                            [min]="0"
                             pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                         </p-spinner>
                     </div>                
@@ -249,8 +258,10 @@
                         Sconfitta al goldel goal/tie break:
                     </div>
                     <div class="ui-grid-col-1">
-                        <input formControlName="pointsGoldenGoalDefeat" tooltipPosition="right"
-                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">                        
+                        <p-spinner formControlName="pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                            [min]="0"
+                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                        </p-spinner>
                     </div>                            
                 </div>                                
 
@@ -281,6 +292,7 @@
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="roundNo" tooltipPosition="right"
+                            [min]="1"
                             pTooltip="Il numero effettivo di gironi deve essere inserito a questo livello">
                         </p-spinner>
                     </div>
@@ -291,7 +303,7 @@
                         Possibili eliminatorie:
                     </div>
                     <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Le possibili eliminatorie sono calcolate automaticamente dal sistema in funzione del numero di squadre e numero di gironi configurati">
+                            pTooltip="Scegliere la fase ad eliminazione diretta di partenza">
                         <p-radioButton *ngFor="let l of levels" 
                             name="eliminationGroupName" 
                             [label]="l.label" 

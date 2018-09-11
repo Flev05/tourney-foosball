@@ -79,11 +79,6 @@ export class TourneyDetailView implements OnInit {
             this.disciplines = t;
         });
 
-        let teamNo = 
-        this.selectedTourney.teams===undefined
-        // this.selectedTourney.teams==[]
-        ?this.selectedTourney.teamNo
-        :this.selectedTourney.teams.length;
 
         if(this.tourneyService.newTourney) {
             this.tourneyDate = today;
@@ -91,13 +86,24 @@ export class TourneyDetailView implements OnInit {
             this.selectedTourney.matchBalanceScores = 0;
             this.selectedTourney.matchLoserScores = 0;
             this.selectedTourney.matchWinnerScores = 3;
+            this.selectedTourney.teamNo = 0;
+            this.selectedTourney.roundNo = 1;
+            this.selectedTourney.teams = undefined;
+            this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
             this.selectedTourney.phases.push("round");
             this.selectedTourney.phases.push("elimination");
+            this.tourneyDate = new Date();
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }
+
+        let teamNo = 
+        this.selectedTourney.teams===undefined
+        // this.selectedTourney.teams==[]
+        ?this.selectedTourney.teamNo
+        :this.selectedTourney.teams.length;
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -123,7 +129,7 @@ export class TourneyDetailView implements OnInit {
             'phases': new FormControl(this.selectedTourney.phases),
             'roundNo': new FormControl(this.selectedTourney.roundNo),
             'teamNo': new FormControl(teamNo),
-            'eliminationLevel': new FormControl(this.selectedTourney.eliminationLevel),
+            'eliminationLevel': new FormControl(this.selectedTourney.eliminationLevel),            
         });
 
         this.it = {
@@ -186,6 +192,9 @@ export class TourneyDetailView implements OnInit {
 
         this.tourneyDate = this.tourneyFormGroup.get('date').value;
         this.selectedTourney.dateInMillis = this.tourneyDate.getMilliseconds();
+
+        this.selectedTourney.dateAsString = this.tourneyDate.toLocaleDateString();
+        this.selectedTourney.timeAsString = this.tourneyDate.toLocaleTimeString();
 
         this.selectedTourney.discipline = this.tourneyFormGroup.get('discipline').value;
         

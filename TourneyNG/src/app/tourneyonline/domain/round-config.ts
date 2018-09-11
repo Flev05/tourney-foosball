@@ -1,7 +1,6 @@
-import { Calendar } from './calendar';
-import { MeetingConfig } from './meeting-config';
+import { NextRoundConfig } from './next-round-config';
 
-export interface RoundConfig extends MeetingConfig {
+export interface RoundConfig extends NextRoundConfig {
 
     teamsNo?: number;
     roundTrip?: boolean;

@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { Tourney } from '../../../domain/tourney';
-import { Round } from '../../../domain/round';
-import { Calendar } from '../../../domain/calendar';
 import { Meeting } from '../../../domain/meeting';
 import { TourneyService } from '../../../service/tourneyservice';
 import { CalendarDetailView } from '../calendar/calendar-detailview';

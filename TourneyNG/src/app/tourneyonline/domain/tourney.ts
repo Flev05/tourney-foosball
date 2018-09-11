@@ -8,12 +8,14 @@ import { RoundConfig } from './round-config';
 import { PlayoffConfig } from './playoff-config';
 import { EliminationConfig } from './elimination-config';
 import { TourneyType } from './tourneyType';
-import { Time } from '@angular/common';
+import { Final } from './final';
 
 export interface Tourney {
     id?: number;
     tourneyName? : string;
     dateInMillis? : number;
+    dateAsString? : string;
+    timeAsString? : string;
     address? : string;
     country? : Country;
     

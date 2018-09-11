@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 
-import { Calendar } from '../../../domain/calendar';
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
 

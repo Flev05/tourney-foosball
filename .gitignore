@@ -52,4 +52,5 @@ build.metadata
 **/tourney-ws/
 **/gradle.properties
 **/local.properties
+**/dist/
 

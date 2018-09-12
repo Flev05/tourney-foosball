@@ -8,6 +8,8 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
+import { Player } from '../domain/player';
+import { Round } from '../domain/round';
 import { Discipline } from '../domain/discipline';
 import { environment } from '../../../environments/environment';
 
@@ -26,6 +28,8 @@ export class TourneyService {
 
     selectedTourney : Tourney;
     selectedMeeting : Meeting;
+    selectedPlayer : Player;
+    selectedRound : Round;
 
     tourneys: Tourney[];
 

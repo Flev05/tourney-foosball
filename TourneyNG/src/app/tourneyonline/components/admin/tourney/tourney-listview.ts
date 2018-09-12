@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
+import { AbstractTourneyListView } from '../../common/tourney-listview';
 
 const redirect: string = '/admintourney/dv';
 
 @Component({
     templateUrl: './tourney-listview.html'
 })
-export class TourneyListView implements OnInit {
+export class TourneyListView extends AbstractTourneyListView {
 
     selectedTourney: Tourney;
 
@@ -18,8 +19,8 @@ export class TourneyListView implements OnInit {
 
     cols: any[];
 
-    constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("TourneyListView.constructor()");
+    constructor(protected tourneyService: TourneyService, public router: Router) { 
+        super(redirect, tourneyService, router);
     }
 
     ngOnInit() {
@@ -31,8 +32,8 @@ export class TourneyListView implements OnInit {
 
         this.cols = [
             { field: 'tourneyName', header: 'Nome' },
-            { field: 'date', header: 'Data' },
-            { field: 'time', header: 'Ora' },
+            { field: 'dateAsString', header: 'Data' },
+            { field: 'timeAsString', header: 'Ora' },
             { field: 'address', header: 'Indirizzo' }
         ];
     }
@@ -51,10 +52,6 @@ export class TourneyListView implements OnInit {
         this.tourneyService.newTourney = false;
 
         this.gotoDetailView();
-    }
-  
-    private gotoDetailView() {
-        this.router.navigate([redirect]);
     }
 
     cloneTourney(c: Tourney): Tourney {

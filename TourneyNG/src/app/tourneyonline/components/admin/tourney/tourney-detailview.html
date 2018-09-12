@@ -44,7 +44,7 @@
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>Torneo {{selectedTourney.tourneyName}}</span></h4>
+    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -90,13 +90,14 @@
                             
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        <label for="country-id">Comune</label>
+                        <label for="country-id">Comune:</label>
                     </div>
                     <div class="ui-grid-col-5">
                         <p-autoComplete id="country-id" formControlName="country" 
                             [suggestions]="filteredCountriesSingle" 
                             (completeMethod)="search($event)" field="city"
-                            placeholder="Comuni" [minLength]="1"></p-autoComplete>
+                            placeholder="Comuni" [minLength]="1">
+                        </p-autoComplete>
                     </div>
                 </div>
             
@@ -124,21 +125,9 @@
             <p-tabPanel header="Caratteristiche">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
-                <div class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Numero squadre:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="teamNo" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Indicativo, il numero effettivo di squadre è determinato da quelle realmente inserite">
-                        </p-spinner>
-                    </div>
-                </div>
-
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Gara a punti o a tempo:
+                        Le gare terminano a:
                     </div>
                     <div class="ui-grid-col-4" tooltipPosition="right"
                             pTooltip="Indicare se le gare terminano a tempo o a punteggio">
@@ -157,7 +146,41 @@
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Punti alla vittoria:
+                        Fasi di svolgimento:
+                    </div>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
+                        <p-checkbox  name="phasesGroupname" label="Gironi"       
+                            value="round"      
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox >
+                        <p-checkbox name="phasesGroupname" label="Play Off"     
+                            value="playoff"     
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox >
+                        <p-checkbox  name="phasesGroupname" label="Eliminatorie" 
+                            value="elimination" 
+                            [formControl]="tourneyFormGroup.controls['phases']">
+                        </p-checkbox >
+                    </div>
+                </div>
+
+                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Si vince ai:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
+                        </p-spinner>
+                    </div>
+                </div>
+
+                <p-fieldset legend="Punteggi">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Vittoria:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
@@ -169,7 +192,7 @@
     
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Punti alla sconfitta:
+                        Sconfitta:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
@@ -181,7 +204,7 @@
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Punti al pareggio:
+                        Pareggio:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
@@ -190,6 +213,7 @@
                         </p-spinner>
                     </div>
                 </div>
+                </p-fieldset>
                                                             
                 <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
                     <div class="ui-grid-col-3">
@@ -199,18 +223,6 @@
                         <p-spinner formControlName="raceDuration" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Indicare il tempo di durata in minuti della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-                
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Punti necessari per vincere:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
                         </p-spinner>
                     </div>
                 </div>
@@ -239,10 +251,11 @@
                     </div>
                 </div>
                             
+                <p-fieldset legend="Goldel goal o Tie break">
                 <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" 
                     class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Vittoria goldel goal/tie break:
+                        Vittoria:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
@@ -255,7 +268,7 @@
                 <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
                     class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Sconfitta al goldel goal/tie break:
+                        Sconfitta:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
@@ -264,43 +277,48 @@
                         </p-spinner>
                     </div>                            
                 </div>                                
-
-                <div class="ui-grid-row">
+                </p-fieldset>
+ 
+                <p-fieldset legend="Struttura del torneo">
+                <div class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Fasi svolgimento:
+                        Squadre:
                     </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare le fasi di cui è composta la competizione">
-                        <p-checkbox  name="phasesGroupname" label="Gironi"       
-                            value="round"      
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                        <p-checkbox name="phasesGroupname" label="Play Off"     
-                            value="playoff"     
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                        <p-checkbox  name="phasesGroupname" label="Eliminatorie" 
-                            value="elimination" 
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="teamNo" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Indicativo, il numero effettivo di squadre è determinato da quelle realmente inserite">
+                        </p-spinner>
                     </div>
                 </div>
-    
+
                 <div *ngIf="containsPhase('round')" class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Numero gironi:
+                        Gironi:
                     </div>
                     <div class="ui-grid-col-1">
                         <p-spinner formControlName="roundNo" tooltipPosition="right"
                             [min]="1"
-                            pTooltip="Il numero effettivo di gironi deve essere inserito a questo livello">
+                            pTooltip="Inserire il numero effettivo di gironi all'italiana che si intende organizzare">
+                        </p-spinner>
+                    </div>
+                </div>
+
+                <div *ngIf="containsPhase('playoff')" class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Playoff:
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-spinner formControlName="playoffNo" tooltipPosition="right"
+                            [min]="0"
+                            pTooltip="Inserire il numero effettivo di gironi di playoff che si intende organizzare">
                         </p-spinner>
                     </div>
                 </div>
 
                 <div *ngIf="containsPhase('elimination')" class="ui-grid-row" >
                     <div class="ui-grid-col-3">
-                        Possibili eliminatorie:
+                        Eliminazione diretta:
                     </div>
                     <div class="ui-grid-col-4" tooltipPosition="right"
                             pTooltip="Scegliere la fase ad eliminazione diretta di partenza">
@@ -312,10 +330,11 @@
                         </p-radioButton>
                     </div>
                 </div>                    
+                </p-fieldset>
             </div>
             </p-tabPanel>
 
-            <p-tabPanel header="Struttura">
+            <p-tabPanel header="Componenti" pTooltip="Scheda per caricare squadre e giocatori">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             </div>
             </p-tabPanel>            

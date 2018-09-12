@@ -58,6 +58,7 @@
             </a>
             <div [ngClass]="{submenushow: (managermenutitle.id == activeMenuId), 'submenuhide': (managermenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
+                <a [routerLink]="['/adminplayer']" (click)="menuActive = false">&#9679; Giocatori</a>
                 <a [routerLink]="['/adminround']" (click)="menuActive = false">&#9679; Gironi</a>
                 <a [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Password</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>

@@ -1,0 +1,64 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Giocatori</span>
+        <span>Giocatori del torneo: {{selectedTourney.tourneyName}}</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Vista elenco di tutti giocatori che compongono il torneo: 
+        {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
+    </p>
+</div>
+
+<div class="content-section implementation">    
+    <p-table [value]="rows" [responsive]="true" 
+        selectionMode="single"
+        [(selection)]="selectedPlayer" 
+        (onRowSelect)="onRowSelect($event)" 
+        [paginator]="true" 
+        [rows]="15">
+
+        <ng-template pTemplate="caption">
+            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Giocatore" ></button>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col style="width: auto;">
+                <col style="width: auto;">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Telefono</th>
+                <th>Email</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr>
+                <td>{{rowData.firstname}}</td>
+                <td>{{rowData.lastname}}</td>
+                <td>{{rowData.phoneNumber}}</td>
+                <td>{{rowData.email}}</td>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Giocatore" ></button>
+            </div>
+        </ng-template>        
+        
+    </p-table>
+
+</div>
+    

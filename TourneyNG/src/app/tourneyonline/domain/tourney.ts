@@ -36,6 +36,7 @@ export interface Tourney {
 
     teamNo?: number;
     roundNo?: number;
+    playoffNo?: number;
     eliminationLevel?: number;
 
     finals?: [ Final ];

@@ -1,11 +1,64 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
- 
-import { Observable } from 'rxjs';
-
+ import {TourneyType} from './tourneyType';
 
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
-      const tourneys = [];
+      const tourneys = [
+        {id: 1, tourneyName: 'Summer week 2018'
+        ,dateInMillis: 1543606200000
+        ,dateAsString: "2018/11/30"
+        ,timeAsString: "20:30:00"
+        ,address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+        ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+        ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
+
+        ,tourneyType: TourneyType.Score
+
+        ,phases:["round", "elimination"]
+
+        ,raceDuration:90
+
+        ,matchWinnerScores:3
+        ,matchLoserScores:0
+        ,matchBalanceScores:1
+        
+        ,pointsNeededToWin:9
+        ,pointsGoldenGoalTieBreakWin:0
+        ,pointsGoldenGoalTieBreakDefeat:1
+
+        ,teamNo:32
+        ,roundNo:2
+        ,playoffNo:0
+        ,eliminationLevel:16
+        ,players:[
+          {firstname:"Salvatore", lastname:"Amoroso"}
+         ,{firstname:"Luciano", lastname:"Martino"}
+         ,{firstname:"Salvatore", lastname:"Cavaliere"}
+         ,{firstname:"Emilio", lastname:"Cattaneo"}
+         ,{firstname:"Massilìmiliano", lastname:"Paganotti"}
+         ,{firstname:"Samuele", lastname:"Paganotti"}
+         ,{firstname:"Roberto", lastname:"Begamaschi"}
+         ,{firstname:"Valter", lastname:"Begamaschi"}
+         ,{firstname:"Riccardo", lastname:"Armadillo"}
+         ,{firstname:"Tommaso", lastname:"Armadillo"}
+         ,{firstname:"Raimondo", lastname:"Brancaccio"}
+         ,{firstname:"Simone", lastname:"Castronuovo"}
+         ,{firstname:"Riccardo", lastname:"Fabbro"}
+         ,{firstname:"Roberto", lastname:"Franzosi"}
+         ,{firstname:"Jacopo", lastname:"Meravglia"}
+         ,{firstname:"Alessandro", lastname:"Scalise"}
+         ,{firstname:"Orlando", lastname:"Zambrella"}
+         ,{firstname:"Gianfranco", lastname:"Elia"}
+         ,{firstname:"Antonio", lastname:"Pietroforte"}
+         ,{firstname:"Mirco", lastname:"Pietroforte"}
+         ,{firstname:"Andrea", lastname:"Melidona"}
+         ,{firstname:"Giuseppe", lastname:"Melidona"}
+         ,{firstname:"Enrico", lastname:"Chiminelli"}
+         ,{firstname:"Savino", lastname:"Caporale"}
+         ,{firstname:"Pino", lastname:"Felini"}
+       ]  
+      }
+    ];
 
       const login = [
       { id: 1

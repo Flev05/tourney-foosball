@@ -86,8 +86,9 @@ export class TourneyDetailView implements OnInit {
             this.selectedTourney.matchBalanceScores = 0;
             this.selectedTourney.matchLoserScores = 0;
             this.selectedTourney.matchWinnerScores = 3;
-            this.selectedTourney.teamNo = 0;
+            this.selectedTourney.teamNo = 1;
             this.selectedTourney.roundNo = 1;
+            this.selectedTourney.playoffNo = 0;
             this.selectedTourney.teams = undefined;
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
@@ -128,6 +129,7 @@ export class TourneyDetailView implements OnInit {
 
             'phases': new FormControl(this.selectedTourney.phases),
             'roundNo': new FormControl(this.selectedTourney.roundNo),
+            'playoffNo': new FormControl(this.selectedTourney.playoffNo),
             'teamNo': new FormControl(teamNo),
             'eliminationLevel': new FormControl(this.selectedTourney.eliminationLevel),            
         });
@@ -191,7 +193,7 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.country = this.tourneyFormGroup.get('country').value;
 
         this.tourneyDate = this.tourneyFormGroup.get('date').value;
-        this.selectedTourney.dateInMillis = this.tourneyDate.getMilliseconds();
+        this.selectedTourney.dateInMillis = this.tourneyDate.getTime();
 
         this.selectedTourney.dateAsString = this.tourneyDate.toLocaleDateString();
         this.selectedTourney.timeAsString = this.tourneyDate.toLocaleTimeString();
@@ -209,6 +211,7 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
         this.selectedTourney.teamNo = this.tourneyFormGroup.get('teamNo').value;
         this.selectedTourney.roundNo = this.tourneyFormGroup.get('roundNo').value;
+        this.selectedTourney.playoffNo = this.tourneyFormGroup.get('playoffNo').value;
         this.selectedTourney.eliminationLevel = this.tourneyFormGroup.get('eliminationLevel').value;
 
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);

@@ -4,6 +4,7 @@ import { Round } from '../../domain/round';
 import { Meeting } from '../../domain/meeting';
 import { TourneyService } from '../../service/tourneyservice';
 import { AbstractTourneyDetailView } from './tourney-detailview';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
 
 export abstract class RoundDetailView extends AbstractTourneyDetailView {
 
@@ -11,8 +12,8 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
 
     protected rows: any[] = [];
 
-    constructor(protected tourneyService: TourneyService, protected location: Location) {
-        super(tourneyService, location);
+    constructor(protected tourneyService: TourneyService, protected location: Location, protected countryService: CountryService ) {
+        super(tourneyService, location, countryService);
     }
 
     ngOnInit() {

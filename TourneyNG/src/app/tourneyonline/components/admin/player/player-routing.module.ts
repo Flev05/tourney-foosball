@@ -9,7 +9,7 @@ import {PlayerDetailView} from './player-detailview';
 		RouterModule.forChild([
 			{ path: '', component: PlayerTourneyListView },
 			{ path: 'lv', component: PlayerListView },
-			{ path: 'dv', component: PlayerDetailView },
+			{ path: 'lv/dv', component: PlayerDetailView },
 		])
 	],
 	exports: [

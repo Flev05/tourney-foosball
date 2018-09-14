@@ -1,6 +1,7 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
+import {AccordionModule} from 'primeng/accordion';
 
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {TableModule}  from 'primeng/table';
@@ -50,6 +51,7 @@ import {TourneyDetailView} from './tourney-detailview';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
+        ,AccordionModule
 	],
 	declarations: [
 		TourneyListView,

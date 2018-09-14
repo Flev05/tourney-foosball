@@ -13,7 +13,8 @@
 </div>
 
 <div class="content-section implementation">    
-    <p-table [value]="rows" [responsive]="true" 
+    <p-table [columns]="cols" 
+        [value]="players" [responsive]="true" 
         selectionMode="single"
         [(selection)]="selectedPlayer" 
         (onRowSelect)="onRowSelect($event)" 
@@ -27,7 +28,23 @@
             </div>
         </ng-template>
 
-        <ng-template pTemplate="colgroup" let-columns>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+        
+        <!-- <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: auto;">
                 <col style="width: auto;">
@@ -50,7 +67,7 @@
                 <td>{{rowData.phoneNumber}}</td>
                 <td>{{rowData.email}}</td>
             </tr>
-        </ng-template>
+        </ng-template> -->
     
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">

@@ -5,41 +5,188 @@
     </div>
 </div>
 
-<p-fieldset legend="Istruzioni" [toggleable]="true">
 <div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Introduzione">            
+        <p>Vista di dettaglio di un torneo.
+            Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno già esistente.
+            Per utenti non connessi, ovvero non in possesso di un account, si possono creare
+            nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
+            tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
+            inseriti saranno persi.
+            Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
+            nella pagina         
+            <a class="home-button" [routerLink]="['/owner']">
+                Versione Noleggio
+            </a>
+        </p>
+    </p-accordionTab>
 
-    <p>Vista di dettaglio di un torneo.
-        Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno esistente
-        Per utenti non connessi, ovvero non in possesso di un account, si possono creare
-        nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
-        tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
-        inseriti saranno persi.
-        Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
-        nella pagina         
-        <a class="home-button" [routerLink]="['/owner']">
-            Versione Noleggio
-        </a>
-    </p>
+    <p-accordionTab header="Nuovo torneo">            
+        <h3>Creare un nuovo torneo</h3>
+        <p>La creazione di un nuovo torneo è organizzata nei seguenti passi elementari:</p>
+        <ul>
+            <li>Definizione caratteristiche</li>
+            <li>Caricamento anagrafica giocatori</li>
+            <li>Configurazione squadre</li>
+            <li>Configurazione gironi</li>
+            <li>Configurazione playoff</li>
+            <li>Passaggio di turno</li>
+            <li>Calendario</li>
+        </ul>            
+    
+        <h4>Definizione caratteristiche</h4>
+        <p>
+            La definizione delle caratteristiche deve essere effettuata nella vista di dettaglio accessibile della voce di menù: 
+            <a class="home-button" [routerLink]="['/admintourney']" (click)="menuActive = false">Tornei</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
+            ed accederete alla corrispondente vista di dettaglio.
+            La vista espone 2 schede: una per l'anagrafica e una per le caratteristiche del torneo.
+            Nelle caratteristiche devono essere specificate tra le altre cose, anche se prevista la fass ad eliminazione diretta.
+            L'elimiazione diretta non è obbligatoria e dipende dalla natura del torneo, alcuni la prevedono altri no.
+            In pratica le eliminazioni dirette possono essere viste come mini gironi all'italiana in cui il girone
+            è composto di due squadre in cui passa solo la prima classificata.
+            Compilate tutti i campi obbligatori e salvare con il bottone Salva.             
+        </p>
 
-    <h4>Creare un nuovo torneo</h4>
-    <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-        il bottone Salva
-        I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
-    </p>
+        <h4>Caricamento anagrafica giocatori</h4>
+        <p>
+            I giocatori che partecipano al torneo devono essere caricati a sistema inserendo i loro
+            dati anagrafici. La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
+            ed accederete alla vista elenco di tutti i giocatori del torneo.
+            Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
+            modificare i valori dei campi esistenti.
+            Se invece volete inserire un nuovo giocatore, premete il bottone: "Nuovo Giocatore" ed accederete alla
+            vista di dettaglio del giocatore nella quale dovete compilare tutti i campi obbligatori.
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+        </p>
+        
+        <h4>Configurazione squadre</h4>
+        <p>
+            Le squadre che compongono il torneo, devono essere create a valle della creazione dei giocatori.
+            Una squadra contiene un sottoinsieme dei giocatori del torneo.
+            La vista preposta allo scopo è accessibile alla voce di menù:
+            <a class="home-button" [routerLink]="['/adminteam']" (click)="menuActive = false">Squadre</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
+            ed accederete alla corrispondente lista elenco di tutte le squadre del torneo.
+            Se selezionate una dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
+            modificare i valori dei campi esistenti.
+            Se invece volete inserire una nuova squadra, premete il bottone: "Nuova Squadra" ed accederete alla
+            vista di dettaglio della squadra nella quale potete effettuare la composizione della vostra squadra 
+            inserendo il suo nome ed attingendo dalla lista dei giocatori disponibili non ancora inseriti in altre squadre.
+            Nel momento in cui il giocatore va a far parte di una squadra automaticamente viene rimosso dal sistema
+            dalla lista dei giocatori disponibili.
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+        </p>
+        
+        <h4>Configurazione gironi</h4>
+        <p>
+            I gironi sono intesi come quelli all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+            Il torneo contiene sempre almeno un girone, nel caso di campionato, ci sarà un unico girone che contiene
+            tutte le squadre del torneo.
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/admintour']" (click)="menuActive = false">Gironi</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
+            ed accederete alla vista elenco di tutti i gironi del torneo.
+            Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
+            modificare i valori dei campi esistenti.
+            Se invece volete inserire un nuovo girone, premete il bottone: "Nuovo Girone" ed accederete alla
+            vista di dettaglio del girone nella quale potete effettuare la composizione del vostro girone 
+            inserendo il suo nome ed attingendo dalla lista delle squadre disponibili non ancora inseriti in altri gironi.
+            Nel momento in cui la squadra va a far parte di un girone automaticamente viene rimossa dal sistema
+            dalla lista delle squadre disponibili.
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+        </p>
+            
+        <h4>Configurazione playoff</h4>
+        <p>
+            I playoff non sono obbligatori e dipende dalla natura del torneo, alcuni li prevedono altri no.
+            Anche i playoff sono gironi all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayoff']" (click)="menuActive = false">Playoff</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei che prevedono i playoff, 
+            selezionate quello di vostro interesse ed accederete alla vista elenco di tutti i playoff del torneo.
+            Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
+            modificare i valori dei campi esistenti.
+            Se invece volete inserire un nuovo playoff, premete il bottone: "Nuovo Playoff" ed accederete alla
+            vista di dettaglio del playoff nella quale potete effettuare la composizione del vostro playoff 
+            inserendo il suo nome e il numero di squadre previste, il popolamento dei playoff non viene 
+            specificato in questa fase ma in quella della configurazione del passaggio di turno.
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+        </p>
 
-    <h4>Modificare un torneo</h4>
-    <p>Si possono modifiselectedCare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
-        non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-        essere svuotati.
-        Alla fine dell'operazione salvare con il bottone Salva
-    </p>
-    <h4>Rimuovere un torneo</h4>
-    <p>Si può rimuovere un torneo esistente con il bottore Rimuovi.
-        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il torneo
-        sarà rimosso dal sistema.
-    </p>
+        <h4>Passaggio di turno</h4>
+        <p>
+            Il passaggio del turno deve essere ben specificato per ogni fase dell'evoluzione del torneo.
+            Tutto deve essere chiaro e ben definito come passare dai gironi ai playoff o direttamente al risultato finale.
+            Come passare dai gironi/playoff alle eliminatore, come impostare il primo livello di partenza delle eliminatorie,
+            se ci sono una o più squadre che vincono il torneo, tipico dei campionati di calcio di serie B in cui 
+            salgono 3 o 4 squadre in serie A, ecc.
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminrule']" (click)="menuActive = false">Regole</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali configurare il passaggio dei turni, 
+            selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
+            In questa vista dovete scegliere se volete la configurazione:
+        </p> 
+        <ul>
+            <li>Automatica</li>
+            <li>Manuale</li>
+        </ul>         
+            
+        <h5>Automatica</h5>
+        <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
+            senza playoff. In questo caso dovete specificare il numero di squadre che volete passino dai gironi alla 
+            fase ad eliminazione diretta, potere inserire qualsiasi numero minore o uguale al numero totale delle
+            squadre che compongono il torneo, ci pensa il sistama sistemarle nell'opportuno livello di eliminatorie iniziale:            
+            sedicesimi, ottavi di finale, ecc.
+        </p> 
+        
+        <h5>Manuale</h5>
+        <p>La gestione manuale permette qualsiasi configurazione del passaggio del turno, combinando tutti i casi 
+            dai gironi, ai playoff alle eliminatorie, dai playoff alle eliminatorie ecc.        
+            Nella vista dovete creare una riga per ogni regola di passaggio di turno. 
+            Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
+            di ciasun girone ai quarti di finale (inteso come livello di partenza), dovete inserire, con il bottone 
+            "Aggiungi Regola" le seguenti 4 regole in cui esprimete che:
+        </p> 
+        <ul>
+            <li>la 1° classificata del 1° girone gioca con la 2° classificata del 4° girone</li>
+            <li>la 1° classificata del 2° girone gioca con la 2° classificata del 3° girone</li>
+            <li>la 1° classificata del 3° girone gioca con la 2° classificata del 2° girone</li>
+            <li>la 1° classificata del 4° girone gioca con la 2° classificata del 1° girone</li>
+        </ul>         
+     
+
+        <p>Nelle regole la colonna FASE indica la destinazione della regola, per esempio PLAYOFF significa che
+            la riga si riferisce a come popolare i playoff 
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+        </p>
+    
+    
+    </p-accordionTab>
+
+    <p-accordionTab header="Gestione torneo">    
+        <p>Per gestione del torneo si intende la possibilità di modificare i suoi dati solo nella parte interessata: 
+            un nome, una data, un indirizzo, ecc. e di rimuovere completamente il torneo perchè non si ha più bisogno 
+        </p>        
+        <h4>Modificare un torneo</h4>
+        <p>Si possono modificare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
+            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+            essere svuotati.
+            Alla fine dell'operazione salvare con il bottone Salva
+        </p>
+        <h4>Rimuovere un torneo</h4>
+        <p>Si può rimuovere un torneo esistente con il bottore Rimuovi.
+            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il torneo
+            sarà rimosso dal sistema. L'operazione di rimozione è distruttuiva e non può essere più recuperata
+        </p>
+    </p-accordionTab>
+</p-accordion>
 </div>
-</p-fieldset>
 
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
@@ -127,7 +274,7 @@
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Le gare terminano a:
+                        Gara:
                     </div>
                     <div class="ui-grid-col-4" tooltipPosition="right"
                             pTooltip="Indicare se le gare terminano a tempo o a punteggio">
@@ -144,201 +291,149 @@
                     </div>
                 </div>
 
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Fasi di svolgimento:
+                <p-fieldset legend="Fasi">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Fasi di svolgimento:
+                        </div>
+                        <div class="ui-grid-col-4" tooltipPosition="right"
+                                pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
+                            <p-checkbox  name="phasesGroupname" label="Gironi"       
+                                value="round"      
+                                [formControl]="tourneyFormGroup.controls['phases']">
+                            </p-checkbox >
+                            <p-checkbox name="phasesGroupname" label="Play Off"     
+                                value="playoff"     
+                                [formControl]="tourneyFormGroup.controls['phases']">
+                            </p-checkbox >
+                            <p-checkbox  name="phasesGroupname" label="Eliminatorie" 
+                                value="elimination" 
+                                [formControl]="tourneyFormGroup.controls['phases']">
+                            </p-checkbox >
+                        </div>
                     </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
-                        <p-checkbox  name="phasesGroupname" label="Gironi"       
-                            value="round"      
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                        <p-checkbox name="phasesGroupname" label="Play Off"     
-                            value="playoff"     
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                        <p-checkbox  name="phasesGroupname" label="Eliminatorie" 
-                            value="elimination" 
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                    </div>
-                </div>
 
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Si vince ai:
+                    <div *ngIf="containsPhase('round')" class="ui-grid-row" >
+                        <div class="ui-grid-col-3">
+                            Gironi:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="roundNo" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Inserire il numero effettivo di gironi all'italiana che si intende organizzare">
+                            </p-spinner>
+                        </div>
                     </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
-                        </p-spinner>
-                    </div>
-                </div>
 
+                    <div *ngIf="containsPhase('playoff')" class="ui-grid-row" >
+                        <div class="ui-grid-col-3">
+                            Playoff:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="playoffNo" tooltipPosition="right"
+                                [min]="0"
+                                pTooltip="Inserire il numero effettivo di gironi di playoff che si intende organizzare">
+                            </p-spinner>
+                        </div>
+                    </div>
+                </p-fieldset>
+                    
                 <p-fieldset legend="Punteggi">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Vittoria:
+                    <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Si vince ai:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
+                            </p-spinner>
+                        </div>
+                        <div class="ui-grid-col-3">
+                            punti
+                        </div>
                     </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-    
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
 
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Pareggio:
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Vittoria:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
+                            </p-spinner>
+                        </div>
                     </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
-                        </p-spinner>
+        
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Sconfitta:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
+                                [min]="0"
+                                pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
+                            </p-spinner>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Pareggio:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
+                                [min]="0"
+                                pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
+                            </p-spinner>
+                        </div>
+                    </div>
                 </p-fieldset>
                                                             
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Tempo di gara:
+                <p-fieldset legend="Durata" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Minuti:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="raceDuration" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Indicare il tempo di durata in minuti della singola gara">
+                            </p-spinner>
+                        </div>
                     </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="raceDuration" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Indicare il tempo di durata in minuti della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Punti sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForDefeat" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti alla perdita della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Punti per il pareggio:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForParity" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti in caso di pareggio della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
+                </p-fieldset>
                             
-                <p-fieldset legend="Goldel goal o Tie break">
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" 
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Vittoria:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
-                        </p-spinner>
+                <p-fieldset legend="Goldel goal o Tie break" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'">
+                    <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" 
+                        class="ui-grid-row" >
+                        <div class="ui-grid-col-3">
+                            Vittoria:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                                [min]="0"
+                                pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                            </p-spinner>
+                        </div>                
                     </div>                
-                </div>                
 
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
-                        </p-spinner>
-                    </div>                            
-                </div>                                
-                </p-fieldset>
- 
-                <p-fieldset legend="Struttura del torneo">
-                <div class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Squadre:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="teamNo" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Indicativo, il numero effettivo di squadre è determinato da quelle realmente inserite">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="containsPhase('round')" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Gironi:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="roundNo" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Inserire il numero effettivo di gironi all'italiana che si intende organizzare">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="containsPhase('playoff')" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Playoff:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="playoffNo" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Inserire il numero effettivo di gironi di playoff che si intende organizzare">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="containsPhase('elimination')" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Eliminazione diretta:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Scegliere la fase ad eliminazione diretta di partenza">
-                        <p-radioButton *ngFor="let l of levels" 
-                            name="eliminationGroupName" 
-                            [label]="l.label" 
-                            [value]="l.value" 
-                            formControlName="eliminationLevel">
-                        </p-radioButton>
-                    </div>
-                </div>                    
-                </p-fieldset>
+                    <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
+                        class="ui-grid-row" >
+                        <div class="ui-grid-col-3">
+                            Sconfitta:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                                [min]="0"
+                                pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                            </p-spinner>
+                        </div>                            
+                    </div>                                
+                </p-fieldset> 
             </div>
             </p-tabPanel>
-
-            <p-tabPanel header="Componenti" pTooltip="Scheda per caricare squadre e giocatori">
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            </div>
-            </p-tabPanel>            
-
         </p-tabView>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">

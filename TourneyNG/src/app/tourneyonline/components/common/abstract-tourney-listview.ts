@@ -7,15 +7,16 @@ import { AbstractListView } from './abstract-listview';
 export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected tourneys: Tourney[];
-
-    cols: any[];
+    protected selectedTourney: Tourney;
+    protected cols: any[];
+    toggleable: boolean = false;
 
     constructor(protected redirect: string, protected tourneyService: TourneyService, public router: Router) { 
         super(redirect, tourneyService, router);
     }
 
     ngOnInit() {
-        console.log("TourneyListView.ngOnInit()");
+        console.log("AbstractTourneyListView.ngOnInit()");
 
         this.loadTourney();
 
@@ -28,7 +29,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     }
 
     protected loadTourney() {
-        console.log("Entering TourneyListView.loadTourney()");
+        console.log("Entering AbstractTourneyListView.loadTourney()");
         this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
     }
 

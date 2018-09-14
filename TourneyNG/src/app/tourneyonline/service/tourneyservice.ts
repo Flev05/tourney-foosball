@@ -34,11 +34,19 @@ export class TourneyService {
     tourneys: Tourney[];
 
     newTourney : boolean = false;
+    newPlayer : boolean = false;
 
     firstTime : boolean = true;
 
+    private sequenceNumber: number = 0;
+
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
+        this.sequenceNumber++;
+    }
+
+    getSequenceNumber() {
+        return this.sequenceNumber++;
     }
 
     loadTourneySmall (): Observable<Tourney[]> {

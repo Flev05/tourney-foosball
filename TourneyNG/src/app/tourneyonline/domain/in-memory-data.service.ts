@@ -30,32 +30,10 @@ export class InMemoryDataService implements InMemoryDbService {
         ,roundNo:2
         ,playoffNo:0
         ,eliminationLevel:16
+        
         ,players:[
           {firstname:"Salvatore", lastname:"Amoroso"}
          ,{firstname:"Luciano", lastname:"Martino"}
-         ,{firstname:"Salvatore", lastname:"Cavaliere"}
-         ,{firstname:"Emilio", lastname:"Cattaneo"}
-         ,{firstname:"Massilìmiliano", lastname:"Paganotti"}
-         ,{firstname:"Samuele", lastname:"Paganotti"}
-         ,{firstname:"Roberto", lastname:"Begamaschi"}
-         ,{firstname:"Valter", lastname:"Begamaschi"}
-         ,{firstname:"Riccardo", lastname:"Armadillo"}
-         ,{firstname:"Tommaso", lastname:"Armadillo"}
-         ,{firstname:"Raimondo", lastname:"Brancaccio"}
-         ,{firstname:"Simone", lastname:"Castronuovo"}
-         ,{firstname:"Riccardo", lastname:"Fabbro"}
-         ,{firstname:"Roberto", lastname:"Franzosi"}
-         ,{firstname:"Jacopo", lastname:"Meravglia"}
-         ,{firstname:"Alessandro", lastname:"Scalise"}
-         ,{firstname:"Orlando", lastname:"Zambrella"}
-         ,{firstname:"Gianfranco", lastname:"Elia"}
-         ,{firstname:"Antonio", lastname:"Pietroforte"}
-         ,{firstname:"Mirco", lastname:"Pietroforte"}
-         ,{firstname:"Andrea", lastname:"Melidona"}
-         ,{firstname:"Giuseppe", lastname:"Melidona"}
-         ,{firstname:"Enrico", lastname:"Chiminelli"}
-         ,{firstname:"Savino", lastname:"Caporale"}
-         ,{firstname:"Pino", lastname:"Felini"}
        ]  
       }
     ];

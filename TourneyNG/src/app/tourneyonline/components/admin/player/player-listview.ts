@@ -7,7 +7,7 @@ import { Player } from '../../../domain/player';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 
-const redirect: string = "adminplayer/dv";
+const redirect: string = "adminplayer/lv/dv";
 
 @Component({
     templateUrl: './player-listview.html'
@@ -24,11 +24,13 @@ export class PlayerListView extends AbstractListView {
     selectedTourney: Tourney;
     selectedPlayer: Player;
     rows: any[] = [];
+    cols: any[];
 
     players: [Player];
 
     ngOnInit() {
         super.ngOnInit();
+      
         this.updateRowGroupMetaData();
     }
 
@@ -40,12 +42,19 @@ export class PlayerListView extends AbstractListView {
         for (let row = 0; row < this.players.length; row++) {
             this.rows.push(this.players[row]);
         }
+
+        this.cols = [
+            { field: 'firstname', header: 'Nome' },
+            { field: 'lastname', header: 'Cognome' },
+            { field: 'phoneNumber', header: 'Telefono' },
+            { field: 'address', header: 'Indirizzo' },
+        ];        
     }
 
     create() {
-        this.selectedPlayer={id: 0, firstname: "", lastname: "", address: ""};
+        this.selectedPlayer={};
         this.tourneyService.selectedPlayer = this.selectedPlayer;
-        this.tourneyService.newTourney = true;
+        this.tourneyService.newPlayer = true;
         this.gotoDetailView();
     }
 

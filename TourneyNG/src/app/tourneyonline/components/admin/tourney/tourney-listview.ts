@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
-import { AbstractTourneyListView } from '../../common/tourney-listview';
+import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 
 const redirect: string = '/admintourney/dv';
 
@@ -12,34 +12,16 @@ const redirect: string = '/admintourney/dv';
 })
 export class TourneyListView extends AbstractTourneyListView {
 
-    selectedTourney: Tourney;
-
-    tourneys: Tourney[];
-    toggleable: boolean = false;
-
-    cols: any[];
-
     constructor(protected tourneyService: TourneyService, public router: Router) { 
         super(redirect, tourneyService, router);
     }
 
     ngOnInit() {
-        console.log("TourneyListView.ngOnInit()");
-
-        this.tourneyService.loadTourneySmall().subscribe(cs => this.tourneys = cs);
-
-        this.tourneyService.newTourney = false;
-
-        this.cols = [
-            { field: 'tourneyName', header: 'Nome' },
-            { field: 'dateAsString', header: 'Data' },
-            { field: 'timeAsString', header: 'Ora' },
-            { field: 'address', header: 'Indirizzo' }
-        ];
+        super.ngOnInit();
     }
 
     create() {
-        this.selectedTourney={id: 0, tourneyName: "", address: "", rounds:[{}], phases:[""]};
+        this.selectedTourney={};
         this.tourneyService.selectedTourney = this.selectedTourney;
         this.tourneyService.newTourney = true;
         this.gotoDetailView();

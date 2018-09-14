@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-import {ConfirmationService} from 'primeng/api';
 
-import {Message} from '../../../../components/common/api';
+import { Message } from '../../../../components/common/api';
 
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
@@ -12,26 +11,23 @@ import { CountryService } from '../../../service/countryservice';
 import { Country } from '../../../domain/country';
 import { Discipline } from '../../../domain/discipline';
 import { TourneyType } from '../../../domain/tourneyType';
+import { AbstractDetailView } from '../../common/abstract-detailview';
 
 
 @Component({
     templateUrl: './tourney-detailview.html',
-    providers: [ConfirmationService],
-    styles: [`        
-        .ui-g label {
-          font-weight: bold;
-          margin-top: .25em;
-          display: block;
-        }
-        .date-width {
-            width: 30mm;
-        }
-        .time-width {
-            width: 20mm;
-        }
-  `]
 })
-export class TourneyDetailView implements OnInit {
+export class TourneyDetailView extends AbstractDetailView {
+
+    constructor(
+        private fb: FormBuilder,
+        protected location: Location,
+        protected tourneyService: TourneyService,
+        protected countryService: CountryService,
+    ) { 
+        super(tourneyService, location, countryService);
+    }
+
     selectedTourney: Tourney;
 
     tourneyDate: Date;
@@ -42,28 +38,9 @@ export class TourneyDetailView implements OnInit {
 
     submitted: boolean;
 
-    countries: Country[];
-    filteredCountriesSingle: Country[];
-
     disciplines: Discipline[];
 
     gender: string = "tourney";
-
-    levels= [{label:"Quarti",value:4}
-        ,{label:"Ottavi",value:8}
-        ,{label:"Sedicesimi",value:16}
-    ];
-    eliminationLevel:number=4;
-
-    it: any;
-
-    constructor(
-        private fb: FormBuilder,
-        private location: Location,
-        private confirmationService: ConfirmationService,
-        private tourneyService: TourneyService,
-        private countryService: CountryService,
-    ) {}
 
     ngOnInit() {
 
@@ -131,31 +108,7 @@ export class TourneyDetailView implements OnInit {
             'roundNo': new FormControl(this.selectedTourney.roundNo),
             'playoffNo': new FormControl(this.selectedTourney.playoffNo),
             'teamNo': new FormControl(teamNo),
-            'eliminationLevel': new FormControl(this.selectedTourney.eliminationLevel),            
         });
-
-        this.it = {
-        	firstDayOfWeek: 1,
-        	dayNames: [ "domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato" ],
-        	dayNamesShort: [ "dom","lun","mar","mer","gio","ven","sab" ],
-        	dayNamesMin: [ "D","L","M","M","G","V","S" ],
-            monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre"
-            ,"Novembre","Dicembre" ],
-        	monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic" ],
-            today: 'Oggi',
-            clear: 'Clear'
-        };
-        
-        let month = today.getMonth();
-        let year = today.getFullYear();
-        let prevMonth = (month === 0) ? 11 : month -1;
-        let prevYear = (prevMonth === 11) ? year - 1 : year;
-        let nextMonth = (month === 11) ? 0 : month + 1;
-        let nextYear = (nextMonth === 0) ? year + 1 : year;
-        
-        let invalidDate = new Date();
-        invalidDate.setDate(today.getDate() - 1);
-
     }
 
     search(event) {
@@ -180,13 +133,15 @@ export class TourneyDetailView implements OnInit {
         let popup = 'Sicuro di voler rimuovere il torneo: ';
 
         if(confirm(popup + this.selectedTourney.tourneyName + "?")) {
-            this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+            this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
             // console.log("Rimosso il torneo: " + this.selectedTourney.tourneyName);
           }
     }
 
     onSubmit(value: string) {
         this.submitted = true;
+
+        this.selectedTourney.id = this.tourneyService.getSequenceNumber(); 
 
         this.selectedTourney.tourneyName = this.tourneyFormGroup.get('tourneyName').value;
         this.selectedTourney.address = this.tourneyFormGroup.get('address').value;
@@ -212,14 +167,13 @@ export class TourneyDetailView implements OnInit {
         this.selectedTourney.teamNo = this.tourneyFormGroup.get('teamNo').value;
         this.selectedTourney.roundNo = this.tourneyFormGroup.get('roundNo').value;
         this.selectedTourney.playoffNo = this.tourneyFormGroup.get('playoffNo').value;
-        this.selectedTourney.eliminationLevel = this.tourneyFormGroup.get('eliminationLevel').value;
 
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 
         if(this.tourneyService.newTourney) {
-            this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
+            this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());  
         } else  {
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
         }
     }
 
@@ -236,24 +190,6 @@ export class TourneyDetailView implements OnInit {
         return false;
     }
 
-    delete() {
-        this.confirmationService.confirm({
-            message: 'Vuoi rimuovere il torneo dal database?',
-            header: 'Conferma la rimozione',
-            icon: 'pi pi-info-circle',
-            accept: () => {
-                this.doDelete();
-                this.msgs = [{severity:'info', summary:'Confirmed', detail:'Record deleted'}];
-            },
-            reject: () => {
-                this.msgs = [{severity:'info', summary:'Rejected', detail:'You have rejected'}];
-            }
-        });
-    }
-
-    next(n:any) {
-    }
-
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;
@@ -264,13 +200,5 @@ export class TourneyDetailView implements OnInit {
             msgerr = 'Modifica torneo fallita';
         }
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
-    }
-
-    onComplete() {
-        this.goBack();  
-    }
-
-    goBack(): void {
-        this.location.back();
     }
 }

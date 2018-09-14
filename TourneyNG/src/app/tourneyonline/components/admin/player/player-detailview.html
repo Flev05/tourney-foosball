@@ -1,42 +1,33 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Gestione torneo</span>
-        <span>Creare o modificare un torneo</span>
+        <span class="feature-title">Gestione anagrafica giocatore</span>
+        <span>Creare o modificare anagrafica giocatore</span>
     </div>
 </div>
 
 <p-fieldset legend="Istruzioni" [toggleable]="true">
 <div class="content-section documentation">
 
-    <p>Vista di dettaglio di un torneo.
-        Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno esistente
-        Per utenti non connessi, ovvero non in possesso di un account, si possono creare
-        nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
-        tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
-        inseriti saranno persi.
-        Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
-        nella pagina         
-        <a class="home-button" [routerLink]="['/owner']">
-            Versione Noleggio
-        </a>
+    <p>Vista di dettaglio anagrafica giocatore.
+        Da questa vista potete creare, modificare o rimuovere l'anagrafica di un giocatore.
     </p>
 
-    <h4>Creare un nuovo torneo</h4>
+    <h4>Creare una nuova anagrafica giocatore</h4>
     <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-        il bottone Salva
+        il bottone Salva.
         I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
     </p>
 
-    <h4>Modificare un torneo</h4>
-    <p>Si possono modifiselectedCare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
+    <h4>Modificare anagrafica giocatore</h4>
+    <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
         non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
         essere svuotati.
         Alla fine dell'operazione salvare con il bottone Salva
     </p>
-    <h4>Rimuovere un torneo</h4>
-    <p>Si può rimuovere un torneo esistente con il bottore Rimuovi.
-        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il torneo
-        sarà rimosso dal sistema.
+    <h4>Rimuovere anagrafica giocatore</h4>
+    <p>Si può rimuovere l'anagrafica di un giocatore esistente con il bottore Rimuovi.
+        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
+        sarà rimossa dal sistema.
     </p>
 </div>
 </p-fieldset>
@@ -44,310 +35,86 @@
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+    <h4><span>Giocatore: {{selectedPlayer.firstname}} {{selectedPlayer.lastname}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
-    <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
-        <p-tabView>
-            <p-tabPanel header="Anagrafica">
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Nome Torneo:
-                    </div>
-                    <div class="ui-grid-col-5">                                
-                        <input pInputText type="text" formControlName="tourneyName"/>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['tourneyName'].valid&&tourneyFormGroup.controls['tourneyName'].dirty">
-                            <i class="fa fa-close"></i>
-                            <span *ngIf="tourneyFormGroup.controls['tourneyName'].errors['required']">
-                                Il nome del torneo è obbligatorio
-                            </span>
-                        </div>
+    <form [formGroup]="playerFormGroup" (ngSubmit)="onSubmit(playerFormGroup.value)">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Nome:
+                </div>
+                <div class="ui-grid-col-5">                                
+                    <input pInputText type="text" formControlName="firstname"/>
+                </div>
+                <div class="ui-grid-col-3">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['firstname'].valid&&playerFormGroup.controls['firstname'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="playerFormGroup.controls['firstname'].errors['required']">
+                            Il nome del giocatore è obbligatorio
+                        </span>
                     </div>
                 </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Cognome:
+                </div>
+                <div class="ui-grid-col-5">                                
+                    <input pInputText type="text" formControlName="lastname"/>
+                </div>
+                <div class="ui-grid-col-3">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['lastname'].valid&&playerFormGroup.controls['lastname'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="playerFormGroup.controls['lastname'].errors['required']">
+                            Il cognome del giocatore è obbligatorio
+                        </span>
+                    </div>
+                </div>
+            </div>
                 
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Indirizzo:
-                    </div>
-                    <div class="ui-grid-col-5">
-                        <input pInputText type="text" formControlName="address"/>
-                    </div>
-                    <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['address'].valid&&tourneyFormGroup.controls['address'].dirty">
-                            <i class="fa fa-close"></i>
-                            <span *ngIf="tourneyFormGroup.controls['address'].errors['required']">
-                                L'indirizzo è obbligatorio
-                            </span>
-                        </div>
-                    </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo:
                 </div>
-                            
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <label for="country-id">Comune:</label>
-                    </div>
-                    <div class="ui-grid-col-5">
-                        <p-autoComplete id="country-id" formControlName="country" 
-                            [suggestions]="filteredCountriesSingle" 
-                            (completeMethod)="search($event)" field="city"
-                            placeholder="Comuni" [minLength]="1">
-                        </p-autoComplete>
-                    </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="address"/>
                 </div>
-            
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Data e ora:
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-calendar formControlName="date" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
-                        </p-calendar>
-                    </div>
-                </div>
-
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Disciplina:
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown [options]="disciplines" formControlName="discipline" optionLabel="name"></p-dropdown>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['address'].valid&&playerFormGroup.controls['address'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="playerFormGroup.controls['address'].errors['required']">
+                            L'indirizzo del giocatore è obbligatorio
+                        </span>
                     </div>
                 </div>
             </div>
-            </p-tabPanel>
-
-            <p-tabPanel header="Caratteristiche">
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Le gare terminano a:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare se le gare terminano a tempo o a punteggio">
-                        <p-radioButton name="tourneyTypeGroupname" 
-                            label="A punti" 
-                            value="score" 
-                            formControlName="tourneyType">
-                        </p-radioButton>
-                        <p-radioButton name="tourneyTypeGroupname" 
-                            label="A tempo" 
-                            value="time" 
-                            formControlName="tourneyType">
-                        </p-radioButton>
-                    </div>
+                        
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    <label for="country-id">Comune:</label>
                 </div>
-
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Fasi di svolgimento:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
-                        <p-checkbox  name="phasesGroupname" label="Gironi"       
-                            value="round"      
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                        <p-checkbox name="phasesGroupname" label="Play Off"     
-                            value="playoff"     
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                        <p-checkbox  name="phasesGroupname" label="Eliminatorie" 
-                            value="elimination" 
-                            [formControl]="tourneyFormGroup.controls['phases']">
-                        </p-checkbox >
-                    </div>
+                <div class="ui-grid-col-5">
+                    <p-autoComplete id="country-id" formControlName="country" 
+                        [suggestions]="filteredCountriesSingle" 
+                        (completeMethod)="search($event)" field="city"
+                        placeholder="Comuni" [minLength]="1">
+                    </p-autoComplete>
                 </div>
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Si vince ai:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <p-fieldset legend="Punteggi">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Vittoria:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-    
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Pareggio:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-                </p-fieldset>
-                                                            
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Tempo di gara:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="raceDuration" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Indicare il tempo di durata in minuti della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Punti sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForDefeat" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti alla perdita della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Punti per il pareggio:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsForParity" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti in caso di pareggio della singola gara">
-                        </p-spinner>
-                    </div>
-                </div>
-                            
-                <p-fieldset legend="Goldel goal o Tie break">
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" 
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Vittoria:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
-                        </p-spinner>
-                    </div>                
-                </div>                
-
-                <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Sconfitta:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
-                        </p-spinner>
-                    </div>                            
-                </div>                                
-                </p-fieldset>
- 
-                <p-fieldset legend="Struttura del torneo">
-                <div class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Squadre:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="teamNo" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Indicativo, il numero effettivo di squadre è determinato da quelle realmente inserite">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="containsPhase('round')" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Gironi:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="roundNo" tooltipPosition="right"
-                            [min]="1"
-                            pTooltip="Inserire il numero effettivo di gironi all'italiana che si intende organizzare">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="containsPhase('playoff')" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Playoff:
-                    </div>
-                    <div class="ui-grid-col-1">
-                        <p-spinner formControlName="playoffNo" tooltipPosition="right"
-                            [min]="0"
-                            pTooltip="Inserire il numero effettivo di gironi di playoff che si intende organizzare">
-                        </p-spinner>
-                    </div>
-                </div>
-
-                <div *ngIf="containsPhase('elimination')" class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
-                        Eliminazione diretta:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Scegliere la fase ad eliminazione diretta di partenza">
-                        <p-radioButton *ngFor="let l of levels" 
-                            name="eliminationGroupName" 
-                            [label]="l.label" 
-                            [value]="l.value" 
-                            formControlName="eliminationLevel">
-                        </p-radioButton>
-                    </div>
-                </div>                    
-                </p-fieldset>
             </div>
-            </p-tabPanel>
-
-            <p-tabPanel header="Componenti" pTooltip="Scheda per caricare squadre e giocatori">
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            </div>
-            </p-tabPanel>            
-
-        </p-tabView>
+        </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!playerFormGroup.valid"></button>
                 </div>
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!tourneyFormGroup.valid"></button>
+                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!playerFormGroup.valid"></button>
                 </div>
             </div>
         </div>

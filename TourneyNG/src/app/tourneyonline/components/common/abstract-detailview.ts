@@ -32,8 +32,10 @@ export abstract class AbstractDetailView implements OnInit {
         	dayNames: [ "domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato" ],
         	dayNamesShort: [ "dom","lun","mar","mer","gio","ven","sab" ],
         	dayNamesMin: [ "D","L","M","M","G","V","S" ],
-            monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre"
-            ,"Novembre","Dicembre" ],
+            
+            monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno"
+                         ,"Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
+
         	monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic" ],
             today: 'Oggi',
             clear: 'Clear'
@@ -75,4 +77,5 @@ export abstract class AbstractDetailView implements OnInit {
         }
         return filtered;
     }
+
 }

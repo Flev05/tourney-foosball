@@ -165,8 +165,6 @@
             la riga si riferisce a come popolare i playoff 
             In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
         </p>
-    
-    
     </p-accordionTab>
 
     <p-accordionTab header="Gestione torneo">    
@@ -253,7 +251,7 @@
                         Data e ora:
                     </div>
                     <div class="ui-grid-col-3">
-                        <p-calendar formControlName="date" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                        <p-calendar formControlName="tourneyDate" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
                         </p-calendar>
                     </div>
                 </div>
@@ -413,7 +411,7 @@
                         </div>
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
-                                [min]="0"
+                                [min]="1"
                                 pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                             </p-spinner>
                         </div>                

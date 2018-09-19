@@ -8,7 +8,6 @@ import { Message } from '../../../../components/common/api';
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
 import { CountryService } from '../../../service/countryservice';
-import { Country } from '../../../domain/country';
 import { Discipline } from '../../../domain/discipline';
 import { TourneyType } from '../../../domain/tourneyType';
 import { AbstractDetailView } from '../../common/abstract-detailview';
@@ -43,22 +42,22 @@ export class TourneyDetailView extends AbstractDetailView {
     gender: string = "tourney";
 
     ngOnInit() {
-
         console.log("TourneyDetailView.ngOnInit() ");
 
+        super.ngOnInit();
+        
         let today = new Date();
 
-        this.selectedTourney = this.tourneyService.selectedTourney;
-        this.countryService.loadCountries().subscribe(c => {
-            this.countries = c;
-        });
         this.tourneyService.loadDisciplines().subscribe(t => {
             this.disciplines = t;
         });
 
+        this.selectedTourney = this.tourneyService.selectedTourney;
 
         if(this.tourneyService.newTourney) {
             this.tourneyDate = today;
+            this.selectedTourney.tourneyName = "";
+            this.selectedTourney.address = "";
             this.selectedTourney.tourneyType = TourneyType.Score;
             this.selectedTourney.matchBalanceScores = 0;
             this.selectedTourney.matchLoserScores = 0;
@@ -66,13 +65,19 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.teamNo = 1;
             this.selectedTourney.roundNo = 1;
             this.selectedTourney.playoffNo = 0;
-            this.selectedTourney.teams = undefined;
+
+            this.selectedTourney.finals = [{}];
+            this.selectedTourney.rounds = [{}];
+            this.selectedTourney.playoffs = [{}];
+            this.selectedTourney.eliminations = [{}];
+            this.selectedTourney.teams = [{}];
+            this.selectedTourney.players = [{}];
+
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
-            this.selectedTourney.phases.push("round");
+            this.selectedTourney.phases=["round"];
             this.selectedTourney.phases.push("elimination");
-            this.tourneyDate = new Date();
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }
@@ -88,7 +93,7 @@ export class TourneyDetailView extends AbstractDetailView {
             'address': new FormControl(this.selectedTourney.address, Validators.compose([Validators.required])),
             'country': new FormControl(this.selectedTourney.country),
 
-            'date': new FormControl(this.tourneyDate),
+            'tourneyDate': new FormControl(this.tourneyDate),
 
             'discipline': new FormControl(this.selectedTourney.discipline),
 
@@ -116,18 +121,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.filteredCountriesSingle =this.filterCountry(query, this.countries);
     }
 
-    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-    filterCountry(query, countries: Country[]) : Country[] {
-        let filtered : Country[] = [];
-        for(let i = 0; i < countries.length; i++) {
-            let country = countries[i];
-            if(country.city.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
-        }
-        return filtered;
-    }
-
     doDelete() {
         console.log("doDelete(): " + this.selectedTourney.tourneyName);
         let popup = 'Sicuro di voler rimuovere il torneo: ';
@@ -147,7 +140,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.address = this.tourneyFormGroup.get('address').value;
         this.selectedTourney.country = this.tourneyFormGroup.get('country').value;
 
-        this.tourneyDate = this.tourneyFormGroup.get('date').value;
+        this.tourneyDate = this.tourneyFormGroup.get('tourneyDate').value;
         this.selectedTourney.dateInMillis = this.tourneyDate.getTime();
 
         this.selectedTourney.dateAsString = this.tourneyDate.toLocaleDateString();

@@ -5,32 +5,33 @@
     </div>
 </div>
 
-<p-fieldset legend="Istruzioni" [toggleable]="true">
 <div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>Vista di dettaglio anagrafica giocatore.
+            Da questa vista potete creare, modificare o rimuovere l'anagrafica di un giocatore.
+        </p>
 
-    <p>Vista di dettaglio anagrafica giocatore.
-        Da questa vista potete creare, modificare o rimuovere l'anagrafica di un giocatore.
-    </p>
+        <h4>Creare una nuova anagrafica giocatore</h4>
+        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
+            il bottone Salva.
+            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+        </p>
 
-    <h4>Creare una nuova anagrafica giocatore</h4>
-    <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-        il bottone Salva.
-        I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
-    </p>
-
-    <h4>Modificare anagrafica giocatore</h4>
-    <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
-        non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-        essere svuotati.
-        Alla fine dell'operazione salvare con il bottone Salva
-    </p>
-    <h4>Rimuovere anagrafica giocatore</h4>
-    <p>Si può rimuovere l'anagrafica di un giocatore esistente con il bottore Rimuovi.
-        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
-        sarà rimossa dal sistema.
-    </p>
+        <h4>Modificare anagrafica giocatore</h4>
+        <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
+            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+            essere svuotati.
+            Alla fine dell'operazione salvare con il bottone Salva
+        </p>
+        <h4>Rimuovere anagrafica giocatore</h4>
+        <p>Si può rimuovere l'anagrafica di un giocatore esistente con il bottore Rimuovi.
+            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
+            sarà rimossa dal sistema.
+        </p>
+    </p-accordionTab>
+</p-accordion>
 </div>
-</p-fieldset>
 
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
@@ -94,6 +95,40 @@
                 </div>
             </div>
                         
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Telefono:
+                </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="phoneNumber"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['phoneNumber'].valid&&playerFormGroup.controls['phoneNumber'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="playerFormGroup.controls['phoneNumber'].errors['required']">
+                            Il numero di telefono del giocatore è obbligatorio
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    E-mail:
+                </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="email"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['email'].valid&&playerFormGroup.controls['email'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="playerFormGroup.controls['email'].errors['required']">
+                            L'indirizzo e-mail del giocatore è obbligatorio
+                        </span>
+                    </div>
+                </div>
+            </div>
+                                            
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
                     <label for="country-id">Comune:</label>

@@ -32,8 +32,8 @@ export class InMemoryDataService implements InMemoryDbService {
         ,eliminationLevel:16
         
         ,players:[
-          {firstname:"Salvatore", lastname:"Amoroso"}
-         ,{firstname:"Luciano", lastname:"Martino"}
+          {id:1,firstname:"Salvatore", lastname:"Amoroso"}
+         ,{id:2,firstname:"Luciano", lastname:"Martino"}
        ]  
       }
     ];

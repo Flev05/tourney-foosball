@@ -38,7 +38,7 @@ export class TourneyService {
 
     firstTime : boolean = true;
 
-    private sequenceNumber: number = 0;
+    private sequenceNumber: number = 1000;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

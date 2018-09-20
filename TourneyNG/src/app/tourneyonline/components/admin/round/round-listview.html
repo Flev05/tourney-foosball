@@ -1,0 +1,59 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Gironi</span>
+        <span>Gironi del torneo: {{selectedTourney.tourneyName}}</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Vista elenco di tutti i gironi che compongono il torneo: 
+        {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
+    </p>
+</div>
+
+<div class="content-section implementation">    
+    <p-table [columns]="cols" 
+        [value]="rounds" [responsive]="true" 
+        selectionMode="single"
+        [(selection)]="selectedRound" 
+        (onRowSelect)="onRowSelect($event)" 
+        [paginator]="true" 
+        [rows]="15">
+
+        <ng-template pTemplate="caption">
+            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Girone" ></button>
+            </div>
+        </ng-template>
+ 
+        <ng-template pTemplate="colgroup">
+            <colgroup>
+                <col style="width: auto;">
+                <col style="width: auto;">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Nome</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr  [pSelectableRow]="rowData">
+                <td>{{rowData.name}}</td>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Girone" ></button>
+            </div>
+        </ng-template>        
+        
+    </p-table>
+
+</div>
+    

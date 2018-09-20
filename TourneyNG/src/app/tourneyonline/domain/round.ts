@@ -7,8 +7,7 @@ export interface Round extends RoundConfig {
     id?: number;
     name?: string;
 
-    direction?: string;
-    teams?: [ Team ];
-    calendars?: [ Meeting ];
-    classification?: [ Classification ];
+    teams?:  Team[];
+    calendars?: Meeting[];
+    classification?: Classification[];
 }

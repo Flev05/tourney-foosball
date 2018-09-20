@@ -14,7 +14,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
         ,tourneyType: TourneyType.Score
 
-        ,phases:["round", "elimination"]
+        ,phases: ["elimination"]
 
         ,raceDuration:90
 
@@ -32,9 +32,67 @@ export class InMemoryDataService implements InMemoryDbService {
         ,eliminationLevel:16
         
         ,players:[
-          {id:1,firstname:"Salvatore", lastname:"Amoroso"}
-         ,{id:2,firstname:"Luciano", lastname:"Martino"}
-       ]  
+            {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+           ,{id:2, firstname:"Luciano",   lastname:"Martino"}
+           ,{id:3, firstname:"Raimondo",  lastname:"Brancaccio"}
+           ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+           ,{id:5, firstname:"Valter",    lastname:"Bergamaschi"}
+           ,{id:6, firstname:"Emilio",    lastname:"Cattaneo"}
+           ,{id:7, firstname:"Marco",     lastname:"La Ratta"}
+          ]  
+        ,teams:[
+           {id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"
+             ,players:[
+                {id:2, firstname:"Luciano",   lastname:"Martino"}
+                ,{id:3, firstname:"Raimondo",  lastname:"Brancaccio"}
+              ]
+            }
+          ,{id:2,teamName:"AURORA PREGNANA", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"
+            ,players:[
+               {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+              ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+            ]              
+          }
+          ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"
+            ,players:[
+               {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+              ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+            ]              
+          }
+          , {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 - 20020 SOLARO MI"
+            ,players:[
+               {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+              ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+            ]              
+          }
+          , {id:5,teamName:"ORATORIO ZIBIDO A", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"
+            ,players:[
+               {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+              ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+            ]              
+          }
+          , {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"
+            ,players:[
+               {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+              ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+            ]              
+          }
+        ]  
+        , rounds:[{
+            id:1, name: "Girone A"
+            ,teams:[
+               {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
+              ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
+            ]
+          }
+          ,{
+            id:2, name: "Girone B"
+            ,teams:[
+              {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
+             ,{id:2,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
+            ]
+          }
+        ]
       }
     ];
 

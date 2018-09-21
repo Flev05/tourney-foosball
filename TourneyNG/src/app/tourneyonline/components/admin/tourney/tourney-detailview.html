@@ -122,8 +122,8 @@
         <h4>Passaggio di turno</h4>
         <p>
             Il passaggio del turno deve essere ben specificato per ogni fase dell'evoluzione del torneo.
-            Tutto deve essere chiaro e ben definito come passare dai gironi ai playoff o direttamente al risultato finale.
-            Come passare dai gironi/playoff alle eliminatore, come impostare il primo livello di partenza delle eliminatorie,
+            Tutto deve essere chiaro e ben definito come passare dai gironi ai playoff o direttamente al risultato finale,
+            come passare dai gironi/playoff alle eliminatore, come impostare il primo livello di partenza delle eliminatorie,
             se ci sono una o più squadre che vincono il torneo, tipico dei campionati di calcio di serie B in cui 
             salgono 3 o 4 squadre in serie A, ecc.
             La vista preposta allo scopo è accessibile alla voce di menù: 
@@ -165,6 +165,26 @@
             la riga si riferisce a come popolare i playoff 
             In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
         </p>
+
+        <h4>Calendario</h4>
+        <p>
+            Questo è l'ultimo e più lungo passo della configurazione del torneo.
+            Per ciascun girone del torneo, dovete creare il calendario di tutti gli incotri previsti per il girone,
+            stessa cosa per i playoff e le eliminatorie, se previsti.
+            In alcuni tornei le date degli incontri di playoff ed eliminatorie non sono definibili a priori e bisogna
+            aspettare la fine della fase di qualifiacazione, in tal caso potete accedere alla vista del calendario 
+            del torneo e completarlo quando disponete dei dati per la compilazione delle date e luoghi dove
+            svolgere gli incontri.
+
+            La vista preposta allo scopo è accessibile alla voce di menù:
+            <a class="home-button" [routerLink]="['/admincalendar']" (click)="menuActive = false">Calendario</a>
+
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali iniziare la configurazione del 
+            calendario, selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
+            La vista successiva vi mostra l'elenco di tutti i gironi, playoff ed eliminatorie da configurare.
+            Selezionare un ruolo, playoff o eliminatoria ed accedere alla vista corrispondente contenente tutti
+            gli incontri sui quali dovete compilare tutti i dati per il calendario associato.
+        </p> 
     </p-accordionTab>
 
     <p-accordionTab header="Gestione torneo">    
@@ -296,10 +316,6 @@
                         </div>
                         <div class="ui-grid-col-4" tooltipPosition="right"
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
-                            <p-checkbox  name="phasesGroupname" label="Gironi"       
-                                value="round"      
-                                [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox >
                             <p-checkbox name="phasesGroupname" label="Play Off"     
                                 value="playoff"     
                                 [formControl]="tourneyFormGroup.controls['phases']">
@@ -311,7 +327,7 @@
                         </div>
                     </div>
 
-                    <div *ngIf="containsPhase('round')" class="ui-grid-row" >
+                    <div class="ui-grid-row" >
                         <div class="ui-grid-col-3">
                             Gironi:
                         </div>
@@ -329,7 +345,7 @@
                         </div>
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="playoffNo" tooltipPosition="right"
-                                [min]="0"
+                                [min]="1"
                                 pTooltip="Inserire il numero effettivo di gironi di playoff che si intende organizzare">
                             </p-spinner>
                         </div>
@@ -382,7 +398,7 @@
                         </div>
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
-                                [min]="0"
+                                [min]="1"
                                 pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
                             </p-spinner>
                         </div>

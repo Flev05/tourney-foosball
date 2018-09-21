@@ -108,6 +108,7 @@ export class TeamDetailView extends AbstractDetailView {
 
         if(this.tourneyService.newTeam) {
             this.selectedTourney.teams.push(this.selectedTeam);
+            this.selectedTourney.teamNo = this.selectedTourney.teams.length;
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

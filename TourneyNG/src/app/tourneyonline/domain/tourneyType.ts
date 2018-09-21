@@ -1,3 +1,3 @@
 export enum TourneyType {
-    Time='time' , Score='score'
+    Time='time', Score='score'
 }

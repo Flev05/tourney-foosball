@@ -66,12 +66,13 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.roundNo = 1;
             this.selectedTourney.playoffNo = 0;
 
-            this.selectedTourney.finals = [{}];
-            this.selectedTourney.rounds = [{}];
-            this.selectedTourney.playoffs = [{}];
-            this.selectedTourney.eliminations = [{}];
-            this.selectedTourney.teams = [{}];
-            this.selectedTourney.players = [{}];
+            this.selectedTourney.finals = [];
+            this.selectedTourney.rounds = [];
+            this.selectedTourney.playoffs = [];
+            this.selectedTourney.eliminations = [];
+            this.selectedTourney.teams = [];
+            this.selectedTourney.players = [];
+            this.selectedTourney.playoffs = [];
 
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;

@@ -10,6 +10,7 @@ import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
 import { Player } from '../domain/player';
 import { Round } from '../domain/round';
+import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
 import { environment } from '../../../environments/environment';
@@ -34,11 +35,13 @@ export class TourneyService {
     selectedPlayer : Player;
     selectedTeam: Team;
     selectedRound : Round;
+    selectedPlayoff : Playoff;
 
     newTourney : boolean = false;
     newPlayer : boolean = false;
     newTeam : boolean = false;
     newRound : boolean = false;
+    newPlayoff : boolean = false;
 
     firstTime : boolean = true;
 

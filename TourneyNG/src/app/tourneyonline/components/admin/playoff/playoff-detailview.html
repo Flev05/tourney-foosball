@@ -1,0 +1,97 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Gestione playoff</span>
+        <span>Creare o modificare un playoff</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>Vista di dettaglio playoff.
+            Da questa vista potete creare, modificare o rimuovere un playoff.
+        </p>
+
+        <h4>Creare un nuovo playoff</h4>
+        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
+            il bottone Salva.
+            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti.
+            Il playoff è un ulteriore opzionale girone all'italiana visto anch'esso come un semplice contenitore di squadre, 
+            nulla deve essere assunto relativamente agli incontri di andata e ritorno che devono essere documentati nel calendario
+            corrispondente. 
+            Inoltre, il playoff deve essere inteso anche per eventuali gironi o per organizzare tornei in 
+            cui si definisce un gruppo di serie A ed uno di serie B
+        </p>
+
+        <h4>Modificare un playoff</h4>
+        <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
+            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+            essere svuotati.
+            Alla fine dell'operazione salvare con il bottone Salva
+        </p>
+        <h4>Rimuovere un playoff</h4>
+        <p>Si può rimuovere l'anagrafica di un playoff esistente con il bottore Rimuovi.
+            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
+            sarà rimossa dal sistema.
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <h4><span>Playoff: {{selectedPlayoff.name}}</span></h4>
+  
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+
+    <form [formGroup]="playoffFormGroup" (ngSubmit)="onSubmit(playoffFormGroup.value)">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Nome:
+                </div>
+                <div class="ui-grid-col-5">                                
+                    <input pInputText type="text" formControlName="name"/>
+                </div>
+                <div class="ui-grid-col-3">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playoffFormGroup.controls['name'].valid&&playoffFormGroup.controls['name'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="playoffFormGroup.controls['name'].errors['required']">
+                            Il nome del playoff è obbligatorio
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
+                    [responsive]="true"
+                    dragdrop="true" 
+                    dragdropScope="teams" 
+                    [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
+                <ng-template let-team pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <div>{{team.teamName}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>            
+                    
+        </div>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!playoffFormGroup.valid"></button>
+                </div>
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!playoffFormGroup.valid"></button>
+                </div>
+            </div>
+        </div>
+
+    </form>   
+
+</div>
+ 

@@ -15,7 +15,10 @@
         <h4>Creare un nuovo girone</h4>
         <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
             il bottone Salva.
-            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti.
+            Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
+            relativamente agli incontri di andata e ritorno che devono essere documentati nel calendario
+            corrispondente. 
         </p>
 
         <h4>Modificare un girone</h4>
@@ -65,10 +68,10 @@
                     [responsive]="true"
                     dragdrop="true" 
                     dragdropScope="teams" 
-                    [sourceStyle]="{'height':'400px'}" [targetStyle]="{'height':'400px'}">
+                    [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
                 <ng-template let-team pTemplate="item">
                     <div class="ui-helper-clearfix">
-                        <div>{{team.name}}</div>
+                        <div>{{team.teamName}}</div>
                     </div>
                 </ng-template>
             </p-pickList>            

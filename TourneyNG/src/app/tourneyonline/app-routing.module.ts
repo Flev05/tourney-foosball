@@ -17,6 +17,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminplayer',   loadChildren: './components/admin/player/player.module#PlayerModule'},
             {path: 'adminteam',     loadChildren: './components/admin/team/team.module#TeamModule'},
             {path: 'adminround',     loadChildren: './components/admin/round/round.module#RoundModule'},
+            {path: 'adminplayoff',     loadChildren: './components/admin/playoff/playoff.module#PlayoffModule'},
 
             // Presentation Section
             {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},

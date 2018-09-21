@@ -39,6 +39,8 @@ export class PlayerDetailView extends AbstractDetailView {
         this.selectedPlayer = this.tourneyService.selectedPlayer;
 
         if(this.tourneyService.newPlayer) {
+            this.selectedPlayer.firstname = "";
+            this.selectedPlayer.lastname = "";
             this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
         }
 

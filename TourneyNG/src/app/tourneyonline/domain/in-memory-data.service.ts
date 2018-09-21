@@ -89,10 +89,11 @@ export class InMemoryDataService implements InMemoryDbService {
             id:2, name: "Girone B"
             ,teams:[
               {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
-             ,{id:2,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
+             ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
             ]
           }
         ]
+        ,playoffs:[]
       }
     ];
 

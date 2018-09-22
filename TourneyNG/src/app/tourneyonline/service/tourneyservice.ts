@@ -10,6 +10,8 @@ import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
 import { Player } from '../domain/player';
 import { Round } from '../domain/round';
+import { Playoff } from '../domain/playoff';
+import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
 import { environment } from '../../../environments/environment';
 
@@ -26,19 +28,24 @@ const countryUrl = environment.serverUri + '/api/country';  // URL to web api
 @Injectable()
 export class TourneyService {
 
+    tourneys: Tourney[];
+
     selectedTourney : Tourney;
     selectedMeeting : Meeting;
     selectedPlayer : Player;
+    selectedTeam: Team;
     selectedRound : Round;
-
-    tourneys: Tourney[];
+    selectedPlayoff : Playoff;
 
     newTourney : boolean = false;
     newPlayer : boolean = false;
+    newTeam : boolean = false;
+    newRound : boolean = false;
+    newPlayoff : boolean = false;
 
     firstTime : boolean = true;
 
-    private sequenceNumber: number = 0;
+    private sequenceNumber: number = 1000;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

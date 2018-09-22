@@ -1,9 +1,13 @@
 import { Round } from './round';
+import { Playoff } from './playoff';
+import { Eliminatory } from './eliminatory';
+
 import { Country } from './country';
 import { Team } from './team';
 import { Player } from './player';
-import { TreeNode } from 'primeng/api';
+
 import { Discipline } from './discipline';
+
 import { RoundConfig } from './round-config';
 import { PlayoffConfig } from './playoff-config';
 import { EliminationConfig } from './elimination-config';
@@ -37,14 +41,13 @@ export interface Tourney {
     teamNo?: number;
     roundNo?: number;
     playoffNo?: number;
-    // eliminationLevel?: number;
 
-    finals?: [ Final ];
-    rounds?: [ Round ];
-    playoffs?: [ Round ];
-    eliminations?: [ TreeNode ];
-    teams?: [ Team ];
-    players?: [ Player ];
+    finals?: Final[];
+    rounds?: Round[];
+    playoffs?: Playoff[];
+    eliminatories?: Eliminatory[];
+    teams?: Team[];
+    players?: Player[ ];
 
     roundConfig?: RoundConfig;
     playoffConfig?: PlayoffConfig;

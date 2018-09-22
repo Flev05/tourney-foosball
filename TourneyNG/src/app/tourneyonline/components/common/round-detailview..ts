@@ -41,7 +41,7 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
                 console.log(currentKey + " rowspan=" + len);       
 
                 this.rows.push(m);
-                this.rows[row].roundName = round.name + "(" + round.direction + ")";    
+                this.rows[row].roundName = round.name;    
                 this.rows[row].meetingName = m.name;    
                 if(!roundMap.has(currentKey)) {
                     roundMap.set(currentKey, m);
@@ -66,7 +66,7 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
     }
     
     makeKey( round : Round, cal : Meeting) : string {
-        let key = round.name + "(" + round.direction + ") - " + cal.name;
+        let key = round.name + " - " + cal.name;
         return key;
     }
 }

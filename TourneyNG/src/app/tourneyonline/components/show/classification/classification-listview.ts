@@ -55,7 +55,7 @@ export class ClassificationListView extends CalendarDetailView {
                 console.log(currentKey + " rowspan=" + len);
 
                 this.rows.push(cla);
-                this.rows[row].roundName = round.name + "(" + round.direction + ")";    
+                this.rows[row].roundName = round.name ;    
                 this.rows[row].teamName = cla.team.teamName;    
                 if(!roundMap.has(currentKey)) {
                     roundMap.set(currentKey, cla);
@@ -79,7 +79,7 @@ export class ClassificationListView extends CalendarDetailView {
     }
 
     makeKey( round : Round) : string {
-        let key = round.name + "(" + round.direction + ")";
+        let key = round.name;
         return key;
     }
 

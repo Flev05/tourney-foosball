@@ -28,7 +28,7 @@
             </div>
         </ng-template>
 
-        <ng-template pTemplate="header" let-columns>
+        <!-- <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
                     {{col.header}}
@@ -43,8 +43,9 @@
                 </td>
             </tr>
         </ng-template>
-        
-        <!-- <ng-template pTemplate="colgroup">
+         -->
+         
+        <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: auto;">
                 <col style="width: auto;">
@@ -61,13 +62,13 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-            <tr>
+            <tr  [pSelectableRow]="rowData">
                 <td>{{rowData.firstname}}</td>
                 <td>{{rowData.lastname}}</td>
                 <td>{{rowData.phoneNumber}}</td>
                 <td>{{rowData.email}}</td>
             </tr>
-        </ng-template> -->
+        </ng-template>
     
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">

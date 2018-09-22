@@ -9,6 +9,7 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
+import {AccordionModule} from 'primeng/accordion';
 
 import {PlayerRoutingModule} from './player-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
@@ -20,7 +21,6 @@ import {ButtonModule} from '../../../../components/button/button';
 import {TabViewModule} from '../../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
 import {SliderModule} from '../../../../components/slider/slider';
-
 
 import {CalendarModule} from '../../../../components/calendar/calendar';
 
@@ -52,7 +52,8 @@ import {PlayerDetailView} from './player-detailview';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
-		,PlayerRoutingModule
+        ,PlayerRoutingModule
+        ,AccordionModule
     ],
 	declarations: [
 		PlayerTourneyListView,

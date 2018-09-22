@@ -32,12 +32,15 @@ export class PlayerDetailView extends AbstractDetailView {
     }
 
     ngOnInit() {
-
         console.log("PlayerDetailView.ngOnInit() ");
+
+        super.ngOnInit();
 
         this.selectedPlayer = this.tourneyService.selectedPlayer;
 
         if(this.tourneyService.newPlayer) {
+            this.selectedPlayer.firstname = "";
+            this.selectedPlayer.lastname = "";
             this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
         }
 
@@ -46,6 +49,8 @@ export class PlayerDetailView extends AbstractDetailView {
             'lastname': new FormControl(this.selectedPlayer.lastname, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedPlayer.address, Validators.compose([Validators.required])),
             'country': new FormControl(this.selectedPlayer.country),
+            'phoneNumber': new FormControl(this.selectedPlayer.phoneNumber, Validators.compose([Validators.required])),
+            'email': new FormControl(this.selectedPlayer.email, Validators.compose([Validators.required])),
         });
     }
 
@@ -68,6 +73,9 @@ export class PlayerDetailView extends AbstractDetailView {
         this.selectedPlayer.lastname = this.playerFormGroup.get('lastname').value;
         this.selectedPlayer.address = this.playerFormGroup.get('address').value;
         this.selectedPlayer.country = this.playerFormGroup.get('country').value;
+
+        this.selectedPlayer.phoneNumber = this.playerFormGroup.get('phoneNumber').value;
+        this.selectedPlayer.email = this.playerFormGroup.get('email').value;
 
         if(this.tourneyService.newPlayer) {
             this.selectedTourney.players.push(this.selectedPlayer);

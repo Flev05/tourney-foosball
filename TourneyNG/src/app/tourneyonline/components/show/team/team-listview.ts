@@ -15,7 +15,7 @@ import { CalendarDetailView } from '../calendar/calendar-detailview';
 export class TeamListView extends CalendarDetailView {
     rows: any[] = [];
 
-    teams: [Team];
+    teams: Team[];
 
     ngOnInit() {
         super.ngOnInit();

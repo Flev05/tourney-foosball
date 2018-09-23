@@ -10,7 +10,7 @@ import { Eliminatory } from '../../../domain/eliminatory';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 
-const roundRedirect: string = "admincalendar/lv/dv";
+const redirect: string = "admincalendar/lv/dv";
 const playoffRedirect: string = "admincalendar/lv/dv";
 const eliminatoryRedirect: string = "admincalendar/lv/dv";
 
@@ -67,7 +67,7 @@ export class CalendarListView extends AbstractListView {
     }
 
     protected gotoRoundDetailView() {
-        this.router.navigate([this.roundRedirect]);
+        this.router.navigate([this.redirect]);
     }
 
     goBack(): void {

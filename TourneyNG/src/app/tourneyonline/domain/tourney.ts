@@ -8,11 +8,11 @@ import { Player } from './player';
 
 import { Discipline } from './discipline';
 
-import { RoundConfig } from './round-config';
 import { PlayoffConfig } from './playoff-config';
-import { EliminationConfig } from './elimination-config';
+import { EliminatoryConfig } from './eliminatory-config';
 import { TourneyType } from './tourneyType';
 import { Final } from './final';
+import { ObjectiveConfig } from './objective-config';
 
 export interface Tourney {
     id?: number;
@@ -47,9 +47,5 @@ export interface Tourney {
     playoffs?: Playoff[];
     eliminatories?: Eliminatory[];
     teams?: Team[];
-    players?: Player[ ];
-
-    roundConfig?: RoundConfig;
-    playoffConfig?: PlayoffConfig;
-    eliminationConfig?: EliminationConfig;
+    players?: Player[];
 }

@@ -16,7 +16,7 @@ import { Round } from '../../../domain/round';
   `]
 })
 export class PlayoffListView extends CalendarDetailView {
-    playoffs: [Round];
+    playoffs: Round[];
 
     ngOnInit() {
         super.ngOnInit();

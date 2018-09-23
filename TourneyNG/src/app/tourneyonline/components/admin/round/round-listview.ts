@@ -24,7 +24,7 @@ export class RoundListView extends AbstractListView {
     selectedTourney: Tourney;
     selectedRound: Round;
 
-    rounds: [Round];
+    rounds: Round [];
 
     ngOnInit() {
         super.ngOnInit();

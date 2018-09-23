@@ -62,6 +62,6 @@ export class EliminationListView extends CalendarDetailView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.data1 = this.selectedTourney.eliminations;      
+        this.data1 = this.selectedTourney.eliminatories;      
     }
 }

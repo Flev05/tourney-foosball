@@ -26,7 +26,7 @@ export class PlayerListView extends AbstractListView {
     rows: any[] = [];
     cols: any[];
 
-    players: [Player];
+    players: Player[];
 
     ngOnInit() {
         super.ngOnInit();
@@ -60,16 +60,7 @@ export class PlayerListView extends AbstractListView {
 
     onRowSelect(event) {
         console.log(event.data);
-
-        let sp = this.cloneObject(event.data);
-
-        for(let i=0; i<this.selectedTourney.players.length; i++ ) {
-            if(this.selectedTourney.players[i].id == sp.id) {
-                this.selectedPlayer = this.selectedTourney.players[i];
-                this.tourneyService.selectedPlayer = this.selectedPlayer;
-                break;
-            }
-        }
+        this.tourneyService.selectedPlayer = this.selectedPlayer;
 
         this.gotoDetailView();
     }

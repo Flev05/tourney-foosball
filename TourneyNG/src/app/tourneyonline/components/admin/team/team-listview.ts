@@ -24,7 +24,7 @@ export class TeamListView extends AbstractListView {
     selectedTourney: Tourney;
     selectedTeam: Team;
 
-    teams: [Team];
+    teams: Team[];
 
     ngOnInit() {
         super.ngOnInit();

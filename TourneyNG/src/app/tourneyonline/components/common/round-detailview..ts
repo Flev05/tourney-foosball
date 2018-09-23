@@ -8,7 +8,7 @@ import { CountryService } from 'app/tourneyonline/service/countryservice';
 
 export abstract class RoundDetailView extends AbstractTourneyDetailView {
 
-    rounds: [Round];
+    rounds: Round[];
 
     protected rows: any[] = [];
 

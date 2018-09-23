@@ -21,6 +21,20 @@
             corrispondente. 
             Inoltre, il playoff deve essere inteso anche per eventuali gironi o per organizzare tornei in 
             cui si definisce un gruppo di serie A ed uno di serie B
+            La configurazione del playoff consiste nel documentare come popolarlo in funzione del risultato 
+            maturato nei gironi all'italiana. Si tratta di inserire le regole secondo le quale si scelgono
+            le squadre dei gironi in funzione della loro posizione di classifica.
+            Ogni riga di configurazione rappresenta una regola con cui popolare il playoff
+            con una squadra da un girone.
+            Per esempio la riga nel playoff Playoff A:
+        </p>
+        <ul>
+            <li>2° classificata Girone A</li>
+            <li>3° classificata Girone B</li>
+        </ul>         
+        <p>           
+            Indica che il playoff A, sarà popolato con la squadra 2° classificata del Girone A e la 3°
+            classificata del Girone B dei gironi all'italiana.
         </p>
 
         <h4>Modificare un playoff</h4>
@@ -30,7 +44,7 @@
             Alla fine dell'operazione salvare con il bottone Salva
         </p>
         <h4>Rimuovere un playoff</h4>
-        <p>Si può rimuovere l'anagrafica di un playoff esistente con il bottore Rimuovi.
+        <p>Si può rimuovere un playoff esistente con il bottore Rimuovi.
             Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
             sarà rimossa dal sistema.
         </p>
@@ -66,18 +80,40 @@
                 </div>
             </div>
 
-            <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
-                    [responsive]="true"
-                    dragdrop="true" 
-                    dragdropScope="teams" 
-                    [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
-                <ng-template let-team pTemplate="item">
-                    <div class="ui-helper-clearfix">
-                        <div>{{team.teamName}}</div>
-                    </div>
+            <div *ngIf="!tourneyService.newPlayoff">
+            <p-table [responsive]="true" 
+                [value]="playoffConfigs"
+                selectionMode="single"
+                [(selection)]="selectedPlayoffConfig" 
+                (onRowSelect)="onRowSelect($event)" >
+                <ng-template pTemplate="colgroup">
+                    <colgroup>
+                        <col style="width: auto;">
+                        <col style="width: auto;">
+                    </colgroup>
                 </ng-template>
-            </p-pickList>            
-                    
+        
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Posizione</th>
+                        <th>Girone</th>
+                    </tr>
+                </ng-template>
+        
+                <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                    <tr  [pSelectableRow]="rowData">
+                        <td>{{rowData.position.label}}</td>
+                        <td>{{rowData.roundName.label}}</td>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="summary" let-rowData>
+                    <div style="text-align:left">
+                        <button pButton icon="fa-plus" type="button" (click)="addRule()" label="Aggiungi Regola" ></button>
+                    </div>
+                </ng-template>        
+            </p-table>                
+            </div>
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -90,8 +126,6 @@
                 </div>
             </div>
         </div>
-
     </form>   
-
 </div>
  

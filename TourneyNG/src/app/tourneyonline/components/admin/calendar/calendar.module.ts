@@ -12,7 +12,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
-import {PlayoffRoutingModule} from './playoff-routing.module';
+import {PlayoffRoutingModule} from '../playoff/playoff-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
 import {DropdownModule} from '../../../../components/dropdown/dropdown';
@@ -25,9 +25,9 @@ import {SliderModule} from '../../../../components/slider/slider';
 
 import {CalendarModule} from '../../../../components/calendar/calendar';
 
-import {PlayoffTourneyListView} from './tourney-listview';
-import {PlayoffListView} from './playoff-listview';
-import {PlayoffDetailView} from './playoff-detailview';
+import {PlayoffTourneyListView} from '../playoff/tourney-listview';
+import {PlayoffListView} from '../playoff/playoff-listview';
+import {PlayoffDetailView} from '../playoff/playoff-detailview';
 
 @NgModule({
 	imports: [

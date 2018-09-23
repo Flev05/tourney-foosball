@@ -28,6 +28,7 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {PlayoffTourneyListView} from './tourney-listview';
 import {PlayoffListView} from './playoff-listview';
 import {PlayoffDetailView} from './playoff-detailview';
+import {PlayoffConfigDetailView} from './playoff-config-detailview';
 
 @NgModule({
 	imports: [
@@ -58,9 +59,10 @@ import {PlayoffDetailView} from './playoff-detailview';
         ,PickListModule
     ],
 	declarations: [
-		PlayoffTourneyListView,
-        PlayoffListView,
-        PlayoffDetailView
+        PlayoffTourneyListView
+        ,PlayoffListView
+        ,PlayoffDetailView
+        ,PlayoffConfigDetailView
 	]
 })
 export class PlayoffModule {}

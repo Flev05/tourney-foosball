@@ -20,7 +20,7 @@ export class CalendarDetailView implements OnInit {
 
     protected selectedTourney: Tourney;
 
-    rounds: [Round];
+    rounds: Round[];
 
     protected rows: any[] = [];
 

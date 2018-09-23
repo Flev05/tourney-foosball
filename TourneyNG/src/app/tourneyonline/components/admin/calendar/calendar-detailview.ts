@@ -5,8 +5,6 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import {Message} from '../../../../components/common/api';
 
-import { Calendar } from '../../../domain/playoff';
-import { RoundType } from '../../../domain/roundType';
 import { Team } from '../../../domain/team';
 import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
@@ -17,7 +15,6 @@ import { AbstractDetailView } from '../../common/abstract-detailview';
     templateUrl: './playoff-detailview.html',
 })
 export class CalendarDetailView extends AbstractDetailView {
-    selectedCalendar: Calendar;
 
     msgs: Message[] = [];
 
@@ -41,9 +38,6 @@ export class CalendarDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
-        this.selectedCalendar = this.tourneyService.selectedCalendar;
- 
-        this.targetTeams = this.selectedCalendar.teams;
         this.availableTeams = [];
 
         let usedTeams: Team[] = [];
@@ -64,34 +58,25 @@ export class CalendarDetailView extends AbstractDetailView {
         }
 
         this.playoffFormGroup = this.fb.group({
-            'name': new FormControl(this.selectedCalendar.name, Validators.compose([Validators.required])),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
         });
     }
 
     doDelete() {
-        console.log("doDelete(): " + this.selectedCalendar.name);
+        console.log("doDelete(): ");
         let popup = 'Sicuro di voler rimuovere il playoff: ';
 
-        if(confirm(popup + this.selectedCalendar.name + "?")) {
-            let index: number = this.selectedTourney.playoffs.indexOf(this.selectedCalendar);
-            if(index > -1) {
-                this.selectedTourney.playoffs.splice(index, 1);
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-            }
-        }
+        // if(confirm(popup + this.selectedCalendar.name + "?")) {
+        //     let index: number = this.selectedTourney.playoffs.indexOf(this.selectedCalendar);
+        //     if(index > -1) {
+        //         this.selectedTourney.playoffs.splice(index, 1);
+        //         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        //     }
+        // }
     }
 
     onSubmit(value: string) {
-
-        this.selectedCalendar.name = this.playoffFormGroup.get('name').value;
-        this.selectedCalendar.teams = this.playoffFormGroup.get('targetTeams').value;
-
-        if(this.tourneyService.newCalendar) {
-            this.selectedTourney.playoffs.push(this.selectedCalendar);
-            this.selectedTourney.playoffNo = this.selectedTourney.playoffs.length;
-        }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }

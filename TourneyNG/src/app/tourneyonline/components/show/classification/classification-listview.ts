@@ -26,7 +26,7 @@ export class ClassificationListView extends CalendarDetailView {
 
     selectedTourney: Tourney;
 
-    rounds: [Round];
+    rounds: Round[];
 
     rows: any[] = [];
 

@@ -14,6 +14,7 @@ import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
 import { environment } from '../../../environments/environment';
+import { PlayoffConfig } from '../domain/playoff-config';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -42,10 +43,12 @@ export class TourneyService {
     newTeam : boolean = false;
     newRound : boolean = false;
     newPlayoff : boolean = false;
+    newPlayoffConfig : boolean = false;
 
     firstTime : boolean = true;
 
     private sequenceNumber: number = 1000;
+    playoffsConfig: any;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

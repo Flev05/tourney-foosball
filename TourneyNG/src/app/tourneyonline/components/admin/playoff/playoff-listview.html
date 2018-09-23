@@ -13,8 +13,8 @@
 </div>
 
 <div class="content-section implementation">    
-    <p-table [columns]="cols" 
-        [value]="playoffs" [responsive]="true" 
+    <p-table [responsive]="true" 
+        [value]="playoffs"
         selectionMode="single"
         [(selection)]="selectedPlayoff" 
         (onRowSelect)="onRowSelect($event)" 

@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Tourney } from '../../../domain/tourney';
-import { Playoff } from '../../../domain/playoff';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
+import { Playoff } from '../../../domain/playoff';
 
 const redirect: string = "adminplayoff/lv/dv";
 
@@ -23,8 +23,7 @@ export class PlayoffListView extends AbstractListView {
 
     selectedTourney: Tourney;
     selectedPlayoff: Playoff;
-
-    playoffs: [Playoff];
+    playoffs: Playoff[];
 
     ngOnInit() {
         super.ngOnInit();
@@ -39,25 +38,15 @@ export class PlayoffListView extends AbstractListView {
     }
 
     create() {
-        this.selectedPlayoff={};
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.tourneyService.selectedPlayoff = {};
+        this.tourneyService.selectedPlayoff.playoffConfigs = [];
         this.tourneyService.newPlayoff = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
-
-        let sp = this.cloneObject(event.data);
-
-        for(let i=0; i<this.selectedTourney.playoffs.length; i++ ) {
-            if(this.selectedTourney.playoffs[i].id == sp.id) {
-                this.selectedPlayoff = this.selectedTourney.playoffs[i];
-                this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-                break;
-            }
-        }
-
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         this.gotoDetailView();
     }
 

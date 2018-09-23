@@ -5,33 +5,36 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import {Message} from '../../../../components/common/api';
 
-import { Playoff } from '../../../domain/playoff';
+import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
 import { RoundType } from '../../../domain/roundType';
 import { Team } from '../../../domain/team';
 import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { Router } from '@angular/router';
 
+const redirect: string = "adminplayoff/lv/dv/config";
 
 @Component({
     templateUrl: './playoff-detailview.html',
 })
 export class PlayoffDetailView extends AbstractDetailView {
+    playoffFormGroup: FormGroup;
+
     selectedPlayoff: Playoff;
+    selectedPlayoffConfig: PlayoffConfig;
 
     msgs: Message[] = [];
 
-    playoffFormGroup: FormGroup;
-    toggleable: boolean = false;
-
-    availableTeams: Team[] = [];
-    targetTeams: Team[] = [];
+    playoffConfigs: PlayoffConfig[];
 
     constructor(
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService
+        protected countryService: CountryService,
+        protected router: Router
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -42,39 +45,35 @@ export class PlayoffDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
 
         if(this.tourneyService.newPlayoff) {
+            this.playoffConfigs = [];
             this.selectedPlayoff.name = "";
-            this.selectedPlayoff.id = this.tourneyService.getSequenceNumber(); 
-            this.selectedPlayoff.teams = [];
-            this.selectedPlayoff.type = RoundType.P;
+            this.selectedPlayoff.id = this.tourneyService.getSequenceNumber();             
         }
 
-        this.targetTeams = this.selectedPlayoff.teams;
-        this.availableTeams = [];
-
-        let usedTeams: Team[] = [];
-        for(let i=0; i<this.selectedTourney.playoffs.length; i++ ) {
-            let t = this.selectedTourney.playoffs[i];
-            let p = t.teams;
-            for(let j=0; j<p.length; j++ ) {
-                usedTeams.push(p[j]);
-            }
-        }
-
-        for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-            let ut = this.selectedTourney.teams[i];
-            let index: number = usedTeams.indexOf(ut);
-            if(index == -1) {
-                this.availableTeams.push(ut);
-            }
-        }
+        this.tourneyService.newPlayoffConfig = false;
 
         this.playoffFormGroup = this.fb.group({
             'name': new FormControl(this.selectedPlayoff.name, Validators.compose([Validators.required])),
-            'availableTeams': new FormControl(this.availableTeams),
-            'targetTeams':    new FormControl(this.targetTeams),
         });
+    }
+    
+    addRule() {
+        this.tourneyService.newPlayoffConfig = true;
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.selectedPlayoff.selectedPlayoffConfig = {};
+        
+        this.gotoDetailView();
+    }
+
+    onRowSelect(event) {
+        console.log(event.data);
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.selectedPlayoff.selectedPlayoffConfig = this.selectedPlayoffConfig;
+        
+        this.gotoDetailView();
     }
 
     doDelete() {
@@ -93,24 +92,28 @@ export class PlayoffDetailView extends AbstractDetailView {
     onSubmit(value: string) {
 
         this.selectedPlayoff.name = this.playoffFormGroup.get('name').value;
-        this.selectedPlayoff.teams = this.playoffFormGroup.get('targetTeams').value;
 
         if(this.tourneyService.newPlayoff) {
             this.selectedTourney.playoffs.push(this.selectedPlayoff);
             this.selectedTourney.playoffNo = this.selectedTourney.playoffs.length;
+            this.tourneyService.newPlayoff = false;
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
- 
+    
+    private gotoDetailView() {
+        this.router.navigate([redirect]);
+    }
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;
 
         if(this.tourneyService.newPlayoff) {
-            msgerr = 'Creazione nuovo playoff fallita';
+            msgerr = 'Creazione nuova configurazione playoff fallita';
         } else {
-            msgerr = 'Modifica playoff fallita';
+            msgerr = 'Modifica configurazione playoff fallita';
         }
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
     }

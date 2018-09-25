@@ -93,7 +93,10 @@ export class InMemoryDataService implements InMemoryDbService {
             ]
           }
         ]
-        ,playoffs:[]
+        ,playoffs:[
+           {id:1, name:"Playoff Girone A"}
+          ,{id:2, name:"Playoff Girone B"}
+        ]
       }
     ];
 

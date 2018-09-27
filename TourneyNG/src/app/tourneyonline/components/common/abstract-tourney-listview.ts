@@ -1,4 +1,5 @@
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
@@ -11,8 +12,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     protected cols: any[];
     toggleable: boolean = false;
 
-    constructor(protected redirect: string, protected tourneyService: TourneyService, public router: Router) { 
-        super(redirect, tourneyService, router);
+    constructor(protected redirect: string
+        , protected tourneyService: TourneyService
+        , public router: Router
+        , protected location: Location) { 
+        super(redirect, tourneyService, router, location);
     }
 
     ngOnInit() {

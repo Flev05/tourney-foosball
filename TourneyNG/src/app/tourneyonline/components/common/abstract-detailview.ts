@@ -1,24 +1,22 @@
-import { OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
+import { AbstractView } from './abstract-view';
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 import { Country } from '../../domain/country';
 import { CountryService } from '../../service/countryservice';
 
-export abstract class AbstractDetailView implements OnInit {
+export abstract class AbstractDetailView extends AbstractView {
 
-    protected selectedTourney: Tourney;
     it: any;
-    countries: Country[];
-    filteredCountriesSingle: Country[];
-    toggleable: boolean = false;
 
     constructor(
         protected tourneyService: TourneyService,
         protected location: Location,
         protected countryService: CountryService,
-    ) {}
+    ) {
+        super(tourneyService, location);
+    }
 
     ngOnInit() {
         this.selectedTourney = this.tourneyService.selectedTourney;
@@ -53,29 +51,4 @@ export abstract class AbstractDetailView implements OnInit {
         let invalidDate = new Date();
         invalidDate.setDate(today.getDate() - 1);
     }
-    
-    next(n:any) {
-    }
-
-    goBack(): void {
-        this.location.back();
-    }
-    
-    search(event) {
-        let query = event.query;
-        this.filteredCountriesSingle = this.filterCountry(query, this.countries);
-    }
-
-    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-    filterCountry(query, countries: Country[]) : Country[] {
-        let filtered : Country[] = [];
-        for(let i = 0; i < countries.length; i++) {
-            let country = countries[i];
-            if(country.city.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
-        }
-        return filtered;
-    }
-
 }

@@ -1,8 +1,15 @@
 import { Round } from './round';
 import { EliminatoryConfig } from './eliminatory-config';
 
-export interface Eliminatory extends Round {
-    level?: number;
+export class Eliminatory  {
+    id: number;
 
-    eliminatoryConfigs?: EliminatoryConfig[];
+    enabled: boolean;
+
+    round: Round;
+
+    level: number;
+
+    tc1: EliminatoryConfig;
+    tc2: EliminatoryConfig;
 }

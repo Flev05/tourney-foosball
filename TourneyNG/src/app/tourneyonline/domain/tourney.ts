@@ -8,11 +8,9 @@ import { Player } from './player';
 
 import { Discipline } from './discipline';
 
-import { PlayoffConfig } from './playoff-config';
-import { EliminatoryConfig } from './eliminatory-config';
 import { TourneyType } from './tourneyType';
 import { Final } from './final';
-import { ObjectiveConfig } from './objective-config';
+import {SelectItem} from 'primeng/api';
 
 export interface Tourney {
     id?: number;
@@ -42,10 +40,13 @@ export interface Tourney {
     roundNo?: number;
     playoffNo?: number;
 
+    
     finals?: Final[];
     rounds?: Round[];
     playoffs?: Playoff[];
     eliminatories?: Eliminatory[];
+    eliminatoryLevel?: number;
+
     teams?: Team[];
     players?: Player[];
 }

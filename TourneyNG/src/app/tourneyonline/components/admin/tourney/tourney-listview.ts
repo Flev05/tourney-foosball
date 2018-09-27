@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
@@ -12,8 +13,8 @@ const redirect: string = '/admintourney/dv';
 })
 export class TourneyListView extends AbstractTourneyListView {
 
-    constructor(protected tourneyService: TourneyService, public router: Router) { 
-        super(redirect, tourneyService, router);
+    constructor(protected tourneyService: TourneyService, public router: Router, public loc: Location) { 
+        super(redirect, tourneyService, router, loc);
     }
 
     ngOnInit() {

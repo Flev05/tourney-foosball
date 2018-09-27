@@ -16,9 +16,9 @@ export class RoundListView extends AbstractListView {
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
-        private location: Location,
+        protected location: Location,
     ) {
-        super(redirect, tourneyService, router);
+        super(redirect, tourneyService, router, location);
     }
 
     selectedTourney: Tourney;

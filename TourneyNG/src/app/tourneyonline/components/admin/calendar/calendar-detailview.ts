@@ -43,7 +43,7 @@ export class CalendarDetailView extends AbstractDetailView {
         let usedTeams: Team[] = [];
         for(let i=0; i<this.selectedTourney.playoffs.length; i++ ) {
             let t = this.selectedTourney.playoffs[i];
-            let p = t.teams;
+            let p = t.round.teams;
             for(let j=0; j<p.length; j++ ) {
                 usedTeams.push(p[j]);
             }

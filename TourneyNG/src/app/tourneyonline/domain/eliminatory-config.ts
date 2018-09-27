@@ -1,5 +1,7 @@
-import { PlayoffConfig } from './playoff-config';
+import { FromRound } from './from-round';
 
-export interface EliminatoryConfig extends PlayoffConfig {
-    playoffName?: string;
+export class EliminatoryConfig {
+    id: number;
+    fromRound?:   FromRound;
+    fromPlayoff?: FromRound;
 }

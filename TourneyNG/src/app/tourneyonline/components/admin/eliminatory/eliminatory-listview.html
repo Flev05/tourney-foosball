@@ -1,0 +1,139 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Eliminatorie</span>
+        <span>Configurazione Eliminatorie iniziale del torneo: {{selectedTourney.tourneyName}}</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Vista elenco delle configurazioni delle eliminatorie di partenza che compongono il torneo: 
+        {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
+    </p>
+</div>
+
+<div class="content-section implementation">      
+
+<div>
+    <div class="ui-g-2">
+        <label for="sel">Livello Eliminatorie</label>
+    </div>
+    
+    <p-dropdown id="sel" [options]="levels" 
+        [(ngModel)]="currentLevelSelectItem"  
+        (onChange)="onChange($event.value)"
+        placeholder="Selezionare" >
+    </p-dropdown>
+</div>
+
+    <p-table [responsive]="true" 
+            [value]="eliminatories" 
+            selectionMode="single" 
+            [(selection)]="selectedEliminatory" 
+            (onRowSelect)="onRowSelect($event)">
+
+        <ng-template pTemplate="colgroup">
+            <colgroup>
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: 10mm;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Classificata</th>
+                <th>Girone</th>
+                <th>Playoff</th>
+                <th>Vs</th>
+                <th>Classificata</th>
+                <th>Girone</th>
+                <th>Playoff</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+            <tr [pSelectableRow]="rowData">
+                <td>{{rowData.tc1.fromRound.position}}</td>
+                <td>{{rowData.tc1.fromRound.roundName}}</td>
+                <td>{{rowData.tc1.fromPlayoff.roundName}}</td>
+                <td> - </td>
+                <td>{{rowData.tc2.fromRound.position}}</td>
+                <td>{{rowData.tc2.fromRound.roundName}}</td>
+                <td>{{rowData.tc2.fromPlayoff.roundName}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
+            </div>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+        <div class="ui-g ui-fluid" *ngIf="row">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="vin">Classificata</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc1.fromRound.position" ></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="round">Girone</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc1.fromRound.roundName"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="playoff">Playoff</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.roundName"></p-dropdown>
+                </div>
+            </div>
+        </div>       
+        Vs         
+        <div class="ui-g ui-fluid" *ngIf="row">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="vin">Classificata</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position" ></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="round">Girone</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.roundName"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="playoff">Playoff</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.roundName"></p-dropdown>
+                </div>
+            </div>
+        </div>       
+
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Delete"></button>
+            <button type="button" pButton icon="fa fa-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-dialog>
+
+</div>
+    

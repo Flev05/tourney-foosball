@@ -27,7 +27,6 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 
 import {PlayoffTourneyListView} from '../playoff/tourney-listview';
 import {PlayoffListView} from '../playoff/playoff-listview';
-import {PlayoffDetailView} from '../playoff/playoff-detailview';
 
 @NgModule({
 	imports: [
@@ -60,7 +59,6 @@ import {PlayoffDetailView} from '../playoff/playoff-detailview';
 	declarations: [
 		PlayoffTourneyListView,
         PlayoffListView,
-        PlayoffDetailView
 	]
 })
 export class PlayoffModule {}

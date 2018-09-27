@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
+import {SelectItem} from 'primeng/api';
 
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
@@ -13,8 +14,6 @@ import { Round } from '../domain/round';
 import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
-import { environment } from '../../../environments/environment';
-import { PlayoffConfig } from '../domain/playoff-config';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -24,12 +23,19 @@ const tourneyUrl = 'api/tourneys';  // URL to web api
 const tourneyPlayoffUrl = 'api/tourneys';  // URL to web api
 const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
 const typologiesUrl = 'api/typologies';  // URL to web api
-const countryUrl = environment.serverUri + '/api/country';  // URL to web api
+
+const classificationLabel = "°";
+const selectLabel = "----";
 
 @Injectable()
 export class TourneyService {
 
     tourneys: Tourney[];
+
+    levelsSelectItem: SelectItem[];
+    positionsSelectItem: SelectItem[];
+    roundsSelectItem: SelectItem[];
+    playoffsSelectItem: SelectItem[];
 
     selectedTourney : Tourney;
     selectedMeeting : Meeting;
@@ -48,11 +54,69 @@ export class TourneyService {
     firstTime : boolean = true;
 
     private sequenceNumber: number = 1000;
-    playoffsConfig: any;
+    playoffsConfig: boolean;
+    newEliminatoryConfig: boolean;
+    newEliminatory: boolean;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
+    }
+
+    prepareEliminatoriesComboBoxes() {
+        this.levelsSelectItem = [];
+
+        let log2 = Math.ceil(Math.log2(this.selectedTourney.rounds.length));
+        // let log2 = Math.ceil(Math.log2(32));
+
+        for(let l=log2; l>=0; l--) {
+            let lev = "";
+            if(l >= 4) {
+                lev = Math.pow(2, l) + "-esimi di finale";
+            }
+            if(l == 3) {
+                lev = "Ottavi di finale";
+            }
+            if(l == 2) {
+                lev = "Quarti di finale";
+            }
+            if(l == 1) {
+                lev = "Semi finale";
+            }
+            if(l == 0) {
+                lev = "Finale";
+            }
+            let si: SelectItem = {label:lev, value:l};
+            this.levelsSelectItem.push(si);
+        }
+
+        this.roundsSelectItem = [];
+        this.roundsSelectItem.push({"label": selectLabel, "value": selectLabel});
+        for(let r of this.selectedTourney.rounds) {
+            this.roundsSelectItem.push({"label": r.name, "value": r.name});
+        }
+
+        if(this.selectedTourney.playoffs.length > 0) {
+            this.playoffsSelectItem = [];
+            this.playoffsSelectItem.push({"label": selectLabel, "value": selectLabel});
+            for(let i=0; i<this.selectedTourney.playoffs.length; i++) {
+                let r=this.selectedTourney.playoffs[i];
+                this.playoffsSelectItem.push({"label": r.round.name, "value": r.round.name});
+            }
+        }
+
+        this.positionsSelectItem = [];
+
+        let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
+        if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {
+            maxPosition++;
+        }
+
+        for(let p=1; p<=maxPosition; p++ ) {
+            let vv: string = "" + p;
+            vv = vv + classificationLabel;
+            this.positionsSelectItem.push({"label": vv, "value": vv});
+        }        
     }
 
     getSequenceNumber() {

@@ -1,6 +1,6 @@
-import { NextRoundConfig } from './next-round-config';
-import {SelectItem} from 'primeng/api';
+import { FromRound } from './from-round';
 
-export interface PlayoffConfig extends NextRoundConfig {
-    roundName?: SelectItem;
+export class PlayoffConfig {
+    id: number;
+    fromRound: FromRound;
 }

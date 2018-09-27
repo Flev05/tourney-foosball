@@ -16,9 +16,9 @@ export class PlayoffListView extends AbstractListView {
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
-        private location: Location,
+        protected location: Location,
     ) {
-        super(redirect, tourneyService, router);
+        super(redirect, tourneyService, router, location);
     }
 
     selectedTourney: Tourney;
@@ -38,7 +38,9 @@ export class PlayoffListView extends AbstractListView {
     }
 
     create() {
-        this.tourneyService.selectedPlayoff = {};
+        // this.tourneyService.selectedPlayoff = {id=this.tourneyService.getSequenceNumber()
+        //     , round: {id=this.tourneyService.getSequenceNumber()}
+        // };
         this.tourneyService.selectedPlayoff.playoffConfigs = [];
         this.tourneyService.newPlayoff = true;
         this.gotoDetailView();

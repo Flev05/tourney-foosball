@@ -11,6 +11,8 @@ import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
+import { DialogModule } from 'primeng/dialog';
+import { GrowlModule } from 'app/components/growl/growl';
 
 import {EliminatoryRoutingModule} from './eliminatory-routing.module';
 import {PanelModule} from '../../../../components/panel/panel';
@@ -26,8 +28,6 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 
 import {EliminatoryTourneyListView} from './tourney-listview';
 import {EliminatoryListView} from './eliminatory-listview';
-import { GrowlModule } from 'app/components/growl/growl';
-import { DialogModule } from 'app/components/dialog/dialog';
 
 @NgModule({
 	imports: [

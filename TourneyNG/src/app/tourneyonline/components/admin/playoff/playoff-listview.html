@@ -7,8 +7,13 @@
 
 <div class="content-section documentation">
 
-    <p>Vista elenco di tutti i gironi che compongono il torneo: 
+    <p>Vista elenco di tutti i playoff che compongono il torneo: 
         {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
+    </p>
+        
+    <p>
+        Selezionare il playoff di interesse per accedere alla vista di dettaglio corrispondente
+        dalla quale configurare il playoff
     </p>
 </div>
 
@@ -23,9 +28,6 @@
 
         <ng-template pTemplate="caption">
             <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
-            <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Playoff" ></button>
-            </div>
         </ng-template>
  
         <ng-template pTemplate="colgroup">
@@ -36,19 +38,13 @@
 
         <ng-template pTemplate="header">
             <tr>
-                <th>Classificata</th>
-                <th>Girone</th>
+                <th>Nome girone Playoff</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-            <tr  [pSelectableRow]="rowData">
-                <td>
-                    <p-dropdown [options]="positions" [(ngModel)]="rowData.position"></p-dropdown>
-                </td>
-                <td>
-                    <p-dropdown [options]="rounds" [(ngModel)]="rowData.roundName"></p-dropdown>
-                </td>
+            <tr [pSelectableRow]="rowData">
+                <td>{{rowData.round.name}}</td>            
             </tr>
         </ng-template>
     

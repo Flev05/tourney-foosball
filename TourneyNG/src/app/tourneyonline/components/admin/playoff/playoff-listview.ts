@@ -38,16 +38,13 @@ export class PlayoffListView extends AbstractListView {
     }
 
     create() {
-        // this.tourneyService.selectedPlayoff = {id=this.tourneyService.getSequenceNumber()
-        //     , round: {id=this.tourneyService.getSequenceNumber()}
-        // };
-        this.tourneyService.selectedPlayoff.playoffConfigs = [];
         this.tourneyService.newPlayoff = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
+        this.tourneyService.newPlayoff = false;
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         this.gotoDetailView();
     }

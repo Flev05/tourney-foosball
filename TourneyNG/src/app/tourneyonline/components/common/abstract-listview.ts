@@ -13,6 +13,7 @@ export abstract class AbstractListView extends AbstractView {
     }
 
     ngOnInit() {
+        super.ngOnInit();
     }
   
     protected gotoDetailView() {

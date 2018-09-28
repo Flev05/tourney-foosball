@@ -17,6 +17,5 @@ export class EliminatoryTourneyListView extends AbstractTourneyListView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.tourneyService.newEliminatory = false;
     }
 }

@@ -25,7 +25,6 @@ const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
 const typologiesUrl = 'api/typologies';  // URL to web api
 
 const classificationLabel = "°";
-const selectLabel = "----";
 
 @Injectable()
 export class TourneyService {
@@ -55,8 +54,6 @@ export class TourneyService {
 
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
-    newEliminatoryConfig: boolean;
-    newEliminatory: boolean;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
@@ -91,14 +88,12 @@ export class TourneyService {
         }
 
         this.roundsSelectItem = [];
-        this.roundsSelectItem.push({"label": selectLabel, "value": selectLabel});
         for(let r of this.selectedTourney.rounds) {
             this.roundsSelectItem.push({"label": r.name, "value": r.name});
         }
 
         if(this.selectedTourney.playoffs.length > 0) {
             this.playoffsSelectItem = [];
-            this.playoffsSelectItem.push({"label": selectLabel, "value": selectLabel});
             for(let i=0; i<this.selectedTourney.playoffs.length; i++) {
                 let r=this.selectedTourney.playoffs[i];
                 this.playoffsSelectItem.push({"label": r.round.name, "value": r.round.name});

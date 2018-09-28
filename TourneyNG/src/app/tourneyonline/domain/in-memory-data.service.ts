@@ -4,9 +4,9 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
       const tourneys = [
-        {id: 1, tourneyName: 'Summer week 2018'
+        {id: 1, tourneyName: 'CSI Open A 2017'
         ,dateInMillis: 1543606200000
-        ,dateAsString: "2018/11/30"
+        ,dateAsString: "23/10/2017"
         ,timeAsString: "20:30:00"
         ,address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
         ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
@@ -14,7 +14,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
         ,tourneyType: TourneyType.Score
 
-        ,phases: ["elimination"]
+        ,phases: ["playoff", "elimination"]
 
         ,raceDuration:90
 

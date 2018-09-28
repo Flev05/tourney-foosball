@@ -27,10 +27,10 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 
 import {PlayoffTourneyListView} from './tourney-listview';
 import {PlayoffListView} from './playoff-listview';
+import { PlayoffDetailView } from './playoff-detailview';
 
 @NgModule({
 	imports: [
-
 		CommonModule
         ,FormsModule
         ,ReactiveFormsModule
@@ -57,8 +57,9 @@ import {PlayoffListView} from './playoff-listview';
         ,PickListModule
     ],
 	declarations: [
-        PlayoffTourneyListView
+         PlayoffTourneyListView
         ,PlayoffListView
+        ,PlayoffDetailView
 	]
 })
 export class PlayoffModule {}

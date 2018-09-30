@@ -10,6 +10,46 @@
     <p>Vista elenco delle configurazioni delle eliminatorie di partenza che compongono il torneo: 
         {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
     </p>
+
+    <h4>Istruzioni</h4>
+    <p>
+       Scegliere se effettuare la configurazione delle eliminatorie in modo automatico o manuale selezionando 
+       dai radio button sotto
+    </p> 
+    <ul>
+        <li>Automatica</li>
+        <li>Manuale</li>
+    </ul>         
+        
+    <h5>Automatica</h5>
+    <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
+        senza playoff. In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
+        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale al numero totale delle
+        squadre che compongono il torneo, ci pensa il sistama sistemarle nell'opportuno livello di eliminatorie iniziale:            
+        sedicesimi, ottavi di finale, ecc.
+    </p> 
+    
+    <h5>Manuale</h5>
+    <p>La gestione manuale permette qualsiasi configurazione del passaggio del turno, combinando tutti i casi 
+        dai gironi all'italiana, ai playoff alle eliminatorie, dai playoff alle eliminatorie ecc.        
+        Nella vista dovete creare una riga per ogni regola di passaggio di turno.
+        Il sistema calcola, in automatico in funzione del numero di squadre e gironi presenti nel torneo,
+        la lista delle possibili eliminatorie di partenza.
+        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatiorie.
+        Alla scelta del livello di eliminazione, viene creata la corrispondente lista di possibili 
+        incontri. Per esempio, se selezionate i sedicesimi di finale, saranno creare 8 righe della tabella sottostante
+        che dovete completare una per una cliccando su ciascuna di essa e compilando la successiva dialog box
+        nella quale dovere inserire le regole di popolamento delle eliminatorie.
+        Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
+        di ciasun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
+        in cui potete inserire le seguenti regole:
+    </p> 
+    <ul>
+        <li>1° classificata Girone A Vs 2° classificata Girone D</li>
+        <li>1° classificata Girone B Vs 2° classificata Girone C</li>
+        <li>1° classificata Girone C Vs 2° classificata Girone B</li>
+        <li>1° classificata Girone D Vs 2° classificata Girone A</li>
+    </ul>         
 </div>
 
 <div class="content-section implementation">      
@@ -18,7 +58,8 @@
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        <p-dropdown id="levelId" [options]="levels" 
+        <p-dropdown id="levelId" 
+            [options]="levels" 
             [(ngModel)]="eliminatoryLevel"  
             (onChange)="onChange($event.value)"
             placeholder="Eliminatorie">
@@ -35,11 +76,11 @@
             <colgroup>
                 <col style="width: auto;">
                 <col style="width: auto;">
-                <col style="width: auto;">
+                <col *ngIf="isPlayoff" style="width: auto;">
                 <col style="width: 10mm;">
                 <col style="width: auto;">
                 <col style="width: auto;">
-                <col style="width: auto;">
+                <col *ngIf="isPlayoff" style="width: auto;">
             </colgroup>
         </ng-template>
 
@@ -47,23 +88,23 @@
             <tr>
                 <th>Classificata</th>
                 <th>Girone</th>
-                <th>Playoff</th>
+                <th *ngIf="isPlayoff">Playoff</th>
                 <th>Vs</th>
                 <th>Classificata</th>
                 <th>Girone</th>
-                <th>Playoff</th>
+                <th *ngIf="isPlayoff">Playoff</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData>
             <tr [pSelectableRow]="rowData">
                 <td>{{rowData.tc1.fromRound.position.label}}</td>
-                <td>{{rowData.tc1.fromRound.roundName}}</td>
-                <td>{{rowData.tc1.fromPlayoff.roundName}}</td>
+                <td>{{rowData.tc1.fromRound.round.label}}</td>
+                <td *ngIf="isPlayoff">{{rowData.tc1.fromPlayoff.round.label}}</td>
                 <td> - </td>
                 <td>{{rowData.tc2.fromRound.position.label}}</td>
-                <td>{{rowData.tc2.fromRound.roundName}}</td>
-                <td>{{rowData.tc2.fromPlayoff.roundName}}</td>
+                <td>{{rowData.tc2.fromRound.round.label}}</td>
+                <td *ngIf="isPlayoff">{{rowData.tc2.fromPlayoff.round.label}}</td>
             </tr>
         </ng-template>
 
@@ -81,22 +122,28 @@
                 <div class="ui-g-4">
                     <label for="positionId">Classificata</label>
                 </div>
-                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.tc1.fromRound.position.label"></p-dropdown>
+                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.tc1.fromRound.position" optionLabel="label"></p-dropdown>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
-                    <label for="round">Girone</label>
+                    <label for="roundId">Girone</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc1.fromRound.roundName" placeholder="Selezionare"></p-dropdown>
+                    <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.tc1.fromRound.round" 
+                    optionLabel="label" 
+                    placeholder="Selezionare">
+                </p-dropdown>
                 </div>
             </div>
-            <div class="ui-g-12">
+            <div *ngIf="isPlayoff" class="ui-g-12">
                 <div class="ui-g-4">
-                    <label for="playoff">Playoff</label>
+                    <label for="playoffId">Playoff</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.roundName" placeholder="Selezionare"></p-dropdown>
+                    <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.round" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
                 </div>
             </div>
         </div>       
@@ -107,7 +154,7 @@
                     <label for="vin">Classificata</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position.label" ></p-dropdown>
+                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position" optionLabel="label"></p-dropdown>
                 </div>
             </div>
             <div class="ui-g-12">
@@ -115,15 +162,21 @@
                     <label for="round">Girone</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.roundName" placeholder="Selezionare"></p-dropdown>
+                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.round" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
                 </div>
             </div>
-            <div class="ui-g-12">
+            <div *ngIf="isPlayoff" class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="playoff">Playoff</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.roundName" placeholder="Selezionare"></p-dropdown>
+                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.round" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
                 </div>
             </div>
         </div>       
@@ -132,6 +185,5 @@
             <button type="button" pButton icon="fa fa-check" (click)="done()" label="Fatto"></button>
         </div>
     </p-dialog>
-
 </div>
     

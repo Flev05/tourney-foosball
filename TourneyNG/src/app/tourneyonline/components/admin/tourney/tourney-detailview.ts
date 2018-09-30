@@ -55,6 +55,8 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney = this.tourneyService.selectedTourney;
 
         if(this.tourneyService.newTourney) {
+            this.selectedTourney.id = this.tourneyService.getSequenceNumber(); 
+
             this.tourneyDate = today;
             this.selectedTourney.tourneyName = "";
             this.selectedTourney.address = "";
@@ -62,17 +64,18 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.matchBalanceScores = 0;
             this.selectedTourney.matchLoserScores = 0;
             this.selectedTourney.matchWinnerScores = 3;
-            this.selectedTourney.teamNo = 1;
-            this.selectedTourney.roundNo = 1;
-            this.selectedTourney.playoffNo = 0;
-
-            this.selectedTourney.finals = [];
+            
+            this.selectedTourney.objectives = [];
             this.selectedTourney.rounds = [];
             this.selectedTourney.playoffs = [];
             this.selectedTourney.eliminatories = [];
             this.selectedTourney.teams = [];
             this.selectedTourney.players = [];
             this.selectedTourney.playoffs = [];
+
+            this.selectedTourney.teamNo = this.selectedTourney.teams.length;
+            this.selectedTourney.roundNo = this.selectedTourney.rounds.length;
+            this.selectedTourney.playoffNo = this.selectedTourney.playoffs.length;
 
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
@@ -134,8 +137,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onSubmit(value: string) {
         this.submitted = true;
-
-        this.selectedTourney.id = this.tourneyService.getSequenceNumber(); 
 
         this.selectedTourney.tourneyName = this.tourneyFormGroup.get('tourneyName').value;
         this.selectedTourney.address = this.tourneyFormGroup.get('address').value;

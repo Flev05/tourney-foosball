@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
-import {SelectItem} from 'primeng/api';
 
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
@@ -14,6 +13,7 @@ import { Round } from '../domain/round';
 import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -31,10 +31,10 @@ export class TourneyService {
 
     tourneys: Tourney[];
 
-    levelsSelectItem: SelectItem[];
-    positionsSelectItem: SelectItem[];
-    roundsSelectItem: SelectItem[];
-    playoffsSelectItem: SelectItem[];
+    levelsCombobox: Combobox[];
+    positionsCombobox: Combobox[];
+    roundsCombobox: Combobox[];
+    playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
     selectedMeeting : Meeting;
@@ -61,7 +61,7 @@ export class TourneyService {
     }
 
     prepareEliminatoriesComboBoxes() {
-        this.levelsSelectItem = [];
+        this.levelsCombobox = [];
 
         let log2 = Math.ceil(Math.log2(this.selectedTourney.rounds.length));
         // let log2 = Math.ceil(Math.log2(32));
@@ -83,24 +83,28 @@ export class TourneyService {
             if(l == 0) {
                 lev = "Finale";
             }
-            let si: SelectItem = {label:lev, value:l};
-            this.levelsSelectItem.push(si);
+            let si: Combobox = {label:lev, value:l};
+            this.levelsCombobox.push(si);
         }
 
-        this.roundsSelectItem = [];
-        for(let r of this.selectedTourney.rounds) {
-            this.roundsSelectItem.push({"label": r.name, "value": r.name});
+        this.roundsCombobox = [];
+        this.roundsCombobox.push({label: "", value: 0});
+            
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r=this.selectedTourney.rounds[i];
+            this.roundsCombobox.push({label: r.name, value: i+1});
         }
 
         if(this.selectedTourney.playoffs.length > 0) {
-            this.playoffsSelectItem = [];
+            this.playoffsCombobox = [];
+            this.playoffsCombobox.push({label: "", value: 0});
             for(let i=0; i<this.selectedTourney.playoffs.length; i++) {
                 let r=this.selectedTourney.playoffs[i];
-                this.playoffsSelectItem.push({"label": r.round.name, "value": r.round.name});
+                this.playoffsCombobox.push({label: r.round.name, value: i+1});
             }
         }
 
-        this.positionsSelectItem = [];
+        this.positionsCombobox = [];
 
         let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
         if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {
@@ -108,9 +112,8 @@ export class TourneyService {
         }
 
         for(let p=1; p<=maxPosition; p++ ) {
-            let vv: string = "" + p;
-            vv = vv + classificationLabel;
-            this.positionsSelectItem.push({"label": vv, "value": vv});
+            let vv: string = "" + p + classificationLabel;
+            this.positionsCombobox.push({label: vv, value: p});
         }        
     }
 
@@ -122,7 +125,7 @@ export class TourneyService {
  
         return this.http.get<Tourney[]>(tourneyUrl)
         .pipe(
-            tap(_ => this.log(`fetched all tourneys`)),
+            tap(_ => this.log('fetched all tourneys')),
             catchError(this.handleError('loadTourneySmall', []))
           );
     }
@@ -131,7 +134,7 @@ export class TourneyService {
  
         return this.http.get<Discipline[]>(typologiesUrl)
         .pipe(
-            tap(_ => this.log(`fetched all typologies of the tourney`)),
+            tap(_ => this.log('fetched all typologies of the tourney')),
             catchError(this.handleError('loadTypologies', []))
           );
     }
@@ -140,7 +143,7 @@ export class TourneyService {
  
         return this.http.get<Tourney[]>(tourneyPlayoffUrl)
         .pipe(
-            tap(_ => this.log(`fetched all Playoff tourneys`)),
+            tap(_ => this.log('fetched all Playoff tourneys')),
             catchError(this.handleError('loadTourneyPlayoff', []))
           );
     }
@@ -149,7 +152,7 @@ export class TourneyService {
  
         return this.http.get<Tourney[]>(tourneyEliminationUrl)
         .pipe(
-            tap(_ => this.log(`fetched all Elimination tourneys`)),
+            tap(_ => this.log('fetched all Elimination tourneys')),
             catchError(this.handleError('loadTourneyElimination', []))
           );
     }
@@ -158,15 +161,15 @@ export class TourneyService {
     getTourney(id: number): Observable<Tourney> {
         const url = `${tourneyUrl}/${id}`;
         return this.http.get<Tourney>(url).pipe(
-            tap(_ => this.log(`fetched Tourney id=${id}`)),
-            catchError(this.handleError<Tourney>(`getTourney id=${id}`))
+            tap(_ => this.log('fetched Tourney id='+id)),
+            catchError(this.handleError<Tourney>('getTourney id='+id))
         );
     }
 
     /** POST: add a new tourney to the server */
     addTourney (tourney: Tourney): Observable<Tourney> {
         return this.http.post<Tourney>(tourneyUrl, tourney, httpOptions).pipe(
-            tap((tourney: Tourney) => this.log(`added Tourney w/ id=${tourney.id}`)),
+            tap((tourney: Tourney) => this.log('added Tourney w/ id=' + tourney.id)),
             catchError(this.handleError<Tourney>('addTourney'))
         );
     }
@@ -174,21 +177,21 @@ export class TourneyService {
     /** PUT: update the tourney on the server */
     updateTourney (tourney: Tourney ): Observable<Tourney> {
         const id =  tourney.id;
-        const url = `${tourneyUrl}/${tourney.id}`;
+        const url = tourneyUrl + "/" + id;
 
         return this.http.put(url, tourney, httpOptions).pipe(
-            tap(_ => this.log(`updated Tourney id=${id}`)),
+            tap(_ => this.log('updated Tourney id=' + id)),
             catchError(this.handleError<Tourney>('updateTourney'))
         );
     }
     
     /** DELETE: delete the tourney from the server */
     deleteTourney (tourney: Tourney | number): Observable<Tourney> {
-        const id = typeof tourney === 'number' ? tourney : tourney.id;
-        const url = `${tourneyUrl}/${id}`;
+        const id = typeof tourney === 'number' ? tourney : tourney.id;        
+        const url = tourneyUrl + "/" + id;
 
         return this.http.delete<Tourney>(url, httpOptions).pipe(
-            tap(_ => this.log(`deleted Tourney id=${id}`)),
+            tap(_ => this.log('deleted Tourney id=' + id)),
             catchError(this.handleError<Tourney>('deleteTourney'))
         );
     }

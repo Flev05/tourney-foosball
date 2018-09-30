@@ -13,7 +13,7 @@
         
     <p>
         Selezionare il playoff di interesse per accedere alla vista di dettaglio corrispondente
-        dalla quale configurare il playoff
+        dalla quale configurare il playoff oppure crearne uno nuovo con il bottone Nuovo Playoff
     </p>
 </div>
 
@@ -27,7 +27,7 @@
         [rows]="15">
 
         <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
+            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
         </ng-template>
  
         <ng-template pTemplate="colgroup">

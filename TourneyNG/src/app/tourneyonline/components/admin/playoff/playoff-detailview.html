@@ -82,8 +82,8 @@
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-        <p-dropdown id="levelId" [options]="teamsSelectItem" 
-            [(ngModel)]="teamNoSelectItem"  
+        <p-dropdown id="levelId" [options]="teamsCombobox" 
+            [(ngModel)]="teamNoCombobox"  
             (onChange)="onChange($event.value)"
             placeholder="Numero squadre">
         </p-dropdown>
@@ -112,7 +112,7 @@
         <ng-template pTemplate="body" let-rowData>
             <tr [pSelectableRow]="rowData">
                 <td>{{rowData.fromRound.position.label}}</td>
-                <td>{{rowData.fromRound.roundName}}</td>
+                <td>{{rowData.fromRound.round.label}}</td>
             </tr>
         </ng-template>
 
@@ -130,14 +130,14 @@
                 <div class="ui-g-4">
                     <label for="positionId">Classificata</label>
                 </div>
-                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.fromRound.position.label"></p-dropdown>
+                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.fromRound.position" optionLabel="label"></p-dropdown>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="round">Girone</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.fromRound.roundName" placeholder="Selezionare"></p-dropdown>
+                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.fromRound.round" optionLabel="label"></p-dropdown>
                 </div>
             </div>
         </div>       

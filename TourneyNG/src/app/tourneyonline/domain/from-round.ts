@@ -1,7 +1,7 @@
-import { SelectItem } from "../../components/common/api";
+import { Combobox } from "./tourney-combobox";
 
 export class FromRound {
     id: number;
-    position: SelectItem;
-    roundName: string;
+    position: Combobox;
+    round: Combobox;
 }

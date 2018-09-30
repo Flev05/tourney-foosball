@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { SelectItem } from 'primeng/api';
 
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
     templateUrl: './playoff-detailview.html'
@@ -17,8 +17,8 @@ export class PlayoffDetailView extends AbstractListView {
     position: number;
     roundName: string;
 
-    positions: SelectItem[];
-    rounds: SelectItem[];
+    positions: Combobox[];
+    rounds: Combobox[];
     playoffConfigs: PlayoffConfig[];
     selectedPlayoffConfig; PlayoffConfig;
 
@@ -27,8 +27,8 @@ export class PlayoffDetailView extends AbstractListView {
     row: PlayoffConfig;  
     displayDialog: boolean;
 
-    teamNoSelectItem: number;
-    teamsSelectItem: SelectItem[];
+    teamNoCombobox: number;
+    teamsCombobox: Combobox[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -48,31 +48,24 @@ export class PlayoffDetailView extends AbstractListView {
 
         this.tourneyService.prepareEliminatoriesComboBoxes();
 
-        this.positions = this.tourneyService.positionsSelectItem;
-        this.rounds = this.tourneyService.roundsSelectItem;
+        this.positions = this.tourneyService.positionsCombobox;
+        this.rounds = this.tourneyService.roundsCombobox;
 
-        this.teamNoSelectItem = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
+        this.teamNoCombobox = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
 
-        this.teamsSelectItem = [];
-        for(let i=2; i<=this.teamNoSelectItem; i++ ) {
+        this.teamsCombobox = [];
+        for(let i=2; i<=this.teamNoCombobox; i++ ) {
             let item = { label: "" + i, value: i  };
-            this.teamsSelectItem.push(item);
+            this.teamsCombobox.push(item);
         }
 
-        this.teamNoSelectItem = 0;
+        this.teamNoCombobox = 0;
 
         if(this.tourneyService.newPlayoff) {
             this.selectedPlayoff = {
                   id:this.tourneyService.getSequenceNumber()
                 , round:{id: this.tourneyService.getSequenceNumber(), name: ""}
-                , playoffConfigs: [{
-                        id: this.tourneyService.getSequenceNumber()
-                        , fromRound: {id: this.tourneyService.getSequenceNumber()
-                        , position:{label: "1°", value: 1}
-                        , roundName: ""
-                    }
-                }
-            ]};
+                , playoffConfigs: [this.newPlaoffConfig()]};
 
             this.selectedTourney.playoffs.push(this.selectedPlayoff);
         } else {
@@ -85,18 +78,22 @@ export class PlayoffDetailView extends AbstractListView {
         console.log(event);
 
         this.playoffConfigs = [];
-        for(let i=1; i<=this.teamNoSelectItem; i++ ) {
-            let pc: PlayoffConfig = {
-                  id: this.tourneyService.getSequenceNumber()
-                , fromRound: {
-                      id: this.tourneyService.getSequenceNumber()
-                    , position:{label: 1 + "°", value: 1}
-                    , roundName:""
-                }                
-              };
+        for(let i=1; i<=this.teamNoCombobox; i++ ) {
+            let pc: PlayoffConfig = this.newPlaoffConfig();
     
             this.playoffConfigs.push(pc);
         }
+    }
+
+    private newPlaoffConfig(): PlayoffConfig {
+        return {
+            id: this.tourneyService.getSequenceNumber(),
+            fromRound: {
+                id: this.tourneyService.getSequenceNumber(),
+                position: { label: 1 + "°", value: 1 },
+                round: { label: "", value: 0 }
+            }
+        };
     }
 
     showDialogToAdd() {
@@ -104,7 +101,7 @@ export class PlayoffDetailView extends AbstractListView {
               id: this.tourneyService.getSequenceNumber()
             , fromRound: {id: this.tourneyService.getSequenceNumber()
                 , position:{label: this.selectedPlayoffConfig.label, value: this.selectedPlayoffConfig.value}
-                , roundName: this.selectedPlayoffConfig.roundName
+                , round: this.selectedPlayoffConfig.round
             }  
         };
         this.displayDialog = true;

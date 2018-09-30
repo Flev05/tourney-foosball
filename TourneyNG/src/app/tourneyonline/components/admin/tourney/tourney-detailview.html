@@ -14,7 +14,7 @@
             nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
             tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
             inseriti saranno persi.
-            Per avere un account e salvare i dati inseriti, occorre procurarsi un account come descritto 
+            Per avere un account e salvare i dati inseriti, occorre procurarselo come descritto 
             nella pagina         
             <a class="home-button" [routerLink]="['/owner']">
                 Versione Noleggio
@@ -24,7 +24,7 @@
 
     <p-accordionTab header="Nuovo torneo">            
         <h3>Creare un nuovo torneo</h3>
-        <p>La creazione di un nuovo torneo è organizzata nei seguenti passi elementari:</p>
+        <p>La creazione di un nuovo torneo è organizzata in più passi da eseguire nell'ordine:</p>
         <ul>
             <li>Definizione caratteristiche</li>
             <li>Caricamento anagrafica giocatori</li>
@@ -32,8 +32,8 @@
             <li>Configurazione gironi</li>
             <li>Configurazione playoff</li>
             <li>Configurazione eliminatorie</li>
-            <li>Obiettivo torneo</li>
-            <li>Calendario</li>
+            <li>Configurazione Obiettivo torneo</li>
+            <li>Creazione Calendario</li>
         </ul>            
     
         <h4>Definizione caratteristiche</h4>
@@ -120,51 +120,27 @@
             In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
         </p>
 
-        <h4>Passaggio di turno</h4>
+        <h4>Configurazione eliminatorie</h4>
         <p>
-            Il passaggio del turno deve essere ben specificato per ogni fase dell'evoluzione del torneo.
-            Tutto deve essere chiaro e ben definito come passare dai gironi ai playoff o direttamente al risultato finale,
-            come passare dai gironi/playoff alle eliminatore, come impostare il primo livello di partenza delle eliminatorie,
-            se ci sono una o più squadre che vincono il torneo, tipico dei campionati di calcio di serie B in cui 
-            salgono 3 o 4 squadre in serie A, ecc.
+            La fase della eliminazione diretta, deve essere configurata scegliendo il livello
+            di partenza - sedicesimi, ottavi, quarti, ecc. - e spcificando come popolare gli incontri 
+            a partire dai posizionamente di clssifica dei girone precedenti: gironi all'italiana e playoff.
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/adminrule']" (click)="menuActive = false">Regole</a>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali configurare il passaggio dei turni, 
+            <a class="home-button" [routerLink]="['/admineliminatory']" (click)="menuActive = false">Eliminatorie</a>
+            Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali configurare le eliminatorie, 
             selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
-            In questa vista dovete scegliere se volete la configurazione:
+            Nella vista troverete anche le istruzioni di dettaglio per la creazione delle regole di popolamento 
+            dell'eliminatorie.
         </p> 
-        <ul>
-            <li>Automatica</li>
-            <li>Manuale</li>
-        </ul>         
-            
-        <h5>Automatica</h5>
-        <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
-            senza playoff. In questo caso dovete specificare il numero di squadre che volete passino dai gironi alla 
-            fase ad eliminazione diretta, potere inserire qualsiasi numero minore o uguale al numero totale delle
-            squadre che compongono il torneo, ci pensa il sistama sistemarle nell'opportuno livello di eliminatorie iniziale:            
-            sedicesimi, ottavi di finale, ecc.
-        </p> 
-        
-        <h5>Manuale</h5>
-        <p>La gestione manuale permette qualsiasi configurazione del passaggio del turno, combinando tutti i casi 
-            dai gironi, ai playoff alle eliminatorie, dai playoff alle eliminatorie ecc.        
-            Nella vista dovete creare una riga per ogni regola di passaggio di turno. 
-            Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
-            di ciasun girone ai quarti di finale (inteso come livello di partenza), dovete inserire, con il bottone 
-            "Aggiungi Regola" le seguenti 4 regole in cui esprimete che:
-        </p> 
-        <ul>
-            <li>la 1° classificata del 1° girone gioca con la 2° classificata del 4° girone</li>
-            <li>la 1° classificata del 2° girone gioca con la 2° classificata del 3° girone</li>
-            <li>la 1° classificata del 3° girone gioca con la 2° classificata del 2° girone</li>
-            <li>la 1° classificata del 4° girone gioca con la 2° classificata del 1° girone</li>
-        </ul>         
-     
 
-        <p>Nelle regole la colonna FASE indica la destinazione della regola, per esempio PLAYOFF significa che
-            la riga si riferisce a come popolare i playoff 
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+        <h4>Obiettivi</h4>
+        <p>
+            L'obiettivo del torneo è da configurare per scopi di memorizzazione dello scopo del torneo
+            possibile da consultare anche in futuro.
+            Per esempio, per il campionato di calcio di serie B, l'obiettivo è salire in serie A e ci 
+            arrivano le prime due squadre del campionato più quella che vince i playoff corrispondenti.
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminobjective']" (click)="menuActive = false">Obiettivi</a>
         </p>
 
         <h4>Calendario</h4>
@@ -333,10 +309,7 @@
                             Gironi:
                         </div>
                         <div class="ui-grid-col-1">
-                            <p-spinner formControlName="roundNo" tooltipPosition="right"
-                                [min]="1"
-                                pTooltip="Inserire il numero effettivo di gironi all'italiana che si intende organizzare">
-                            </p-spinner>
+                            {{selectedTourney.roundNo}}
                         </div>
                     </div>
 
@@ -345,10 +318,7 @@
                             Playoff:
                         </div>
                         <div class="ui-grid-col-1">
-                            <p-spinner formControlName="playoffNo" tooltipPosition="right"
-                                [min]="1"
-                                pTooltip="Inserire il numero effettivo di gironi di playoff che si intende organizzare">
-                            </p-spinner>
+                            {{selectedTourney.playoffNo}}
                         </div>
                     </div>
                 </p-fieldset>

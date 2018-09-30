@@ -9,6 +9,6 @@ export interface Round {
     type?: RoundType;
 
     teams?:  Team[];
-    calendars?: Meeting[];
+    meetings?: Meeting[];
     classification?: Classification[];
 }

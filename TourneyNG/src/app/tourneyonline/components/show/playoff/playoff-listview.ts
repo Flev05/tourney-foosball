@@ -40,12 +40,12 @@ export class PlayoffListView extends CalendarDetailView {
             
             let round : Round = this.playoffs[i];
 
-            for (let j = 0; j < round.calendars.length; j++) {
+            for (let j = 0; j < round.meetings.length; j++) {
                 
-                let m : Meeting = round.calendars[j];
+                let m : Meeting = round.meetings[j];
                 let currentKey = this.makeKey(round, m);  
 
-                let len = round.calendars.length;
+                let len = round.meetings.length;
                 console.log(currentKey + " rowspan=" + len);
 
                 this.rows.push(m);

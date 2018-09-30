@@ -14,6 +14,7 @@ import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -42,6 +43,7 @@ export class TourneyService {
     selectedTeam: Team;
     selectedRound : Round;
     selectedPlayoff : Playoff;
+    selectedEliminatory : Eliminatory;
 
     newTourney : boolean = false;
     newPlayer : boolean = false;

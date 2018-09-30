@@ -10,7 +10,7 @@ import { Eliminatory } from '../../../domain/eliminatory';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 
-const redirect: string = "admincalendar/lv/dv";
+const roundRedirect: string = "admincalendar/lv/dv";
 const playoffRedirect: string = "admincalendar/lv/dv";
 const eliminatoryRedirect: string = "admincalendar/lv/dv";
 
@@ -23,10 +23,8 @@ export class CalendarListView extends AbstractListView {
         protected router: Router,
         protected location: Location,
     ) {
-        super(redirect, tourneyService, router, location);
+        super(roundRedirect, tourneyService, router, location);
     }
-
-    selectedTourney: Tourney;
 
     selectedPlayoff: Playoff;
     selectedRound: Round;
@@ -53,22 +51,39 @@ export class CalendarListView extends AbstractListView {
     onRoundSelect(event) {
         console.log(event.data);
 
-        let sp = this.cloneObject(event.data);
-
-        for(let i=0; i<this.selectedTourney.rounds.length; i++ ) {
-            if(this.selectedTourney.rounds[i].id == sp.id) {
-                this.selectedRound = this.selectedTourney.rounds[i];
-                this.tourneyService.selectedRound = this.selectedRound;
-                break;
-            }
-        }
+        this.tourneyService.selectedRound = this.selectedRound;
 
         this.gotoRoundDetailView();
     }
 
-    protected gotoRoundDetailView() {
-        this.router.navigate([this.redirect]);
+    private gotoRoundDetailView() {
+        this.router.navigate([roundRedirect]);
     }
+
+    onPlayoffSelect(event) {
+        console.log(event.data);
+
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+
+        this.gotoPlayoffDetailView();
+    }
+
+    private gotoPlayoffDetailView() {
+        this.router.navigate([playoffRedirect]);
+    }
+
+    onEliminatorySelect(event) {
+        console.log(event.data);
+
+        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
+
+        this.gotoEliminatoryDetailView();
+    }
+
+    private gotoEliminatoryDetailView() {
+        this.router.navigate([eliminatoryRedirect]);
+    }
+
 
     goBack(): void {
         this.location.back();

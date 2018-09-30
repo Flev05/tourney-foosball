@@ -24,9 +24,7 @@
             [value]="rounds"
             selectionMode="single"
             [(selection)]="selectedRound" 
-            (onRowSelect)="onRoundSelect($event)" 
-            [paginator]="true" 
-            [rows]="15">
+            (onRowSelect)="onRoundSelect($event)" >
     
             <ng-template pTemplate="colgroup">
                 <colgroup>
@@ -55,9 +53,7 @@
             [value]="playoffs" 
             selectionMode="single"
             [(selection)]="selectedPlayoff" 
-            (onRowSelect)="onPlayoffSelect($event)" 
-            [paginator]="true" 
-            [rows]="15">
+            (onRowSelect)="onPlayoffSelect($event)" >
     
             <ng-template pTemplate="colgroup">
                 <colgroup>
@@ -86,9 +82,7 @@
             [value]="eliminatories" 
             selectionMode="single"
             [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onEliminatorySelect($event)" 
-            [paginator]="true" 
-            [rows]="15">
+            (onRowSelect)="onEliminatorySelect($event)" >
     
             <ng-template pTemplate="colgroup">
                 <colgroup>

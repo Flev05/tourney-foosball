@@ -7,6 +7,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import {Message} from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { RoundType } from 'app/tourneyonline/domain/roundType';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -86,7 +87,7 @@ export class EliminatoryListView extends AbstractListView {
         return {
         id: this.tourneyService.getSequenceNumber(),
             enabled: false,
-            round: {},
+            round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P, isRoundTrip: true},
             level: this.tourneyService.levelsCombobox.length,
             tc1: {
                 id: this.tourneyService.getSequenceNumber(),

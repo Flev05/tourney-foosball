@@ -12,7 +12,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
-import {PlayoffRoutingModule} from '../playoff/playoff-routing.module';
+import {CalendarRoutingModule} from './calendar-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
 import {DropdownModule} from '../../../../components/dropdown/dropdown';
@@ -25,8 +25,10 @@ import {SliderModule} from '../../../../components/slider/slider';
 
 import {CalendarModule} from '../../../../components/calendar/calendar';
 
-import {PlayoffTourneyListView} from '../playoff/tourney-listview';
-import {PlayoffListView} from '../playoff/playoff-listview';
+import {CalendarTourneyListView } from './tourney-listview';
+import { MeetingListView } from './meeting-listview';
+import { MeetingDetailView } from './meeting-detailview';
+import { CalendarListView } from './calendar-listview';
 
 @NgModule({
 	imports: [
@@ -52,13 +54,15 @@ import {PlayoffListView} from '../playoff/playoff-listview';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
-        ,PlayoffRoutingModule
+        ,CalendarRoutingModule
         ,AccordionModule
         ,PickListModule
     ],
 	declarations: [
-		PlayoffTourneyListView,
-        PlayoffListView,
+		CalendarTourneyListView
+        ,CalendarListView
+        ,MeetingListView
+        ,MeetingDetailView
 	]
 })
-export class PlayoffModule {}
+export class AdminCalendarModule {}

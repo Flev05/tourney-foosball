@@ -13,12 +13,19 @@
         </p>
 
         <h4>Creare un nuovo girone</h4>
-        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-            il bottone Salva.
-            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti.
+        <p>
             Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
             relativamente agli incontri di andata e ritorno che devono essere documentati nel calendario
-            corrispondente. 
+            corrispondente.
+            L'utente deve semplicemente spostare, con i bottoni preposti, la squadra scelta da sinstra verso destra per aggiungerla
+            al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.
+            Nel momento in cui si conferma la composizione del girone, il sistema automaticamente genera gli incontri della
+            nuova squadra con quelli già esistenti, allo stesso modo rimuove gli incontri relativi alla squadra rimossa
+            dal girone.
+            Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
+            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente 
+            alla voce di menù:
+            <a class="home-button" [routerLink]="['/admincalendar']" (click)="menuActive = false">Calendario</a>
         </p>
 
         <h4>Modificare un girone</h4>
@@ -67,8 +74,13 @@
             <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
                     [responsive]="true"
                     dragdrop="true" 
-                    dragdropScope="teams" 
-                    [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}">
+                    [sourceStyle]="{'height':'300px'}" 
+                    [targetStyle]="{'height':'300px'}"                    
+                    (onMoveToTarget)="onMoveToTarget($event.items)"
+                    (onMoveToSource)="onMoveToSource($event.items)"
+                    (onMoveAllToTarget)="onMoveAllToTarget($event.items)"
+                    (onMoveAllToSource)="onMoveAllToSource($event.items)"
+                    >
                 <ng-template let-team pTemplate="item">
                     <div class="ui-helper-clearfix">
                         <div>{{team.teamName}}</div>
@@ -88,8 +100,6 @@
                 </div>
             </div>
         </div>
-
     </form>   
-
 </div>
  

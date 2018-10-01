@@ -6,6 +6,7 @@ import { Tourney } from '../../../domain/tourney';
 import { Round } from '../../../domain/round';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
+import { RoundType } from 'app/tourneyonline/domain/roundType';
 
 const redirect: string = "adminround/lv/dv";
 
@@ -39,7 +40,7 @@ export class RoundListView extends AbstractListView {
     }
 
     create() {
-        this.selectedRound={};
+        this.selectedRound={id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.R, isRoundTrip: true};
         this.tourneyService.selectedRound = this.selectedRound;
         this.tourneyService.newRound = true;
         this.gotoDetailView();

@@ -36,7 +36,7 @@ export class MeetingListView extends CalendarDetailView {
         this.router.navigate([redirect]);
     }
 
-    cloneMeeting(c: Meeting): Meeting {
+    cloneMeeting(c: any): any {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

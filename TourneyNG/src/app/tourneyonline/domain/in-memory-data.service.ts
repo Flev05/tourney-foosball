@@ -1,5 +1,6 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
  import {TourneyType} from './tourneyType';
+import { RoundType } from 'app/tourneyonline/domain/roundType';
 
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
@@ -79,18 +80,20 @@ export class InMemoryDataService implements InMemoryDbService {
           }
         ]  
         , rounds:[{
-            id:1, name: "Girone A"
+            id:1, name: "Girone A", type: RoundType.R, isRoundTrip: true
             ,teams:[
                {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
               ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
             ]
+            ,meetings:[]
           }
           ,{
-            id:2, name: "Girone B"
+            id:2, name: "Girone B", type: RoundType.R, isRoundTrip: true
             ,teams:[
               {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
              ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
             ]
+            ,meetings:[]
           }
         ]
         ,playoffs:[]

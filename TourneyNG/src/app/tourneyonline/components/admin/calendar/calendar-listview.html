@@ -7,17 +7,17 @@
 
 <div class="content-section documentation">
 
-    <p>Vista elenco di tutti i gironi, playoff e eliminatorie che compongono il torneo: 
-        {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
-    </p>
-
-    <p>Da questa vista elenco potete selezionare la scheda della fase a girone, playoff o eliminatoria dalla
-        quale accedere alla vista di dettaglio degli incontri o dell'incontro di interesse
-        per configurare il calendario corrispondente.
+    <p>Vista elenco di tutti i gironi, playoff e eliminatorie dalla quale accedere ai corrispondenti calendari.
+        Selezionare la riga di interesse per accedere alla lista degli incontri relativi e configurare 
+        il corrispondente calendario.
     </p>
 </div>
 
 <div class="content-section implementation">    
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>
+
 <p-tabView>
     <p-tabPanel header="Gironi">    
         <p-table [responsive]="true" 
@@ -45,9 +45,6 @@
             </ng-template>        
         </p-table>
     </p-tabPanel>
-</p-tabView>
-
-<p-tabView>
     <p-tabPanel header="Playoff">    
         <p-table [responsive]="true" 
             [value]="playoffs" 
@@ -63,20 +60,17 @@
 
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Nome</th>
+                    <th>Nome playoff</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr  [pSelectableRow]="rowData">
-                    <td>{{rowData.name}}</td>
+                    <td>{{rowData.round.name}}</td>
                 </tr>
             </ng-template>        
         </p-table>
     </p-tabPanel>
-</p-tabView>
-
-<p-tabView>
     <p-tabPanel header="Eliminatorie">    
         <p-table [responsive]="true" 
             [value]="eliminatories" 
@@ -100,7 +94,7 @@
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr  [pSelectableRow]="rowData">
-                    <td>{{rowData.name}}</td>
+                    <td>{{rowData.round.name}}</td>
                     <td>{{rowData.level}}</td>
                 </tr>
             </ng-template>        

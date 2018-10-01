@@ -4,9 +4,10 @@ import { Meeting } from './meeting';
 import { RoundType } from './roundType';
 
 export interface Round {
-    id?: number;
-    name?: string;
-    type?: RoundType;
+    id: number;
+    name: string;
+    type: RoundType;
+    isRoundTrip: boolean;
 
     teams?:  Team[];
     meetings?: Meeting[];

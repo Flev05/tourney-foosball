@@ -58,7 +58,7 @@ export class ClassificationListView extends CalendarDetailView {
                 this.rows[row].roundName = round.name ;    
                 this.rows[row].teamName = cla.team.teamName;    
                 if(!roundMap.has(currentKey)) {
-                    roundMap.set(currentKey, cla);
+                    // roundMap.set(currentKey, cla);
                     this.rows[row].rowspanSize = len;
                 } else {
                     this.rows[row].rowspanSize = undefined;

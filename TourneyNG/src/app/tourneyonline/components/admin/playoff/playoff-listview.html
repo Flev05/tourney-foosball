@@ -22,9 +22,7 @@
         [value]="playoffs"
         selectionMode="single"
         [(selection)]="selectedPlayoff" 
-        (onRowSelect)="onRowSelect($event)" 
-        [paginator]="true" 
-        [rows]="15">
+        (onRowSelect)="onRowSelect($event)" >
 
         <ng-template pTemplate="caption">
             <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>

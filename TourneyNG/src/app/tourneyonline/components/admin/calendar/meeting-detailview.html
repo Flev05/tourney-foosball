@@ -1,0 +1,98 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Gestione incontro</span>
+        <span>Vista di dettaglio di un incontro</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>
+            Da questa vista potete modificare i dati dell'incontro selezionato 
+        </p>
+
+        <h4>Modificare un incontro</h4>
+        <p>I dati da inserire o modificare solo la data e l'ora dell'incontro e l'indirizzo dove
+           si svolge l'incontro
+        </p>
+
+        <h4>Creare un nuovo incontro</h4>
+        <p>
+            La creazione di un incontro non viene effettuato in questa pagina ma nelle
+            pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
+        </p>
+
+        <h4>Rimuovere un incontro</h4>
+        <p>La rimozione di un incontro non viene effettuato in questa pagina ma nelle
+            pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <h4><span>Incontro: {{selectedMeeting.name}}</span></h4>
+  
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+
+    <form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Indirizzo:
+                    </div>
+                    <div class="ui-grid-col-5">
+                        <input pInputText type="text" formControlName="address"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!meetingFormGroup.controls['address'].valid&&meetingFormGroup.controls['address'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
+                                L'indirizzo è obbligatorio
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        <label for="country-id">Comune:</label>
+                    </div>
+                    <div class="ui-grid-col-5">
+                        <p-autoComplete id="country-id" formControlName="country" 
+                            [suggestions]="filteredCountriesSingle" 
+                            (completeMethod)="search($event)" field="city"
+                            placeholder="Comuni" [minLength]="1">
+                        </p-autoComplete>
+                    </div>
+                </div>
+            
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Data e ora:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-calendar formControlName="dateAndTime" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                        </p-calendar>
+                    </div>
+                </div>
+
+        </div>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!meetingFormGroup.valid"></button>
+                </div>
+            </div>
+        </div>
+
+    </form>   
+
+</div>
+ 

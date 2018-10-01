@@ -4,6 +4,7 @@ import { Meeting } from '../../../domain/meeting';
  
 import { CalendarDetailView } from '../calendar/calendar-detailview';
 import { Round } from '../../../domain/round';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
 
 @Component({
     templateUrl: './playoff-listview.html',
@@ -16,7 +17,7 @@ import { Round } from '../../../domain/round';
   `]
 })
 export class PlayoffListView extends CalendarDetailView {
-    playoffs: Round[];
+    playoffs: Playoff[];
 
     ngOnInit() {
         super.ngOnInit();
@@ -33,26 +34,26 @@ export class PlayoffListView extends CalendarDetailView {
 
         let row : number = 0;
 
-        var roundMap: Map<string, Meeting> = new Map<string, Meeting>();
+        var playoffMap: Map<string, Meeting> = new Map<string, Meeting>();
         this.rows = [];
         
         for (let i = 0; i < this.playoffs.length; i++) {
             
-            let round : Round = this.playoffs[i];
+            let playoff : Playoff = this.playoffs[i];
 
-            for (let j = 0; j < round.meetings.length; j++) {
+            for (let j = 0; j < playoff.round.meetings.length; j++) {
                 
-                let m : Meeting = round.meetings[j];
-                let currentKey = this.makeKey(round, m);  
+                let m : Meeting = playoff.round.meetings[j];
+                let currentKey = this.makeKey(playoff.round, m);  
 
-                let len = round.meetings.length;
+                let len = playoff.round.meetings.length;
                 console.log(currentKey + " rowspan=" + len);
 
                 this.rows.push(m);
-                this.rows[row].roundName = round.name ;    
+                this.rows[row].playoffName = playoff.round.name ;    
                 this.rows[row].meetingName = m.name;    
-                if(!roundMap.has(currentKey)) {
-                    roundMap.set(currentKey, m);
+                if(!playoffMap.has(currentKey)) {
+                    playoffMap.set(currentKey, m);
                     this.rows[row].rowspanSize = len;
                 } else {
                     this.rows[row].rowspanSize = undefined;

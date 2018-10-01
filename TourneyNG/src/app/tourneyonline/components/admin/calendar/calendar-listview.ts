@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Tourney } from '../../../domain/tourney';
 import { Round } from '../../../domain/round';
 import { Playoff } from '../../../domain/playoff';
 import { Eliminatory } from '../../../domain/eliminatory';
@@ -10,9 +9,7 @@ import { Eliminatory } from '../../../domain/eliminatory';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 
-const roundRedirect: string = "admincalendar/lv/dv";
-const playoffRedirect: string = "admincalendar/lv/dv";
-const eliminatoryRedirect: string = "admincalendar/lv/dv";
+const meetingLvRedirect: string = "admincalendar/lv/meetingLv";
 
 @Component({
     templateUrl: './calendar-listview.html'
@@ -23,7 +20,7 @@ export class CalendarListView extends AbstractListView {
         protected router: Router,
         protected location: Location,
     ) {
-        super(roundRedirect, tourneyService, router, location);
+        super(meetingLvRedirect, tourneyService, router, location);
     }
 
     selectedPlayoff: Playoff;
@@ -53,37 +50,28 @@ export class CalendarListView extends AbstractListView {
 
         this.tourneyService.selectedRound = this.selectedRound;
 
-        this.gotoRoundDetailView();
+        this.gotoMeetingListView();
     }
 
-    private gotoRoundDetailView() {
-        this.router.navigate([roundRedirect]);
+    private gotoMeetingListView() {
+        this.router.navigate([meetingLvRedirect]);
     }
 
     onPlayoffSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.tourneyService.selectedRound = this.selectedPlayoff.round;
 
-        this.gotoPlayoffDetailView();
-    }
-
-    private gotoPlayoffDetailView() {
-        this.router.navigate([playoffRedirect]);
+        this.gotoMeetingListView();
     }
 
     onEliminatorySelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
+        this.tourneyService.selectedRound = this.selectedEliminatory.round;
 
-        this.gotoEliminatoryDetailView();
+        this.gotoMeetingListView();
     }
-
-    private gotoEliminatoryDetailView() {
-        this.router.navigate([eliminatoryRedirect]);
-    }
-
 
     goBack(): void {
         this.location.back();

@@ -8,6 +8,7 @@ import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { RoundType } from 'app/tourneyonline/domain/roundType';
 
 @Component({
     templateUrl: './playoff-detailview.html'
@@ -64,7 +65,7 @@ export class PlayoffDetailView extends AbstractListView {
         if(this.tourneyService.newPlayoff) {
             this.selectedPlayoff = {
                   id:this.tourneyService.getSequenceNumber()
-                , round:{id: this.tourneyService.getSequenceNumber(), name: ""}
+                , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P, isRoundTrip: true}
                 , playoffConfigs: [this.newPlaoffConfig()]};
 
             this.selectedTourney.playoffs.push(this.selectedPlayoff);

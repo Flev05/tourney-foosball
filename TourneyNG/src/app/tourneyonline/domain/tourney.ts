@@ -13,17 +13,18 @@ import { Final } from './final';
 import {SelectItem} from 'primeng/api';
 
 export interface Tourney {
-    id?: number;
-    tourneyName? : string;
-    dateInMillis? : number;
-    dateAsString? : string;
-    timeAsString? : string;
-    address? : string;
-    country? : Country;
+    id: number;
+    tourneyName : string;
+    dateInMillis : number;
+    dateAsString : string;
+    timeAsString : string;
+    address : string;
+    country : Country;
     
-    discipline? : Discipline;
+    access: string;
+    discipline : Discipline;
 
-    tourneyType?: TourneyType;
+    tourneyType: TourneyType;
     raceDuration?: number;
 
     phases?: [string];

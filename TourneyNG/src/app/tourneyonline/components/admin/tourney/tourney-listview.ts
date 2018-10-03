@@ -22,7 +22,6 @@ export class TourneyListView extends AbstractTourneyListView {
     }
 
     create() {
-        this.selectedTourney={};
         this.tourneyService.selectedTourney = this.selectedTourney;
         this.tourneyService.newTourney = true;
         this.gotoDetailView();
@@ -31,17 +30,9 @@ export class TourneyListView extends AbstractTourneyListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedTourney = this.cloneTourney(event.data);
+        this.tourneyService.selectedTourney = this.cloneObject(event.data);
         this.tourneyService.newTourney = false;
 
         this.gotoDetailView();
-    }
-
-    cloneTourney(c: Tourney): Tourney {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
-        }
-        return car;
     }
 }

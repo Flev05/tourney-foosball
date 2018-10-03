@@ -7,13 +7,15 @@ export class InMemoryDataService implements InMemoryDbService {
       const tourneys = [
         {id: 1, tourneyName: 'CSI Open A 2017'
         ,dateInMillis: 1543606200000
-        ,dateAsString: "23/10/2017"
+        ,dateAsString: "30/11/2018"
         ,timeAsString: "20:30:00"
-        ,address: 'Via Roma 110 - 20010 Pregnana Milanese (MI)'
+        ,address: 'Via Roma, 110'
         ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
         ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
 
         ,tourneyType: TourneyType.Score
+
+        ,access: "public"
 
         ,phases: ["playoff", "elimination"]
 
@@ -24,7 +26,7 @@ export class InMemoryDataService implements InMemoryDbService {
         ,matchBalanceScores:1
         
         ,pointsNeededToWin:9
-        ,pointsGoldenGoalTieBreakWin:0
+        ,pointsGoldenGoalTieBreakWin:2
         ,pointsGoldenGoalTieBreakDefeat:1
 
         ,teamNo:32
@@ -85,7 +87,29 @@ export class InMemoryDataService implements InMemoryDbService {
                {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
               ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
             ]
-            ,meetings:[]
+            ,meetings:[{
+                  id: 1,
+                  name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
+                  dateInMillis : 1543606200000,
+                  date: "30/11/2018",
+                  time: "20:30:00",
+                  address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
+                  country: {id:1, city: "ZIBIDO SAN GIACOMO"},
+                  team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
+                  team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
+              }
+              ,{
+                  id: 2,
+                  name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
+                  dateInMillis : 1543606200000,
+                  date: "30/11/2018",
+                  time: "20:30:00",
+                  address: "VIA ZANZOTTERA 32 20153 MILANO MI",
+                  country: {id:1, city: "ORIGGIO"},
+                  team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
+                  team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
+              }
+            ]
           }
           ,{
             id:2, name: "Girone B", type: RoundType.R, isRoundTrip: true
@@ -93,11 +117,105 @@ export class InMemoryDataService implements InMemoryDbService {
               {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
              ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
             ]
-            ,meetings:[]
+            ,meetings:[{
+                id: 1,
+                name:  "SOLAROSPORT - AURORA PREGNANA BLU",
+                dateInMillis : 1543606200000,
+                date: "30/11/2018",
+                time: "20:30:00",
+                address: "VIA S.PAOLO, 6 20020 SOLARO MI",
+                country: {id:1, city: "SOLARO"},
+                team1: {id:4, teamName: ""},
+                team2: {id:1, teamName: "AURORA PREGNANA BLU"}
+            }
+            ,{
+                id: 2,
+                name:  "AURORA PREGNANA BLU - SOLAROSPORT",
+                dateInMillis : 1543606200000,
+                date: "30/11/2018",
+                time: "20:30:00",
+                address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
+                country: {id:1, city: "PREGNANA"},
+                team1: {id:1, teamName: "AURORA PREGNANA BLU"},
+                team2: {id:4, teamName: "SOLAROSPORT"}
+            }]
           }
         ]
-        ,playoffs:[]
-        ,eliminatories:[]
+        ,playoffs:[
+          {id:1, round:{
+              id:1, name: "Playoff Girone A", type: RoundType.P, isRoundTrip: true
+              ,teams:[
+                {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
+                ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
+              ]
+              ,meetings:[{
+                    id: 1,
+                    name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
+                    dateInMillis : 1543606200000,
+                    date: "30/11/2018",
+                    time: "20:30:00",
+                    address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
+                    country: {id:1, city: "ZIBIDO SAN GIACOMO"},
+                    team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
+                    team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
+                }
+                ,{
+                    id: 2,
+                    name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
+                    dateInMillis : 1543606200000,
+                    date: "30/11/2018",
+                    time: "20:30:00",
+                    address: "VIA ZANZOTTERA 32 20153 MILANO MI",
+                    country: {id:1, city: "ORIGGIO"},
+                    team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
+                    team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
+                }
+              ]
+            }
+            ,playoffConfigs:[
+                 {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
+                ,{id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+              ]
+          }
+          ,{id:2, round:{
+            id:2, name: "Playoff Girone B", type: RoundType.P, isRoundTrip: true
+            ,teams:[
+              {id:6,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 - 20020 SOLARO MI"}
+              ,{id:3,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
+            ]
+            ,meetings:[{
+                  id: 1,
+                  name:  "SOLAROSPORT - AURORA PREGNANA BLU",
+                  dateInMillis : 1543606200000,
+                  date: "30/11/2018",
+                  time: "20:30:00",
+                  address: "VIA S.PAOLO, 6 - 20020 SOLARO MI",
+                  country: {id:1, city: "SOLARO"},
+                  team1: {id:6, teamName: "SOLAROSPORT"},
+                  team2: {id:3, teamName: "AURORA PREGNANA BLU"}
+              }
+              ,{
+                  id: 2,
+                  name:  "AURORA PREGNANA BLU - SOLAROSPORT",
+                  dateInMillis : 1543606200000,
+                  date: "30/11/2018",
+                  time: "20:30:00",
+                  address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
+                  country: {id:1, city: "PREGNANA"},
+                  team1: {id:3, teamName: "AURORA PREGNANA BLU"},
+                  team2: {id:6, teamName: "SOLAROSPORT"}
+              }
+            ]
+          }
+        ,playoffConfigs:[
+             {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
+            ,{id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
+          ]
+        }
+        ]
+        ,eliminatories:[
+
+        ]
         ,objectives:[]
       }
     ];
@@ -247,6 +365,13 @@ export class InMemoryDataService implements InMemoryDbService {
           , cityCode: 'B026'
           , provinceCode: 'PU'
           , zipCode: '61040'
+          , countryCode: 'IT'
+        },
+        {id: 801
+          , city: 'PREGNANA MILANESE'
+          , cityCode: 'H106'
+          , provinceCode: 'MI'
+          , zipCode: '20010'
           , countryCode: 'IT'
         },
         {id: 8000

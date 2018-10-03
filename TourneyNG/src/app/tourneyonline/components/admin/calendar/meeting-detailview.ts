@@ -57,6 +57,9 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.dateInMillis = dateAndTime.getTime();
 
+        this.selectedMeeting.date  = dateAndTime.toLocaleDateString();
+        this.selectedMeeting.time  = dateAndTime.toLocaleTimeString();
+
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
 

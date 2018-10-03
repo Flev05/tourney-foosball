@@ -215,7 +215,7 @@
                 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Indirizzo:
+                        Via:
                     </div>
                     <div class="ui-grid-col-5">
                         <input pInputText type="text" formControlName="address"/>
@@ -224,7 +224,7 @@
                         <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['address'].valid&&tourneyFormGroup.controls['address'].dirty">
                             <i class="fa fa-close"></i>
                             <span *ngIf="tourneyFormGroup.controls['address'].errors['required']">
-                                L'indirizzo è obbligatorio
+                                La via è obbligatoria
                             </span>
                         </div>
                     </div>
@@ -242,7 +242,16 @@
                         </p-autoComplete>
                     </div>
                 </div>
-            
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Indirizzo:
+                    </div>
+                    <div class="ui-grid-col-8">
+                        {{fullAddress}}
+                    </div>
+                </div>
+                    
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
                         Data e ora:
@@ -261,6 +270,26 @@
                         <p-dropdown [options]="disciplines" formControlName="discipline" optionLabel="name"></p-dropdown>
                     </div>
                 </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Accesso:
+                    </div>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare se il torneo è visibile a tutti: pubblico o riservato solo a chi ha l'accesso: privato">
+                        <p-radioButton name="accessGroupname" 
+                            label="Pubblico" 
+                            value="public" 
+                            formControlName="access">
+                        </p-radioButton>
+                        <p-radioButton name="accessGroupname" 
+                            label="Privato" 
+                            value="private" 
+                            formControlName="access">
+                        </p-radioButton>
+                    </div>
+                </div>
+    
             </div>
             </p-tabPanel>
 
@@ -349,6 +378,9 @@
                                 pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
                             </p-spinner>
                         </div>
+                        <div class="ui-grid-col-3">
+                            punti
+                        </div>
                     </div>
         
                     <div class="ui-grid-row">
@@ -361,6 +393,9 @@
                                 pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
                             </p-spinner>
                         </div>
+                        <div class="ui-grid-col-3">
+                            punti
+                        </div>
                     </div>
 
                     <div class="ui-grid-row">
@@ -372,6 +407,9 @@
                                 [min]="1"
                                 pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
                             </p-spinner>
+                        </div>
+                        <div class="ui-grid-col-3">
+                            punti
                         </div>
                     </div>
                 </p-fieldset>
@@ -402,6 +440,9 @@
                                 pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                             </p-spinner>
                         </div>                
+                        <div class="ui-grid-col-3">
+                            punti
+                        </div>
                     </div>                
 
                     <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
@@ -415,6 +456,9 @@
                                 pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
                             </p-spinner>
                         </div>                            
+                        <div class="ui-grid-col-3">
+                            punti
+                        </div>
                     </div>                                
                 </p-fieldset> 
             </div>

@@ -6,7 +6,7 @@ export interface Meeting
 {
     id      : number;
     name    : string;
-    dateInMillis? : number;
+    dateInMillis : number;
     date    : string;
     time    : string;
     address : string;

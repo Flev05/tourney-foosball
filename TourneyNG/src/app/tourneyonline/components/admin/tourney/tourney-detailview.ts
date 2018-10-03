@@ -41,6 +41,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
     gender: string = "tourney";
 
+    fullAddress: string;
+
     ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
 
@@ -64,6 +66,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.matchBalanceScores = 0;
             this.selectedTourney.matchLoserScores = 0;
             this.selectedTourney.matchWinnerScores = 3;
+            this.selectedTourney.access = "public";
             
             this.selectedTourney.objectives = [];
             this.selectedTourney.rounds = [];
@@ -86,6 +89,10 @@ export class TourneyDetailView extends AbstractDetailView {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }
 
+        this.fullAddress = this.selectedTourney.address + " - " 
+            + this.selectedTourney.country.zipCode + " " + this.selectedTourney.country.city
+            + " (" + this.selectedTourney.country.provinceCode +")";
+
         let teamNo = 
         this.selectedTourney.teams===undefined
         // this.selectedTourney.teams==[]
@@ -98,6 +105,7 @@ export class TourneyDetailView extends AbstractDetailView {
             'country': new FormControl(this.selectedTourney.country),
 
             'tourneyDate': new FormControl(this.tourneyDate),
+            'access': new FormControl(this.selectedTourney.access),
 
             'discipline': new FormControl(this.selectedTourney.discipline),
 
@@ -141,6 +149,8 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.tourneyName = this.tourneyFormGroup.get('tourneyName').value;
         this.selectedTourney.address = this.tourneyFormGroup.get('address').value;
         this.selectedTourney.country = this.tourneyFormGroup.get('country').value;
+
+        this.selectedTourney.access = this.tourneyFormGroup.get('access').value;
 
         this.tourneyDate = this.tourneyFormGroup.get('tourneyDate').value;
         this.selectedTourney.dateInMillis = this.tourneyDate.getTime();

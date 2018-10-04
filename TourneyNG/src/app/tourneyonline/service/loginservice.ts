@@ -11,11 +11,11 @@ import { Login } from '../domain/login';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
+const loginUrl = 'api/login';  // URL to web server api
+const logoutUrl = 'api/logout';  // URL to web server api
 
 @Injectable()
 export class LoginService {
-    private loginUrl = 'api/login';  // URL to web server api
-    private logoutUrl = 'api/logout';  // URL to web server api
 
     selectedLogin : Login;
 
@@ -29,7 +29,7 @@ export class LoginService {
     /** PUT: send the request login to the server */
     sendLogin (login: Login ): Observable<Login> {
         const id =  login.id;
-        const url = `${this.loginUrl}/${id}`;
+        const url = `${loginUrl}/${id}`;
 
         this.userLogged=true;
         this.selectedLogin=login;
@@ -43,7 +43,7 @@ export class LoginService {
     /** PUT: send the request logout to the server */
     sendLogout (): Observable<Login> {
         const id =  this.selectedLogin.id;
-        const url = `${this.logoutUrl}/${id}`;
+        const url = `${logoutUrl}/${id}`;
 
         this.userLogged=undefined;
 

@@ -43,7 +43,7 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Indirizzo:
+                        Via:
                     </div>
                     <div class="ui-grid-col-5">
                         <input pInputText type="text" formControlName="address"/>
@@ -52,7 +52,7 @@
                         <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!meetingFormGroup.controls['address'].valid&&meetingFormGroup.controls['address'].dirty">
                             <i class="fa fa-close"></i>
                             <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
-                                L'indirizzo è obbligatorio
+                                    La via è obbligatoria
                             </span>
                         </div>
                     </div>
@@ -70,7 +70,16 @@
                         </p-autoComplete>
                     </div>
                 </div>
-            
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Indirizzo:
+                    </div>
+                    <div class="ui-grid-col-8">
+                        {{fullAddress}}
+                    </div>
+                </div>
+                                
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
                         Data e ora:

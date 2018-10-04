@@ -56,7 +56,7 @@ export class CalendarTourneyListView implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    cloneTourney(c: Tourney): Tourney {
+    cloneTourney(c: any): any {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

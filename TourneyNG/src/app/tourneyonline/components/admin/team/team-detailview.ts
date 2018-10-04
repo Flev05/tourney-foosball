@@ -26,6 +26,8 @@ export class TeamDetailView extends AbstractDetailView {
     availablePlayers: Player[] = [];
     targetPlayers: Player[] = [];
 
+    fullAddress: string;
+
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -75,6 +77,10 @@ export class TeamDetailView extends AbstractDetailView {
                 this.availablePlayers.push(ap);
             }
         }
+
+        this.fullAddress = this.selectedTeam.address + " - " 
+            + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
+            + " (" + this.selectedTeam.country.provinceCode +")";
 
         this.teamFormGroup = this.fb.group({
             'teamName': new FormControl(this.selectedTeam.teamName, Validators.compose([Validators.required])),

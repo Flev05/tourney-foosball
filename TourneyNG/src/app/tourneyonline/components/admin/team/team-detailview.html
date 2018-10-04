@@ -13,21 +13,23 @@
         </p>
 
         <h4>Creare una nuova squadra</h4>
-        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-            il bottone Salva.
-            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+        <p>
+            Spostare i nomi dall'area di destra a quella di sinistra e viceversa per costruire o modificare
+            una squadra.
         </p>
 
         <h4>Modificare squadra</h4>
-        <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
-            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-            essere svuotati.
-            Alla fine dell'operazione salvare con il bottone Salva
+        <p>Come per la creazione si tratta di spostare opportiunamente i giocari dall'area di destra 
+            all'area di sinistra per aggiungere e togliere un giocatore dalla squadra rispettivamente.           
         </p>
+
         <h4>Rimuovere squadra</h4>
-        <p>Si può rimuovere l'anagrafica di una squadra esistente con il bottore Rimuovi.
+        <p>Rimuovere una squadra significa rimuovere tutti i giocatori in essa contenuti e la squadra stessa.
             Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
             sarà rimossa dal sistema.
+        </p>
+        <p>
+            In tutti i casi, alla fine dell'operazione salvare con il bottone Salva
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -63,7 +65,7 @@
                 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Indirizzo:
+                    Via:
                 </div>
                 <div class="ui-grid-col-5">
                     <input pInputText type="text" formControlName="address"/>
@@ -72,7 +74,7 @@
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!teamFormGroup.controls['address'].valid&&teamFormGroup.controls['address'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="teamFormGroup.controls['address'].errors['required']">
-                            L'indirizzo della squadra è obbligatorio
+                            La via della squadra è obbligatoria
                         </span>
                     </div>
                 </div>
@@ -90,6 +92,15 @@
                     </p-autoComplete>
                 </div>
             </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo:
+                </div>
+                <div class="ui-grid-col-8">
+                    {{fullAddress}}
+                </div>
+            </div>           
 
             <p-pickList [source]="availablePlayers" [target]="targetPlayers" sourceHeader="Disponibili" targetHeader="Selezionati" 
                     [responsive]="true"

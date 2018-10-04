@@ -55,7 +55,7 @@ export class ClassificationTourneyListView implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    cloneClassification(c: Tourney): Tourney {
+    cloneClassification(c: any): any {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

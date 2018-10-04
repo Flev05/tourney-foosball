@@ -3,14 +3,16 @@
         <span class="feature-title">Eliminatorie</span>
         <span>Configurazione Eliminatorie iniziale del torneo: {{selectedTourney.tourneyName}}</span>
     </div>
-</div>
+</div>    
 
 <div class="content-section documentation">
+<p>Vista elenco delle configurazioni delle eliminatorie di partenza che compongono il torneo: 
+    {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
+</p>
 
-    <p>Vista elenco delle configurazioni delle eliminatorie di partenza che compongono il torneo: 
-        {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
-    </p>
-
+<p-accordion>
+        <p-accordionTab header="Istruzioni">                        
+            
     <h4>Istruzioni</h4>
     <p>
        Scegliere se effettuare la configurazione delle eliminatorie in modo automatico o manuale selezionando 
@@ -49,7 +51,9 @@
         <li>1° classificata Girone B Vs 2° classificata Girone C</li>
         <li>1° classificata Girone C Vs 2° classificata Girone B</li>
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
-    </ul>         
+    </ul>  
+</p-accordionTab>
+</p-accordion>
 </div>
 
 <div class="content-section implementation">      

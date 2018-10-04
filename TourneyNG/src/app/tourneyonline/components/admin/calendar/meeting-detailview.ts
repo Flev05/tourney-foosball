@@ -22,6 +22,8 @@ export class MeetingDetailView extends AbstractDetailView {
     toggleable: boolean = false;
 
     selectedMeeting: Meeting;
+    
+    fullAddress: string;
 
     constructor(
         private fb: FormBuilder,
@@ -40,6 +42,10 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting = this.tourneyService.selectedMeeting;
 
         let dateAndTime: Date = new Date(this.selectedMeeting.dateInMillis);
+        
+        this.fullAddress = this.selectedMeeting.address + " - " 
+            + this.selectedMeeting.country.zipCode + " " + this.selectedMeeting.country.city
+            + " (" + this.selectedMeeting.country.provinceCode +")";
 
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),

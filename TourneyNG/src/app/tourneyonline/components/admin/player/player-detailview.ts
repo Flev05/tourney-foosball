@@ -21,7 +21,8 @@ export class PlayerDetailView extends AbstractDetailView {
 
     playerFormGroup: FormGroup;
     toggleable: boolean = false;
-
+    fullAddress: string;
+    
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -43,6 +44,10 @@ export class PlayerDetailView extends AbstractDetailView {
             this.selectedPlayer.lastname = "";
             this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
         }
+
+        this.fullAddress = this.selectedPlayer.address + " - " 
+        + this.selectedPlayer.country.zipCode + " " + this.selectedPlayer.country.city
+        + " (" + this.selectedPlayer.country.provinceCode +")";
 
         this.playerFormGroup = this.fb.group({
             'firstname': new FormControl(this.selectedPlayer.firstname, Validators.compose([Validators.required])),

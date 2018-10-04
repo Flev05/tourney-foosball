@@ -80,7 +80,7 @@
                 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Indirizzo:
+                    Via :
                 </div>
                 <div class="ui-grid-col-5">
                     <input pInputText type="text" formControlName="address"/>
@@ -89,11 +89,33 @@
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['address'].valid&&playerFormGroup.controls['address'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="playerFormGroup.controls['address'].errors['required']">
-                            L'indirizzo del giocatore è obbligatorio
+                                La via è obbligatoria
                         </span>
                     </div>
                 </div>
             </div>
+                                            
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    <label for="country-id">Comune:</label>
+                </div>
+                <div class="ui-grid-col-5">
+                    <p-autoComplete id="country-id" formControlName="country" 
+                            [suggestions]="filteredCountriesSingle" 
+                            (completeMethod)="search($event)" field="city"
+                            placeholder="Comuni" [minLength]="1">
+                    </p-autoComplete>
+                </div>
+            </div>           
+    
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo:
+                </div>
+                <div class="ui-grid-col-8">
+                    {{fullAddress}}
+                </div>
+            </div>             
                         
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
@@ -126,19 +148,6 @@
                             L'indirizzo e-mail del giocatore è obbligatorio
                         </span>
                     </div>
-                </div>
-            </div>
-                                            
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    <label for="country-id">Comune:</label>
-                </div>
-                <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" formControlName="country" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="search($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
-                    </p-autoComplete>
                 </div>
             </div>
         </div>

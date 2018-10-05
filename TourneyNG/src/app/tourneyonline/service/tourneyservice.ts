@@ -15,6 +15,7 @@ import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Matrix } from '../domain/matrix';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -56,6 +57,7 @@ export class TourneyService {
 
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
+    selectedMatrix: Matrix[][];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

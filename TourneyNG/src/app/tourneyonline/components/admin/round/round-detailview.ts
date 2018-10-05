@@ -72,6 +72,7 @@ export class RoundDetailView extends AbstractDetailView {
             if(!found) {
                 this.availableTeams.push(team);
             }
+
         }
 
         if(this.selectedRound.meetings.length==0 && this.selectedRound.teams.length > 0) {
@@ -87,6 +88,19 @@ export class RoundDetailView extends AbstractDetailView {
                         this.selectedRound.meetings.push(m);    
                     }
                 }
+            }
+        }
+
+        // Create matrix
+        for(let i=0; i<this.selectedRound.teams.length; i++ ) {
+            for(let j=0; j<this.selectedRound.teams.length; j++ ) {
+                let t1 = this.selectedRound.teams[i];
+                let t2 = this.selectedRound.teams[j];
+                this.selectedRound.matrix[i][j].id = this.tourneyService.getSequenceNumber();
+                this.selectedRound.matrix[i][j].points1 = 0;
+                this.selectedRound.matrix[i][j].points2 = 0;
+                this.selectedRound.matrix[i][j].teamName1 = t1.teamName;
+                this.selectedRound.matrix[i][j].teamName2 = t2.teamName;
             }
         }
 

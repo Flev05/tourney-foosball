@@ -2,6 +2,7 @@ import { Classification } from './classification';
 import { Team } from './team';
 import { Meeting } from './meeting';
 import { RoundType } from './roundType';
+import { Matrix } from './matrix';
 
 export interface Round {
     id: number;
@@ -12,4 +13,5 @@ export interface Round {
     teams?:  Team[];
     meetings?: Meeting[];
     classification?: Classification[];
+    matrix: Matrix[][];
 }

@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Incontri</span>
-        <span>Incontri del torneo: {{selectedTourney.tourneyName}}</span>
+        <span class="feature-title">Calendario</span>
+        <span>Calendario del torneo: {{selectedTourney.tourneyName}}</span>
     </div>
 </div>
 
@@ -17,11 +17,15 @@
 </div>
 
 <div class="content-section implementation">    
+    <h3><span>Girone: "{{selectedRound.name}}"</span></h3>
+
     <p-table [responsive]="true" 
         [value]="meetings"
         selectionMode="single"
         [(selection)]="selectedMeeting" 
-        (onRowSelect)="onRowSelect($event)">
+        (onRowSelect)="onRowSelect($event)"
+        [paginator]="true" 
+        [rows]="15">
 
         <ng-template pTemplate="caption">
             <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -53,6 +57,10 @@
                 <td>{{rowData.address}}</td>
             </tr>
         </ng-template>
+        
+        <ng-template pTemplate="summary">
+            Ci sono {{meetings?.length}} incontri
+        </ng-template>        
         
     </p-table>
 

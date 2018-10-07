@@ -10,10 +10,6 @@
     <p-accordionTab header="Istruzioni">                        
         <p>Vista di dettaglio girone.
             Da questa vista potete creare, modificare o rimuovere un girone.
-        </p>
-
-        <h4>Creare un nuovo girone</h4>
-        <p>
             Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
             relativamente agli incontri di andata e ritorno che devono essere documentati nel calendario
             corrispondente.
@@ -28,16 +24,20 @@
             <a class="home-button" [routerLink]="['/admincalendar']" (click)="menuActive = false">Calendario</a>
         </p>
 
+        <h4>Creare un nuovo girone</h4>
+        <p>
+            L'area di destra "Selezionati", elenca le squadre che compongono il girone
+            mentre quella di sinistra "Disponibili", elenca tutte le squadre disponibili
+        </p>
+
         <h4>Modificare un girone</h4>
-        <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
-            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-            essere svuotati.
-            Alla fine dell'operazione salvare con il bottone Salva
+        <p>La modifica del girone consiste nello spostare le squadre dall'area dei disponibili a quella dei 
+            selezionati e viceversa.
         </p>
         <h4>Rimuovere un girone</h4>
-        <p>Si può rimuovere l'anagrafica di un girone esistente con il bottore Rimuovi.
-            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
-            sarà rimossa dal sistema.
+        <p>Si può rimuovere un girone esistente con il bottore Rimuovi.
+            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, 
+            il girone sarà rimosso dal torneo.
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -71,9 +71,29 @@
                 </div>
             </div>
 
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Turni:
+                </div>
+                <div class="ui-grid-col-5" tooltipPosition="right"
+                        pTooltip="Indicare se il girone è di solo andata o andata e ritorno">
+                    <p-radioButton name="tournGroupname" 
+                        label="Solo andata" 
+                        value="false" 
+                        formControlName="isRoundTrip">
+                    </p-radioButton>
+                    <p-radioButton name="tournGroupname" 
+                        label="Andata e ritorno" 
+                        value="true" 
+                        formControlName="isRoundTrip">
+                    </p-radioButton>
+                </div>
+            </div>        
+
             <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
                     [responsive]="true"
                     dragdrop="true" 
+                    dragdropScope="rounds" 
                     [sourceStyle]="{'height':'300px'}" 
                     [targetStyle]="{'height':'300px'}"                    
                     (onMoveToTarget)="onMoveToTarget($event.items)"
@@ -83,11 +103,10 @@
                     >
                 <ng-template let-team pTemplate="item">
                     <div class="ui-helper-clearfix">
-                        <div>{{team.teamName}}</div>
+                        <div>{{team}}</div>
                     </div>
                 </ng-template>
-            </p-pickList>            
-                    
+            </p-pickList>                                
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">

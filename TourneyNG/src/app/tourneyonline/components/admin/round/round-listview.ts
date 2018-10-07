@@ -49,15 +49,7 @@ export class RoundListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        let sp = this.cloneObject(event.data);
-
-        for(let i=0; i<this.selectedTourney.rounds.length; i++ ) {
-            if(this.selectedTourney.rounds[i].id == sp.id) {
-                this.selectedRound = this.selectedTourney.rounds[i];
-                this.tourneyService.selectedRound = this.selectedRound;
-                break;
-            }
-        }
+        this.tourneyService.selectedRound = this.selectedRound;
 
         this.gotoDetailView();
     }

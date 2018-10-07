@@ -64,7 +64,8 @@ export class ObjectiveListView extends AbstractListView {
         this.objectives = this.selectedTourney.objectives;
 
         this.isObjectiveLoaded = this.objectives.length > 0 ? true : false;
-        this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
+        
+        this.isPlayoff = this.containsPhase("playoff", this.selectedTourney.phases);
     }
 
     showDialogToAdd() {

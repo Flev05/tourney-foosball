@@ -45,17 +45,19 @@ export class PlayerDetailView extends AbstractDetailView {
             this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
         }
 
-        this.fullAddress = this.selectedPlayer.address + " - " 
-        + this.selectedPlayer.country.zipCode + " " + this.selectedPlayer.country.city
-        + " (" + this.selectedPlayer.country.provinceCode +")";
+        if(this.selectedPlayer.country != undefined ) {
+            this.fullAddress = this.selectedPlayer.address + " - " 
+            + this.selectedPlayer.country.zipCode + " " + this.selectedPlayer.country.city
+            + " (" + this.selectedPlayer.country.provinceCode +")";
+        }
 
         this.playerFormGroup = this.fb.group({
             'firstname': new FormControl(this.selectedPlayer.firstname, Validators.compose([Validators.required])),
             'lastname': new FormControl(this.selectedPlayer.lastname, Validators.compose([Validators.required])),
-            'address': new FormControl(this.selectedPlayer.address, Validators.compose([Validators.required])),
+            'address': new FormControl(this.selectedPlayer.address),
             'country': new FormControl(this.selectedPlayer.country),
-            'phoneNumber': new FormControl(this.selectedPlayer.phoneNumber, Validators.compose([Validators.required])),
-            'email': new FormControl(this.selectedPlayer.email, Validators.compose([Validators.required])),
+            'phoneNumber': new FormControl(this.selectedPlayer.phoneNumber),
+            'email': new FormControl(this.selectedPlayer.email),
         });
     }
 
@@ -83,6 +85,7 @@ export class PlayerDetailView extends AbstractDetailView {
         this.selectedPlayer.email = this.playerFormGroup.get('email').value;
 
         if(this.tourneyService.newPlayer) {
+            this.tourneyService.newPlayer = false;
             this.selectedTourney.players.push(this.selectedPlayer);
         }
 

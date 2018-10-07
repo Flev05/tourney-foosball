@@ -87,7 +87,10 @@ export class EliminatoryListView extends AbstractListView {
         return {
         id: this.tourneyService.getSequenceNumber(),
             enabled: false,
-            round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P, isRoundTrip: true},
+            round:{id: this.tourneyService.getSequenceNumber()
+                , name: ""
+                , type: RoundType.E
+                , isRoundTrip: true},
             level: this.tourneyService.levelsCombobox.length,
             tc1: {
                 id: this.tourneyService.getSequenceNumber(),

@@ -21,6 +21,8 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'admineliminatory',  loadChildren: './components/admin/eliminatory/eliminatory.module#EliminatoryModule'},
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
             {path: 'admincalendar',     loadChildren: './components/admin/calendar/calendar.module#AdminCalendarModule'},
+            {path: 'adminresult',     loadChildren: './components/admin/result/result.module#AdminResultModule'},
+            {path: 'adminmatrix',     loadChildren: './components/admin/matrix/matrix.module#AdminMatrixModule'},
 
             // Presentation Section
             {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},

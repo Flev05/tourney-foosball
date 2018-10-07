@@ -57,7 +57,6 @@ export class TourneyService {
 
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
-    selectedMatrix: Matrix[][];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
@@ -66,6 +65,10 @@ export class TourneyService {
 
     prepareEliminatoriesComboBoxes() {
         this.levelsCombobox = [];
+
+        if(this.selectedTourney.rounds.length==0) {
+            return;
+        }
 
         let log2 = Math.ceil(Math.log2(this.selectedTourney.rounds.length));
         // let log2 = Math.ceil(Math.log2(32));
@@ -109,16 +112,16 @@ export class TourneyService {
         }
 
         this.positionsCombobox = [];
-
-        let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
-        if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {
-            maxPosition++;
+        if(this.selectedTourney.rounds.length>0) {
+            let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
+            if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {
+                maxPosition++;
+            }
+            for(let p=1; p<=maxPosition; p++ ) {
+                let vv: string = "" + p + classificationLabel;
+                this.positionsCombobox.push({label: vv, value: p});
+            }                    
         }
-
-        for(let p=1; p<=maxPosition; p++ ) {
-            let vv: string = "" + p + classificationLabel;
-            this.positionsCombobox.push({label: vv, value: p});
-        }        
     }
 
     getSequenceNumber() {

@@ -18,4 +18,19 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
     ngOnInit() {
         super.ngOnInit();
     }
+
+    onComplete(): any {
+        for(let t of this.tourneys) {
+            if(!this.containsPhase('playoff', t.phases)) {
+                let index: number = this.tourneys.indexOf(t);
+                if(index > -1) {
+                    this.tourneys.splice(index, 1);
+                }
+            }
+        }
+
+        if(this.selectedTourney != null) {
+            this.router.navigate([this.redirect]);
+        }
+    }
 }

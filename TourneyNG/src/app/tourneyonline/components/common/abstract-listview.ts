@@ -19,4 +19,14 @@ export abstract class AbstractListView extends AbstractView {
     protected gotoDetailView() {
         this.router.navigate([this.redirect]);
     }
+
+    containsPhase(value: string, phases: string[]) : boolean{
+
+        for(let i=0; i<phases.length; i++ ) {
+            if(phases[i].toLowerCase().indexOf(value) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

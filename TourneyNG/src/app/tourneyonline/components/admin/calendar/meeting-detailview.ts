@@ -9,6 +9,7 @@ import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Round } from 'app/tourneyonline/domain/round';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class MeetingDetailView extends AbstractDetailView {
     meetingFormGroup: FormGroup;
     toggleable: boolean = false;
 
+    selectedRound: Round;
     selectedMeeting: Meeting;
     
     fullAddress: string;
@@ -39,6 +41,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
+        this.selectedRound = this.tourneyService.selectedRound;
         this.selectedMeeting = this.tourneyService.selectedMeeting;
 
         let dateAndTime: Date = new Date(this.selectedMeeting.dateInMillis);

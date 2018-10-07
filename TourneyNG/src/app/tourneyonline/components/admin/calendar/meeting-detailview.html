@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Gestione incontro</span>
-        <span>Vista di dettaglio di un incontro</span>
+        <span class="feature-title">Gestione Calendario</span>
+        <span>Vista di dettaglio di un calendario</span>
     </div>
 </div>
 
@@ -9,21 +9,21 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>
-            Da questa vista potete modificare i dati dell'incontro selezionato 
+            Da questa vista potete modificare i dati dell'calendario selezionato 
         </p>
 
-        <h4>Modificare un incontro</h4>
-        <p>I dati da inserire o modificare sono la data, l'ora e l'indirizzo dove si svolge l'incontro
+        <h4>Modificare un calendario</h4>
+        <p>I dati da inserire o modificare sono la data, l'ora e l'indirizzo dove si svolge l'calendario
         </p>
 
-        <h4>Creare un nuovo incontro</h4>
+        <h4>Creare un nuovo calendario</h4>
         <p>
-            La creazione di un incontro non viene effettuato in questa pagina ma nelle
+            La creazione di un calendario non viene effettuato in questa pagina ma nelle
             pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
         </p>
 
-        <h4>Rimuovere un incontro</h4>
-        <p>La rimozione di un incontro non viene effettuato in questa pagina ma nelle
+        <h4>Rimuovere un calendario</h4>
+        <p>La rimozione di un calendario non viene effettuato in questa pagina ma nelle
             pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
         </p>
     </p-accordionTab>
@@ -33,7 +33,8 @@
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>Incontro: {{selectedMeeting.name}}</span></h4>
+    <h3><span>Girone: "{{selectedRound.name}}"</span></h3>
+    <h4><span>Incontro: "{{selectedMeeting.name}}"</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>

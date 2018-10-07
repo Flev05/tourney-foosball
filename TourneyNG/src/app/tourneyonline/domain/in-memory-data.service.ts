@@ -28,11 +28,6 @@ export class InMemoryDataService implements InMemoryDbService {
         ,pointsNeededToWin:9
         ,pointsGoldenGoalTieBreakWin:2
         ,pointsGoldenGoalTieBreakDefeat:1
-
-        ,teamNo:32
-        ,roundNo:2
-        ,playoffNo:0
-        ,eliminationLevel:16
         
         ,players:[
             {id:1, firstname:"Salvatore", lastname:"Amoroso", address:""
@@ -53,10 +48,55 @@ export class InMemoryDataService implements InMemoryDbService {
            ,{id:6, firstname:"Emilio",    lastname:"Cattaneo", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-           ,{id:7, firstname:"Marco",     lastname:"La Ratta", address:""
+            ,{id:7, firstname:"Orlando",     lastname:"Zambrella", address:""
+            ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:8, firstname:"Mirko",     lastname:"Cuschera", address:""
+            ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:9, firstname:"Andrea",     lastname:"Mangione", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-          ]  
+            ,{id:10, firstname:"Antonio",     lastname:"Pietroforte", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:11, firstname:"Mirko",     lastname:"Boniotti", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:12, firstname:"Andrea",     lastname:"Procopio", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:13, firstname:"Claudio",     lastname:"Boniotti", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:14, firstname:"Salvo",     lastname:"De Luca", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:15, firstname:"Andrea",     lastname:"Di Maria", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:16, firstname:"Antonino",     lastname:"Scarpaci", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:17, firstname:"Michele",     lastname:"Monteleone", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:18, firstname:"Alessio",     lastname:"Lioy", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:19, firstname:"Salvatore",     lastname:"Cavaliere", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:20, firstname:"Giuseppe",     lastname:"Lombardo", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:21, firstname:"Savino",     lastname:"Caporale", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+            ,{id:22, firstname:"Pino",     lastname:"Selini", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+            }
+        ]  
         ,teams:[
            {id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110"
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
@@ -238,7 +278,183 @@ export class InMemoryDataService implements InMemoryDbService {
         ]
         ,objectives:[]
       }
-    ];
+      ,{id: 2, tourneyName: 'Preliminari 2018/2019'
+          ,dateInMillis: 1543606200000
+          ,dateAsString: "24/09/2018"
+          ,timeAsString: "20:30:00"
+          ,address: 'Via Roma, 110'
+          ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+          ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
+
+          ,tourneyType: TourneyType.Score
+
+          ,access: "public"
+
+          ,phases: []
+
+          ,raceDuration:90
+
+          ,matchWinnerScores:3
+          ,matchLoserScores:0
+          ,matchBalanceScores:1
+          
+          ,pointsNeededToWin:9
+          ,pointsGoldenGoalTieBreakWin:2
+          ,pointsGoldenGoalTieBreakDefeat:1
+
+          ,players:[
+              {id:1, firstname:"Salvatore", lastname:"Amoroso", address:""
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              }
+              ,{id:2, firstname:"Luciano",   lastname:"Martino", address:"Via Nilde Iotti, 8"
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+              ,{id:3, firstname:"Raimondo",  lastname:"Brancaccio", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+              ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+              ,{id:5, firstname:"Valter",    lastname:"Bergamaschi", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+              ,{id:6, firstname:"Emilio",    lastname:"Cattaneo", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:7, firstname:"Orlando",     lastname:"Zambrella", address:""
+                ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:8, firstname:"Mirko",     lastname:"Cuschera", address:""
+                ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:9, firstname:"Andrea",     lastname:"Mangione", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:10, firstname:"Antonio",     lastname:"Pietroforte", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:11, firstname:"Mirko",     lastname:"Boniotti", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:12, firstname:"Andrea",     lastname:"Procopio", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:13, firstname:"Claudio",     lastname:"Boniotti", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:14, firstname:"Salvo",     lastname:"De Luca", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:15, firstname:"Andrea",     lastname:"Di Maria", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:16, firstname:"Antonino",     lastname:"Scarpaci", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:17, firstname:"Michele",     lastname:"Monteleone", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:18, firstname:"Alessio",     lastname:"Lioy", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:19, firstname:"Salvatore",     lastname:"Cavaliere", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:20, firstname:"Giuseppe",     lastname:"Lombardo", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+                ,{id:21, firstname:"Savino",     lastname:"Caporale", address:""
+                  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+                }
+              ,{id:22, firstname:"Pino",     lastname:"Selini", address:""
+                ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              }
+            ]
+            ,teams:[
+              {id:1,teamName:"SALLUC", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                  {id:2, firstname:"Luciano",   lastname:"Martino"}
+                  ,{id:3, firstname:"Salvatore",  lastname:"Amoroso"}
+                ]
+              }
+              ,{id:2,teamName:"B&B", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Roberto",   lastname:"Bergamaschi"}
+                  ,{id:3, firstname:"Valter",  lastname:"Bergamaschi"}
+                ]
+              }
+              ,{id:3,teamName:"I POETI", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Raimondo", lastname:"Brancaccio"}
+                  ,{id:3, firstname:"Andrea",   lastname:"Procopio"}
+                ]
+              }
+              ,{id:4,teamName:"MALDIVE", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Savino", lastname:"Caporale"}
+                  ,{id:3, firstname:"Pino",   lastname:"Selini"}
+                ]
+              }
+              ,{id:5,teamName:"BINGABUNGA", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Antonio", lastname:"Pietroforte"}
+                  ,{id:3, firstname:"Andrea",   lastname:"Mangione"}
+                ]
+              }
+              ,{id:6,teamName:"DelucaDimaria", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Salvo", lastname:"De Luca"}
+                  ,{id:3, firstname:"Andrea",   lastname:"Di Maria"}
+                ]
+              }
+              ,{id:7,teamName:"OrlandoMirko", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Orlando", lastname:"Zambrella"}
+                  ,{id:3, firstname:"Mirko",   lastname:"Cuschera"}
+                ]
+              }
+              ,{id:8,teamName:"MicheleAlessio", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Michele", lastname:"Monteleone"}
+                  ,{id:3, firstname:"Alessio",   lastname:"Lioy"}
+                ]
+              }
+              ,{id:9,teamName:"I BONIOTTI", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Mirko", lastname:"Boniotti"}
+                  ,{id:3, firstname:"Claudio",   lastname:"Boniotti"}
+                ]
+              }
+              ,{id:10,teamName:"CavalieriLombardo", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Salvatore", lastname:"Cavaliere"}
+                  ,{id:3, firstname:"Giuseppe",   lastname:"Lombardo"}
+                ]
+              }
+              ,{id:11,teamName:"EmilioNino", address:"Via Roma, 110"
+              ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+              ,players:[
+                   {id:2, firstname:"Emilio", lastname:"Cattaneo"}
+                  ,{id:3, firstname:"Antonino",   lastname:"Scarpaci"}
+                ]
+              }
+            ]  
+            ,rounds:[]  
+            ,playoffs:[]
+            ,meetings:[]  
+            ,objectives:[]  
+          }
+        ];
 
       const login = [
       { id: 1

@@ -14,7 +14,6 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 
-
 @Component({
     templateUrl: './round-detailview.html',
 })
@@ -26,8 +25,9 @@ export class RoundDetailView extends AbstractDetailView {
     roundFormGroup: FormGroup;
     toggleable: boolean = false;
 
-    availableTeams: Team[] = [];
-    targetTeams: Team[] = [];
+    availableTeams: string[] = [];
+    targetTeams: string[] = [];
+    isRoundTrip: string;
 
     constructor(
         private fb: FormBuilder,
@@ -48,11 +48,16 @@ export class RoundDetailView extends AbstractDetailView {
         if(this.tourneyService.newRound) {
             this.selectedRound.id = this.tourneyService.getSequenceNumber(); 
             this.selectedRound.teams = [];
-            this.selectedRound.isRoundTrip = true;
+            this.selectedRound.meetings = [];
+            this.selectedRound.isRoundTrip = false;
             this.selectedRound.type = RoundType.R;
         }
 
-        this.targetTeams = this.selectedRound.teams;
+        this.isRoundTrip = this.selectedRound.isRoundTrip ? "true" : "false";
+        this.targetTeams = [];
+        for(let t of this.selectedRound.teams) {
+            this.targetTeams.push(t.teamName);
+        }
         this.availableTeams = [];
 
         for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
@@ -70,42 +75,13 @@ export class RoundDetailView extends AbstractDetailView {
                 }
             }
             if(!found) {
-                this.availableTeams.push(team);
-            }
-
-        }
-
-        if(this.selectedRound.meetings.length==0 && this.selectedRound.teams.length > 0) {
-            for(let i=0; i<this.selectedRound.teams.length; i++) {
-                for(let j=i+1; j<this.selectedRound.teams.length; j++) {
-                    let t1: Team = this.selectedRound.teams[i];
-                    let t2: Team = this.selectedRound.teams[j];
-                    let m : Meeting = this.createMeeting(t1, t2);
-                    this.selectedRound.meetings.push(m);
-
-                    if(this.selectedRound.isRoundTrip) {
-                        let m : Meeting = this.createMeeting(t2, t1);
-                        this.selectedRound.meetings.push(m);    
-                    }
-                }
-            }
-        }
-
-        // Create matrix
-        for(let i=0; i<this.selectedRound.teams.length; i++ ) {
-            for(let j=0; j<this.selectedRound.teams.length; j++ ) {
-                let t1 = this.selectedRound.teams[i];
-                let t2 = this.selectedRound.teams[j];
-                this.selectedRound.matrix[i][j].id = this.tourneyService.getSequenceNumber();
-                this.selectedRound.matrix[i][j].points1 = 0;
-                this.selectedRound.matrix[i][j].points2 = 0;
-                this.selectedRound.matrix[i][j].teamName1 = t1.teamName;
-                this.selectedRound.matrix[i][j].teamName2 = t2.teamName;
+                this.availableTeams.push(team.teamName);
             }
         }
 
         this.roundFormGroup = this.fb.group({
             'name': new FormControl(this.selectedRound.name, Validators.compose([Validators.required])),
+            'isRoundTrip': new FormControl(this.isRoundTrip),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
         });
@@ -216,11 +192,43 @@ export class RoundDetailView extends AbstractDetailView {
     onSubmit(value: string) {
 
         this.selectedRound.name = this.roundFormGroup.get('name').value;
+
+        this.isRoundTrip = this.roundFormGroup.get('isRoundTrip').value;
+        if(this.isRoundTrip=="true") {
+            this.selectedRound.isRoundTrip = true;
+        } else {
+            this.selectedRound.isRoundTrip = false;
+        }
+
         this.selectedRound.teams = this.roundFormGroup.get('targetTeams').value;
 
         if(this.tourneyService.newRound) {
+            this.tourneyService.newRound = false;
             this.selectedTourney.rounds.push(this.selectedRound);
-            this.selectedTourney.roundNo = this.selectedTourney.rounds.length;
+        }
+
+        this.selectedRound.teams = [];
+        for(let tn of this.targetTeams) {
+            for(let t of this.selectedTourney.teams) {
+                if(t.teamName == tn) {
+                    this.selectedRound.teams.push(t);
+                }
+            }
+        }
+
+        this.selectedRound.meetings = [];
+        for(let i=0; i<this.selectedRound.teams.length; i++) {
+            for(let j=i+1; j<this.selectedRound.teams.length; j++) {
+                let t1: Team = this.selectedRound.teams[i];
+                let t2: Team = this.selectedRound.teams[j];
+                let m : Meeting = this.createMeeting(t1, t2);
+                this.selectedRound.meetings.push(m);
+
+                if(this.selectedRound.isRoundTrip) {
+                    let m : Meeting = this.createMeeting(t2, t1);
+                    this.selectedRound.meetings.push(m);    
+                }
+            }
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

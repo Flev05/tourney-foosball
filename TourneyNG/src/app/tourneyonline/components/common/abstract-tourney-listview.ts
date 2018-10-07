@@ -34,7 +34,15 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected loadTourney() {
         console.log("Entering AbstractTourneyListView.loadTourney()");
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
+        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t, e => this.onError(e), () => this.onComplete());
+    }
+
+    onError(e: any): any {
+        console.log("Entering onComplete()" + e);
+    }
+
+    onComplete(): any {
+        console.log("Entering onComplete()");
     }
 
     onRowSelect(event) {

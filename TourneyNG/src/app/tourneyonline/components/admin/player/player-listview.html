@@ -10,6 +10,10 @@
     <p>Vista elenco di tutti giocatori che compongono il torneo: 
         {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
     </p>
+    <p>
+        Selezionare la riga di interesse - con un click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+    </p>
+    
 </div>
 
 <div class="content-section implementation">    
@@ -19,12 +23,12 @@
         [(selection)]="selectedPlayer" 
         (onRowSelect)="onRowSelect($event)" 
         [paginator]="true" 
-        [rows]="15">
+        [rows]="10">
 
         <ng-template pTemplate="caption">
             <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
             <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Giocatore" ></button>
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
             </div>
         </ng-template>
  
@@ -56,9 +60,7 @@
         </ng-template>
     
         <ng-template pTemplate="summary" let-rowData>
-            <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Giocatore" ></button>
-            </div>
+            Ci sono {{players?.length}} giocatori
         </ng-template>        
         
     </p-table>

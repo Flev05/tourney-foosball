@@ -12,7 +12,6 @@ import { Discipline } from '../../../domain/discipline';
 import { TourneyType } from '../../../domain/tourneyType';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 
-
 @Component({
     templateUrl: './tourney-detailview.html',
 })
@@ -57,6 +56,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney = this.tourneyService.selectedTourney;
 
         if(this.tourneyService.newTourney) {
+            this.selectedTourney={};
             this.selectedTourney.id = this.tourneyService.getSequenceNumber(); 
 
             this.tourneyDate = today;
@@ -76,10 +76,6 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.players = [];
             this.selectedTourney.playoffs = [];
 
-            this.selectedTourney.teamNo = this.selectedTourney.teams.length;
-            this.selectedTourney.roundNo = this.selectedTourney.rounds.length;
-            this.selectedTourney.playoffNo = this.selectedTourney.playoffs.length;
-
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
@@ -88,16 +84,12 @@ export class TourneyDetailView extends AbstractDetailView {
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }
-
-        this.fullAddress = this.selectedTourney.address + " - " 
-            + this.selectedTourney.country.zipCode + " " + this.selectedTourney.country.city
-            + " (" + this.selectedTourney.country.provinceCode +")";
-
-        let teamNo = 
-        this.selectedTourney.teams===undefined
-        // this.selectedTourney.teams==[]
-        ?this.selectedTourney.teamNo
-        :this.selectedTourney.teams.length;
+        
+        if(this.selectedTourney.country != undefined ) {
+            this.fullAddress = this.selectedTourney.address + " - " 
+                + this.selectedTourney.country.zipCode + " " + this.selectedTourney.country.city
+                + " (" + this.selectedTourney.country.provinceCode +")";
+        }
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -122,9 +114,6 @@ export class TourneyDetailView extends AbstractDetailView {
             'pointsGoldenGoalTieBreakDefeat': new FormControl(this.selectedTourney.pointsGoldenGoalTieBreakDefeat),
 
             'phases': new FormControl(this.selectedTourney.phases),
-            'roundNo': new FormControl(this.selectedTourney.roundNo),
-            'playoffNo': new FormControl(this.selectedTourney.playoffNo),
-            'teamNo': new FormControl(teamNo),
         });
     }
 
@@ -169,9 +158,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.pointsGoldenGoalTieBreakDefeat = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakDefeat').value;
 
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
-        this.selectedTourney.teamNo = this.tourneyFormGroup.get('teamNo').value;
-        this.selectedTourney.roundNo = this.tourneyFormGroup.get('roundNo').value;
-        this.selectedTourney.playoffNo = this.tourneyFormGroup.get('playoffNo').value;
 
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 

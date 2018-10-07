@@ -15,13 +15,30 @@ import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './matrix-detailview.html',
+    styles: [`
+        .style0 {
+            disabled: true !important;
+        }
+        .diagonalStyle {
+            background-color: black !important;
+            disabled: true !important;
+        }
+        .totalStyle {
+            background-color: black !important;
+            disabled: false !important;
+        }
+        .lastStyle {
+            background-color: black !important;
+            disabled: false !important;
+        }
+    `
+    ]
 })
 export class MatrixDetailView extends AbstractDetailView {
 
     msgs: Message[] = [];
 
     selectedRound: Round;
-    selectedMatrix: Matrix[][];
     
     fullAddress: string;
 
@@ -46,35 +63,58 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.selectedRound = this.tourneyService.selectedRound;
         this.roundName = this.selectedRound.name;
+        this.matrix = this.selectedRound.matrix;
 
-        this.selectedMatrix = this.tourneyService.selectedMatrix;
-
-        this.cols = [
-            { field: 'teamName', header: 'A' },
-            { field: 'points',   header: 'B' },
-            { field: 'points',   header: 'C' },
-            { field: 'points',   header: 'D' }
-        ];
-
-        let headerValue = 'A';
         this.cols = [];
-        this.matrix = [];
-        for(let i=0; i<=this.selectedRound.teams.length; i++) {
-            let t = this.selectedRound.teams[i-1];
-            let cell = "";
-            if( i==0 ){
-                cell = t.teamName + " " + headerValue;
-                headerValue = "Squadre";
-            } else {
-                cell = headerValue + i;
-            }
-            let col = {field: cell, header: headerValue}
+        let col = { field: 'teamName', header: 'Squadre' };
+        this.cols.push(col);
+        col = { field: 'littleName', header: '+' };
+        this.cols.push(col);
+
+        var letter: String = "A";
+        for(let i=0; i<this.selectedRound.teams.length; i++) {
+            let t = this.selectedRound.teams[i];
+            let col = {field: 'points' + i, header: letter, style: 'style'};
             this.cols.push(col);
+            letter = this.getNextLetter(letter);
+        }
+        
+        // Create matrix
+        if(this.matrix == undefined || this.matrix == []) {
+            this.matrix = [];
+
+            var letter: String = "A";
+            let r = 0;
+            let sum: number = 0;
+            for(let i=0; i<this.selectedRound.teams.length; i++ ) {
+                let t = this.selectedRound.teams[i];
+                let currentStyle: string = null;
+                if(i>=0 && i<=1) {
+                    currentStyle = 'style0';
+                } else if(i==r) {
+                    currentStyle = 'diagonalStyle';
+                }
+                let m : Matrix = {
+                      id: this.tourneyService.getSequenceNumber()
+                    , littleName: letter.toString()
+                    , teamName: t.teamName
+                    , style: currentStyle
+                };
+                this.matrix.push(m);
+                letter = this.getNextLetter(letter);
+                r++;                
+            }
         }
     }
 
-    save() {
+    getNextLetter(char: String): String {
+        var code: number = char.charCodeAt(0);
+        code++;
+        return String.fromCharCode(code);
+    }
 
+    save() {
+        this.selectedRound.matrix = this.matrix;
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  

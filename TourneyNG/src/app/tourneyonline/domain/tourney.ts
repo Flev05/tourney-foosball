@@ -35,10 +35,6 @@ export interface Tourney {
     pointsNeededToWin? : number;
     pointsGoldenGoalTieBreakWin? : number;
     pointsGoldenGoalTieBreakDefeat? : number;
-
-    teamNo?: number;
-    roundNo?: number;
-    playoffNo?: number;
     
     objectives?: Final[];
     rounds?: Round[];

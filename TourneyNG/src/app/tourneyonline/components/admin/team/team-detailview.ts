@@ -78,13 +78,15 @@ export class TeamDetailView extends AbstractDetailView {
             }
         }
 
-        this.fullAddress = this.selectedTeam.address + " - " 
-            + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
-            + " (" + this.selectedTeam.country.provinceCode +")";
+        if(this.selectedTeam.country!=undefined) {
+            this.fullAddress = this.selectedTeam.address + " - " 
+                + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
+                + " (" + this.selectedTeam.country.provinceCode +")";
+        }
 
         this.teamFormGroup = this.fb.group({
             'teamName': new FormControl(this.selectedTeam.teamName, Validators.compose([Validators.required])),
-            'address':  new FormControl(this.selectedTeam.address, Validators.compose([Validators.required])),
+            'address':  new FormControl(this.selectedTeam.address ),
 
             'country':          new FormControl(this.selectedTeam.country),
             'availablePlayers': new FormControl(this.availablePlayers),
@@ -114,7 +116,6 @@ export class TeamDetailView extends AbstractDetailView {
 
         if(this.tourneyService.newTeam) {
             this.selectedTourney.teams.push(this.selectedTeam);
-            this.selectedTourney.teamNo = this.selectedTourney.teams.length;
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

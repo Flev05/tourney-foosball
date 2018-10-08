@@ -27,6 +27,8 @@ export interface Tourney {
     raceDuration?: number;
 
     phases?: [string];
+    eliminatoryType?: string;
+    eliminatoryMode?: string;
 
     matchWinnerScores?: number;
     matchLoserScores?: number;

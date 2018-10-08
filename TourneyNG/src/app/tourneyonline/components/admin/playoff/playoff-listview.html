@@ -6,14 +6,14 @@
 </div>
 
 <div class="content-section documentation">
-
-    <p>Vista elenco di tutti i playoff che compongono il torneo
-    </p>
-
     <p>
-        Selezionare la riga di interesse - con un click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+        Vista elenco di tutti i playoff che compongono il torneo
     </p>
-    
+    <p>
+        Da questa vista potete creare un nuovo girone di playoff o accedere ad uno esistente.
+        Per creare un nuovo playoff, click sul bottone "Aggiungi Playoff". Per aggiornare uno esistente, 
+        selezionare la riga di interesse - click su un punto qualsiasi della riga - ed accedere alla corrispondente vista di dettaglio
+    </p>    
 </div>
 
 <div class="content-section implementation">    
@@ -47,11 +47,9 @@
     
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Playoff" ></button>
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Playoff" ></button>
             </div>
-        </ng-template>        
-        
+        </ng-template>
     </p-table>
-
 </div>
     

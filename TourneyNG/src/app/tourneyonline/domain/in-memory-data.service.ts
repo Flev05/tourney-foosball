@@ -17,7 +17,9 @@ export class InMemoryDataService implements InMemoryDbService {
 
         ,access: "public"
 
-        ,phases: ["playoff", "elimination"]
+        ,phases: ["round", "playoff", "elimination"]
+        ,eliminatoryType:"derivate"
+        ,eliminatoryMode:"manual"
 
         ,raceDuration:90
 
@@ -290,7 +292,9 @@ export class InMemoryDataService implements InMemoryDbService {
 
           ,access: "public"
 
-          ,phases: []
+          ,phases: ["round"]
+          ,eliminatoryType:"derivate"
+          ,eliminatoryMode:"manual"
 
           ,raceDuration:90
 

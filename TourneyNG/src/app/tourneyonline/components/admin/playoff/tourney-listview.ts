@@ -4,15 +4,16 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from '../../../service/tourneyservice';
-
-const redirect = '/adminplayoff/lv';
+import { PlayoffListView } from './playoff-listview';
 
 @Component({
     templateUrl: './tourney-listview.html'
 })
 export class PlayoffTourneyListView extends AbstractTourneyListView {
+    static redirect = '/adminplayoff/lv';
+
     constructor(protected tourneyService: TourneyService, public router: Router, public loc: Location) { 
-        super(redirect, tourneyService, router, loc);
+        super(PlayoffTourneyListView.redirect, tourneyService, router, loc);
     }
 
     ngOnInit() {
@@ -29,8 +30,8 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
             }
         }
 
-        if(this.selectedTourney != null) {
-            this.router.navigate([this.redirect]);
+        if(this.tourneyService.selectedTourney != null) {
+            // this.router.navigate([PlayoffListView.redirect]);
         }
     }
 }

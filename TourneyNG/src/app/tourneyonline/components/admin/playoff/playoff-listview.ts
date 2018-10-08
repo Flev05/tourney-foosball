@@ -7,23 +7,22 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 import { Playoff } from '../../../domain/playoff';
 
-const redirect: string = "adminplayoff/lv/dv";
-
 @Component({
     templateUrl: './playoff-listview.html'
 })
 export class PlayoffListView extends AbstractListView {
+    static redirect: string = "adminplayoff/lv/dv";
+    selectedTourney: Tourney;
+    selectedPlayoff: Playoff;
+    playoffs: Playoff[];
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super(redirect, tourneyService, router, location);
+        super(PlayoffListView.redirect, tourneyService, router, location);
     }
-
-    selectedTourney: Tourney;
-    selectedPlayoff: Playoff;
-    playoffs: Playoff[];
 
     ngOnInit() {
         super.ngOnInit();

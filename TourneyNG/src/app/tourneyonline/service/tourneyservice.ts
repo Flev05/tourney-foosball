@@ -36,6 +36,7 @@ export class TourneyService {
     levelsCombobox: Combobox[];
     positionsCombobox: Combobox[];
     roundsCombobox: Combobox[];
+    teamsCombobox: Combobox[];
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
@@ -66,12 +67,16 @@ export class TourneyService {
     prepareEliminatoriesComboBoxes() {
         this.levelsCombobox = [];
 
-        if(this.selectedTourney.rounds.length==0) {
+        if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return;
         }
 
-        let log2 = Math.ceil(Math.log2(this.selectedTourney.rounds.length));
-        // let log2 = Math.ceil(Math.log2(32));
+        let levelNo = this.selectedTourney.rounds.length;
+        if(levelNo==0 ) {
+            levelNo = this.selectedTourney.teams.length;
+        }
+
+        let log2 = Math.ceil(Math.log2(levelNo));
 
         for(let l=log2; l>=0; l--) {
             let lev = "";
@@ -94,12 +99,20 @@ export class TourneyService {
             this.levelsCombobox.push(si);
         }
 
+        this.teamsCombobox = [];
+        this.teamsCombobox.push({label: "", value: 0});
+            
+        for(let i=0; i<this.selectedTourney.teams.length; i++) {
+            let r=this.selectedTourney.teams[i];
+            this.teamsCombobox.push({label: r.teamName, value: r.id});
+        }
+
         this.roundsCombobox = [];
         this.roundsCombobox.push({label: "", value: 0});
             
         for(let i=0; i<this.selectedTourney.rounds.length; i++) {
             let r=this.selectedTourney.rounds[i];
-            this.roundsCombobox.push({label: r.name, value: i+1});
+            this.roundsCombobox.push({label: r.name, value: r.id});
         }
 
         if(this.selectedTourney.playoffs.length > 0) {
@@ -107,7 +120,7 @@ export class TourneyService {
             this.playoffsCombobox.push({label: "", value: 0});
             for(let i=0; i<this.selectedTourney.playoffs.length; i++) {
                 let r=this.selectedTourney.playoffs[i];
-                this.playoffsCombobox.push({label: r.round.name, value: i+1});
+                this.playoffsCombobox.push({label: r.round.name, value: r.id});
             }
         }
 

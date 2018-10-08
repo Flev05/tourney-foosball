@@ -21,21 +21,26 @@ export class EliminatoryListView extends AbstractListView {
     position2: number;
     round2: string;
     playoffName2: string;
-
-    levels: Combobox[];
-    eliminatoryLevel: number;
-    isEliminatoryLoaded: boolean = false;
-
+   
     positions: Combobox[];
     rounds: Combobox[];
     playoffs: Combobox[];
+    teams: Combobox[];
+
+    levels: Combobox[];
+    eliminatoryLevel: number;
+    eliminatoryType: string;
+    eliminatoryMode: string;
     
     selectedEliminatory: Eliminatory;
     eliminatories: Eliminatory[];
 
     row: Eliminatory;  
     displayDialog: boolean;
+    displayDialogConfig: boolean;
     isPlayoff: boolean;
+    isDerivate: boolean;
+    isManual: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -56,41 +61,67 @@ export class EliminatoryListView extends AbstractListView {
         this.levels = this.tourneyService.levelsCombobox;
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
+        this.teams = this.tourneyService.teamsCombobox;
         this.playoffs = this.tourneyService.playoffsCombobox;
 
         this.eliminatories = this.selectedTourney.eliminatories;
+        this.eliminatoryType = this.selectedTourney.eliminatoryType;
+        this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
 
         this.eliminatoryLevel = this.selectedTourney.eliminatoryLevel;
 
-        this.isEliminatoryLoaded = this.eliminatories.length > 0 ? true : false;
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
+        this.isDerivate = this.eliminatoryType=="derivate" ? true : false;
+        this.isManual = this.eliminatoryMode=="manual" ? true : false;
+    }
+
+    onManualClick() {
+        console.log("Entering onManualClick()");
+        this.eliminatoryMode="manual";
+        this.isManual = true;
+    }
+
+    onAutoClick() {
+        console.log("Entering onAutoClick()");
+        this.eliminatoryMode="auto";
+        this.isManual = false;
+    }
+
+    onAutonomousClick() {
+        console.log("Entering onAutonomousClick()");
+        this.eliminatoryType="autonomous";
+        this.isDerivate = false;
+    }
+
+    onDerivateClick() {
+        console.log("Entering onDerivateClick()");
+        this.eliminatoryType="derivate";
+        this.isDerivate = true;
     }
 
     onChange(event) {
         console.log(event);
 
-        this.isEliminatoryLoaded = true;
         this.eliminatories = [];
         for(let i=0; i<=this.eliminatoryLevel; i++ ) {
-            let se = this.newEliminatory();
+            let se = this.newEliminatoryConfig();
     
             this.eliminatories.push(se);
         }
     }
 
-    showDialogToAdd() {
-        this.row = this.newEliminatory();
-        this.displayDialog = true;
-    }
-
-    private newEliminatory(): Eliminatory {
+    private newEliminatoryConfig(): Eliminatory {
         return {
         id: this.tourneyService.getSequenceNumber(),
             enabled: false,
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: ""
                 , type: RoundType.E
-                , isRoundTrip: true},
+                , isRoundTrip: true
+                , teams:[
+                     {id:0, teamName:""}
+                    ,{id:1, teamName:""}
+                ]},
             level: this.tourneyService.levelsCombobox.length,
             tc1: {
                 id: this.tourneyService.getSequenceNumber(),
@@ -122,14 +153,22 @@ export class EliminatoryListView extends AbstractListView {
         this.displayDialog = true;
     }
 
+    onRowSelectConfig(event) {
+        this.row = this.cloneObject(event.data);
+        this.displayDialogConfig = true;
+    }
+
     done() {
         this.eliminatories[this.eliminatories.indexOf(this.selectedEliminatory)] = this.row;
 
         this.row = null;
         this.displayDialog = false;
+        this.displayDialogConfig = false;
     }
 
     save() {
+        this.selectedTourney.eliminatoryType = this.eliminatoryType;
+        this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
         this.selectedTourney.eliminatories = this.eliminatories;
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
     }

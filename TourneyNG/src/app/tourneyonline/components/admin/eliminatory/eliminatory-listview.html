@@ -10,30 +10,45 @@
 </p>
 
 <p-accordion>
-        <p-accordionTab header="Istruzioni">                        
+<p-accordionTab header="Istruzioni">                        
             
     <h4>Istruzioni</h4>
-    <p>
-       Scegliere se effettuare la configurazione delle eliminatorie in modo automatico o manuale selezionando 
-       dai radio button sotto
+    <p> Premessa: le eliminatorie sono concepite, da tourneyonline.com, come una lista di gironi piccoli 
+        composti di solo due squadre in cui si qualifica solo la prima delle due.
+        Sono gestite 2 tipi di eliminatozione dirette da selezionare con i corrispondenti radio button:
     </p> 
     <ul>
-        <li>Automatica</li>
-        <li>Manuale</li>
+        <li>Autonome</li>
+        <li>Derivate</li>
     </ul>         
-        
-    <h5>Automatica</h5>
-    <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
-        senza playoff. In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
-        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale al numero totale delle
-        squadre che compongono il torneo, ci pensa il sistema ad inserirle nell'opportuno livello di eliminatorie iniziale:            
-        sedicesimi, ottavi di finale, ecc.
+ 
+    <h5>Autonome</h5>
+    <p>
+        Autonome significa che gli incontri sono creati partendo direttamente dalle squadre del torneo senza passare ne 
+        per gironi ne per playoff precedenti. In questo caso il sistema richiede il livello iniziale delle eliminatorie
+        - 4°, 8°, 16°, ecc - sulla base dei quali creare poi gli accoppiamenti. Nessun altra configurazione è necessaria.
     </p> 
     
+    <h5>Derivate</h5>
+    <p>
+        Derivate, il default, significa che gli incontri sono creati partendo da gironi o playoff precedenti.
+        In questo caso, si devono effetture ulteriori scelte sulla modalità di popolamento:
+    </p> 
+    <ul>
+        <li>Manuale</li>
+        <li>Automatica</li>
+    </ul>         
+        
     <h5>Manuale</h5>
-    <p>La gestione manuale permette qualsiasi configurazione del passaggio del turno, combinando tutti i casi 
-        dai gironi all'italiana, ai playoff alle eliminatorie, dai playoff alle eliminatorie ecc.        
-        Nella vista dovete creare una riga per ogni regola di passaggio di turno.
+    <p>La gestione manuale, il default, permette qualsiasi configurazione del passaggio del turno, combinando tutti i casi: 
+    </p> 
+    <ul>
+        <li>dai gironi all'italiana ai playoff</li>
+        <li>dai gironi all'italiana alle eliminatorie</li>
+        <li>dai playoff alle eliminatorie</li>
+    </ul>  
+
+    <p>Nella vista dovete creare una riga per ogni regola di passaggio di turno.
         Il sistema calcola, in automatico in funzione del numero di squadre e gironi presenti nel torneo,
         la lista delle possibili eliminatorie di partenza.
         Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatiorie.
@@ -41,9 +56,20 @@
         incontri. Per esempio, se selezionate i sedicesimi di finale, saranno creare 8 righe della tabella sottostante
         che dovete completare una per una cliccando su ciascuna di essa e compilando la successiva dialog box
         nella quale dovere inserire le regole di popolamento delle eliminatorie.
+    </p>         
+
+    <h5>Automatica</h5>
+    <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
+        e senza playoff. In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
+        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale al numero totale delle
+        squadre che compongono il torneo, ci pensa il sistema ad inserirle nell'opportuno livello di eliminatorie iniziale:            
+        sedicesimi, ottavi di finale, ecc.
+        Il sistema applica la procedura standard utilizzata dai più diffusi tornei di calcio, basket, volley ecc.
+        Applicando la regola generale che la prima di un girone affronta l'ultima di un altro girone, la seconda affronta
+        la penultima, ecc.
         Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
         di ciasun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
-        in cui potete inserire le seguenti regole:
+        con le seguenti regole:
     </p> 
     <ul>
         <li>1° classificata Girone A Vs 2° classificata Girone D</li>
@@ -51,6 +77,30 @@
         <li>1° classificata Girone C Vs 2° classificata Girone B</li>
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
     </ul>  
+    <p>
+        Potete inserire qualsiasi numero purchè il totale sia pari, per esempio se avete 5 gironi da 7 squadre l'uno 
+        e volete far passare le prime 3 avrete un totale di 15 squadre, il sistema automaticamente elimina l'ultima delle 15
+        e lavora sulle restanti 14.
+    </p>
+    <p>
+        In generale, se il numero di squadre totali, è una potenza di 2 - 4, 8, 16, 32, ecc - il sistema colloca le squadre
+        a due a due in modo che la squadra con maggior punti giochi in casa e l'altra fuori.
+    </p>
+    <p>
+        Se il numero di squadre non è una potenza di due, il sistema compila le eliminatorie con il livello minimo che le
+        contenza tutte. Per esempio se avete 34 squadre, si parte dai 32-esimi di finale, se ne avete 28 dai sedicesimi, ecc.   
+        Siccome non si può completare tutto il livello, si usa il criterio dello spareggio fra le ultime per passare al turno
+        successivo, mentre le prime passano automaticamente.
+        In pratica si prendono le ultime classificate di ciascun girone e che rietrano fra quelle richieste, e le si incrociano
+        con le ultime degli altri gironi fino ad ottenere il numero esatto potenza di 2.
+
+        Ogni coppia di squadre, per ciascuna posizione delle eliminatorie, viene scelto con il criterio delle ultime classificate.
+        Cioè si creano le coppie del livello partendo dalla squadre che hanno fatto meno punti nel proprio girone così che 
+        possano fare lo spareggio passare al turno successivo in cui tutte saranno accoppiate.
+        In questo modo le squadre che hanno fatto più punti si troveranno sanza avversario e passano automaticamente 
+        al turno successivo aspettando la squadra che si qualifica con lo spareggio.
+    </p>
+                    
 </p-accordionTab>
 </p-accordion>
 </div>
@@ -58,22 +108,134 @@
 <div class="content-section implementation">      
 
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        <p-dropdown id="levelId" 
-            [options]="levels" 
-            [(ngModel)]="eliminatoryLevel"  
-            (onChange)="onChange($event.value)"
-            placeholder="Eliminatorie">
-        </p-dropdown>
-    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Popolamento:
+        </div>
+        <div class="ui-grid-col-4" tooltipPosition="right"
+                pTooltip="Si veda le istruzioni per maggiori dettagli">
+            <p-radioButton name="eliminatoryTypeGroupname" 
+                label="Derivate" 
+                value="derivate" 
+                [(ngModel)]="eliminatoryType" (onClick)="onDerivateClick()">
+            </p-radioButton>
+            <p-radioButton name="eliminatoryTypeGroupname" 
+                label="Autonome" 
+                value="autonomous" 
+                [(ngModel)]="eliminatoryType" (onClick)="onAutonomousClick()">
+            </p-radioButton>
+        </div>
+    </div>        
 
-    <p-table [responsive]="true" 
+    <div  *ngIf="isDerivate" class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Modo:
+        </div>
+        <div class="ui-grid-col-4" tooltipPosition="right"
+                pTooltip="Si veda le istruzioni per maggiori dettagli">
+            <p-radioButton name="eliminatoryModeGroupname" 
+                label="Manuale" 
+                value="manual" 
+                [(ngModel)]="eliminatoryMode" (onClick)="onManualClick()">
+            </p-radioButton>
+            <p-radioButton name="eliminatoryModeGroupname" 
+                label="Automatico" 
+                value="auto" 
+                [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
+            </p-radioButton>
+        </div>
+    </div>       
+
+    <p-dropdown id="levelId" 
+        [options]="levels" 
+        [(ngModel)]="eliminatoryLevel"  
+        (onChange)="onChange($event.value)"
+        placeholder="Eliminatorie">
+    </p-dropdown>
+
+    <p-table *ngIf="!isDerivate" 
+            [responsive]="true" 
             [value]="eliminatories" 
             selectionMode="single" 
             [(selection)]="selectedEliminatory" 
             (onRowSelect)="onRowSelect($event)">
+
+        <ng-template pTemplate="colgroup">
+            <colgroup>
+                <col style="width: 10mm;">
+                <col style="width: auto;">
+                <col style="width: 10mm;">
+                <col style="width: auto;">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>N°</th>
+                <th>Squadra 1</th>
+                <th>Vs</th>
+                <th>Squadra 2</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+            <tr [pSelectableRow]="rowData">
+                <td>{{rowData.position}}</td>
+                <td>{{rowData.team1}}</td>
+                <td> - </td>
+                <td>{{rowData.team2}}</td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
+            </div>
+        </ng-template> 
+    </p-table>
+    
+    <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+        <div class="ui-g ui-fluid" *ngIf="row">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="team1Id">Squadra 1</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="team1Id" [options]="teams" [(ngModel)]="row.round.teams[0].teamName" 
+                    optionLabel="label" 
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+        </div>       
+        Vs         
+        <div class="ui-g ui-fluid" *ngIf="row">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="team2Id">Squadra 2</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="team2Id" [options]="teams" [(ngModel)]="row.round.teams[1].teamName" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+        </div>       
+
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-check" (click)="done()" label="Fatto"></button>
+        </div>
+    </p-dialog>
+
+    <p-table *ngIf="isDerivate" 
+            [responsive]="true" 
+            [value]="eliminatories" 
+            selectionMode="single" 
+            [(selection)]="selectedEliminatory" 
+            (onRowSelect)="onRowSelectConfig($event)">
 
         <ng-template pTemplate="colgroup">
             <colgroup>
@@ -116,10 +278,9 @@
                 <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
             </div>
         </ng-template> 
-
     </p-table>
 
-    <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+    <p-dialog header="Eliminatorie" [(visible)]="displayDialogConfig" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
         <div class="ui-g ui-fluid" *ngIf="row">
             <div class="ui-g-12">
                 <div class="ui-g-4">

@@ -8,7 +8,6 @@ import { AbstractListView } from './abstract-listview';
 export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected tourneys: Tourney[];
-    protected selectedTourney: Tourney;
     protected cols: any[];
     toggleable: boolean = false;
 
@@ -48,7 +47,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedTourney = this.cloneObject(event.data);
+        // this.tourneyService.selectedTourney = this.cloneObject(event.data);
+        this.tourneyService.selectedTourney = this.selectedTourney;
 
         this.gotoDetailView();
     }

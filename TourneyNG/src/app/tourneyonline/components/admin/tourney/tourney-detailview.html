@@ -321,6 +321,10 @@
                         </div>
                         <div class="ui-grid-col-4" tooltipPosition="right"
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
+                            <p-checkbox name="phasesGroupname" label="Gironi"     
+                                value="round"     
+                                [formControl]="tourneyFormGroup.controls['phases']">
+                            </p-checkbox >
                             <p-checkbox name="phasesGroupname" label="Play Off"     
                                 value="playoff"     
                                 [formControl]="tourneyFormGroup.controls['phases']">

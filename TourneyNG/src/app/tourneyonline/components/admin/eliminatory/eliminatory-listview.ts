@@ -29,7 +29,6 @@ export class EliminatoryListView extends AbstractListView {
 
     levels: Combobox[];
     eliminatoryLevel: number;
-    eliminatoryType: string;
     eliminatoryMode: string;
     
     selectedEliminatory: Eliminatory;
@@ -41,6 +40,9 @@ export class EliminatoryListView extends AbstractListView {
     isPlayoff: boolean;
     isDerivate: boolean;
     isManual: boolean;
+
+    rowCombobox1: Combobox;
+    rowCombobox2: Combobox;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -65,14 +67,26 @@ export class EliminatoryListView extends AbstractListView {
         this.playoffs = this.tourneyService.playoffsCombobox;
 
         this.eliminatories = this.selectedTourney.eliminatories;
-        this.eliminatoryType = this.selectedTourney.eliminatoryType;
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
 
-        this.eliminatoryLevel = this.selectedTourney.eliminatoryLevel;
-
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
-        this.isDerivate = this.eliminatoryType=="derivate" ? true : false;
         this.isManual = this.eliminatoryMode=="manual" ? true : false;
+        
+        if( this.selectedTourney.phases.length == 1 && this.containsPhase("eliminatory", this.selectedTourney.phases)) {
+            this.isDerivate = false;
+            let pow2 = Math.pow(2, this.tourneyService.levelNo);
+            if(this.eliminatories.length==0 || this.eliminatories.length != pow2) {
+                this.eliminatories = [];
+                for(let i = 0; i < pow2; i++) {
+                    let se = this.newEliminatory();    
+                    this.eliminatories.push(se);
+                }
+            } else {
+
+            }
+        } else {
+            this.isDerivate = true;
+        }
     }
 
     onManualClick() {
@@ -87,32 +101,20 @@ export class EliminatoryListView extends AbstractListView {
         this.isManual = false;
     }
 
-    onAutonomousClick() {
-        console.log("Entering onAutonomousClick()");
-        this.eliminatoryType="autonomous";
-        this.isDerivate = false;
-    }
-
-    onDerivateClick() {
-        console.log("Entering onDerivateClick()");
-        this.eliminatoryType="derivate";
-        this.isDerivate = true;
-    }
-
     onChange(event) {
         console.log(event);
 
         this.eliminatories = [];
         for(let i=0; i<=this.eliminatoryLevel; i++ ) {
-            let se = this.newEliminatoryConfig();
+            let se = this.newEliminatory();
     
             this.eliminatories.push(se);
         }
     }
 
-    private newEliminatoryConfig(): Eliminatory {
-        return {
-        id: this.tourneyService.getSequenceNumber(),
+    private newEliminatory(): Eliminatory {
+        let e: Eliminatory = {
+            id: this.tourneyService.getSequenceNumber(),
             enabled: false,
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: ""
@@ -146,11 +148,31 @@ export class EliminatoryListView extends AbstractListView {
                 }
             }
         };
+
+        return e;
     }
 
     onRowSelect(event) {
-        this.row = this.cloneObject(event.data);
+        this.rowCombobox1 = {label: this.selectedEliminatory.round.teams[0].teamName, value: this.selectedEliminatory.round.teams[0].id};
+        this.rowCombobox2 = {label: this.selectedEliminatory.round.teams[1].teamName, value: this.selectedEliminatory.round.teams[1].id};
+
         this.displayDialog = true;
+    }
+
+    done() {
+        this.selectedEliminatory.round.teams[0].teamName = this.rowCombobox1.label;
+        this.selectedEliminatory.round.teams[0].id = this.rowCombobox1.value;
+
+        this.selectedEliminatory.round.teams[1].teamName = this.rowCombobox2.label;
+        this.selectedEliminatory.round.teams[1].id = this.rowCombobox2.value;
+
+        this.eliminatories[this.eliminatories.indexOf(this.selectedEliminatory)] = this.selectedEliminatory;
+
+        this.rowCombobox1 = null;
+        this.rowCombobox2 = null;
+
+        this.displayDialog = false;
+        this.displayDialogConfig = false;
     }
 
     onRowSelectConfig(event) {
@@ -158,7 +180,7 @@ export class EliminatoryListView extends AbstractListView {
         this.displayDialogConfig = true;
     }
 
-    done() {
+    doneConfig() {
         this.eliminatories[this.eliminatories.indexOf(this.selectedEliminatory)] = this.row;
 
         this.row = null;
@@ -167,7 +189,6 @@ export class EliminatoryListView extends AbstractListView {
     }
 
     save() {
-        this.selectedTourney.eliminatoryType = this.eliminatoryType;
         this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
         this.selectedTourney.eliminatories = this.eliminatories;
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );

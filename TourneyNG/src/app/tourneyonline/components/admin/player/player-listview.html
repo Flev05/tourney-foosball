@@ -34,6 +34,7 @@
  
         <ng-template pTemplate="colgroup">
             <colgroup>
+                <col style="width: 15mm;">
                 <col style="width: auto;">
                 <col style="width: auto;">
                 <col style="width: auto;">
@@ -43,6 +44,7 @@
 
         <ng-template pTemplate="header">
             <tr>
+                <th>N°</th>
                 <th>Nome</th>
                 <th>Cognome</th>
                 <th>Telefono</th>
@@ -52,6 +54,7 @@
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr  [pSelectableRow]="rowData">
+                <td>{{rowIndex + 1}}</td>                
                 <td>{{rowData.firstname}}</td>
                 <td>{{rowData.lastname}}</td>
                 <td>{{rowData.phoneNumber}}</td>

@@ -13,9 +13,9 @@
 <p-accordionTab header="Istruzioni">                        
             
     <h4>Istruzioni</h4>
-    <p> Premessa: le eliminatorie sono concepite, da tourneyonline.com, come una lista di gironi piccoli 
+    <p> Premessa: le eliminatorie sono concepite, da tourneyonline.com, come una lista di piccoli gironi  
         composti di solo due squadre in cui si qualifica solo la prima delle due.
-        Sono gestite 2 tipi di eliminatozione dirette da selezionare con i corrispondenti radio button:
+        Esistono 2 tipi di eliminazione diretta:
     </p> 
     <ul>
         <li>Autonome</li>
@@ -25,13 +25,43 @@
     <h5>Autonome</h5>
     <p>
         Autonome significa che gli incontri sono creati partendo direttamente dalle squadre del torneo senza passare ne 
-        per gironi ne per playoff precedenti. In questo caso il sistema richiede il livello iniziale delle eliminatorie
-        - 4°, 8°, 16°, ecc - sulla base dei quali creare poi gli accoppiamenti. Nessun altra configurazione è necessaria.
+        per gironi ne per playoff precedenti, in pratica quando si seleziona solo la check box Eliminatorie nella vista di 
+        dettaglio del torneo.
+
+        Il sistema in questo caso automaticamente crea il numero minimo indispensabile per ospitare tutti gli scontri diretti
+        in funzione del numero effettivo di squadre configurate ed è in grado di ricondurre alle eliminatorie qualsiasi numero 
+        di squadre purchè pari, se dispari non considera l'ultimo della lista.
+        
+    </p>
+    
+    <p>
+        Ci sono due casi da gestire: se il numero di squadre è una potenza di 2, tutte le squadre sono collocate in modo preciso 
+        nelle caselle degli scontri.
+
+        Se il numero di squadre non è una potenza di 2, il sistema prepara un insieme di scontri diretti preliminari
+        atti a normalizzare il numero di squadre al livello giusto. 
+
+        Partendo da un numero pari N di squadre, il sistema individua il livello minimo per ospitarle - per 24 squadre si parte dai sedicesimi,
+        per 10 dagli ottavi, per 38 dai 32-esimi ecc - quindi prepara 2 * X squadre che fanno un turno preliminare di passaggio del turno
+        e Y che lo passino senza giocare.
+    </p>
+
+    <p>
+        Per esempio se il torneo ha N=25 squadre, l'ultima non viene considerata ed N=24, il sistema crea i sedicesimi di finale come 
+        livello minimo di partenza per contenere le 24 squadre, calcola X=8 squadre che diputano un partita a testa per passare agli ottavi 
+        e Y=8 che passano il turno agli ottavi direttamente.  
+    </p>
+    
+    <p>
+        Pertanto ci saranno 8 + 8 = 16 squadre che vanno a riempire esattamente il livello degli ottavi di finali.
+
+        Nella tabella sottostante, generata automaticamente, non dovete far altro che popolare gli incontri, riga per riga,
+        con le squadre di vostra scelta.
     </p> 
     
     <h5>Derivate</h5>
     <p>
-        Derivate, il default, significa che gli incontri sono creati partendo da gironi o playoff precedenti.
+        Derivate, che è il default, significa che gli incontri sono creati partendo da gironi e playoff precedenti.
         In questo caso, si devono effetture ulteriori scelte sulla modalità di popolamento:
     </p> 
     <ul>
@@ -48,25 +78,36 @@
         <li>dai playoff alle eliminatorie</li>
     </ul>  
 
-    <p>Nella vista dovete creare una riga per ogni regola di passaggio di turno.
-        Il sistema calcola, in automatico in funzione del numero di squadre e gironi presenti nel torneo,
+    <p> Il sistema calcola, in automatico in funzione del numero di squadre e gironi presenti nel torneo,
         la lista delle possibili eliminatorie di partenza.
-        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatiorie.
+
+        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatorie.
         Alla scelta del livello di eliminazione, viene creata la corrispondente lista di possibili 
-        incontri. Per esempio, se selezionate i sedicesimi di finale, saranno creare 8 righe della tabella sottostante
+        incontri da compilare, riga per riga, con le regole di passaggio provenienti dai rispultati dei gironi 
+        e playoff precedenti.
+    </p>
+    
+    <p>
+        Per esempio, se selezionate i sedicesimi di finale, saranno creare 8 righe della tabella sottostante
         che dovete completare una per una cliccando su ciascuna di essa e compilando la successiva dialog box
         nella quale dovere inserire le regole di popolamento delle eliminatorie.
     </p>         
 
     <h5>Automatica</h5>
     <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
-        e senza playoff. In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
+        e senza playoff. 
+        
+        In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
         alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale al numero totale delle
         squadre che compongono il torneo, ci pensa il sistema ad inserirle nell'opportuno livello di eliminatorie iniziale:            
         sedicesimi, ottavi di finale, ecc.
+
         Il sistema applica la procedura standard utilizzata dai più diffusi tornei di calcio, basket, volley ecc.
-        Applicando la regola generale che la prima di un girone affronta l'ultima di un altro girone, la seconda affronta
-        la penultima, ecc.
+        in cui, come regola generale, la prima del primo girone affronta l'ultima dell'ultimo girone, 
+        la seconda del primo girone affronta la penultima dell'ultimo girone, ecc.
+    </p>
+    
+    <p>
         Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
         di ciasun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
         con le seguenti regole:
@@ -88,15 +129,18 @@
     </p>
     <p>
         Se il numero di squadre non è una potenza di due, il sistema compila le eliminatorie con il livello minimo che le
-        contenza tutte. Per esempio se avete 34 squadre, si parte dai 32-esimi di finale, se ne avete 28 dai sedicesimi, ecc.   
+        contenga tutte. Per esempio se avete 34 squadre, si parte dai 32-esimi di finale, se ne avete 28 dai sedicesimi, ecc.   
         Siccome non si può completare tutto il livello, si usa il criterio dello spareggio fra le ultime per passare al turno
         successivo, mentre le prime passano automaticamente.
         In pratica si prendono le ultime classificate di ciascun girone e che rietrano fra quelle richieste, e le si incrociano
         con le ultime degli altri gironi fino ad ottenere il numero esatto potenza di 2.
-
+    </p>
+    
+    <p>
         Ogni coppia di squadre, per ciascuna posizione delle eliminatorie, viene scelto con il criterio delle ultime classificate.
         Cioè si creano le coppie del livello partendo dalla squadre che hanno fatto meno punti nel proprio girone così che 
         possano fare lo spareggio passare al turno successivo in cui tutte saranno accoppiate.
+
         In questo modo le squadre che hanno fatto più punti si troveranno sanza avversario e passano automaticamente 
         al turno successivo aspettando la squadra che si qualifica con lo spareggio.
     </p>
@@ -110,26 +154,7 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Popolamento:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right"
-                pTooltip="Si veda le istruzioni per maggiori dettagli">
-            <p-radioButton name="eliminatoryTypeGroupname" 
-                label="Derivate" 
-                value="derivate" 
-                [(ngModel)]="eliminatoryType" (onClick)="onDerivateClick()">
-            </p-radioButton>
-            <p-radioButton name="eliminatoryTypeGroupname" 
-                label="Autonome" 
-                value="autonomous" 
-                [(ngModel)]="eliminatoryType" (onClick)="onAutonomousClick()">
-            </p-radioButton>
-        </div>
-    </div>        
-
-    <div  *ngIf="isDerivate" class="ui-grid-row">
+    <div *ngIf="isDerivate" class="ui-grid-row">
         <div class="ui-grid-col-2">
             Modo:
         </div>
@@ -148,13 +173,20 @@
         </div>
     </div>       
 
-    <p-dropdown id="levelId" 
-        [options]="levels" 
-        [(ngModel)]="eliminatoryLevel"  
-        (onChange)="onChange($event.value)"
-        placeholder="Eliminatorie">
-    </p-dropdown>
-
+    <div *ngIf="isDerivate" class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Livelli:
+        </div>
+        <div class="ui-grid-col-4" tooltipPosition="right">
+            <p-dropdown id="levelId" 
+                [options]="levels" 
+                [(ngModel)]="eliminatoryLevel"  
+                (onChange)="onChange($event.value)"
+                placeholder="Eliminatorie">
+            </p-dropdown>
+        </div>
+    </div>        
+    
     <p-table *ngIf="!isDerivate" 
             [responsive]="true" 
             [value]="eliminatories" 
@@ -180,12 +212,12 @@
             </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-rowData>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
-                <td>{{rowData.position}}</td>
-                <td>{{rowData.team1}}</td>
+                <td>{{rowIndex + 1}}</td>
+                <td>{{rowData.round.teams[0].teamName}}</td>
                 <td> - </td>
-                <td>{{rowData.team2}}</td>
+                <td>{{rowData.round.teams[1].teamName}}</td>
             </tr>
         </ng-template>
 
@@ -197,30 +229,30 @@
     </p-table>
     
     <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
-        <div class="ui-g ui-fluid" *ngIf="row">
+        <div class="ui-g ui-fluid" *ngIf="rowCombobox1">
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="team1Id">Squadra 1</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="team1Id" [options]="teams" [(ngModel)]="row.round.teams[0].teamName" 
-                    optionLabel="label" 
-                    placeholder="Selezionare">
-                </p-dropdown>
+                    <p-dropdown id="team1Id" [options]="teams" [(ngModel)]="rowCombobox1" 
+                        optionLabel="label"  
+                        placeholder="Selezionare">
+                    </p-dropdown>
                 </div>
             </div>
         </div>       
         Vs         
-        <div class="ui-g ui-fluid" *ngIf="row">
+        <div class="ui-g ui-fluid" *ngIf="rowCombobox2">
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="team2Id">Squadra 2</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="team2Id" [options]="teams" [(ngModel)]="row.round.teams[1].teamName" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
+                    <p-dropdown id="team2Id" [options]="teams" [(ngModel)]="rowCombobox2" 
+                        optionLabel="label" 
+                        placeholder="Selezionare">
+                    </p-dropdown>
                 </div>
             </div>
         </div>       
@@ -346,7 +378,7 @@
         </div>       
 
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" (click)="done()" label="Fatto"></button>
+            <button type="button" pButton icon="fa fa-check" (click)="doneConfig()" label="Fatto"></button>
         </div>
     </p-dialog>
 </div>

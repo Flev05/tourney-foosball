@@ -55,6 +55,7 @@ export class TourneyService {
     newPlayoffConfig : boolean = false;
 
     firstTime : boolean = true;
+    levelNo : number;
 
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
@@ -71,14 +72,14 @@ export class TourneyService {
             return;
         }
 
-        let levelNo = this.selectedTourney.rounds.length;
-        if(levelNo==0 ) {
-            levelNo = this.selectedTourney.teams.length;
+        let itemlNo = this.selectedTourney.rounds.length;
+        if(itemlNo==0 ) {
+            itemlNo = this.selectedTourney.teams.length;
         }
 
-        let log2 = Math.ceil(Math.log2(levelNo));
+        this.levelNo = Math.ceil(Math.log2(itemlNo));
 
-        for(let l=log2; l>=0; l--) {
+        for(let l=this.levelNo; l>=0; l--) {
             let lev = "";
             if(l >= 4) {
                 lev = Math.pow(2, l) + "-esimi di finale";

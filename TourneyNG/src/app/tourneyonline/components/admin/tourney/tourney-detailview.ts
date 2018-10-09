@@ -80,7 +80,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
             this.selectedTourney.phases=["round"];
-            this.selectedTourney.phases.push("elimination");
+            this.selectedTourney.phases.push("eliminatory");
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }

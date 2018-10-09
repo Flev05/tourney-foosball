@@ -17,7 +17,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
         ,access: "public"
 
-        ,phases: ["round", "playoff", "elimination"]
+        ,phases: ["round", "playoff", "eliminatory"]
         ,eliminatoryType:"derivate"
         ,eliminatoryMode:"manual"
 
@@ -275,9 +275,7 @@ export class InMemoryDataService implements InMemoryDbService {
           ]
         }
         ]
-        ,eliminatories:[
-
-        ]
+        ,eliminatories:[]
         ,objectives:[]
       }
       ,{id: 2, tourneyName: 'Preliminari 2018/2019'
@@ -456,6 +454,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ,rounds:[]  
             ,playoffs:[]
             ,meetings:[]  
+            ,eliminatories:[]
             ,objectives:[]  
           }
         ];

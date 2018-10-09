@@ -47,7 +47,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        // this.tourneyService.selectedTourney = this.cloneObject(event.data);
         this.tourneyService.selectedTourney = this.selectedTourney;
 
         this.gotoDetailView();

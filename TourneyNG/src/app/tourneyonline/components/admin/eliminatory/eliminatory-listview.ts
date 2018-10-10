@@ -9,6 +9,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { RoundType } from 'app/tourneyonline/domain/roundType';
 import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -143,7 +144,39 @@ export class EliminatoryListView extends AbstractListView {
             }
         } else {
             this.isDerivate = true;
+            this.prepatePointsTeam();
+
         }
+    }
+    
+    prepatePointsTeam(): any {
+        let unorderedTeams : Array<Classification> = [];
+
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r = this.selectedTourney.rounds[i];
+            let firsts : Array<Classification> = [];
+            let pt = {id: this.tourneyService.getSequenceNumber(), team: r.classification[i].team, points: r.classification[i].points};
+
+            unorderedTeams.push(pt);
+
+            unorderedTeams = this.sortTeam(unorderedTeams);
+        }
+    }
+
+    sortTeam(unsortedArray:Classification[]): Classification[] {
+        var sortedArray: Classification[] = unsortedArray.sort((obj1, obj2) => {
+            if (obj1.points > obj2.points) {
+                return 1;
+            }
+        
+            if (obj1.points < obj2.points) {
+                return -1;
+            }
+        
+            return 0;
+        });
+
+        return sortedArray;
     }
 
     onManualClick() {

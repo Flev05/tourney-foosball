@@ -41,22 +41,24 @@
         Se il numero di squadre non è una potenza di 2, il sistema prepara un insieme di scontri diretti preliminari
         atti a normalizzare il numero di squadre al livello giusto. 
 
-        Partendo da un numero pari N di squadre, il sistema individua il livello minimo per ospitarle - per 24 squadre si parte dai sedicesimi,
+        Partendo da un numero qualsiasi di N di squadre, il sistema individua il livello minimo per ospitarle - per 24 squadre si parte dai sedicesimi,
         per 10 dagli ottavi, per 38 dai 32-esimi ecc - quindi prepara 2 * X squadre che fanno un turno preliminare di passaggio del turno
         e Y che lo passino senza giocare.
     </p>
-
     <p>
-        Per esempio se il torneo ha N=25 squadre, l'ultima non viene considerata ed N=24, il sistema crea i sedicesimi di finale come 
-        livello minimo di partenza per contenere le 24 squadre, calcola X=8 squadre che diputano un partita a testa per passare agli ottavi 
-        e Y=8 che passano il turno agli ottavi direttamente.  
+        La vista visualizza 2 tabelle: una per il massaggio automatico al turno successivo e una per le squadre che fanno lo spareggio.
+        La prima, di Y righe e una colonna, deve essere compilta con le squadre che passano automaticamente al turno successivo. 
+        La seconda, di X righe e 2 colonne, deve essere compilata con le coppie di squadre che devono disputare lo spareggio.
     </p>
-    
+          
     <p>
-        Pertanto ci saranno 8 + 8 = 16 squadre che vanno a riempire esattamente il livello degli ottavi di finali.
-
-        Nella tabella sottostante, generata automaticamente, non dovete far altro che popolare gli incontri, riga per riga,
-        con le squadre di vostra scelta.
+        Per esempio se il torneo ha N=25 squadre, il sistema sceglie i sedicesimi di finale come livello minimo di partenza per contenere 
+        le 25 squadre, calcola X=25-16=9 coppie di squadre che disputano un partita per passare agli ottavi 
+        e Y=7 che passano il turno agli ottavi direttamente.  
+    </p>
+    <p>
+        Pertanto ci saranno 9 + 7 = 16 squadre che vanno a riempire esattamente il livello degli ottavi di finali.
+        Dovete popolare le 2 tabelle sottostanti, riga per riga, con le squadre di vostra scelta.
     </p> 
     
     <h5>Derivate</h5>
@@ -189,11 +191,69 @@
     
     <p-table *ngIf="!isDerivate" 
             [responsive]="true" 
-            [value]="eliminatories" 
+            [value]="luckyTeams" 
             selectionMode="single" 
-            [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onRowSelect($event)">
+            [(selection)]="selectedLuckyTeam" 
+            (onRowSelect)="onLuckyTeamRowSelect($event)">
 
+        <ng-template pTemplate="caption">
+            Squadre fortunate
+        </ng-template>
+
+        <ng-template pTemplate="colgroup">
+            <colgroup>
+                <col style="width: 10mm;">
+                <col style="width: auto;">
+            </colgroup>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>N°</th>
+                <th>Squadra 1</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+                <td>{{rowIndex + 1}}</td>
+                <td>{{rowData.label}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="Squadre fortunate" [(visible)]="luckyTeamDisplayDialog" 
+        [responsive]="true" showEffect="fade" [modal]="true" [width]="500" [height]="500">
+        <div class="ui-g ui-fluid" *ngIf="luckyTeamRow">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="team1Id">Squadra</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="team1Id" [options]="availableTeams" [(ngModel)]="luckyTeamRow" 
+                        optionLabel="label"  
+                        placeholder="Selezionare">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>       
+
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-check" (click)="luckyTeamDone()" label="Fatto"></button>
+        </div>
+    </p-dialog>        
+
+    <p-table *ngIf="!isDerivate" 
+            [responsive]="true" 
+            [value]="unluckyTeams" 
+            selectionMode="single" 
+            [(selection)]="selectedUnluckyTeam" 
+            (onRowSelect)="onUnluckyTeamRowSelect($event)">
+
+        <ng-template pTemplate="caption">
+            Squadre per lo spareggio
+        </ng-template>
+        
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
@@ -215,50 +275,52 @@
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
                 <td>{{rowIndex + 1}}</td>
-                <td>{{rowData.round.teams[0].teamName}}</td>
+                <td>{{rowData.cb1.label}}</td>
                 <td> - </td>
-                <td>{{rowData.round.teams[1].teamName}}</td>
+                <td>{{rowData.cb2.label}}</td>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">
-                <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
+                <button type="button" pButton icon="fa fa-save" (click)="standaloneSave()" label="Salva"></button>
             </div>
         </ng-template> 
     </p-table>
     
-    <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
-        <div class="ui-g ui-fluid" *ngIf="rowCombobox1">
+    <p-dialog header="Squadre per lo spareggio" [(visible)]="unluckyDisplayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+        <div class="ui-g ui-fluid" *ngIf="combobox1Row">
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="team1Id">Squadra 1</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="team1Id" [options]="teams" [(ngModel)]="rowCombobox1" 
+                    <p-dropdown id="team1Id" [options]="availableTeams" [(ngModel)]="combobox1Row" 
                         optionLabel="label"  
-                        placeholder="Selezionare">
+                        placeholder="Selezionare"
+                        (onChange)="onCombobox1Change($event.value)">
                     </p-dropdown>
                 </div>
             </div>
         </div>       
         Vs         
-        <div class="ui-g ui-fluid" *ngIf="rowCombobox2">
+        <div class="ui-g ui-fluid" *ngIf="combobox2Row">
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="team2Id">Squadra 2</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="team2Id" [options]="teams" [(ngModel)]="rowCombobox2" 
+                    <p-dropdown id="team2Id" [options]="availableTeams" [(ngModel)]="combobox2Row" 
                         optionLabel="label" 
-                        placeholder="Selezionare">
+                        placeholder="Selezionare"
+                        (onChange)="onCombobox2Change($event.value)">
                     </p-dropdown>
                 </div>
             </div>
         </div>       
 
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" (click)="done()" label="Fatto"></button>
+            <button type="button" pButton icon="fa fa-check" (click)="unluckyTeamDone()" label="Fatto"></button>
         </div>
     </p-dialog>
 

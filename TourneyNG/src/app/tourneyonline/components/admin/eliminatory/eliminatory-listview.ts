@@ -8,6 +8,7 @@ import {Message} from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { RoundType } from 'app/tourneyonline/domain/roundType';
+import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -35,14 +36,26 @@ export class EliminatoryListView extends AbstractListView {
     eliminatories: Eliminatory[];
 
     row: Eliminatory;  
-    displayDialog: boolean;
     displayDialogConfig: boolean;
     isPlayoff: boolean;
     isDerivate: boolean;
     isManual: boolean;
 
-    rowCombobox1: Combobox;
-    rowCombobox2: Combobox;
+    combobox1Row: Combobox;
+    combobox2Row: Combobox;
+
+    availableTeams: Combobox[];
+
+    luckyTeamDisplayDialog: boolean;
+    luckyTeams: Combobox[];
+    selectedLuckyTeam: Combobox;
+    luckyTeamRow: Combobox;
+
+    unluckyDisplayDialog: boolean;
+    unluckyTeams: DoubleCombobox[];
+    selectedUnluckyTeam: DoubleCombobox;
+    unluckyTeamRow: Combobox;
+    unluckyTeamDisplayDialog: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -74,15 +87,59 @@ export class EliminatoryListView extends AbstractListView {
         
         if( this.selectedTourney.phases.length == 1 && this.containsPhase("eliminatory", this.selectedTourney.phases)) {
             this.isDerivate = false;
-            let pow2 = Math.pow(2, this.tourneyService.levelNo);
-            if(this.eliminatories.length==0 || this.eliminatories.length != pow2) {
-                this.eliminatories = [];
-                for(let i = 0; i < pow2; i++) {
-                    let se = this.newEliminatory();    
-                    this.eliminatories.push(se);
-                }
-            } else {
+            this.luckyTeamRow = null;
 
+
+            let pow2 = Math.pow(2, this.tourneyService.levelNo-1);
+            let X = this.selectedTourney.teams.length - pow2;
+            let Y = pow2 - X;
+
+            this.luckyTeams = [];
+            this.unluckyTeams = [];
+            this.availableTeams = [];
+            for(let cb of this.teams) {
+                this.availableTeams.push(cb);
+            }
+        
+            if(this.eliminatories.length==0 || this.eliminatories.length != pow2) {
+                for(let i = 0; i < X; i++) {
+                    let cb1: Combobox = {label:"", value: i};
+                    let cb2: Combobox = {label:"", value: i};
+                    let dcb: DoubleCombobox = {id:0, "cb1": cb1, "cb2": cb2};
+                    this.unluckyTeams.push(dcb);
+                }
+
+                for(let i=0; i<Y; i++) {
+                    let cb: Combobox = {label:"", value: i};
+                    this.luckyTeams.push(cb);
+                }    
+            } else {
+                for(let e of this.eliminatories) {
+                    if(e.round.teams[0].id!=0 && e.round.teams[1].id==0){
+                        let cb: Combobox = {label:e.round.teams[0].teamName, value: e.round.teams[0].id};
+                        this.luckyTeams.push(cb);
+
+                        let index: number = this.availableTeams.indexOf(cb);
+                        if(index > -1) {
+                            this.availableTeams.splice(index, 1);
+                        }
+                
+                    } else {
+                        let cb1: Combobox = {label:e.round.teams[0].teamName, value: e.round.teams[0].id};
+                        let cb2: Combobox = {label:e.round.teams[1].teamName, value: e.round.teams[1].id};
+                        let dcb: DoubleCombobox = {id:0, "cb1": cb1, "cb2": cb2};
+                        this.unluckyTeams.push(dcb);
+
+                        let index: number = this.availableTeams.indexOf(cb1);
+                        if(index > -1) {
+                            this.availableTeams.splice(index, 1);
+                        }
+                        index  = this.availableTeams.indexOf(cb2);
+                        if(index > -1) {
+                            this.availableTeams.splice(index, 1);
+                        }
+                    }
+                }
             }
         } else {
             this.isDerivate = true;
@@ -152,27 +209,116 @@ export class EliminatoryListView extends AbstractListView {
         return e;
     }
 
-    onRowSelect(event) {
-        this.rowCombobox1 = {label: this.selectedEliminatory.round.teams[0].teamName, value: this.selectedEliminatory.round.teams[0].id};
-        this.rowCombobox2 = {label: this.selectedEliminatory.round.teams[1].teamName, value: this.selectedEliminatory.round.teams[1].id};
+    onLuckyTeamRowSelect(event) {
+        this.luckyTeamRow = this.selectedLuckyTeam;
+        this.luckyTeamDisplayDialog = true;
+    }   
+    onUnluckyTeamRowSelect(event) {
+        this.combobox1Row = {label: this.selectedUnluckyTeam.cb1.label, value: this.selectedUnluckyTeam.cb1.value};
+        this.combobox2Row = null;
 
-        this.displayDialog = true;
+        this.unluckyDisplayDialog = true;
     }
 
-    done() {
-        this.selectedEliminatory.round.teams[0].teamName = this.rowCombobox1.label;
-        this.selectedEliminatory.round.teams[0].id = this.rowCombobox1.value;
+    luckyTeamDone() {
+        this.luckyTeamDisplayDialog = false;
+        if(this.luckyTeamRow.value == 0) {
+            this.availableTeams.push(this.selectedLuckyTeam);
+            let index: number = this.luckyTeams.indexOf(this.selectedLuckyTeam);
+            if(index > -1) {
+                this.luckyTeams.splice(index, 1);
+            }
+        } else {
+            let index: number = this.availableTeams.indexOf(this.luckyTeamRow);
+            if(index > -1) {
+                this.availableTeams.splice(index, 1);
+            }
+    
+            index  = this.luckyTeams.indexOf(this.selectedLuckyTeam);
+            if(index > -1) {
+                this.luckyTeams[index] = this.luckyTeamRow;
+            }
+        }
+        
+        this.luckyTeamRow = null;
+    }
+    unluckyTeamDone() {
+        if(this.combobox1Row.value == 0) {
+            this.availableTeams.push(this.selectedUnluckyTeam.cb1);
+        }        
+        if(this.combobox2Row.value == 0) {
+            this.availableTeams.push(this.selectedUnluckyTeam.cb2);
+        }
+        if(this.combobox1Row.value == 0 && this.combobox2Row.value == 0) {
+            let index: number = this.unluckyTeams.indexOf(this.selectedUnluckyTeam);
+            if(index > -1) {
+                this.unluckyTeams.splice(index, 1);
+            }
+        }
 
-        this.selectedEliminatory.round.teams[1].teamName = this.rowCombobox2.label;
-        this.selectedEliminatory.round.teams[1].id = this.rowCombobox2.value;
+        if(this.combobox1Row.value != 0 && this.combobox2Row.value != 0) {
+            this.selectedUnluckyTeam.cb1.label = this.combobox1Row.label;
+            this.selectedUnluckyTeam.cb1.value = this.combobox1Row.value;
 
-        this.eliminatories[this.eliminatories.indexOf(this.selectedEliminatory)] = this.selectedEliminatory;
+            this.selectedUnluckyTeam.cb2.label = this.combobox2Row.label;
+            this.selectedUnluckyTeam.cb2.value = this.combobox2Row.value;
+            let index: number = this.availableTeams.indexOf(this.combobox1Row);
+            if(index > -1) {
+                this.availableTeams.splice(index, 1);
+            }
+            index = this.availableTeams.indexOf(this.combobox2Row);
+            if(index > -1) {
+                this.availableTeams.splice(index, 1);
+            }
+        }
 
-        this.rowCombobox1 = null;
-        this.rowCombobox2 = null;
+        this.combobox1Row = null;
+        this.combobox2Row = null;
 
-        this.displayDialog = false;
-        this.displayDialogConfig = false;
+        this.unluckyDisplayDialog = false;
+    }
+
+    onCombobox1Change(event) {
+        console.log(event);
+        let index: number = this.availableTeams.indexOf(this.combobox1Row);
+        if(index > -1) {
+            this.availableTeams.splice(index, 1);
+        }
+        this.combobox2Row = {label: this.selectedUnluckyTeam.cb2.label, value: this.selectedUnluckyTeam.cb2.value};
+    }
+    onCombobox2Change(event) {
+        console.log(event);
+        let index: number = this.availableTeams.indexOf(this.combobox2Row);
+        if(index > -1) {
+            this.availableTeams.splice(index, 1);
+        }
+    }
+    standaloneSave() {      
+        this.eliminatories = [];
+        for(let cb of this.luckyTeams) {
+
+            let e = this.newEliminatory();
+            e.round.teams[0].teamName = cb.label;
+            e.round.teams[0].id = cb.value;
+            e.round.teams[1].teamName = "";
+            e.round.teams[1].id = 0;
+            
+            this.eliminatories.push(e);
+        }
+        for(let dcb of this.unluckyTeams) {
+
+            let e = this.newEliminatory();
+            e.round.teams[0].teamName = dcb.cb1.label;
+            e.round.teams[0].id = dcb.cb1.value;
+            e.round.teams[1].teamName = dcb.cb2.label;
+            e.round.teams[1].id = dcb.cb2.value;
+            
+            this.eliminatories.push(e);
+        }
+        
+        this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
+        this.selectedTourney.eliminatories = this.eliminatories;
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
     }
 
     onRowSelectConfig(event) {
@@ -184,7 +330,7 @@ export class EliminatoryListView extends AbstractListView {
         this.eliminatories[this.eliminatories.indexOf(this.selectedEliminatory)] = this.row;
 
         this.row = null;
-        this.displayDialog = false;
+        this.unluckyDisplayDialog = false;
         this.displayDialogConfig = false;
     }
 
@@ -193,7 +339,7 @@ export class EliminatoryListView extends AbstractListView {
         this.selectedTourney.eliminatories = this.eliminatories;
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
     }
-            
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

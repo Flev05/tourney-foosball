@@ -30,9 +30,10 @@
                 <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
             </div>
         </ng-template>
- 
+
         <ng-template pTemplate="colgroup">
             <colgroup>
+                <col style="width: 10mm;">
                 <col style="width: auto;">
                 <col style="width: auto;">
             </colgroup>
@@ -40,13 +41,15 @@
 
         <ng-template pTemplate="header">
             <tr>
+                <th>N°</th>
                 <th>Nome</th>
                 <th>Indirizzo</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-            <tr  [pSelectableRow]="rowData">
+            <tr [pSelectableRow]="rowData">
+                <td>{{rowIndex + 1}}</td>
                 <td>{{rowData.teamName}}</td>
                 <td>{{rowData.address}}</td>
             </tr>

@@ -63,7 +63,7 @@
     
     <h5>Derivate</h5>
     <p>
-        Derivate, che è il default, significa che gli incontri sono creati partendo da gironi e playoff precedenti.
+        Derivate, che è il default, significa che gli incontri sono creati partendo da gironi e/o playoff precedenti.
         In questo caso, si devono effetture ulteriori scelte sulla modalità di popolamento:
     </p> 
     <ul>
@@ -97,16 +97,19 @@
 
     <h5>Automatica</h5>
     <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
-        e senza playoff. 
+        ma senza playoff. 
         
         In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
-        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale al numero totale delle
-        squadre che compongono il torneo, ci pensa il sistema ad inserirle nell'opportuno livello di eliminatorie iniziale:            
-        sedicesimi, ottavi di finale, ecc.
-
-        Il sistema applica la procedura standard utilizzata dai più diffusi tornei di calcio, basket, volley ecc.
-        in cui, come regola generale, la prima del primo girone affronta l'ultima dell'ultimo girone, 
-        la seconda del primo girone affronta la penultima dell'ultimo girone, ecc.
+        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale del numero totale di
+        squadre che compongono il torneo, anche tutte, ci pensa il sistema a scegliere l'opportuno livello di eliminatorie iniziale
+        - sedicesimi, ottavi di finale, ecc. - preparare la lista delle squadre che passano automaticamente
+        al turno successivo e quelle che devono invece fare un ulteriore turno di spareggio.
+    </p>
+    
+    <p>
+        La regola generale è quella standard utilizzata dai più diffusi tornei di calcio, basket, volley ecc.
+        in cui la prima classificata del primo girone affronta l'ultima classificata dell'ultimo girone, 
+        la prima classificata del secondo girone affronta la ultima classificata del penultimo girone, ecc.
     </p>
     
     <p>
@@ -120,31 +123,23 @@
         <li>1° classificata Girone C Vs 2° classificata Girone B</li>
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
     </ul>  
+
     <p>
-        Potete inserire qualsiasi numero purchè il totale sia pari, per esempio se avete 5 gironi da 7 squadre l'uno 
-        e volete far passare le prime 3 avrete un totale di 15 squadre, il sistema automaticamente elimina l'ultima delle 15
-        e lavora sulle restanti 14.
+        In generale, il sistema ordina le squadre swecondo il criterio delle migliori prime di tutti i gironi, 
+        poi le migliori second di tutti i gironi, le migliori terze di tutti i gironi, ecc.
     </p>
     <p>
-        In generale, se il numero di squadre totali, è una potenza di 2 - 4, 8, 16, 32, ecc - il sistema colloca le squadre
-        a due a due in modo che la squadra con maggior punti giochi in casa e l'altra fuori.
-    </p>
-    <p>
-        Se il numero di squadre non è una potenza di due, il sistema compila le eliminatorie con il livello minimo che le
-        contenga tutte. Per esempio se avete 34 squadre, si parte dai 32-esimi di finale, se ne avete 28 dai sedicesimi, ecc.   
-        Siccome non si può completare tutto il livello, si usa il criterio dello spareggio fra le ultime per passare al turno
-        successivo, mentre le prime passano automaticamente.
-        In pratica si prendono le ultime classificate di ciascun girone e che rietrano fra quelle richieste, e le si incrociano
-        con le ultime degli altri gironi fino ad ottenere il numero esatto potenza di 2.
+        Sulla base di tale ordinamento, di calcolano: le posizioni nelle eliminatorie, le sqadre che passano al turno
+        successivo automaticamente, le squadre che devono effettuare un ulteriore spareggio prima di passare al
+        turno successivo.
     </p>
     
     <p>
-        Ogni coppia di squadre, per ciascuna posizione delle eliminatorie, viene scelto con il criterio delle ultime classificate.
-        Cioè si creano le coppie del livello partendo dalla squadre che hanno fatto meno punti nel proprio girone così che 
-        possano fare lo spareggio passare al turno successivo in cui tutte saranno accoppiate.
-
-        In questo modo le squadre che hanno fatto più punti si troveranno sanza avversario e passano automaticamente 
-        al turno successivo aspettando la squadra che si qualifica con lo spareggio.
+        Per esempio se avete 5 gironi da 5 squadre l'una e si richiede che passino tutte, il sistema ordina le squadre 
+        secondo il criterio descritto sopra, quindi individua i 16-esimi di finale come livello minimo parziale
+        da cui partire con le eliminazioni dirette, alloca le ultime 2*(25-16)=2*9=18 squadre per lo spareggio 
+        per gli ottavi di finale, dalle quali se ne qualificano 9, e le restanti prime: 16-9=7, che passano 
+        automaicamente agli ottavi senza spareggio.
     </p>
                     
 </p-accordionTab>

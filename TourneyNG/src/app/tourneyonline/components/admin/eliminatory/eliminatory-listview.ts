@@ -10,6 +10,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { RoundType } from 'app/tourneyonline/domain/roundType';
 import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
 import { Classification } from 'app/tourneyonline/domain/classification';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -58,6 +59,8 @@ export class EliminatoryListView extends AbstractListView {
     unluckyTeamRow: Combobox;
     unluckyTeamDisplayDialog: boolean;
 
+    orderedTeams : Array<Classification>;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -86,90 +89,132 @@ export class EliminatoryListView extends AbstractListView {
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode=="manual" ? true : false;
         
-        if( this.selectedTourney.phases.length == 1 && this.containsPhase("eliminatory", this.selectedTourney.phases)) {
-            this.isDerivate = false;
-            this.luckyTeamRow = null;
+        if( this.selectedTourney.phases.length == 1 && 
+                this.containsPhase("eliminatory", this.selectedTourney.phases)) {
+            this.processStandalone();
+        }
 
-
-            let pow2 = Math.pow(2, this.tourneyService.levelNo-1);
-            let X = this.selectedTourney.teams.length - pow2;
-            let Y = pow2 - X;
-
-            this.luckyTeams = [];
-            this.unluckyTeams = [];
-            this.availableTeams = [];
-            for(let cb of this.teams) {
-                this.availableTeams.push(cb);
-            }
-        
-            if(this.eliminatories.length==0 || this.eliminatories.length != pow2) {
-                for(let i = 0; i < X; i++) {
-                    let cb1: Combobox = {label:"", value: i};
-                    let cb2: Combobox = {label:"", value: i};
-                    let dcb: DoubleCombobox = {id:0, "cb1": cb1, "cb2": cb2};
-                    this.unluckyTeams.push(dcb);
-                }
-
-                for(let i=0; i<Y; i++) {
-                    let cb: Combobox = {label:"", value: i};
-                    this.luckyTeams.push(cb);
-                }    
-            } else {
-                for(let e of this.eliminatories) {
-                    if(e.round.teams[0].id!=0 && e.round.teams[1].id==0){
-                        let cb: Combobox = {label:e.round.teams[0].teamName, value: e.round.teams[0].id};
-                        this.luckyTeams.push(cb);
-
-                        let index: number = this.availableTeams.indexOf(cb);
-                        if(index > -1) {
-                            this.availableTeams.splice(index, 1);
-                        }
-                
-                    } else {
-                        let cb1: Combobox = {label:e.round.teams[0].teamName, value: e.round.teams[0].id};
-                        let cb2: Combobox = {label:e.round.teams[1].teamName, value: e.round.teams[1].id};
-                        let dcb: DoubleCombobox = {id:0, "cb1": cb1, "cb2": cb2};
-                        this.unluckyTeams.push(dcb);
-
-                        let index: number = this.availableTeams.indexOf(cb1);
-                        if(index > -1) {
-                            this.availableTeams.splice(index, 1);
-                        }
-                        index  = this.availableTeams.indexOf(cb2);
-                        if(index > -1) {
-                            this.availableTeams.splice(index, 1);
-                        }
-                    }
-                }
-            }
-        } else {
+        if(this.containsPhase("round", this.selectedTourney.phases)
+                && this.containsPhase("eliminatory", this.selectedTourney.phases)
+                && !this.containsPhase("playoff", this.selectedTourney.phases)) 
+        {
             this.isDerivate = true;
-            this.prepatePointsTeam();
+            this.processAutomatic();
+        }
+    }
 
+    processAutomatic(): any {
+
+        this.prepatePointsTeam();
+
+        this.eliminatories = [];
+        let N = Math.pow(2, this.tourneyService.levelNo);
+        for(let i=0; i<N; i++){
+            let e = this.newEliminatory();
+            this.eliminatories.push(e);
+        }
+
+        for(let step = N; step>0; step/=2) {
+
+            for(let i=0; i<N; i+=step) {
+                // this.eliminatories[i] = 
+            }
         }
     }
     
-    prepatePointsTeam(): any {
-        let unorderedTeams : Array<Classification> = [];
-
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
-            let firsts : Array<Classification> = [];
-            let pt = {id: this.tourneyService.getSequenceNumber(), team: r.classification[i].team, points: r.classification[i].points};
-
-            unorderedTeams.push(pt);
-
-            unorderedTeams = this.sortTeam(unorderedTeams);
+    private processStandalone() {
+        this.isDerivate = false;
+        this.luckyTeamRow = null;
+        let pow2 = Math.pow(2, this.tourneyService.levelNo - 1);
+        let X = this.selectedTourney.teams.length - pow2;
+        let Y = pow2 - X;
+        this.luckyTeams = [];
+        this.unluckyTeams = [];
+        this.availableTeams = [];
+        for (let cb of this.teams) {
+            this.availableTeams.push(cb);
+        }
+        if (this.eliminatories.length == 0 || this.eliminatories.length != pow2) {
+            for (let i = 0; i < X; i++) {
+                let cb1: Combobox = { label: "", value: i };
+                let cb2: Combobox = { label: "", value: i };
+                let dcb: DoubleCombobox = { id: 0, "cb1": cb1, "cb2": cb2 };
+                this.unluckyTeams.push(dcb);
+            }
+            for (let i = 0; i < Y; i++) {
+                let cb: Combobox = { label: "", value: i };
+                this.luckyTeams.push(cb);
+            }
+        }
+        else {
+            for (let e of this.eliminatories) {
+                if (e.round.teams[0].id != 0 && e.round.teams[1].id == 0) {
+                    let cb: Combobox = { label: e.round.teams[0].teamName, value: e.round.teams[0].id };
+                    this.luckyTeams.push(cb);
+                    let index: number = this.availableTeams.indexOf(cb);
+                    if (index > -1) {
+                        this.availableTeams.splice(index, 1);
+                    }
+                }
+                else {
+                    let cb1: Combobox = { label: e.round.teams[0].teamName, value: e.round.teams[0].id };
+                    let cb2: Combobox = { label: e.round.teams[1].teamName, value: e.round.teams[1].id };
+                    let dcb: DoubleCombobox = { id: 0, "cb1": cb1, "cb2": cb2 };
+                    this.unluckyTeams.push(dcb);
+                    let index: number = this.availableTeams.indexOf(cb1);
+                    if (index > -1) {
+                        this.availableTeams.splice(index, 1);
+                    }
+                    index = this.availableTeams.indexOf(cb2);
+                    if (index > -1) {
+                        this.availableTeams.splice(index, 1);
+                    }
+                }
+            }
         }
     }
 
-    sortTeam(unsortedArray:Classification[]): Classification[] {
-        var sortedArray: Classification[] = unsortedArray.sort((obj1, obj2) => {
-            if (obj1.points > obj2.points) {
+    prepatePointsTeam(): Array<Classification>  {
+        this.orderedTeams = [];
+
+        let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r = this.selectedTourney.rounds[i];
+
+            let orderedClassification: Array<Classification> = this.sortTeam(r.classification);
+
+            for(let j=0; j < orderedClassification.length; j++) {
+                let c:Classification = orderedClassification[j];
+                let key = "" + (j + 1);
+                if(!bestOfMap.has(key)) {
+                    let list: Array<Classification> = new Array<Classification>();
+                    bestOfMap.set(key, list);
+                }
+
+                let list: Array<Classification> = bestOfMap.get(key);
+
+                list.push(c);
+            }
+        }
+
+        for(let key of bestOfMap.keys()) {
+            
+            let unsortedValue = bestOfMap.get(key);
+
+            let sortedValue = this.sortTeam(unsortedValue);
+            bestOfMap.set(key, sortedValue);
+        }
+
+        return this.orderedTeams;
+    }
+
+    sortTeam(unsortedArray:Array<Classification> ): Array<Classification>  {
+        var sortedArray: Array<Classification>  = unsortedArray.sort((t1, t2) => {
+            if (t1.points > t2.points) {
                 return 1;
             }
         
-            if (obj1.points < obj2.points) {
+            if (t1.points < t2.points) {
                 return -1;
             }
         

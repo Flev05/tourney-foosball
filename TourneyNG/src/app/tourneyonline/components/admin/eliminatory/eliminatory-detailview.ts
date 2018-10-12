@@ -10,17 +10,18 @@ import { Player } from '../../../domain/player';
 import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 
 @Component({
     templateUrl: './team-detailview.html',
 })
 export class TeamDetailView extends AbstractDetailView {
-    selectedTeam: Team;
+    selectedEliminatory: Eliminatory;
 
     msgs: Message[] = [];
 
-    teamFormGroup: FormGroup;
+    eliminatoryFormGroup: FormGroup;
     toggleable: boolean = false;
 
     availablePlayers: Player[] = [];
@@ -42,92 +43,30 @@ export class TeamDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
-        this.selectedTeam = this.tourneyService.selectedTeam;
+        this.selectedEliminatory = this.tourneyService.selectedEliminatory;
 
-        if(this.tourneyService.newTeam) {
-            this.selectedTeam.id = this.tourneyService.getSequenceNumber(); 
-            this.selectedTeam.players = [];
+        if(this.selectedEliminatory.round.meetings[0].country!=undefined) {
+            this.fullAddress = this.selectedEliminatory.round.meetings[0].address + " - " 
+                + this.selectedEliminatory.round.meetings[0].country.zipCode + " " + this.selectedEliminatory.round.meetings[0].country.city
+                + " (" + this.selectedEliminatory.round.meetings[0].country.provinceCode +")";
         }
 
-        this.targetPlayers = this.selectedTeam.players;
-        this.availablePlayers = [];
+        this.eliminatoryFormGroup = this.fb.group({
+            'name': new FormControl(this.selectedEliminatory.round.name, Validators.compose([Validators.required])),
+            'address':  new FormControl(this.selectedEliminatory.round.meetings[0].address ),
 
-        let alreadyInTeam: Player[] = [];
-        for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-            let t = this.selectedTourney.teams[i];
-            let p = t.players;
-            for(let j=0; j<p.length; j++ ) {
-                alreadyInTeam.push(p[j]);
-            }
-        }
-
-        for(let i=0; i<this.selectedTourney.players.length; i++ ) {
-            let ap = this.selectedTourney.players[i];
-
-            let found: boolean = false;
-            for(let j=0; j<alreadyInTeam.length; j++ ) {
-                let tp = alreadyInTeam[j];
-        
-                if(ap.id == tp.id) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                this.availablePlayers.push(ap);
-            }
-        }
-
-        if(this.selectedTeam.country!=undefined) {
-            this.fullAddress = this.selectedTeam.address + " - " 
-                + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
-                + " (" + this.selectedTeam.country.provinceCode +")";
-        }
-
-        this.teamFormGroup = this.fb.group({
-            'teamName': new FormControl(this.selectedTeam.teamName, Validators.compose([Validators.required])),
-            'address':  new FormControl(this.selectedTeam.address ),
-
-            'country':          new FormControl(this.selectedTeam.country),
-            'availablePlayers': new FormControl(this.availablePlayers),
-            'targetPlayers':    new FormControl(this.targetPlayers),
+            'country':          new FormControl(this.selectedEliminatory.round.meetings[0].country),
         });
     }
-
-    doDelete() {
-        console.log("doDelete(): " + this.selectedTeam.teamName);
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + this.selectedTeam.teamName;
-
-        if(confirm(popup + this.selectedTeam.teamName + "?")) {
-            let index: number = this.selectedTourney.teams.indexOf(this.selectedTeam);
-            if(index > -1) {
-                this.selectedTourney.teams.splice(index, 1);
-            }
-
-            for(let r of this.selectedTourney.rounds) {
-                let index: number = r.teams.indexOf(this.selectedTeam);
-                if(index > -1) {
-                    r.teams.splice(index, 1);
-                }    
-                 index = r.classification.indexOf(this.selectedTeam);
-                if(index > -1) {
-                    r.classification.splice(index, 1);
-                }    
-            }
-
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        }
-    }
-
+ 
     onSubmit(value: string) {
 
-        this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
-        this.selectedTeam.address = this.teamFormGroup.get('address').value;
-        this.selectedTeam.country = this.teamFormGroup.get('country').value;
-        this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
+        this.selectedEliminatory.round.name = this.eliminatoryFormGroup.get('name').value;
+        this.selectedEliminatory.round.meetings[0].address = this.eliminatoryFormGroup.get('address').value;
+        this.selectedEliminatory.round.meetings[0].country = this.eliminatoryFormGroup.get('country').value;
 
         if(this.tourneyService.newTeam) {
-            this.selectedTourney.teams.push(this.selectedTeam);
+            this.selectedTourney.teams.push(this.selectedEliminatory);
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

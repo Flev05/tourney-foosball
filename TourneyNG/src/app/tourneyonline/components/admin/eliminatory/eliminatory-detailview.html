@@ -40,23 +40,37 @@
 
     <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Nome:
-                </div>
-                <div class="ui-grid-col-5">                                
-                    <input pInputText type="text" formControlName="teamName"/>
-                </div>
-                <div class="ui-grid-col-3">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['teamName'].valid&&eliminatoryFormGroup.controls['teamName'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="eliminatoryFormGroup.controls['teamName'].errors['required']">
-                            Il nome della squadra è obbligatorio
-                        </span>
+
+            <div class="ui-g ui-fluid" *ngIf="combobox1Row">
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="team1Id">Squadra 1</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="team1Id" [options]="availableTeams" formControlName="combobox1Row" 
+                            optionLabel="label"  
+                            placeholder="Selezionare"
+                            (onChange)="onCombobox1Change($event.value)">
+                        </p-dropdown>
                     </div>
                 </div>
-            </div>
-                
+            </div>       
+            Vs         
+            <div class="ui-g ui-fluid" *ngIf="combobox2Row">
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="team2Id">Squadra 2</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="team2Id" [options]="availableTeams" formControlName="combobox2Row" 
+                            optionLabel="label" 
+                            placeholder="Selezionare"
+                            (onChange)="onCombobox2Change($event.value)">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>    
+
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
                     Via:
@@ -94,20 +108,7 @@
                 <div class="ui-grid-col-8">
                     {{fullAddress}}
                 </div>
-            </div>           
-
-            <p-pickList [source]="availablePlayers" [target]="targetPlayers" sourceHeader="Disponibili" targetHeader="Selezionati" 
-                    [responsive]="true"
-                    dragdrop="true" 
-                    dragdropScope="players" 
-                    [sourceStyle]="{'height':'400px'}" 
-                    [targetStyle]="{'height':'400px'}">
-                <ng-template let-player pTemplate="item">
-                    <div class="ui-helper-clearfix">
-                        <div>{{player.firstname}} {{player.lastname}}</div>
-                    </div>
-                </ng-template>
-            </p-pickList>            
+            </div>                  
                     
         </div>
 
@@ -115,9 +116,6 @@
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid"></button>
-                </div>
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!eliminatoryFormGroup.valid"></button>
                 </div>
             </div>
         </div>

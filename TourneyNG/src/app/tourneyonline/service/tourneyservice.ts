@@ -55,8 +55,7 @@ export class TourneyService {
     newPlayoffConfig : boolean = false;
 
     firstTime : boolean = true;
-    levelNo : number;
-
+    
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
 
@@ -77,9 +76,9 @@ export class TourneyService {
             itemlNo = this.selectedTourney.teams.length;
         }
 
-        this.levelNo = Math.ceil(Math.log2(itemlNo));
+        let levelNo = Math.ceil(Math.log2(itemlNo));
 
-        for(let l=this.levelNo; l>=0; l--) {
+        for(let l=levelNo; l>=0; l--) {
             let lev = "";
             if(l >= 4) {
                 lev = Math.pow(2, l) + "-esimi di finale";
@@ -137,6 +136,14 @@ export class TourneyService {
             }                    
         }
     }
+
+    power2Padding(length: number): number {
+        let levelNo = Math.ceil(Math.log2(length));
+        let min = Math.pow(2, levelNo);
+
+        return min;
+    }
+
 
     getSequenceNumber() {
         return this.sequenceNumber++;

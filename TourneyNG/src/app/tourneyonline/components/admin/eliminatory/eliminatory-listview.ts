@@ -11,6 +11,7 @@ import { RoundType } from 'app/tourneyonline/domain/roundType';
 import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Team } from 'app/tourneyonline/domain/team';
+import { Round } from 'app/tourneyonline/domain/round';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -40,7 +41,7 @@ export class EliminatoryListView extends AbstractListView {
     row: Eliminatory;  
     displayDialogConfig: boolean;
     isPlayoff: boolean;
-    isDerivate: boolean;
+    isStandalone: boolean;
     isManual: boolean;
 
     combobox1Row: Combobox;
@@ -48,18 +49,16 @@ export class EliminatoryListView extends AbstractListView {
 
     availableTeams: Combobox[];
 
-    luckyTeamDisplayDialog: boolean;
-    luckyTeams: Combobox[];
-    selectedLuckyTeam: Combobox;
-    luckyTeamRow: Combobox;
+    // luckyTeamDisplayDialog: boolean;
+    // luckyTeams: Combobox[];
+    // selectedLuckyTeam: Combobox;
+    // luckyTeamRow: Combobox;
 
     unluckyDisplayDialog: boolean;
     unluckyTeams: DoubleCombobox[];
     selectedUnluckyTeam: DoubleCombobox;
     unluckyTeamRow: Combobox;
     unluckyTeamDisplayDialog: boolean;
-
-    orderedTeams : Array<Classification>;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -98,90 +97,161 @@ export class EliminatoryListView extends AbstractListView {
                 && this.containsPhase("eliminatory", this.selectedTourney.phases)
                 && !this.containsPhase("playoff", this.selectedTourney.phases)) 
         {
-            this.isDerivate = true;
-            this.processAutomatic();
+            this.isStandalone = false;
+            this.prepateEliminatories();
         }
     }
 
-    processAutomatic(): any {
-
-        this.prepatePointsTeam();
-
-        this.eliminatories = [];
-        let N = Math.pow(2, this.tourneyService.levelNo);
-        for(let i=0; i<N; i++){
-            let e = this.newEliminatory();
-            this.eliminatories.push(e);
-        }
-
-        for(let step = N; step>0; step/=2) {
-
-            for(let i=0; i<N; i+=step) {
-                // this.eliminatories[i] = 
-            }
-        }
-    }
-    
+    /**
+     * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
+     * no round and no playoff
+     */
     private processStandalone() {
-        this.isDerivate = false;
-        this.luckyTeamRow = null;
-        let pow2 = Math.pow(2, this.tourneyService.levelNo - 1);
-        let X = this.selectedTourney.teams.length - pow2;
-        let Y = pow2 - X;
-        this.luckyTeams = [];
-        this.unluckyTeams = [];
-        this.availableTeams = [];
-        for (let cb of this.teams) {
-            this.availableTeams.push(cb);
-        }
-        if (this.eliminatories.length == 0 || this.eliminatories.length != pow2) {
-            for (let i = 0; i < X; i++) {
-                let cb1: Combobox = { label: "", value: i };
-                let cb2: Combobox = { label: "", value: i };
-                let dcb: DoubleCombobox = { id: 0, "cb1": cb1, "cb2": cb2 };
-                this.unluckyTeams.push(dcb);
+        this.isStandalone = true;
+        // this.luckyTeamRow = null;
+
+        let round: Round;
+        if(this.selectedTourney.rounds.length==0) {           
+            round = {id:this.tourneyService.getSequenceNumber()
+                , name:""
+                , type: RoundType.E
+                , isRoundTrip:false
+                , teams: this.selectedTourney.teams
+                , meetings:[]
+                , classification:[]
+                , matrix:[]
+            };
+            this.selectedTourney.rounds.push(round);
+            for(let t of round.teams) {
+                let c: Classification = this.newClassification(t, 0)
+                round.classification.push(c);
             }
-            for (let i = 0; i < Y; i++) {
-                let cb: Combobox = { label: "", value: i };
-                this.luckyTeams.push(cb);
-            }
-        }
-        else {
-            for (let e of this.eliminatories) {
-                if (e.round.teams[0].id != 0 && e.round.teams[1].id == 0) {
-                    let cb: Combobox = { label: e.round.teams[0].teamName, value: e.round.teams[0].id };
-                    this.luckyTeams.push(cb);
-                    let index: number = this.availableTeams.indexOf(cb);
-                    if (index > -1) {
-                        this.availableTeams.splice(index, 1);
-                    }
-                }
-                else {
-                    let cb1: Combobox = { label: e.round.teams[0].teamName, value: e.round.teams[0].id };
-                    let cb2: Combobox = { label: e.round.teams[1].teamName, value: e.round.teams[1].id };
-                    let dcb: DoubleCombobox = { id: 0, "cb1": cb1, "cb2": cb2 };
-                    this.unluckyTeams.push(dcb);
-                    let index: number = this.availableTeams.indexOf(cb1);
-                    if (index > -1) {
-                        this.availableTeams.splice(index, 1);
-                    }
-                    index = this.availableTeams.indexOf(cb2);
-                    if (index > -1) {
-                        this.availableTeams.splice(index, 1);
-                    }
+    
+        } else {
+            round = this.selectedTourney.rounds[0];
+            for(let t of this.selectedTourney.teams) {
+                let index: number = round.teams.indexOf(t);
+                if(index > -1) {
+                    round.teams.push(t);
+                    let c: Classification = this.newClassification(t, 0)
+                    round.classification.push(c);
                 }
             }
         }
+
+        let pow2 = this.tourneyService.power2Padding(round.teams.length);
+        for(let r=round.teams.length; r<pow2; r++) {
+            let t: Team = {
+                id: this.tourneyService.getSequenceNumber()
+                ,teamName:""
+            };
+            let c: Classification = this.newClassification(t, -1)
+            round.classification.push(c);
+        }
+        round.classification = this.sortAsc(round.classification);
+
+        let ascTeams :Array<Team> = new Array<Team>();
+        for(let i=0; i<round.classification.length/2; i++) {
+            let c = round.classification[i];
+            ascTeams.push(c.team);
+        }
+        let descTeams :Array<Team> = new Array<Team>();
+        for(let i=round.classification.length-1; i>=round.classification.length/2; i--) {
+            let c = round.classification[i];
+            descTeams.push(c.team);
+        }
+
+        let elims: Array<Eliminatory> = new Array<Eliminatory>();
+        for(let i=0; i<ascTeams.length; i++) {
+            let t1 = ascTeams[i];
+            
+            let e = this.newEliminatory();
+            e.round.teams[0] = t1;
+
+            let t2 = descTeams[i];
+            e.round.teams[1] = t2;
+
+            elims.push(e);
+        }
+        this.eliminatories = elims;
+    } 
+
+    sortAsc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
+            if (t1.points > t2.points) {
+                return 1;
+            }
+        
+            if (t1.points < t2.points) {
+                return -1;
+            }
+        
+            if(t1.team.teamName > t2.team.teamName) {
+                return 1;
+            }
+            if(t1.team.teamName < t2.team.teamName) {
+                return -1;
+            }
+
+            return 0;
+        });
+
+        return sortedClassification;
     }
 
-    prepatePointsTeam(): Array<Classification>  {
-        this.orderedTeams = [];
+    sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
+            if (t1.points > t2.points) {
+                return -1;
+            }
+        
+            if (t1.points < t2.points) {
+                return 1;
+            }
+        
+            return 0;
+        });
+
+        return sortedClassification;
+    }
+
+    private newClassification(t: Team, initialPoints: number): Classification {
+        return {
+        id: this.tourneyService.getSequenceNumber(),
+            team: t,
+            points: initialPoints,
+            played: 0,
+            won: 0,
+            lost: 0,
+            penalty: 0,
+            goalsDone: 0,
+            goalsConceded: 0,
+            goalsDiff: 0
+        };
+    }
+ 
+    /**
+     * For each round, adds the correct dummy classifictions, having points=-1, so the total number 
+     * of teams will be equal to the next neatest power of 2.
+     * 
+     * Sorts by firsts classificated teams in each round, then the second in each round, and so on.
+     * 
+     * Create a full list of each so sorted classificated teams and prepare 2 new lists:
+     * an ascendent list starting from the first to the half and a descendent list starting from 
+     * the ast team to the half.
+     * 
+     * So prepare the elemintories list by using the smart put algorithm
+     * 
+     */
+    private prepateEliminatories(): any  {
+
+        this.paddingRound();
 
         let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
         for(let i=0; i<this.selectedTourney.rounds.length; i++) {
             let r = this.selectedTourney.rounds[i];
 
-            let orderedClassification: Array<Classification> = this.sortTeam(r.classification);
+            let orderedClassification: Array<Classification> = this.sortAsc(r.classification);
 
             for(let j=0; j < orderedClassification.length; j++) {
                 let c:Classification = orderedClassification[j];
@@ -197,31 +267,129 @@ export class EliminatoryListView extends AbstractListView {
             }
         }
 
+        let allSortedClassification: Array<Classification> = new Array<Classification>();
         for(let key of bestOfMap.keys()) {
             
-            let unsortedValue = bestOfMap.get(key);
+            let unsortedClassification = bestOfMap.get(key);
 
-            let sortedValue = this.sortTeam(unsortedValue);
-            bestOfMap.set(key, sortedValue);
+            let sortedClassification = this.sortAsc(unsortedClassification);
+            bestOfMap.set(key, sortedClassification);
+
+            allSortedClassification.concat(sortedClassification);
         }
 
-        return this.orderedTeams;
+        let ascClassification: Array<Classification> = new Array<Classification>();
+        for(let i=0; i<allSortedClassification.length/2; i++) {
+            let c: Classification = allSortedClassification[i];
+            ascClassification.push(c);
+        }
+        let descClassification: Array<Classification> = new Array<Classification>();
+        for(let i=allSortedClassification.length-1; i>=allSortedClassification.length/2; i--) {
+            let c: Classification = allSortedClassification[i];
+            descClassification.push(c);
+        }
+
+        let N: number = ascClassification.length;
+
+        let elims = new Array<Eliminatory>(N);
+
+        for(let i=0; i<ascClassification.length; i++) {
+
+            let c1: Classification = ascClassification[i];
+
+            let e = this.newEliminatory();
+
+            let t1: Team = c1.team;
+            e.round.teams[0] = t1;
+
+            elims.push(e);
+        }
+
+        this.eliminatories = new Array<Eliminatory>(N);
+        let p: number=0;
+        for (let step = N; step > 0; step = step / 2) {
+
+            for (let i = 0; i < N; i += step) {
+                if(this.eliminatories[i].round.teams[0] != null) {
+                    continue;
+                }
+                let e = elims[p];
+                this.eliminatories[i] = e;
+                p++;
+            }
+        }
+
+        for(let i=0; i<descClassification.length; i++) {
+
+            let c2: Classification = descClassification[i];
+           
+            let t2: Team = c2.team;
+            
+            let e = elims[i];
+
+            e.round.teams[1] = t2;
+        }
+
+        p =0;
+        for (let step = N; step > 0; step = step / 2) {
+
+            for (let i = 0; i < N; i += step) {
+                if(this.eliminatories[i].round.teams[1] != null) {
+                    continue;
+                }
+                let e = elims[p];
+                this.eliminatories[i] = e;
+                p++;
+            }
+        }
     }
 
-    sortTeam(unsortedArray:Array<Classification> ): Array<Classification>  {
-        var sortedArray: Array<Classification>  = unsortedArray.sort((t1, t2) => {
-            if (t1.points > t2.points) {
-                return 1;
-            }
-        
-            if (t1.points < t2.points) {
-                return -1;
-            }
-        
-            return 0;
-        });
+    /**
+     * Padds each classification round to the next upper power of 2 teams by adding
+     * the dummies teams with points  = -1
+     */
+    private paddingRound(): any {
 
-        return sortedArray;
+        let maxDeep: number = 0;
+
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r = this.selectedTourney.rounds[i];
+            if(r.classification.length > maxDeep ) {
+                maxDeep = r.classification.length;
+            }
+        }
+
+        let N: number = this.selectedTourney.teams.length;
+        let diff = this.tourneyService.power2Padding(N) - N;
+
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r = this.selectedTourney.rounds[i];
+            while(r.classification.length < maxDeep && diff > 0 ) {
+                let t: Team = {
+                    id: this.tourneyService.getSequenceNumber()
+                    ,teamName:""
+                };
+                let dummy = this.newClassification(t, -1);
+                r.classification.push(dummy);
+                diff--;
+            }
+        }
+
+        while( diff > 0 ) {
+            for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+                let r = this.selectedTourney.rounds[i];
+                let t: Team = {
+                    id: this.tourneyService.getSequenceNumber()
+                    ,teamName:""
+                };
+                let dummy = this.newClassification(t, -1);
+                r.classification.push(dummy);
+                diff--;
+                if(diff==0) {
+                    break;
+                }
+            }
+        }
     }
 
     onManualClick() {
@@ -287,10 +455,10 @@ export class EliminatoryListView extends AbstractListView {
         return e;
     }
 
-    onLuckyTeamRowSelect(event) {
-        this.luckyTeamRow = this.selectedLuckyTeam;
-        this.luckyTeamDisplayDialog = true;
-    }   
+    // onLuckyTeamRowSelect(event) {
+    //     this.luckyTeamRow = this.selectedLuckyTeam;
+    //     this.luckyTeamDisplayDialog = true;
+    // }   
     onUnluckyTeamRowSelect(event) {
         this.combobox1Row = {label: this.selectedUnluckyTeam.cb1.label, value: this.selectedUnluckyTeam.cb1.value};
         this.combobox2Row = null;
@@ -298,28 +466,29 @@ export class EliminatoryListView extends AbstractListView {
         this.unluckyDisplayDialog = true;
     }
 
-    luckyTeamDone() {
-        this.luckyTeamDisplayDialog = false;
-        if(this.luckyTeamRow.value == 0) {
-            this.availableTeams.push(this.selectedLuckyTeam);
-            let index: number = this.luckyTeams.indexOf(this.selectedLuckyTeam);
-            if(index > -1) {
-                this.luckyTeams.splice(index, 1);
-            }
-        } else {
-            let index: number = this.availableTeams.indexOf(this.luckyTeamRow);
-            if(index > -1) {
-                this.availableTeams.splice(index, 1);
-            }
+    // luckyTeamDone() {
+    //     this.luckyTeamDisplayDialog = false;
+    //     if(this.luckyTeamRow.value == 0) {
+    //         this.availableTeams.push(this.selectedLuckyTeam);
+    //         let index: number = this.luckyTeams.indexOf(this.selectedLuckyTeam);
+    //         if(index > -1) {
+    //             this.luckyTeams.splice(index, 1);
+    //         }
+    //     } else {
+    //         let index: number = this.availableTeams.indexOf(this.luckyTeamRow);
+    //         if(index > -1) {
+    //             this.availableTeams.splice(index, 1);
+    //         }
     
-            index  = this.luckyTeams.indexOf(this.selectedLuckyTeam);
-            if(index > -1) {
-                this.luckyTeams[index] = this.luckyTeamRow;
-            }
-        }
+    //         index  = this.luckyTeams.indexOf(this.selectedLuckyTeam);
+    //         if(index > -1) {
+    //             this.luckyTeams[index] = this.luckyTeamRow;
+    //         }
+    //     }
         
-        this.luckyTeamRow = null;
-    }
+    //     this.luckyTeamRow = null;
+    // }
+
     unluckyTeamDone() {
         if(this.combobox1Row.value == 0) {
             this.availableTeams.push(this.selectedUnluckyTeam.cb1);
@@ -373,16 +542,16 @@ export class EliminatoryListView extends AbstractListView {
     }
     standaloneSave() {      
         this.eliminatories = [];
-        for(let cb of this.luckyTeams) {
+        // for(let cb of this.luckyTeams) {
 
-            let e = this.newEliminatory();
-            e.round.teams[0].teamName = cb.label;
-            e.round.teams[0].id = cb.value;
-            e.round.teams[1].teamName = "";
-            e.round.teams[1].id = 0;
+        //     let e = this.newEliminatory();
+        //     e.round.teams[0].teamName = cb.label;
+        //     e.round.teams[0].id = cb.value;
+        //     e.round.teams[1].teamName = "";
+        //     e.round.teams[1].id = 0;
             
-            this.eliminatories.push(e);
-        }
+        //     this.eliminatories.push(e);
+        // }
         for(let dcb of this.unluckyTeams) {
 
             let e = this.newEliminatory();

@@ -1,0 +1,128 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Eliminazione diretta</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>Vista di dettaglio Eliminazione diretta.
+            Da questa vista potete creare, modificare o rimuovere un incontro di Eliminazione diretta di tipo
+            Standalone o Automatica
+        </p>
+
+        <h4>Standalone</h4>
+        <p>
+            Se Standalone, l'utente deve modificare gli incontri proposti con i default di sistema,
+            la locazione e la data ora di svolgimento degli incontri.
+        </p>
+
+        <h4>Automatica</h4>
+        <p>Lo vista visualizza già gli accoppiamenti giusti in funzione delle qualificazioni derivanti 
+            dai gironi all'italiana, l'utente può solo modificare la locazione e la data di svolgimento
+            degli incontri, gli incontri non devono essere modificati dall'utente
+        </p>
+            In tutti i casi, alla fine dell'operazione salvare con il bottone Salva
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <h4><span>Incontro: {{selectedEliminatory.teamName}}</span></h4>
+  
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+
+    <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Nome:
+                </div>
+                <div class="ui-grid-col-5">                                
+                    <input pInputText type="text" formControlName="teamName"/>
+                </div>
+                <div class="ui-grid-col-3">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['teamName'].valid&&eliminatoryFormGroup.controls['teamName'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="eliminatoryFormGroup.controls['teamName'].errors['required']">
+                            Il nome della squadra è obbligatorio
+                        </span>
+                    </div>
+                </div>
+            </div>
+                
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Via:
+                </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="address"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address'].valid&&eliminatoryFormGroup.controls['address'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="eliminatoryFormGroup.controls['address'].errors['required']">
+                            La via della squadra è obbligatoria
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    <label for="country-id">Comune:</label>
+                </div>
+                <div class="ui-grid-col-5">
+                    <p-autoComplete id="country-id" formControlName="country" 
+                        [suggestions]="filteredCountriesSingle" 
+                        (completeMethod)="search($event)" field="city"
+                        placeholder="Comuni" [minLength]="1">
+                    </p-autoComplete>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo:
+                </div>
+                <div class="ui-grid-col-8">
+                    {{fullAddress}}
+                </div>
+            </div>           
+
+            <p-pickList [source]="availablePlayers" [target]="targetPlayers" sourceHeader="Disponibili" targetHeader="Selezionati" 
+                    [responsive]="true"
+                    dragdrop="true" 
+                    dragdropScope="players" 
+                    [sourceStyle]="{'height':'400px'}" 
+                    [targetStyle]="{'height':'400px'}">
+                <ng-template let-player pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <div>{{player.firstname}} {{player.lastname}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>            
+                    
+        </div>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid"></button>
+                </div>
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!eliminatoryFormGroup.valid"></button>
+                </div>
+            </div>
+        </div>
+
+    </form>   
+
+</div>
+ 

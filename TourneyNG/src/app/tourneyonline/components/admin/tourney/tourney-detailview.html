@@ -317,28 +317,97 @@
 
                     <div class="ui-grid-row">
                         <div class="ui-grid-col-3">
-                            Fasi di svolgimento:
+                            Fasi:
                         </div>
-                        <div class="ui-grid-col-4" tooltipPosition="right"
+                        <div class="ui-grid-col-6" tooltipPosition="right"
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
                             <p-checkbox name="phasesGroupname" label="Gironi"     
                                 value="round"     
                                 [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox >
+                            </p-checkbox>
                             <p-checkbox name="phasesGroupname" label="Play Off"     
                                 value="playoff"     
                                 [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox >
-                            <p-checkbox  name="phasesGroupname" label="Eliminatorie" 
+                            </p-checkbox>
+                            <p-checkbox name="phasesGroupname" label="Eliminatorie" 
                                 value="eliminatory" 
                                 [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox >
+                            </p-checkbox>
+                        </div>
+                        <div class="ui-grid-col-3">
+                            <div *ngIf="notAllowedPhases()" class="ui-message ui-messages-error ui-corner-all">
+                                <span>
+                                    Questa combinazione non è prevista
+                                </span>
+                            </div>
+                            <div *ngIf="!atLeastOnePhase()" class="ui-message ui-messages-error ui-corner-all">
+                                <span>
+                                    Abilitare almeno una fase
+                                </span>
+                            </div>
                         </div>
                     </div>
+
+                    <div *ngIf="containsPhase('round')" class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Gironi:
+                        </div>
+                        <div class="ui-grid-col-5" tooltipPosition="right"
+                                pTooltip="Indicare se i gironi sono di solo andata o andata e ritorno">
+                            <p-radioButton name="isOnewayRoundGroupname" 
+                                label="Solo andata" 
+                                value="false" 
+                                formControlName="isOnewayRound">
+                            </p-radioButton>
+                            <p-radioButton name="isOnewayRoundGroupname" 
+                                label="Andata e ritorno" 
+                                value="true" 
+                                formControlName="isOnewayRound">
+                            </p-radioButton>
+                        </div>
+                    </div>                           
+
+                    <div *ngIf="containsPhase('playoff')" class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Playoff:
+                        </div>
+                        <div class="ui-grid-col-5" tooltipPosition="right"
+                                pTooltip="Indicare se i gironi playoff sono di solo andata o andata e ritorno">
+                            <p-radioButton name="isOnewayPlayoffGroupname" 
+                                label="Solo andata" 
+                                value="false" 
+                                formControlName="isOnewayPlayoff">
+                            </p-radioButton>
+                            <p-radioButton name="isOnewayPlayoffGroupname" 
+                                label="Andata e ritorno" 
+                                value="true" 
+                                formControlName="isOnewayPlayoff">
+                            </p-radioButton>
+                        </div>
+                    </div>                           
+
+                    <div *ngIf="containsPhase('eliminatory')" class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Eliminatorie:
+                        </div>
+                        <div class="ui-grid-col-5" tooltipPosition="right"
+                                pTooltip="Indicare se le eliminatorie sono di solo andata o andata e ritorno">
+                            <p-radioButton name="isOnewayEliminatoryGroupname" 
+                                label="Solo andata" 
+                                value="false" 
+                                formControlName="isOnewayEliminatory">
+                            </p-radioButton>
+                            <p-radioButton name="isOnewayEliminatoryGroupname" 
+                                label="Andata e ritorno" 
+                                value="true" 
+                                formControlName="isOnewayEliminatory">
+                            </p-radioButton>
+                        </div>
+                    </div>                           
                 </p-fieldset>
                     
                 <p-fieldset legend="Punteggi">
-                    <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"  class="ui-grid-row">
+                    <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" class="ui-grid-row">
                         <div class="ui-grid-col-3">
                             Si vince ai:
                         </div>
@@ -453,10 +522,12 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!tourneyFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" 
+                    [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!tourneyFormGroup.valid"></button>
+                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" 
+                    [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
             </div>
         </div>

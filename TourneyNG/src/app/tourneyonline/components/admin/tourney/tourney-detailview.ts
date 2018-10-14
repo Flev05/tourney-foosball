@@ -11,21 +11,13 @@ import { CountryService } from '../../../service/countryservice';
 import { Discipline } from '../../../domain/discipline';
 import { TourneyType } from '../../../domain/tourneyType';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { PhaseType, EliminatoryMode, AccessMode } from 'app/tourneyonline/domain/phase-type';
 
 @Component({
     templateUrl: './tourney-detailview.html',
 })
 export class TourneyDetailView extends AbstractDetailView {
-
-    constructor(
-        private fb: FormBuilder,
-        protected location: Location,
-        protected tourneyService: TourneyService,
-        protected countryService: CountryService,
-    ) { 
-        super(tourneyService, location, countryService);
-    }
-
+    
     selectedTourney: Tourney;
 
     tourneyDate: Date;
@@ -41,6 +33,19 @@ export class TourneyDetailView extends AbstractDetailView {
     gender: string = "tourney";
 
     fullAddress: string;
+
+    isOnewayRound: string;
+    isOnewayPlayoff: string;
+    isOnewayEliminatory: string;
+
+    constructor(
+        private fb: FormBuilder,
+        protected location: Location,
+        protected tourneyService: TourneyService,
+        protected countryService: CountryService,
+    ) { 
+        super(tourneyService, location, countryService);
+    }
 
     ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
@@ -66,7 +71,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.matchBalanceScores = 0;
             this.selectedTourney.matchLoserScores = 0;
             this.selectedTourney.matchWinnerScores = 3;
-            this.selectedTourney.access = "public";
+            this.selectedTourney.access = AccessMode.PU;
             
             this.selectedTourney.objectives = [];
             this.selectedTourney.rounds = [];
@@ -79,11 +84,21 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
-            this.selectedTourney.phases=["round"];
-            this.selectedTourney.phases.push("eliminatory");
+            this.selectedTourney.phases=[PhaseType.R];
+            this.selectedTourney.phases.push(PhaseType.E);   
+
+            this.selectedTourney.isOnewayRound = true;         
+            this.selectedTourney.isOnewayPlayoff = true;         
+            this.selectedTourney.isOnewayEliminatory = true;   
+            
+            this.selectedTourney.eliminatoryMode = EliminatoryMode.M
+
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }
+        this.isOnewayRound = this.selectedTourney.isOnewayRound ? "true" : "false";
+        this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff ? "true" : "false";
+        this.isOnewayEliminatory = this.selectedTourney.isOnewayEliminatory ? "true" : "false";
         
         if(this.selectedTourney.country != undefined ) {
             this.fullAddress = this.selectedTourney.address + " - " 
@@ -113,7 +128,11 @@ export class TourneyDetailView extends AbstractDetailView {
             'pointsGoldenGoalTieBreakWin': new FormControl(this.selectedTourney.pointsGoldenGoalTieBreakWin),
             'pointsGoldenGoalTieBreakDefeat': new FormControl(this.selectedTourney.pointsGoldenGoalTieBreakDefeat),
 
-            'phases': new FormControl(this.selectedTourney.phases),
+            'phases': new FormControl(this.selectedTourney.phases, Validators.compose([Validators.required])),
+
+            'isOnewayRound': new FormControl(this.isOnewayRound),
+            'isOnewayPlayoff': new FormControl(this.isOnewayPlayoff),
+            'isOnewayEliminatory': new FormControl(this.isOnewayEliminatory),
         });
     }
 
@@ -159,6 +178,27 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
 
+        this.isOnewayRound = this.tourneyFormGroup.get('isOnewayRound').value;
+        if(this.isOnewayRound=="true") {
+            this.selectedTourney.isOnewayRound = true;
+        } else {
+            this.selectedTourney.isOnewayRound = false;
+        }
+
+        this.isOnewayPlayoff = this.tourneyFormGroup.get('isOnewayPlayoff').value;
+        if(this.isOnewayPlayoff=="true") {
+            this.selectedTourney.isOnewayPlayoff = true;
+        } else {
+            this.selectedTourney.isOnewayPlayoff = false;
+        }
+
+        this.isOnewayEliminatory = this.tourneyFormGroup.get('isOnewayEliminatory').value;
+        if(this.isOnewayEliminatory=="true") {
+            this.selectedTourney.isOnewayEliminatory = true;
+        } else {
+            this.selectedTourney.isOnewayEliminatory = false;
+        }
+
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 
         if(this.tourneyService.newTourney) {
@@ -178,6 +218,40 @@ export class TourneyDetailView extends AbstractDetailView {
                 return true;
             }
         }
+        return false;
+    }
+
+    atLeastOnePhase() : boolean{
+        let phases = this.tourneyFormGroup.get('phases').value;
+
+        if(this.containsPhase(PhaseType.R)) {
+            return true;
+        }
+        if(this.containsPhase(PhaseType.P)) {
+            return true;
+        }
+        if(this.containsPhase(PhaseType.E)) {
+            return true;
+        }
+
+        return false;
+    }
+    notAllowedPhases(): boolean {
+        let phases = this.tourneyFormGroup.get('phases').value;
+
+        if(!this.containsPhase(PhaseType.R) 
+            && this.containsPhase(PhaseType.P)
+            && this.containsPhase(PhaseType.E)) 
+        {
+            return true;
+        }
+        if(!this.containsPhase(PhaseType.R) 
+            && this.containsPhase(PhaseType.P)
+            && !this.containsPhase(PhaseType.E)) 
+        {
+            return true;
+        }
+
         return false;
     }
 

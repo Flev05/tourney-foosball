@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TourneyService } from '../../service/tourneyservice';
 import { AbstractView } from './abstract-view';
+import { PhaseType } from 'app/tourneyonline/domain/phase-type';
  
 export abstract class AbstractListView extends AbstractView {
 
@@ -20,10 +21,10 @@ export abstract class AbstractListView extends AbstractView {
         this.router.navigate([this.redirect]);
     }
 
-    containsPhase(value: string, phases: string[]) : boolean{
+    containsPhase(value: PhaseType, phases: PhaseType[]) : boolean{
 
         for(let i=0; i<phases.length; i++ ) {
-            if(phases[i].toLowerCase().indexOf(value) == 0) {
+            if(phases[i] == value ) {
                 return true;
             }
         }

@@ -76,7 +76,7 @@ export class TourneyService {
             itemlNo = this.selectedTourney.teams.length;
         }
 
-        let levelNo = Math.ceil(Math.log2(itemlNo));
+        let levelNo = Math.floor(Math.log2(itemlNo));
 
         for(let l=levelNo; l>=0; l--) {
             let lev = "";
@@ -99,13 +99,15 @@ export class TourneyService {
             this.levelsCombobox.push(si);
         }
 
-        this.teamsCombobox = [];
-        this.teamsCombobox.push({label: "", value: 0});
-            
-        for(let i=0; i<this.selectedTourney.teams.length; i++) {
-            let r=this.selectedTourney.teams[i];
-            this.teamsCombobox.push({label: r.teamName, value: r.id});
+        if(this.teamsCombobox==undefined) {
+            this.teamsCombobox = [];
+            this.teamsCombobox.push({label: "", value: 0});
         }
+            
+        // for(let i=0; i<this.selectedTourney.teams.length; i++) {
+        //     let r=this.selectedTourney.teams[i];
+        //     this.teamsCombobox.push({label: r.teamName, value: r.id});
+        // }
 
         this.roundsCombobox = [];
         this.roundsCombobox.push({label: "", value: 0});
@@ -143,7 +145,6 @@ export class TourneyService {
 
         return min;
     }
-
 
     getSequenceNumber() {
         return this.sequenceNumber++;
@@ -242,5 +243,4 @@ export class TourneyService {
     private log(message: string) {
         console.log('TourneyService: ' + message);
     }
-
 }

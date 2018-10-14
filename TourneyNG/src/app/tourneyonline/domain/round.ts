@@ -8,7 +8,6 @@ export interface Round {
     id: number;
     name: string;
     type: RoundType;
-    isRoundTrip: boolean;
 
     teams?:  Team[];
     meetings?: Meeting[];

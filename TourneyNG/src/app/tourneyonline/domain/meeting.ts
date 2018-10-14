@@ -13,7 +13,7 @@ export interface Meeting
     country : Country;
     team1   : Team;
     team2   : Team;
-    score1?  : string;
-    score2?  : string;
+    score1?  : number;
+    score2?  : number;
     matches? : [ Match ];
 }

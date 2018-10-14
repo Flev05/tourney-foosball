@@ -28,6 +28,7 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 
 import {EliminatoryTourneyListView} from './tourney-listview';
 import {EliminatoryListView} from './eliminatory-listview';
+import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
 
 @NgModule({
 	imports: [
@@ -59,6 +60,7 @@ import {EliminatoryListView} from './eliminatory-listview';
 	declarations: [
         EliminatoryTourneyListView
         ,EliminatoryListView
+        ,AutoEliminatoryDetailView
     ]
 })
 export class EliminatoryModule {}

@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 import { PlayoffListView } from './playoff-listview';
+import { PhaseType } from '../../../domain/phase-type';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -22,7 +23,7 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
 
     onComplete(): any {
         for(let t of this.tourneys) {
-            if(!this.containsPhase('playoff', t.phases)) {
+            if(!this.containsPhase(PhaseType.P, t.phases)) {
                 let index: number = this.tourneys.indexOf(t);
                 if(index > -1) {
                     this.tourneys.splice(index, 1);

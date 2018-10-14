@@ -27,7 +27,6 @@ export class RoundDetailView extends AbstractDetailView {
 
     availableTeams: string[] = [];
     targetTeams: string[] = [];
-    isRoundTrip: string;
 
     constructor(
         private fb: FormBuilder,
@@ -49,11 +48,10 @@ export class RoundDetailView extends AbstractDetailView {
             this.selectedRound.id = this.tourneyService.getSequenceNumber(); 
             this.selectedRound.teams = [];
             this.selectedRound.meetings = [];
-            this.selectedRound.isRoundTrip = false;
+            this.selectedTourney.isOnewayRound = false;
             this.selectedRound.type = RoundType.R;
         }
 
-        this.isRoundTrip = this.selectedRound.isRoundTrip ? "true" : "false";
         this.targetTeams = [];
         for(let t of this.selectedRound.teams) {
             this.targetTeams.push(t.teamName);
@@ -81,7 +79,6 @@ export class RoundDetailView extends AbstractDetailView {
 
         this.roundFormGroup = this.fb.group({
             'name': new FormControl(this.selectedRound.name, Validators.compose([Validators.required])),
-            'isRoundTrip': new FormControl(this.isRoundTrip),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
         });
@@ -143,7 +140,7 @@ export class RoundDetailView extends AbstractDetailView {
             let m = this.createMeeting(team, t);
 
             this.selectedRound.meetings.push(m);
-            if (this.selectedRound.isRoundTrip) {
+            if (this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team);
                 this.selectedRound.meetings.push(m);
             }
@@ -193,13 +190,6 @@ export class RoundDetailView extends AbstractDetailView {
 
         this.selectedRound.name = this.roundFormGroup.get('name').value;
 
-        this.isRoundTrip = this.roundFormGroup.get('isRoundTrip').value;
-        if(this.isRoundTrip=="true") {
-            this.selectedRound.isRoundTrip = true;
-        } else {
-            this.selectedRound.isRoundTrip = false;
-        }
-
         this.selectedRound.teams = this.roundFormGroup.get('targetTeams').value;
 
         if(this.tourneyService.newRound) {
@@ -224,7 +214,7 @@ export class RoundDetailView extends AbstractDetailView {
                 let m : Meeting = this.createMeeting(t1, t2);
                 this.selectedRound.meetings.push(m);
 
-                if(this.selectedRound.isRoundTrip) {
+                if(this.selectedTourney.isOnewayRound) {
                     let m : Meeting = this.createMeeting(t2, t1);
                     this.selectedRound.meetings.push(m);    
                 }

@@ -10,9 +10,11 @@ import { Discipline } from './discipline';
 
 import { TourneyType } from './tourneyType';
 import { Final } from './final';
+import { PhaseType, EliminatoryMode } from './phase-type';
 
 export interface Tourney {
     id?: number;
+    
     tourneyName? : string;
     dateInMillis? : number;
     dateAsString? : string;
@@ -20,13 +22,17 @@ export interface Tourney {
     address? : string;
     country? : Country;
     
+    isOnewayRound?: boolean;
+    isOnewayPlayoff?: boolean;
+    isOnewayEliminatory?: boolean;
+
     access?: string;
     discipline? : Discipline;
 
     tourneyType?: TourneyType;
     raceDuration?: number;
 
-    phases?: [string];
+    phases?: PhaseType[];
 
     matchWinnerScores?: number;
     matchLoserScores?: number;
@@ -41,7 +47,7 @@ export interface Tourney {
     playoffs?: Playoff[];
 
     eliminatories?: Eliminatory[];
-    eliminatoryMode?: string;
+    eliminatoryMode?: EliminatoryMode;
 
     teams?: Team[];
     players?: Player[];

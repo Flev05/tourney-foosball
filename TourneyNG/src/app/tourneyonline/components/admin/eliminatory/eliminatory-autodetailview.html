@@ -7,23 +7,27 @@
 <div class="content-section documentation">
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
-        <p>Vista di dettaglio Eliminazione diretta.
-            Da questa vista potete creare, modificare o rimuovere un incontro di Eliminazione diretta di tipo
-            Standalone o Automatica
+        <p>
+            Vista di dettaglio Eliminazione diretta.
+        </p>
+        <p>
+            Da questa vista potete modificare gli incontri di Eliminazione diretta generati automatimente dal sistema.
+            A questa vista si arriva per via di 2 scelte: Standalone o Automatica
         </p>
 
         <h4>Standalone</h4>
         <p>
-            Se Standalone, l'utente deve modificare gli incontri proposti con i default di sistema,
-            la locazione e la data ora di svolgimento degli incontri.
+            Significa che l'utente ha configurato un torneo con solo le eliminazioni dirette,
+            senza gironi all'italiana ne playoff.
         </p>
 
         <h4>Automatica</h4>
-        <p>Lo vista visualizza già gli accoppiamenti giusti in funzione delle qualificazioni derivanti 
-            dai gironi all'italiana, l'utente può solo modificare la locazione e la data di svolgimento
-            degli incontri, gli incontri non devono essere modificati dall'utente
+        <p>Significa che il configuratore, ha configurato un torneo con i gironi all'italiana e 
+            le eliminazioni dirette. Poi, in fase di configurazione delle elinimazioni dirette,
+            ha scelto la modalità di generazione degli incontri automatica.
         </p>
-            In tutti i casi, alla fine dell'operazione salvare con il bottone Salva
+        <p>
+            In entrambi i casi, alla fine della configurazione salvare con il bottone Salva
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -32,19 +36,19 @@
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>Incontro: {{selectedEliminatory.teamName}}</span></h4>
+    <h4><span>Incontro: {{meetingName}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
-    <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
+    <form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
-            <div class="ui-g ui-fluid" *ngIf="combobox1Row">
+            <div class="ui-g ui-fluid">
                 <div class="ui-g-12">
                     <div class="ui-g-4">
-                        <label for="team1Id">Squadra 1</label>
+                        <label for="team1Id">Squadra 1: </label>
                     </div>
                     <div class="ui-grid-col-3">
                         <p-dropdown id="team1Id" [options]="availableTeams" formControlName="combobox1Row" 
@@ -56,10 +60,10 @@
                 </div>
             </div>       
             Vs         
-            <div class="ui-g ui-fluid" *ngIf="combobox2Row">
+            <div class="ui-g ui-fluid">
                 <div class="ui-g-12">
                     <div class="ui-g-4">
-                        <label for="team2Id">Squadra 2</label>
+                        <label for="team2Id">Squadra 2:</label>
                     </div>
                     <div class="ui-grid-col-3">
                         <p-dropdown id="team2Id" [options]="availableTeams" formControlName="combobox2Row" 
@@ -79,9 +83,9 @@
                     <input pInputText type="text" formControlName="address"/>
                 </div>
                 <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address'].valid&&eliminatoryFormGroup.controls['address'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!meetingFormGroup.controls['address'].valid&&meetingFormGroup.controls['address'].dirty">
                         <i class="fa fa-close"></i>
-                        <span *ngIf="eliminatoryFormGroup.controls['address'].errors['required']">
+                        <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
                             La via della squadra è obbligatoria
                         </span>
                     </div>
@@ -115,7 +119,7 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!meetingFormGroup.valid"></button>
                 </div>
             </div>
         </div>

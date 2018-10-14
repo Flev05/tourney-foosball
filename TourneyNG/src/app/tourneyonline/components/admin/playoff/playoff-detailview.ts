@@ -65,7 +65,7 @@ export class PlayoffDetailView extends AbstractListView {
         if(this.tourneyService.newPlayoff) {
             this.selectedPlayoff = {
                   id:this.tourneyService.getSequenceNumber()
-                , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P, isRoundTrip: true}
+                , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P}
                 , playoffConfigs: [this.newPlaoffConfig()]};
 
             this.selectedTourney.playoffs.push(this.selectedPlayoff);

@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from '../../../service/tourneyservice';
+import { PhaseType } from 'app/tourneyonline/domain/phase-type';
 
 const redirect = '/admineliminatory/lv';
 
@@ -21,7 +22,7 @@ export class EliminatoryTourneyListView extends AbstractTourneyListView {
 
     onComplete(): any {
         for(let t of this.tourneys) {
-            if(!this.containsPhase('eliminatory', t.phases)) {
+            if(!this.containsPhase(PhaseType.E, t.phases)) {
                 let index: number = this.tourneys.indexOf(t);
                 if(index > -1) {
                     this.tourneys.splice(index, 1);

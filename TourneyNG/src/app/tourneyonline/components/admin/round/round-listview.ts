@@ -40,7 +40,7 @@ export class RoundListView extends AbstractListView {
     }
 
     create() {
-        this.selectedRound={id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.R, isRoundTrip: true};
+        this.selectedRound={id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.R};
         this.tourneyService.selectedRound = this.selectedRound;
         this.tourneyService.newRound = true;
         this.gotoDetailView();

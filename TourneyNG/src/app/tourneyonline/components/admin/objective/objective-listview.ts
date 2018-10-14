@@ -8,6 +8,7 @@ import {Message} from 'app/components/common/api';
 import { ObjectiveConfig } from 'app/tourneyonline/domain/objective-config';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Final } from 'app/tourneyonline/domain/final';
+import { PhaseType } from 'app/tourneyonline/domain/phase-type';
 
 @Component({
     templateUrl: './objective-listview.html'
@@ -65,7 +66,7 @@ export class ObjectiveListView extends AbstractListView {
 
         this.isObjectiveLoaded = this.objectives.length > 0 ? true : false;
         
-        this.isPlayoff = this.containsPhase("playoff", this.selectedTourney.phases);
+        this.isPlayoff = this.containsPhase(PhaseType.P, this.selectedTourney.phases);
     }
 
     showDialogToAdd() {

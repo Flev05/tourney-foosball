@@ -151,7 +151,7 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <div *ngIf="!isStandalone" class="ui-grid-row">
+    <div *ngIf="isModeEnabled" class="ui-grid-row">
         <div class="ui-grid-col-2">
             Modo:
         </div>
@@ -170,7 +170,7 @@
         </div>
     </div>       
 
-    <div *ngIf="!isStandalone" class="ui-grid-row">
+    <div *ngIf="isManual" class="ui-grid-row">
         <div class="ui-grid-col-2">
             Livelli:
         </div>
@@ -184,15 +184,15 @@
         </div>
     </div>             
 
-    <p-table *ngIf="isStandalone" 
+    <p-table *ngIf="isStandalone || !isManual" 
             [responsive]="true" 
-            [value]="eliminatories" 
+            [value]="meetings" 
             selectionMode="single" 
-            [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onUnluckyTeamRowSelect($event)">
+            [(selection)]="selectedMeeting" 
+            (onRowSelect)="onMeetingRowSelect($event)">
 
         <ng-template pTemplate="caption">
-            Squadre per lo spareggio
+            Eliminazioni dirette
         </ng-template>
         
         <ng-template pTemplate="colgroup">
@@ -216,56 +216,14 @@
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
                 <td>{{rowIndex + 1}}</td>
-                <td>{{rowData.cb1.label}}</td>
+                <td>{{rowData.team1.teamName}}</td>
                 <td> - </td>
-                <td>{{rowData.cb2.label}}</td>
+                <td>{{rowData.team2.teamName}}</td>
             </tr>
         </ng-template>
-
-        <ng-template pTemplate="summary" let-rowData>
-            <div style="text-align:left">
-                <button type="button" pButton icon="fa fa-save" (click)="standaloneSave()" label="Salva"></button>
-            </div>
-        </ng-template> 
     </p-table>
-    
-    <p-dialog header="Squadre per lo spareggio" [(visible)]="unluckyDisplayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
-        <div class="ui-g ui-fluid" *ngIf="combobox1Row">
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="team1Id">Squadra 1</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="team1Id" [options]="availableTeams" [(ngModel)]="combobox1Row" 
-                        optionLabel="label"  
-                        placeholder="Selezionare"
-                        (onChange)="onCombobox1Change($event.value)">
-                    </p-dropdown>
-                </div>
-            </div>
-        </div>       
-        Vs         
-        <div class="ui-g ui-fluid" *ngIf="combobox2Row">
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="team2Id">Squadra 2</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="team2Id" [options]="availableTeams" [(ngModel)]="combobox2Row" 
-                        optionLabel="label" 
-                        placeholder="Selezionare"
-                        (onChange)="onCombobox2Change($event.value)">
-                    </p-dropdown>
-                </div>
-            </div>
-        </div>       
 
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" (click)="unluckyTeamDone()" label="Fatto"></button>
-        </div>
-    </p-dialog>
-
-    <p-table *ngIf="!isStandalone" 
+    <p-table *ngIf="isManual" 
             [responsive]="true" 
             [value]="eliminatories" 
             selectionMode="single" 
@@ -307,12 +265,6 @@
                 <td *ngIf="isPlayoff">{{rowData.tc2.fromPlayoff.round.label}}</td>
             </tr>
         </ng-template>
-
-        <ng-template pTemplate="summary" let-rowData>
-            <div style="text-align:left">
-                <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
-            </div>
-        </ng-template> 
     </p-table>
 
     <p-dialog header="Eliminatorie" [(visible)]="displayDialogConfig" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">

@@ -14,6 +14,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
 import { EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
+import { Team } from 'app/tourneyonline/domain/team';
 
 
 @Component({
@@ -27,27 +28,27 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     meetingFormGroup: FormGroup;
     toggleable: boolean = false;
 
-    availablePlayers: Player[] = [];
-    targetPlayers: Player[] = [];
-
     fullAddress: string;
     meetingName: string;
 
-    combobox1Row: Combobox;
-    combobox2Row: Combobox;
+    // combobox1Row: Combobox;
+    // combobox2Row: Combobox;
 
-    unluckyTeams: DoubleCombobox[];
-    unluckyTeamRow: Combobox;
+    // unluckyTeams: DoubleCombobox[];
+    // unluckyTeamRow: Combobox;
 
     positions: Combobox[];
     rounds: Combobox[];
     playoffs: Combobox[];
-    availableTeams: Combobox[];
 
+    // availableTeams: Combobox[];
     // selectedUnluckyTeam: DoubleCombobox;
 
     eliminatoryMode: EliminatoryMode;
     eliminatories: Eliminatory[];
+
+    availableTeams: Team[] = [];
+    targetTeams: Team[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -65,11 +66,14 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
-        this.availableTeams = this.tourneyService.teamsCombobox;
+        this.availableTeams = this.tourneyService.availableTeams;
         this.playoffs = this.tourneyService.playoffsCombobox;
         this.selectedMeeting = this.tourneyService.selectedMeeting;
 
         this.meetingName = this.selectedMeeting.name;
+
+        this.targetTeams.push(this.selectedMeeting.team1);
+        this.targetTeams.push(this.selectedMeeting.team2);
 
         if(this.selectedMeeting.country!=undefined) {
             this.fullAddress = this.selectedMeeting.address + " - " 
@@ -77,20 +81,23 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
                 + " (" + this.selectedMeeting.country.provinceCode +")";
         }
 
-        this.combobox1Row = {label: this.selectedMeeting.team1.teamName, value: this.selectedMeeting.team1.id};
-        let index=this.availableTeams.indexOf(this.combobox1Row);
-        if(index==-1) {
-            this.availableTeams.push(this.combobox1Row);
-        }
-        this.combobox2Row = {label: this.selectedMeeting.team2.teamName, value: this.selectedMeeting.team2.id};
-        index=this.availableTeams.indexOf(this.combobox2Row);
-        if(index==-1) {
-            this.availableTeams.push(this.combobox2Row);
-        }
+        // this.combobox1Row = {label: this.selectedMeeting.team1.teamName, value: this.selectedMeeting.team1.id};
+        // let index=this.availableTeams.indexOf(this.combobox1Row);
+        // if(index==-1) {
+        //     this.availableTeams.push(this.combobox1Row);
+        // }
+        // this.combobox2Row = {label: this.selectedMeeting.team2.teamName, value: this.selectedMeeting.team2.id};
+        // index=this.availableTeams.indexOf(this.combobox2Row);
+        // if(index==-1) {
+        //     this.availableTeams.push(this.combobox2Row);
+        // }
         
         this.meetingFormGroup = this.fb.group({
-            'combobox1Row': new FormControl(this.combobox1Row),
-            'combobox2Row': new FormControl(this.combobox2Row),
+            // 'combobox1Row': new FormControl(this.combobox1Row),
+            // 'combobox2Row': new FormControl(this.combobox2Row),
+
+            'availableTeams': new FormControl(this.availableTeams),
+            'targetTeams':    new FormControl(this.targetTeams),
 
             'address':  new FormControl(this.selectedMeeting.address ),
             'country':  new FormControl(this.selectedMeeting.country),
@@ -131,44 +138,61 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     //     this.combobox2Row = null;
     // }
 
-    onCombobox1Change(event) {
-        console.log(event);
-        
-        let cc: Combobox = this.meetingFormGroup.get('combobox1Row').value;
-        if(cc.value == 0) {
-            this.availableTeams.push(this.combobox1Row);
-        }
+    // onCombobox1Change(event) {
+    //     console.log(event);
+    //     let cc: Combobox = this.meetingFormGroup.get('combobox1Row').value;
+        // if(cc.value == 0) {
+        //     this.availableTeams.push(this.combobox1Row);
+        // }
+        // this.combobox1Row = cc;
 
-        this.combobox1Row = cc;
-
-        let index: number = this.availableTeams.indexOf(this.combobox1Row);
-        if(index > 0) {
-            this.availableTeams.splice(index, 1);
-        }
+        // let index: number = this.availableTeams.indexOf(this.combobox1Row);
+        // if(index > 0) {
+        //     this.availableTeams.splice(index, 1);
+        // }
         // this.combobox2Row = {label: this.selectedMeeting.team2.teamName, value: this.selectedMeeting.team2.id};
-    }
-    onCombobox2Change(event) {
-        console.log(event);
-        let cc: Combobox = this.meetingFormGroup.get('combobox2Row').value;
-        if(cc.value == 0) {
-            this.availableTeams.push(this.combobox2Row);
-        }
-        this.combobox2Row = cc;
+    // }
+    // onCombobox2Change(event) {
+    //     console.log(event);
+    //     let cc: Combobox = this.meetingFormGroup.get('combobox2Row').value;
+    //     if(cc.value == 0) {
+    //         this.availableTeams.push(this.combobox2Row);
+    //     }
+    //     this.combobox2Row = cc;
 
-        let index: number = this.availableTeams.indexOf(this.combobox2Row);
-        if(index > 0) {
-            this.availableTeams.splice(index, 1);
-        }
-    }
+    //     let index: number = this.availableTeams.indexOf(this.combobox2Row);
+    //     if(index > 0) {
+    //         this.availableTeams.splice(index, 1);
+    //     }
+    // }
+
     onSubmit(value: string) {
 
-        this.combobox1Row = this.meetingFormGroup.get('combobox1Row').value;
-        this.selectedMeeting.team1.teamName = this.combobox1Row.label;
-        this.selectedMeeting.team1.id = this.combobox1Row.value;
+        // this.combobox1Row = this.meetingFormGroup.get('combobox1Row').value;
+        // this.selectedMeeting.team1.teamName = this.combobox1Row.label;
+        // this.selectedMeeting.team1.id = this.combobox1Row.value;
 
-        this.combobox2Row = this.meetingFormGroup.get('combobox2Row').value;
-        this.selectedMeeting.team2.teamName = this.combobox1Row.label;
-        this.selectedMeeting.team2.id = this.combobox1Row.value;
+        // this.combobox2Row = this.meetingFormGroup.get('combobox2Row').value;
+        // this.selectedMeeting.team2.teamName = this.combobox1Row.label;
+        // this.selectedMeeting.team2.id = this.combobox1Row.value;
+
+        // this.selectedMeeting.team1.teamName = "";
+        // this.selectedMeeting.team1.id = 0;
+        // this.selectedMeeting.team2.teamName = "";
+        // this.selectedMeeting.team2.id = 0;
+        // this.selectedMeeting.name = "";
+
+        let teams: Team[] = this.meetingFormGroup.get('targetTeams').value;
+        if(teams.length == 1) {
+            this.selectedMeeting.team1.teamName = teams[0].teamName;
+            this.selectedMeeting.team1.id = teams[0].id;
+            this.selectedMeeting.name = this.selectedMeeting.team1.teamName + " - ";
+        }
+        if(teams.length == 2) {
+            this.selectedMeeting.team2.teamName = teams[1].teamName;
+            this.selectedMeeting.team2.id = teams[1].id;
+            this.selectedMeeting.name = this.selectedMeeting.team1.teamName + " - " + this.selectedMeeting.team2.teamName;
+        }
 
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
@@ -194,7 +218,6 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     //     this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
     // }
 
- 
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

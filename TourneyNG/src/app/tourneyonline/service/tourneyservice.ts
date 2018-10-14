@@ -46,6 +46,7 @@ export class TourneyService {
     selectedRound : Round;
     selectedPlayoff : Playoff;
     selectedEliminatory : Eliminatory;
+    availableTeams: Team[];
 
     newTourney : boolean = false;
     newPlayer : boolean = false;
@@ -103,7 +104,10 @@ export class TourneyService {
             this.teamsCombobox = [];
             this.teamsCombobox.push({label: "", value: 0});
         }
-            
+        if(this.availableTeams==undefined) {
+            this.availableTeams = [];
+        }
+
         // for(let i=0; i<this.selectedTourney.teams.length; i++) {
         //     let r=this.selectedTourney.teams[i];
         //     this.teamsCombobox.push({label: r.teamName, value: r.id});

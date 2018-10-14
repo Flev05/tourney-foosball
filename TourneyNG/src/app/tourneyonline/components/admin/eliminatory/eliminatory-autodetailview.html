@@ -44,37 +44,7 @@
 
     <form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
-            <div class="ui-g ui-fluid">
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="team1Id">Squadra 1: </label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="team1Id" [options]="availableTeams" formControlName="combobox1Row" 
-                            optionLabel="label"  
-                            placeholder="Selezionare"
-                            (onChange)="onCombobox1Change($event.value)">
-                        </p-dropdown>
-                    </div>
-                </div>
-            </div>       
-            Vs         
-            <div class="ui-g ui-fluid">
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="team2Id">Squadra 2:</label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="team2Id" [options]="availableTeams" formControlName="combobox2Row" 
-                            optionLabel="label" 
-                            placeholder="Selezionare"
-                            (onChange)="onCombobox2Change($event.value)">
-                        </p-dropdown>
-                    </div>
-                </div>
-            </div>    
-
+  
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
                     Via:
@@ -113,7 +83,19 @@
                     {{fullAddress}}
                 </div>
             </div>                  
-                    
+
+            <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
+                    [responsive]="true"
+                    dragdrop="true" 
+                    dragdropScope="teams" 
+                    [sourceStyle]="{'height':'200px'}" 
+                    [targetStyle]="{'height':'100px'}">
+                <ng-template let-team pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <div>{{team.teamName}}</div>
+                    </div>
+                </ng-template>
+            </p-pickList>                       
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">

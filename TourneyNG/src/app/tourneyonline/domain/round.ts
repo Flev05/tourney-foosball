@@ -9,6 +9,8 @@ export interface Round {
     name: string;
     type: RoundType;
 
+    isOneway?: boolean;
+
     teams?:  Team[];
     meetings?: Meeting[];
     classification?: Classification[];

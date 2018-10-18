@@ -76,7 +76,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.objectives = [];
             this.selectedTourney.rounds = [];
             this.selectedTourney.playoffs = [];
-            this.selectedTourney.eliminatories = [];
+            this.selectedTourney.eliminatoryLevels = [];
             this.selectedTourney.teams = [];
             this.selectedTourney.players = [];
             this.selectedTourney.playoffs = [];
@@ -86,20 +86,13 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
             this.selectedTourney.phases=[PhaseType.R];
             this.selectedTourney.phases.push(PhaseType.E);   
-
-            this.selectedTourney.isOnewayRound = true;         
-            this.selectedTourney.isOnewayPlayoff = true;         
-            this.selectedTourney.isOnewayEliminatory = true;   
             
             this.selectedTourney.eliminatoryMode = EliminatoryMode.M
 
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }
-        this.isOnewayRound = this.selectedTourney.isOnewayRound ? "true" : "false";
-        this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff ? "true" : "false";
-        this.isOnewayEliminatory = this.selectedTourney.isOnewayEliminatory ? "true" : "false";
-        
+
         if(this.selectedTourney.country != undefined ) {
             this.fullAddress = this.selectedTourney.address + " - " 
                 + this.selectedTourney.country.zipCode + " " + this.selectedTourney.country.city
@@ -177,27 +170,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.pointsGoldenGoalTieBreakDefeat = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakDefeat').value;
 
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
-
-        this.isOnewayRound = this.tourneyFormGroup.get('isOnewayRound').value;
-        if(this.isOnewayRound=="true") {
-            this.selectedTourney.isOnewayRound = true;
-        } else {
-            this.selectedTourney.isOnewayRound = false;
-        }
-
-        this.isOnewayPlayoff = this.tourneyFormGroup.get('isOnewayPlayoff').value;
-        if(this.isOnewayPlayoff=="true") {
-            this.selectedTourney.isOnewayPlayoff = true;
-        } else {
-            this.selectedTourney.isOnewayPlayoff = false;
-        }
-
-        this.isOnewayEliminatory = this.tourneyFormGroup.get('isOnewayEliminatory').value;
-        if(this.isOnewayEliminatory=="true") {
-            this.selectedTourney.isOnewayEliminatory = true;
-        } else {
-            this.selectedTourney.isOnewayEliminatory = false;
-        }
 
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 

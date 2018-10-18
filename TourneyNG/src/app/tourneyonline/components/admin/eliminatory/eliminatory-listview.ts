@@ -14,13 +14,14 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { PhaseType, EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
 })
 export class EliminatoryListView extends AbstractListView {
-    static redirect: string = '/admineliminatory/lv/dv';
-    static configRedirect: string = '/admineliminatory/lv/configdv';
+    static redirect: string = '/admineliminatory/levelLv/eliminatoryLv/dv';
+    static configRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/configdv';
 
     msgs: Message[] = [];
     position1: number;
@@ -31,6 +32,8 @@ export class EliminatoryListView extends AbstractListView {
     round2: string;
     playoffName2: string;
    
+    selectedEliminatoryLevel: EliminatoryLevel;
+
     eliminatoryLevel: number;
     eliminatoryMode: EliminatoryMode;
     
@@ -45,7 +48,9 @@ export class EliminatoryListView extends AbstractListView {
     isManual: boolean;
 
     levels: Combobox[];
- 
+
+    isOneway: string;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -64,8 +69,12 @@ export class EliminatoryListView extends AbstractListView {
 
         this.levels = this.tourneyService.levelsCombobox;
 
-        this.eliminatories = this.selectedTourney.eliminatories;
+        this.selectedEliminatoryLevel = this.selectedTourney.selectedEliminatoryLevel;
+
+        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
+
+        this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true": "false";
 
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
@@ -217,7 +226,7 @@ export class EliminatoryListView extends AbstractListView {
                 , score2: 0
             }
             e.round.meetings.push(m);
-            if(this.selectedTourney.isOnewayEliminatory) {
+            if(this.selectedEliminatoryLevel.isOneway) {
                 let m: Meeting = {id: this.tourneyService.getSequenceNumber()
                     , name: c2.team.teamName + " - " + c1.team.teamName
                     , dateInMillis: this.selectedTourney.dateInMillis
@@ -395,7 +404,6 @@ export class EliminatoryListView extends AbstractListView {
     private newEliminatory(): Eliminatory {
         let e: Eliminatory = {
             id: this.tourneyService.getSequenceNumber(),
-            enabled: false,
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: ""
                 , type: RoundType.E
@@ -407,7 +415,6 @@ export class EliminatoryListView extends AbstractListView {
                 ,meetings: []
                 ,matrix: []
             },
-            level: this.tourneyService.levelsCombobox.length,
             tc1: {
                 id: this.tourneyService.getSequenceNumber(),
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
@@ -448,7 +455,7 @@ export class EliminatoryListView extends AbstractListView {
 
     save() {
         this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
-        this.selectedTourney.eliminatories = this.eliminatories;
+        this.selectedEliminatoryLevel.eliminatories = this.eliminatories;
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
     }
 

@@ -8,6 +8,7 @@ import { Eliminatory } from '../../../domain/eliminatory';
 
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 const meetingLvRedirect: string = "admincalendar/lv/meetingLv";
 
@@ -26,6 +27,7 @@ export class CalendarListView extends AbstractListView {
     selectedPlayoff: Playoff;
     selectedRound: Round;
     selectedEliminatory: Eliminatory;
+    selectedEliminatoryLevel: EliminatoryLevel;
 
     rounds: Round[];
     playoffs: Playoff[];
@@ -39,10 +41,11 @@ export class CalendarListView extends AbstractListView {
     private loadAll() {
 
         this.selectedTourney = this.tourneyService.selectedTourney;
+        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.rounds = this.selectedTourney.rounds;
         this.playoffs = this.selectedTourney.playoffs;
-        this.eliminatories = this.selectedTourney.eliminatories;
+        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
     }
 
     onRoundSelect(event) {

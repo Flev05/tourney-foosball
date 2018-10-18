@@ -16,6 +16,7 @@ import { Discipline } from '../domain/discipline';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Matrix } from '../domain/matrix';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -72,10 +73,15 @@ export class TourneyService {
             return;
         }
 
+        let min: number = 2;
+
         let itemlNo = this.selectedTourney.rounds.length;
-        if(itemlNo==0 ) {
-            itemlNo = this.selectedTourney.teams.length;
+        if( itemlNo==0 ) {
+            itemlNo = this.selectedTourney.teams.length;            
+        } else {
+            min = itemlNo;
         }
+        let max: number = this.selectedTourney.teams.length;
 
         let levelNo = Math.floor(Math.log2(itemlNo));
 
@@ -99,19 +105,16 @@ export class TourneyService {
             let si: Combobox = {label:lev, value:l};
             this.levelsCombobox.push(si);
         }
-
-        if(this.teamsCombobox==undefined) {
-            this.teamsCombobox = [];
-            this.teamsCombobox.push({label: "", value: 0});
+        
+        this.teamsCombobox = [];
+        this.teamsCombobox.push({label: "Tutte", value: 0});
+        for(let i=min; i<=max; i++) {
+            this.teamsCombobox.push({label: "" + i, value: i});
         }
+        
         if(this.availableTeams==undefined) {
             this.availableTeams = [];
         }
-
-        // for(let i=0; i<this.selectedTourney.teams.length; i++) {
-        //     let r=this.selectedTourney.teams[i];
-        //     this.teamsCombobox.push({label: r.teamName, value: r.id});
-        // }
 
         this.roundsCombobox = [];
         this.roundsCombobox.push({label: "", value: 0});

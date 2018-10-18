@@ -30,6 +30,7 @@ export class PlayoffDetailView extends AbstractListView {
 
     teamNoCombobox: number;
     teamsCombobox: Combobox[];
+    isOneway: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -65,7 +66,7 @@ export class PlayoffDetailView extends AbstractListView {
         if(this.tourneyService.newPlayoff) {
             this.selectedPlayoff = {
                   id:this.tourneyService.getSequenceNumber()
-                , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P}
+                , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P, isOneway: true}
                 , playoffConfigs: [this.newPlaoffConfig()]};
 
             this.selectedTourney.playoffs.push(this.selectedPlayoff);
@@ -73,6 +74,18 @@ export class PlayoffDetailView extends AbstractListView {
             this.selectedPlayoff = this.tourneyService.selectedPlayoff;
             this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
         }
+
+        this.isOneway = this.selectedPlayoff.round.isOneway ? "true": "false";
+    }
+    
+    onOnewayClick() {
+        console.log("Entering onOnewayClick()");
+        this.selectedPlayoff.round.isOneway=true;
+    }
+
+    onRoundtripClick() {
+        console.log("Entering onRoundtripClick()");
+        this.selectedPlayoff.round.isOneway=false;
     }
 
     onChange(event) {

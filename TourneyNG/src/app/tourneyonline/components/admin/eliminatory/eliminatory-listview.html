@@ -1,21 +1,24 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Eliminatorie</span>
-        <span>Configurazione Eliminatorie iniziale del torneo: {{selectedTourney.tourneyName}}</span>
+        <span class="feature-title">Eliminazioni dirette</span>
+        <span>Configurazione Eliminazioni dirette iniziale del torneo: {{selectedTourney.tourneyName}}</span>
     </div>
 </div>    
 
 <div class="content-section documentation">
-<p>Vista elenco delle configurazioni delle eliminatorie di partenza che compongono il torneo
+<p>Vista elenco delle configurazioni delle Eliminazioni dirette di partenza che compongono il torneo
 </p>
 
 <p-accordion>
 <p-accordionTab header="Istruzioni">                        
             
     <h4>Istruzioni</h4>
-    <p> Premessa: le eliminatorie sono concepite, da tourneyonline.com, come una lista di piccoli gironi  
+    <p> 
+        Premessa: le eliminazioni dirette sono concepite, da tourneyonline.com, come una lista di piccoli gironi  
         composti di solo due squadre in cui si qualifica solo la prima delle due.
-        Esistono 2 tipi di eliminazione diretta:
+    </p> 
+    <p>
+        Esistono 2 tipi di eliminazioni dirette:
     </p> 
     <ul>
         <li>Autonome</li>
@@ -24,76 +27,67 @@
  
     <h5>Autonome</h5>
     <p>
-        Autonome significa che gli incontri sono creati partendo direttamente dalle squadre del torneo senza passare ne 
-        per gironi ne per playoff precedenti, in pratica quando si seleziona solo la check box Eliminatorie nella vista di 
-        dettaglio del torneo.
-
-        Il sistema in questo caso automaticamente crea il numero minimo indispensabile per ospitare tutti gli scontri diretti
-        in funzione del numero effettivo di squadre configurate ed è in grado di ricondurre alle eliminatorie qualsiasi numero 
-        di squadre purchè pari, se dispari non considera l'ultimo della lista.
-        
-    </p>
-    
-    <p>
-        Ci sono due casi da gestire: se il numero di squadre è una potenza di 2, tutte le squadre sono collocate in modo preciso 
-        nelle caselle degli scontri.
-
-        Se il numero di squadre non è una potenza di 2, il sistema prepara un insieme di scontri diretti preliminari
-        atti a normalizzare il numero di squadre al livello giusto. 
-
-        Partendo da un numero qualsiasi di N di squadre, il sistema individua il livello minimo per ospitarle - per 24 squadre si parte dai sedicesimi,
-        per 10 dagli ottavi, per 38 dai 32-esimi ecc - quindi prepara 2 * X squadre che fanno un turno preliminare di passaggio del turno
-        e Y che lo passino senza giocare.
+        Autonome significa che il torneo è fatto di sole eliminazioni dirette.
+        Non ci sono ne gironi ne playoff preliminari ma si incomincia direttamente dagli scontri diretti.
     </p>
     <p>
-        La vista visualizza 2 tabelle: una per il massaggio automatico al turno successivo e una per le squadre che fanno lo spareggio.
-        La prima, di Y righe e una colonna, deve essere compilta con le squadre che passano automaticamente al turno successivo. 
-        La seconda, di X righe e 2 colonne, deve essere compilata con le coppie di squadre che devono disputare lo spareggio.
-    </p>
-          
+        Per poter gestire questo caso, il sistema propone automaticamente una lista di scontri diretti
+        e un numero di squadre che passa al turno successivo senza giocare in modo da andare a riempire tutte 
+        le caselle del livello successivo. 
+    </p>                
     <p>
-        Per esempio se il torneo ha N=25 squadre, il sistema sceglie i sedicesimi di finale come livello minimo di partenza per contenere 
-        le 25 squadre, calcola X=25-16=9 coppie di squadre che disputano un partita per passare agli ottavi 
-        e Y=7 che passano il turno agli ottavi direttamente.  
+        Per esempio se ci sono 25 squadre, il sistema propone un livello di entrata ai sedicesimi di finale
+        in cui 25-16=9 coppie, disputano uno spareggio per passare agli ottavi, mentre le restanti 25-18=7
+        squadre, passano direttamente ai ottavi ma senza giocare.
     </p>
     <p>
-        Pertanto ci saranno 9 + 7 = 16 squadre che vanno a riempire esattamente il livello degli ottavi di finali.
-        Dovete popolare le 2 tabelle sottostanti, riga per riga, con le squadre di vostra scelta.
-    </p> 
-    
+        Il come scegliere chi disputa lo spareggio e chi passa direttamente al turno successivo, resta a discrezione
+        del gestore del torneo. Il sistema fa una proposta basata sull'ordine alfabetico delle squadre, 
+        ma il gestore può cambiare tutto a suo piacimento.
+    </p>
+              
     <h5>Derivate</h5>
     <p>
-        Derivate, che è il default, significa che gli incontri sono creati partendo da gironi e/o playoff precedenti.
+        Le eliminazioni dirette sono Derivate, che è il default, quando il torneo prevede dei gironi all'italiana 
+        e/o playoff preliminari.
+    </p> 
+    <p>
         In questo caso, si devono effetture ulteriori scelte sulla modalità di popolamento:
     </p> 
+    
     <ul>
         <li>Manuale</li>
         <li>Automatica</li>
     </ul>         
         
     <h5>Manuale</h5>
-    <p>La gestione manuale, il default, permette qualsiasi configurazione del passaggio del turno, combinando tutti i casi: 
+    <p>La gestione manuale, il default, permette qualsiasi configurazione delle regole del passaggio del turno, partendo
+        dai risultati conseguiti nei gironi e playoff. Si possono cioè definire le regole per passare posizioni di classifica
+        dei gironi alle eliminazioni dirette così come dai playoff se ci sono.
     </p> 
-    <ul>
-        <li>dai gironi all'italiana ai playoff</li>
-        <li>dai gironi all'italiana alle eliminatorie</li>
-        <li>dai playoff alle eliminatorie</li>
-    </ul>  
 
-    <p> Il sistema calcola, in automatico in funzione del numero di squadre e gironi presenti nel torneo,
+    <p> Il sistema calcola, in funzione del numero di squadre e gironi presenti nel torneo,
         la lista delle possibili eliminatorie di partenza.
-
-        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatorie.
-        Alla scelta del livello di eliminazione, viene creata la corrispondente lista di possibili 
-        incontri da compilare, riga per riga, con le regole di passaggio provenienti dai rispultati dei gironi 
-        e playoff precedenti.
     </p>
+    <p> 
+        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatorie.
+        A fronte di talle scelta, viene viene visualizzata nella vista successiva, una lista di possibili 
+        di tutti i livelli di cui è composto il torneo, da quello di partenza a tutti i successivi, fino
+        alla finalissima per il 1° e 2° posto e l'eventuale finalina per il 3° e 4° posto.
+    </p>
+
+    <p>
+        Solo la prima riga contiene le regole per il popolamento delle squadre provenienti dai posizionamenti
+        nei gironi, le altre devono essere configurate solo per inserire le date e i luoghi dove avverranno
+        gli incontri. Se si tratta di un torneo giornaliero, questa fase non è necessaria.
+    </p>         
     
     <p>
-        Per esempio, se selezionate i sedicesimi di finale, saranno creare 8 righe della tabella sottostante
-        che dovete completare una per una cliccando su ciascuna di essa e compilando la successiva dialog box
-        nella quale dovere inserire le regole di popolamento delle eliminatorie.
-    </p>         
+        Per esempio, se selezionate i sedicesimi di finale dalla conbo box Livelli,
+        vedrete nella vista successiva,6 righe dai sedicesimi alla finalissima più quella del 3° e 4° posto.
+        Selezionando la prima riga, quella dei sedicesimi, si apre la corrispondente vista di dettaglio
+        con 8 righe da compilare con le regole di popolamento delle eliminatorie di partenza.
+    </p>
 
     <h5>Automatica</h5>
     <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
@@ -125,23 +119,11 @@
     </ul>  
 
     <p>
-        In generale, il sistema ordina le squadre secondo il criterio delle migliori prime di tutti i gironi, 
-        poi le migliori second di tutti i gironi, le migliori terze di tutti i gironi, ecc.
+        In generale, a prescindere dai metodi di generazione delle eliminazionie di partenza,
+        il sistema calcola in automatico i passaggi ai turni successivi e nessuna altra operazione di configurazione
+        deve essere apportata.
     </p>
-    <p>
-        Sulla base di tale ordinamento, di calcolano: le posizioni nelle eliminatorie, le sqadre che passano al turno
-        successivo automaticamente, le squadre che devono effettuare un ulteriore spareggio prima di passare al
-        turno successivo.
-    </p>
-    
-    <p>
-        Per esempio se avete 5 gironi da 5 squadre l'una e si richiede che passino tutte, il sistema ordina le squadre 
-        secondo il criterio descritto sopra, quindi individua i 16-esimi di finale come livello minimo parziale
-        da cui partire con le eliminazioni dirette, alloca le ultime 2*(25-16)=2*9=18 squadre per lo spareggio 
-        per gli ottavi di finale, dalle quali se ne qualificano 9, e le restanti prime: 16-9=7, che passano 
-        automaicamente agli ottavi senza spareggio.
-    </p>
-                    
+                        
 </p-accordionTab>
 </p-accordion>
 </div>
@@ -150,39 +132,6 @@
 
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-
-    <div *ngIf="isModeEnabled" class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Modo:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right"
-                pTooltip="Si veda le istruzioni per maggiori dettagli">
-            <p-radioButton name="eliminatoryModeGroupname" 
-                label="Manuale" 
-                value="manual" 
-                [(ngModel)]="eliminatoryMode" (onClick)="onManualClick()">
-            </p-radioButton>
-            <p-radioButton name="eliminatoryModeGroupname" 
-                label="Automatico" 
-                value="auto" 
-                [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
-            </p-radioButton>
-        </div>
-    </div>       
-
-    <div *ngIf="isManual" class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Livelli:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right">
-            <p-dropdown id="levelId" 
-                [options]="levels" 
-                [(ngModel)]="eliminatoryLevel"  
-                (onChange)="onChange($event.value)"
-                placeholder="Eliminatorie">
-            </p-dropdown>
-        </div>
-    </div>             
 
     <p-table *ngIf="isStandalone || !isManual" 
             [responsive]="true" 

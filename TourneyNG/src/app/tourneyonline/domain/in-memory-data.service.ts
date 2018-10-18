@@ -18,10 +18,6 @@ export class InMemoryDataService implements InMemoryDbService {
 
         ,access: AccessMode.PU
 
-        ,isOnewayRound: false
-        ,isOnewayPlayoff: false
-        ,isOnewayEliminatory: false
-      
         ,phases: [PhaseType.R, PhaseType.P, PhaseType.E]
         ,eliminatoryMode:EliminatoryMode.M
 
@@ -148,7 +144,7 @@ export class InMemoryDataService implements InMemoryDbService {
           }
         ]  
         , rounds:[{
-            id:1, name: "Girone A", type: RoundType.R 
+            id:1, name: "Girone A", type: RoundType.R, isOneway: false 
             ,teams:[
                {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
               ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
@@ -178,7 +174,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ]
           }
           ,{
-            id:2, name: "Girone B", type: RoundType.R 
+            id:2, name: "Girone B", type: RoundType.R , isOneway: false
             ,teams:[
               {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
              ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
@@ -209,7 +205,7 @@ export class InMemoryDataService implements InMemoryDbService {
         ]
         ,playoffs:[
           {id:1, round:{
-              id:1, name: "Playoff Girone A", type: RoundType.P 
+              id:1, name: "Playoff Girone A", type: RoundType.P, isOneway: false 
               ,teams:[
                 {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
                 ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
@@ -244,7 +240,7 @@ export class InMemoryDataService implements InMemoryDbService {
               ]
           }
           ,{id:2, round:{
-            id:2, name: "Playoff Girone B", type: RoundType.P 
+            id:2, name: "Playoff Girone B", type: RoundType.P , isOneway: false
             ,teams:[
               {id:6,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 - 20020 SOLARO MI"}
               ,{id:3,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
@@ -279,7 +275,8 @@ export class InMemoryDataService implements InMemoryDbService {
           ]
         }
         ]
-        ,eliminatories:[]
+        ,eliminatoryLevels: []
+        ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
         ,objectives:[]
       }
       ,{id: 2, tourneyName: 'Preliminari 2018/2019'
@@ -294,10 +291,6 @@ export class InMemoryDataService implements InMemoryDbService {
 
           ,access: AccessMode.PU
 
-          ,isOnewayRound: true
-          ,isOnewayPlayoff: true
-          ,isOnewayEliminatory: true
-  
           ,phases: [PhaseType.R]
           ,eliminatoryMode:EliminatoryMode.M
 
@@ -461,7 +454,8 @@ export class InMemoryDataService implements InMemoryDbService {
             ,rounds:[]  
             ,playoffs:[]
             ,meetings:[]  
-            ,eliminatories:[]
+            ,eliminatoryLevels: []
+            ,selectedEliminatoryLevel:{isOneway:true, eliminatories:[]}
             ,objectives:[]  
           }
         ];

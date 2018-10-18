@@ -11,6 +11,8 @@ import { Discipline } from './discipline';
 import { TourneyType } from './tourneyType';
 import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './phase-type';
+import { EliminatoryLevel } from './eliminatory-level';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 export interface Tourney {
     id?: number;
@@ -21,10 +23,6 @@ export interface Tourney {
     timeAsString? : string;
     address? : string;
     country? : Country;
-    
-    isOnewayRound?: boolean;
-    isOnewayPlayoff?: boolean;
-    isOnewayEliminatory?: boolean;
 
     access?: string;
     discipline? : Discipline;
@@ -46,8 +44,12 @@ export interface Tourney {
     rounds?: Round[];
     playoffs?: Playoff[];
 
-    eliminatories?: Eliminatory[];
+    eliminatoryLevels?: Array<EliminatoryLevel>;
+    selectedEliminatoryLevel?: EliminatoryLevel;
+
     eliminatoryMode?: EliminatoryMode;
+    selectedLevelCombobox?: Combobox;
+    selectedTeamsNumCombobox?: Combobox;
 
     teams?: Team[];
     players?: Player[];

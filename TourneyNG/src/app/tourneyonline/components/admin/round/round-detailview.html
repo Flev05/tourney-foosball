@@ -69,7 +69,26 @@
                         </span>
                     </div>
                 </div>
-            </div> 
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Turni:
+                </div>
+                <div class="ui-grid-col-5" tooltipPosition="right"
+                        pTooltip="Indicare se i gironi sono di solo andata o andata e ritorno">
+                    <p-radioButton name="isOnewayGroupname" 
+                        label="Solo andata" 
+                        value="false" 
+                        formControlName="isOneway">
+                    </p-radioButton>
+                    <p-radioButton name="isOnewayGroupname" 
+                        label="Andata e ritorno" 
+                        value="true" 
+                        formControlName="isOneway">
+                    </p-radioButton>
+                </div>
+            </div>                           
 
             <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
                     [responsive]="true"

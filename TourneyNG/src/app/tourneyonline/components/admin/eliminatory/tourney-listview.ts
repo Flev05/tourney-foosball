@@ -6,7 +6,7 @@ import { AbstractTourneyListView } from '../../common/abstract-tourney-listview'
 import { TourneyService } from '../../../service/tourneyservice';
 import { PhaseType } from 'app/tourneyonline/domain/phase-type';
 
-const redirect = '/admineliminatory/lv';
+const redirect = '/admineliminatory/levelLv';
 
 @Component({
     templateUrl: './tourney-listview.html'

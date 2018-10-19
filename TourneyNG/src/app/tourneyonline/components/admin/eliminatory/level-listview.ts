@@ -67,10 +67,11 @@ export class LevelListView extends AbstractListView {
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
                 
         this.isStandalone = false;
-        
+        this.isManual = true;
+
         if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
-            this.containsPhase(PhaseType.E, this.selectedTourney.phases) && 
-            !this.containsPhase(PhaseType.R, this.selectedTourney.phases)) 
+            !this.containsPhase(PhaseType.P, this.selectedTourney.phases) &&
+            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
         {
             this.isModeEnabled = true;
         } else {
@@ -82,52 +83,41 @@ export class LevelListView extends AbstractListView {
             this.isStandalone = true;
             this.isManual = false;
             this.prepareEliminatoryLevels(this.eliminatoryLevels.length);
-        } else {
-            this.isManual = true;
         }
     }
 
-    private prepareEliminatoryLevels(N: number ): any {
-        
-        if(this.levelsCombobox.length >  N) {
+    /**
+     * Prepares the list view of the desired levels in function of the received parameter
+     * 
+     * @param comboBoxIndex the index of the combobox to limit the list of levels
+     */
+    private prepareEliminatoryLevels(comboBoxIndex: number): any {
 
-            for(let lcb of this.levelsCombobox){
-                let found: boolean = false;
-                for(let el of this.eliminatoryLevels) {
-                    if(lcb.value == el.id) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found) {
-                    let el: EliminatoryLevel = {id: this.tourneyService.getSequenceNumber()
-                        ,name: lcb.label
-                        ,level: Math.pow(2,lcb.value)
-                        ,isOneway: this.selectedEliminatoryLevel.isOneway
-                        ,eliminatories: this.eliminatories
-                    };
-                    this.eliminatoryLevels.push(el);
-                }
-            }
+        if(comboBoxIndex < this.eliminatoryLevels.length) {
+            comboBoxIndex++;
+            this.eliminatoryLevels.splice(comboBoxIndex);
+            return;
         }
+       
+        if(comboBoxIndex >= this.eliminatoryLevels.length ) {
 
-        if(this.levelsCombobox.length < N) {
+            let tempElimList: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
+            
+            let from = this.eliminatoryLevels.length;
+            let to = comboBoxIndex + 1;
 
-            let index: number = 0;
-            for(let el of this.eliminatoryLevels) {
+            for(let i=from; i<to; i++ ) {
+                let lcb = this.levelsCombobox[i];
+                let el: EliminatoryLevel = {id: lcb.value
+                    ,name: lcb.label
+                    ,level: Math.pow(2, lcb.value)
+                    ,isOneway: this.selectedEliminatoryLevel.isOneway
+                    ,eliminatories: this.eliminatories
+                };
+                tempElimList.push(el);
+            }
 
-                let found: boolean = false;
-                for(let lcb of this.levelsCombobox){
-                    if(lcb.value == el.id) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found) {
-                    this.eliminatoryLevels.slice(1, index);
-                }
-                index++;
-            }        
+            this.eliminatoryLevels =  this.eliminatoryLevels.concat(tempElimList);
         }
     }
             
@@ -170,14 +160,17 @@ export class LevelListView extends AbstractListView {
     onChange(event) {
         console.log("Entering onChange()");
 
-        let N: number = Math.pow(2, this.selectedLevelCombobox.value);
-
-        this.prepareEliminatoryLevels(N);
+        this.prepareEliminatoryLevels(this.selectedLevelCombobox.value);
     }
 
     onTeamNumChange(event) {
         console.log("Entering onTeamNumChange(): " + this.selectedTeamsNumCombobox);
-        this.selectedTeamsNumCombobox
+        let N: number = this.selectedTeamsNumCombobox.value;
+        if(N==0) {
+            N = this.selectedTourney.teams.length;
+        }
+        let level = Math.ceil(Math.log2(N));
+        this.prepareEliminatoryLevels(level-1);
     }
 }
 

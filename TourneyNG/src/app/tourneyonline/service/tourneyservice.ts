@@ -85,7 +85,7 @@ export class TourneyService {
 
         let levelNo = Math.floor(Math.log2(itemlNo));
 
-        for(let l=levelNo; l>=0; l--) {
+        for(let l=0; l<=levelNo; l++) {
             let lev = "";
             if(l >= 4) {
                 lev = Math.pow(2, l) + "-esimi di finale";
@@ -106,8 +106,12 @@ export class TourneyService {
             this.levelsCombobox.push(si);
         }
         
+        let all = {label: "Tutte", value: 0};
+        if(this.selectedTourney.selectedTeamsNumCombobox==undefined) {
+            this.selectedTourney.selectedTeamsNumCombobox= all;
+        } 
         this.teamsCombobox = [];
-        this.teamsCombobox.push({label: "Tutte", value: 0});
+        this.teamsCombobox.push(all);
         for(let i=min; i<=max; i++) {
             this.teamsCombobox.push({label: "" + i, value: i});
         }

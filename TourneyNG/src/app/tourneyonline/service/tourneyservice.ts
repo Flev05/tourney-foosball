@@ -41,12 +41,12 @@ export class TourneyService {
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
-    selectedMeeting : Meeting;
     selectedPlayer : Player;
     selectedTeam: Team;
     selectedRound : Round;
     selectedPlayoff : Playoff;
     selectedEliminatory : Eliminatory;
+    selectedMeeting : Meeting;
     availableTeams: Team[];
 
     newTourney : boolean = false;
@@ -85,7 +85,7 @@ export class TourneyService {
 
         let levelNo = Math.floor(Math.log2(itemlNo));
 
-        for(let l=0; l<=levelNo; l++) {
+        for(let l=levelNo; l>=0; l--) {
             let lev = "";
             if(l >= 4) {
                 lev = Math.pow(2, l) + "-esimi di finale";
@@ -100,12 +100,12 @@ export class TourneyService {
                 lev = "Semi finale";
             }
             if(l == 0) {
-                lev = "Finale";
+                lev = "Finalissima 1° e 2° posto";
             }
-            let si: Combobox = {label:lev, value:l};
+            let si: Combobox = {label:lev, value: levelNo - l};
             this.levelsCombobox.push(si);
         }
-        
+    
         let all = {label: "Tutte", value: 0};
         if(this.selectedTourney.selectedTeamsNumCombobox==undefined) {
             this.selectedTourney.selectedTeamsNumCombobox= all;
@@ -113,7 +113,7 @@ export class TourneyService {
         this.teamsCombobox = [];
         this.teamsCombobox.push(all);
         for(let i=min; i<=max; i++) {
-            this.teamsCombobox.push({label: "" + i, value: i});
+            this.teamsCombobox.push({label: "" + i, value: max - i});
         }
         
         if(this.availableTeams==undefined) {

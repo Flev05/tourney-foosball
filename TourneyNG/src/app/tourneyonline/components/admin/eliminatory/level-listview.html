@@ -14,54 +14,33 @@
             
     <h4>Istruzioni</h4>
     <p> 
-        Premessa: le eliminazioni dirette sono concepite, da tourneyonline.com, come una lista di piccoli gironi  
-        composti di solo due squadre in cui si qualifica solo la prima delle due.
+        La vista contiene l'elenco di tutti i livelli delle eliminazioni dirette minimo indispensabile
+        per effettuare la fase finale ad eliminazione diretta propria nei tornei a squadre.
     </p> 
     <p>
-        Esistono 2 tipi di eliminazioni dirette:
+        La vista può richiedere fino 4 tipi di input
     </p> 
     <ul>
-        <li>Autonome</li>
-        <li>Derivate</li>
+        <li>Turno</li>
+        <li>Modo</li>
+        <li>Livelli</li>
+        <li>Squadre</li>
     </ul>         
  
-    <h5>Autonome</h5>
+    <h5>Turno</h5>
     <p>
-        Autonome significa che il torneo è fatto di sole eliminazioni dirette.
-        Non ci sono ne gironi ne playoff preliminari ma si incomincia direttamente dagli scontri diretti.
+        Per Turno si intende quello di solo andata o andata e ritorno. Scegliere la tipologia 
+        di turno che intendente applicare per le vostre eliminazioni dirette, il sistema le userà 
+        poi per richiedere la configurazione delle date e luoghi degli incontri.
     </p>
+    <h5>Modo</h5>
     <p>
-        Per poter gestire questo caso, il sistema propone automaticamente una lista di scontri diretti
-        e un numero di squadre che passa al turno successivo senza giocare in modo da andare a riempire tutte 
-        le caselle del livello successivo. 
+        Se il torneo contiene solo gironi ed eliminazioni dirette ma non contiene playoff, il sistema
+        vi da la possibilità di calcolare in automativo le regole di accopiamento iniziale nelle
+        eliminazioni dirette. Allo scopo, dovete scegliere tra 2 punti di una radio button:
+        Manuale e Automatico
     </p>                
-    <p>
-        Per esempio se ci sono 25 squadre, il sistema propone un livello di entrata ai sedicesimi di finale
-        in cui 25-16=9 coppie, disputano uno spareggio per passare agli ottavi, mentre le restanti 25-18=7
-        squadre, passano direttamente ai ottavi ma senza giocare.
-    </p>
-    <p>
-        Il come scegliere chi disputa lo spareggio e chi passa direttamente al turno successivo, resta a discrezione
-        del gestore del torneo. Il sistema fa una proposta basata sull'ordine alfabetico delle squadre, 
-        ma il gestore può cambiare tutto a suo piacimento.
-    </p>
-              
-    <h5>Derivate</h5>
-    <p>
-        Le eliminazioni dirette sono Derivate, che è il default, quando il torneo prevede dei gironi all'italiana 
-        e/o playoff preliminari.
-    </p> 
-    <p>
-        In questo caso, si devono effetture ulteriori scelte sulla modalità di popolamento:
-    </p> 
-    
-    <ul>
-        <li>Manuale</li>
-        <li>Automatica</li>
-    </ul>         
-        
-    <h5>Manuale</h5>
-    <p>La gestione manuale, il default, permette qualsiasi configurazione delle regole del passaggio del turno, partendo
+    <p>La gestione Manuale, il default, permette qualsiasi configurazione delle regole del passaggio del turno, partendo
         dai risultati conseguiti nei gironi e playoff. Si possono cioè definire le regole per passare posizioni di classifica
         dei gironi alle eliminazioni dirette così come dai playoff se ci sono.
     </p> 
@@ -83,14 +62,23 @@
     </p>         
     
     <p>
-        Per esempio, se selezionate i sedicesimi di finale dalla conbo box Livelli,
-        vedrete nella vista successiva,6 righe dai sedicesimi alla finalissima più quella del 3° e 4° posto.
-        Selezionando la prima riga, quella dei sedicesimi, si apre la corrispondente vista di dettaglio
-        con 8 righe da compilare con le regole di popolamento delle eliminatorie di partenza.
+        Per esempio, se selezionate gli ottavi di finale dalla conbo box Livelli,
+        vedrete nella vista sottostante, 5 righe dagli ottavi alla finalissima 1° e 2° posto
+        più quella opzionale del 3° e 4° posto.
+    </p>
+        
+    <p>
+        Per esempio se ci sono 25 squadre, il sistema propone un livello di entrata ai sedicesimi di finale
+        in cui 25-16=9 coppie, disputano uno spareggio per passare agli ottavi, mentre le restanti 25-18=7
+        squadre, passano direttamente ai ottavi ma senza giocare.
+    </p>
+    <p>
+        Il come scegliere chi disputa lo spareggio e chi passa direttamente al turno successivo, resta a discrezione
+        del gestore del torneo. Il sistema fa una proposta basata sull'ordine alfabetico delle squadre, 
+        ma il gestore può cambiare tutto a suo piacimento.
     </p>
 
-    <h5>Automatica</h5>
-    <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
+    <p>La gestione Automatico può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
         ma senza playoff. 
         
         In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
@@ -107,7 +95,7 @@
     </p>
     
     <p>
-        Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
+        Per esempio, se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
         di ciasun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
         con le seguenti regole:
     </p> 
@@ -117,6 +105,14 @@
         <li>1° classificata Girone C Vs 2° classificata Girone B</li>
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
     </ul>  
+
+    <h5>Livello/Squadre</h5>
+
+    <p>
+        La scelta tra Livello e Squadre sono mutuamente esclusive, se si sceglie il livello si da vita 
+        al livello di partenza da quello scelto. Se si sceglie Squadre, il sistema calcola il livello 
+        minimo in funzione del numero di squadre fornito dall'organizzatore.
+    </p>
 
     <p>
         In generale, a prescindere dai metodi di generazione delle eliminazionie di partenza,
@@ -137,7 +133,7 @@
         <div class="ui-grid-col-2">
             Turni:
         </div>
-        <div class="ui-grid-col-4" tooltipPosition="right"
+        <div class="ui-grid-col-5" tooltipPosition="right"
                 pTooltip="Indicare se le eliminazioni dirette sono di solo andata o andata e ritorno">
             <p-radioButton name="isOnewayGroupname" 
                 label="Solo andata" 
@@ -197,7 +193,8 @@
                 [options]="teamsCombobox" 
                 [(ngModel)]="selectedTeamsNumCombobox"  
                 optionLabel="label"
-                (onChange)="onTeamNumChange($event.value)" >
+                (onChange)="onTeamNumChange($event.value)" 
+                placeholder="Seleziona">>
             </p-dropdown>
         </div>
     </div>             

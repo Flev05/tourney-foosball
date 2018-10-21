@@ -14,90 +14,52 @@
             
     <h4>Istruzioni</h4>
     <p> 
-        Premessa: le eliminazioni dirette sono concepite, da tourneyonline.com, come una lista di piccoli gironi  
-        composti di solo due squadre in cui si qualifica solo la prima delle due.
+        La vista contiene la lista di tutti i possibili incontri per il livello selezionato.
+        Se il livello non è il livello più alto, il primo nella lista di provenienza, allora
+        la vista contiene solo gli incontri da compilare con le date e le locazioni.
+
+        Se il livello è quello più alto, allora oltre alla configurazione di date e luoghi
+        degli incontri, dovete configurare gli accoppiamente di partenza delle eliminzioni dirette.
+        
     </p> 
     <p>
-        Esistono 2 tipi di eliminazioni dirette:
-    </p> 
+        In questa vista ci arrivate per 3 tipologia di eliminzione diretta che avete scelto per 
+        il vostro torneo:
+    </p>
     <ul>
-        <li>Autonome</li>
-        <li>Derivate</li>
-    </ul>         
- 
-    <h5>Autonome</h5>
-    <p>
-        Autonome significa che il torneo è fatto di sole eliminazioni dirette.
-        Non ci sono ne gironi ne playoff preliminari ma si incomincia direttamente dagli scontri diretti.
-    </p>
-    <p>
-        Per poter gestire questo caso, il sistema propone automaticamente una lista di scontri diretti
-        e un numero di squadre che passa al turno successivo senza giocare in modo da andare a riempire tutte 
-        le caselle del livello successivo. 
-    </p>                
-    <p>
-        Per esempio se ci sono 25 squadre, il sistema propone un livello di entrata ai sedicesimi di finale
-        in cui 25-16=9 coppie, disputano uno spareggio per passare agli ottavi, mentre le restanti 25-18=7
-        squadre, passano direttamente ai ottavi ma senza giocare.
-    </p>
-    <p>
-        Il come scegliere chi disputa lo spareggio e chi passa direttamente al turno successivo, resta a discrezione
-        del gestore del torneo. Il sistema fa una proposta basata sull'ordine alfabetico delle squadre, 
-        ma il gestore può cambiare tutto a suo piacimento.
-    </p>
-              
-    <h5>Derivate</h5>
-    <p>
-        Le eliminazioni dirette sono Derivate, che è il default, quando il torneo prevede dei gironi all'italiana 
-        e/o playoff preliminari.
-    </p> 
-    <p>
-        In questo caso, si devono effetture ulteriori scelte sulla modalità di popolamento:
-    </p> 
-    
-    <ul>
+        <li>Standalone</li>
         <li>Manuale</li>
-        <li>Automatica</li>
+        <li>Automatico</li>
     </ul>         
+    <h5>Standalone</h5>
+    <p>
+        Il tipo Standalone si riferisce ad un torneo fatto di sole eliminazioni dirette in cui
+        non ci sono ne gironi ne playoff. In questo caso il sistema propone in automatico, in funzione
+        del numero di squadre iscritte, il livello minimo di partenza.
+        Se il numero di squadre non è una potenza di 2 - 4, 8, 16, ecc. - seleziona il livello minimo per contenerle
+        tutte e sceglie le squadre che devono lo spareggio, così come quelle che passano in automatico 
+        al turno successivo, con un algoritmo standard. Potete cambiare queste scelte con le vostre preferenze.
+    </p>
         
     <h5>Manuale</h5>
-    <p>La gestione manuale, il default, permette qualsiasi configurazione delle regole del passaggio del turno, partendo
-        dai risultati conseguiti nei gironi e playoff. Si possono cioè definire le regole per passare posizioni di classifica
-        dei gironi alle eliminazioni dirette così come dai playoff se ci sono.
+    <p>Il tipo di eliminazione Manuale, il default, permette qualsiasi configurazione delle regole del passaggio
+        del turno, partendo dai risultati conseguiti nei gironi e playoff. 
+        Si possono cioè definire le regole per esprimere il passaggio del turno partendo dalle posizioni di classifica
+        conseguite nei gironi e playoff alle eliminazioni dirette.
     </p> 
 
-    <p> Il sistema calcola, in funzione del numero di squadre e gironi presenti nel torneo,
-        la lista delle possibili eliminatorie di partenza.
-    </p>
-    <p> 
-        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatorie.
-        A fronte di talle scelta, viene viene visualizzata nella vista successiva, una lista di possibili 
-        di tutti i livelli di cui è composto il torneo, da quello di partenza a tutti i successivi, fino
-        alla finalissima per il 1° e 2° posto e l'eventuale finalina per il 3° e 4° posto.
-    </p>
 
+    <h5>Automatico</h5>
     <p>
-        Solo la prima riga contiene le regole per il popolamento delle squadre provenienti dai posizionamenti
-        nei gironi, le altre devono essere configurate solo per inserire le date e i luoghi dove avverranno
-        gli incontri. Se si tratta di un torneo giornaliero, questa fase non è necessaria.
-    </p>         
-    
-    <p>
-        Per esempio, se selezionate i sedicesimi di finale dalla conbo box Livelli,
-        vedrete nella vista sottostante, 6 righe dalla finalissima ai sedicesimi, più quella del 3° e 4° posto.
-        Selezionando la prima riga, quella dei sedicesimi, si apre la corrispondente vista di dettaglio
-        con 8 righe da compilare con le regole di popolamento delle eliminatorie di partenza.
+        Questo tipo di eliminazione è possibile solo per quei tornei che hanno solo i gironi all'italiana 
+        e le eliminazioni dirette, e non hanno gironi di playoff.
     </p>
-
-    <h5>Automatica</h5>
-    <p>La gestione Automatica può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
-        e senza playoff. 
-        
-        In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
-        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale del numero totale di
-        squadre che compongono il torneo, anche tutte, ci pensa il sistema a scegliere l'opportuno livello di eliminatorie iniziale
-        - sedicesimi, ottavi di finale, ecc. - preparare la lista delle squadre che passano automaticamente
-        al turno successivo e quelle che devono invece fare un ulteriore turno di spareggio.
+    <p>
+        In questo caso, l'organizzatore, che sceglie il modo Automatico nella vista precedente,
+        è chiamato a scegliere anche il numero di squadre che intende fare passare il turno dai gironi.
+        Una volta fornito il numero di squadre, anche tutte, il sistema prepara il livello minimo 
+        per ospitarle e le posiziona in automatico nelle caselle del livello di eliminazione di partenza
+        in funzione delle classifiche delle squadre in ciascun girone.
     </p>
     
     <p>
@@ -105,25 +67,13 @@
         in cui la prima classificata del primo girone affronta l'ultima classificata dell'ultimo girone, 
         la prima classificata del secondo girone affronta la ultima classificata del penultimo girone, ecc.
     </p>
-    
-    <p>
-        Per esempio se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
-        di ciasun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
-        con le seguenti regole:
-    </p> 
-    <ul>
-        <li>1° classificata Girone A Vs 2° classificata Girone D</li>
-        <li>1° classificata Girone B Vs 2° classificata Girone C</li>
-        <li>1° classificata Girone C Vs 2° classificata Girone B</li>
-        <li>1° classificata Girone D Vs 2° classificata Girone A</li>
-    </ul>  
 
-    <p>
-        In generale, a prescindere dai metodi di generazione delle eliminazionie di partenza,
-        il sistema calcola in automatico i passaggi ai turni successivi e nessuna altra operazione di configurazione
-        deve essere apportata.
+    <p> Dovete effettuare la configurazione per tutte le righe del livello. 
+        Così se il livello più alto del vostro torneo sono i sedicesimi di finale, dovete
+        configurare 16 righe, una per una, in cui inseritete le regole di passaggio del turno 
+        dai gironi, le date e i luoghi degli incontri.
     </p>
-                        
+
 </p-accordionTab>
 </p-accordion>
 </div>
@@ -135,39 +85,45 @@
 
     <p-table *ngIf="isStandalone || !isManual" 
             [responsive]="true" 
-            [value]="meetings" 
+            [value]="eliminatories" 
             selectionMode="single" 
-            [(selection)]="selectedMeeting" 
-            (onRowSelect)="onMeetingRowSelect($event)">
+            [(selection)]="selectedEliminatory" 
+            (onRowSelect)="onAutoEliminatoryRowSelect($event)">
 
         <ng-template pTemplate="caption">
-            Eliminazioni dirette
+            Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
         </ng-template>
         
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
+                <col *ngIf="isTopLevel" style="width: auto;">
+                <col *ngIf="isTopLevel" style="width: 10mm;">
+                <col *ngIf="isTopLevel" style="width: auto;">
                 <col style="width: auto;">
-                <col style="width: 10mm;">
-                <col style="width: auto;">
+                <col *ngIf="!isOneway" style="width: auto;">
             </colgroup>
         </ng-template>
 
         <ng-template pTemplate="header">
             <tr>
                 <th>N°</th>
-                <th>Squadra 1</th>
-                <th>Vs</th>
-                <th>Squadra 2</th>
+                <th *ngIf="isTopLevel">Squadra 1</th>
+                <th *ngIf="isTopLevel">Vs</th>
+                <th *ngIf="isTopLevel">Squadra 2</th>
+                <th>Andata</th>
+                <th *ngIf="!isOneway">Ritorno</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
                 <td>{{rowIndex + 1}}</td>
-                <td>{{rowData.team1.teamName}}</td>
-                <td> - </td>
-                <td>{{rowData.team2.teamName}}</td>
+                <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team1.teamName}}</td>
+                <td *ngIf="isTopLevel"> - </td>
+                <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team2.teamName}}</td>
+                <td>{{rowData.round.meetings[0].date}}</td>
+                <td *ngIf="!isOneway">{{rowData.round.meetings[1].date}}</td>
             </tr>
         </ng-template>
     </p-table>
@@ -177,8 +133,12 @@
             [value]="eliminatories" 
             selectionMode="single" 
             [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onRowSelectConfig($event)">
+            (onRowSelect)="onManualEliminatoryRowSelect($event)">
 
+            <ng-template pTemplate="caption">
+                Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
+            </ng-template>
+            
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: auto;">
@@ -215,75 +175,5 @@
             </tr>
         </ng-template>
     </p-table>
-
-    <p-dialog header="Eliminatorie" [(visible)]="displayDialogConfig" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
-        <div class="ui-g ui-fluid" *ngIf="row">
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="positionId">Classificata</label>
-                </div>
-                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.tc1.fromRound.position" optionLabel="label"></p-dropdown>
-            </div>
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="roundId">Girone</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.tc1.fromRound.round" 
-                    optionLabel="label" 
-                    placeholder="Selezionare">
-                </p-dropdown>
-                </div>
-            </div>
-            <div *ngIf="isPlayoff" class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="playoffId">Playoff</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.round" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
-                </div>
-            </div>
-        </div>       
-        Vs         
-        <div class="ui-g ui-fluid" *ngIf="row">
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="vin">Classificata</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position" optionLabel="label"></p-dropdown>
-                </div>
-            </div>
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="round">Girone</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.round" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
-                </div>
-            </div>
-            <div *ngIf="isPlayoff" class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="playoff">Playoff</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.round" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
-                </div>
-            </div>
-        </div>       
-
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" (click)="doneConfig()" label="Fatto"></button>
-        </div>
-    </p-dialog>
 </div>
     

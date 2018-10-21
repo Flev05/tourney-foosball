@@ -15,6 +15,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
 import { EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
 import { Team } from 'app/tourneyonline/domain/team';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 
 @Component({
@@ -44,8 +45,10 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     // availableTeams: Combobox[];
     // selectedUnluckyTeam: DoubleCombobox;
 
+    selectedEliminatory: Eliminatory;
+
     eliminatoryMode: EliminatoryMode;
-    eliminatories: Eliminatory[];
+    eliminatories: Eliminatory[];  
 
     availableTeams: Team[] = [];
     targetTeams: Team[] = [];
@@ -64,11 +67,12 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
+        this.selectedEliminatory = this.tourneyService.selectedEliminatory;
+
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
         this.availableTeams = this.tourneyService.availableTeams;
         this.playoffs = this.tourneyService.playoffsCombobox;
-        this.selectedMeeting = this.tourneyService.selectedMeeting;
 
         this.meetingName = this.selectedMeeting.name;
 

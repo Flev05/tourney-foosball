@@ -8,7 +8,6 @@ import {Message} from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { RoundType } from 'app/tourneyonline/domain/roundType';
-import { DoubleCombobox } from 'app/tourneyonline/domain/double-combobox';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Round } from 'app/tourneyonline/domain/round';
@@ -20,8 +19,8 @@ import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
     templateUrl: './eliminatory-listview.html'
 })
 export class EliminatoryListView extends AbstractListView {
-    static redirect: string = '/admineliminatory/levelLv/eliminatoryLv/dv';
-    static configRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/configdv';
+    static autoRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/dv';
+    static manualRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/manualdv';
 
     msgs: Message[] = [];
     position1: number;
@@ -49,14 +48,15 @@ export class EliminatoryListView extends AbstractListView {
 
     levels: Combobox[];
 
-    isOneway: string;
+    isOneway: boolean;
+    isTopLevel: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super(EliminatoryListView.redirect, tourneyService, router, location);
+        super(EliminatoryListView.autoRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
@@ -74,16 +74,19 @@ export class EliminatoryListView extends AbstractListView {
         this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
 
-        this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true": "false";
+        this.isOneway = this.selectedEliminatoryLevel.isOneway ;
+        this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
-        
+
+        this.prepareLevel();
+
         this.isStandalone = false;
         
         if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
-            this.containsPhase(PhaseType.E, this.selectedTourney.phases) && 
-            !this.containsPhase(PhaseType.R, this.selectedTourney.phases)) 
+            !this.containsPhase(PhaseType.P, this.selectedTourney.phases) && 
+            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
         {
             this.isModeEnabled = true;
         } else {
@@ -95,9 +98,35 @@ export class EliminatoryListView extends AbstractListView {
             this.isStandalone = true;
             this.isManual = false;
             this.processStandalone();
-            this.prepateEliminatories();
         } else {
             this.isManual = true;
+        }
+
+        if(this.isTopLevel ) {
+            if(!this.isManual && this.isStandalone) {
+                this.prepateAutoEliminatories();
+            } else {
+                this.prepateManualEliminatories();
+            }
+        }
+    }
+    prepateManualEliminatories(): any {
+        // throw new Error("Method not implemented.");
+    }
+
+    prepareLevel(): any {
+        
+        if(this.selectedEliminatoryLevel.eliminatories.length == 0) {
+            if(this.selectedEliminatoryLevel.level > 0) {
+                for(let i=0; i<this.selectedEliminatoryLevel.level; i++){
+                    let e: Eliminatory = this.newEliminatory();
+                    this.selectedEliminatoryLevel.eliminatories.push(e);
+                }
+            } else {
+                let e: Eliminatory = this.newEliminatory();
+                this.selectedEliminatoryLevel.eliminatories.push(e);
+            }
+            this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
         }
     }
 
@@ -156,7 +185,7 @@ export class EliminatoryListView extends AbstractListView {
      * 
      * So prepare the elemintories list by using the smart put algorithm
      */
-    private prepateEliminatories(): any  {
+    private prepateAutoEliminatories(): any  {
 
         this.paddingRound();
 
@@ -213,39 +242,18 @@ export class EliminatoryListView extends AbstractListView {
 
             let e: Eliminatory = this.newEliminatory();
 
-            let m: Meeting = {id: this.tourneyService.getSequenceNumber()
-                , name: c1.team.teamName + " - " + c2.team.teamName
-                , dateInMillis: this.selectedTourney.dateInMillis
-                , date: this.selectedTourney.dateAsString
-                , time: this.selectedTourney.timeAsString
-                , team1: c1.team
-                , team2: c2.team
-                , address: this.selectedTourney.address
-                , country: this.selectedTourney.country
-                , score1: 0
-                , score2: 0
-            }
+            let m: Meeting = this.newMeeting(c1, c2)
+
             e.round.meetings.push(m);
-            if(this.selectedEliminatoryLevel.isOneway) {
-                let m: Meeting = {id: this.tourneyService.getSequenceNumber()
-                    , name: c2.team.teamName + " - " + c1.team.teamName
-                    , dateInMillis: this.selectedTourney.dateInMillis
-                    , date: this.selectedTourney.dateAsString
-                    , time: this.selectedTourney.timeAsString
-                    , team1: c2.team
-                    , team2: c1.team
-                    , address: this.selectedTourney.address
-                    , country: this.selectedTourney.country
-                    , score1: 0
-                    , score2: 0
-                }
+            if(!this.selectedEliminatoryLevel.isOneway) {
+                let m: Meeting = this.newMeeting(c2, c1)
                 e.round.meetings.push(m);  
             }
 
             sequenzialEliminatories.push(e);
         }
 
-        this.eliminatories = this.newEliminatories(N);
+        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
         let p: number=0;
         for (let step = N; step >= 1; step = step / 2) {
 
@@ -260,13 +268,22 @@ export class EliminatoryListView extends AbstractListView {
         }
         console.log("Eliminatories.size=" + this.eliminatories.length);
 
-        this.meetings = [];
-        for(let e  of this.eliminatories) {
-            this.meetings.push(e.round.meetings[0]);
-            if(e.round.meetings.length > 1) {
-                this.meetings.push(e.round.meetings[1]);
-            }
-        }
+    }
+
+    private newMeeting(c2: Classification, c1: Classification): Meeting {
+        return {
+        id: this.tourneyService.getSequenceNumber(),
+            name: c2.team.teamName + " - " + c1.team.teamName,
+            dateInMillis: this.selectedTourney.dateInMillis,
+            date: this.selectedTourney.dateAsString,
+            time: this.selectedTourney.timeAsString,
+            team1: c2.team,
+            team2: c1.team,
+            address: this.selectedTourney.address,
+            country: this.selectedTourney.country,
+            score1: 0,
+            score2: 0
+        };
     }
 
     /**
@@ -322,7 +339,7 @@ export class EliminatoryListView extends AbstractListView {
     sortAsc(unsortedClassification: Array<Classification> ): Array<Classification>  {
         var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
             if (t1.points > t2.points) {
-                return -11;
+                return -1;
             }
         
             if (t1.points < t2.points) {
@@ -373,35 +390,35 @@ export class EliminatoryListView extends AbstractListView {
         };
     }
  
-    onManualClick() {
-        console.log("Entering onManualClick()");
-        this.eliminatoryMode=EliminatoryMode.M;
-        this.isManual = true;
-    }
-
-    onAutoClick() {
-        console.log("Entering onAutoClick()");
-        this.eliminatoryMode=EliminatoryMode.A;
-        this.isManual = false;
-    }
-
-    onChange(event) {
-        console.log(event);
-
-        let N: number = Math.pow(2, this.eliminatoryLevel) ;
-        this.newEliminatories(N);
-    }
-
-    private newEliminatories(N: number): Array<Eliminatory> {
-        this.eliminatories = [];
-        for (let i = 0; i < N; i++) {
-            let se = this.newEliminatory();
-            this.eliminatories.push(se);
-        }
-        return this.eliminatories;
-    }
-
     private newEliminatory(): Eliminatory {
+
+        let meetings = new Array<Meeting>();
+        let m = {id:this.tourneyService.getSequenceNumber()                    
+            ,name: ""
+            ,dateInMillis:this.selectedTourney.dateInMillis
+            ,date: this.selectedTourney.dateAsString
+            ,time: this.selectedTourney.timeAsString
+            ,address: this.selectedTourney.address
+            ,country: this.selectedTourney.country
+            ,team1: {}
+            ,team2: {}
+        };
+        meetings.push(m);
+
+        if(!this.isOneway) {
+            m = {id:this.tourneyService.getSequenceNumber()                    
+                ,name: ""
+                ,dateInMillis:this.selectedTourney.dateInMillis
+                ,date: this.selectedTourney.dateAsString
+                ,time: this.selectedTourney.timeAsString
+                ,address: this.selectedTourney.address
+                ,country: this.selectedTourney.country
+                ,team1: {}
+                ,team2: {}
+            };
+            meetings.push(m);
+        }
+
         let e: Eliminatory = {
             id: this.tourneyService.getSequenceNumber(),
             round:{id: this.tourneyService.getSequenceNumber()
@@ -412,7 +429,7 @@ export class EliminatoryListView extends AbstractListView {
                     ,{id:1, teamName:""}
                 ]
                 ,classification: []
-                ,meetings: []
+                ,meetings: meetings
                 ,matrix: []
             },
             tc1: {
@@ -442,29 +459,19 @@ export class EliminatoryListView extends AbstractListView {
         return e;
     }
 
-    onMeetingRowSelect(event) {
+    onAutoEliminatoryRowSelect(event) {
+        console.log("Entering onAutoEliminatoryRowSelect()");
 
-        this.tourneyService.selectedMeeting = this.selectedMeeting;
-        this.router.navigate([EliminatoryListView.redirect]);
+        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
+        this.router.navigate([EliminatoryListView.autoRedirect]);
     }
 
-    onRowSelectConfig(event) {
-        this.tourneyService.selectedMeeting = this.selectedMeeting;
-        this.router.navigate([EliminatoryListView.configRedirect]);
+    onManualEliminatoryRowSelect(event) {
+        console.log("Entering onManualEliminatoryRowSelect()");
+
+        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
+        this.router.navigate([EliminatoryListView.manualRedirect]);
     }
 
-    save() {
-        this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
-        this.selectedEliminatoryLevel.eliminatories = this.eliminatories;
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
-    }
-
-    onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        msgerr = 'Modifica configurazione eliminatory fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
-    }
 }
 

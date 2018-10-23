@@ -22,28 +22,18 @@ import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
     templateUrl: './eliminatory-autodetailview.html',
 })
 export class AutoEliminatoryDetailView extends AbstractDetailView {
-    selectedMeeting: Meeting;
-
+    
     msgs: Message[] = [];
 
-    meetingFormGroup: FormGroup;
+    eliminatoryFormGroup: FormGroup;
     toggleable: boolean = false;
 
     fullAddress: string;
     meetingName: string;
 
-    // combobox1Row: Combobox;
-    // combobox2Row: Combobox;
-
-    // unluckyTeams: DoubleCombobox[];
-    // unluckyTeamRow: Combobox;
-
     positions: Combobox[];
     rounds: Combobox[];
     playoffs: Combobox[];
-
-    // availableTeams: Combobox[];
-    // selectedUnluckyTeam: DoubleCombobox;
 
     selectedEliminatory: Eliminatory;
 
@@ -52,6 +42,10 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     availableTeams: Team[] = [];
     targetTeams: Team[] = [];
+
+    selectedEliminatoryLevel: EliminatoryLevel;
+    isOneway: boolean;
+    isTopLevel: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -68,159 +62,164 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
+        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
         this.availableTeams = this.tourneyService.availableTeams;
         this.playoffs = this.tourneyService.playoffsCombobox;
 
-        this.meetingName = this.selectedMeeting.name;
+        this.isOneway = this.selectedEliminatory.round.isOneway;
+        this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
-        this.targetTeams.push(this.selectedMeeting.team1);
-        this.targetTeams.push(this.selectedMeeting.team2);
-
-        if(this.selectedMeeting.country!=undefined) {
-            this.fullAddress = this.selectedMeeting.address + " - " 
-                + this.selectedMeeting.country.zipCode + " " + this.selectedMeeting.country.city
-                + " (" + this.selectedMeeting.country.provinceCode +")";
+        let m1: Meeting = this.selectedEliminatory.round.meetings[0];
+        if(m1.country!=undefined) {
+            this.fullAddress = m1.address + " - " 
+                + m1.country.zipCode + " " + m1.country.city
+                + " (" + m1.country.provinceCode +")";
         }
 
-        // this.combobox1Row = {label: this.selectedMeeting.team1.teamName, value: this.selectedMeeting.team1.id};
-        // let index=this.availableTeams.indexOf(this.combobox1Row);
-        // if(index==-1) {
-        //     this.availableTeams.push(this.combobox1Row);
-        // }
-        // this.combobox2Row = {label: this.selectedMeeting.team2.teamName, value: this.selectedMeeting.team2.id};
-        // index=this.availableTeams.indexOf(this.combobox2Row);
-        // if(index==-1) {
-        //     this.availableTeams.push(this.combobox2Row);
-        // }
+        if(this.targetTeams.length == 0) {
+            this.targetTeams.push(this.selectedEliminatory.round.meetings[0].team1);
+            this.targetTeams.push(this.selectedEliminatory.round.meetings[0].team2);
+        }
+
+        let m2: Meeting = m1;
+        if(!this.selectedEliminatory.round.isOneway) {
+            m2 = this.selectedEliminatory.round.meetings[1];
+        }
         
-        this.meetingFormGroup = this.fb.group({
-            // 'combobox1Row': new FormControl(this.combobox1Row),
-            // 'combobox2Row': new FormControl(this.combobox2Row),
+        this.eliminatoryFormGroup = this.fb.group({
 
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
 
-            'address':  new FormControl(this.selectedMeeting.address ),
-            'country':  new FormControl(this.selectedMeeting.country),
+            'address1':  new FormControl(m1.address),
+            'country1':  new FormControl(m1.country),
+
+            'address2':  new FormControl(m2.address),
+            'country2':  new FormControl(m2.country),    
         });
     }
-    
-    // unluckyTeamDone() {
-    //     if(this.combobox1Row.value == 0) {
-    //         this.availableTeams.push(this.selectedUnluckyTeam.cb1);
-    //     }        
-    //     if(this.combobox2Row.value == 0) {
-    //         this.availableTeams.push(this.selectedUnluckyTeam.cb2);
-    //     }
-    //     if(this.combobox1Row.value == 0 && this.combobox2Row.value == 0) {
-    //         let index: number = this.unluckyTeams.indexOf(this.selectedUnluckyTeam);
-    //         if(index > -1) {
-    //             this.unluckyTeams.splice(index, 1);
-    //         }
-    //     }
-
-    //     if(this.combobox1Row.value != 0 && this.combobox2Row.value != 0) {
-    //         this.selectedUnluckyTeam.cb1.label = this.combobox1Row.label;
-    //         this.selectedUnluckyTeam.cb1.value = this.combobox1Row.value;
-
-    //         this.selectedUnluckyTeam.cb2.label = this.combobox2Row.label;
-    //         this.selectedUnluckyTeam.cb2.value = this.combobox2Row.value;
-    //         let index: number = this.availableTeams.indexOf(this.combobox1Row);
-    //         if(index > -1) {
-    //             this.availableTeams.splice(index, 1);
-    //         }
-    //         index = this.availableTeams.indexOf(this.combobox2Row);
-    //         if(index > -1) {
-    //             this.availableTeams.splice(index, 1);
-    //         }
-    //     }
-
-    //     this.combobox1Row = null;
-    //     this.combobox2Row = null;
-    // }
-
-    // onCombobox1Change(event) {
-    //     console.log(event);
-    //     let cc: Combobox = this.meetingFormGroup.get('combobox1Row').value;
-        // if(cc.value == 0) {
-        //     this.availableTeams.push(this.combobox1Row);
-        // }
-        // this.combobox1Row = cc;
-
-        // let index: number = this.availableTeams.indexOf(this.combobox1Row);
-        // if(index > 0) {
-        //     this.availableTeams.splice(index, 1);
-        // }
-        // this.combobox2Row = {label: this.selectedMeeting.team2.teamName, value: this.selectedMeeting.team2.id};
-    // }
-    // onCombobox2Change(event) {
-    //     console.log(event);
-    //     let cc: Combobox = this.meetingFormGroup.get('combobox2Row').value;
-    //     if(cc.value == 0) {
-    //         this.availableTeams.push(this.combobox2Row);
-    //     }
-    //     this.combobox2Row = cc;
-
-    //     let index: number = this.availableTeams.indexOf(this.combobox2Row);
-    //     if(index > 0) {
-    //         this.availableTeams.splice(index, 1);
-    //     }
-    // }
 
     onSubmit(value: string) {
 
-        // this.combobox1Row = this.meetingFormGroup.get('combobox1Row').value;
-        // this.selectedMeeting.team1.teamName = this.combobox1Row.label;
-        // this.selectedMeeting.team1.id = this.combobox1Row.value;
-
-        // this.combobox2Row = this.meetingFormGroup.get('combobox2Row').value;
-        // this.selectedMeeting.team2.teamName = this.combobox1Row.label;
-        // this.selectedMeeting.team2.id = this.combobox1Row.value;
-
-        // this.selectedMeeting.team1.teamName = "";
-        // this.selectedMeeting.team1.id = 0;
-        // this.selectedMeeting.team2.teamName = "";
-        // this.selectedMeeting.team2.id = 0;
-        // this.selectedMeeting.name = "";
-
-        let teams: Team[] = this.meetingFormGroup.get('targetTeams').value;
+        let teams: Team[] = this.eliminatoryFormGroup.get('targetTeams').value;
         if(teams.length == 1) {
-            this.selectedMeeting.team1.teamName = teams[0].teamName;
-            this.selectedMeeting.team1.id = teams[0].id;
-            this.selectedMeeting.name = this.selectedMeeting.team1.teamName + " - ";
+            this.selectedEliminatory.round.meetings[0].team1.teamName = teams[0].teamName;
+            this.selectedEliminatory.round.meetings[0].team1.id = teams[0].id;
+            this.selectedEliminatory.round.meetings[0].name = this.selectedEliminatory.round.meetings[0].team1.teamName + " - ";
         }
         if(teams.length == 2) {
-            this.selectedMeeting.team2.teamName = teams[1].teamName;
-            this.selectedMeeting.team2.id = teams[1].id;
-            this.selectedMeeting.name = this.selectedMeeting.team1.teamName + " - " + this.selectedMeeting.team2.teamName;
+            this.selectedEliminatory.round.meetings[0].team2.teamName = teams[1].teamName;
+            this.selectedEliminatory.round.meetings[0].team2.id = teams[1].id;
+            this.selectedEliminatory.round.meetings[0].name = this.selectedEliminatory.round.meetings[0].team1.teamName + " - " + this.selectedEliminatory.round.meetings[0].team2.teamName;
         }
 
-        this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
-        this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
+        this.selectedEliminatory.round.meetings[0].address = this.eliminatoryFormGroup.get('address1').value;
+        this.selectedEliminatory.round.meetings[0].country = this.eliminatoryFormGroup.get('country1').value;
+
+        if(!this.selectedEliminatory.round.isOneway) {
+            this.selectedEliminatory.round.meetings[1].address = this.eliminatoryFormGroup.get('address2').value;
+            this.selectedEliminatory.round.meetings[1].country = this.eliminatoryFormGroup.get('country2').value;
+
+            this.selectedEliminatory.round.meetings[1].team1.teamName = teams[0].teamName;
+            this.selectedEliminatory.round.meetings[1].team1.id = teams[0].id;
+            this.selectedEliminatory.round.meetings[1].name = 
+                this.selectedEliminatory.round.meetings[0].team1.teamName 
+                + " - " 
+                + this.selectedEliminatory.round.meetings[0].team2.teamName;
+        }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
-    // standaloneSave() {      
-    //     this.eliminatories = [];
-    //     for(let dcb of this.unluckyTeams) {
+    onMoveToTarget(teamList: Team[]) {
+        console.log("Entering onMoveToTarget(), teamList.length=" + teamList.length);
+        for(let t of this.targetTeams) {
+            console.log("Team=" + JSON.stringify(t));
+        }
 
-    //         let e = this.newEliminatory();
-    //         e.round.teams[0].teamName = dcb.cb1.label;
-    //         e.round.teams[0].id = dcb.cb1.value;
-    //         e.round.teams[1].teamName = dcb.cb2.label;
-    //         e.round.teams[1].id = dcb.cb2.value;
-            
-    //         this.eliminatories.push(e);
-    //     }
-        
-    //     this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
-    //     this.selectedTourney.eliminatories = this.eliminatories;
-    //     this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
-    // }
+        this.alignMoveToTargetList(teamList);
+    }
+
+    onMoveToSource(teamList: Team[]) {
+        console.log("Entering onMoveToSource(), teamList.length=" + teamList.length);
+        this.alignMoveToSourceList(teamList);
+    }
+
+    onMoveAllToTarget(teamList: Team[]) {
+        console.log("Entering onMoveAllToTarget(), teamList.length=" + teamList.length);
+        this.alignMoveToTargetList(teamList);
+    }
+
+    onMoveAllToSource(teamList: Team[]) {
+        console.log("Entering onMoveAllToSource(), teamList.length=" + teamList.length);
+        this.alignMoveToSourceList(teamList);
+    }
+
+    private alignMoveToTargetList(teamList: Team[]) {
+        for (let t of teamList) {
+            this.addToMeetings(t);
+        }
+    }
+
+    private addToMeetings(team: Team) {
+        console.log("addToMeetings(" + team.teamName + ")");
+
+        this.addTeamToMeetings(team);
+
+        this.selectedEliminatory.round.teams.push(team);
+    }
+
+    private addTeamToMeetings(team: Team) {
+        for (let t of this.selectedEliminatory.round.teams) {
+            let m = this.createMeeting(team, t);
+
+            this.selectedEliminatory.round.meetings.push(m);
+            if (this.selectedEliminatory.round.isOneway) {
+                m = this.createMeeting(t, team);
+                this.selectedEliminatory.round.meetings.push(m);
+            }
+        }
+    }
+    private alignMoveToSourceList(teamList: Team[]) {
+        for (let t of teamList) {
+            this.removeFromMeetings(t);
+        }
+    }
+
+    private removeFromMeetings(team: Team): any {
+        console.log("removeFromMeetings(" + team.teamName + ")");
+        let index: number = 0;
+        for(let m of this.selectedEliminatory.round.meetings) {
+            if(m.team1.id == team.id ) {
+                this.selectedEliminatory.round.meetings.splice(index, 1);    
+            }
+            if(m.team2.id == team.id ) {
+                this.selectedEliminatory.round.meetings.splice(index, 1);    
+            }            
+        }
+
+        index = this.selectedEliminatory.round.teams.indexOf(team);
+        if (index > -1) {
+            this.selectedEliminatory.round.teams.splice(index, 1);
+        }
+    }
+    private createMeeting(t: Team, team: Team) {
+        let m : Meeting = {
+            id: this.tourneyService.getSequenceNumber(),
+            name: t.teamName + " - " + team.teamName,
+            dateInMillis : this.selectedTourney.dateInMillis,
+            date: this.selectedTourney.dateAsString,
+            time: this.selectedTourney.timeAsString,
+            address: this.selectedTourney.address,
+            country: this.selectedTourney.country,
+            team1: t,
+            team2: team
+        };
+        return m;
+    }
 
     onError(n:any) {
         this.msgs = [];

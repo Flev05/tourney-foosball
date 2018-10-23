@@ -1,0 +1,192 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Configurazione Eliminazione diretta manuale</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>
+            Vista di dettaglio Eliminazione diretta gestione manuale.
+        </p>
+        <p>
+            Da questa vista potete modificare gli incontri di Eliminazione diretta generati automatimente dal sistema.
+            A questa vista si arriva per via della scelta: Manuale
+        </p>
+
+        <h4>Manuale</h4>
+        <p>
+            Significa che il configuratore ha configurato un torneo con gironi all'italiana, playoff ed eliminazioni dirette.
+            Questa è la modalità di default che permette qualsiasi tipo di configurazione delle eliminazioni dirette
+            partendo dai risulti dei gironi e dei playoff, si possono combinare tutti i tipi di associazioni specificando
+            le regole di popolamento a partire dalle posizioni di classifica dei gironi e playoff.
+        </p>
+
+        <p>
+            Oltre alla configurazione delle regole di popolamento delle eliminazioni dirette, dovete anche inserire
+            le date e i luoghi degli incontri di andata e, se previsto, di ritorno.
+            Alla fine della configurazione salvare con il bottone Salva
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <h4><span>Incontro: {{meetingName}}</span></h4>
+  
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+
+    <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+  
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Via(andata):
+                </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="address1"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid&&eliminatoryFormGroup.controls['address1'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
+                            La via dell'incontro di andata è obbligatoria
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    <label for="country-id">Comune(andata):</label>
+                </div>
+                <div class="ui-grid-col-5">
+                    <p-autoComplete id="country-id" formControlName="country1" 
+                        [suggestions]="filteredCountriesSingle" 
+                        (completeMethod)="search($event)" field="city"
+                        placeholder="Comuni" [minLength]="1">
+                    </p-autoComplete>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo(andata):
+                </div>
+                <div class="ui-grid-col-8">
+                    {{fullAddress1}}
+                </div>
+            </div>                  
+  
+            <div *ngIf="!isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Via(ritorno):
+                </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="address2"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid&&eliminatoryFormGroup.controls['address2'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
+                            La via dell'incontro di ritorno è obbligatoria
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    <label for="country-id">Comune(ritorno):</label>
+                </div>
+                <div class="ui-grid-col-5">
+                    <p-autoComplete id="country-id" formControlName="country2" 
+                        [suggestions]="filteredCountriesSingle" 
+                        (completeMethod)="search($event)" field="city"
+                        placeholder="Comuni" [minLength]="1">
+                    </p-autoComplete>
+                </div>
+            </div>
+
+            <div *ngIf="!isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo(ritorno):
+                </div>
+                <div class="ui-grid-col-8">
+                    {{fullAddress2}}
+                </div>
+            </div>                  
+                   
+        </div>
+
+        <div class="ui-g ui-fluid" *ngIf="row">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="positionId">Classificata</label>
+                </div>
+                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.tc1.fromRound.position" optionLabel="label"></p-dropdown>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="roundId">Girone</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.tc1.fromRound.round" 
+                    optionLabel="label" 
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+            <div *ngIf="isPlayoff" class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="playoffId">Playoff</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.round" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+        </div>       
+        Vs         
+        <div class="ui-g ui-fluid" *ngIf="row">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="vin">Classificata</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position" optionLabel="label"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="round">Girone</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.round" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+            <div *ngIf="isPlayoff" class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="playoff">Playoff</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.round" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+        </div>       
+    </form>   
+</div>
+ 

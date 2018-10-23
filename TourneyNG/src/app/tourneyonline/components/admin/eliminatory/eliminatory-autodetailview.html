@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Eliminazione diretta</span>
+        <span class="feature-title">Configurazione Eliminazione diretta automatica</span>
     </div>
 </div>
 
@@ -8,26 +8,35 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>
-            Vista di dettaglio Eliminazione diretta.
+            Vista di dettaglio Eliminazione diretta configuazione automatica.
         </p>
         <p>
-            Da questa vista potete modificare gli incontri di Eliminazione diretta generati automatimente dal sistema.
-            A questa vista si arriva per via di 2 scelte: Standalone o Automatica
+            Da questa vista potete modificare gli incontri di Eliminazione diretta generati automatimente dal sistema,
+            nel senso che ci pensa il sistema a generara automaticamente gli accoppiamenti iniziali delle eliminatorie.
+            Il sistema utilizza una logica standard del passaggio del turno dai gironi alle eliminazioni. In ogni
+            caso avete la possibilita di cambiare a vostro piacimento gli incontri proposti.
+        </p>
+
+        <p>
+            A questa vista ci si arriva per via di 2 scelte: Standalone o Automatica
         </p>
 
         <h4>Standalone</h4>
         <p>
-            Significa che l'utente ha configurato un torneo con solo le eliminazioni dirette,
+            Significa che il responsabile del terneo ha configurato un torneo con solo le eliminazioni dirette,
             senza gironi all'italiana ne playoff.
         </p>
 
         <h4>Automatica</h4>
-        <p>Significa che il configuratore, ha configurato un torneo con i gironi all'italiana e 
+        <p>
+            Significa che il responsabile del terneo, ha configurato un torneo con i gironi all'italiana e 
             le eliminazioni dirette. Poi, in fase di configurazione delle elinimazioni dirette,
             ha scelto la modalità di generazione degli incontri automatica.
         </p>
         <p>
-            In entrambi i casi, alla fine della configurazione salvare con il bottone Salva
+            Oltre alla configurazione delle regole di popolamento delle eliminazioni dirette, dovete anche inserire
+            le date e i luoghi degli incontri di andata e, se previsto, di ritorno.
+            Alla fine della configurazione salvare con il bottone Salva
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -42,21 +51,21 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
-    <form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
+    <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
   
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Via:
+                    Via(andata):
                 </div>
                 <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="address"/>
+                    <input pInputText type="text" formControlName="address1"/>
                 </div>
                 <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!meetingFormGroup.controls['address'].valid&&meetingFormGroup.controls['address'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid&&eliminatoryFormGroup.controls['address1'].dirty">
                         <i class="fa fa-close"></i>
-                        <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
-                            La via della squadra è obbligatoria
+                        <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
+                            La via dell'incontro di andata è obbligatoria
                         </span>
                     </div>
                 </div>
@@ -64,10 +73,10 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    <label for="country-id">Comune:</label>
+                    <label for="country-id">Comune(andata):</label>
                 </div>
                 <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" formControlName="country" 
+                    <p-autoComplete id="country-id" formControlName="country1" 
                         [suggestions]="filteredCountriesSingle" 
                         (completeMethod)="search($event)" field="city"
                         placeholder="Comuni" [minLength]="1">
@@ -77,36 +86,82 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Indirizzo:
+                    Indirizzo(andata):
                 </div>
                 <div class="ui-grid-col-8">
-                    {{fullAddress}}
+                    {{fullAddress1}}
                 </div>
             </div>                  
-
-            <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
-                    [responsive]="true"
-                    dragdrop="true" 
-                    dragdropScope="teams" 
-                    [sourceStyle]="{'height':'200px'}" 
-                    [targetStyle]="{'height':'100px'}">
-                <ng-template let-team pTemplate="item">
-                    <div class="ui-helper-clearfix">
-                        <div>{{team.teamName}}</div>
+  
+            <div *ngIf="!isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Via(ritorno):
+                </div>
+                <div class="ui-grid-col-5">
+                    <input pInputText type="text" formControlName="address2"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid&&eliminatoryFormGroup.controls['address2'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
+                            La via dell'incontro di ritorno è obbligatoria
+                        </span>
                     </div>
-                </ng-template>
-            </p-pickList>                       
+                </div>
+            </div>
+
+            <div *ngIf="!isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    <label for="country-id">Comune(ritorno):</label>
+                </div>
+                <div class="ui-grid-col-5">
+                    <p-autoComplete id="country-id" formControlName="country2" 
+                        [suggestions]="filteredCountriesSingle" 
+                        (completeMethod)="search($event)" field="city"
+                        placeholder="Comuni" [minLength]="1">
+                    </p-autoComplete>
+                </div>
+            </div>
+
+            <div *ngIf="!isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Indirizzo(ritorno):
+                </div>
+                <div class="ui-grid-col-8">
+                    {{fullAddress2}}
+                </div>
+            </div>                  
+    
+            <div *ngIf="isTopLevel">
+                <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
+                        [responsive]="true"
+                        dragdrop="true" 
+                        dragdropScope="teams" 
+                        [sourceStyle]="{'height':'200px'}" 
+                        [targetStyle]="{'height':'100px'}"
+                        (onMoveToTarget)="onMoveToTarget($event.items)"
+                        (onMoveToSource)="onMoveToSource($event.items)"
+                        (onMoveAllToTarget)="onMoveAllToTarget($event.items)"
+                        (onMoveAllToSource)="onMoveAllToSource($event.items)">
+                    <ng-template let-team pTemplate="item">
+                        <div class="ui-helper-clearfix">
+                            <div>{{team.teamName}}</div>
+                        </div>
+                    </ng-template>
+                </p-pickList>                       
+            </div>
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!meetingFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid"></button>
                 </div>
             </div>
         </div>
 
     </form>   
+
     <p-dialog header="Eliminatorie" [(visible)]="displayDialogConfig" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
             <div class="ui-g ui-fluid" *ngIf="row">
                 <div class="ui-g-12">

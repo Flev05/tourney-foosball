@@ -45,11 +45,8 @@ export interface Tourney {
     playoffs?: Playoff[];
 
     eliminatoryLevels?: Array<EliminatoryLevel>;
-    selectedEliminatoryLevel?: EliminatoryLevel;
 
     eliminatoryMode?: EliminatoryMode;
-    selectedLevelCombobox?: Combobox;
-    selectedTeamsNumCombobox?: Combobox;
 
     teams?: Team[];
     players?: Player[];

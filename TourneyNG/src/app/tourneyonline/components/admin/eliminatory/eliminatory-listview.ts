@@ -46,8 +46,6 @@ export class EliminatoryListView extends AbstractListView {
     isModeEnabled: boolean;
     isManual: boolean;
 
-    levels: Combobox[];
-
     isOneway: boolean;
     isTopLevel: boolean;
 
@@ -67,9 +65,7 @@ export class EliminatoryListView extends AbstractListView {
     protected updateRowGroupMetaData() {
         this.tourneyService.prepareEliminatoriesComboBoxes();
 
-        this.levels = this.tourneyService.levelsCombobox;
-
-        this.selectedEliminatoryLevel = this.selectedTourney.selectedEliminatoryLevel;
+        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
@@ -102,14 +98,13 @@ export class EliminatoryListView extends AbstractListView {
             this.isManual = true;
         }
 
-        if(this.isTopLevel ) {
-            if(!this.isManual && this.isStandalone) {
-                this.prepateAutoEliminatories();
-            } else {
-                this.prepateManualEliminatories();
-            }
+        if(!this.isManual && this.isStandalone) {
+            this.prepateAutoEliminatories();
+        } else {
+            this.prepateManualEliminatories();
         }
     }
+
     prepateManualEliminatories(): any {
         // throw new Error("Method not implemented.");
     }
@@ -118,7 +113,8 @@ export class EliminatoryListView extends AbstractListView {
         
         if(this.selectedEliminatoryLevel.eliminatories.length == 0) {
             if(this.selectedEliminatoryLevel.level > 0) {
-                for(let i=0; i<this.selectedEliminatoryLevel.level; i++){
+                let pow = Math.pow(2, this.selectedEliminatoryLevel.level);
+                for(let i=0; i<pow; i++){
                     let e: Eliminatory = this.newEliminatory();
                     this.selectedEliminatoryLevel.eliminatories.push(e);
                 }
@@ -424,6 +420,7 @@ export class EliminatoryListView extends AbstractListView {
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: ""
                 , type: RoundType.E
+                , isOneway: this.isOneway
                 , teams:[
                      {id:0, teamName:""}
                     ,{id:1, teamName:""}

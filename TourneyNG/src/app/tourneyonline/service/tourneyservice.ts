@@ -34,7 +34,6 @@ export class TourneyService {
 
     tourneys: Tourney[];
 
-    levelsCombobox: Combobox[];
     positionsCombobox: Combobox[];
     roundsCombobox: Combobox[];
     teamsCombobox: Combobox[];
@@ -46,6 +45,7 @@ export class TourneyService {
     selectedRound : Round;
     selectedPlayoff : Playoff;
     selectedEliminatory : Eliminatory;
+    selectedEliminatoryLevel: EliminatoryLevel;
     selectedMeeting : Meeting;
     availableTeams: Team[];
 
@@ -66,54 +66,36 @@ export class TourneyService {
         this.sequenceNumber++;
     }
 
-    prepareEliminatoriesComboBoxes() {
-        this.levelsCombobox = [];
-
+    prepareEliminatoriesComboBoxes(): number {
         if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return;
         }
 
         let min: number = 2;
 
-        let itemlNo = this.selectedTourney.rounds.length;
-        if( itemlNo==0 ) {
-            itemlNo = this.selectedTourney.teams.length;            
+        let teamsNo = this.selectedTourney.rounds.length;
+        if( this.selectedTourney.rounds.length==0 ) {
+            teamsNo = this.selectedTourney.teams.length;
         } else {
-            min = itemlNo;
+            teamsNo = 0;
+            for( let r of this.selectedTourney.rounds ){
+                teamsNo += r.teams.length;
+            }
+            if(this.selectedTourney.rounds.length > min) {
+                min = this.selectedTourney.rounds.length;
+            } 
         }
+
         let max: number = this.selectedTourney.teams.length;
-
-        let levelNo = Math.floor(Math.log2(itemlNo));
-
-        for(let l=levelNo; l>=0; l--) {
-            let lev = "";
-            if(l >= 4) {
-                lev = Math.pow(2, l) + "-esimi di finale";
-            }
-            if(l == 3) {
-                lev = "Ottavi di finale";
-            }
-            if(l == 2) {
-                lev = "Quarti di finale";
-            }
-            if(l == 1) {
-                lev = "Semi finale";
-            }
-            if(l == 0) {
-                lev = "Finalissima 1° e 2° posto";
-            }
-            let si: Combobox = {label:lev, value: levelNo - l};
-            this.levelsCombobox.push(si);
-        }
     
-        let all = {label: "Tutte", value: 0};
+        let all = {label: "Tutte", value: max};
         if(this.selectedTourney.selectedTeamsNumCombobox==undefined) {
             this.selectedTourney.selectedTeamsNumCombobox= all;
         } 
         this.teamsCombobox = [];
         this.teamsCombobox.push(all);
         for(let i=min; i<=max; i++) {
-            this.teamsCombobox.push({label: "" + i, value: max - i});
+            this.teamsCombobox.push({label: "" + i, value: i});
         }
         
         if(this.availableTeams==undefined) {
@@ -148,6 +130,35 @@ export class TourneyService {
                 this.positionsCombobox.push({label: vv, value: p});
             }                    
         }
+
+        return teamsNo;
+    }
+
+    public prepareLevelCombobox(teamsNo: number) : Array<Combobox> {
+
+        let levelNo = Math.ceil(Math.log2(teamsNo));
+        let levelsCombobox = new Array<Combobox>();
+        for (let l = levelNo; l > 0 ; l--) {
+            let lev = "";
+            if (l >= 5) {
+                lev = Math.pow(2, l-1) + "-esimi di finale";
+            }
+            if (l == 4) {
+                lev = "Ottavi di finale";
+            }
+            if (l == 3) {
+                lev = "Quarti di finale";
+            }
+            if (l == 2) {
+                lev = "Semi finale";
+            }
+            if (l == 1) {
+                lev = "Finalissima 1° e 2° posto";
+            }
+            let si: Combobox = { label: lev, value: l };
+            levelsCombobox.push(si);
+        }
+        return levelsCombobox;
     }
 
     power2Padding(length: number): number {

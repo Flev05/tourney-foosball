@@ -23,7 +23,6 @@
     <ul>
         <li>Turno</li>
         <li>Modo</li>
-        <li>Livelli</li>
         <li>Squadre</li>
     </ul>         
  
@@ -106,12 +105,12 @@
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
     </ul>  
 
-    <h5>Livello/Squadre</h5>
+    <h5>Squadre</h5>
 
     <p>
-        La scelta tra Livello e Squadre sono mutuamente esclusive, se si sceglie il livello si da vita 
-        al livello di partenza da quello scelto. Se si sceglie Squadre, il sistema calcola il livello 
-        minimo in funzione del numero di squadre fornito dall'organizzatore.
+        Scegliere in numero di squadre che deve essere allocato inizialmente nelle eliminazioni dirette, 
+        il sistema calcola il livello minimo per contenerle e prepare gli accoppiamenti per lo spareggio 
+        e le squadre che passa automaticamente.
     </p>
 
     <p>
@@ -150,6 +149,22 @@
         </div>
     </div>    
         
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Squadre:
+        </div>
+        <div class="ui-grid-col-4" tooltipPosition="right" 
+                pTooltip="Scegliere il numero di squadre che incominciano le eliminazioni dirette, anche tutte">
+            <p-dropdown id="teamsId" 
+                [options]="teamsCombobox" 
+                [(ngModel)]="selectedTeamsNumCombobox"  
+                optionLabel="label"
+                (onChange)="onTeamNumChange($event.value)" 
+                placeholder="Seleziona">
+            </p-dropdown>
+        </div>
+    </div>             
+        
     <div *ngIf="isModeEnabled" class="ui-grid-row">
         <div class="ui-grid-col-2">
             Modo:
@@ -168,37 +183,7 @@
             </p-radioButton>
         </div>
     </div>       
-
-    <div *ngIf="isManual" class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Livelli:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right">
-            <p-dropdown id="levelId" 
-                [options]="levelsCombobox" 
-                [(ngModel)]="selectedLevelCombobox"  
-                optionLabel="label"
-                (onChange)="onChange($event.value)"
-                placeholder="Eliminatorie">
-            </p-dropdown>
-        </div>
-    </div>             
-
-    <div *ngIf="!isManual && !isStandalone" class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Squadre:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right">
-            <p-dropdown id="teamsId" 
-                [options]="teamsCombobox" 
-                [(ngModel)]="selectedTeamsNumCombobox"  
-                optionLabel="label"
-                (onChange)="onTeamNumChange($event.value)" 
-                placeholder="Seleziona">>
-            </p-dropdown>
-        </div>
-    </div>             
-    
+ 
     <p-table [responsive]="true" 
             [value]="eliminatoryLevels" 
             selectionMode="single" 
@@ -220,7 +205,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>N°</th>
-                <th>Livello</th>
+                <th>Squadre</th>
                 <th>Nome</th>
             </tr>
         </ng-template>
@@ -228,7 +213,7 @@
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
                 <td>{{rowIndex + 1}}</td>
-                <td>{{rowData.level}}</td>
+                <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
                 <td>{{rowData.name}}</td>
             </tr>
         </ng-template>

@@ -76,7 +76,7 @@ export class EliminatoryListView extends AbstractListView {
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
 
-        this.prepareLevel();
+        // this.prepareLevel();
 
         this.isStandalone = false;
         
@@ -109,22 +109,22 @@ export class EliminatoryListView extends AbstractListView {
         // throw new Error("Method not implemented.");
     }
 
-    prepareLevel(): any {
+    // prepareLevel(): any {
         
-        if(this.selectedEliminatoryLevel.eliminatories.length == 0) {
-            if(this.selectedEliminatoryLevel.level > 0) {
-                let pow = Math.pow(2, this.selectedEliminatoryLevel.level);
-                for(let i=0; i<pow; i++){
-                    let e: Eliminatory = this.newEliminatory();
-                    this.selectedEliminatoryLevel.eliminatories.push(e);
-                }
-            } else {
-                let e: Eliminatory = this.newEliminatory();
-                this.selectedEliminatoryLevel.eliminatories.push(e);
-            }
-            this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
-        }
-    }
+    //     if(this.selectedEliminatoryLevel.eliminatories.length == 0) {
+    //         if(this.selectedEliminatoryLevel.level > 0) {
+    //             let pow = Math.pow(2, this.selectedEliminatoryLevel.level);
+    //             for(let i=0; i<pow; i++){
+    //                 let e: Eliminatory = this.newEliminatory();
+    //                 this.selectedEliminatoryLevel.eliminatories.push(e);
+    //             }
+    //         } else {
+    //             let e: Eliminatory = this.newEliminatory();
+    //             this.selectedEliminatoryLevel.eliminatories.push(e);
+    //         }
+    //         this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
+    //     }
+    // }
 
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
@@ -182,6 +182,7 @@ export class EliminatoryListView extends AbstractListView {
      * So prepare the elemintories list by using the smart put algorithm
      */
     private prepateAutoEliminatories(): any  {
+        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
 
         this.paddingRound();
 
@@ -227,8 +228,6 @@ export class EliminatoryListView extends AbstractListView {
             descClassification.push(c);
         }
 
-        let N: number = ascClassification.length;
-
         let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
 
         for(let i=0; i<ascClassification.length; i++) {
@@ -236,20 +235,20 @@ export class EliminatoryListView extends AbstractListView {
             let c1: Classification = ascClassification[i];
             let c2: Classification = descClassification[i];
 
-            let e: Eliminatory = this.newEliminatory();
+            let e: Eliminatory = this.eliminatories[i];
 
             let m: Meeting = this.newMeeting(c1, c2)
 
-            e.round.meetings.push(m);
+            e.round.meetings[0] = m;
             if(!this.selectedEliminatoryLevel.isOneway) {
                 let m: Meeting = this.newMeeting(c2, c1)
-                e.round.meetings.push(m);  
+                e.round.meetings[1] = m;  
             }
 
             sequenzialEliminatories.push(e);
         }
 
-        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
+        let N: number = ascClassification.length;
         let p: number=0;
         for (let step = N; step >= 1; step = step / 2) {
 
@@ -263,7 +262,6 @@ export class EliminatoryListView extends AbstractListView {
             }
         }
         console.log("Eliminatories.size=" + this.eliminatories.length);
-
     }
 
     private newMeeting(c2: Classification, c1: Classification): Meeting {
@@ -386,76 +384,7 @@ export class EliminatoryListView extends AbstractListView {
         };
     }
  
-    private newEliminatory(): Eliminatory {
-
-        let meetings = new Array<Meeting>();
-        let m = {id:this.tourneyService.getSequenceNumber()                    
-            ,name: ""
-            ,dateInMillis:this.selectedTourney.dateInMillis
-            ,date: this.selectedTourney.dateAsString
-            ,time: this.selectedTourney.timeAsString
-            ,address: this.selectedTourney.address
-            ,country: this.selectedTourney.country
-            ,team1: {}
-            ,team2: {}
-        };
-        meetings.push(m);
-
-        if(!this.isOneway) {
-            m = {id:this.tourneyService.getSequenceNumber()                    
-                ,name: ""
-                ,dateInMillis:this.selectedTourney.dateInMillis
-                ,date: this.selectedTourney.dateAsString
-                ,time: this.selectedTourney.timeAsString
-                ,address: this.selectedTourney.address
-                ,country: this.selectedTourney.country
-                ,team1: {}
-                ,team2: {}
-            };
-            meetings.push(m);
-        }
-
-        let e: Eliminatory = {
-            id: this.tourneyService.getSequenceNumber(),
-            round:{id: this.tourneyService.getSequenceNumber()
-                , name: ""
-                , type: RoundType.E
-                , isOneway: this.isOneway
-                , teams:[
-                     {id:0, teamName:""}
-                    ,{id:1, teamName:""}
-                ]
-                ,classification: []
-                ,meetings: meetings
-                ,matrix: []
-            },
-            tc1: {
-                id: this.tourneyService.getSequenceNumber(),
-                fromRound:   { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
-                    , round: { label: "", value: 0 } 
-                },
-                fromPlayoff: { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
-                    , round: { label: "", value: 0 } 
-                }
-            },
-            tc2: {
-                id: this.tourneyService.getSequenceNumber(),
-                fromRound:   { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
-                    , round: { label: "", value: 0 } 
-                },
-                fromPlayoff: { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
-                    , round: { label: "", value: 0 } 
-                }
-            }
-        };
-
-        return e;
-    }
-
+    
     onAutoEliminatoryRowSelect(event) {
         console.log("Entering onAutoEliminatoryRowSelect()");
 

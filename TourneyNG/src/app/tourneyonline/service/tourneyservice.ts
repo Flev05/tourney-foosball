@@ -89,9 +89,6 @@ export class TourneyService {
         let max: number = this.selectedTourney.teams.length;
     
         let all = {label: "Tutte", value: max};
-        if(this.selectedTourney.selectedTeamsNumCombobox==undefined) {
-            this.selectedTourney.selectedTeamsNumCombobox= all;
-        } 
         this.teamsCombobox = [];
         this.teamsCombobox.push(all);
         for(let i=min; i<=max; i++) {

@@ -9,6 +9,8 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { PhaseType, EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { RoundType } from 'app/tourneyonline/domain/roundType';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 @Component({
     templateUrl: './level-listview.html'
@@ -103,7 +105,7 @@ export class LevelListView extends AbstractListView {
         if(this.eliminatoryLevels.length==0) {
             for(let i=0; i<levelsCombobox.length; i++ ) {
                 let lcb = levelsCombobox[i];
-                let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, lcb.value);
+                let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, teamsNo);
                 this.eliminatoryLevels.push(el);
             }
             this.addOptionaLevel();  
@@ -120,7 +122,7 @@ export class LevelListView extends AbstractListView {
             let lcb : Combobox = levelsCombobox[i];
             while( lcb.value > maxCurrentLevel ) {                
                 let level = lcb.value
-                let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, level);
+                let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, teamsNo);
                 tempElimList.push(el);
                 i++;
                 lcb = levelsCombobox[i];
@@ -158,18 +160,94 @@ export class LevelListView extends AbstractListView {
         this.eliminatoryLevels.push(el);
     }
 
-    private newEliminatoryLevel(lcb: Combobox, level: number): EliminatoryLevel {
+    private newEliminatoryLevel(lcb: Combobox, teamsNo: number): EliminatoryLevel {
+
+        let els = new Array<Eliminatory>();
+        
+        for(let i=0; i<teamsNo; i++ ) {
+            let e: Eliminatory = this.newEliminatory();
+            els.push(e);
+        }
 
         let el : EliminatoryLevel = {
             id: lcb.value,
             name: lcb.label,
-            level: level,
+            level: lcb.value,
             isTopLevel: lcb.value == 0 ? true : false,
             isOneway: true,
-            eliminatories: []
+            eliminatories: els
         };
 
         return el;
+    }
+    private newEliminatory(): Eliminatory {
+
+        let meetings = new Array<Meeting>();
+        let m = {id:this.tourneyService.getSequenceNumber()                    
+            ,name: ""
+            ,dateInMillis:this.selectedTourney.dateInMillis
+            ,date: this.selectedTourney.dateAsString
+            ,time: this.selectedTourney.timeAsString
+            ,address: this.selectedTourney.address
+            ,country: this.selectedTourney.country
+            ,team1: {}
+            ,team2: {}
+        };
+        meetings.push(m);
+
+        if(!this.isOneway) {
+            m = {id:this.tourneyService.getSequenceNumber()                    
+                ,name: ""
+                ,dateInMillis:this.selectedTourney.dateInMillis
+                ,date: this.selectedTourney.dateAsString
+                ,time: this.selectedTourney.timeAsString
+                ,address: this.selectedTourney.address
+                ,country: this.selectedTourney.country
+                ,team1: {}
+                ,team2: {}
+            };
+            meetings.push(m);
+        }
+
+        let e: Eliminatory = {
+            id: this.tourneyService.getSequenceNumber(),
+            round:{id: this.tourneyService.getSequenceNumber()
+                , name: ""
+                , type: RoundType.E
+                , isOneway: this.isOneway == "true" ? true : false
+                , teams:[
+                     {id:0, teamName:""}
+                    ,{id:1, teamName:""}
+                ]
+                ,classification: []
+                ,meetings: meetings
+                ,matrix: []
+            },
+            tc1: {
+                id: this.tourneyService.getSequenceNumber(),
+                fromRound:   { id: this.tourneyService.getSequenceNumber()
+                    , position: { label: "1°", value: 0 }
+                    , round: { label: "", value: 0 } 
+                },
+                fromPlayoff: { id: this.tourneyService.getSequenceNumber()
+                    , position: { label: "1°", value: 0 }
+                    , round: { label: "", value: 0 } 
+                }
+            },
+            tc2: {
+                id: this.tourneyService.getSequenceNumber(),
+                fromRound:   { id: this.tourneyService.getSequenceNumber()
+                    , position: { label: "1°", value: 0 }
+                    , round: { label: "", value: 0 } 
+                },
+                fromPlayoff: { id: this.tourneyService.getSequenceNumber()
+                    , position: { label: "1°", value: 0 }
+                    , round: { label: "", value: 0 } 
+                }
+            }
+        };
+
+        return e;
     }
 
     onOnewayClick() {

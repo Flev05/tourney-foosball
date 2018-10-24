@@ -23,31 +23,20 @@ export class EliminatoryListView extends AbstractListView {
     static manualRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/manualdv';
 
     msgs: Message[] = [];
-    position1: number;
-    round1: string;
-    playoffName1: string;
-
-    position2: number;
-    round2: string;
-    playoffName2: string;
    
     selectedEliminatoryLevel: EliminatoryLevel;
 
-    eliminatoryLevel: number;
     eliminatoryMode: EliminatoryMode;
     
     selectedEliminatory: Eliminatory;
     eliminatories: Eliminatory[];
-    meetings: Meeting[];
-    selectedMeeting: Meeting;
 
     isPlayoff: boolean;
-    isStandalone: boolean;
-    isModeEnabled: boolean;
     isManual: boolean;
 
-    isOneway: boolean;
     isTopLevel: boolean;
+
+    isOneway: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -59,331 +48,19 @@ export class EliminatoryListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.updateRowGroupMetaData();
-    }
-
-    protected updateRowGroupMetaData() {
         this.tourneyService.prepareEliminatoriesComboBoxes();
-
+    
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
-
+    
         this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
-
-        this.isOneway = this.selectedEliminatoryLevel.isOneway ;
+    
+        this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true" : "false" ;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
-
+    
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
-
-        // this.prepareLevel();
-
-        this.isStandalone = false;
-        
-        if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
-            !this.containsPhase(PhaseType.P, this.selectedTourney.phases) && 
-            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
-        {
-            this.isModeEnabled = true;
-        } else {
-             this.isModeEnabled = false;
-        }
-
-        if( this.selectedTourney.phases.length == 1 && 
-                this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
-            this.isStandalone = true;
-            this.isManual = false;
-            this.processStandalone();
-        } else {
-            this.isManual = true;
-        }
-
-        if(!this.isManual && this.isStandalone) {
-            this.prepateAutoEliminatories();
-        } else {
-            this.prepateManualEliminatories();
-        }
     }
-
-    prepateManualEliminatories(): any {
-        // throw new Error("Method not implemented.");
-    }
-
-    // prepareLevel(): any {
-        
-    //     if(this.selectedEliminatoryLevel.eliminatories.length == 0) {
-    //         if(this.selectedEliminatoryLevel.level > 0) {
-    //             let pow = Math.pow(2, this.selectedEliminatoryLevel.level);
-    //             for(let i=0; i<pow; i++){
-    //                 let e: Eliminatory = this.newEliminatory();
-    //                 this.selectedEliminatoryLevel.eliminatories.push(e);
-    //             }
-    //         } else {
-    //             let e: Eliminatory = this.newEliminatory();
-    //             this.selectedEliminatoryLevel.eliminatories.push(e);
-    //         }
-    //         this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
-    //     }
-    // }
-
-    /**
-     * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
-     * no rounds and no playoffs
-     */
-    private processStandalone() {
-
-        let round: Round;
-        if(this.selectedTourney.rounds.length==0) {           
-            round = {id:this.tourneyService.getSequenceNumber()
-                , name:""
-                , type: RoundType.E
-                , teams: this.selectedTourney.teams
-                , meetings:[]
-                , classification:[]
-                , matrix:[]
-            };
-            this.selectedTourney.rounds.push(round);
-            for(let t of round.teams) {
-                let c: Classification = this.newClassification(t, 0)
-                round.classification.push(c);
-            }
-        } else {
-            this.alignToNewTeams();
-        }
-    } 
-
-    /**
-     * Verifies if there are new teams added to the tourney and aligns the
-     * teams and classifications in the each rounds
-     */
-    private alignToNewTeams() {
-        for (let r of this.selectedTourney.rounds) {
-            for (let t of this.selectedTourney.teams) {
-                let index: number = r.teams.indexOf(t);
-                if (index == -1) {
-                    r.teams.push(t);
-                    let c: Classification = this.newClassification(t, 0);
-                    r.classification.push(c);
-                }
-            }
-        }
-    }
-
-    /**
-     * For each round, adds the correct dummy classifictions, having points=-1, so the total number 
-     * of teams will be equal to the next neatest power of 2.
-     * 
-     * Sorts by firsts classificated teams in each round, then the second in each round, and so on.
-     * 
-     * Create a full list of each so sorted classificated teams and prepare 2 new lists:
-     * an ascendent list starting from the first to the half and a descendent list starting from 
-     * the ast team to the half.
-     * 
-     * So prepare the elemintories list by using the smart put algorithm
-     */
-    private prepateAutoEliminatories(): any  {
-        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
-
-        this.paddingRound();
-
-        let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
-
-            let orderedClassification: Array<Classification> = this.sortAsc(r.classification);
-
-            for(let j=0; j < orderedClassification.length; j++) {
-                let c: Classification = orderedClassification[j];
-                let key = "" + (j + 1);
-                if(!bestOfMap.has(key)) {
-                    let list: Array<Classification> = new Array<Classification>();
-                    bestOfMap.set(key, list);
-                }
-
-                let list: Array<Classification> = bestOfMap.get(key);
-
-                list.push(c);
-            }
-        }
-
-        let allSortedClassification: Array<Classification> = new Array<Classification>();
-        for(let key of bestOfMap.keys()) {
-            
-            let unsortedClassification: Array<Classification> = bestOfMap.get(key);
-
-            let sortedClassification: Array<Classification> = this.sortAsc(unsortedClassification);
-            bestOfMap.set(key, sortedClassification);
-
-            allSortedClassification = allSortedClassification.concat(sortedClassification);
-        }
-
-        let ascClassification: Array<Classification> = new Array<Classification>();
-        for(let i=0; i<allSortedClassification.length/2; i++) {
-            let c: Classification = allSortedClassification[i];
-            ascClassification.push(c);
-        }
-        let descClassification: Array<Classification> = new Array<Classification>();
-        for(let i=allSortedClassification.length-1; i>=allSortedClassification.length/2; i--) {
-            let c: Classification = allSortedClassification[i];
-            descClassification.push(c);
-        }
-
-        let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
-
-        for(let i=0; i<ascClassification.length; i++) {
-
-            let c1: Classification = ascClassification[i];
-            let c2: Classification = descClassification[i];
-
-            let e: Eliminatory = this.eliminatories[i];
-
-            let m: Meeting = this.newMeeting(c1, c2)
-
-            e.round.meetings[0] = m;
-            if(!this.selectedEliminatoryLevel.isOneway) {
-                let m: Meeting = this.newMeeting(c2, c1)
-                e.round.meetings[1] = m;  
-            }
-
-            sequenzialEliminatories.push(e);
-        }
-
-        let N: number = ascClassification.length;
-        let p: number=0;
-        for (let step = N; step >= 1; step = step / 2) {
-
-            for (let i = 0; i < N; i += step) {
-                if(this.eliminatories[i].round.meetings.length != 0) {
-                    continue;
-                }
-                let e = sequenzialEliminatories[p];
-                this.eliminatories[i] = e;
-                p++;
-            }
-        }
-        console.log("Eliminatories.size=" + this.eliminatories.length);
-    }
-
-    private newMeeting(c2: Classification, c1: Classification): Meeting {
-        return {
-        id: this.tourneyService.getSequenceNumber(),
-            name: c2.team.teamName + " - " + c1.team.teamName,
-            dateInMillis: this.selectedTourney.dateInMillis,
-            date: this.selectedTourney.dateAsString,
-            time: this.selectedTourney.timeAsString,
-            team1: c2.team,
-            team2: c1.team,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            score1: 0,
-            score2: 0
-        };
-    }
-
-    /**
-     * Padds each classification round to the next upper power of 2 teams by adding
-     * the dummies teams with points = -1
-     */
-    private paddingRound(): any {
-
-        let maxDeep: number = 0;
-        let N: number = 0;
-
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
-            N+=r.classification.length;
-
-            if(r.classification.length > maxDeep ) {
-                maxDeep = r.classification.length;
-            }
-        }
-
-        let diff = this.tourneyService.power2Padding(N) - N;
-        if( diff <= 0) {
-            return;
-        }
-
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
-            while(r.classification.length < maxDeep && diff > 0 ) {
-                let t: Team = {id: 0, teamName: ""};
-                let dummy = this.newClassification(t, -1);
-                r.classification.push(dummy);
-                diff--;
-            }
-        }
-
-        while( diff > 0 ) {
-            for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-                let r = this.selectedTourney.rounds[i];
-                let t: Team = {
-                    id: this.tourneyService.getSequenceNumber()
-                    ,teamName:""
-                };
-                let dummy = this.newClassification(t, -1);
-                r.classification.push(dummy);
-                diff--;
-                if(diff==0) {
-                    break;
-                }
-            }
-        }
-    }
-
-    sortAsc(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
-            if (t1.points > t2.points) {
-                return -1;
-            }
-        
-            if (t1.points < t2.points) {
-                return 1;
-            }
-        
-            if(t1.team.teamName > t2.team.teamName) {
-                return -1;
-            }
-            if(t1.team.teamName < t2.team.teamName) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        return sortedClassification;
-    }
-
-    sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
-            if (t1.points > t2.points) {
-                return 1;
-            }
-        
-            if (t1.points < t2.points) {
-                return -1;
-            }
-        
-            return 0;
-        });
-
-        return sortedClassification;
-    }
-
-    private newClassification(t: Team, initialPoints: number): Classification {
-        return {
-            id: this.tourneyService.getSequenceNumber(),
-            team: t,
-            points: initialPoints,
-            played: 0,
-            won: 0,
-            lost: 0,
-            penalty: 0,
-            goalsDone: 0,
-            goalsConceded: 0,
-            goalsDiff: 0
-        };
-    }
- 
     
     onAutoEliminatoryRowSelect(event) {
         console.log("Entering onAutoEliminatoryRowSelect()");
@@ -399,5 +76,47 @@ export class EliminatoryListView extends AbstractListView {
         this.router.navigate([EliminatoryListView.manualRedirect]);
     }
 
+    onOnewayClick() {
+        console.log("Entering onOnewayClick()");
+        this.selectedEliminatoryLevel.isOneway=true;
+
+        this.manageMeeting(true);
+    }
+
+    onRoundtripClick() {
+        console.log("Entering onRoundtripClick()");
+        this.selectedEliminatoryLevel.isOneway=false;
+        this.manageMeeting(false);
+    }
+
+    private manageMeeting(isOneway: boolean) {
+
+        for(let e of this.eliminatories) {
+            if(isOneway) {
+                if(e.round.meetings.length == 2) {
+                    e.round.meetings.splice(1, 1);
+                }
+            } else {
+                let m = this.newMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1);
+                e.round.meetings.push(m);
+            }
+        }
+    }
+    
+    private newMeeting(t1: Team, t2: Team): Meeting {
+        return {
+        id: this.tourneyService.getSequenceNumber(),
+            name: t1.teamName + " - " + t2.teamName,
+            dateInMillis: this.selectedTourney.dateInMillis,
+            date: this.selectedTourney.dateAsString,
+            time: this.selectedTourney.timeAsString,
+            team1: t1,
+            team2: t2,
+            address: this.selectedTourney.address,
+            country: this.selectedTourney.country,
+            score1: 0,
+            score2: 0
+        };
+    }
 }
 

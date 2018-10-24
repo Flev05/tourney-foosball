@@ -18,20 +18,13 @@
         per effettuare la fase finale ad eliminazione diretta propria nei tornei a squadre.
     </p> 
     <p>
-        La vista può richiedere fino 4 tipi di input
+        La vista può richiedere fino 2 tipi di input
     </p> 
     <ul>
-        <li>Turno</li>
         <li>Modo</li>
         <li>Squadre</li>
     </ul>         
  
-    <h5>Turno</h5>
-    <p>
-        Per Turno si intende quello di solo andata o andata e ritorno. Scegliere la tipologia 
-        di turno che intendente applicare per le vostre eliminazioni dirette, il sistema le userà 
-        poi per richiedere la configurazione delle date e luoghi degli incontri.
-    </p>
     <h5>Modo</h5>
     <p>
         Se il torneo contiene solo gironi ed eliminazioni dirette ma non contiene playoff, il sistema
@@ -128,27 +121,6 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Turni:
-        </div>
-        <div class="ui-grid-col-5" tooltipPosition="right"
-                pTooltip="Indicare se le eliminazioni dirette sono di solo andata o andata e ritorno">
-            <p-radioButton name="isOnewayGroupname" 
-                label="Solo andata" 
-                value="true" 
-                [(ngModel)]="isOneway"
-                (onClick)="onOnewayClick()">
-            </p-radioButton>
-            <p-radioButton name="isOnewayGroupname" 
-                label="Andata e ritorno" 
-                value="false" 
-                [(ngModel)]="isOneway"
-                (onClick)="onRoundtripClick()">
-            </p-radioButton>
-        </div>
-    </div>    
-        
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             Squadre:

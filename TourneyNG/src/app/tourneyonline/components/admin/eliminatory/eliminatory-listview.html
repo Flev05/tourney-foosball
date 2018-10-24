@@ -14,30 +14,44 @@
             
     <h4>Istruzioni</h4>
     <p> 
-        La vista contiene la lista di tutti i possibili incontri per il livello selezionato.
-        Se il livello non è il livello più alto, il primo nella lista di provenienza, allora
-        la vista contiene solo gli incontri da compilare con le date e le locazioni.
 
-        Se il livello è quello più alto, allora oltre alla configurazione di date e luoghi
-        degli incontri, dovete configurare gli accoppiamente di partenza delle eliminzioni dirette.
-        
+        In questa vista dovete effettuare le seguenti operazioni:
     </p> 
+    <ul>
+        <li>Scegliere il turno</li>
+        <li>Completare i livelli</li>
+    </ul>
+
+    <h5>Scegliere il turno</h5>
     <p>
-        In questa vista ci arrivate per 3 tipologia di eliminzione diretta che avete scelto per 
-        il vostro torneo:
+        Per Turno si intende quello di solo andata o andata e ritorno. Scegliere la tipologia 
+        di turno che intendente applicare per il corrente livello di eliminazione diretta, il sistema le userà 
+        poi per richiedere la configurazione delle date e luoghi degli incontri.
+    </p>
+
+    <h5>Completare i livelli</h5>
+    <p> 
+        Dovete selezionare tutte le righe, una per una, ed accedere alla corrispondente vista di dettaglio
+        dove inserirete i dati richiesti.
+    </p> 
+
+    <p>
+        In funzione del tipo di torneo e della scelta alla pagina precedente,
+        le righe nella vista possono essere di 3 tipi:
     </p>
     <ul>
         <li>Standalone</li>
         <li>Manuale</li>
         <li>Automatico</li>
-    </ul>         
+    </ul>
+
     <h5>Standalone</h5>
     <p>
         Il tipo Standalone si riferisce ad un torneo fatto di sole eliminazioni dirette in cui
         non ci sono ne gironi ne playoff. In questo caso il sistema propone in automatico, in funzione
-        del numero di squadre iscritte, il livello minimo di partenza.
+        del numero di squadre selezionate, il livello minimo di partenza.
         Se il numero di squadre non è una potenza di 2 - 4, 8, 16, ecc. - seleziona il livello minimo per contenerle
-        tutte e sceglie le squadre che devono lo spareggio, così come quelle che passano in automatico 
+        tutte e sceglie le squadre che devono fare lo spareggio, così come quelle che passano in automatico 
         al turno successivo, con un algoritmo standard. Potete cambiare queste scelte con le vostre preferenze.
     </p>
         
@@ -67,12 +81,14 @@
         in cui la prima classificata del primo girone affronta l'ultima classificata dell'ultimo girone, 
         la prima classificata del secondo girone affronta la ultima classificata del penultimo girone, ecc.
     </p>
-
-    <p> Dovete effettuare la configurazione per tutte le righe del livello. 
-        Così se il livello più alto del vostro torneo sono i sedicesimi di finale, dovete
-        configurare 16 righe, una per una, in cui inseritete le regole di passaggio del turno 
-        dai gironi, le date e i luoghi degli incontri.
+                
+    <p>
+        Solo per il livello più alto, il primo della lista, dovete aggiustare, se volete, la lista di accoppiamenti
+        generata in automatco dal sistema.
+    
+        Per le altre righe, se il torneo si sviluppa su più giorni, compilare le date e le locazioni.
     </p>
+
 
 </p-accordionTab>
 </p-accordion>
@@ -83,7 +99,28 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <p-table *ngIf="isStandalone || !isManual" 
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Turni:
+        </div>
+        <div class="ui-grid-col-5" tooltipPosition="right"
+                pTooltip="Indicare se le eliminazioni dirette sono di solo andata o andata e ritorno">
+            <p-radioButton name="isOnewayGroupname" 
+                label="Solo andata" 
+                value="true" 
+                [(ngModel)]="isOneway"
+                (onClick)="onOnewayClick()">
+            </p-radioButton>
+            <p-radioButton name="isOnewayGroupname" 
+                label="Andata e ritorno" 
+                value="false" 
+                [(ngModel)]="isOneway"
+                (onClick)="onRoundtripClick()">
+            </p-radioButton>
+        </div>
+    </div>    
+                
+    <p-table *ngIf="!isManual" 
             [responsive]="true" 
             [value]="eliminatories" 
             selectionMode="single" 

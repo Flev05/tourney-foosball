@@ -136,6 +136,7 @@ export class RoundDetailView extends AbstractDetailView {
         this.addTeamToMeetings(team);
 
         this.selectedRound.teams.push(team);
+        this.selectedRound.classification.push(team);
     }
 
     private addTeamToMeetings(team: Team) {
@@ -186,6 +187,10 @@ export class RoundDetailView extends AbstractDetailView {
         index = this.selectedRound.teams.indexOf(team);
         if (index > -1) {
             this.selectedRound.teams.splice(index, 1);
+        }
+        index = this.selectedRound.classification.indexOf(team);
+        if (index > -1) {
+            this.selectedRound.classification.splice(index, 1);
         }
     }
 

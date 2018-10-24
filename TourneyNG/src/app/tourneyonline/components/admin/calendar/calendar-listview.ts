@@ -41,7 +41,7 @@ export class CalendarListView extends AbstractListView {
     private loadAll() {
 
         this.selectedTourney = this.tourneyService.selectedTourney;
-        this.selectedEliminatoryLevel = this.selectedTourney.selectedEliminatoryLevel;
+        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.rounds = this.selectedTourney.rounds;
         this.playoffs = this.selectedTourney.playoffs;

@@ -23,7 +23,6 @@ export class ObjectiveListView extends AbstractListView {
     round2: string;
     playoffName2: string;
 
-    levels: Combobox[];
     objectiveLevel: number;
     isObjectiveLoaded: boolean = false;
 
@@ -58,7 +57,6 @@ export class ObjectiveListView extends AbstractListView {
     protected updateRowGroupMetaData() {
         this.tourneyService.prepareEliminatoriesComboBoxes();
 
-        this.levels = this.tourneyService.levelsCombobox;
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
         this.playoffs = this.tourneyService.playoffsCombobox;

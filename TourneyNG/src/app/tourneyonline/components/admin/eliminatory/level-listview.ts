@@ -429,7 +429,7 @@ export class LevelListView extends AbstractListView {
         let pow2 = Math.pow(2, lcb.value-1);
 
         for(let i=0; i<pow2; i++ ) {
-            let e: Eliminatory = this.newEliminatory();
+            let e: Eliminatory = this.newEliminatory(i+1);
             els.push(e);
         }
 
@@ -445,14 +445,14 @@ export class LevelListView extends AbstractListView {
         return el;
     }
 
-    private newEliminatory(): Eliminatory {
+    private newEliminatory(index : number): Eliminatory {
 
         let m: Meeting = this.newSmallMeeting();
 
         let e: Eliminatory = {
             id: this.tourneyService.getSequenceNumber(),
             round:{id: this.tourneyService.getSequenceNumber()
-                , name: ""
+                , name: "" + index
                 , type: RoundType.E
                 , isOneway: true
                 , teams:[

@@ -12,26 +12,37 @@
 <p-accordion>
 <p-accordionTab header="Istruzioni">                        
             
-    <h4>Istruzioni</h4>
+    <h3>Istruzioni</h3>
     <p> 
         La vista contiene l'elenco di tutti i livelli delle eliminazioni dirette minimo indispensabile
         per effettuare la fase finale ad eliminazione diretta propria nei tornei a squadre.
     </p> 
     <p>
-        La vista può richiedere fino 2 tipi di input
+        L'organizzatore, deve fornire fino a 2 tipi di informazioni: il numero di Squadre e, se il torneo prevede i gironi
+        e le eliminazioni dirette senza playoff, dovete inserire anche il Modo di selezione delle squadre di partenza 
+        delle eliminazioni dirette: Automatico o Manuale. 
     </p> 
     <ul>
-        <li>Modo</li>
         <li>Squadre</li>
+        <li>Modo</li>
     </ul>         
- 
-    <h5>Modo</h5>
+
+    <h4>Squadre</h4>
+    <p>
+        Scegliere il numero di squadre che incomincia le eliminazioni dirette, sia se proveniente dai gironi e playoff
+        sia se si incomincia direttamente dai gironi eliminatori.
+        In funzione di tale numero il sistema sceglie il livello minimo per contenerle tutte.
+    </p>    
+
+    <h4>Modo</h4>
     <p>
         Se il torneo contiene solo gironi ed eliminazioni dirette ma non contiene playoff, il sistema
-        vi da la possibilità di calcolare in automativo le regole di accopiamento iniziale nelle
-        eliminazioni dirette. Allo scopo, dovete scegliere tra 2 punti di una radio button:
-        Manuale e Automatico
+        vi da la possibilità di calcolare in automatico le regole di accopiamento iniziale nelle
+        eliminazioni dirette. 
+        Allo scopo, dovete scegliere tra 2 punti di una radio button: Manuale e Automatico
     </p>                
+
+    <h5>Manuale</h5>
     <p>La gestione Manuale, il default, permette qualsiasi configurazione delle regole del passaggio del turno, partendo
         dai risultati conseguiti nei gironi e playoff. Si possono cioè definire le regole per passare posizioni di classifica
         dei gironi alle eliminazioni dirette così come dai playoff se ci sono.
@@ -70,13 +81,14 @@
         ma il gestore può cambiare tutto a suo piacimento.
     </p>
 
-    <p>La gestione Automatico può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
+    <h5>Automatico</h5>
+    <p>La gestione in Automatico può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
         ma senza playoff. 
         
         In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
         alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale del numero totale di
         squadre che compongono il torneo, anche tutte, ci pensa il sistema a scegliere l'opportuno livello di eliminatorie iniziale
-        - sedicesimi, ottavi di finale, ecc. - preparare la lista delle squadre che passano automaticamente
+        - sedicesimi, ottavi, quarti, ecc. - preparare la lista delle squadre che passano automaticamente
         al turno successivo e quelle che devono invece fare un ulteriore turno di spareggio.
     </p>
     
@@ -98,12 +110,26 @@
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
     </ul>  
 
-    <h5>Squadre</h5>
-
     <p>
-        Scegliere in numero di squadre che deve essere allocato inizialmente nelle eliminazioni dirette, 
-        il sistema calcola il livello minimo per contenerle e prepare gli accoppiamenti per lo spareggio 
-        e le squadre che passa automaticamente.
+        Inoltre, se avete selezionato il modo Automatico, il sistema vi chiede di scegliere fra 3 possibili 
+        ordini iniziale per preparare gli occoppiamenti di partenza:        
+    </p>
+    <ul>
+        <li>Ordine di inserimento</li>
+        <li>Ordine alfabetico</li>
+        <li>Sorteggio</li>
+    </ul>         
+    <h5>Ordine di inserimento</h5>
+    <p>
+        Il sistema utilizzerà l'ordine delle squadre così come inserito.
+    </p>
+    <h5>Ordine alfabetico</h5>
+    <p>
+        Il sistema effettua un ordinamento alfabetico delle squadre inserite
+    </p>
+    <h5>Sorteggio</h5>
+    <p>
+        Il sistema effettua un ordinamento casuale sulle squadre inserite, quindi si ha un vero e proprio sorteggio.
     </p>
 
     <p>
@@ -154,6 +180,29 @@
                 [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
             </p-radioButton>
         </div>
+
+        <div *ngIf="!isManual" class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Ordinamento:
+            </div>
+            <div class="ui-grid-col-4" tooltipPosition="right"
+                pTooltip="Scegliere il tipo di ordinamento delle squadre. Si veda le istruzioni per maggiori dettagli">
+            <p-radioButton name="sortmodeGroupname" 
+                label="Originale" 
+                value="original" 
+                [(ngModel)]="teamSortType" (onClick)="onOriginalClick()">
+            </p-radioButton>
+            <p-radioButton name="sortmodeGroupname" 
+                label="Alfabetico" 
+                value="alphabetical" 
+                [(ngModel)]="teamSortType" (onClick)="onAlphabeticalClick()">
+            </p-radioButton>
+            <p-radioButton name="eliminatoryModeGroupname" 
+                label="Sorteggio" 
+                value="random" 
+                [(ngModel)]="teamSortType" (onClick)="onRandomClick()">
+            </p-radioButton>
+        </div>        
     </div>       
  
     <p-table [responsive]="true" 

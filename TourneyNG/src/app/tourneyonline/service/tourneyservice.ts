@@ -61,6 +61,8 @@ export class TourneyService {
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
 
+    originalTeams: Team[];
+
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;

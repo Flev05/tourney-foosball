@@ -11,7 +11,7 @@ import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
+import { EliminatoryMode } from '../../../domain/enumerations';
 import { Team } from 'app/tourneyonline/domain/team';
 
 

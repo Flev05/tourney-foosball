@@ -8,9 +8,9 @@ import { Player } from './player';
 
 import { Discipline } from './discipline';
 
-import { TourneyType } from './tourneyType';
+import { TourneyType } from './enumerations';
 import { Final } from './final';
-import { PhaseType, EliminatoryMode } from './phase-type';
+import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 

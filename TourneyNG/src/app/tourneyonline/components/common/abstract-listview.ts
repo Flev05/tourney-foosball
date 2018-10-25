@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TourneyService } from '../../service/tourneyservice';
 import { AbstractView } from './abstract-view';
-import { PhaseType } from 'app/tourneyonline/domain/phase-type';
+import { PhaseType } from '../../domain/enumerations';
  
 export abstract class AbstractListView extends AbstractView {
 

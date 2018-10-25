@@ -9,9 +9,8 @@ import { Tourney } from '../../../domain/tourney';
 import { TourneyService } from '../../../service/tourneyservice';
 import { CountryService } from '../../../service/countryservice';
 import { Discipline } from '../../../domain/discipline';
-import { TourneyType } from '../../../domain/tourneyType';
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode } from 'app/tourneyonline/domain/phase-type';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType } from '../../../domain/enumerations';
 
 @Component({
     templateUrl: './tourney-detailview.html',

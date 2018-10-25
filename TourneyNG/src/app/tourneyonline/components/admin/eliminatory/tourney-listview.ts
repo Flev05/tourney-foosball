@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from '../../../service/tourneyservice';
-import { PhaseType } from 'app/tourneyonline/domain/phase-type';
+import { PhaseType } from '../../../domain/enumerations';
 
 const redirect = '/admineliminatory/levelLv';
 

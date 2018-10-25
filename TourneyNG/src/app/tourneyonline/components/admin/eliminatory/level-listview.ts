@@ -7,9 +7,9 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { PhaseType, EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
+import { PhaseType, EliminatoryMode, TeamSortType } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { RoundType } from 'app/tourneyonline/domain/roundType';
+import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
@@ -103,15 +103,21 @@ export class LevelListView extends AbstractListView {
                 , matrix:[]
             };
             this.selectedTourney.rounds.push(round);
-            for(let t of round.teams) {
-                let c: Classification = this.newClassification(t, 0)
-                round.classification.push(c);
-            }
+            this.prepareDefaultClassification(round);
         } else {
             this.alignToNewTeams();
         }
     } 
     
+    private prepareDefaultClassification(round: Round) {
+        if(round.classification.length == 0) {
+            for (let t of round.teams) {
+                let c: Classification = this.newClassification(t, 0);
+                round.classification.push(c);
+            }
+        }
+    }
+
     /**
      * Verifies if there are new teams added to the tourney and aligns the
      * teams and classifications in the each rounds
@@ -165,7 +171,7 @@ export class LevelListView extends AbstractListView {
         for(let i=0; i<this.selectedTourney.rounds.length; i++) {
             let r = this.selectedTourney.rounds[i];
 
-            let orderedClassification: Array<Classification> = this.sortAsc(r.classification);
+            let orderedClassification: Array<Classification> = this.teamSort(r.classification);
 
             for(let j=0; j < orderedClassification.length; j++) {
                 let c: Classification = orderedClassification[j];
@@ -186,7 +192,7 @@ export class LevelListView extends AbstractListView {
             
             let unsortedClassification: Array<Classification> = bestOfMap.get(key);
 
-            let sortedClassification: Array<Classification> = this.sortAsc(unsortedClassification);
+            let sortedClassification: Array<Classification> = this.teamSort(unsortedClassification);
             bestOfMap.set(key, sortedClassification);
 
             allSortedClassification = allSortedClassification.concat(sortedClassification);
@@ -311,7 +317,14 @@ export class LevelListView extends AbstractListView {
         }
     }
 
-    sortAsc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+    /**
+     * Team ordering, first sort the teams on the points basis so the dummy team having points=-1
+     * will be the last in the team list. Next, order the team list in function of team sort type 
+     * chosen by the user
+     * 
+     * @param unsortedClassification the unsorted team list
+     */
+    teamSort(unsortedClassification: Array<Classification> ): Array<Classification>  {
         var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
             if (t1.points > t2.points) {
                 return -1;
@@ -321,11 +334,32 @@ export class LevelListView extends AbstractListView {
                 return 1;
             }
         
-            if(t1.team.teamName > t2.team.teamName) {
+            return 0;
+        });
+
+        if( this.selectedEliminatoryLevel.teamSortType=TeamSortType.O) {
+            return sortedClassification;
+        }
+        if( this.selectedEliminatoryLevel.teamSortType=TeamSortType.R) {
+            sortedClassification = sortedClassification.sort((t1, t2) =>{
+                let rand = Math.random();
+                if(rand < 0.33) {
+                    return 0;
+                }
+                if(rand > 0.66) {
+                    return 1;
+                }
                 return -1;
+            });
+            return sortedClassification;
+        }
+
+        sortedClassification = sortedClassification.sort((t1, t2) =>{
+            if(t1.team.teamName > t2.team.teamName) {
+                return 1;
             }
             if(t1.team.teamName < t2.team.teamName) {
-                return 1;
+                return -1;
             }
 
             return 0;
@@ -434,12 +468,13 @@ export class LevelListView extends AbstractListView {
         }
 
         let el : EliminatoryLevel = {
-            id: lcb.value,
-            name: lcb.label,
-            level: lcb.value,
-            isTopLevel: top == 0 ? true : false,
-            isOneway: true,
-            eliminatories: els
+              id: lcb.value
+            , name: lcb.label
+            , level: lcb.value
+            , isTopLevel: top == 0 ? true : false
+            , isOneway: true
+            , eliminatories: els
+            , teamSortType:TeamSortType.O
         };
 
         return el;
@@ -516,6 +551,12 @@ export class LevelListView extends AbstractListView {
         this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
         this.isManual = false;
         this.tourneyService.availableTeams = [];
+
+        for(let r of this.selectedTourney.rounds) {
+            this.prepareDefaultClassification(r);
+        }
+
+        this.prepateAutoEliminatories();
     }
  
     onTeamNumChange(event) {
@@ -524,6 +565,21 @@ export class LevelListView extends AbstractListView {
         let N: number = this.selectedTeamsNumCombobox.value;
         
         this.prepareEliminatoryLevels(N);
+    }
+
+    onOriginalClick() {
+        console.log("Entering onOriginalClick()");
+        this.selectedEliminatoryLevel.teamSortType = TeamSortType.O;
+    }
+
+    onAlphabeticalClick() {
+        console.log("Entering onAlphabeticalClick()");
+        this.selectedEliminatoryLevel.teamSortType = TeamSortType.A;
+    }
+
+    onRandomClick() {
+        console.log("Entering onRandomClick()");
+        this.selectedEliminatoryLevel.teamSortType = TeamSortType.R;
     }
 }
 

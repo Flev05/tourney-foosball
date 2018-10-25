@@ -4,15 +4,11 @@ import { Location } from '@angular/common';
 
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import {Message} from 'app/components/common/api';
+import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { RoundType } from 'app/tourneyonline/domain/roundType';
-import { Classification } from 'app/tourneyonline/domain/classification';
 import { Team } from 'app/tourneyonline/domain/team';
-import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { PhaseType, EliminatoryMode } from 'app/tourneyonline/domain/phase-type';
+import { PhaseType, EliminatoryMode } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Component({

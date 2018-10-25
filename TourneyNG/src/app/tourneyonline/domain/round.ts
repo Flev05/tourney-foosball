@@ -1,17 +1,17 @@
 import { Classification } from './classification';
 import { Team } from './team';
 import { Meeting } from './meeting';
-import { RoundType } from './roundType';
+import { RoundType } from './enumerations';
 import { Matrix } from './matrix';
 
 export interface Round {
     id: number;
     name: string;
     type: RoundType;
-
     isOneway?: boolean;
 
     teams?:  Team[];
+
     meetings?: Meeting[];
     classification?: Classification[];
     matrix?: Matrix[];

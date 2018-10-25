@@ -8,7 +8,7 @@ import {Message} from 'app/components/common/api';
 import { ObjectiveConfig } from 'app/tourneyonline/domain/objective-config';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Final } from 'app/tourneyonline/domain/final';
-import { PhaseType } from 'app/tourneyonline/domain/phase-type';
+import { PhaseType } from '../../../domain/enumerations';
 
 @Component({
     templateUrl: './objective-listview.html'

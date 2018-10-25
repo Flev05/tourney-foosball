@@ -10,7 +10,7 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { CountryService } from '../../../service/countryservice';
 import { Discipline } from '../../../domain/discipline';
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType } from '../../../domain/enumerations';
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -87,7 +87,8 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.phases.push(PhaseType.E);   
             
             this.selectedTourney.eliminatoryMode = EliminatoryMode.M
-
+            this.selectedTourney.teamSortType = TeamSortType.O;
+            
         } else {
             this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
         }

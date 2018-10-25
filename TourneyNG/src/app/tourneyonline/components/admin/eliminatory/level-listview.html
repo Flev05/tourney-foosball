@@ -180,13 +180,14 @@
                 [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
             </p-radioButton>
         </div>
+    </div>       
 
-        <div *ngIf="!isManual" class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Ordinamento:
-            </div>
-            <div class="ui-grid-col-4" tooltipPosition="right"
-                pTooltip="Scegliere il tipo di ordinamento delle squadre. Si veda le istruzioni per maggiori dettagli">
+    <div *ngIf="!isManual" class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Ordinamento:
+        </div>
+        <div class="ui-grid-col-6" tooltipPosition="right"
+            pTooltip="Scegliere il tipo di ordinamento delle squadre. Si veda le istruzioni per maggiori dettagli">
             <p-radioButton name="sortmodeGroupname" 
                 label="Originale" 
                 value="original" 
@@ -202,7 +203,7 @@
                 value="random" 
                 [(ngModel)]="teamSortType" (onClick)="onRandomClick()">
             </p-radioButton>
-        </div>        
+        </div> 
     </div>       
  
     <p-table [responsive]="true" 

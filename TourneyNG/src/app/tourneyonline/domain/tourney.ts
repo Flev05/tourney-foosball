@@ -8,7 +8,7 @@ import { Player } from './player';
 
 import { Discipline } from './discipline';
 
-import { TourneyType } from './enumerations';
+import { TourneyType, TeamSortType } from './enumerations';
 import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
@@ -45,6 +45,7 @@ export interface Tourney {
     playoffs?: Playoff[];
 
     eliminatoryLevels?: Array<EliminatoryLevel>;
+    teamSortType?: TeamSortType;
 
     eliminatoryMode?: EliminatoryMode;
 

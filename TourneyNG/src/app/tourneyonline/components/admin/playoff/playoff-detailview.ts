@@ -8,7 +8,7 @@ import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { RoundType } from 'app/tourneyonline/domain/roundType';
+import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './playoff-detailview.html'

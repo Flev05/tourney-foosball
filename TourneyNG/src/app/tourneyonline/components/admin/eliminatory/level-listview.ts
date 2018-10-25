@@ -36,6 +36,7 @@ export class LevelListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
+    teamSortType: TeamSortType;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -337,10 +338,10 @@ export class LevelListView extends AbstractListView {
             return 0;
         });
 
-        if( this.selectedEliminatoryLevel.teamSortType=TeamSortType.O) {
+        if( this.selectedTourney.teamSortType=TeamSortType.O) {
             return sortedClassification;
         }
-        if( this.selectedEliminatoryLevel.teamSortType=TeamSortType.R) {
+        if( this.selectedTourney.teamSortType=TeamSortType.R) {
             sortedClassification = sortedClassification.sort((t1, t2) =>{
                 let rand = Math.random();
                 if(rand < 0.33) {
@@ -474,7 +475,6 @@ export class LevelListView extends AbstractListView {
             , isTopLevel: top == 0 ? true : false
             , isOneway: true
             , eliminatories: els
-            , teamSortType:TeamSortType.O
         };
 
         return el;
@@ -569,17 +569,17 @@ export class LevelListView extends AbstractListView {
 
     onOriginalClick() {
         console.log("Entering onOriginalClick()");
-        this.selectedEliminatoryLevel.teamSortType = TeamSortType.O;
+        this.selectedTourney.teamSortType = TeamSortType.O;
     }
 
     onAlphabeticalClick() {
         console.log("Entering onAlphabeticalClick()");
-        this.selectedEliminatoryLevel.teamSortType = TeamSortType.A;
+        this.selectedTourney.teamSortType = TeamSortType.A;
     }
 
     onRandomClick() {
         console.log("Entering onRandomClick()");
-        this.selectedEliminatoryLevel.teamSortType = TeamSortType.R;
+        this.selectedTourney.teamSortType = TeamSortType.R;
     }
 }
 

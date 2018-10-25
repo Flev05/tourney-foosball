@@ -8,7 +8,5 @@ export class EliminatoryLevel  {
     isTopLevel: boolean;
     isOneway: boolean;
 
-    teamSortType: TeamSortType;
-
     eliminatories: Array<Eliminatory>;
 }

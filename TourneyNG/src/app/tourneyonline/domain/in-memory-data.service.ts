@@ -1,5 +1,5 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
- import {TourneyType} from './enumerations';
+ import {TourneyType, TeamSortType} from './enumerations';
 import { RoundType } from './enumerations';
 import { PhaseType, EliminatoryMode, AccessMode } from './enumerations';
 import { Team } from './team';
@@ -166,6 +166,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
         ,phases: [PhaseType.R, PhaseType.P, PhaseType.E]
         ,eliminatoryMode:EliminatoryMode.M
+        ,teamSortType: TeamSortType.O
 
         ,raceDuration:90
 
@@ -443,6 +444,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
           ,phases: [PhaseType.R]
           ,eliminatoryMode:EliminatoryMode.M
+          ,teamSortType: TeamSortType.O
 
           ,raceDuration:90
 

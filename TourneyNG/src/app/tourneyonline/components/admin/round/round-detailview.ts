@@ -6,13 +6,13 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import {Message} from '../../../../components/common/api';
 
 import { Round } from '../../../domain/round';
-import { RoundType } from '../../../domain/roundType';
 import { Team } from '../../../domain/team';
 
 import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './round-detailview.html',

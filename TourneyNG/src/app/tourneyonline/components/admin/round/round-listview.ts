@@ -6,7 +6,7 @@ import { Tourney } from '../../../domain/tourney';
 import { Round } from '../../../domain/round';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
-import { RoundType } from 'app/tourneyonline/domain/roundType';
+import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
 const redirect: string = "adminround/lv/dv";
 

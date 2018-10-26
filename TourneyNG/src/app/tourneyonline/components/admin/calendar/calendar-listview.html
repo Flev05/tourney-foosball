@@ -78,37 +78,6 @@
             </ng-template>        
         </p-table>
     </p-tabPanel>
-    <p-tabPanel header="Eliminatorie">    
-        <p-table [responsive]="true" 
-            [value]="eliminatories" 
-            selectionMode="single"
-            [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onEliminatorySelect($event)" >
-    
-            <ng-template pTemplate="colgroup">
-                <colgroup>
-                    <col style="width: auto;">
-                    <col style="width: auto;">
-                </colgroup>
-            </ng-template>
-
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Nome</th>
-                    <th>Livello</th>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr  [pSelectableRow]="rowData">
-                    <td>{{rowData.round.name}}</td>
-                    <td>{{rowData.level}}</td>
-                </tr>
-            </ng-template>        
-        </p-table>
-    </p-tabPanel>
 </p-tabView>
-
-        
 </div>
     

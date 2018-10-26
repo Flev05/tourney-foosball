@@ -53,7 +53,7 @@ export class TourneyDetailView implements OnInit {
 
         this.selectedTourney = this.tourneyService.selectedTourney;
 
-        this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
+        this.tourneyDate = this.selectedTourney.datetime;
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),

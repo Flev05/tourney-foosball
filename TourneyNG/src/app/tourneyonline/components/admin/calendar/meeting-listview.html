@@ -34,8 +34,7 @@
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: auto;">
-                <col style="width: 25mm;">
-                <col style="width: 25mm;">
+                <col style="width: 37mm;">
                 <col style="width: auto;">
             </colgroup>
         </ng-template>
@@ -43,8 +42,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Nome</th>
-                <th>Data</th>
-                <th>Ora</th>
+                <th>Data ora</th>
                 <th>Indirizzo</th>
             </tr>    
         </ng-template>
@@ -52,8 +50,7 @@
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr  [pSelectableRow]="rowData">
                 <td>{{rowData.name}}</td>
-                <td>{{rowData.date}}</td>
-                <td>{{rowData.time}}</td>
+                <td>{{rowData.datetime | date: 'dd/MM/y HH:mm'}}</td>
                 <td>{{rowData.address}}</td>
             </tr>
         </ng-template>

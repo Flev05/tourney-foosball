@@ -67,8 +67,7 @@ export class CalendarDetailView implements OnInit {
                 this.rows[row].teamName1 = m.team1.teamName;
                 this.rows[row].teamName2 = m.team2.teamName;
                 
-                this.rows[row].date = m.date;    
-                this.rows[row].time = m.time;    
+                this.rows[row].date = m.datetime;    
                 this.rows[row].address = m.address;    
 
                 this.rows[row].score1 = m.score1;

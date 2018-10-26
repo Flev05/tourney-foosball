@@ -103,9 +103,7 @@ export class EliminatoryListView extends AbstractListView {
         return {
         id: this.tourneyService.getSequenceNumber(),
             name: t1.teamName + " - " + t2.teamName,
-            dateInMillis: this.selectedTourney.dateInMillis,
-            date: this.selectedTourney.dateAsString,
-            time: this.selectedTourney.timeAsString,
+            datetime: this.selectedTourney.datetime,
             team1: t1,
             team2: t2,
             address: this.selectedTourney.address,

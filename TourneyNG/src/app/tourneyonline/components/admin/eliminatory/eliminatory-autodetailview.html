@@ -57,27 +57,18 @@
 
     <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
-            <div *ngIf="isTopLevel">
-                <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
-                        [responsive]="true"
-                        dragdrop="true" 
-                        dragdropScope="teams" 
-                        [sourceStyle]="{'height':'200px'}" 
-                        [targetStyle]="{'height':'100px'}"
-                        (onMoveToTarget)="onMoveToTarget($event.items)"
-                        (onMoveToSource)="onMoveToSource($event.items)"
-                        (onMoveAllToTarget)="onMoveAllToTarget($event.items)"
-                        (onMoveAllToSource)="onMoveAllToSource($event.items)">
-                    <ng-template let-team pTemplate="item">
-                        <div class="ui-helper-clearfix">
-                            <div>{{team.teamName}}</div>
-                        </div>
-                    </ng-template>
-                </p-pickList>                       
-            </div>            
-
             <h4>Andata</h4>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Data e ora:
+                </div>
+                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
+                    <p-calendar formControlName="meetingDate1" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                    </p-calendar>
+                </div>
+            </div>
+
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
                     Via:
@@ -118,7 +109,17 @@
             </div>                  
   
             <h4 *ngIf="!selectedEliminatoryLevel.isOneway" >Ritorno</h4>
-            
+
+            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Data e ora:
+                </div>
+                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
+                    <p-calendar formControlName="meetingDate2" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                    </p-calendar>
+                </div>
+            </div>
+                
             <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
                 <div class="ui-grid-col-3">
                     Via:
@@ -157,7 +158,6 @@
                     {{fullAddress2}}
                 </div>
             </div>                  
-
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -167,77 +167,6 @@
                 </div>
             </div>
         </div>
-
-    </form>   
-
-    <p-dialog header="Eliminatorie" [(visible)]="displayDialogConfig" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
-            <div class="ui-g ui-fluid" *ngIf="row">
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="positionId">Classificata</label>
-                    </div>
-                    <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.tc1.fromRound.position" optionLabel="label"></p-dropdown>
-                </div>
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="roundId">Girone</label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.tc1.fromRound.round" 
-                        optionLabel="label" 
-                        placeholder="Selezionare">
-                    </p-dropdown>
-                    </div>
-                </div>
-                <div *ngIf="isPlayoff" class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="playoffId">Playoff</label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.round" 
-                        optionLabel="label"
-                        placeholder="Selezionare">
-                    </p-dropdown>
-                    </div>
-                </div>
-            </div>       
-            Vs         
-            <div class="ui-g ui-fluid" *ngIf="row">
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="vin">Classificata</label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position" optionLabel="label"></p-dropdown>
-                    </div>
-                </div>
-                <div class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="round">Girone</label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.round" 
-                        optionLabel="label"
-                        placeholder="Selezionare">
-                    </p-dropdown>
-                    </div>
-                </div>
-                <div *ngIf="isPlayoff" class="ui-g-12">
-                    <div class="ui-g-4">
-                        <label for="playoff">Playoff</label>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.round" 
-                        optionLabel="label"
-                        placeholder="Selezionare">
-                    </p-dropdown>
-                    </div>
-                </div>
-            </div>       
-    
-            <div class="ui-dialog-buttonpane ui-helper-clearfix">
-                <button type="button" pButton icon="fa fa-check" (click)="doneConfig()" label="Fatto"></button>
-            </div>
-        </p-dialog>
+    </form>
 </div>
  

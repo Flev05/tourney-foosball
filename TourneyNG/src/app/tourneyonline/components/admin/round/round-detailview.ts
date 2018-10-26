@@ -58,8 +58,8 @@ export class RoundDetailView extends AbstractDetailView {
         }
         this.availableTeams = [];
 
-        for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-            let team = this.selectedTourney.teams[i];
+        for(let k=0; k<this.selectedTourney.teams.length; k++ ) {
+            let team = this.selectedTourney.teams[k];
         
             let found: boolean = false;
             for(let i=0; i<this.selectedTourney.rounds.length; i++ ) {
@@ -155,9 +155,7 @@ export class RoundDetailView extends AbstractDetailView {
         let m : Meeting = {
             id: this.tourneyService.getSequenceNumber(),
             name: t.teamName + " - " + team.teamName,
-            dateInMillis : this.selectedTourney.dateInMillis,
-            date: this.selectedTourney.dateAsString,
-            time: this.selectedTourney.timeAsString,
+            datetime: this.selectedTourney.datetime,
             address: this.selectedTourney.address,
             country: this.selectedTourney.country,
             team1: t,

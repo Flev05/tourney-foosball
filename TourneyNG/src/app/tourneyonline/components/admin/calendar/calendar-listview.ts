@@ -31,7 +31,6 @@ export class CalendarListView extends AbstractListView {
 
     rounds: Round[];
     playoffs: Playoff[];
-    eliminatories: Eliminatory[];
 
     ngOnInit() {
         super.ngOnInit();
@@ -45,7 +44,6 @@ export class CalendarListView extends AbstractListView {
 
         this.rounds = this.selectedTourney.rounds;
         this.playoffs = this.selectedTourney.playoffs;
-        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
     }
 
     onRoundSelect(event) {

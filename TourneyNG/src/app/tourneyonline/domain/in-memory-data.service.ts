@@ -4,7 +4,7 @@ import { RoundType } from './enumerations';
 import { PhaseType, EliminatoryMode, AccessMode } from './enumerations';
 import { Team } from './team';
 import { Round } from 'app/tourneyonline/domain/round';
-
+import { Meeting } from './meeting';
 
 const  teams1 = [
   {id:1,teamName:"SALLUC", address:"Via Roma, 110"
@@ -132,13 +132,15 @@ export class InMemoryDataService implements InMemoryDbService {
 
   prepareDefaultRounds(teams : Team[]) : Round[] {
 
+    let meetings = this.prepareDefaultMeeting(teams);
+
     let round : Round = {
       id: 1
       , name: "Mono Round"
       , type: RoundType.R
       , isOneway: true
       , teams: teams
-      , meetings: []
+      , meetings: meetings
       , classification: []
       , matrix: []
     };
@@ -150,12 +152,38 @@ export class InMemoryDataService implements InMemoryDbService {
     return rounds;
   }
  
+  private prepareDefaultMeeting(teams : Array<Team>) : Array<Meeting> {
+
+    let meetings = new Array<Meeting>();
+
+    for(let i=0; i<teams.length; i++) {
+
+      let t1 = teams[i];
+
+      for(let j=i+1; j < teams.length; j++) {
+        let t2 = teams[j];
+        let m: Meeting = {id: i+j
+          , name: t1.teamName + " - " + t2.teamName
+          , datetime: new Date(2018, 11, 22, 21, 0)
+          , address: t1.address
+          , country: t1.country
+          , team1: t1
+          , team2: t2
+          , score1: 0
+          , score2: 0
+        };
+
+        meetings.push(m);
+      }
+    }
+
+    return meetings;
+  }
+
   createDb() {
       const tourneys = [
         {id: 1, tourneyName: 'CSI Open A 2017'
-        ,dateInMillis: 1543606200000
-        ,dateAsString: "30/11/2018"
-        ,timeAsString: "20:30:00"
+        ,datetime: new Date(2018, 11, 24, 10, 33)
         ,address: 'Via Roma, 110'
         ,country: {id:1, city: "Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
         ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
@@ -299,9 +327,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ,meetings:[{
                   id: 1,
                   name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-                  dateInMillis : 1543606200000,
-                  date: "30/11/2018",
-                  time: "20:30:00",
+                  datetime: new Date(2018, 11, 24, 10, 33),
                   address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
                   country: {id:1, city: "ZIBIDO SAN GIACOMO"},
                   team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
@@ -310,9 +336,7 @@ export class InMemoryDataService implements InMemoryDbService {
               ,{
                   id: 2,
                   name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-                  dateInMillis : 1543606200000,
-                  date: "30/11/2018",
-                  time: "20:30:00",
+                  datetime: new Date(2018, 11, 30, 15, 0),
                   address: "VIA ZANZOTTERA 32 20153 MILANO MI",
                   country: {id:1, city: "ORIGGIO"},
                   team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
@@ -330,9 +354,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ,meetings:[{
                 id: 1,
                 name:  "SOLAROSPORT - AURORA PREGNANA BLU",
-                dateInMillis : 1543606200000,
-                date: "30/11/2018",
-                time: "20:30:00",
+                datetime: new Date(2018, 11, 30, 15, 0),
                 address: "VIA S.PAOLO, 6 20020 SOLARO MI",
                 country: {id:1, city: "SOLARO"},
                 team1: {id:4, teamName: ""},
@@ -341,9 +363,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ,{
                 id: 2,
                 name:  "AURORA PREGNANA BLU - SOLAROSPORT",
-                dateInMillis : 1543606200000,
-                date: "30/11/2018",
-                time: "20:30:00",
+                datetime: new Date(2018, 11, 30, 15, 0),
                 address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
                 country: {id:1, city: "PREGNANA"},
                 team1: {id:1, teamName: "AURORA PREGNANA BLU"},
@@ -362,9 +382,7 @@ export class InMemoryDataService implements InMemoryDbService {
               ,meetings:[{
                     id: 1,
                     name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-                    dateInMillis : 1543606200000,
-                    date: "30/11/2018",
-                    time: "20:30:00",
+                    datetime: new Date(2018, 11, 30, 15, 0),
                     address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
                     country: {id:1, city: "ZIBIDO SAN GIACOMO"},
                     team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
@@ -373,9 +391,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 ,{
                     id: 2,
                     name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-                    dateInMillis : 1543606200000,
-                    date: "30/11/2018",
-                    time: "20:30:00",
+                    datetime: new Date(2018, 11, 30, 15, 0),
                     address: "VIA ZANZOTTERA 32 20153 MILANO MI",
                     country: {id:1, city: "ORIGGIO"},
                     team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
@@ -398,9 +414,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ,meetings:[{
                   id: 1,
                   name:  "SOLAROSPORT - AURORA PREGNANA BLU",
-                  dateInMillis : 1543606200000,
-                  date: "30/11/2018",
-                  time: "20:30:00",
+                  datetime: new Date(2018, 11, 30, 15, 0),
                   address: "VIA S.PAOLO, 6 - 20020 SOLARO MI",
                   country: {id:1, city: "SOLARO"},
                   team1: {id:6, teamName: "SOLAROSPORT"},
@@ -409,9 +423,7 @@ export class InMemoryDataService implements InMemoryDbService {
               ,{
                   id: 2,
                   name:  "AURORA PREGNANA BLU - SOLAROSPORT",
-                  dateInMillis : 1543606200000,
-                  date: "30/11/2018",
-                  time: "20:30:00",
+                  datetime: new Date(2018, 11, 30, 15, 0),
                   address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
                   country: {id:1, city: "PREGNANA"},
                   team1: {id:3, teamName: "AURORA PREGNANA BLU"},
@@ -431,9 +443,7 @@ export class InMemoryDataService implements InMemoryDbService {
         ,objectives:[]
       }
       ,{id: 2, tourneyName: 'Preliminari 2018/2019'
-          ,dateInMillis: 1543606200000
-          ,dateAsString: "24/09/2018"
-          ,timeAsString: "20:30:00"
+          ,datetime: new Date(2018, 10, 22, 20, 30)
           ,address: 'Via Roma, 110'
           ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
           ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}

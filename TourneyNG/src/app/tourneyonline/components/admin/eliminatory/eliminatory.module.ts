@@ -24,12 +24,12 @@ import {TabViewModule} from '../../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
 import {SliderModule} from '../../../../components/slider/slider';
 
-import {CalendarModule} from '../../../../components/calendar/calendar';
-
 import {EliminatoryTourneyListView} from './tourney-listview';
 import {EliminatoryListView} from './eliminatory-listview';
 import {LevelListView} from './level-listview';
 import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
+import { CalendarModule } from 'app/components/calendar/calendar';
+import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
 
 @NgModule({
 	imports: [
@@ -63,6 +63,7 @@ import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
         ,LevelListView
         ,EliminatoryListView
         ,AutoEliminatoryDetailView        
+        ,ManualEliminatoryDetailView        
     ]
 })
 export class EliminatoryModule {}

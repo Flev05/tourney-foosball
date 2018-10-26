@@ -90,7 +90,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.teamSortType = TeamSortType.O;
             
         } else {
-            this.tourneyDate = new Date(this.selectedTourney.dateInMillis);
+            this.tourneyDate = new Date(this.selectedTourney.datetime);
         }
 
         if(this.selectedTourney.country != undefined ) {
@@ -154,10 +154,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.access = this.tourneyFormGroup.get('access').value;
 
         this.tourneyDate = this.tourneyFormGroup.get('tourneyDate').value;
-        this.selectedTourney.dateInMillis = this.tourneyDate.getTime();
-
-        this.selectedTourney.dateAsString = this.tourneyDate.toLocaleDateString();
-        this.selectedTourney.timeAsString = this.tourneyDate.toLocaleTimeString();
+        this.selectedTourney.datetime = this.tourneyDate;
 
         this.selectedTourney.discipline = this.tourneyFormGroup.get('discipline').value;
         

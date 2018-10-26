@@ -26,6 +26,7 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedMeeting: Meeting;
     
     fullAddress: string;
+    dateAndTime: Date;
 
     constructor(
         private fb: FormBuilder,
@@ -44,7 +45,7 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedRound = this.tourneyService.selectedRound;
         this.selectedMeeting = this.tourneyService.selectedMeeting;
 
-        let dateAndTime: Date = new Date(this.selectedMeeting.dateInMillis);
+        this.dateAndTime = new Date(this.selectedMeeting.datetime);
         
         this.fullAddress = this.selectedMeeting.address + " - " 
             + this.selectedMeeting.country.zipCode + " " + this.selectedMeeting.country.city
@@ -53,7 +54,7 @@ export class MeetingDetailView extends AbstractDetailView {
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),
             
-            'dateAndTime':    new FormControl(dateAndTime),
+            'dateAndTime':    new FormControl(this.dateAndTime),
 
             'address': new FormControl(this.selectedMeeting.address),
             'country': new FormControl(this.selectedMeeting.country),
@@ -62,12 +63,9 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onSubmit(value: string) {
 
-        let dateAndTime: Date = this.meetingFormGroup.get('dateAndTime').value;
+        this.dateAndTime = this.meetingFormGroup.get('dateAndTime').value;
 
-        this.selectedMeeting.dateInMillis = dateAndTime.getTime();
-
-        this.selectedMeeting.date  = dateAndTime.toLocaleDateString();
-        this.selectedMeeting.time  = dateAndTime.toLocaleTimeString();
+        this.selectedMeeting.datetime = this.dateAndTime;
 
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;

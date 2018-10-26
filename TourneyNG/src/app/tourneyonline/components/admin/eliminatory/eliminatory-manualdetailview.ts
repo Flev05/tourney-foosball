@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-
-import {Message} from '../../../../components/common/api';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Message } from '../../../../components/common/api';
 
 import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
@@ -12,19 +11,21 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryMode } from '../../../domain/enumerations';
-import { Team } from 'app/tourneyonline/domain/team';
-
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Component({
     templateUrl: './eliminatory-manualdetailview.html',
 })
-export class AutoEliminatoryDetailView extends AbstractDetailView {
+export class ManualEliminatoryDetailView extends AbstractDetailView {
     
     msgs: Message[] = [];
 
-    toggleable: boolean = false;
+    eliminatoryFormGroup: FormGroup;
 
-    fullAddress: string;
+    selectedEliminatoryLevel: EliminatoryLevel;
+
+    fullAddress1: string;
+    fullAddress2: string;
     meetingName: string;
 
     positions: Combobox[];
@@ -33,10 +34,10 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     selectedEliminatory: Eliminatory;
 
-    eliminatoryMode: EliminatoryMode;
     eliminatories: Eliminatory[];  
 
-    isOneway: boolean;
+    private isOneway: boolean;
+    isPlayoff: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -54,28 +55,86 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
 
+        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
+
+        this.isOneway = this.selectedEliminatoryLevel.isOneway;
+        this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
+
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
 
         this.playoffs = this.tourneyService.playoffsCombobox;
 
-        this.isOneway = this.selectedEliminatory.round.isOneway;
-
         let m1: Meeting = this.selectedEliminatory.round.meetings[0];
+        m1.datetime = new Date(m1.datetime);
         if(m1.country!=undefined) {
-            this.fullAddress = m1.address + " - " 
+            this.fullAddress1 = m1.address + " - " 
                 + m1.country.zipCode + " " + m1.country.city
                 + " (" + m1.country.provinceCode +")";
         }
 
         let m2: Meeting = m1;
-        if(!this.selectedEliminatory.round.isOneway) {
+        if(!this.isOneway) {
             m2 = this.selectedEliminatory.round.meetings[1];
+            m2.datetime = new Date(m2.datetime);
+            if(m2.country!=undefined) {
+                this.fullAddress2 = m2.address + " - " 
+                    + m2.country.zipCode + " " + m2.country.city
+                    + " (" + m2.country.provinceCode +")";
+            }
+            if(m2.datetime.getTime() < m1.datetime.getTime()) {
+                m2.datetime = m1.datetime;
+            }
         }
  
-    }
+        this.eliminatoryFormGroup = this.fb.group({
 
+            'meetingDate1':  new FormControl(m1.datetime),
+            'address1':  new FormControl(m1.address),
+            'country1':  new FormControl(m1.country),
+
+            'meetingDate2':  new FormControl(m2.datetime),
+            'address2':  new FormControl(m2.address),
+            'country2':  new FormControl(m2.country),    
+
+            'positions':  new FormControl(this.positions),
+            'rounds':  new FormControl(this.rounds),
+            'playoffs':  new FormControl(this.playoffs),
+
+            'position1':  new FormControl(this.selectedEliminatory.tc1.fromRound.position),
+            'round1':  new FormControl(this.selectedEliminatory.tc1.fromRound.round),
+            'playoff1':  new FormControl(this.selectedEliminatory.tc1.fromPlayoff.round),
+
+            'position2':  new FormControl(this.selectedEliminatory.tc2.fromRound.position),            
+            'round2':  new FormControl(this.selectedEliminatory.tc2.fromRound.round),
+            'playoff2':  new FormControl(this.selectedEliminatory.tc2.fromPlayoff.round),            
+        });
+    }
+    
     onSubmit(value: string) {
+
+        let m1 = this.selectedEliminatory.round.meetings[0];
+
+        m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
+        m1.address = this.eliminatoryFormGroup.get('address1').value;
+        m1.country = this.eliminatoryFormGroup.get('country1').value;
+
+        this.selectedEliminatory.tc1.fromRound.position = this.eliminatoryFormGroup.get('position1').value;
+        this.selectedEliminatory.tc1.fromRound.round = this.eliminatoryFormGroup.get('round1').value;
+        this.selectedEliminatory.tc1.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff1').value;
+
+        this.selectedEliminatory.tc2.fromRound.position = this.eliminatoryFormGroup.get('position2').value;
+        this.selectedEliminatory.tc2.fromRound.round = this.eliminatoryFormGroup.get('round2').value;
+        this.selectedEliminatory.tc2.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff2').value;
+
+        if(!this.isOneway) {
+            let m2 = this.selectedEliminatory.round.meetings[1];
+            m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+            m2.address = this.eliminatoryFormGroup.get('address2').value;
+            m2.country = this.eliminatoryFormGroup.get('country2').value;
+                                            
+            m2.name = m2.team2.teamName + " - " + m2.team1.teamName;
+        }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }

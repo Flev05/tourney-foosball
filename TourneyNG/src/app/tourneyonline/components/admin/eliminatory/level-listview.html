@@ -191,17 +191,17 @@
             <p-radioButton name="sortmodeGroupname" 
                 label="Originale" 
                 value="original" 
-                [(ngModel)]="teamSortType" (onClick)="onOriginalClick()">
+                [(ngModel)]="selectedTourney.teamSortType" (onClick)="onOriginalClick()">
             </p-radioButton>
             <p-radioButton name="sortmodeGroupname" 
                 label="Alfabetico" 
                 value="alphabetical" 
-                [(ngModel)]="teamSortType" (onClick)="onAlphabeticalClick()">
+                [(ngModel)]="selectedTourney.teamSortType" (onClick)="onAlphabeticalClick()">
             </p-radioButton>
             <p-radioButton name="eliminatoryModeGroupname" 
                 label="Sorteggio" 
                 value="random" 
-                [(ngModel)]="teamSortType" (onClick)="onRandomClick()">
+                [(ngModel)]="selectedTourney.teamSortType" (onClick)="onRandomClick()">
             </p-radioButton>
         </div> 
     </div>       

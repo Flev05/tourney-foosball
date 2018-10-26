@@ -18,9 +18,8 @@ export interface Tourney {
     id?: number;
     
     tourneyName? : string;
-    dateInMillis? : number;
-    dateAsString? : string;
-    timeAsString? : string;
+    datetime? : Date;
+
     address? : string;
     country? : Country;
 
@@ -32,8 +31,8 @@ export interface Tourney {
 
     phases?: PhaseType[];
 
-    matchWinnerScores?: number;
-    matchLoserScores?: number;
+    matchWinnerScores?:  number;
+    matchLoserScores?:   number;
     matchBalanceScores?: number;
 
     pointsNeededToWin? : number;

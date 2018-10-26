@@ -23,24 +23,4 @@ export class PlayoffTourneyListView extends CalendarTourneyListView {
     protected gotoDetailView() {
         this.router.navigate([redirect]);
     }
-
-    // ttemp: Tourney[];
-
-    // protected loadTourney() {
-    //     console.log("Entering PlayoffTourneyListView.loadTourney()");
-
-    //     this.tourneyService.loadTourneyPlayoff().subscribe(t => this.tourneys = t);
-
-    //     console.log("loadTourney(): " + this.tourneys);
-        // this.tourneys=[];
-        // var rr : Tourney;
-        // for(let i=0; i<this.tourneys.length; i++) {
-        //     let rr: Tourney = this.tourneys[i];
-        //     if(rr.playoffs == undefined) {
-        //         continue;
-        //     }
-        //     this.tourneys.push(rr);
-        // }
-    // }
-
 }

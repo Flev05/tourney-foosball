@@ -28,19 +28,11 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     fullAddress1: string;
     fullAddress2: string;
-    meetingName: string;
-
-    positions: Combobox[];
-    rounds: Combobox[];
-    playoffs: Combobox[];
 
     selectedEliminatory: Eliminatory;
 
     eliminatoryMode: EliminatoryMode;
     eliminatories: Eliminatory[];  
-
-    availableTeams: Team[] = [];
-    targetTeams: Team[] = [];
 
     selectedEliminatoryLevel: EliminatoryLevel;
     isTopLevel: boolean;
@@ -63,22 +55,10 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.positions = this.tourneyService.positionsCombobox;
-        this.rounds = this.tourneyService.roundsCombobox;
-        this.availableTeams = this.tourneyService.availableTeams;
-        this.playoffs = this.tourneyService.playoffsCombobox;
-
         this.isOneway = this.selectedEliminatoryLevel.isOneway;
-        // this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
         this.isTopLevel = false;
 
         let m1: Meeting = this.selectedEliminatory.round.meetings[0];
-        if(this.targetTeams.length == 0) {
-            this.targetTeams.push(m1.team1);
-            if(m1.team2.teamName!="") {
-                this.targetTeams.push(m1.team2);
-            }
-        }
 
         if(m1.country!=undefined) {
             this.fullAddress1 = m1.address + " - " 
@@ -98,12 +78,11 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         
         this.eliminatoryFormGroup = this.fb.group({
 
-            'availableTeams': new FormControl(this.availableTeams),
-            'targetTeams':    new FormControl(this.targetTeams),
-
+            'meetingDate1':  new FormControl(new Date(m1.datetime)),
             'address1':  new FormControl(m1.address),
             'country1':  new FormControl(m1.country),
 
+            'meetingDate2':  new FormControl(new Date(m2.datetime)),
             'address2':  new FormControl(m2.address),
             'country2':  new FormControl(m2.country),    
         });
@@ -111,136 +90,22 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     onSubmit(value: string) {
 
-        let targetTeams: Team[] = this.eliminatoryFormGroup.get('targetTeams').value;
+        let m1 = this.selectedEliminatory.round.meetings[0];
 
-        if(targetTeams.length > 0) {
-            let m1 = this.selectedEliminatory.round.meetings[0];
+        m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
+        m1.address = this.eliminatoryFormGroup.get('address1').value;
+        m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-            if(targetTeams.length == 1) {
-                m1.team1.teamName = targetTeams[0].teamName;
-                m1.team1.id = targetTeams[0].id;
-                m1.name = m1.team1.teamName + " - ";
-            }
-            if(targetTeams.length == 2) {
-                m1.address = this.eliminatoryFormGroup.get('address1').value;
-                m1.country = this.eliminatoryFormGroup.get('country1').value;
-
-                m1.team2.teamName = targetTeams[1].teamName;
-                m1.team2.id = targetTeams[1].id;
-                m1.name = m1.team1.teamName + " - " + m1.team2.teamName;
-            }
-
-            if(!this.isOneway) {
-                let m2 = this.selectedEliminatory.round.meetings[1];
-                if(targetTeams.length == 1) {
-                    m2.team1.teamName = targetTeams[0].teamName;
-                    m2.team1.id = targetTeams[0].id;
-                    m2.name = m2.team1.teamName + " - ";
-                }
-                if(targetTeams.length == 2) {
-                    m2.address = this.eliminatoryFormGroup.get('address2').value;
-                    m2.country = this.eliminatoryFormGroup.get('country2').value;
-    
-                    m2.team2.teamName = targetTeams[0].teamName;
-                    m2.team2.id = targetTeams[0].id;
-                                    
-                    m2.team1.teamName = targetTeams[1].teamName;
-                    m2.team1.id = targetTeams[1].id;
-                                                    
-                    m2.name = m2.team2.teamName + " - " + m2.team1.teamName;
-                }
-            }
+        if(!this.isOneway) {
+            let m2 = this.selectedEliminatory.round.meetings[1];
+            m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+            m2.address = this.eliminatoryFormGroup.get('address2').value;
+            m2.country = this.eliminatoryFormGroup.get('country2').value;
+                                            
+            m2.name = m2.team2.teamName + " - " + m2.team1.teamName;
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-
-    onMoveToTarget(teamList: Team[]) {
-        console.log("Entering onMoveToTarget(), teamList.length=" + teamList.length);
-        for(let t of this.targetTeams) {
-            console.log("Team=" + JSON.stringify(t));
-        }
-
-        this.alignMoveToTargetList(teamList);
-    }
-
-    onMoveToSource(teamList: Team[]) {
-        console.log("Entering onMoveToSource(), teamList.length=" + teamList.length);
-        this.alignMoveToSourceList(teamList);
-    }
-
-    onMoveAllToTarget(teamList: Team[]) {
-        console.log("Entering onMoveAllToTarget(), teamList.length=" + teamList.length);
-        this.alignMoveToTargetList(teamList);
-    }
-
-    onMoveAllToSource(teamList: Team[]) {
-        console.log("Entering onMoveAllToSource(), teamList.length=" + teamList.length);
-        this.alignMoveToSourceList(teamList);
-    }
-
-    private alignMoveToTargetList(teamList: Team[]) {
-        for (let t of teamList) {
-            this.addToMeetings(t);
-        }
-    }
-
-    private addToMeetings(team: Team) {
-        console.log("addToMeetings(" + team.teamName + ")");
-
-        this.addTeamToMeetings(team);
-
-        this.selectedEliminatory.round.teams.push(team);
-    }
-
-    private addTeamToMeetings(team: Team) {
-        for (let t of this.selectedEliminatory.round.teams) {
-            let m = this.createMeeting(team, t);
-
-            this.selectedEliminatory.round.meetings.push(m);
-            if (this.isOneway) {
-                m = this.createMeeting(t, team);
-                this.selectedEliminatory.round.meetings.push(m);
-            }
-        }
-    }
-    private alignMoveToSourceList(teamList: Team[]) {
-        for (let t of teamList) {
-            this.removeFromMeetings(t);
-        }
-    }
-
-    private removeFromMeetings(team: Team): any {
-        console.log("removeFromMeetings(" + team.teamName + ")");
-        let index: number = 0;
-        for(let m of this.selectedEliminatory.round.meetings) {
-            if(m.team1.id == team.id ) {
-                this.selectedEliminatory.round.meetings.splice(index, 1);    
-            }
-            if(m.team2.id == team.id ) {
-                this.selectedEliminatory.round.meetings.splice(index, 1);    
-            }            
-        }
-
-        index = this.selectedEliminatory.round.teams.indexOf(team);
-        if (index > -1) {
-            this.selectedEliminatory.round.teams.splice(index, 1);
-        }
-    }
-
-    private createMeeting(t: Team, team: Team) {
-        let m : Meeting = {
-            id: this.tourneyService.getSequenceNumber(),
-            name: t.teamName + " - " + team.teamName,
-            dateInMillis : this.selectedTourney.dateInMillis,
-            date: this.selectedTourney.dateAsString,
-            time: this.selectedTourney.timeAsString,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            team1: t,
-            team2: team
-        };
-        return m;
     }
 
     onError(n:any) {

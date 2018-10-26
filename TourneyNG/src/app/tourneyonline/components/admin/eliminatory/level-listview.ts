@@ -28,7 +28,6 @@ export class LevelListView extends AbstractListView {
     selectedEliminatoryLevel: EliminatoryLevel;
     eliminatoryLevels: Array<EliminatoryLevel>;
 
-    isPlayoff: boolean;
     isStandalone: boolean;
     isModeEnabled: boolean;
     isManual: boolean;
@@ -36,7 +35,6 @@ export class LevelListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
-    teamSortType: TeamSortType;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -58,7 +56,6 @@ export class LevelListView extends AbstractListView {
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
 
-        this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
                 
         this.isStandalone = false;
@@ -256,9 +253,7 @@ export class LevelListView extends AbstractListView {
         return {
         id: this.tourneyService.getSequenceNumber(),
             name: "" + " - " + "",
-            dateInMillis: this.selectedTourney.dateInMillis,
-            date: this.selectedTourney.dateAsString,
-            time: this.selectedTourney.timeAsString,
+            datetime: this.selectedTourney.datetime,
             team1: {},
             team2: {},
             address: this.selectedTourney.address,

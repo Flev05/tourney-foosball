@@ -17,7 +17,10 @@
 
         <h4>Manuale</h4>
         <p>
-            Significa che il configuratore ha configurato un torneo con gironi all'italiana, playoff ed eliminazioni dirette.
+            Significa che il responsabile del torneo ha configurato la versione completa del torneo con gironi all'italiana, 
+            playoff ed eliminazioni dirette.            
+        </p>
+        <p>
             Questa è la modalità di default che permette qualsiasi tipo di configurazione delle eliminazioni dirette
             partendo dai risulti dei gironi e dei playoff, si possono combinare tutti i tipi di associazioni specificando
             le regole di popolamento a partire dalle posizioni di classifica dei gironi e playoff.
@@ -35,7 +38,9 @@
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>Incontro: {{meetingName}}</span></h4>
+    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+    <h4><span>Eliminazioni: {{selectedEliminatoryLevel.name}}</span></h4>
+    <h4><span>Incontro: {{selectedEliminatory.round.name}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -43,10 +48,22 @@
 
     <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-  
+
+            <h4>Andata</h4>
+
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Via(andata):
+                    Data e ora:
+                </div>
+                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
+                    <p-calendar formControlName="meetingDate1" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                    </p-calendar>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Via:
                 </div>
                 <div class="ui-grid-col-5">
                     <input pInputText type="text" formControlName="address1"/>
@@ -63,7 +80,7 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    <label for="country-id">Comune(andata):</label>
+                    <label for="country-id">Comune:</label>
                 </div>
                 <div class="ui-grid-col-5">
                     <p-autoComplete id="country-id" formControlName="country1" 
@@ -76,16 +93,28 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Indirizzo(andata):
+                    Indirizzo:
                 </div>
                 <div class="ui-grid-col-8">
                     {{fullAddress1}}
                 </div>
             </div>                  
   
-            <div *ngIf="!isOneway" class="ui-grid-row">
+            <h4 *ngIf="!selectedEliminatoryLevel.isOneway" >Ritorno</h4>
+            
+            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Via(ritorno):
+                    Data e ora:
+                </div>
+                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
+                    <p-calendar formControlName="meetingDate2" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                    </p-calendar>
+                </div>
+            </div>
+
+            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Via:
                 </div>
                 <div class="ui-grid-col-5">
                     <input pInputText type="text" formControlName="address2"/>
@@ -100,9 +129,9 @@
                 </div>
             </div>
 
-            <div *ngIf="!isOneway" class="ui-grid-row">
+            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    <label for="country-id">Comune(ritorno):</label>
+                    <label for="country-id">Comune:</label>
                 </div>
                 <div class="ui-grid-col-5">
                     <p-autoComplete id="country-id" formControlName="country2" 
@@ -113,33 +142,34 @@
                 </div>
             </div>
 
-            <div *ngIf="!isOneway" class="ui-grid-row">
+            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Indirizzo(ritorno):
+                    Indirizzo:
                 </div>
                 <div class="ui-grid-col-8">
                     {{fullAddress2}}
                 </div>
-            </div>                  
-                   
+            </div>                                                     
         </div>
 
-        <div class="ui-g ui-fluid" *ngIf="row">
+        <h4>Regole di accoppiamento</h4>
+
+        <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="positionId">Classificata</label>
                 </div>
-                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.tc1.fromRound.position" optionLabel="label"></p-dropdown>
+                <p-dropdown id="positionId" [options]="positions" formControlName="position1" optionLabel="label"></p-dropdown>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="roundId">Girone</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.tc1.fromRound.round" 
-                    optionLabel="label" 
-                    placeholder="Selezionare">
-                </p-dropdown>
+                    <p-dropdown id="roundId" [options]="rounds" formControlName="round1" 
+                        optionLabel="label" 
+                        placeholder="Selezionare">
+                    </p-dropdown>
                 </div>
             </div>
             <div *ngIf="isPlayoff" class="ui-g-12">
@@ -147,21 +177,21 @@
                     <label for="playoffId">Playoff</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.tc1.fromPlayoff.round" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
+                    <p-dropdown id="playoffId" [options]="playoffs" formControlName="playoff1" 
+                        optionLabel="label"
+                        placeholder="Selezionare">
+                    </p-dropdown>
                 </div>
             </div>
         </div>       
         Vs         
-        <div class="ui-g ui-fluid" *ngIf="row">
+        <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="vin">Classificata</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="vin" [options]="positions" [(ngModel)]="row.tc2.fromRound.position" optionLabel="label"></p-dropdown>
+                    <p-dropdown id="vin" [options]="positions" formControlName="position2" optionLabel="label"></p-dropdown>
                 </div>
             </div>
             <div class="ui-g-12">
@@ -169,7 +199,7 @@
                     <label for="round">Girone</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="round" [options]="rounds" [(ngModel)]="row.tc2.fromRound.round" 
+                    <p-dropdown id="round" [options]="rounds" formControlName="round2" 
                     optionLabel="label"
                     placeholder="Selezionare">
                 </p-dropdown>
@@ -180,13 +210,22 @@
                     <label for="playoff">Playoff</label>
                 </div>
                 <div class="ui-grid-col-3">
-                    <p-dropdown id="playoff" [options]="playoffs" [(ngModel)]="row.tc2.fromPlayoff.round" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
+                    <p-dropdown id="playoff" [options]="playoffs" formControlName="playoff2" 
+                        optionLabel="label"
+                        placeholder="Selezionare">
+                    </p-dropdown>
                 </div>
             </div>
-        </div>       
+        </div>      
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid"></button>
+                </div>
+            </div>
+        </div>
+
     </form>   
 </div>
  

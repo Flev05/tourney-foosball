@@ -12,64 +12,56 @@
     </p>
 </div>
 
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>
+
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <p-table [columns]="cols" [value]="matrix" selectionMode="single">
-
-    <ng-template pTemplate="caption" let-rowData>
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </div>
-    </ng-template>
-     
-    <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-            <col style="width: auto;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-            <col style="width: 10mm;">
-        </colgroup>
-    </ng-template>
+    <p-table [columns]="cols" [value]="matrix.rows" (onEditComplete)="onEditComplete($event)">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}                                
+                </th>
+            </tr>
+        </ng-template>                                     
     
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-        </tr>
-    </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData" >
+                <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
+                    <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
+                        <ng-template pTemplate="input" >
+                            <p-dropdown [options]="points" 
+                                [(ngModel)]="rowData.cells[i].points" 
+                                optionLabel="label"
+                                [style]="{'width':'100%'}"
+                                placeholder="Punti">                                
+                            </p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{rowData.cells[i].points.label}}
+                        </ng-template>                        
+                    </p-cellEditor>
+                   
+                    <label *ngIf="!rowData.cells[i].isEditable">
+                        {{rowData.cells[i].field}}
+                    </label>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData" >
-            <td *ngFor="let col of columns" pEditableColumn [ngClass]="rowData[col.style]">
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <input type="text" [(ngModel)]="rowData[col.field]">
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{rowData[col.field]}}
-                    </ng-template>
-                </p-cellEditor>
-            </td>            
-        </tr>
-    </ng-template>
-
-    <ng-template pTemplate="summary" let-rowData>
-        <div style="text-align:left">
-            <button pButton icon="fa-save" type="button" (click)="save()" label="Salva" ></button>
-        </div>
-    </ng-template>        
-</p-table> 
+                    <label *ngIf="rowData.cells[i].isTotal">
+                        {{rowData.cells[i].points.value}}
+                    </label>
+                </td>            
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button pButton icon="fa-save" type="button" (click)="save()" label="Salva" ></button>
+            </div>
+        </ng-template>        
+    </p-table> 
 
 </div>
  

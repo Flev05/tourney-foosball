@@ -97,8 +97,7 @@ export class LevelListView extends AbstractListView {
                 , type: RoundType.E
                 , teams: this.selectedTourney.teams
                 , meetings:[]
-                , classification:[]
-                , matrix:[]
+                , classification:[]                
             };
             this.selectedTourney.rounds.push(round);
             this.prepareDefaultClassification(round);
@@ -131,21 +130,6 @@ export class LevelListView extends AbstractListView {
                 }
             }
         }
-    }
-
-    private newClassification(t: Team, initialPoints: number): Classification {
-        return {
-            id: this.tourneyService.getSequenceNumber(),
-            team: t,
-            points: initialPoints,
-            played: 0,
-            won: 0,
-            lost: 0,
-            penalty: 0,
-            goalsDone: 0,
-            goalsConceded: 0,
-            goalsDiff: 0
-        };
     }
 
     /**
@@ -491,7 +475,6 @@ export class LevelListView extends AbstractListView {
                 ]
                 ,classification: []
                 ,meetings: [m]
-                ,matrix: []
             },
             tc1: {
                 id: this.tourneyService.getSequenceNumber(),

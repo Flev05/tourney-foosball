@@ -142,7 +142,6 @@ export class InMemoryDataService implements InMemoryDbService {
       , teams: teams
       , meetings: meetings
       , classification: []
-      , matrix: []
     };
 
     let rounds = new Array<Round>();

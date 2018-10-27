@@ -14,5 +14,5 @@ export interface Round {
 
     meetings?: Meeting[];
     classification?: Classification[];
-    matrix?: Matrix[];
+    matrix?: Matrix;
 }

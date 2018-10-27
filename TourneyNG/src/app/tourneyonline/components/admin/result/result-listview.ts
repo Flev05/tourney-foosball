@@ -45,7 +45,6 @@ export class ResultListView extends AbstractListView {
         
         this.rounds = this.selectedTourney.rounds;
         this.playoffs = this.selectedTourney.playoffs;
-        this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
     }
 
     onRoundSelect(event) {

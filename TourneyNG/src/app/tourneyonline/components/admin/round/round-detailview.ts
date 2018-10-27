@@ -13,6 +13,7 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 @Component({
     templateUrl: './round-detailview.html',
@@ -136,7 +137,9 @@ export class RoundDetailView extends AbstractDetailView {
         this.addTeamToMeetings(team);
 
         this.selectedRound.teams.push(team);
-        this.selectedRound.classification.push(team);
+        let cl: Classification = this.newClassification(team, 0);
+
+        this.selectedRound.classification.push(cl);
     }
 
     private addTeamToMeetings(team: Team) {
@@ -185,9 +188,6 @@ export class RoundDetailView extends AbstractDetailView {
         index = this.selectedRound.teams.indexOf(team);
         if (index > -1) {
             this.selectedRound.teams.splice(index, 1);
-        }
-        index = this.selectedRound.classification.indexOf(team);
-        if (index > -1) {
             this.selectedRound.classification.splice(index, 1);
         }
     }

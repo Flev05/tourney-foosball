@@ -8,16 +8,25 @@
 <div class="content-section documentation">
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
-        <p>Vista di dettaglio girone.
+        <p>
+            Vista di dettaglio girone.
             Da questa vista potete creare, modificare o rimuovere un girone.
+            Il girone è uno all'italiana visto come un semplice contenitore di squadre, 
+            nulla deve essere assunto relativamente agli incontri di andata e/o ritorno che devono essere 
+            documentati nel calendario corrispondente. 
+
             Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
             relativamente agli incontri di andata e ritorno che devono essere documentati nel calendario
             corrispondente.
+        </p>
+        <p>
             L'utente deve semplicemente spostare, con i bottoni preposti, la squadra scelta da sinstra verso destra per aggiungerla
             al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.
             Nel momento in cui si conferma la composizione del girone, il sistema automaticamente genera gli incontri della
             nuova squadra con quelli già esistenti, allo stesso modo rimuove gli incontri relativi alla squadra rimossa
             dal girone.
+        </p>
+        <p>
             Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
             Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente 
             alla voce di menù:
@@ -31,11 +40,14 @@
         </p>
 
         <h4>Modificare un girone</h4>
-        <p>La modifica del girone consiste nello spostare le squadre dall'area dei disponibili a quella dei 
-            selezionati e viceversa.
+        <p>
+            La modifica del girone consiste nello spostare le squadre dall'area dei Disponibili a quella dei 
+            Selezionati e viceversa.
         </p>
+
         <h4>Rimuovere un girone</h4>
-        <p>Si può rimuovere un girone esistente con il bottore Rimuovi.
+        <p>
+            Si può rimuovere un girone esistente con il bottore Rimuovi.
             Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, 
             il girone sarà rimosso dal torneo.
         </p>
@@ -69,26 +81,7 @@
                         </span>
                     </div>
                 </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Turni:
-                </div>
-                <div class="ui-grid-col-5" tooltipPosition="right"
-                        pTooltip="Indicare se i gironi sono di solo andata o andata e ritorno">
-                    <p-radioButton name="isOnewayGroupname" 
-                        label="Solo andata" 
-                        value="false" 
-                        formControlName="isOneway">
-                    </p-radioButton>
-                    <p-radioButton name="isOnewayGroupname" 
-                        label="Andata e ritorno" 
-                        value="true" 
-                        formControlName="isOneway">
-                    </p-radioButton>
-                </div>
-            </div>                           
+            </div>                     
 
             <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
                     [responsive]="true"

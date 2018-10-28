@@ -15,9 +15,7 @@
 <p-table [columns]="cols" [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true" 
-    [rows]="15">
+    (onRowSelect)="onRowSelect($event)" >
 
     <ng-template pTemplate="colgroup" let-columns>
         <colgroup>

@@ -28,6 +28,8 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {ResultTourneyListView } from './tourney-listview';
 import { MeetingListView } from './meeting-listview';
 import { ResultListView } from './result-listview';
+import { EliminatoryListView } from './eliminatory-listview';
+import { MeetingDetailView } from './meeting-detailview';
 
 @NgModule({
 	imports: [
@@ -58,9 +60,11 @@ import { ResultListView } from './result-listview';
         ,PickListModule
     ],
 	declarations: [
-		ResultTourneyListView
+		 ResultTourneyListView
         ,ResultListView
         ,MeetingListView
+        ,EliminatoryListView
+        ,MeetingDetailView
 	]
 })
 export class AdminResultModule {}

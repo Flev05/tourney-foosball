@@ -49,7 +49,6 @@ export class RoundDetailView extends AbstractDetailView {
             this.selectedRound.id = this.tourneyService.getSequenceNumber(); 
             this.selectedRound.teams = [];
             this.selectedRound.meetings = [];
-            this.selectedRound.isOneway = true;
             this.selectedRound.type = RoundType.R;
         }
 
@@ -78,13 +77,11 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
 
-        let isOneway = this.selectedRound.isOneway ? "true" : "false";
-
         this.roundFormGroup = this.fb.group({
             'name': new FormControl(this.selectedRound.name, Validators.compose([Validators.required])),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
-            'isOneway':    new FormControl(isOneway),
+            'isOneway':       new FormControl(this.selectedTourney.isOnewayRound),
         });
     }
 
@@ -147,7 +144,7 @@ export class RoundDetailView extends AbstractDetailView {
             let m = this.createMeeting(team, t);
 
             this.selectedRound.meetings.push(m);
-            if (this.selectedRound.isOneway) {
+            if (this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team);
                 this.selectedRound.meetings.push(m);
             }
@@ -198,9 +195,9 @@ export class RoundDetailView extends AbstractDetailView {
 
         let isOneway: string = this.roundFormGroup.get('isOneway').value;
         if(isOneway=="true") {
-            this.selectedRound.isOneway = true;
+            this.selectedTourney.isOnewayRound = true;
         } else {
-            this.selectedRound.isOneway = false;
+            this.selectedTourney.isOnewayRound = false;
         }
 
         this.selectedRound.teams = this.roundFormGroup.get('targetTeams').value;
@@ -227,7 +224,7 @@ export class RoundDetailView extends AbstractDetailView {
                 let m : Meeting = this.createMeeting(t1, t2);
                 this.selectedRound.meetings.push(m);
 
-                if(this.selectedRound.isOneway) {
+                if(this.selectedTourney.isOnewayRound) {
                     let m : Meeting = this.createMeeting(t2, t1);
                     this.selectedRound.meetings.push(m);    
                 }

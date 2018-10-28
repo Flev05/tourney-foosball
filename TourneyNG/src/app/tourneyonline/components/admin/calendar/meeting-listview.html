@@ -19,6 +19,8 @@
 <div class="content-section implementation">    
     <h3><span>Girone: "{{selectedRound.name}}"</span></h3>
 
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+
     <p-table [responsive]="true" 
         [value]="meetings"
         selectionMode="single"
@@ -26,32 +28,28 @@
         (onRowSelect)="onRowSelect($event)"
         [paginator]="true" 
         [rows]="15">
-
-        <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </ng-template>
  
         <ng-template pTemplate="colgroup">
             <colgroup>
+                <col style="width: 10mm;">
                 <col style="width: auto;">
-                <col style="width: 37mm;">
                 <col style="width: auto;">
             </colgroup>
         </ng-template>
 
         <ng-template pTemplate="header">
             <tr>
-                <th>Nome</th>
+                <th>N°</th>
+                <th>Incontro</th>
                 <th>Data ora</th>
-                <th>Indirizzo</th>
             </tr>    
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr  [pSelectableRow]="rowData">
+                <td>{{rowIndex + 1}}</td>
                 <td>{{rowData.name}}</td>
                 <td>{{rowData.datetime | date: 'dd/MM/y HH:mm'}}</td>
-                <td>{{rowData.address}}</td>
             </tr>
         </ng-template>
         

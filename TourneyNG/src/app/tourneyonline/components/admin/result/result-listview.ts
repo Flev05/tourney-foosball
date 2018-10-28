@@ -10,41 +10,39 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
-const meetingLvRedirect: string = "adminresult/lv/meetingLv";
 
 @Component({
     templateUrl: './result-listview.html'
 })
 export class ResultListView extends AbstractListView {
-    constructor(
-        protected tourneyService: TourneyService,
-        protected router: Router,
-        protected location: Location,
-    ) {
-        super(meetingLvRedirect, tourneyService, router, location);
-    }
+    static meetingLvRedirect:   string = "adminresult/lv/meetingLv";
+    static eliminatoryRedirect: string = '/adminresult/lv/eliminatoryLv/dv';
 
     selectedPlayoff: Playoff;
     selectedRound: Round;
-    selectedEliminatory: Eliminatory;
+
     selectedEliminatoryLevel: EliminatoryLevel;
+    eliminatoryLevels: Array<EliminatoryLevel>;
 
     rounds: Round[];
     playoffs: Playoff[];
     eliminatories: Eliminatory[];
 
-    ngOnInit() {
-        super.ngOnInit();
-        this.loadAll();
+    constructor(
+        protected tourneyService: TourneyService,
+        protected router: Router,
+        protected location: Location,
+    ) {
+        super(ResultListView.meetingLvRedirect, tourneyService, router, location);
     }
 
-    private loadAll() {
-
-        this.selectedTourney = this.tourneyService.selectedTourney;
-        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
+    ngOnInit() {
+        super.ngOnInit();
         
         this.rounds = this.selectedTourney.rounds;
         this.playoffs = this.selectedTourney.playoffs;
+
+        this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
     }
 
     onRoundSelect(event) {
@@ -56,7 +54,7 @@ export class ResultListView extends AbstractListView {
     }
 
     private gotoMeetingListView() {
-        this.router.navigate([meetingLvRedirect]);
+        this.router.navigate([ResultListView.meetingLvRedirect]);
     }
 
     onPlayoffSelect(event) {
@@ -66,13 +64,13 @@ export class ResultListView extends AbstractListView {
 
         this.gotoMeetingListView();
     }
+    
+    onEliminatoryRowSelect(event) {
+        console.log("Entering onRowSelect()");
+      
+        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
 
-    onEliminatorySelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedRound = this.selectedEliminatory.round;
-
-        this.gotoMeetingListView();
+        this.router.navigate([ResultListView.eliminatoryRedirect]);
     }
 
     goBack(): void {

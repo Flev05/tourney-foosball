@@ -11,8 +11,8 @@
     </p>
     
     <p>
-        Selezionare - con un click sul nome della scheda - per visualizzare i gironi in essa contenute.
-        Selezionare il girone di interesse - con un click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+        Selezionare la scheda (click sul nome della scheda) per visualizzare i gironi in essa contenute.
+        Selezionare il girone di interesse (click su un punto qualsiasi della riga) per accedere alla corrispondente vista di dettaglio
     </p>
     
 </div>
@@ -53,6 +53,7 @@
             </ng-template>        
         </p-table>
     </p-tabPanel>
+
     <p-tabPanel header="Playoff">    
         <p-table [responsive]="true" 
             [value]="playoffs" 
@@ -83,36 +84,39 @@
         </p-table>
     </p-tabPanel>
 
-    <!-- <p-tabPanel header="Eliminatorie">    
+    <p-tabPanel header="Eliminazioni dirette">    
+
         <p-table [responsive]="true" 
-            [value]="eliminatories" 
-            selectionMode="single"
-            [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onEliminatorySelect($event)" >
-    
+            [value]="eliminatoryLevels" 
+            selectionMode="single" 
+            [(selection)]="selectedEliminatoryLevel" 
+            (onRowSelect)="onEliminatoryRowSelect($event)">
+
             <ng-template pTemplate="colgroup">
                 <colgroup>
-                    <col style="width: auto;">
+                    <col style="width: 10mm;">
+                    <col style="width: 20mm;">
                     <col style="width: auto;">
                 </colgroup>
             </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Nome</th>
+                    <th>N°</th>
                     <th>Livello</th>
+                    <th>Nome</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr  [pSelectableRow]="rowData">
-                    <td>{{rowData.round.name}}</td>
-                    <td>{{rowData.level}}</td>
+                <tr [pSelectableRow]="rowData">
+                    <td>{{rowIndex + 1}}</td>
+                    <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
+                    <td>{{rowData.name}}</td>
                 </tr>
-            </ng-template>        
+            </ng-template>
         </p-table>
-    </p-tabPanel> -->
-
+    </p-tabPanel>
 </p-tabView>        
 </div>
     

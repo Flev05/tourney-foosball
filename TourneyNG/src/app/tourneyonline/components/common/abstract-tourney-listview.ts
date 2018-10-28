@@ -24,10 +24,10 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.loadTourney();
 
         this.cols = [
-            { field: 'tourneyName', header: 'Torneo' },
+            { field: 'tourneyName',  header: 'Torneo' },
             { field: 'dateAsString', header: 'Data' },
             { field: 'timeAsString', header: 'Ora' },
-            { field: 'address', header: 'Indirizzo' }
+            { field: 'address',      header: 'Indirizzo' }
         ];
     }
 

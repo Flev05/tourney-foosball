@@ -17,15 +17,15 @@
 </div>
 
 <div class="content-section implementation">    
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+    
     <p-table [responsive]="true" 
         [value]="playoffs"
         selectionMode="single"
         [(selection)]="selectedPlayoff" 
         (onRowSelect)="onRowSelect($event)" >
-
-        <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </ng-template>
  
         <ng-template pTemplate="colgroup">
             <colgroup>

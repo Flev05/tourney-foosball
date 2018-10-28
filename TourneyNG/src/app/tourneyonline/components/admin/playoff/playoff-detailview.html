@@ -56,7 +56,8 @@
             </p>
 
             <h4>Modificare un playoff</h4>
-            <p>Modificare un playoff significa modificare il nome, il numero delle squadre o la 
+            <p>
+                Modificare un playoff significa modificare il nome, il numero delle squadre o la 
                 configurazione delle regole di popolamento playoff.
                 Se si cambia il numero di squadre, automaticamente saranno rigenerate tutte le 
                 righe per le regole di popolamento che vanno quindi riconfigurate tutte.
@@ -65,7 +66,8 @@
             </p>
 
             <h4>Rimuovere un playoff</h4>
-            <p>Rimuovere un playoff significa rimuovere un girone di playoff con tutte le sue squadre e tutte
+            <p>
+                Rimuovere un playoff significa rimuovere un girone di playoff con tutte le sue squadre e tutte
                 le sue configurazioni. Il bottone Rimuovi effettua tale operazione e vi riporta alla vista elenco 
                 dei gironi di playoff rimasti.
             </p>
@@ -79,37 +81,19 @@
         <span>Playoff: </span>
         <input pInputText id="nameId" [(ngModel)]="selectedPlayoff.round.name" placeholder="Nome girone playoff" />
     </h4>
-    
+
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+        
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
         
         <p-dropdown id="levelId" [options]="teamsCombobox" 
             [(ngModel)]="teamNoCombobox"  
             (onChange)="onChange($event.value)"
             placeholder="Numero squadre">
         </p-dropdown>
-    </div>
-
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            Turni:
-        </div>
-        <div class="ui-grid-col-5" tooltipPosition="right"
-                pTooltip="Indicare se i gironi di playoff sono di solo andata o andata e ritorno">
-            <p-radioButton name="isOnewayGroupname" 
-                label="Solo andata" 
-                value="false" 
-                [(ngModel)]="isOneway"
-                (onClick)="onOnewayClick()">
-            </p-radioButton>
-            <p-radioButton name="isOnewayGroupname" 
-                label="Andata e ritorno" 
-                value="true" 
-                [(ngModel)]="isOneway"
-                (onClick)="onRoundtripClick()">
-            </p-radioButton>
-        </div>
-    </div>                           
+    </div>                       
 
     <p-table [responsive]="true" 
             [value]="playoffConfigs" 

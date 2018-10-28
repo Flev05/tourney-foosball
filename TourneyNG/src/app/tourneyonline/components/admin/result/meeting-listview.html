@@ -12,29 +12,27 @@
     </p>
 
     <p>
-        Selezionare l'incontro di interesse per modificare il risultato in linea sulla riga
+        Selezionare l'incontro di interesse per modificare il risultato nella Vista
+        di dettaglio derivante.
     </p>
 </div>
-
 <div class="content-section implementation">    
     <h4><span>Girone: "{{selectedRound.name}}"</span></h4>
 
-    <p-table [responsive]="true" 
-        [value]="meetings"
-        [paginator]="true" 
-        [rows]="15">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>
 
-        <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </ng-template>
- 
+    <p-table [responsive]="true" [value]="meetings"
+        selectionMode="single" 
+        [(selection)]="selectedMeeting" 
+        (onRowSelect)="onRowSelect($event)" >
+
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
                 <col style="width: auto;">
                 <col style="width: auto;">
-                <col style="width: 15mm;">
-                <col style="width: 15mm;">
             </colgroup>
         </ng-template>
 
@@ -43,8 +41,6 @@
                 <th>N°</th>
                 <th>Squadra 1</th>
                 <th>Squadra 2</th>
-                <th>Reti</th>
-                <th>Reti</th>
             </tr>
         </ng-template>
 
@@ -55,42 +51,11 @@
                 <td pEditableColumn>
                     {{rowData.team1.teamName}}
                 </td>
-
                 <td>
                     {{rowData.team2.teamName}}
                 </td>
-                    
-                <td pEditableColumn>
-                    <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            <input type="text" [(ngModel)]="rowData.score1">
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{rowData.score1}}
-                        </ng-template>
-                    </p-cellEditor>
-                </td>
-
-                <td pEditableColumn>
-                    <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            <input type="text" [(ngModel)]="rowData.score2">
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{rowData.score2}}
-                        </ng-template>
-                    </p-cellEditor>
-                </td>                                                
             </tr>
         </ng-template>
-            
-        <ng-template pTemplate="summary">
-            Ci sono {{meetings?.length}} incontri
-            <div style="text-align:left">
-                <button pButton icon="fa-save" type="button" (click)="save()" label="Salva" ></button>
-            </div>
-        </ng-template>        
-                
     </p-table>
 
 </div>

@@ -317,10 +317,10 @@ export class LevelListView extends AbstractListView {
             return 0;
         });
 
-        if( this.selectedTourney.teamSortType=TeamSortType.O) {
+        if( this.selectedTourney.teamSortType==TeamSortType.O) {
             return sortedClassification;
         }
-        if( this.selectedTourney.teamSortType=TeamSortType.R) {
+        if( this.selectedTourney.teamSortType==TeamSortType.R) {
             sortedClassification = sortedClassification.sort((t1, t2) =>{
                 let rand = Math.random();
                 if(rand < 0.33) {
@@ -362,10 +362,6 @@ export class LevelListView extends AbstractListView {
         });
 
         return sortedClassification;
-    }
-
-    pow2(level : number) : number {
-        return Math.pow(2, level);
     }
 
     /**
@@ -468,7 +464,6 @@ export class LevelListView extends AbstractListView {
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: "" + index
                 , type: RoundType.E
-                , isOneway: true
                 , teams:[
                      {id:0, teamName:""}
                     ,{id:1, teamName:""}

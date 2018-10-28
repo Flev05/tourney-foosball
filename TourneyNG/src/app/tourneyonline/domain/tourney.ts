@@ -23,6 +23,9 @@ export interface Tourney {
     address? : string;
     country? : Country;
 
+    isOnewayRound?: boolean;
+    isOnewayPlayoff?: boolean;
+
     access?: string;
     discipline? : Discipline;
 

@@ -35,6 +35,7 @@ export class LevelListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
+    localRounds: Round[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -69,6 +70,8 @@ export class LevelListView extends AbstractListView {
              this.isModeEnabled = false;
         }
 
+        this.prepareEliminatoryLevels(teamsNo);
+
         if( this.selectedTourney.phases.length == 1 && 
                 this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
             this.isStandalone = true;
@@ -76,8 +79,6 @@ export class LevelListView extends AbstractListView {
             this.tourneyService.availableTeams = [];
             this.processStandalone();
         }
-
-        this.prepareEliminatoryLevels(teamsNo);
         
         if(!this.isManual || this.isStandalone) {
             this.prepateAutoEliminatories();
@@ -91,7 +92,7 @@ export class LevelListView extends AbstractListView {
     private processStandalone() {
 
         let round: Round;
-        if(this.selectedTourney.rounds.length==0) {           
+        if(this.localRounds.length==0) {           
             round = {id:this.tourneyService.getSequenceNumber()
                 , name:""
                 , type: RoundType.E
@@ -100,7 +101,7 @@ export class LevelListView extends AbstractListView {
                 , classification:[]
                 , matrix:[]
             };
-            this.selectedTourney.rounds.push(round);
+            this.localRounds.push(round);
             this.prepareDefaultClassification(round);
         } else {
             this.alignToNewTeams();
@@ -166,8 +167,8 @@ export class LevelListView extends AbstractListView {
         this.paddingRound();
 
         let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
+        for(let i=0; i<this.localRounds.length; i++) {
+            let r = this.localRounds[i];
 
             let orderedClassification: Array<Classification> = this.teamSort(r.classification);
 
@@ -272,8 +273,8 @@ export class LevelListView extends AbstractListView {
         let maxDeep: number = 0;
         let N: number = 0;
 
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
+        for(let i=0; i<this.localRounds.length; i++) {
+            let r = this.localRounds[i];
             N+=r.classification.length;
 
             if(r.classification.length > maxDeep ) {
@@ -286,8 +287,8 @@ export class LevelListView extends AbstractListView {
             return;
         }
 
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
+        for(let i=0; i<this.localRounds.length; i++) {
+            let r = this.localRounds[i];
             while(r.classification.length < maxDeep && diff > 0 ) {
                 let t: Team = {id: 0, teamName: ""};
                 let dummy = this.newClassification(t, -1);
@@ -297,8 +298,8 @@ export class LevelListView extends AbstractListView {
         }
 
         while( diff > 0 ) {
-            for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-                let r = this.selectedTourney.rounds[i];
+            for(let i=0; i<this.localRounds.length; i++) {
+                let r = this.localRounds[i];
                 let t: Team = {
                     id: this.tourneyService.getSequenceNumber()
                     ,teamName:""
@@ -391,6 +392,8 @@ export class LevelListView extends AbstractListView {
      */
     private prepareEliminatoryLevels(teamsNo: number): any {
         console.log("Entering prepareEliminatoryLevels("+teamsNo+")");
+
+        this.localRounds = 
 
         let levelsCombobox =  this.tourneyService.prepareLevelCombobox(teamsNo);
 
@@ -547,7 +550,7 @@ export class LevelListView extends AbstractListView {
         this.isManual = false;
         this.tourneyService.availableTeams = [];
 
-        for(let r of this.selectedTourney.rounds) {
+        for(let r of this.localRounds) {
             this.prepareDefaultClassification(r);
         }
 

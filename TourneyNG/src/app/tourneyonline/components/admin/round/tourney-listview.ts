@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from '../../../service/tourneyservice';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
 const redirect = '/adminround/lv';
 
@@ -17,5 +18,16 @@ export class RoundTourneyListView extends AbstractTourneyListView {
 
     ngOnInit() {
         super.ngOnInit();
+    }
+
+    onComplete(): any {
+        for(let t of this.tourneys) {
+            if(!this.containsPhase(PhaseType.R, t.phases)) {
+                let index: number = this.tourneys.indexOf(t);
+                if(index > -1) {
+                    this.tourneys.splice(index, 1);
+                }
+            }
+        }
     }
 }

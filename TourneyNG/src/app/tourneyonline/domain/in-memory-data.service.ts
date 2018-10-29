@@ -7,7 +7,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from './meeting';
 
 const  teams1 = [
-  {id:1,teamName:"SALLUC", address:"Via Roma, 110"
+  {id:1,teamName:"SALLUC-1", address:"Via Roma, 110"
   ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
   ,players:[
       {id:2, firstname:"Luciano",   lastname:"Martino"}
@@ -126,36 +126,73 @@ const  teams1 = [
       ,{id:3, firstname:"Antonino",   lastname:"Scarpaci"}
     ]
   }
+  ,{id:18,teamName:"SALLUC-2", address:"Via Roma, 110"
+  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+  ,players:[
+      {id:2, firstname:"Luciano",   lastname:"Martino"}
+      ,{id:3, firstname:"Salvatore",  lastname:"Amoroso"}
+    ]
+  }
+  ,{id:19,teamName:"SALLUC-3", address:"Via Roma, 110"
+  ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+  ,players:[
+      {id:2, firstname:"Luciano",   lastname:"Martino"}
+      ,{id:3, firstname:"Salvatore",  lastname:"Amoroso"}
+    ]
+  }
 ];
 
 export class InMemoryDataService implements InMemoryDbService {
 
   prepareDefaultRounds(teams : Team[]) : Round[] {
 
-    let meetings = this.prepareDefaultMeeting(teams);
-
-    let round : Round = {
-      id: 1
-      , name: "Mono Round"
-      , type: RoundType.R
-      , isOneway: true
-      , teams: teams
-      , meetings: meetings
-      , classification: []
-      , matrix: []
-    };
-
     let rounds = new Array<Round>();
 
-    rounds.push(round);
+    let N = teams.length;
+    let roundNo = Math.floor(N / 4);
+    for(let i=0; i<roundNo; i++) {
+      let round: Round = this.newRound(i + 1);
+      rounds.push(round);
+
+      let r: Round = rounds[i];
+      for(let j=0; j<4; j++ ) {
+        let t : Team = teams[i*4 + j];
+        r.teams.push(t);
+      }
+    }
+    if(N % 4 > 0) {
+      let r: Round = this.newRound(roundNo + 1);
+      rounds.push(r);
+
+      for(let i=roundNo * 4; i<N; i++ ) {
+        let t : Team = teams[i];
+        r.teams.push(t);
+      }
+    }
+ 
+    for(let r=0; r<rounds.length; r++) {
+      this.prepareDefaultMeeting(rounds[r]);
+    }
 
     return rounds;
   }
  
-  private prepareDefaultMeeting(teams : Array<Team>) : Array<Meeting> {
+  private newRound(roundNo : number): Round {
+    return {
+      id: roundNo,
+      name: "GIRONE." + roundNo,
+      type: RoundType.R,
+      isOneway: true,
+      teams: [],
+      meetings: [],
+      classification: [],
+      matrix: []
+    };
+  }
 
-    let meetings = new Array<Meeting>();
+  private prepareDefaultMeeting(r : Round)  {
 
+    let teams = r.teams;
     for(let i=0; i<teams.length; i++) {
 
       let t1 = teams[i];
@@ -173,11 +210,9 @@ export class InMemoryDataService implements InMemoryDbService {
           , score2: 0
         };
 
-        meetings.push(m);
+        r.meetings.push(m);
       }
     }
-
-    return meetings;
   }
 
   createDb() {

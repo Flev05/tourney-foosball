@@ -33,18 +33,21 @@
  
         <ng-template pTemplate="colgroup">
             <colgroup>
+                <col style="width: 10mm;">
                 <col style="width: auto;">
             </colgroup>
         </ng-template>
 
         <ng-template pTemplate="header">
             <tr>
+                <th>N°</th>
                 <th>Nome</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr  [pSelectableRow]="rowData">
+                <td>{{rowIndex + 1}}</td>
                 <td>{{rowData.name}}</td>
             </tr>
         </ng-template>

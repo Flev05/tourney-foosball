@@ -14,6 +14,8 @@
             nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
             tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
             inseriti saranno persi.
+        </p>
+        <p>
             Per avere un account e salvare i dati inseriti, occorre procurarselo come descritto 
             nella pagina         
             <a class="home-button" [routerLink]="['/owner']">
@@ -43,6 +45,8 @@
             Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
             ed accederete alla corrispondente vista di dettaglio.
             La vista espone 2 schede: una per l'anagrafica e una per le caratteristiche del torneo.
+        </p>
+        <p>
             Nelle caratteristiche devono essere specificate tra le altre cose, anche se prevista la fass ad eliminazione diretta.
             L'elimiazione diretta non è obbligatoria e dipende dalla natura del torneo, alcuni la prevedono altri no.
             In pratica le eliminazioni dirette possono essere viste come mini gironi all'italiana in cui il girone
@@ -52,15 +56,21 @@
 
         <h4>Caricamento anagrafica giocatori</h4>
         <p>
-            I giocatori che partecipano al torneo devono essere caricati a sistema inserendo i loro
-            dati anagrafici. La vista preposta allo scopo è accessibile alla voce di menù: 
+            I giocatori che partecipano al torneo devono essere caricati a sistema inserendo i loro dati anagrafici.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
+        </p>
+        <p>            
             Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
             ed accederete alla vista elenco di tutti i giocatori del torneo.
             Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
             modificare i valori dei campi esistenti.
             Se invece volete inserire un nuovo giocatore, premete il bottone: "Nuovo Giocatore" ed accederete alla
-            vista di dettaglio del giocatore nella quale dovete compilare tutti i campi obbligatori.
+            vista di dettaglio del giocatore nella quale dovete compilare tutti i campi obbligatori.            
+        </p>
+        <p>
             In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
         </p>
         
@@ -68,17 +78,25 @@
         <p>
             Le squadre che compongono il torneo, devono essere create a valle della creazione dei giocatori.
             Una squadra contiene un sottoinsieme dei giocatori del torneo.
+        </p>
+        <p>
             La vista preposta allo scopo è accessibile alla voce di menù:
             <a class="home-button" [routerLink]="['/adminteam']" (click)="menuActive = false">Squadre</a>
+        </p>
+        <p>
             Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
             ed accederete alla corrispondente lista elenco di tutte le squadre del torneo.
             Se selezionate una dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
             modificare i valori dei campi esistenti.
+        </p>
+        <p>
             Se invece volete inserire una nuova squadra, premete il bottone: "Nuova Squadra" ed accederete alla
             vista di dettaglio della squadra nella quale potete effettuare la composizione della vostra squadra 
             inserendo il suo nome ed attingendo dalla lista dei giocatori disponibili non ancora inseriti in altre squadre.
             Nel momento in cui il giocatore va a far parte di una squadra automaticamente viene rimosso dal sistema
-            dalla lista dei giocatori disponibili.
+            dalla lista dei giocatori disponibili.            
+        </p>
+        <p>
             In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
         </p>
         
@@ -87,58 +105,80 @@
             I gironi sono intesi come quelli all'italiana in cui tutte le squadre si incontrano e ne determinano
             una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
             Il torneo contiene sempre almeno un girone, nel caso di campionato, ci sarà un unico girone che contiene
-            tutte le squadre del torneo.
+            tutte le squadre del torneo.            
+        </p>
+        <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/admintour']" (click)="menuActive = false">Gironi</a>
+            <a class="home-button" [routerLink]="['/adminround']" (click)="menuActive = false">Gironi</a>
+        </p>        
+        <p>
             Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
             ed accederete alla vista elenco di tutti i gironi del torneo.
             Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
             modificare i valori dei campi esistenti.
+        </p>
+        <p>
             Se invece volete inserire un nuovo girone, premete il bottone: "Nuovo Girone" ed accederete alla
             vista di dettaglio del girone nella quale potete effettuare la composizione del vostro girone 
             inserendo il suo nome ed attingendo dalla lista delle squadre disponibili non ancora inseriti in altri gironi.
             Nel momento in cui la squadra va a far parte di un girone automaticamente viene rimossa dal sistema
-            dalla lista delle squadre disponibili.
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+            dalla lista delle squadre disponibili.            
         </p>
-            
+        <p>
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.    
+        </p>
+
         <h4>Configurazione playoff</h4>
         <p>
             I playoff non sono obbligatori e dipende dalla natura del torneo, alcuni li prevedono altri no.
             Anche i playoff sono gironi all'italiana in cui tutte le squadre si incontrano e ne determinano
-            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.            
+        </p>            
+        <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminplayoff']" (click)="menuActive = false">Playoff</a>
+        </p>
+        <p>
             Nella pagina che si apre troverete la lista di tutti i vostri tornei che prevedono i playoff, 
             selezionate quello di vostro interesse ed accederete alla vista elenco di tutti i playoff del torneo.
             Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
-            modificare i valori dei campi esistenti.
+            modificare i valori dei campi esistenti.            
+        </p>
+        <p>
             Se invece volete inserire un nuovo playoff, premete il bottone: "Nuovo Playoff" ed accederete alla
             vista di dettaglio del playoff nella quale potete effettuare la composizione del vostro playoff 
             inserendo il suo nome e il numero di squadre previste, il popolamento dei playoff non viene 
-            specificato in questa fase ma in quella della configurazione del passaggio di turno.
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
+            specificato in questa fase ma in quella della configurazione del passaggio di turno.            
+        </p>
+        <p>
+            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.    
         </p>
 
         <h4>Configurazione eliminatorie</h4>
         <p>
             La fase della eliminazione diretta, deve essere configurata scegliendo il livello
             di partenza - sedicesimi, ottavi, quarti, ecc. - e spcificando come popolare gli incontri 
-            a partire dai posizionamente di clssifica dei girone precedenti: gironi all'italiana e playoff.
+            a partire dai posizionamente di clssifica dei girone precedenti: gironi all'italiana e playoff.            
+        </p>
+        <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/admineliminatory']" (click)="menuActive = false">Eliminatorie</a>
+        </p> 
+        <p>
             Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali configurare le eliminatorie, 
             selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
             Nella vista troverete anche le istruzioni di dettaglio per la creazione delle regole di popolamento 
-            dell'eliminatorie.
-        </p> 
+            dell'eliminatorie.    
+        </p>
 
         <h4>Obiettivi</h4>
         <p>
             L'obiettivo del torneo è da configurare per scopi di memorizzazione dello scopo del torneo
             possibile da consultare anche in futuro.
             Per esempio, per il campionato di calcio di serie B, l'obiettivo è salire in serie A e ci 
-            arrivano le prime due squadre del campionato più quella che vince i playoff corrispondenti.
+            arrivano le prime due squadre del campionato più quella che vince i playoff corrispondenti.            
+        </p>
+        <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminobjective']" (click)="menuActive = false">Obiettivi</a>
         </p>
@@ -152,10 +192,12 @@
             aspettare la fine della fase di qualifiacazione, in tal caso potete accedere alla vista del calendario 
             del torneo e completarlo quando disponete dei dati per la compilazione delle date e luoghi dove
             svolgere gli incontri.
-
+        </p> 
+        <p>
             La vista preposta allo scopo è accessibile alla voce di menù:
             <a class="home-button" [routerLink]="['/admincalendar']" (click)="menuActive = false">Calendario</a>
-
+        </p>
+        <p>
             Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali iniziare la configurazione del 
             calendario, selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
             La vista successiva vi mostra l'elenco di tutti i gironi, playoff ed eliminatorie da configurare.
@@ -474,8 +516,5 @@
                 </div>
             </div>
         </div>
-
     </form>   
-
 </div>
- 

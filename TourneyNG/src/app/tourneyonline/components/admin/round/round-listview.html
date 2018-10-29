@@ -7,29 +7,26 @@
 
 <div class="content-section documentation">
 
-    <p>Vista elenco di tutti i gironi che compongono il torneo.
+    <p>
+        Vista elenco di tutti i gironi che compongono il torneo.
     </p>
     <p>
-        Selezionare la riga di interesse - con un click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+        Selezionare la riga di interesse (click su un punto qualsiasi della riga) per accedere alla corrispondente vista di dettaglio
     </p>
     
 </div>
 
 <div class="content-section implementation">    
+
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+        
     <p-table [columns]="cols" 
         [value]="rounds" [responsive]="true" 
         selectionMode="single"
         [(selection)]="selectedRound" 
-        (onRowSelect)="onRowSelect($event)" 
-        [paginator]="true" 
-        [rows]="15">
-
-        <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-            <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Girone" ></button>
-            </div>
-        </ng-template>
+        (onRowSelect)="onRowSelect($event)" >
  
         <ng-template pTemplate="colgroup">
             <colgroup>
@@ -50,14 +47,13 @@
                 <td>{{rowIndex + 1}}</td>
                 <td>{{rowData.name}}</td>
             </tr>
-        </ng-template>
-    
+        </ng-template>        
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Nuovo Girone" ></button>
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Girone" ></button>
             </div>
-        </ng-template>        
-        
+        </ng-template>
+    
     </p-table>
 
 </div>

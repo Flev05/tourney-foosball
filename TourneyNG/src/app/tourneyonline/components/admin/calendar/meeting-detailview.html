@@ -13,7 +13,8 @@
         </p>
 
         <h4>Modificare un calendario</h4>
-        <p>I dati da inserire o modificare sono la data, l'ora e l'indirizzo dove si svolge l'calendario
+        <p>
+            I dati da inserire o modificare sono la data, l'ora e l'indirizzo dove si svolge l'calendario
         </p>
 
         <h4>Creare un nuovo calendario</h4>
@@ -23,7 +24,8 @@
         </p>
 
         <h4>Rimuovere un calendario</h4>
-        <p>La rimozione di un calendario non viene effettuato in questa pagina ma nelle
+        <p>
+            La rimozione di un calendario non viene effettuato in questa pagina ma nelle
             pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
         </p>
     </p-accordionTab>
@@ -53,7 +55,7 @@
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!meetingFormGroup.controls['address'].valid&&meetingFormGroup.controls['address'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
-                                La via è obbligatoria
+                            La via è obbligatoria
                         </span>
                     </div>
                 </div>

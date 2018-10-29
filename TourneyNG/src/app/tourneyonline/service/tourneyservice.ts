@@ -62,6 +62,8 @@ export class TourneyService {
     playoffsConfig: boolean;
 
     originalTeams: Team[];
+    meetings: Meeting[];
+    isOneway: boolean;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

@@ -231,6 +231,9 @@ export class InMemoryDataService implements InMemoryDbService {
         ,eliminatoryMode:EliminatoryMode.M
         ,teamSortType: TeamSortType.O
 
+        ,isOnewayRound: false
+        ,isOnewayPlayoff: false
+
         ,raceDuration:90
 
         ,matchWinnerScores:3
@@ -354,7 +357,7 @@ export class InMemoryDataService implements InMemoryDbService {
           }
         ]  
         , rounds:[{
-            id:1, name: "Girone A", type: RoundType.R, isOneway: false 
+            id:1, name: "Girone A", type: RoundType.R
             ,teams:[
                {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
               ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
@@ -381,7 +384,7 @@ export class InMemoryDataService implements InMemoryDbService {
             ,classification:[]
           }
           ,{
-            id:2, name: "Girone B", type: RoundType.R , isOneway: false
+            id:2, name: "Girone B", type: RoundType.R
             ,teams:[
               {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
              ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
@@ -409,7 +412,7 @@ export class InMemoryDataService implements InMemoryDbService {
         ]
         ,playoffs:[
           {id:1, round:{
-              id:1, name: "Playoff Girone A", type: RoundType.P, isOneway: false 
+              id:1, name: "Playoff Girone A", type: RoundType.P
               ,teams:[
                 {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
                 ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
@@ -441,7 +444,7 @@ export class InMemoryDataService implements InMemoryDbService {
               ]
           }
           ,{id:2, round:{
-            id:2, name: "Playoff Girone B", type: RoundType.P , isOneway: false
+            id:2, name: "Playoff Girone B", type: RoundType.P
             ,teams:[
               {id:6,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 - 20020 SOLARO MI"}
               ,{id:3,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}

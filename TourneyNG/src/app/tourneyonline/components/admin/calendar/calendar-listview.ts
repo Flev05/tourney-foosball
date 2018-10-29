@@ -16,13 +16,6 @@ const meetingLvRedirect: string = "admincalendar/lv/meetingLv";
     templateUrl: './calendar-listview.html'
 })
 export class CalendarListView extends AbstractListView {
-    constructor(
-        protected tourneyService: TourneyService,
-        protected router: Router,
-        protected location: Location,
-    ) {
-        super(meetingLvRedirect, tourneyService, router, location);
-    }
 
     selectedPlayoff: Playoff;
     selectedRound: Round;
@@ -32,18 +25,45 @@ export class CalendarListView extends AbstractListView {
     rounds: Round[];
     playoffs: Playoff[];
 
-    ngOnInit() {
-        super.ngOnInit();
-        this.loadAll();
+    isOnewayRound: string;
+    isOnewayPlayoff: string;
+
+    constructor(
+        protected tourneyService: TourneyService,
+        protected router: Router,
+        protected location: Location,
+    ) {
+        super(meetingLvRedirect, tourneyService, router, location);
     }
 
-    private loadAll() {
+    ngOnInit() {
+        super.ngOnInit();
 
         this.selectedTourney = this.tourneyService.selectedTourney;
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
-
+    
         this.rounds = this.selectedTourney.rounds;
         this.playoffs = this.selectedTourney.playoffs;
+
+        this.selectedRound = this.tourneyService.selectedRound;
+        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+
+        this.isOnewayRound = this.selectedTourney.isOnewayRound? "true" : "false";
+        this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff? "true" : "false";
+    }
+
+    onOnewayRoundClick() {
+        this.selectedTourney.isOnewayRound = true;
+    }
+    onRoundtripRoundClick() {
+        this.selectedTourney.isOnewayRound = false;
+    }
+
+    onOnewayPlayoffClick() {
+        this.selectedTourney.isOnewayPlayoff = true;
+    }
+    onRoundtripPlayoffClick() {
+        this.selectedTourney.isOnewayPlayoff = false;
     }
 
     onRoundSelect(event) {
@@ -52,10 +72,6 @@ export class CalendarListView extends AbstractListView {
         this.tourneyService.selectedRound = this.selectedRound;
 
         this.gotoMeetingListView();
-    }
-
-    private gotoMeetingListView() {
-        this.router.navigate([meetingLvRedirect]);
     }
 
     onPlayoffSelect(event) {
@@ -72,6 +88,10 @@ export class CalendarListView extends AbstractListView {
         this.tourneyService.selectedRound = this.selectedEliminatory.round;
 
         this.gotoMeetingListView();
+    }
+    
+    private gotoMeetingListView() {
+        this.router.navigate([meetingLvRedirect]);
     }
 
     goBack(): void {

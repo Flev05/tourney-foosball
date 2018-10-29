@@ -4,6 +4,8 @@ import { Location } from '@angular/common';
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 import { Country } from '../../domain/country';
+import { Team } from 'app/tourneyonline/domain/team';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 export abstract class AbstractView implements OnInit {
 
@@ -52,4 +54,21 @@ export abstract class AbstractView implements OnInit {
         }
         return filtered;
     }
+
+    protected newClassification(t: Team, initialPoints: number): Classification {
+        return {
+            id: this.tourneyService.getSequenceNumber(),
+            team: t,
+            points: initialPoints,
+            played: 0,
+            won: 0,
+            lost: 0,
+            penalty: 0,
+            goalsDone: 0,
+            goalsConceded: 0,
+            goalsDiff: 0
+        };
+    }
+
+
 }

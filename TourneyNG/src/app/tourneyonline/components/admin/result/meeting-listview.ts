@@ -2,18 +2,18 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Round } from '../../../domain/round';
-import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Message } from 'primeng/api';
-
-const redirect: string = "adminresult/lv/meetingLv/dv";
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { Round } from 'app/tourneyonline/domain/round';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
 @Component({
     templateUrl: './meeting-listview.html'
 })
 export class MeetingListView extends AbstractListView {
+    static redirect: string = "adminresult/lv/meetingLv/dv";
+    
     msgs: Message[] = [];
     selectedRound: Round;
 
@@ -25,31 +25,22 @@ export class MeetingListView extends AbstractListView {
         protected router: Router,
         protected location: Location,
     ) {
-        super(redirect, tourneyService, router, location);
+        super(MeetingListView.redirect, tourneyService, router, location);
     }
  
     ngOnInit() {
         super.ngOnInit();
-        this.updateRowGroupMetaData();
-    }
 
-    protected updateRowGroupMetaData() {
-
-        this.selectedRound = this.tourneyService.selectedRound;
-
+        this.selectedRound = this.tourneyService.selectedRound;    
         this.meetings = this.selectedRound.meetings;
     }
- 
-    save() {
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
 
-    onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
+    onRowSelect(event) {
+        console.log("Entering onRowSelect()");
 
-        msgerr = 'Modifica matrix fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        this.tourneyService.selectedMeeting = this.selectedMeeting;
+
+        this.router.navigate([MeetingListView.redirect]);
     }
 }
 

@@ -98,8 +98,7 @@ export class LevelListView extends AbstractListView {
                 , type: RoundType.E
                 , teams: this.selectedTourney.teams
                 , meetings:[]
-                , classification:[]
-                , matrix:[]
+                , classification:[]                
             };
             this.localRounds.push(round);
             this.prepareDefaultClassification(round);
@@ -132,21 +131,6 @@ export class LevelListView extends AbstractListView {
                 }
             }
         }
-    }
-
-    private newClassification(t: Team, initialPoints: number): Classification {
-        return {
-            id: this.tourneyService.getSequenceNumber(),
-            team: t,
-            points: initialPoints,
-            played: 0,
-            won: 0,
-            lost: 0,
-            penalty: 0,
-            goalsDone: 0,
-            goalsConceded: 0,
-            goalsDiff: 0
-        };
     }
 
     /**
@@ -334,10 +318,10 @@ export class LevelListView extends AbstractListView {
             return 0;
         });
 
-        if( this.selectedTourney.teamSortType=TeamSortType.O) {
+        if( this.selectedTourney.teamSortType==TeamSortType.O) {
             return sortedClassification;
         }
-        if( this.selectedTourney.teamSortType=TeamSortType.R) {
+        if( this.selectedTourney.teamSortType==TeamSortType.R) {
             sortedClassification = sortedClassification.sort((t1, t2) =>{
                 let rand = Math.random();
                 if(rand < 0.33) {
@@ -379,10 +363,6 @@ export class LevelListView extends AbstractListView {
         });
 
         return sortedClassification;
-    }
-
-    pow2(level : number) : number {
-        return Math.pow(2, level);
     }
 
     /**
@@ -487,14 +467,12 @@ export class LevelListView extends AbstractListView {
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: "" + index
                 , type: RoundType.E
-                , isOneway: true
                 , teams:[
                      {id:0, teamName:""}
                     ,{id:1, teamName:""}
                 ]
                 ,classification: []
                 ,meetings: [m]
-                ,matrix: []
             },
             tc1: {
                 id: this.tourneyService.getSequenceNumber(),

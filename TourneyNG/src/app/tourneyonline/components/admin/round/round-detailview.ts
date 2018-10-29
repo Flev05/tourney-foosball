@@ -13,6 +13,7 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 @Component({
     templateUrl: './round-detailview.html',
@@ -48,7 +49,6 @@ export class RoundDetailView extends AbstractDetailView {
             this.selectedRound.id = this.tourneyService.getSequenceNumber(); 
             this.selectedRound.teams = [];
             this.selectedRound.meetings = [];
-            this.selectedRound.isOneway = true;
             this.selectedRound.type = RoundType.R;
         }
 
@@ -77,13 +77,11 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
 
-        let isOneway = this.selectedRound.isOneway ? "true" : "false";
-
         this.roundFormGroup = this.fb.group({
             'name': new FormControl(this.selectedRound.name, Validators.compose([Validators.required])),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
-            'isOneway':    new FormControl(isOneway),
+            'isOneway':       new FormControl(this.selectedTourney.isOnewayRound),
         });
     }
 
@@ -136,7 +134,9 @@ export class RoundDetailView extends AbstractDetailView {
         this.addTeamToMeetings(team);
 
         this.selectedRound.teams.push(team);
-        this.selectedRound.classification.push(team);
+        let cl: Classification = this.newClassification(team, 0);
+
+        this.selectedRound.classification.push(cl);
     }
 
     private addTeamToMeetings(team: Team) {
@@ -144,7 +144,7 @@ export class RoundDetailView extends AbstractDetailView {
             let m = this.createMeeting(team, t);
 
             this.selectedRound.meetings.push(m);
-            if (this.selectedRound.isOneway) {
+            if (this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team);
                 this.selectedRound.meetings.push(m);
             }
@@ -185,9 +185,6 @@ export class RoundDetailView extends AbstractDetailView {
         index = this.selectedRound.teams.indexOf(team);
         if (index > -1) {
             this.selectedRound.teams.splice(index, 1);
-        }
-        index = this.selectedRound.classification.indexOf(team);
-        if (index > -1) {
             this.selectedRound.classification.splice(index, 1);
         }
     }
@@ -198,9 +195,9 @@ export class RoundDetailView extends AbstractDetailView {
 
         let isOneway: string = this.roundFormGroup.get('isOneway').value;
         if(isOneway=="true") {
-            this.selectedRound.isOneway = true;
+            this.selectedTourney.isOnewayRound = true;
         } else {
-            this.selectedRound.isOneway = false;
+            this.selectedTourney.isOnewayRound = false;
         }
 
         this.selectedRound.teams = this.roundFormGroup.get('targetTeams').value;
@@ -227,7 +224,7 @@ export class RoundDetailView extends AbstractDetailView {
                 let m : Meeting = this.createMeeting(t1, t2);
                 this.selectedRound.meetings.push(m);
 
-                if(this.selectedRound.isOneway) {
+                if(this.selectedTourney.isOnewayRound) {
                     let m : Meeting = this.createMeeting(t2, t1);
                     this.selectedRound.meetings.push(m);    
                 }

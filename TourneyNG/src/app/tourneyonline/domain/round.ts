@@ -8,11 +8,10 @@ export interface Round {
     id: number;
     name: string;
     type: RoundType;
-    isOneway?: boolean;
 
     teams?:  Team[];
 
     meetings?: Meeting[];
     classification?: Classification[];
-    matrix?: Matrix[];
+    matrix?: Matrix;
 }

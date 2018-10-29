@@ -21,7 +21,7 @@ export abstract class AbstractListView extends AbstractView {
         this.router.navigate([this.redirect]);
     }
 
-    containsPhase(value: PhaseType, phases: PhaseType[]) : boolean{
+    protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean{
 
         for(let i=0; i<phases.length; i++ ) {
             if(phases[i] == value ) {
@@ -29,5 +29,9 @@ export abstract class AbstractListView extends AbstractView {
             }
         }
         return false;
+    }
+
+    protected pow2(level : number) : number {
+        return Math.pow(2, level);
     }
 }

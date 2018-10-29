@@ -1,0 +1,59 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Incontri</span>
+        <span>Scontro diretto: {{selectedMeeting.name}}</span>
+    </div>
+</div>    
+
+<div class="content-section documentation">
+<p>
+    Vista per l'inserimento del risultato finale dell'incontro selezionato.
+</p>
+
+<p-accordion>
+<p-accordionTab header="Istruzioni">                        
+            
+    <h4>Istruzioni</h4>
+    <p> 
+        La vista mostra l'incontro di andata e, se esiste, l'incontro di ritorno delle 2 squadre selezionate.
+    </p> 
+    <p>
+        Inserire i risultati finali dei corrispondenti incontri e salvare.
+    </p>
+</p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="content-section implementation">      
+
+    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+    <h4><span>Incontro: {{selectedMeeting.name}}</span></h4>
+
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+
+    <div class="ui-grid-col-3">
+        Squadra 1:
+    </div>
+    <div class="ui-grid-col-1">
+        <p-spinner ([ngModel])="selectedMeeting.team1.teamName" tooltipPosition="right"
+            pTooltip="Inserire il punteggio della squadra di casa">
+            [min]="0"
+        </p-spinner>
+    </div>                
+
+    <div class="ui-grid-col-3">
+        Squadra 2:
+    </div>
+    <div class="ui-grid-col-1">
+        <p-spinner ([ngModel])="selectedMeeting.team2.teamName" tooltipPosition="right"
+            pTooltip="Inserire il punteggio della squadra fuori casa">
+            [min]="0"
+        </p-spinner>
+    </div>                
+
+    <div style="text-align:left">
+        <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
+    </div>
+
+</div>
+    

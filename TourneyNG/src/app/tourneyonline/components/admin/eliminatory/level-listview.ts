@@ -91,9 +91,8 @@ export class LevelListView extends AbstractListView {
      */
     private processStandalone() {
 
-        let round: Round;
         if(this.localRounds.length==0) {           
-            round = {id:this.tourneyService.getSequenceNumber()
+            let round: Round = {id:this.tourneyService.getSequenceNumber()
                 , name:""
                 , type: RoundType.E
                 , teams: this.selectedTourney.teams
@@ -373,7 +372,6 @@ export class LevelListView extends AbstractListView {
     private prepareEliminatoryLevels(teamsNo: number): any {
         console.log("Entering prepareEliminatoryLevels("+teamsNo+")");
 
-        this.localRounds = 
 
         let levelsCombobox =  this.tourneyService.prepareLevelCombobox(teamsNo);
 

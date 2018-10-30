@@ -365,16 +365,18 @@
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
                             <p-checkbox name="phasesGroupname" label="Gironi"     
                                 value="round"     
-                                [formControl]="tourneyFormGroup.controls['phases']">
+                                [formControl]="tourneyFormGroup.controls['phases']"
+                                (onChange)="onOnewayRoundChange()">
                             </p-checkbox>
                             <p-checkbox name="phasesGroupname" label="Play Off"     
                                 value="playoff"     
-                                [formControl]="tourneyFormGroup.controls['phases']">
+                                [formControl]="tourneyFormGroup.controls['phases']"
+                                (onChange)="onOnewayPlayoffChange()">
                             </p-checkbox>
                             <p-checkbox name="phasesGroupname" label="Eliminatorie" 
                                 value="eliminatory" 
                                 [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox>
+                            </p-checkbox>                            
                         </div>
                         <div class="ui-grid-col-3">
                             <div *ngIf="notAllowedPhases()" class="ui-message ui-messages-error ui-corner-all">
@@ -389,6 +391,44 @@
                             </div>
                         </div>
                     </div>
+
+                    <div *ngIf="containsPhase('round')" class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Turni Gironi:
+                        </div>
+                        <div class="ui-grid-col-5" tooltipPosition="right"
+                                pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
+                            <p-radioButton name="isOnewayRoundGroupname" 
+                                label="Solo andata" 
+                                value="true" 
+                                formControlName="isOnewayRound">
+                            </p-radioButton>
+                            <p-radioButton name="isOnewayRoundGroupname" 
+                                label="Andata e ritorno" 
+                                value="false" 
+                                formControlName="isOnewayRound">
+                            </p-radioButton>
+                        </div>
+                    </div>                          
+
+                    <div *ngIf="containsPhase('playoff')" class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Turni Playoff:
+                        </div>
+                        <div class="ui-grid-col-5" tooltipPosition="right"
+                                pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
+                            <p-radioButton name="isOnewayGroupname" 
+                                label="Solo andata" 
+                                value="true" 
+                                formControlName="isOnewayPlayoff">
+                            </p-radioButton>
+                            <p-radioButton name="isOnewayGroupname" 
+                                label="Andata e ritorno" 
+                                value="false" 
+                                formControlName="isOnewayPlayoff">
+                            </p-radioButton>
+                        </div>
+                    </div>                          
                 </p-fieldset>
                     
                 <p-fieldset legend="Punteggi">

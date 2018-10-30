@@ -9,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './domain/in-memory-data.service';
 
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
@@ -23,6 +22,7 @@ import { ClientService } from './service/clientservice';
 import { UserngService } from './service/userngservice';
 import { RoleService } from './service/roleservice';
 import { CountryService } from './service/countryservice';
+import { InMemoryDataService } from 'app/tourneyonline/in-memory-data-service/in-memory-data.service';
 
 @NgModule({
   declarations: [

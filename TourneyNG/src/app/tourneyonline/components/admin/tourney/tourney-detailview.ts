@@ -35,7 +35,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
     isOnewayRound: string;
     isOnewayPlayoff: string;
-    isOnewayEliminatory: string;
 
     constructor(
         private fb: FormBuilder,
@@ -88,10 +87,16 @@ export class TourneyDetailView extends AbstractDetailView {
             
             this.selectedTourney.eliminatoryMode = EliminatoryMode.M
             this.selectedTourney.teamSortType = TeamSortType.O;
-            
+
+            this.selectedTourney.isOnewayRound=true ;
+            this.selectedTourney.isOnewayPlayoff=true;
+    
         } else {
             this.tourneyDate = new Date(this.selectedTourney.datetime);
         }
+
+        this.isOnewayRound = this.selectedTourney.isOnewayRound ? "true" : "false";
+        this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff ? "true" : "false";
 
         if(this.selectedTourney.country != undefined ) {
             this.fullAddress = this.selectedTourney.address + " - " 
@@ -125,8 +130,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
             'isOnewayRound': new FormControl(this.isOnewayRound),
             'isOnewayPlayoff': new FormControl(this.isOnewayPlayoff),
-            'isOnewayEliminatory': new FormControl(this.isOnewayEliminatory),
-        });
+       });
     }
 
     search(event) {
@@ -167,6 +171,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.pointsGoldenGoalTieBreakDefeat = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakDefeat').value;
 
         this.selectedTourney.phases = this.tourneyFormGroup.get('phases').value;
+
+        this.selectedTourney.isOnewayRound   = this.tourneyFormGroup.get('isOnewayRound').value == "true"? true: false;
+        this.selectedTourney.isOnewayPlayoff = this.tourneyFormGroup.get('isOnewayPlayoff').value == "true"? true: false;
 
         console.log("selectedTourney.phases: " + this.selectedTourney.phases);
 

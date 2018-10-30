@@ -11,11 +11,13 @@
     </p>
 
     <p>
-        Selezionare la riga di interesse - con un click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+        Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
     </p>
 </div>
 
 <div class="content-section implementation">    
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+
     <p-table [columns]="cols" 
         [value]="teams" [responsive]="true" 
         selectionMode="single"
@@ -25,7 +27,6 @@
         [rows]="10">
 
         <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
             <div style="text-align:left">
                 <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
             </div>

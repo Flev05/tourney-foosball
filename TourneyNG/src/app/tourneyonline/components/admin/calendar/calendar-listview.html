@@ -28,27 +28,6 @@
 <p-tabView>
     <p-tabPanel header="Gironi">    
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Turni:
-            </div>
-            <div class="ui-grid-col-5" tooltipPosition="right"
-                    pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
-                <p-radioButton name="isOnewayRoundGroupname" 
-                    label="Solo andata" 
-                    value="true" 
-                    [(ngModel)]="isOnewayRound"
-                    (onClick)="onOnewayRoundClick()">
-                </p-radioButton>
-                <p-radioButton name="isOnewayRoundGroupname" 
-                    label="Andata e ritorno" 
-                    value="false" 
-                    [(ngModel)]="isOnewayRound"
-                    (onClick)="onRoundtripRoundClick()">
-                </p-radioButton>
-            </div>
-        </div>  
-
         <p-table [responsive]="true" 
             [value]="rounds"
             selectionMode="single"
@@ -79,28 +58,6 @@
     </p-tabPanel>
 
     <p-tabPanel header="Playoff">    
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Turni:
-            </div>
-            <div class="ui-grid-col-5" tooltipPosition="right"
-                    pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
-                <p-radioButton name="isOnewayGroupname" 
-                    label="Solo andata" 
-                    value="true" 
-                    [(ngModel)]="isOnewayPlayoff"
-                    (onClick)="onOnewayPlayoffClick()">
-                </p-radioButton>
-                <p-radioButton name="isOnewayGroupname" 
-                    label="Andata e ritorno" 
-                    value="false" 
-                    [(ngModel)]="isOnewayPlayoff"
-                    (onClick)="onRoundtripPlayoffClick()">
-                </p-radioButton>
-            </div>
-        </div>  
-        
         <p-table [responsive]="true" 
             [value]="playoffs" 
             selectionMode="single"

@@ -48,6 +48,7 @@ export class TourneyService {
     selectedEliminatoryLevel: EliminatoryLevel;
     selectedMeeting : Meeting;
     availableTeams: Team[];
+    selectedTeams:  Team[];
 
     newTourney : boolean = false;
     newPlayer : boolean = false;
@@ -136,6 +137,11 @@ export class TourneyService {
     }
 
     public prepareLevelCombobox(teamsNo: number) : Array<Combobox> {
+
+        this.selectedTeams = [];
+        for(let t of this.selectedTourney.teams) {
+            this.selectedTeams.push(t);
+        }
 
         let levelNo = Math.ceil(Math.log2(teamsNo));
         let levelsCombobox = new Array<Combobox>();

@@ -38,6 +38,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
     private isOneway: boolean;
     isPlayoff: boolean;
+    isTopLevel: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -59,6 +60,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.isOneway = this.selectedEliminatoryLevel.isOneway;
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
+        this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;

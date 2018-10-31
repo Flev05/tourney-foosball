@@ -1,12 +1,13 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Eliminazioni dirette</span>
-        <span>Configurazione Eliminazioni dirette iniziale del torneo: {{selectedTourney.tourneyName}}</span>
+        <span class="feature-title">Eliminazioni Dirette</span>
+        <span>Configurazione delle Eliminazioni Dirette</span>
     </div>
 </div>    
 
 <div class="content-section documentation">
-<p>Vista elenco delle configurazioni delle Eliminazioni dirette di partenza che compongono il torneo
+<p>
+    Vista elenco delle configurazioni delle Eliminazioni dirette che compongono il torneo: {{selectedTourney.tourneyName}}
 </p>
 
 <p-accordion>
@@ -14,83 +15,36 @@
             
     <h4>Istruzioni</h4>
     <p> 
-        In questa vista dovete effettuare le seguenti operazioni:
+        In questa vista dovete effettuare 2 operazioni:
     </p> 
     <ul>
-        <li>Scegliere il turno</li>
-        <li>Completare i livelli</li>
+        <li>1) Scegliere il turno</li>
+        <li>2) Completare i livelli</li>
     </ul>
 
-    <h5>Scegliere il turno</h5>
+    <h5>1) Scegliere il turno</h5>
     <p>
-        Per Turno si intende quello di solo andata o andata e ritorno. Scegliete la tipologia 
-        di turno che intendente applicare per il corrente livello di eliminazione diretta, il sistema la userà 
-        poi per richiedere la configurazione delle date e luoghi degli incontri.
+        Dovete specificare per ciascun livello di eliminazione diretta - finele, semifinale, quarti, ecc. - 
+        se gli incontri sono di solo andata o andata e ritorno. Il sistema lo userà 
+        poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
     </p>
 
-    <h5>Completare i livelli</h5>
+    <h5>2) Completare i livelli</h5>
     <p> 
-        Dovete selezionare tutte le righe, una per una, ed accedere alla corrispondente vista di dettaglio
-        dove inserirete i dati richiesti.
+        Dovete selezionare tutti i livelli, uno per uno, accedere alla corrispondente vista di dettaglio
+        ed inserire i dati richiesti.
     </p> 
 
     <p>
-        In funzione del tipo di torneo e della scelta alla pagina precedente,
-        le righe nella vista possono essere di 3 tipi:
-    </p>
-    <ul>
-        <li>Standalone</li>
-        <li>Manuale</li>
-        <li>Automatico</li>
-    </ul>
-
-    <h5>Standalone</h5>
-    <p>
-        Il tipo Standalone si riferisce ad un torneo fatto di sole eliminazioni dirette in cui
-        non ci sono ne gironi ne playoff. In questo caso il sistema propone in automatico, in funzione
-        del numero di squadre selezionate, il livello minimo di partenza.
-    </p>
-    <p>
-        Se il numero di squadre non è una potenza di 2 - 4, 8, 16, ecc. - seleziona il livello minimo per contenerle
-        tutte e sceglie le squadre che devono fare lo spareggio, così come quelle che passano in automatico 
-        al turno successivo, con un algoritmo standard. Potete cambiare queste scelte con le vostre preferenze.
-    </p>
-        
-    <h5>Manuale</h5>
-    <p>Il tipo di eliminazione Manuale, il default, permette qualsiasi configurazione delle regole del passaggio
-        del turno, partendo dai risultati conseguiti nei gironi e playoff. 
-        Si possono cioè definire le regole per esprimere il passaggio del turno partendo dalle posizioni di classifica
-        conseguite nei gironi e playoff alle eliminazioni dirette.
-    </p> 
-
-    <h5>Automatico</h5>
-    <p>
-        Questo tipo di eliminazione è possibile solo per quei tornei che hanno solo i gironi all'italiana 
-        e le eliminazioni dirette, e non hanno gironi di playoff.
-    </p>
-    <p>
-        In questo caso, l'organizzatore, che sceglie il modo Automatico nella vista precedente,
-        è chiamato a scegliere anche il numero di squadre che intende fare passare il turno dai gironi.
-    </p>
-    <p>        
-        Una volta fornito il numero di squadre, anche tutte, il sistema prepara il livello minimo 
-        per ospitarle e le posiziona in automatico nelle caselle del livello di eliminazione di partenza
-        in funzione delle classifiche delle squadre in ciascun girone.
-    </p>
-    
-    <p>
-        La regola generale è quella standard utilizzata dai più diffusi tornei di calcio, basket, volley ecc.
-        in cui la prima classificata del primo girone affronta l'ultima classificata dell'ultimo girone, 
-        la prima classificata del secondo girone affronta la ultima classificata del penultimo girone, ecc.
-    </p>
-                
-    <p>
-        Solo per il livello più alto, il primo della lista, dovete aggiustare, se volete, la lista di accoppiamenti
-        generata in automatco dal sistema.
-    
-        Per le altre righe, se il torneo si sviluppa su più giorni, compilare le date e le locazioni.
+        Bisogna differenziare fra il primo livello, quello più alto, e tutti gli altri.
+        Il primo livello contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo.
+        Gli altri livelli contengono solo la configurazione della data e del luogo.
     </p>
 
+    <p>
+        Se il torneo è di tipo giornaliero, non dovete configurare la parte relativa alle date e ai luoghi
+        di svolgimento delle partite.
+    </p>
 </p-accordionTab>
 </p-accordion>
 </div>
@@ -123,7 +77,7 @@
         </div>
     </div>    
                 
-    <p-table *ngIf="!isManual" 
+    <p-table *ngIf="!isManual"
             [responsive]="true" 
             [value]="eliminatories" 
             selectionMode="single" 
@@ -221,5 +175,6 @@
             </tr>
         </ng-template>
     </p-table>
+    
 </div>
     

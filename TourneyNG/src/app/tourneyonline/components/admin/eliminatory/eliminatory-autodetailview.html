@@ -11,34 +11,32 @@
             Vista di dettaglio Eliminazione diretta configuazione automatica.
         </p>
         <p>
-            A questa vista ci si arriva per via di 2 ragioni: torneo di tipo Standalone o scelta per la generazione degli
-            accoppiamenti di partenza Automatico
+            In questa vista devono essere effettuate fino a 3 operazioni: 
+        </p>
+        <ul>
+            <li>1) Configurazione coppie</li>
+            <li>2) Data e locazione turno di andata</li>
+            <li>3) Se esiste, data e locazione turno di ritorno</li>
+        </ul>          
+
+        <h4>1) Configurazione coppie</h4>
+        <p>
+            Se non generate automaticamente, scegliere dalle 2 combo box le squadre che compongono l'incontro selezionato
         </p>
 
-        <h4>Standalone</h4>
+        <h4>2) Data e locazione turno di andata</h4>
         <p>
-            Significa che il responsabile del terneo ha configurato un torneo con solo le eliminazioni dirette,
-            senza gironi all'italiana ne playoff.
+            Se il torneo non è di tipo giornaliero, inserire la data e il luogo dell'incontro per il turno di andata
         </p>
 
-        <h4>Automatico</h4>
+        <h4>3) Se esiste, data e locazione turno di ritorno</h4>
         <p>
-            Significa che il responsabile del terneo, ha configurato un torneo con i gironi all'italiana e 
-            le eliminazioni dirette. Poi, in fase di configurazione delle elinimazioni dirette,
-            ha scelto la modalità di generazione degli incontri automatica.
+            Inserire la data e il luogo dell'incontro per il turno di ritorno
         </p>
 
         <p>
-            Potete modificare gli accoppiamenti proposti dal sistema, con accoppiamenti di vostra scelta.
-            Per fare ciò trascinate le squadre dall'area dei Disponibili a quella dei Selezionati 
-            e viceversa. Alla fine, però, tutte le squadre devono essere collocate in una posizione di vostra
-            scelta e l'area dei Disponibili deve essere vuota altrimenti le modifiche non possono essere accettate.
-        </p>
-
-        <p>
-            Oltre alla configurazione delle regole di popolamento delle eliminazioni dirette, dovete anche inserire
-            le date e i luoghi degli incontri di andata e, se previsto, di ritorno.
-            Alla fine della configurazione salvare con il bottone Salva
+            In ogni caso, rammentare cha alla fine della configurazione deve essere salvato il tutto con il bottone Salva
+            altrimenti tutte le scelte andranno perdute e dovranno essere rifatte.
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -56,6 +54,32 @@
     </div>                  
 
     <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
+        <div *ngIf="isTopLevel" class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="team1">I Squadra</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="team1" [options]="availatbleTeams" formControlName="team1" 
+                        optionLabel="label" 
+                        placeholder="Selezionare">
+                    </p-dropdown>
+                </div>
+            </div>
+            Vs         
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="team2">II Squadra</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="team2" [options]="availatbleTeams" formControlName="team2" 
+                    optionLabel="label"
+                    placeholder="Selezionare">
+                </p-dropdown>
+                </div>
+            </div>
+        </div>      
+
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <h4>Andata</h4>
 
@@ -80,7 +104,7 @@
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid&&eliminatoryFormGroup.controls['address1'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
-                            La via dell'incontro di andata è obbligatoria
+                            La via dell'incontro del luogo di andata è obbligatoria
                         </span>
                     </div>
                 </div>
@@ -131,7 +155,7 @@
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid&&eliminatoryFormGroup.controls['address2'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
-                            La via dell'incontro di ritorno è obbligatoria
+                            La via dell'incontro del luogo di ritorno è obbligatoria
                         </span>
                     </div>
                 </div>

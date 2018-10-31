@@ -38,6 +38,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     isTopLevel: boolean;
     private isOneway: boolean;
 
+    availableTeams: Combobox[];
+
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -56,7 +58,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.isOneway = this.selectedEliminatoryLevel.isOneway;
-        this.isTopLevel = false;
+        this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         let m1: Meeting = this.selectedEliminatory.round.meetings[0];
 
@@ -75,7 +77,13 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
                     + " (" + m2.country.provinceCode +")";
             }
         }
-        
+
+        this.availableTeams = [];
+        for(let t of this.tourneyService.selectedTeams) {
+            let cb = {label: t.teamName, value: t.id};
+            this.availableTeams.push(cb);
+        }
+
         this.eliminatoryFormGroup = this.fb.group({
 
             'meetingDate1':  new FormControl(new Date(m1.datetime)),
@@ -85,6 +93,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             'meetingDate2':  new FormControl(new Date(m2.datetime)),
             'address2':  new FormControl(m2.address),
             'country2':  new FormControl(m2.country),    
+            'availableTeams':  new FormControl(this.availableTeams),    
         });
     }
 
@@ -96,16 +105,34 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
+        let teamName = this.eliminatoryFormGroup.get('team1').value;
+        m1.team1 = this.getTeam(teamName);
+        m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
+
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
-                                            
+
+            let teamName = this.eliminatoryFormGroup.get('team2').value;
+            m1.team2 = this.getTeam(teamName);
+    
             m2.name = m2.team2.teamName + " - " + m2.team1.teamName;
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+    }
+
+    private getTeam(teamName: string) : Team {
+
+        for(let t of this.tourneyService.selectedTeams) {
+            if(t.teamName == teamName) {
+                return t;
+            }
+        }
+
+        return null;
     }
 
     onError(n:any) {

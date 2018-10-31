@@ -29,78 +29,74 @@
 
     <h4>Squadre</h4>
     <p>
-        Scegliere il numero di squadre che incomincia le eliminazioni dirette, sia se proveniente dai gironi e playoff
+        Scegliere il numero di squadre che incominciano le eliminazioni dirette, sia se proveniente dai gironi e/o playoff
         sia se si incomincia direttamente dai gironi eliminatori.
-        In funzione di tale numero il sistema sceglie il livello minimo per contenerle tutte.
+        Con il numero N scelto dalla combo box, anche tutte, il sistema preleva le prime N squadre dalla lista 
+        delle squadre del torneo nell'ordine in cui si trovano.
     </p>    
 
     <h4>Modo</h4>
     <p>
-        Se il torneo contiene solo gironi ed eliminazioni dirette ma non contiene playoff, il sistema
-        vi da la possibilità di calcolare in automatico le regole di accopiamento iniziale nelle
-        eliminazioni dirette. 
-        Allo scopo, dovete scegliere tra 2 punti di una radio button: Manuale e Automatico
+        A meno che il vostro torneo non contenga i gironi dei playoff, il sistema vi da la possibilità di scegliere 
+        se volete far calcolare in automatico le regole di accopiamento iniziale nelle eliminazioni dirette.         
+        Allo scopo, potete scegliere tra 2 punti di una radio button: Manuale e Automatico
     </p>                
-
-    <h5>Manuale</h5>
-    <p>La gestione Manuale, il default, permette qualsiasi configurazione delle regole del passaggio del turno, partendo
-        dai risultati conseguiti nei gironi e playoff. Si possono cioè definire le regole per passare posizioni di classifica
-        dei gironi alle eliminazioni dirette così come dai playoff se ci sono.
-    </p> 
-
-    <p> Il sistema calcola, in funzione del numero di squadre e gironi presenti nel torneo,
-        la lista delle possibili eliminatorie di partenza.
+    <p>
+        Se il vostro torneo contiene anche i playoff, invece, non avete alcuna possibilità di far calcolare in Automatico
+        le posizioni di partenza delle elininazioni dirette ma dovete compilare voi a mano tutte le regole di
+        passaggio del turno dalle posizioni dei gironi e playoff alle aliminazioni dirette.
     </p>
     <p> 
-        Potete selezionare quella che fa al vostro caso dalla lista a tendina Eliminatorie.
-        A fronte di talle scelta, viene viene visualizzata nella vista successiva, una lista di possibili 
-        di tutti i livelli di cui è composto il torneo, da quello di partenza a tutti i successivi, fino
-        alla finalissima per il 1° e 2° posto e l'eventuale finalina per il 3° e 4° posto.
+        In funzione del numero di squadre fornito nella combo box delle squadre, il sistema determina il livello
+        minimo di partenza per ospitare le squadre scelte e i livelli successivi fino alla finalissima 1° e 2° posto
+        e finalina per il 3° e 4° posto.
     </p>
-
     <p>
         Solo la prima riga contiene le regole per il popolamento delle squadre provenienti dai posizionamenti
         nei gironi, le altre devono essere configurate solo per inserire le date e i luoghi dove avverranno
-        gli incontri. Se si tratta di un torneo giornaliero, questa fase non è necessaria.
+        gli incontri. 
     </p>         
-    
     <p>
-        Per esempio, se selezionate gli ottavi di finale dalla conbo box Livelli,
-        vedrete nella vista sottostante, 5 righe dagli ottavi alla finalissima 1° e 2° posto
-        più quella opzionale del 3° e 4° posto.
-    </p>
-        
-    <p>
-        Per esempio se ci sono 25 squadre, il sistema propone un livello di entrata ai sedicesimi di finale
-        in cui 25-16=9 coppie, disputano uno spareggio per passare agli ottavi, mentre le restanti 25-18=7
-        squadre, passano direttamente ai ottavi ma senza giocare.
+        Se si tratta di un torneo giornaliero, questa fase non è necessaria.
     </p>
     <p>
-        Il come scegliere chi disputa lo spareggio e chi passa direttamente al turno successivo, resta a discrezione
-        del gestore del torneo. Il sistema fa una proposta basata sull'ordine alfabetico delle squadre, 
-        ma il gestore può cambiare tutto a suo piacimento.
+        Per esempio, se selezionate N=13 squadre dalla combo box delle squadre, il sistema prende le prime 13 squadre
+        dalla lista del torneo e visualizza la lista delle eliminazioni dirette dagli ottavi di finale fino alla 
+        finalissima e finalina.
     </p>
+            
+    <h5>Manuale</h5>
+    <p>
+        La gestione Manuale, che è il default, permette qualsiasi configurazione delle regole del passaggio del turno.
+        Partendo dai risultati conseguiti nei gironi e playoff, si possono compilare le regole per il posizionamento 
+        nel livello di partenza delle eliminazioni dirette.
+    </p> 
 
     <h5>Automatico</h5>
-    <p>La gestione in Automatico può essere applicata solo nel caso di configurazione a gironi con eliminazione diretta
-        ma senza playoff. 
-        
-        In questo caso dovete specificare il numero di squadre che volete passino dai gironi all'italiana
-        alla fase ad eliminazione diretta, potete inserire qualsiasi numero minore o uguale del numero totale di
-        squadre che compongono il torneo, anche tutte, ci pensa il sistema a scegliere l'opportuno livello di eliminatorie iniziale
-        - sedicesimi, ottavi, quarti, ecc. - preparare la lista delle squadre che passano automaticamente
-        al turno successivo e quelle che devono invece fare un ulteriore turno di spareggio.
-    </p>
-    
     <p>
-        La regola generale è quella standard utilizzata dai più diffusi tornei di calcio, basket, volley ecc.
-        in cui la prima classificata del primo girone affronta l'ultima classificata dell'ultimo girone, 
-        la prima classificata del secondo girone affronta la ultima classificata del penultimo girone, ecc.
+        Nel modo automatico, il sistema si differenzia per 2 casi:
     </p>
-    
+    <ul>
+        <li>1) Torneo con gironi ed eliminazioni dirette</li>
+        <li>2) Torneo con sole eliminazioni dirette</li>
+    </ul>  
+
+    <p>
+        Nel caso 1) il sistema prepara le caselle di coppie, del livello minimo di eliminazione diretta, 
+        per ospitare le squadre in funzione delle posizioni conseguite nei gironi di qualificazione per popolarlo.
+        In pratica effettua un ordinamento sulle posizione delle squadre all'interno dei singoli gironi e poi un 
+        ordinamento globale in modo che si abbiano, nell'ordine:
+        le migliori prime, le migliori seconde, le migliori terze, ecc.
+    </p>
+    <p>
+        Nel caso 2) il sistema, non avendo delle posizioni di classifica da cui partire, è come se tutte le squadre
+        avessero gli stessi punti quindi effettua un sorteggio con un ordinamento casuale sulle squadre 
+        selezionate ed applica lo stesso algoritmo di popolamento del caso 1) in cui si ha solo la classifica delle
+        migliori prime.
+    </p>
     <p>
         Per esempio, se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
-        di ciasun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
+        di ciascun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
         con le seguenti regole:
     </p> 
     <ul>
@@ -109,35 +105,6 @@
         <li>1° classificata Girone C Vs 2° classificata Girone B</li>
         <li>1° classificata Girone D Vs 2° classificata Girone A</li>
     </ul>  
-
-    <p>
-        Inoltre, se avete selezionato il modo Automatico, il sistema vi chiede di scegliere fra 3 possibili 
-        ordini iniziale per preparare gli occoppiamenti di partenza:        
-    </p>
-    <ul>
-        <li>Ordine di inserimento</li>
-        <li>Ordine alfabetico</li>
-        <li>Sorteggio</li>
-    </ul>         
-    <h5>Ordine di inserimento</h5>
-    <p>
-        Il sistema utilizzerà l'ordine delle squadre così come inserito.
-    </p>
-    <h5>Ordine alfabetico</h5>
-    <p>
-        Il sistema effettua un ordinamento alfabetico delle squadre inserite
-    </p>
-    <h5>Sorteggio</h5>
-    <p>
-        Il sistema effettua un ordinamento casuale sulle squadre inserite, quindi si ha un vero e proprio sorteggio.
-    </p>
-
-    <p>
-        In generale, a prescindere dai metodi di generazione delle eliminazionie di partenza,
-        il sistema calcola in automatico i passaggi ai turni successivi e nessuna altra operazione di configurazione
-        deve essere aggiunta.
-    </p>
-                        
 </p-accordionTab>
 </p-accordion>
 </div>
@@ -180,30 +147,6 @@
                 [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
             </p-radioButton>
         </div>
-    </div>       
-
-    <div *ngIf="!isManual" class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Ordinamento:
-        </div>
-        <div class="ui-grid-col-6" tooltipPosition="right"
-            pTooltip="Scegliere il tipo di ordinamento delle squadre. Si veda le istruzioni per maggiori dettagli">
-            <p-radioButton name="sortmodeGroupname" 
-                label="Originale" 
-                value="original" 
-                [(ngModel)]="selectedTourney.teamSortType" (onClick)="onOriginalClick()">
-            </p-radioButton>
-            <p-radioButton name="sortmodeGroupname" 
-                label="Alfabetico" 
-                value="alphabetical" 
-                [(ngModel)]="selectedTourney.teamSortType" (onClick)="onAlphabeticalClick()">
-            </p-radioButton>
-            <p-radioButton name="eliminatoryModeGroupname" 
-                label="Sorteggio" 
-                value="random" 
-                [(ngModel)]="selectedTourney.teamSortType" (onClick)="onRandomClick()">
-            </p-radioButton>
-        </div> 
     </div>       
  
     <p-table [responsive]="true" 

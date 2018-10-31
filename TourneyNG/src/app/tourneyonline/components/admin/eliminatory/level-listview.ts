@@ -81,36 +81,139 @@ export class LevelListView extends AbstractListView {
         }
         
         if(!this.isManual || this.isStandalone) {
+            this.loadLocalRounds();
             this.prepateAutoEliminatories();
         }
     }
 
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
-     * no rounds and no playoffs
+     * no rounds and no playoffs.
+     * Always aligns the teams in the local round to the user selected teams
      */
     private processStandalone() {
 
-        if(this.localRounds.length==0) {           
+        if(this.localRounds == undefined) {
+            this.localRounds = [];
             let round: Round = {id:this.tourneyService.getSequenceNumber()
                 , name:""
                 , type: RoundType.E
-                , teams: this.selectedTourney.teams
+                , teams: this.tourneyService.selectedTeams
                 , meetings:[]
                 , classification:[]                
             };
             this.localRounds.push(round);
-            this.prepareDefaultClassification(round);
-        } else {
-            this.alignToNewTeams();
         }
+
+        let r = this.localRounds[0];
+
+        this.removeFromLocalRound(r, this.tourneyService.selectedTeams);
+        this.addToLocalRound(r, this.tourneyService.selectedTeams);
+
+        this.prepareDefaultClassification(r);
     } 
+
+    private loadLocalRounds(): any {
+        if(this.localRounds == undefined ) {
+            for(let r of this.selectedTourney.rounds) {
+                this.localRounds.push(r);
+            }
+        }
+
+        this.removeFromLocalRounds();
+        this.addToLocalRounds();
+
+        this.alignRoundTeams();
+    }
+
+    private removeFromLocalRounds(){
+        for(let i=0; i<this.localRounds.length; i++) {
+            let r = this.localRounds[i];
+            let found = false;
+            for(let sr of this.selectedTourney.rounds) {
+                if(r.name == sr.name) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                this.localRounds.splice(1, i);
+            }
+        }
+    }
+
+    private addToLocalRounds(): any {
+        for(let sr of this.selectedTourney.rounds) {
+            let found = false;
+            for(let r of this.localRounds) {
+                if(r.name==sr.name) {
+                    found = true;
+                    break;
+                }
+            } 
+            if(!found) {
+                this.localRounds.push(sr);
+            }
+        }
+    }
+
+    private alignRoundTeams( ): any {
+        for(let i=0; i<this.localRounds.length; i++) {
+            let r = this.localRounds[i];
+            for(let sr of this.selectedTourney.rounds) {
+                if(r.name == sr.name) {
+                    this.alignTeams(r, sr.teams);
+                    break;
+                }
+            }
+        }
+    }
     
-    private prepareDefaultClassification(round: Round) {
-        if(round.classification.length == 0) {
-            for (let t of round.teams) {
+    private alignTeams(r: Round, st: Team[]) {
+        let ts = this.removeFromLocalRound(r, st);
+        ts = this.addToLocalRound(r, st);
+    }
+
+    private removeFromLocalRound(r: Round, selTeams: Team[])  {
+        let localTeams: Team[] = r.teams;
+
+        for(let i=0; i<localTeams.length; i++) {
+            let found = false;
+            let t = localTeams[i];
+            for(let st of selTeams) {
+                if(t.teamName == st.teamName) {
+                    found = true;                    
+                    break;
+                }
+            }
+            if(!found) {
+                localTeams.splice(1, i);
+            }
+        }         
+    }
+
+    private addToLocalRound(r: Round, selTeams: Team[]): any {
+        let localTeams: Team[] = r.teams;
+
+        for(let st of selTeams) {
+            let found = false;
+            for(let i=0; i<localTeams.length; i++) {
+                let t = localTeams[i];
+                if(t.teamName == st.teamName) {
+                    found = true;                    
+                }
+            }
+            if(!found) {
+                localTeams.push(st);
+            }
+        }
+    }
+    
+    private prepareDefaultClassification(r: Round) {
+        if(r.classification.length == 0) {
+            for (let t of r.teams) {
                 let c: Classification = this.newClassification(t, 0);
-                round.classification.push(c);
+                r.classification.push(c);
             }
         }
     }
@@ -119,18 +222,18 @@ export class LevelListView extends AbstractListView {
      * Verifies if there are new teams added to the tourney and aligns the
      * teams and classifications in the each rounds
      */
-    private alignToNewTeams() {
-        for (let r of this.selectedTourney.rounds) {
-            for (let t of this.selectedTourney.teams) {
-                let index: number = r.teams.indexOf(t);
-                if (index == -1) {
-                    r.teams.push(t);
-                    let c: Classification = this.newClassification(t, 0);
-                    r.classification.push(c);
-                }
-            }
-        }
-    }
+    // private alignToNewTeams() {
+    //     for (let r of this.selectedTourney.rounds) {
+    //         for (let t of this.selectedTourney.teams) {
+    //             let index: number = r.teams.indexOf(t);
+    //             if (index == -1) {
+    //                 r.teams.push(t);
+    //                 let c: Classification = this.newClassification(t, 0);
+    //                 r.classification.push(c);
+    //             }
+    //         }
+    //     }
+    // }
 
     /**
      * For each round, adds the correct dummy classifictions, having points=-1, so the total number 
@@ -304,7 +407,7 @@ export class LevelListView extends AbstractListView {
      * 
      * @param unsortedClassification the unsorted team list
      */
-    teamSort(unsortedClassification: Array<Classification> ): Array<Classification>  {
+    private teamSort(unsortedClassification: Array<Classification> ): Array<Classification>  {
         var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
             if (t1.points > t2.points) {
                 return -1;
@@ -348,7 +451,7 @@ export class LevelListView extends AbstractListView {
         return sortedClassification;
     }
 
-    sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+    private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
         var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
             if (t1.points > t2.points) {
                 return 1;
@@ -365,13 +468,13 @@ export class LevelListView extends AbstractListView {
     }
 
     /**
-     * Prepares the list view of the desired levels in function of the received parameter
+     * Prepares the list view of the desired levels in function of the user selected 
+     * number of teams to pass the qualification phase
      * 
      * @param teamsNo the number of teams to allocate on the eliminatory level
      */
     private prepareEliminatoryLevels(teamsNo: number): any {
         console.log("Entering prepareEliminatoryLevels("+teamsNo+")");
-
 
         let levelsCombobox =  this.tourneyService.prepareLevelCombobox(teamsNo);
 

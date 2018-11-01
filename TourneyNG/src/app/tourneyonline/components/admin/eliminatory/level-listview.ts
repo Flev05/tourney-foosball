@@ -62,12 +62,12 @@ export class LevelListView extends AbstractListView {
         this.isStandalone = false;
 
         if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
-            !this.containsPhase(PhaseType.P, this.selectedTourney.phases) &&
+            this.containsPhase(PhaseType.P, this.selectedTourney.phases) &&
             this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
         {
-            this.isModeEnabled = true;
+            this.isModeEnabled = false;
         } else {
-             this.isModeEnabled = false;
+             this.isModeEnabled = true;
         }
 
         this.prepareEliminatoryLevels(teamsNo);

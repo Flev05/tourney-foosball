@@ -94,8 +94,8 @@
                 <col *ngIf="isTopLevel" style="width: auto;">
                 <col *ngIf="isTopLevel" style="width: 10mm;">
                 <col *ngIf="isTopLevel" style="width: auto;">
-                <col style="width: auto;">
-                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: auto;">
+                <col style="width: 38mm;">
+                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: 38mm;">
             </colgroup>
         </ng-template>
 
@@ -129,49 +129,52 @@
             [(selection)]="selectedEliminatory" 
             (onRowSelect)="onManualEliminatoryRowSelect($event)">
 
-            <ng-template pTemplate="caption">
-                Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
-            </ng-template>
+        <ng-template pTemplate="caption">
+            Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
+        </ng-template>
             
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
-                <col style="width: 25mm;">
-                <col style="width: 10mm;">
-                <col style="width: auto;">
-                <col *ngIf="isPlayoff" style="width: auto;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-                <col style="width: auto;">
-                <col *ngIf="isPlayoff" style="width: auto;">
+                <col style="width: 38mm;">
+                <col *ngIf="isTopLevel" style="width: 10mm;">
+                <col *ngIf="isTopLevel" style="width: auto;">
+                <col *ngIf="isPlayoff && isTopLevel" style="width: auto;">
+                <col *ngIf="isTopLevel" style="width: 10mm;">
+                <col *ngIf="isTopLevel" style="width: 10mm;">
+                <col *ngIf="isTopLevel" style="width: auto;">
+                <col *ngIf="isPlayoff && isTopLevel" style="width: auto;">
+                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: 38mm;">
             </colgroup>
         </ng-template>
 
         <ng-template pTemplate="header">
             <tr>
                 <th>N°</th>
-                <th>Data</th>
-                <th>C°</th>
-                <th>Girone</th>
-                <th *ngIf="isPlayoff">Playoff</th>
-                <th>Vs</th>
-                <th>C°</th>
-                <th>Girone</th>
-                <th *ngIf="isPlayoff">Playoff</th>
+                <th>Andata</th>
+                <th *ngIf="isTopLevel">C°</th>
+                <th *ngIf="isTopLevel">Girone</th>
+                <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
+                <th *ngIf="isTopLevel">Vs</th>
+                <th *ngIf="isTopLevel">C°</th>
+                <th *ngIf="isTopLevel">Girone</th>
+                <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
+                <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
                 <td>{{rowIndex + 1}}</td>
-                <td>{{rowData.round.meetings[0].datetime | date: 'dd/MM/y'}}</td>
-                <td>{{rowData.tc1.fromRound.position.label}}</td>
-                <td>{{rowData.tc1.fromRound.round.label}}</td>
-                <td *ngIf="isPlayoff">{{rowData.tc1.fromPlayoff.round.label}}</td>
-                <td> - </td>
-                <td>{{rowData.tc2.fromRound.position.label}}</td>
-                <td>{{rowData.tc2.fromRound.round.label}}</td>
-                <td *ngIf="isPlayoff">{{rowData.tc2.fromPlayoff.round.label}}</td>
+                <td>{{rowData.round.meetings[0].datetime | date: 'dd/MM/y HH:mm'}}</td>
+                <td *ngIf="isTopLevel">{{rowData.tc1.fromRound.position.label}}</td>
+                <td *ngIf="isTopLevel">{{rowData.tc1.fromRound.round.label}}</td>
+                <td *ngIf="isPlayoff && isTopLevel">{{rowData.tc1.fromPlayoff.round.label}}</td>
+                <td *ngIf="isTopLevel"> - </td>
+                <td *ngIf="isTopLevel">{{rowData.tc2.fromRound.position.label}}</td>
+                <td *ngIf="isTopLevel">{{rowData.tc2.fromRound.round.label}}</td>
+                <td *ngIf="isPlayoff && isTopLevel">{{rowData.tc2.fromPlayoff.round.label}}</td>
+                <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date :  "dd/MM/y HH:mm"}}</td>
             </tr>
         </ng-template>
     </p-table>

@@ -78,22 +78,28 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             }
         }
 
-        this.availableTeams = [];
+        this.availableTeams = [{label:"", value: 0}];
+        
         for(let t of this.tourneyService.selectedTeams) {
             let cb = {label: t.teamName, value: t.id};
             this.availableTeams.push(cb);
         }
 
+        let team1CB = {label:m1.team1.teamName, value: m1.team1.id};
+        let team2CB = {label:m1.team2.teamName, value: m1.team2.id};
+
         this.eliminatoryFormGroup = this.fb.group({
 
-            'meetingDate1':  new FormControl(new Date(m1.datetime)),
-            'address1':  new FormControl(m1.address),
-            'country1':  new FormControl(m1.country),
+            'meetingDate1': new FormControl(new Date(m1.datetime)),
+            'address1': new FormControl(m1.address),
+            'country1': new FormControl(m1.country),
 
-            'meetingDate2':  new FormControl(new Date(m2.datetime)),
-            'address2':  new FormControl(m2.address),
-            'country2':  new FormControl(m2.country),    
-            'availableTeams':  new FormControl(this.availableTeams),    
+            'meetingDate2': new FormControl(new Date(m2.datetime)),
+            'address2': new FormControl(m2.address),
+            'country2': new FormControl(m2.country),    
+            'availableTeams': new FormControl(this.availableTeams),    
+            'team1': new FormControl(team1CB),    
+            'team2': new FormControl(team2CB),    
         });
     }
 
@@ -105,8 +111,11 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        let teamName = this.eliminatoryFormGroup.get('team1').value;
-        m1.team1 = this.getTeam(teamName);
+        let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
+        let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
+        m1.team1 = this.getTeam(team1CB);
+        m1.team2 = this.getTeam(team2CB);
+
         m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
 
         if(!this.isOneway) {
@@ -115,24 +124,27 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            let teamName = this.eliminatoryFormGroup.get('team2').value;
-            m1.team2 = this.getTeam(teamName);
+            m2.team1 = m1.team2;
+            m2.team2 = m1.team1;
     
-            m2.name = m2.team2.teamName + " - " + m2.team1.teamName;
+            m2.name = m2.team1.teamName + " - " + m2.team2.teamName;
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
-    private getTeam(teamName: string) : Team {
+    private getTeam(teamName: Combobox) : Team {
 
         for(let t of this.tourneyService.selectedTeams) {
-            if(t.teamName == teamName) {
+            if(t.teamName == teamName.label) {
                 return t;
             }
         }
 
-        return null;
+        let empty: Team = {
+            id:0, teamName: ""
+        };
+        return empty;
     }
 
     onError(n:any) {

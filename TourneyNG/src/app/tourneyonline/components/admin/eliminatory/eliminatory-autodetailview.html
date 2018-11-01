@@ -54,37 +54,38 @@
     </div>                  
 
     <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
-        <div *ngIf="isTopLevel" class="ui-g ui-fluid">
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="team1">I Squadra</label>
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+            <div *ngIf="isTopLevel">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        <label for="team1">Squadra 1</label>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-dropdown id="team1" [options]="availableTeams" formControlName="team1" 
+                            optionLabel="label" 
+                            placeholder="Selezionare">
+                        </p-dropdown>
+                    </div>
                 </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="team1" [options]="availatbleTeams" formControlName="team1" 
-                        optionLabel="label" 
+                Vs         
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        <label for="team2">Squadra 2</label>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-dropdown id="team2" [options]="availableTeams" formControlName="team2" 
+                        optionLabel="label"
                         placeholder="Selezionare">
                     </p-dropdown>
-                </div>
+                    </div>
+                </div>      
             </div>
-            Vs         
-            <div class="ui-g-12">
-                <div class="ui-g-4">
-                    <label for="team2">II Squadra</label>
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-dropdown id="team2" [options]="availatbleTeams" formControlName="team2" 
-                    optionLabel="label"
-                    placeholder="Selezionare">
-                </p-dropdown>
-                </div>
-            </div>
-        </div>      
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <h4>Andata</h4>
 
             <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     Data e ora:
                 </div>
                 <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
@@ -94,7 +95,7 @@
             </div>
 
             <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     Via:
                 </div>
                 <div class="ui-grid-col-5">
@@ -111,7 +112,7 @@
             </div>
 
             <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     <label for="country-id">Comune:</label>
                 </div>
                 <div class="ui-grid-col-5">
@@ -124,7 +125,7 @@
             </div>
 
             <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     Indirizzo:
                 </div>
                 <div class="ui-grid-col-8">
@@ -135,7 +136,7 @@
             <h4 *ngIf="!selectedEliminatoryLevel.isOneway" >Ritorno</h4>
 
             <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     Data e ora:
                 </div>
                 <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
@@ -145,7 +146,7 @@
             </div>
                 
             <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     Via:
                 </div>
                 <div class="ui-grid-col-5">
@@ -162,7 +163,7 @@
             </div>
 
             <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     <label for="country-id">Comune:</label>
                 </div>
                 <div class="ui-grid-col-5">
@@ -175,7 +176,7 @@
             </div>
 
             <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
+                <div class="ui-grid-col-2">
                     Indirizzo:
                 </div>
                 <div class="ui-grid-col-8">

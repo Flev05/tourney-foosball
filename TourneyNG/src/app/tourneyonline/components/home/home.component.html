@@ -14,42 +14,54 @@
     <div class="features">
         <h3>Perchè Tourney Online?</h3>
         <p class="features-tagline">
-            Congratulazioni! 🎉 La tua ricerca del miglior programma per la gestione dei tornei è completa
+            Congratulazioni! 🎉 Hai scoperto il miglior programma online per la gestione dei tornei
         </p>
 
         <p style="features-description">
-            Tourney Online è pensato per essere configurato per qualsiasi tipo di torneo, a squadre o individuale
-            , dal calcio, al tennis, al volley, al basket, al calcio balilla, ecc
+            Tourney Online è pensato per essere configurato per qualsiasi tipo di torneo a squadre o individuale:
+            dal calcio, al tennis, al volley, al basket, al calcio balilla, ecc.
         </p>
 
         <div class="ui-g">
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-component.svg" />
                 <span class="feature-name">Campionato</span>
-                <p>Tutti i tipi di campionato, sola andata e andata e ritorno con qualiasi numero di squadre e punteggio per risultato della partita</p>
+                <p>
+                    Tutti i tipi di campionato, di sola andata o andata e ritorno, con qualiasi numero di squadre 
+                    e partite che terminano a tempo o a punti
+                </p>
             </div>
+            <div class="ui-g-12 ui-md-4">
+                    <img src="assets/showcase/images/home/icon-themes.svg" />
+                    <span class="feature-name">Fase a gironi</span>
+                    <p>
+                        Gestione dei gironi di qualificazione. 
+                        Potete definire qualsiasi numero di gironi all'italiana, ciascuno con le squadre squadre, risultati e classifiche.
+                    </p>
+                </div>
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-opensource.svg" />
                 <span class="feature-name">Play Off</span>
-                <p>Configurazione dei play off di fine campionato, i gironi finale possono essere configurati in fase di definizione del campionato o a fine campionato</p>
-            </div>
-            <div class="ui-g-12 ui-md-4">
-                <img src="assets/showcase/images/home/icon-themes.svg" />
-                <span class="feature-name">Fase a gironi</span>
                 <p>
-                    Definizione del torneo a partire dalla fase a gironi: configurazione dei risultati a tempo o a punteggio
+                    Gestione dei playoff nel torneo. 
+                    Potete prevedere gironi di play off in cascata ai gironi all'italiana,
+                    configurabili in funzione dei risultati conseguiti delle fasi a gironi precedenti.
                 </p>
             </div>
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-productive.svg" />
                 <span class="feature-name">Eliminazione diretta</span>
-                <p>Tornei ad eliminazione diretta a partire dai sedicesimi di finale o da altro numero configurabile dal gestore del torneo</p>
+                <p>
+                    Gestione di tornei con fasi ad eliminazione diretta.
+                    Possono essere creati fasi ad eliminazione diretta autonome, senza gironi di qualificazione
+                    o dipendenti dai risultati conseguiti nei gironi di qualificazione e playoff precedenti</p>
             </div>
 
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-community.svg" />
                 <span class="feature-name">Demo</span>
-                <p>Versione DEMO online. Permette la gestione temporanea di un torneo senza persistenza
+                <p>
+                    Versione DEMO online. Permette la gestione temporanea di un torneo senza la persistenza dei dati
                     <a [routerLink]="['/demo']">Leggi tutto...</a>
                 </p>
             </div>            
@@ -57,8 +69,9 @@
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-component.svg" />
                 <span class="feature-name">Noleggio</span>
-                <p>Noleggia il sistema per il tempo che ti serve. Puoi creare e gestire tutti i tornei che vuoi con tutte le
-                    funzionalità al completo.                
+                <p>
+                    Versione a Noleggio. Permette la gestione persistente del torneo.
+                    Il sistema salva su un proprio database i tuoi tornei che puoi riprendere quando vuoi.                
                     <a [routerLink]="['/lease']">Leggi tutto...</a>
                 </p>
             </div>            

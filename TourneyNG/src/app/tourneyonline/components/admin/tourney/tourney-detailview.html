@@ -195,7 +195,7 @@
         </p> 
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù:
-            <a class="home-button" [routerLink]="['/admincalendar']" (click)="menuActive = false">Calendario</a>
+            <a class="home-button" [routerLink]="['/adminmeeting']" (click)="menuActive = false">Calendario</a>
         </p>
         <p>
             Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali iniziare la configurazione del 
@@ -211,13 +211,15 @@
             un nome, una data, un indirizzo, ecc. e di rimuovere completamente il torneo perchè non si ha più bisogno 
         </p>        
         <h4>Modificare un torneo</h4>
-        <p>Si possono modificare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
+        <p>
+            Si possono modificare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
             non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
             essere svuotati.
             Alla fine dell'operazione salvare con il bottone Salva
         </p>
         <h4>Rimuovere un torneo</h4>
-        <p>Si può rimuovere un torneo esistente con il bottore Rimuovi.
+        <p>
+            Si può rimuovere un torneo esistente con il bottore Rimuovi.
             Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il torneo
             sarà rimosso dal sistema. L'operazione di rimozione è distruttuiva e non può essere più recuperata
         </p>
@@ -246,7 +248,8 @@
                         <input pInputText type="text" formControlName="tourneyName"/>
                     </div>
                     <div class="ui-grid-col-3">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['tourneyName'].valid&&tourneyFormGroup.controls['tourneyName'].dirty">
+                        <div class="ui-message ui-messages-error ui-corner-all" 
+                            *ngIf="!tourneyFormGroup.controls['tourneyName'].valid && tourneyFormGroup.controls['tourneyName'].dirty">
                             <i class="fa fa-close"></i>
                             <span *ngIf="tourneyFormGroup.controls['tourneyName'].errors['required']">
                                 Il nome del torneo è obbligatorio
@@ -263,7 +266,8 @@
                         <input pInputText type="text" formControlName="address"/>
                     </div>
                     <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!tourneyFormGroup.controls['address'].valid&&tourneyFormGroup.controls['address'].dirty">
+                        <div class="ui-message ui-messages-error ui-corner-all" 
+                            *ngIf="!tourneyFormGroup.controls['address'].valid && tourneyFormGroup.controls['address'].dirty">
                             <i class="fa fa-close"></i>
                             <span *ngIf="tourneyFormGroup.controls['address'].errors['required']">
                                 La via è obbligatoria
@@ -365,13 +369,11 @@
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
                             <p-checkbox name="phasesGroupname" label="Gironi"     
                                 value="round"     
-                                [formControl]="tourneyFormGroup.controls['phases']"
-                                (onChange)="onOnewayRoundChange()">
+                                [formControl]="tourneyFormGroup.controls['phases']">
                             </p-checkbox>
                             <p-checkbox name="phasesGroupname" label="Play Off"     
                                 value="playoff"     
-                                [formControl]="tourneyFormGroup.controls['phases']"
-                                (onChange)="onOnewayPlayoffChange()">
+                                [formControl]="tourneyFormGroup.controls['phases']">
                             </p-checkbox>
                             <p-checkbox name="phasesGroupname" label="Eliminatorie" 
                                 value="eliminatory" 

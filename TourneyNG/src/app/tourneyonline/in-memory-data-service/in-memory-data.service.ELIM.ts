@@ -20,6 +20,9 @@ static tourney =
       ,eliminatoryMode:EliminatoryMode.A
       ,teamSortType: TeamSortType.O
 
+      ,isOnewayRound: false
+      ,isOnewayPlayoff: false
+  
       ,raceDuration:90
 
       ,matchWinnerScores:3

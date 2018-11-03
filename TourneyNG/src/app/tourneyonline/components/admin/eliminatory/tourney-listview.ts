@@ -21,13 +21,6 @@ export class EliminatoryTourneyListView extends AbstractTourneyListView {
     }
 
     onComplete(): any {
-        for(let t of this.tourneys) {
-            if(!this.containsPhase(PhaseType.E, t.phases)) {
-                let index: number = this.tourneys.indexOf(t);
-                if(index > -1) {
-                    this.tourneys.splice(index, 1);
-                }
-            }
-        }
+        this.purgePhaseType(PhaseType.E); 
     }
 }

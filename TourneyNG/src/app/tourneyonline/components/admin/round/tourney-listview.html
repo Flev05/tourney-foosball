@@ -14,32 +14,29 @@
 <p-table [columns]="cols" [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true" 
-    [rows]="15">
+    (onRowSelect)="onRowSelect($event)"  >
 
-    <ng-template pTemplate="colgroup" let-columns>
+    <ng-template pTemplate="colgroup">
         <colgroup>
+            <col style="width: 10mm;">
             <col style="width: auto;">
-            <col style="width: 30mm;">
-            <col style="width: 20mm;">
             <col style="width: auto;">
         </colgroup>
     </ng-template>
 
-    <ng-template pTemplate="header" let-columns>
+    <ng-template pTemplate="header">
         <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
+            <th>N°</th>
+            <th>Nome</th>
+            <th>Data</th>
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
-            </td>
+            <td>{{rowIndex + 1}}</td>
+            <td>{{rowData.tourneyName}}</td>
+            <td>{{rowData.datetime | date : "dd/MM/y HH:mm"}}</td>
         </tr>
     </ng-template>
 

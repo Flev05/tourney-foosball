@@ -27,7 +27,10 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 
 import {PlayoffTourneyListView} from './tourney-listview';
 import {PlayoffListView} from './playoff-listview';
-import { PlayoffDetailView } from './playoff-detailview';
+import { PlayoffConfigListView } from './playoff-config-listview';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import { PlayoffConfigDetailView } from './playoff-config-detailview';
 
 @NgModule({
 	imports: [
@@ -55,11 +58,14 @@ import { PlayoffDetailView } from './playoff-detailview';
         ,PlayoffRoutingModule
         ,AccordionModule
         ,PickListModule
+        ,MessagesModule
+        ,MessageModule
     ],
 	declarations: [
          PlayoffTourneyListView
         ,PlayoffListView
-        ,PlayoffDetailView
+        ,PlayoffConfigListView
+        ,PlayoffConfigDetailView
 	]
 })
 export class PlayoffModule {}

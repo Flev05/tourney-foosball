@@ -5,9 +5,9 @@
         </a>
 
         <a href="#" class="logo" [routerLink]="['/']">
-            <img alt="logo" src="assets/showcase/images/omino.jpg" />
+            <!-- <img alt="logo" src="assets/showcase/images/omino.jpg" />
             <img alt="logo" src="assets/showcase/images/volley.jpg" />
-            <img alt="logo" src="assets/showcase/images/basket.jpg" />
+            <img alt="logo" src="assets/showcase/images/basket.jpg" /> -->
             <img alt="logo" src="assets/showcase/images/logoTorneiNG.png" />
         </a>
 
@@ -16,7 +16,7 @@
                 <a href="#" [routerLink]="['/']">Home</a>
             </li>
             <li>
-                <a href="#" [routerLink]="['/']">Chi siamo</a>
+                <a href="#" [routerLink]="['/login']">Login</a>
             </li>
         </ul>
     </div>
@@ -63,7 +63,7 @@
                 <a [routerLink]="['/adminplayoff']" (click)="menuActive = false">&#9679; Playoff</a>
                 <a [routerLink]="['/admineliminatory']" (click)="menuActive = false">&#9679; Eliminatorie</a>
                 <a [routerLink]="['/adminobjective']" (click)="menuActive = false">&#9679; Obiettivi</a>
-                <a [routerLink]="['/admincalendar']" (click)="menuActive = false">&#9679; Calendario</a>
+                <a [routerLink]="['/adminmeeting']" (click)="menuActive = false">&#9679; Incontri</a>
                 <a [routerLink]="['/adminresult']" (click)="menuActive = false">&#9679; Risultati</a>
 
                 <a [routerLink]="['/adminmatrix']" (click)="menuActive = false">&#9679; Matrice</a> 

@@ -1,17 +1,16 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Playoff</span>
-        <span>Configurazione Playoff iniziale del torneo: {{selectedTourney.tourneyName}}</span>
+        <span>Vista di dettagio Playoff</span>
     </div>
 </div>
 
 <div class="content-section documentation">
-
-    <p>Vista elenco delle configurazioni delle playoff di partenza che compongono il torneo
+    <p>
+        Vista di dettaglio per la configurazione dei gironi di playoff
     </p>
-
     <p-accordion>
-        <p-accordionTab header="Istruzioni">                        
+        <p-accordionTab header="Introduzione">                        
             <p>
                 Da questa vista potete creare, modificare o rimuovere un playoff.
             </p>
@@ -38,10 +37,15 @@
                 <li>3° classificata Girone B</li>
             </ul>         
             <p>           
-                Indica che il playoff P-A, sarà popolato con la squadra 2° classificata del Girone A e la 3°
-                classificata del Girone B dei gironi all'italiana.
+                Indica che il girone playoff P-A, avrà un incotro costituito dalla squadra 2° classificata del Girone A
+                contro la 3° classificata del Girone B dei gironi all'italiana.
             </p>
-        
+        </p-accordionTab>
+    </p-accordion>    
+
+    <p-accordion>
+            <p-accordionTab header="Istruzioni">                        
+                        
             <h4>Creare un nuovo playoff</h4>
             <p>
                 Creare un nuovo playoff significa eseguire le seguenti operazioni:
@@ -76,25 +80,45 @@
 </div>
 
 <div class="content-section implementation">      
-
-    <h4>
-        <span>Playoff: </span>
-        <input pInputText id="nameId" [(ngModel)]="selectedPlayoff.round.name" placeholder="Nome girone playoff" />
-    </h4>
-
+    <h3>
+        Torneo: {{selectedTourney.tourneyName}}
+    </h3>
+    <h3>
+        Playoff: {{selectedPlayoff.round.name}}
+    </h3>
+        
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-    </div>                  
-        
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        
-        <p-dropdown id="levelId" [options]="teamsCombobox" 
-            [(ngModel)]="teamNoCombobox"  
-            (onChange)="onChange($event.value)"
-            placeholder="Numero squadre">
-        </p-dropdown>
-    </div>                       
+    </div>              
 
+    <form [formGroup]="playoffFormGroup" (ngSubmit)="onSubmit(playoffFormGroup.value)">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="positionId">Classificata</label>
+                </div>
+                <p-dropdown id="positionId" [options]="positions" formControlName="position" optionLabel="label"></p-dropdown>
+            </div>
+            <div class="ui-g-12">
+                <div class="ui-g-4">
+                    <label for="roundId">Girone</label>
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-dropdown id="roundId" [options]="rounds" formControlName="round" optionLabel="label"></p-dropdown>
+                </div>
+            </div>
+        </div>   
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" 
+                    [disabled]="!playoffFormGroup.valid"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+<!-- 
     <p-table [responsive]="true" 
             [value]="playoffConfigs" 
             selectionMode="single" 
@@ -151,7 +175,7 @@
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
             <button type="button" pButton icon="fa fa-check" (click)="done()" label="Fatto"></button>
         </div>
-    </p-dialog>
+    </p-dialog> -->
 
 </div>
     

@@ -2,17 +2,23 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Round } from '../../../domain/round';
-import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 
-const redirect: string = "admincalendar/lv/meetingLv/dv";
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { AbstractListView } from '../../common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { Round } from 'app/tourneyonline/domain/round';
+
+const redirect: string = "adminmeeting/lv/meetingLv/dv";
 
 @Component({
     templateUrl: './meeting-listview.html'
 })
 export class MeetingListView extends AbstractListView {
+    selectedRound: Round;
+    selectedMeeting: Meeting;
+    meetings: Meeting [];
+    atLeast2teams: boolean;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -21,21 +27,14 @@ export class MeetingListView extends AbstractListView {
         super(redirect, tourneyService, router, location);
     }
 
-    selectedRound: Round;
-
-    selectedMeeting: Meeting;
-    meetings: Meeting [];
-
     ngOnInit() {
         super.ngOnInit();
-        this.updateRowGroupMetaData();
-    }
-
-    protected updateRowGroupMetaData() {
 
         this.selectedRound = this.tourneyService.selectedRound;
 
         this.meetings = this.selectedRound.meetings;
+
+        this.atLeast2teams = this.meetings.length > 0 ? true : false;
     }
  
     onRowSelect(event) {

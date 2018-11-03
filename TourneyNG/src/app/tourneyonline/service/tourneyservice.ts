@@ -15,8 +15,9 @@ import { Team } from '../domain/team';
 import { Discipline } from '../domain/discipline';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { Matrix } from '../domain/matrix';
+
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { PlayoffConfig } from '../domain/playoff-config';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -65,6 +66,8 @@ export class TourneyService {
     originalTeams: Team[];
     meetings: Meeting[];
     isOneway: boolean;
+    selectedPlayoffConfig: PlayoffConfig;
+    playoffsConfigs: PlayoffConfig[];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

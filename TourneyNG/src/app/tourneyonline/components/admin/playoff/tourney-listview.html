@@ -1,47 +1,46 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Playoff</span>
-        <span>Vista elenco dei tornei dai quali si accede ai playoff</span>
+        <span>Vista elenco dei tornei per la gestione dei playoff</span>
     </div>
 </div>
 
 <div class="content-section documentation">
-    <p>Una volta selezionato il torneo, si accede alla corrispondente vista elenco dei playoff che compongono il torneo. 
+    <p>
+        Da questa vista si accede alla vista elenco dei playoff del torneo. 
         Un playoff è composto da un numero preciso di squadre non censibili al momento della creazione del playoff.
-        In questa vista si definiscono le regole con cui verrà popolato il playoff quando saranno terminati 
-        i gironi in funzione delle posizioni aquisite delle squadre alla fine del girone.
+        In questa vista si definiscono le regole con cui verranno popolati i playoff quando saranno terminati 
+        i gironi in funzione delle posizioni aquisite dalle squadre all'interno del proprio girone.
     </p>
 </div>
 
-<p-table [columns]="cols" [value]="tourneys" 
+<p-table [columns]="cols" 
+    [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true" 
-    [rows]="15">
+    (onRowSelect)="onRowSelect($event)" >
 
-    <ng-template pTemplate="colgroup" let-columns>
+    <ng-template pTemplate="colgroup">
         <colgroup>
+            <col style="width: 10mm;">
             <col style="width: auto;">
-            <col style="width: 30mm;">
-            <col style="width: 20mm;">
             <col style="width: auto;">
         </colgroup>
     </ng-template>
 
-    <ng-template pTemplate="header" let-columns>
+    <ng-template pTemplate="header">
         <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
+            <th>N°</th>
+            <th>Nome</th>
+            <th>Data</th>
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
-            </td>
+            <td>{{rowIndex + 1}}</td>
+            <td>{{rowData.tourneyName}}</td>
+            <td>{{rowData.datetime | date : "dd/MM/y HH:mm"}}</td>
         </tr>
     </ng-template>
 

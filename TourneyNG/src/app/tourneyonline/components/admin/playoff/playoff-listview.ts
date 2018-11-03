@@ -11,10 +11,12 @@ import { Playoff } from '../../../domain/playoff';
     templateUrl: './playoff-listview.html'
 })
 export class PlayoffListView extends AbstractListView {
-    static redirect: string = "adminplayoff/lv/dv";
+    static redirect: string = "adminplayoff/lv/playoffRoundLv";
     selectedTourney: Tourney;
     selectedPlayoff: Playoff;
     playoffs: Playoff[];
+
+    atLeastOneRound: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -26,14 +28,12 @@ export class PlayoffListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.updateRowGroupMetaData();
-    }
-
-    protected updateRowGroupMetaData() {
 
         this.selectedTourney = this.tourneyService.selectedTourney;
         this.playoffs = this.tourneyService.selectedTourney.playoffs;
         this.tourneyService.newPlayoff = false;
+   
+        this.atLeastOneRound = this.selectedTourney.rounds.length > 0;
     }
 
     create() {

@@ -116,8 +116,8 @@
                 <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team1.teamName}}</td>
                 <td *ngIf="isTopLevel"> - </td>
                 <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team2.teamName}}</td>
-                <td>{{rowData.round.meetings[0].datetime | date :  "dd/MM/y HH:mm" }}</td>
-                <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date :  "dd/MM/y HH:mm"}}</td>
+                <td>{{rowData.round.meetings[0].datetime | date : "dd/MM/y HH:mm" }}</td>
+                <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
             </tr>
         </ng-template>
     </p-table>

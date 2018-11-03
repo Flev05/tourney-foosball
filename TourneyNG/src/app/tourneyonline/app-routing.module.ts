@@ -20,7 +20,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminplayoff',      loadChildren: './components/admin/playoff/playoff.module#PlayoffModule'},
             {path: 'admineliminatory',  loadChildren: './components/admin/eliminatory/eliminatory.module#EliminatoryModule'},
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
-            {path: 'admincalendar',     loadChildren: './components/admin/calendar/calendar.module#AdminCalendarModule'},
+            {path: 'adminmeeting',     loadChildren: './components/admin/meeting/meeting.module#AdminMeetingModule'},
             {path: 'adminresult',     loadChildren: './components/admin/result/result.module#AdminResultModule'},
             {path: 'adminmatrix',     loadChildren: './components/admin/matrix/matrix.module#AdminMatrixModule'},
 

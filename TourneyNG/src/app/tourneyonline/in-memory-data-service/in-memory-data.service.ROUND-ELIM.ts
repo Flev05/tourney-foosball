@@ -10,7 +10,8 @@ export class InMemoryDataServiceRoundElim  {
  static teams = TeamsPool.prepareTeams(10);
 
  static tourney =
-    {id: 2, tourneyName: 'Gironi+Eliminatore 2018/2019'
+      {id: 3
+      ,tourneyName: 'Gironi+Eliminatore 2018/2019'
       ,datetime: new Date(2018, 10, 22, 20, 30)
       ,address: 'Via Roma, 110'
       ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
@@ -24,6 +25,9 @@ export class InMemoryDataServiceRoundElim  {
       ,eliminatoryMode:EliminatoryMode.M
       ,teamSortType: TeamSortType.O
 
+      ,isOnewayRound: false
+      ,isOnewayPlayoff: false
+  
       ,raceDuration:90
 
       ,matchWinnerScores:3

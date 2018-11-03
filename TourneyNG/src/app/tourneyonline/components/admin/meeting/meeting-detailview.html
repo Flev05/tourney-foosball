@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Gestione Calendario</span>
-        <span>Vista di dettaglio di un calendario</span>
+        <span class="feature-title">Gestione Incontri</span>
+        <span>Vista di dettaglio di un Incontro</span>
     </div>
 </div>
 
@@ -9,23 +9,23 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>
-            Da questa vista potete modificare i dati dell'calendario selezionato 
+            Da questa vista potete modificare i dati dell'Incontro selezionato.
         </p>
 
-        <h4>Modificare un calendario</h4>
+        <h4>Modificare un Incontro</h4>
         <p>
-            I dati da inserire o modificare sono la data, l'ora e l'indirizzo dove si svolge l'calendario
+            I dati da inserire o modificare sono la data, l'ora e l'indirizzo dove si svolge l'Incontro
         </p>
 
-        <h4>Creare un nuovo calendario</h4>
+        <h4>Creare un nuovo Incontro</h4>
         <p>
-            La creazione di un calendario non viene effettuato in questa pagina ma nelle
+            La creazione di un Incontro non viene effettuato in questa pagina ma nelle
             pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
         </p>
 
-        <h4>Rimuovere un calendario</h4>
+        <h4>Rimuovere un Incontro</h4>
         <p>
-            La rimozione di un calendario non viene effettuato in questa pagina ma nelle
+            La rimozione di un Incontro non viene effettuato in questa pagina ma nelle
             pagine dei gironi, playoff ed eliminatorie accessibili dalle corrispondenti voci di menù.
         </p>
     </p-accordionTab>
@@ -52,7 +52,8 @@
                     <input pInputText type="text" formControlName="address"/>
                 </div>
                 <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!meetingFormGroup.controls['address'].valid&&meetingFormGroup.controls['address'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" 
+                        *ngIf="!meetingFormGroup.controls['address'].valid && meetingFormGroup.controls['address'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
                             La via è obbligatoria

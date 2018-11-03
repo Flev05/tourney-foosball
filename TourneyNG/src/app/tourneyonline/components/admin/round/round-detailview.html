@@ -7,18 +7,20 @@
 
 <div class="content-section documentation">
 <p-accordion>
-    <p-accordionTab header="Istruzioni">                        
+    <p-accordionTab header="Introduzione">                        
         <p>
             Vista di dettaglio girone.
             Da questa vista potete creare, modificare o rimuovere un girone.
             Il girone è uno all'italiana visto come un semplice contenitore di squadre, 
             nulla deve essere assunto relativamente agli incontri di andata e/o ritorno che devono essere 
             documentati nel calendario corrispondente. 
-
+        </p>
+        <p>                
             Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
             relativamente agli incontri di andata e ritorno che devono essere documentati nel calendario
             corrispondente.
         </p>
+
         <p>
             L'utente deve semplicemente spostare, con i bottoni preposti, la squadra scelta da sinstra verso destra per aggiungerla
             al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.
@@ -30,9 +32,14 @@
             Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
             Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente 
             alla voce di menù:
-            <a class="home-button" [routerLink]="['/admincalendar']" (click)="menuActive = false">Calendario</a>
+            <a class="home-button" [routerLink]="['/adminmeeting']" (click)="menuActive = false">Incontri</a>
         </p>
+    </p-accordionTab>
+</p-accordion>
 
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+            
         <h4>Creare un nuovo girone</h4>
         <p>
             L'area di destra "Selezionati", elenca le squadre che compongono il girone

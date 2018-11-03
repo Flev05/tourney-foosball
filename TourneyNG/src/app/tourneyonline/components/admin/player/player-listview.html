@@ -1,20 +1,22 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Giocatori</span>
-        <span>Giocatori del torneo: {{selectedTourney.tourneyName}}</span>
+        <span>Giocatori del torneo</span>
     </div>
 </div>
 
 <div class="content-section documentation">
 
-    <p>Vista elenco di tutti giocatori che compongono il torneo: 
-        {{selectedTourney.tourneyName}} - {{selectedTourney.dateAsString}} {{selectedTourney.timeAsString}}
+    <p>
+        Vista elenco di tutti giocatori che compongono il torneo.
     </p>
     <p>
-        Selezionare la riga di interesse - con un click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+        Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
     </p>
     
 </div>
+
+<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
 
 <div class="content-section implementation">    
     <p-table [columns]="cols" 

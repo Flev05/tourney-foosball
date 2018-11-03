@@ -137,7 +137,7 @@ export class LevelListView extends AbstractListView {
                 }
             }
             if(!found) {
-                this.localRounds.splice(1, i);
+                this.localRounds.splice(i, 1);
             }
         }
     }
@@ -187,7 +187,7 @@ export class LevelListView extends AbstractListView {
                 }
             }
             if(!found) {
-                localTeams.splice(1, i);
+                localTeams.splice(i, 1);
             }
         }         
     }

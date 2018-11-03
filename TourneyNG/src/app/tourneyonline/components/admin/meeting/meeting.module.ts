@@ -12,7 +12,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
-import {CalendarRoutingModule} from './calendar-routing.module';
+import {CalendarRoutingModule} from './meeting-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
 import {DropdownModule} from '../../../../components/dropdown/dropdown';
@@ -28,7 +28,9 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {CalendarTourneyListView } from './tourney-listview';
 import { MeetingListView } from './meeting-listview';
 import { MeetingDetailView } from './meeting-detailview';
-import { CalendarListView } from './calendar-listview';
+import { AllMeetingListView } from './all-meeting-listview';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 
 @NgModule({
 	imports: [
@@ -57,12 +59,14 @@ import { CalendarListView } from './calendar-listview';
         ,CalendarRoutingModule
         ,AccordionModule
         ,PickListModule
+        ,MessagesModule
+        ,MessageModule
     ],
 	declarations: [
 		CalendarTourneyListView
-        ,CalendarListView
+        ,AllMeetingListView
         ,MeetingListView
         ,MeetingDetailView
 	]
 })
-export class AdminCalendarModule {}
+export class AdminMeetingModule {}

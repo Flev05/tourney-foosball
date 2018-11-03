@@ -4,11 +4,11 @@ import { Location } from '@angular/common';
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 import { AbstractListView } from './abstract-listview';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected tourneys: Tourney[];
-    protected cols: any[];
     toggleable: boolean = false;
 
     constructor(protected redirect: string
@@ -22,13 +22,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         console.log("AbstractTourneyListView.ngOnInit()");
 
         this.loadTourney();
-
-        this.cols = [
-            { field: 'tourneyName',  header: 'Torneo' },
-            { field: 'dateAsString', header: 'Data' },
-            { field: 'timeAsString', header: 'Ora' },
-            { field: 'address',      header: 'Indirizzo' }
-        ];
     }
 
     protected loadTourney() {
@@ -50,5 +43,18 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.tourneyService.selectedTourney = this.selectedTourney;
 
         this.gotoDetailView();
+    }
+
+    purgePhaseType(pt : PhaseType) {
+        let tempTourneys = new Array<Tourney>();
+        
+        for(let t of this.tourneys) {
+            
+            if(this.containsPhase(pt, t.phases)) {
+                tempTourneys.push(t);
+            }
+        }
+
+        this.tourneys = tempTourneys;
     }
 }

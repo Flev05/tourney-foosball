@@ -11,9 +11,10 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
-    templateUrl: './playoff-detailview.html'
+    templateUrl: './playoff-config-listview.html'
 })
-export class PlayoffDetailView extends AbstractListView {
+export class PlayoffConfigListView extends AbstractListView {
+    static redirect: string = "adminplayoff/lv/playoffRoundLv/dv";
     msgs: Message[] = [];
     position: number;
     roundName: string;
@@ -21,42 +22,35 @@ export class PlayoffDetailView extends AbstractListView {
     positions: Combobox[];
     rounds: Combobox[];
     playoffConfigs: PlayoffConfig[];
-    selectedPlayoffConfig; PlayoffConfig;
 
     selectedPlayoff: Playoff;
 
-    row: PlayoffConfig;  
-    displayDialog: boolean;
-
     teamNoCombobox: number;
     teamsCombobox: Combobox[];
+    nameIsMandatory: boolean;
+    selectedPlayoffConfig: PlayoffConfig; 
 
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super("", tourneyService, router, location);
+        super(PlayoffConfigListView.redirect, tourneyService, router, location);
     }
 
     ngOnInit() {
         super.ngOnInit();
-        this.updateRowGroupMetaData();
-    }
-
-    protected updateRowGroupMetaData() {
-        this.displayDialog = false;
 
         this.tourneyService.prepareEliminatoriesComboBoxes();
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
 
-        this.teamNoCombobox = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
+        this.teamNoCombobox = this.selectedTourney.teams.length;
 
         this.teamsCombobox = [];
         for(let i=2; i<=this.teamNoCombobox; i++ ) {
-            let item = { label: "" + i, value: i  };
+            let item = { label: "" + i, value: i };
             this.teamsCombobox.push(item);
         }
 
@@ -94,6 +88,7 @@ export class PlayoffDetailView extends AbstractListView {
     
             this.playoffConfigs.push(pc);
         }
+        this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
     }
 
     private newPlaoffConfig(): PlayoffConfig {
@@ -107,40 +102,13 @@ export class PlayoffDetailView extends AbstractListView {
         };
     }
 
-    showDialogToAdd() {
-        this.row = {
-              id: this.tourneyService.getSequenceNumber()
-            , fromRound: {id: this.tourneyService.getSequenceNumber()
-                , position:{label: this.selectedPlayoffConfig.label, value: this.selectedPlayoffConfig.value}
-                , round: this.selectedPlayoffConfig.round
-            }  
-        };
-        this.displayDialog = true;
-    }
-
     onRowSelect(event) {
-        this.row = this.cloneObject(event.data);
-        this.displayDialog = true;
+
+        this.tourneyService.playoffsConfigs = this.playoffConfigs;
+
+        this.tourneyService.selectedPlayoffConfig = this.selectedPlayoffConfig;
+        this.router.navigate([PlayoffConfigListView.redirect]);
     }
 
-    done() {
-        this.playoffConfigs[this.playoffConfigs.indexOf(this.selectedPlayoffConfig)] = this.row;
-
-        this.row = null;
-        this.displayDialog = false;
-    }
-
-    save() {
-        this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-            
-    onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        msgerr = 'Modifica configurazione playoff fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
-    }
 }
 

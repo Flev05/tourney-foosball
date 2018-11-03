@@ -22,14 +22,8 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
     }
 
     onComplete(): any {
-        for(let t of this.tourneys) {
-            if(!this.containsPhase(PhaseType.P, t.phases)) {
-                let index: number = this.tourneys.indexOf(t);
-                if(index > -1) {
-                    this.tourneys.splice(index, 1);
-                }
-            }
-        }
+
+        this.purgePhaseType(PhaseType.P);
 
         if(this.tourneyService.selectedTourney != null) {
             // this.router.navigate([PlayoffListView.redirect]);

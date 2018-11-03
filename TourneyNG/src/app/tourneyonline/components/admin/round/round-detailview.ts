@@ -81,7 +81,6 @@ export class RoundDetailView extends AbstractDetailView {
             'name': new FormControl(this.selectedRound.name, Validators.compose([Validators.required])),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
-            'isOneway':       new FormControl(this.selectedTourney.isOnewayRound),
         });
     }
 
@@ -144,7 +143,7 @@ export class RoundDetailView extends AbstractDetailView {
             let m = this.createMeeting(team, t);
 
             this.selectedRound.meetings.push(m);
-            if (this.selectedTourney.isOnewayRound) {
+            if (!this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team);
                 this.selectedRound.meetings.push(m);
             }
@@ -193,13 +192,6 @@ export class RoundDetailView extends AbstractDetailView {
 
         this.selectedRound.name = this.roundFormGroup.get('name').value;
 
-        let isOneway: string = this.roundFormGroup.get('isOneway').value;
-        if(isOneway=="true") {
-            this.selectedTourney.isOnewayRound = true;
-        } else {
-            this.selectedTourney.isOnewayRound = false;
-        }
-
         this.selectedRound.teams = this.roundFormGroup.get('targetTeams').value;
 
         if(this.tourneyService.newRound) {
@@ -224,7 +216,7 @@ export class RoundDetailView extends AbstractDetailView {
                 let m : Meeting = this.createMeeting(t1, t2);
                 this.selectedRound.meetings.push(m);
 
-                if(this.selectedTourney.isOnewayRound) {
+                if(!this.selectedTourney.isOnewayRound) {
                     let m : Meeting = this.createMeeting(t2, t1);
                     this.selectedRound.meetings.push(m);    
                 }

@@ -31,11 +31,6 @@ export class MatrixListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.loadAll();
-    }
-
-    private loadAll() {
-
         this.selectedTourney = this.tourneyService.selectedTourney;
 
         this.rounds = this.selectedTourney.rounds;

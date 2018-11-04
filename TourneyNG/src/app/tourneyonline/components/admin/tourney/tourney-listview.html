@@ -8,39 +8,45 @@
 <div class="content-section documentation">   
 <p-accordion>
     <p-accordionTab header="Premessa">
-        <h4>Premessa</h4>
+
         <p>Per gestire un torneo bisogna essere un utente del Sistema.</p>
         <p>Esistono due tipi di utenti:</p>
         <ul>
             <li>Utenti anonimi</li>
             <li>Utenti con account</li>
         </ul>
+ 
         <h4>Utenti anonimi</h4>
-        <p>Un utente anonimo è un utente qualsiasi che si connette al sistema Tourney Online senza effettuare alcuna forma 
+        <p>
+            Un utente anonimo è un utente qualsiasi che si connette al sistema Tourney Online senza effettuare alcuna forma 
             di login, egli può disporre o non disporre affatto di alcun account di sistema.
             Gli utenti anonimi possono consultare tornei già esistenti, quelli creati da altri utenti che pubblicano i loro tornei,
             ma non possono in nessun modo modificarne i contenuti, a meno che non si tratti di un torneo di sessione.
         </p>
     
-        <p>Un torneo di sessione, nasce e muore all'interno di una sessione utente. La sessione utente può durare anche 
+        <p>
+            Un torneo di sessione, nasce e muore all'interno di una sessione utente. La sessione utente può durare anche 
             indefinitamente se il browser non viene utilizzato continuamente e non viene abbandonato per più di mezz'ora. 
             Se il browser resta inutilizzato per più di mezzora o se il PC, portatile o altro device viene spento, 
             la sessione utente preesistente scade e viene iniziata una nuova che non ha niente in comune con quella precedente.
         </p>
     
-        <p>Durante la sessione, l'utente anonimo dispone di tutte le funzionalità del sistema, ma non appena scade la sessione, 
+        <p>
+            Durante la sessione, l'utente anonimo dispone di tutte le funzionalità del sistema, ma non appena scade la sessione, 
             perde tutto il lavoro fatto. I dati dell'utente anonimo sono si fatto volatili e non sono salvati sul database di 
             Tourney Online, pertanto sono visibili ed utilizzabili per tutta la durata della sessione ma non appena scade non sono 
             più recuperabili.
         </p>
             
         <h4>Utenti con account</h4>
-        <p>L'utente in possesso di un account con diritti di amministrazione può fare tutto ciò che fa un utente anonimo 
+        <p>
+            L'utente in possesso di un account con diritti di amministrazione può fare tutto ciò che fa un utente anonimo 
             ma con il grande valore aggiunto della persistenza dei dati nel Data Base di Tourney Online 
             con possibilità di modificare i dati di un suo torneo esistente, per esempio per 
             modificare la configurazione dei contenuti o semplicemente per aggiornare i risultari di un incontro.
         </p>
-        <p>Per procurarsi un account si rimanda alla pagina di introduzione relativa al noleggio:
+        <p>
+            Per procurarsi un account si rimanda alla pagina di introduzione relativa al noleggio:
             <a [routerLink]="['/lease']">
                 Versione Noleggio
             </a>
@@ -48,13 +54,15 @@
     </p-accordionTab>
     <p-accordionTab header="Contenuti">
         <h4>Vista elenco tornei</h4>
-        <p>La vista contiene l'elenco dei tornei già creati e pubblicati dal proprietario. Il proprietario o responsabile di un torneo
+        <p>
+            La vista contiene l'elenco dei tornei già creati e pubblicati dal proprietario. Il proprietario o responsabile di un torneo
             può scegliere a sua discrezione se rendere visibile a chiunque il proprio torneo o limitarlo solo a quelli in possesso delle
             credenziali di accesso: login o codice di accesso del torneo.
         </p>
     
         <h4>Creare un nuovo torneo</h4>
-        <p>Con il bottone Nuovo Torneo si accede alla vista di dettaglio per la creazione di un nuovo torneo. 
+        <p>
+            Con il bottone Nuovo Torneo si accede alla vista di dettaglio per la creazione di un nuovo torneo. 
             La creazione di un torneo si sviluppa su più fasi e bisogna compilare tante schede prima
             di completarlo. La vista di dettaglio, oltre alla form per la compilazione dei dati del torneo, 
             contiene anche le istruzioni da seguire per completare la creazione di tutto il torneo.
@@ -62,13 +70,15 @@
         </p>
     
         <h4>Modificare un torneo esistente</h4>
-        <p>Con un click sulla riga, si accede alla vista di dettaglio corrispondente in cui si possono 
-                modificare i dati esistenti
+        <p>
+            Con un click sulla riga, si accede alla vista di dettaglio corrispondente in cui si possono 
+            modificare i dati esistenti.
         </p>
     
         <h4>Rimuovere un torneo esistente</h4>
-        <p>Per rimuovere un torneo esistente bisogna comunque accedere alla vista di dettaglio del torneo selezionato e da lì 
-            rimuovere il torneo con il bottone corrispondente
+        <p>
+            Per rimuovere un torneo esistente bisogna comunque accedere alla vista di dettaglio del torneo selezionato e da lì 
+            rimuovere il torneo con il bottone corrispondente.
         </p>
     </p-accordionTab>
 </p-accordion>

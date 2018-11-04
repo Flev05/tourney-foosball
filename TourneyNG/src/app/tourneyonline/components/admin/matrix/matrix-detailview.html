@@ -18,7 +18,14 @@
 
 <div class="content-section implementation">
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+    <h3>
+        Torneo: {{selectedTourney.tourneyName}}
+    </h3> 
 
+    <h3>
+        Girone: {{selectedRound.name}}
+    </h3> 
+    
     <p-table [columns]="cols" [value]="matrix.rows" (onEditComplete)="onEditComplete($event)">
         <ng-template pTemplate="header" let-columns>
             <tr>

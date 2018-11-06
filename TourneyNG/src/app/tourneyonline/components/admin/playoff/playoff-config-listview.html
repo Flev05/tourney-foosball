@@ -8,78 +8,80 @@
 <div class="content-section documentation">
 
     <p>
-        Vista elenco dei gironi di un playoff
+        Vista elenco dei gironi di un Playoff
     </p>
 
     <p-accordion>
-        <p-accordionTab header="Premessa">                        
+        <p-accordionTab header="Introduzione">     
             <p>
-                Un girone di playoff è da considerare come un mero contenitore di squadre, 
-                nulla deve essere inserito relativamente agli incontri, date e luoghi tra le squadre
-                che devono essere documentati nella voce di menù degli incontri al link:          
-                <a class="home-button" [routerLink]="['/adminmeeting']">
-                    Incontri
-                </a>       
-            </p>
-                        
-            <p>
-                Configurare un girone di playoff, consiste nel documentare come popolarlo in funzione del risultato 
-                maturato nei gironi all'italiana. 
-                Si tratta di inserire le regole con le quali si scelgono le squadre dei gironi in funzione della 
-                loro posizione di classifica conseguita nei gironi all'italiana.
-            </p>
-                        
-            <p>
-                Per esempio la seguente riga del girone di playoff P-A:
+                Un girone di playoff è come un girone all'italiana visto anch'esso come un semplice contenitore di squadre, 
+                nulla deve essere assunto relativamente agli incontri di andata e/o ritorno che devono essere documentati nel calendario
+                corrispondente. 
+            </p>                               
+
+            <p>                
+                Per esempio, se per il girone: Playoff Girone A, potreste avere le seguenti regole:
             </p>
             <ul>
-                <li>2° classificata Girone A</li>
-                <li>3° classificata Girone B</li>
+                <li>1° Girone A</li>
+                <li>2° Girone A</li>
+                <li>1° Girone B</li>
+                <li>2° Girone B</li>
             </ul>         
             <p>           
-                Indica che il girone di playoff P-A, avrà 2 squadre: la 2° classificata del Girone A
-                e la 3° classificata del Girone B dei gironi all'italiana.
+                Che significa il girone: "Playoff Girone A", conterrà le prime 2 classificate dei 2 gironi all'italiana Girone A e B.
             </p>
+                                    
+            <p>
+                In questa vista dovete definire il nome del girone di playoff e le regole di passaggio del turno 
+                in funzione del risultato maturato nei gironi all'italiana. 
+            </p>
+
+           
+    
         </p-accordionTab>
     </p-accordion>    
         
     <p-accordion>
-        <p-accordionTab header="Istruzioni">           
-            <h3>Creare un nuovo girone di playoff</h3>
+        <p-accordionTab header="Istruzioni">
             <p>
-                Creare un nuovo girone di playoff significa eseguire le seguenti operazioni:
+                In questa vista, trovate i seguenti oggetti:
             </p>
             <ul>
-                <li>Inserire il nome del playoff</li>
-                <li>Inserire il numero di squadre per playoff</li>
-                <li>Configurare le regole di popolamento dei playoff</li>
-            </ul>
-            <p>
-                Per configurare le regole di popolamento, click su ciascuna delle righe generate ed accedere 
-                alla vista di dettaglio in cui scegliere le posizioni e i nomi dei gironi di provenienza.  
-            </p>         
+                <li>Il bottone Indietro</li>
+                <li>Il bottone Incontri</li>
+                <li>La casella per il nome del girone</li>
+                <li>La lista delle regole</li>
+                <li>Il bottone Aggiungi Regola</li>
+                <li>Il bottone Salva</li>
+            </ul>         
 
-            <h4>Modificare un playoff</h4>
             <p>
-                Modificare un playoff significa modificare il nome, il numero delle squadre o la 
-                configurazione delle regole di popolamento playoff.                
+                Il bottone Indietro permette di ritornare alla vista precedente senza salvare le eventuale modifiche apportate.
             </p>
-            <p>                
-                Se si cambia il numero di squadre, automaticamente saranno rigenerate tutte le 
-                righe per le regole di popolamento che vanno quindi riconfigurate tutte.
-                Il bottone Salva effettua tale operazione e vi riporta alla vista elenco 
-                dei gironi modificati 
-            </p>
-
-            <h4>Rimuovere un playoff</h4>
+    
             <p>
-                Rimuovere un playoff significa rimuovere un girone di playoff con tutte le sue squadre e tutte
-                le sue configurazioni. Il bottone Rimuovi effettua tale operazione e vi riporta alla vista elenco 
-                dei gironi di playoff rimasti.
+                Il bottone Incontri permette di accedere alla vista elenco di tutti gli incontri possibile con
+                le regole configurate. Serve per specificare date e location degli incontri.
             </p>
 
             <p>
-                Alla fine dell'operazione salvare con il bottone Salva
+                La casella del nome contiene il nome del girone che potete modificare con uno a vostro piacimento.
+            </p>
+
+            <p>
+                La lista delle regole contiene tutte le regole per il passaggio del turno utilizzate dal sistema
+                man mano che il torneo si svolge e sono inseriti i dati dei risultate delle partite dei gironi all'italiana.
+                Alla fine dei gironi, i playoff conosceranno tutte le squadre che li compongono
+            </p>
+
+            <p>
+                Il bottone "Aggiungi Regola" apre la vista di dettaglio di una regola in cui dovete configurare le posizioni e 
+                i nomi dei gironi all'italiana che devono avere le squadre per approdare ai playoff.
+            </p>
+
+            <p>
+                Il bottone Salva, da utilizzare ad ogni modifica apportata, serve per confermare le operazioni effettuate.
             </p>
     
         </p-accordionTab>
@@ -90,23 +92,22 @@
     <h3>
         Torneo: {{selectedTourney.tourneyName}}
     </h3>
-    
+    <h3>
+        Girone: {{selectedPlayoff.round.name}}
+    </h3>
+        
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goMeeting()" label="Incontri"></button>
+    </div>                  
+    
     <div style="margin-top:30px">
         <input pInputText [(ngModel)]="selectedPlayoff.round.name" placeholder="Girone Playoff" class="ng-dirty ng-invalid"/>
         <p-message *ngIf="nameIsMandatory" severity="error" text="Il nome del girone di playoff è obbligatorio"></p-message>
     </div>        
-
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <p-dropdown id="levelId" [options]="teamsCombobox" 
-            [(ngModel)]="teamNoCombobox"  
-            (onChange)="onChange($event.value)"
-            placeholder="Numero squadre">
-        </p-dropdown>
-    </div>                       
 
     <p-table
             [value]="playoffConfigs" 
@@ -137,6 +138,14 @@
                 <td>{{rowData.fromRound.round.label}}</td>
             </tr>
         </ng-template>
+
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="add()" label="Aggiungi Regola" ></button>
+                <button pButton icon="fa-plus" type="button" (click)="save()" label="Salva" ></button>
+            </div>
+        </ng-template>               
+            
     </p-table>
 </div>
     

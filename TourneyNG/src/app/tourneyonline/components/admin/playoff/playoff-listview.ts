@@ -36,7 +36,7 @@ export class PlayoffListView extends AbstractListView {
         this.atLeastOneRound = this.selectedTourney.rounds.length > 0;
     }
 
-    create() {
+    add() {
         this.tourneyService.newPlayoff = true;
         this.gotoDetailView();
     }

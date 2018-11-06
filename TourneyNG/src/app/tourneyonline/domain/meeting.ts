@@ -1,6 +1,7 @@
 import { Team } from './team';
 import { Country } from './country';
 import { Match } from './match';
+import { PlayoffConfig } from './playoff-config';
 
 export interface Meeting
 {
@@ -13,5 +14,6 @@ export interface Meeting
     team2    : Team;
     score1?  : number;
     score2?  : number;
-    matches? : [ Match ];
+    matches? : Match[];
+    playoffConfigs?: PlayoffConfig[];
 }

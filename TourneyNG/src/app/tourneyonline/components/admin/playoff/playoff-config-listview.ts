@@ -15,18 +15,16 @@ import { RoundType } from 'app/tourneyonline/domain/enumerations';
 })
 export class PlayoffConfigListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/playoffRoundLv/dv";
+    static redirectToMeeting: string = "adminplayoff/lv/playoffRoundLv/meeting";
+
     msgs: Message[] = [];
     position: number;
     roundName: string;
 
-    positions: Combobox[];
-    rounds: Combobox[];
     playoffConfigs: PlayoffConfig[];
 
     selectedPlayoff: Playoff;
-
-    teamNoCombobox: number;
-    teamsCombobox: Combobox[];
+ 
     nameIsMandatory: boolean;
     selectedPlayoffConfig: PlayoffConfig; 
 
@@ -42,53 +40,31 @@ export class PlayoffConfigListView extends AbstractListView {
         super.ngOnInit();
 
         this.tourneyService.prepareEliminatoriesComboBoxes();
-
-        this.positions = this.tourneyService.positionsCombobox;
-        this.rounds = this.tourneyService.roundsCombobox;
-
-        this.teamNoCombobox = this.selectedTourney.teams.length;
-
-        this.teamsCombobox = [];
-        for(let i=2; i<=this.teamNoCombobox; i++ ) {
-            let item = { label: "" + i, value: i };
-            this.teamsCombobox.push(item);
-        }
-
-        this.teamNoCombobox = 0;
-
         if(this.tourneyService.newPlayoff) {
-            this.selectedPlayoff = {
+            this.tourneyService.selectedPlayoff = {
                   id:this.tourneyService.getSequenceNumber()
                 , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P}
                 , playoffConfigs: [this.newPlaoffConfig()]};
 
             this.selectedTourney.playoffs.push(this.selectedPlayoff);
-        } else {
-            this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-            this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
         }
-    }
-    
-    onOnewayClick() {
-        console.log("Entering onOnewayClick()");
-        this.selectedTourney.isOnewayPlayoff=true;
+        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
     }
 
-    onRoundtripClick() {
-        console.log("Entering onRoundtripClick()");
-        this.selectedTourney.isOnewayPlayoff=false;
+    goMeeting() {
+        this.router.navigate([PlayoffConfigListView.redirectToMeeting]);
     }
 
-    onChange(event) {
-        console.log(event);
+    add() {
 
-        this.playoffConfigs = [];
-        for(let i=1; i<=this.teamNoCombobox; i++ ) {
-            let pc: PlayoffConfig = this.newPlaoffConfig();
-    
-            this.playoffConfigs.push(pc);
-        }
-        this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
+        let item = this.newPlaoffConfig();
+        this.playoffConfigs.push(item);
+        this.router.navigate([PlayoffConfigListView.redirect]);
+    }
+
+    save() {
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     private newPlaoffConfig(): PlayoffConfig {
@@ -110,5 +86,12 @@ export class PlayoffConfigListView extends AbstractListView {
         this.router.navigate([PlayoffConfigListView.redirect]);
     }
 
+    onError(n:any) {
+        this.msgs = [];
+        let msgerr : string;
+
+        msgerr = 'Modifica configurazione playoff fallita';
+        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+    }
 }
 

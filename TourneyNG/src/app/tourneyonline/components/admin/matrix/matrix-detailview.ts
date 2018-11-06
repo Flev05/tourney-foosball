@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 
 import {Message} from '../../../../components/common/api';
 
@@ -10,7 +10,6 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Matrix } from '../../../domain/matrix';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Team } from 'app/tourneyonline/domain/team';
 import { Cell } from 'app/tourneyonline/domain/cell';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Combobox } from '../../../domain/tourney-combobox';

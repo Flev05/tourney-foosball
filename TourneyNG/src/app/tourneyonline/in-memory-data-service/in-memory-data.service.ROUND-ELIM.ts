@@ -91,7 +91,7 @@ static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
       , teams: []
       , meetings: []
       , classification: []
-      , matrix: {id: 1, rows: []}
+      , matrix: null
     };
   }
 

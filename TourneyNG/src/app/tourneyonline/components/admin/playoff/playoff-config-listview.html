@@ -98,14 +98,11 @@
         
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-    </div>                  
-
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goMeeting()" label="Incontri"></button>
     </div>                  
     
     <div style="margin-top:30px">
-        <input pInputText [(ngModel)]="selectedPlayoff.round.name" placeholder="Girone Playoff" class="ng-dirty ng-invalid"/>
+        <input name="Nome girone" pInputText [(ngModel)]="selectedPlayoff.round.name" placeholder="Girone Playoff" class="ng-dirty ng-invalid"/>
         <p-message *ngIf="nameIsMandatory" severity="error" text="Il nome del girone di playoff è obbligatorio"></p-message>
     </div>        
 

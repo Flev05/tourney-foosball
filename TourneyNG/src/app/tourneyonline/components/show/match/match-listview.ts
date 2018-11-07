@@ -21,7 +21,7 @@ export class MatchListView implements OnInit {
     selectedTourney: Tourney;
     selectedMeeting: Meeting;
 
-    matches: [Match];
+    matches: Match[];
     rows: any[] = [];
 
 

@@ -36,9 +36,6 @@
                 In questa vista dovete definire il nome del girone di playoff e le regole di passaggio del turno 
                 in funzione del risultato maturato nei gironi all'italiana. 
             </p>
-
-           
-    
         </p-accordionTab>
     </p-accordion>    
         
@@ -118,7 +115,7 @@
         </div>
     </div>
 
-    <p-table
+    <p-table *ngIf="playoffFormGroup.controls['roundName'].valid"
             [value]="playoffConfigs" 
             selectionMode="single" 
             [(selection)]="selectedPlayoffConfig" 
@@ -127,7 +124,7 @@
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
-                <col style="width: auto;">
+                <col style="width: 100%;">
                 <col style="width: 100%;">
             </colgroup>
         </ng-template>

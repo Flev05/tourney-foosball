@@ -219,23 +219,6 @@ export class LevelListView extends AbstractListView {
     }
 
     /**
-     * Verifies if there are new teams added to the tourney and aligns the
-     * teams and classifications in the each rounds
-     */
-    // private alignToNewTeams() {
-    //     for (let r of this.selectedTourney.rounds) {
-    //         for (let t of this.selectedTourney.teams) {
-    //             let index: number = r.teams.indexOf(t);
-    //             if (index == -1) {
-    //                 r.teams.push(t);
-    //                 let c: Classification = this.newClassification(t, 0);
-    //                 r.classification.push(c);
-    //             }
-    //         }
-    //     }
-    // }
-
-    /**
      * For each round, adds the correct dummy classifictions, having points=-1, so the total number 
      * of teams will be equal to the next neatest power of 2.
      * 

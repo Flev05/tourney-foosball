@@ -145,7 +145,7 @@ export class TourneyDetailView extends AbstractDetailView {
         if(confirm(popup + this.selectedTourney.tourneyName + "?")) {
             this.tourneyService.deleteTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
             // console.log("Rimosso il torneo: " + this.selectedTourney.tourneyName);
-          }
+        }
     }
 
     onSubmit(value: string) {

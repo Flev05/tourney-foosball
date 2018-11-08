@@ -68,6 +68,7 @@ export class TourneyService {
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffConfig;
     playoffsConfigs: PlayoffConfig[];
+    selectedIndex: number;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
@@ -124,7 +125,7 @@ export class TourneyService {
             }
         }
 
-        this.positionsCombobox = [];
+        this.positionsCombobox = [{label: "", value: 0}];
         if(this.selectedTourney.rounds.length>0) {
             let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
             if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {

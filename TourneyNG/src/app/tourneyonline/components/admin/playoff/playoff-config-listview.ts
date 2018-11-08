@@ -7,8 +7,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
-import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
     templateUrl: './playoff-config-listview.html'
@@ -16,6 +16,8 @@ import { RoundType } from 'app/tourneyonline/domain/enumerations';
 export class PlayoffConfigListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/playoffRoundLv/dv";
     static redirectToMeeting: string = "adminplayoff/lv/playoffRoundLv/meeting";
+
+    playoffFormGroup: FormGroup;
 
     msgs: Message[] = [];
     position: number;
@@ -25,10 +27,12 @@ export class PlayoffConfigListView extends AbstractListView {
 
     selectedPlayoff: Playoff;
  
-    nameIsMandatory: boolean;
+    // nameIsMandatory: boolean;
     selectedPlayoffConfig: PlayoffConfig; 
 
-    constructor(
+    roudName: string;
+
+    constructor(private fb: FormBuilder,
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
@@ -45,11 +49,16 @@ export class PlayoffConfigListView extends AbstractListView {
                   id:this.tourneyService.getSequenceNumber()
                 , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P}
                 , playoffConfigs: [this.newPlaoffConfig()]};
-
-            this.selectedTourney.playoffs.push(this.selectedPlayoff);
         }
+
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
+
+        this.playoffFormGroup = this.fb.group({
+
+            'roundName':  new FormControl(this.selectedPlayoff.round.name, Validators.compose([Validators.required])),
+     
+        });
     }
 
     goMeeting() {
@@ -58,13 +67,41 @@ export class PlayoffConfigListView extends AbstractListView {
 
     add() {
 
-        let item = this.newPlaoffConfig();
-        this.playoffConfigs.push(item);
+        let newpc = this.newPlaoffConfig();
+        this.tourneyService.playoffsConfigs = this.playoffConfigs;
+        this.tourneyService.selectedPlayoffConfig = newpc;
+        this.tourneyService.selectedIndex = this.playoffConfigs.length-1;
+
         this.router.navigate([PlayoffConfigListView.redirect]);
     }
 
     save() {
+
+        this.selectedPlayoff.round.name = this.playoffFormGroup.get('roundName').value;
+        
+        this.selectedTourney.playoffs.push(this.tourneyService.selectedPlayoff);
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        
+        // if(this.nameIsMandatory) {
+        // } else {  
+        // this.msgs = [];
+        //     this.msgs.push({severity:'error', summary:'Errore!', detail:'Il nome del girone di playoff è obbligatorio'});
+        // }
+    }
+
+    doDelete() {
+        console.log("doDelete(): " + this.selectedPlayoff.round.name);
+        let popup = 'Sicuro di voler rimuovere il girone: ';
+
+        if(confirm(popup + this.selectedPlayoff.round.name + "?")) {
+
+            let index = this.selectedTourney.playoffs.indexOf(this.selectedPlayoff);
+            if(index > -1 ) {
+                this.selectedTourney.playoffs.splice(index, 1);
+    
+                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+            }
+        }
     }
 
     private newPlaoffConfig(): PlayoffConfig {
@@ -83,6 +120,11 @@ export class PlayoffConfigListView extends AbstractListView {
         this.tourneyService.playoffsConfigs = this.playoffConfigs;
 
         this.tourneyService.selectedPlayoffConfig = this.selectedPlayoffConfig;
+
+        let index = this.playoffConfigs.indexOf(this.selectedPlayoffConfig);
+
+        this.tourneyService.selectedIndex = index;
+
         this.router.navigate([PlayoffConfigListView.redirect]);
     }
 

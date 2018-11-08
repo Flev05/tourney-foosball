@@ -15,7 +15,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
     templateUrl: './playoff-config-detailview.html'
 })
 export class PlayoffConfigDetailView extends AbstractListView {
-    playoffFormGroup: FormGroup;
+    playoffConfigFormGroup: FormGroup;
 
     msgs: Message[] = [];
 
@@ -26,6 +26,7 @@ export class PlayoffConfigDetailView extends AbstractListView {
 
     selectedPlayoff: Playoff;
     selectedPlayoffConfig: PlayoffConfig; 
+    selectedIndex: number;
  
     constructor(
         private fb: FormBuilder,
@@ -46,8 +47,11 @@ export class PlayoffConfigDetailView extends AbstractListView {
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         this.selectedPlayoffConfig = this.tourneyService.selectedPlayoffConfig;
+        this.selectedIndex = this.tourneyService.selectedIndex + 1;
 
-        this.playoffFormGroup = this.fb.group({
+        this.playoffConfigs = this.tourneyService.playoffsConfigs;
+
+        this.playoffConfigFormGroup = this.fb.group({
 
             'position':  new FormControl(this.selectedPlayoffConfig.fromRound.position),
             'round':  new FormControl(this.selectedPlayoffConfig.fromRound.round),
@@ -57,12 +61,29 @@ export class PlayoffConfigDetailView extends AbstractListView {
 
     onSubmit(value: string) {
 
-        this.selectedPlayoffConfig.fromRound.position = this.playoffFormGroup.get('position').value;
-        this.selectedPlayoffConfig.fromRound.round = this.playoffFormGroup.get('round').value;
+        this.playoffConfigs.push(this.selectedPlayoffConfig);
+
+        let position = this.playoffConfigFormGroup.get('position').value;
+        this.selectedPlayoffConfig.fromRound.position = position;
+
+        this.selectedPlayoffConfig.fromRound.round = this.playoffConfigFormGroup.get('round').value;
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
-            
+
+    doDelete() {
+        console.log("doDelete(): " + this.selectedIndex);
+        let popup = 'Sicuro di voler rimuovere la regola: ';
+
+        if(confirm(popup + this.selectedIndex + "?")) {
+
+            this.playoffConfigs.splice(this.selectedIndex-1, 1);
+            this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
+
+            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        }
+    }
+    
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

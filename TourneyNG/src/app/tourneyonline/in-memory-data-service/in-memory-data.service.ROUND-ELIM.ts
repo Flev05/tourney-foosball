@@ -1,6 +1,6 @@
 import { Round } from 'app/tourneyonline/domain/round';
 import { Team } from 'app/tourneyonline/domain/team';
-import { RoundType, TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType } from 'app/tourneyonline/domain/enumerations';
+import { RoundType, TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TeamsPool } from './teams-pool';
 import { PlayersPool } from './players-pool';
@@ -113,6 +113,7 @@ static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
           , team2: t2
           , score1: 0
           , score2: 0
+          , direction: Direction.OneWay
         };
 
         r.meetings.push(m);

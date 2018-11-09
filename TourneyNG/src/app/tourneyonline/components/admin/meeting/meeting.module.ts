@@ -12,7 +12,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
-import {CalendarRoutingModule} from './meeting-routing.module';
+import {MeetingRoutingModule} from './meeting-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
 import {DropdownModule} from '../../../../components/dropdown/dropdown';
@@ -56,7 +56,7 @@ import {MessageModule} from 'primeng/message';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
-        ,CalendarRoutingModule
+        ,MeetingRoutingModule
         ,AccordionModule
         ,PickListModule
         ,MessagesModule

@@ -8,7 +8,7 @@ import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { PhaseType, EliminatoryMode } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, Direction } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Component({
@@ -109,7 +109,8 @@ export class EliminatoryListView extends AbstractListView {
             address: this.selectedTourney.address,
             country: this.selectedTourney.country,
             score1: 0,
-            score2: 0
+            score2: 0,
+            direction: Direction.OneWay
         };
     }
 }

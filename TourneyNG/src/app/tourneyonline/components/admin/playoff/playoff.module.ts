@@ -31,6 +31,8 @@ import { PlayoffConfigListView } from './playoff-config-listview';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { PlayoffConfigDetailView } from './playoff-config-detailview';
+import { MeetingListView } from './meeting-listview';
+import { MeetingDetailView } from './meeting-detailview';
 
 @NgModule({
 	imports: [
@@ -66,6 +68,8 @@ import { PlayoffConfigDetailView } from './playoff-config-detailview';
         ,PlayoffListView
         ,PlayoffConfigListView
         ,PlayoffConfigDetailView
+        ,MeetingListView
+        ,MeetingDetailView
 	]
 })
 export class PlayoffModule {}

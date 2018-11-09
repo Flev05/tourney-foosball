@@ -15,7 +15,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 })
 export class PlayoffConfigListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/playoffRoundLv/dv";
-    static redirectToMeeting: string = "adminplayoff/lv/playoffRoundLv/meeting";
+    static redirectToMeeting: string = "adminplayoff/lv/meetingLv";
 
     playoffFormGroup: FormGroup;
 
@@ -68,6 +68,7 @@ export class PlayoffConfigListView extends AbstractListView {
     add() {
 
         let newpc = this.newPlaoffConfig();
+        this.tourneyService.newRule = true;
         this.tourneyService.playoffsConfigs = this.playoffConfigs;
         this.tourneyService.selectedPlayoffConfig = newpc;
         this.tourneyService.selectedIndex = this.playoffConfigs.length-1;
@@ -77,16 +78,17 @@ export class PlayoffConfigListView extends AbstractListView {
 
     save() {
 
-        this.selectedPlayoff.round.name = this.playoffFormGroup.get('roundName').value;
-        
-        this.selectedTourney.playoffs.push(this.tourneyService.selectedPlayoff);
+        this.beforeSave();
+
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        
-        // if(this.nameIsMandatory) {
-        // } else {  
-        // this.msgs = [];
-        //     this.msgs.push({severity:'error', summary:'Errore!', detail:'Il nome del girone di playoff è obbligatorio'});
-        // }
+    }
+
+    private beforeSave() {
+        if (this.tourneyService.newPlayoff) {
+            this.tourneyService.newPlayoff = false;
+            this.selectedPlayoff.round.name = this.playoffFormGroup.get('roundName').value;
+            this.selectedTourney.playoffs.push(this.tourneyService.selectedPlayoff);
+        }
     }
 
     doDelete() {
@@ -116,6 +118,10 @@ export class PlayoffConfigListView extends AbstractListView {
     }
 
     onRowSelect(event) {
+
+        if(this.tourneyService.newPlayoff) {
+            this.beforeSave();
+        }
 
         this.tourneyService.playoffsConfigs = this.playoffConfigs;
 

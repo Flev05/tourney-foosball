@@ -479,7 +479,7 @@
                         </div>
                     </div>
 
-                    <div class="ui-grid-row">
+                    <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'" class="ui-grid-row">
                         <div class="ui-grid-col-3">
                             Pareggio:
                         </div>

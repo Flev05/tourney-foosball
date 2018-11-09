@@ -18,4 +18,4 @@ import { MeetingListView } from './meeting-listview';
 		RouterModule
 	]
 })
-export class CalendarRoutingModule {}
+export class MeetingRoutingModule {}

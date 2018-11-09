@@ -21,3 +21,7 @@ export enum TourneyType {
 export enum TeamSortType {
     O='original', A='alphabetical', R="random"
 }
+
+export enum Direction {
+    OneWay='Andata', RoundTrip="Ritorno"
+}

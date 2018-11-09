@@ -30,9 +30,11 @@
         </p>
         <p>
             Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
-            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente 
-            alla voce di menù:
-            <a class="home-button" [routerLink]="['/adminmeeting']" (click)="menuActive = false">Incontri</a>
+            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente accessibile con
+            il bottone Incontri
+        </p>
+        <p>
+            Attenzione! Se non ci sono squadre nell'area di sinistra, dovete prima creare le squadre del torneo
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -69,6 +71,7 @@
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa-user-plus"  pButton (click)="goMeeting()" label="Incontri" class="ui-button-success"></button>
     </div>                  
 
     <form [formGroup]="roundFormGroup" (ngSubmit)="onSubmit(roundFormGroup.value)">

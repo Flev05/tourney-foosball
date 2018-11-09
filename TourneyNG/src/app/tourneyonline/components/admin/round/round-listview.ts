@@ -8,24 +8,25 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
-const redirect: string = "adminround/lv/dv";
 
 @Component({
     templateUrl: './round-listview.html'
 })
 export class RoundListView extends AbstractListView {
-    constructor(
-        protected tourneyService: TourneyService,
-        protected router: Router,
-        protected location: Location,
-    ) {
-        super(redirect, tourneyService, router, location);
-    }
+    static redirect: string = "adminround/lv/dv";
 
     selectedTourney: Tourney;
     selectedRound: Round;
 
     rounds: Round [];
+
+    constructor(
+        protected tourneyService: TourneyService,
+        protected router: Router,
+        protected location: Location,
+    ) {
+        super(RoundListView.redirect, tourneyService, router, location);
+    }    
 
     ngOnInit() {
         super.ngOnInit();

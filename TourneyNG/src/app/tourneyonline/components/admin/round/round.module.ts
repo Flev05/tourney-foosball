@@ -28,6 +28,10 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {RoundTourneyListView} from './tourney-listview';
 import {RoundListView} from './round-listview';
 import {RoundDetailView} from './round-detailview';
+import { MeetingListView } from './meeting-listview';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import { MeetingDetailView } from './meeting-detailview';
 
 @NgModule({
 	imports: [
@@ -56,11 +60,15 @@ import {RoundDetailView} from './round-detailview';
         ,RoundRoutingModule
         ,AccordionModule
         ,PickListModule
+        ,MessagesModule
+        ,MessageModule
     ],
 	declarations: [
-		RoundTourneyListView,
-        RoundListView,
-        RoundDetailView
+        RoundTourneyListView
+        ,RoundListView
+        ,RoundDetailView
+        ,MeetingListView
+        ,MeetingDetailView
 	]
 })
 export class RoundModule {}

@@ -12,13 +12,16 @@ import { CountryService } from '../../../service/countryservice';
 import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { RoundType } from 'app/tourneyonline/domain/enumerations';
+import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Classification } from 'app/tourneyonline/domain/classification';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './round-detailview.html',
 })
 export class RoundDetailView extends AbstractDetailView {
+    static meetingListviewRedirect: string = "adminround/lv/meetingLv";
+
     selectedRound: Round;
 
     msgs: Message[] = [];
@@ -32,6 +35,7 @@ export class RoundDetailView extends AbstractDetailView {
     constructor(
         private fb: FormBuilder,
         protected location: Location,
+        protected router: Router,
         protected tourneyService: TourneyService,
         protected countryService: CountryService
     ) { 
@@ -82,6 +86,10 @@ export class RoundDetailView extends AbstractDetailView {
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
         });
+    }
+
+    goMeeting() {
+        this.router.navigate([RoundDetailView.meetingListviewRedirect]);
     }
 
     doDelete() {
@@ -140,17 +148,17 @@ export class RoundDetailView extends AbstractDetailView {
 
     private addTeamToMeetings(team: Team) {
         for (let t of this.selectedRound.teams) {
-            let m = this.createMeeting(team, t);
+            let m = this.createMeeting(team, t, Direction.OneWay);
 
             this.selectedRound.meetings.push(m);
             if (!this.selectedTourney.isOnewayRound) {
-                m = this.createMeeting(t, team);
+                m = this.createMeeting(t, team, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
             }
         }
     }
 
-    private createMeeting(t: Team, team: Team) {
+    private createMeeting(t: Team, team: Team, d: Direction) {
         let m : Meeting = {
             id: this.tourneyService.getSequenceNumber(),
             name: t.teamName + " - " + team.teamName,
@@ -158,7 +166,8 @@ export class RoundDetailView extends AbstractDetailView {
             address: this.selectedTourney.address,
             country: this.selectedTourney.country,
             team1: t,
-            team2: team
+            team2: team,
+            direction: d
         };
         return m;
     }
@@ -213,11 +222,11 @@ export class RoundDetailView extends AbstractDetailView {
             for(let j=i+1; j<this.selectedRound.teams.length; j++) {
                 let t1: Team = this.selectedRound.teams[i];
                 let t2: Team = this.selectedRound.teams[j];
-                let m : Meeting = this.createMeeting(t1, t2);
+                let m : Meeting = this.createMeeting(t1, t2, Direction.OneWay);
                 this.selectedRound.meetings.push(m);
 
                 if(!this.selectedTourney.isOnewayRound) {
-                    let m : Meeting = this.createMeeting(t2, t1);
+                    let m : Meeting = this.createMeeting(t2, t1, Direction.RoundTrip);
                     this.selectedRound.meetings.push(m);    
                 }
             }

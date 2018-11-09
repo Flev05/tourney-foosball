@@ -69,6 +69,7 @@ export class TourneyService {
     selectedPlayoffConfig: PlayoffConfig;
     playoffsConfigs: PlayoffConfig[];
     selectedIndex: number;
+    newRule: boolean;
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");

@@ -42,7 +42,6 @@
                 <col style="width: 10mm;">
                 <col style="width: 20mm;">
                 <col style="width: 10mm;">
-                <col style="width: 10mm;">
                 <col style="width: 20mm;">
                 <col style="width: 100%;">
             </colgroup>
@@ -54,7 +53,6 @@
                 <th>Data</th>
                 <th>Ora</th>
                 <th>Direzione</th>
-                <th>C°</th>
                 <th>Regola</th>
             </tr>    
         </ng-template>
@@ -65,7 +63,7 @@
                 <td>{{rowData.datetime | date: 'dd/MM/y'}}</td>
                 <td>{{rowData.datetime | date: 'HH:mm'}}</td>
                 <td>{{rowData.direction}}</td>
-                <td>{{rowData.playoffConfig1.fromRound.position.label}} - {{rowData.playoffConfig1.fromRound.round.label}}</td>
+                <td>{{rowData.playoffConfig1.fromRound.position.label}} {{rowData.playoffConfig1.fromRound.round.label}} - {{rowData.playoffConfig2.fromRound.position.label}} {{rowData.playoffConfi2.fromRound.round.label}}</td>
             </tr>
         </ng-template>
     </p-table>

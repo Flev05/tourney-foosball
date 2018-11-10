@@ -49,6 +49,8 @@ export class PlayoffConfigListView extends AbstractListView {
                   id:this.tourneyService.getSequenceNumber()
                 , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P}
                 , playoffConfigs: [this.newPlaoffConfig()]};
+
+            this.playoffConfigs = [];
         }
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
@@ -86,6 +88,7 @@ export class PlayoffConfigListView extends AbstractListView {
     private beforeSave() {
         if (this.tourneyService.newPlayoff) {
             this.tourneyService.newPlayoff = false;
+            this.selectedPlayoff.round.meetings = [];
             this.selectedPlayoff.round.name = this.playoffFormGroup.get('roundName').value;
             this.selectedTourney.playoffs.push(this.tourneyService.selectedPlayoff);
         }

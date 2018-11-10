@@ -11,7 +11,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Direction, RoundType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './playoff-config-detailview.html'

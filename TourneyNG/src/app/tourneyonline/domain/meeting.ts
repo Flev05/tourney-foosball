@@ -19,4 +19,5 @@ export interface Meeting
     matches? : Match[];
     playoffConfig1?: PlayoffConfig;
     playoffConfig2?: PlayoffConfig;
+    ruleName?: string;
 }

@@ -55,7 +55,7 @@ export class TourneyService {
     newPlayer : boolean = false;
     newTeam : boolean = false;
     newRound : boolean = false;
-    newPlayoff : boolean = false;
+    
     newPlayoffConfig : boolean = false;
 
     firstTime : boolean = true;
@@ -67,7 +67,6 @@ export class TourneyService {
     meetings: Meeting[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffConfig;
-    playoffsConfigs: PlayoffConfig[];
     selectedIndex: number;
     newRule: boolean;
 

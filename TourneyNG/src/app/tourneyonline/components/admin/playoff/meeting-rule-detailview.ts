@@ -3,25 +3,24 @@ import { Location } from '@angular/common';
 
 import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import {Message} from '../../../../components/common/api';
-
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
-import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Round } from 'app/tourneyonline/domain/round';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { Message } from 'primeng/api';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 
 @Component({
-    templateUrl: './meeting-detailview.html',
+    templateUrl: './meeting-rule-detailview.html',
 })
-export class MeetingDetailView extends AbstractDetailView {
+export class MeetingRuleDetailView extends AbstractDetailView {
 
     msgs: Message[] = [];
 
     meetingFormGroup: FormGroup;
     toggleable: boolean = false;
 
-    selectedRound: Round;
+    selectedPlayoff: Playoff;
     selectedMeeting: Meeting;
     
     fullAddress: string;
@@ -41,7 +40,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
-        this.selectedRound = this.tourneyService.selectedRound;
+        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         this.selectedMeeting = this.tourneyService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);

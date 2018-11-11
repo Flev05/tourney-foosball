@@ -10,8 +10,6 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Router } from '@angular/router';
-
 
 @Component({
     templateUrl: './meeting-detailview.html',

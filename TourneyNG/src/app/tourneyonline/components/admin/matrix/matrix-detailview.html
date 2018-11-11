@@ -1,14 +1,16 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Matrice dei punti</span>
-        <span>Vista di dettaglio della matrice dei punti {{roundName}}</span>
+        <span>Vista di dettaglio della matrice dei punti</span>
     </div>
 </div>
 
 <div class="content-section documentation">
     <p>
-        Da questa vista potete modificare i dati della matrice dei punti per il girone selezionato 
-        Impostare correttamente i dati nelle due caselle cui si ricerisce l'incontro e salvare
+        Da questa vista potete modificare i dati della matrice dei punti per il girone selezionato.        
+    </p>
+    <p>
+        Impostate correttamente i dati nelle due caselle cui si riferisce l'incontro e salvare col bottone Salva.
     </p>
 </div>
 
@@ -17,14 +19,13 @@
 </div>
 
 <div class="content-section implementation">
-    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
     <h3>
         Torneo: {{selectedTourney.tourneyName}}
     </h3> 
 
-    <h3>
+    <h4>
         Girone: {{selectedRound.name}}
-    </h3> 
+    </h4> 
     
     <p-table [columns]="cols" [value]="matrix.rows" (onEditComplete)="onEditComplete($event)">
         <ng-template pTemplate="header" let-columns>
@@ -69,6 +70,5 @@
             </div>
         </ng-template>        
     </p-table> 
-
 </div>
  

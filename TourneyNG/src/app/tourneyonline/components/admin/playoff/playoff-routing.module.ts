@@ -2,9 +2,9 @@ import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
 import {PlayoffTourneyListView} from './tourney-listview';
 import {PlayoffListView} from './playoff-listview';
-import { PlayoffConfigListView } from './playoff-config-listview';
-import { PlayoffConfigDetailView } from './playoff-config-detailview';
-import { MeetingDetailView } from './meeting-detailview';
+import { RuleListView } from './rule-listview';
+import { RuleDetailView } from './rule-detailview';
+import { MeetingRuleDetailView } from './meeting-rule-detailview';
 import { MeetingListView } from './meeting-listview';
 
 @NgModule({
@@ -12,10 +12,10 @@ import { MeetingListView } from './meeting-listview';
 		RouterModule.forChild([
 			{ path: '', component: PlayoffTourneyListView },
 			{ path: 'lv', component: PlayoffListView },
-			{ path: 'lv/playoffRoundLv', component: PlayoffConfigListView },
-			{ path: 'lv/playoffRoundLv/dv', component: PlayoffConfigDetailView },
+			{ path: 'lv/playoffRoundLv', component: RuleListView },
+			{ path: 'lv/playoffRoundLv/dv', component: RuleDetailView },
 			{ path: 'lv/meetingLv', component: MeetingListView },
-			{ path: 'lv/meetingLv/dv', component: MeetingDetailView },
+			{ path: 'lv/meetingLv/playoffRuledv', component: MeetingRuleDetailView },
 		])
 	],
 	exports: [

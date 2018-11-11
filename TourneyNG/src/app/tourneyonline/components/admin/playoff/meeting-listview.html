@@ -26,12 +26,8 @@
     <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
 
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-
-    <div style="margin-top:30px">
-        <p-message *ngIf="!atLeast2teams" severity="error" text="Attenzione! Il girone è vuoto, inserire almeno 2 squadre"></p-message>
-    </div>     
     
-    <p-table *ngIf="atLeast2teams"
+    <p-table
         [value]="meetings"
         selectionMode="single"
         [(selection)]="selectedMeeting" 
@@ -63,7 +59,7 @@
                 <td>{{rowData.datetime | date: 'dd/MM/y'}}</td>
                 <td>{{rowData.datetime | date: 'HH:mm'}}</td>
                 <td>{{rowData.direction}}</td>
-                <td>{{rowData.playoffConfig1.fromRound.position.label}} {{rowData.playoffConfig1.fromRound.round.label}} - {{rowData.playoffConfig2.fromRound.position.label}} {{rowData.playoffConfi2.fromRound.round.label}}</td>
+                <td>{{rowData.ruleName}}</td>
             </tr>
         </ng-template>
     </p-table>

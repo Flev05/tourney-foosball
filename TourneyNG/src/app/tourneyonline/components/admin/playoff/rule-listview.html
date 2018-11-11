@@ -1,23 +1,29 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Gironi Playoff</span>
-        <span>Configurazione gironi di Playoff</span>
+        <span class="feature-title">Regole Playoff</span>
+        <span>Vista elenco regole dei Playoff</span>
     </div>
 </div>
 
 <div class="content-section documentation">
 
     <p>
-        Vista elenco dei gironi di un Playoff
+        Vista elenco delle regole per il passaggio di turno ai Playoff
     </p>
 
     <p-accordion>
         <p-accordionTab header="Introduzione">     
             <p>
-                Un girone di playoff è come un girone all'italiana visto anch'esso come un semplice contenitore di squadre, 
-                nulla deve essere assunto relativamente agli incontri di andata e/o ritorno che devono essere documentati nel calendario
-                corrispondente. 
+                Un girone di playoff è come un girone all'italiana visto anch'esso come un semplice contenitore di squadre.
             </p>                               
+            <p>
+                In questa vista dovete definire il nome del girone di playoff e le regole di passaggio del turno 
+                in funzione del risultato maturato nei gironi all'italiana. 
+            </p>
+            <p>
+                Nulla deve essere assunto relativamente agli incontri di andata e/o ritorno che devono essere documentati nella
+                vista degli incontri corrispondente. 
+            </p>
 
             <p>                
                 Per esempio, se per il girone: Playoff Girone A, potreste avere le seguenti regole:
@@ -32,10 +38,6 @@
                 Che significa il girone: "Playoff Girone A", conterrà le prime 2 classificate dei 2 gironi all'italiana Girone A e B.
             </p>
                                     
-            <p>
-                In questa vista dovete definire il nome del girone di playoff e le regole di passaggio del turno 
-                in funzione del risultato maturato nei gironi all'italiana. 
-            </p>
         </p-accordionTab>
     </p-accordion>    
         
@@ -86,17 +88,20 @@
 </div>
 
 <h3>Torneo: {{selectedTourney.tourneyName}}</h3>
+<h4>Girone: {{selectedPlayoff.round.name}}</h4>
 
 <div class="content-section implementation">      
     
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"    label="Indietro"></button>
-    <button type="button" icon="fa-user-plus"  pButton (click)="goMeeting()" label="Incontri" class="ui-button-success"></button>
+    <button *ngIf="atLeast2Rules" type="button" icon="fa-user-plus"  
+        pButton (click)="goMeeting()" 
+        label="Incontri" class="ui-button-success"></button>
 </div>                  
 
 <form [formGroup]="playoffFormGroup" (ngSubmit)="onSubmit(playoffFormGroup.value)">
     
-    <div class="ui-grid-row">
+    <!-- <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             Nome Girone:
         </div>
@@ -113,9 +118,9 @@
                 </span>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <p-table *ngIf="playoffFormGroup.controls['roundName'].valid"
+    <p-table *ngIf="atLeast1Rule"
             [value]="playoffConfigs" 
             selectionMode="single" 
             [(selection)]="selectedPlayoffConfig" 
@@ -147,16 +152,13 @@
     </p-table>
 
     <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+        <div class="ui-grid-col-5">
             <button pButton icon="fa-plus" type="button" (click)="add()" label="Aggiungi Regola" ></button>
-        </div>
-        <div class="ui-grid-col-2">
-            <button class="ui-button-success" pButton icon="fa-save" type="button" (click)="save()" label="Salva" 
-            [disabled]="!playoffFormGroup.valid"></button>
-        </div>
-        <div class="ui-grid-col-2">
-            <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi"
-            [disabled]="!playoffFormGroup.valid"></button>
+            <button class="ui-button-danger" pButton type="button" icon="fa-close"
+                (click)="doDelete()" 
+                label="Rimuovi"
+                [disabled]="!playoffFormGroup.valid">
+            </button>
         </div>
     </div>
 </form>

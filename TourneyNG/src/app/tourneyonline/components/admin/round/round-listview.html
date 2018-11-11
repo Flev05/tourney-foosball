@@ -6,14 +6,13 @@
 </div>
 
 <div class="content-section documentation">
-
     <p>
         Vista elenco di tutti i gironi che compongono il torneo.
     </p>
     <p>
-        Selezionare la riga di interesse (click su un punto qualsiasi della riga) per accedere alla vista di dettaglio corrispondente
+        Qui potete aggiungere un nuovo girone con il bottone "Aggiungi Girone" e modificare uno esistente
+        selezionando la riga di interesse.
     </p>
-    
 </div>
 
 <div class="content-section implementation">    
@@ -31,12 +30,6 @@
         [(selection)]="selectedRound" 
         (onRowSelect)="onRowSelect($event)" >
 
-        <ng-template pTemplate="caption" let-rowData>
-            <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Crea Girone" ></button>
-            </div>
-        </ng-template>
-    
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
@@ -58,7 +51,11 @@
             </tr>
         </ng-template>        
     
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Girone" ></button>
+            </div>
+        </ng-template>
     </p-table>
-
 </div>
     

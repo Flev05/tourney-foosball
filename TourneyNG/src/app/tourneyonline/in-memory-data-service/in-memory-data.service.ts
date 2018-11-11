@@ -173,6 +173,27 @@ export class InMemoryDataService implements InMemoryDbService {
           , zipCode: '31029'
           , countryCode: 'IT'
         },
+        {id:6943
+          , city:'SOLARO'
+          ,cityCode:'I786'
+          ,provinceCode:'MI'
+          ,zipCode:'20020'
+          ,countryCode:'IT'
+        }
+        ,{id: 8075
+          ,city: 'ZIBIDO SAN GIACOMO'
+          ,cityCode: 'M176'
+          ,provinceCode:'MI'
+          ,zipCode:'20080'
+          ,countryCode:'IT'
+        }
+        ,{id:4790
+          ,city: 'ORIGGIO'
+          ,cityCode: 'G103'
+          ,provinceCode:'VA'
+          ,zipCode:'21040'
+          ,countryCode:'IT'
+         }
       ];
 
       const typologies = [

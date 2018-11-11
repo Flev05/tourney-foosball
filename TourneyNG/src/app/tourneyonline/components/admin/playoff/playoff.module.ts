@@ -11,8 +11,9 @@ import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 
-import {PlayoffRoutingModule} from './playoff-routing.module';
 import {GrowlModule} from '../../../../components/growl/growl';
 import {PanelModule} from '../../../../components/panel/panel';
 import {DropdownModule} from '../../../../components/dropdown/dropdown';
@@ -22,17 +23,15 @@ import {ButtonModule} from '../../../../components/button/button';
 import {TabViewModule} from '../../../../components/tabview/tabview';
 import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
 import {SliderModule} from '../../../../components/slider/slider';
-
 import {CalendarModule} from '../../../../components/calendar/calendar';
 
+import {PlayoffRoutingModule} from './playoff-routing.module';
 import {PlayoffTourneyListView} from './tourney-listview';
 import {PlayoffListView} from './playoff-listview';
-import { PlayoffConfigListView } from './playoff-config-listview';
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
-import { PlayoffConfigDetailView } from './playoff-config-detailview';
+import { RuleListView } from './rule-listview';
+import { RuleDetailView } from './rule-detailview';
 import { MeetingListView } from './meeting-listview';
-import { MeetingDetailView } from './meeting-detailview';
+import { MeetingRuleDetailView } from './meeting-rule-detailview';
 
 @NgModule({
 	imports: [
@@ -66,10 +65,10 @@ import { MeetingDetailView } from './meeting-detailview';
 	declarations: [
          PlayoffTourneyListView
         ,PlayoffListView
-        ,PlayoffConfigListView
-        ,PlayoffConfigDetailView
+        ,RuleListView
+        ,RuleDetailView
         ,MeetingListView
-        ,MeetingDetailView
+        ,MeetingRuleDetailView
 	]
 })
 export class PlayoffModule {}

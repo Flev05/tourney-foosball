@@ -94,10 +94,28 @@
 
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="add()" label="Aggiungi Girone" ></button>
+                <button pButton icon="fa-plus" type="button" (click)="showDialogToAdd()" label="Aggiungi Girone" ></button>
             </div>
         </ng-template>               
     </p-table>
+
+    <p-dialog header="Girone" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+        <div *ngIf="newRound">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="ui-g-5">
+                        <label for="newRoundId">Nome girone</label>
+                    </div>
+                    <div class="ui-g-10">
+                        <input pInputText id="newRoundId" [(ngModel)]="newRound.round.name" />
+                    </div>
+                </div>
+            </div>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton icon="fa fa-save" (click)="save()" label="Save"></button>
+            </div>
+        </div>
+    </p-dialog>    
 </div>
 
     

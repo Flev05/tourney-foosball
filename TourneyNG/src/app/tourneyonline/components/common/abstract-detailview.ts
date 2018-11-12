@@ -5,6 +5,8 @@ import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 import { Country } from '../../domain/country';
 import { CountryService } from '../../service/countryservice';
+import { Round } from 'app/tourneyonline/domain/round';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 export abstract class AbstractDetailView extends AbstractView {
 
@@ -50,5 +52,23 @@ export abstract class AbstractDetailView extends AbstractView {
         
         let invalidDate = new Date();
         invalidDate.setDate(today.getDate() - 1);
+    }
+
+    protected initClassification(r : Round) {
+        r.classification = [];
+        for(let t of r.teams) {
+            let c : Classification = {id:this.tourneyService.getSequenceNumber()
+                , team: t
+                , points: 0
+                , played: 0
+                , won: 0
+                , lost: 0
+                , penalty: 0
+                , goalsDone: 0
+                , goalsConceded: 0
+                , goalsDiff: 0
+            };
+            r.classification.push(c);
+        }
     }
 }

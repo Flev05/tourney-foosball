@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { Classification } from '../../../domain/classification';
-import { Tourney } from '../../../domain/tourney';
-import { TourneyService } from '../../../service/tourneyservice';
-
-const redirect = '/classification/lv';
+import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abstract-tourney-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './tourney-listview.html',
@@ -18,48 +17,18 @@ const redirect = '/classification/lv';
         }
     `]
 })
-export class ClassificationTourneyListView implements OnInit {
+export class ClassificationTourneyListView extends AbstractTourneyListView  {
+    static redirect = '/classification/lv';
 
-    selectedTourney: Tourney;
-
-    tourneys: Tourney[];
-
-    cols: any[];
-
-    constructor(private tourneyService: TourneyService, public router: Router) { 
-        console.log("ClassificationTourneyListView.constructor()");
+    constructor(protected tourneyService: TourneyService, public router: Router, public loc: Location) { 
+        super(ClassificationTourneyListView.redirect, tourneyService, router, loc);
     }
 
     ngOnInit() {
-        console.log("ClassificationTourneyListView.ngOnInit()");
-
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
-
-        this.cols = [
-            { field: 'tourneyName', header: 'Torneo' },
-            { field: 'date', header: 'Data' },
-            { field: 'time', header: 'Ora' },
-            { field: 'address', header: 'Indirizzo' }
-        ];
+        super.ngOnInit();
     }
 
-    onRowSelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedTourney = this.cloneClassification(event.data);
-
-        this.gotoDetailView();
-    }
-  
-    protected gotoDetailView() {
-        this.router.navigate([redirect]);
-    }
-
-    cloneClassification(c: any): any {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
-        }
-        return car;
+    onComplete(): any {
+        super.purgeEliminatory();
     }
 }

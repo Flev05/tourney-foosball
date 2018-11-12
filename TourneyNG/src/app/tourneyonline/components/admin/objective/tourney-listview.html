@@ -8,15 +8,14 @@
 <div class="content-section documentation">
     <p>Una volta selezionato il torneo, si accede alla corrispondente vista elenco degli obiettivi del torneo. 
         Gli obiettivi del torneo non hanno alcuna influenza sullo svolgimento del torneo ma sono 
-        necessari per definire lo scopo finale e per la consultazione in futuro come sintesi dei risultati.
+        necessari per definire lo scopo finale e per la consultazione in futuro della sintesi dei risultati.
     </p>
 </div>
 
-<p-table [columns]="cols" [value]="tourneys" 
+<p-table [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true"  >
+    (onRowSelect)="onRowSelect($event)">
 
     <ng-template pTemplate="colgroup">
         <colgroup>

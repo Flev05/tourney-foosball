@@ -1,19 +1,17 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Message } from 'app/components/common/api';
 
-import {FormBuilder} from '@angular/forms';
-
-import {Message} from '../../../../components/common/api';
-
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
-import { AbstractDetailView } from '../../common/abstract-detailview';
-import { Matrix } from '../../../domain/matrix';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Cell } from 'app/tourneyonline/domain/cell';
 import { Classification } from 'app/tourneyonline/domain/classification';
-import { Combobox } from '../../../domain/tourney-combobox';
-
+import { Matrix } from 'app/tourneyonline/domain/matrix';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './matrix-detailview.html',
@@ -59,7 +57,6 @@ export class MatrixDetailView extends AbstractDetailView {
     points: Combobox[];
 
     constructor(
-        private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService
@@ -117,42 +114,46 @@ export class MatrixDetailView extends AbstractDetailView {
                 let cells = new Array<Cell>();
                 
                 let row = {
-                    id: this.tourneyService.getSequenceNumber()
+                      id: i
                     , cells: cells
                 }
                 this.matrix.rows.push(row);
                 
-                let cl = this.selectedRound.classification[i];
-                let c : Cell = this.newCell(cl.team.teamName, 'style0', false, false);
+                let c1 = this.selectedRound.classification[i];
+                let c : Cell = this.newCell(null, null, c1.team.teamName, 'style0', false, false);
                 cells.push(c);
 
-                c = this.newCell(letter.toString(), 'style1', false, false);
+                c = this.newCell(null, null, letter.toString(), 'style1', false, false);
                 cells.push(c);
                 letter = this.getNextLetter(letter);                            
 
                 for(let j=0; j<this.selectedRound.classification.length; j++ ) {
+                    let c2 = this.selectedRound.classification[j];
+
                     if(i==j) { 
-                        c = this.newCell("", 'diagonalStyle', false, false);
+                        c = this.newCell(null, null, "", 'diagonalStyle', false, false);
                       } else {
-                        c = this.newCell("", 'style0', true, false);
+                        c = this.newCell(c1.team, c2.team, "", 'style0', true, false);
                     }    
                     cells.push(c);
                 }          
 
-                c = this.newCell("", 'totalStyle', false, true);     
+                c = this.newCell(null, null, "", 'totalStyle', false, true);     
                 cells.push(c);
             }            
         }
     }
 
-    private newCell(field: string, style: string, isEditable: boolean, isTotal: boolean): Cell {
+    private newCell(t1: Team, t2: Team, field: string, style: string, isEditable: boolean, isTotal: boolean): Cell {
         return {
-        id: this.tourneyService.getSequenceNumber()
+              id: this.tourneyService.getSequenceNumber()
             , field: field
             , style: style
             , points: { label: "", value: 0 }
             , isEditable: isEditable
             , isTotal: isTotal
+            , team1Id: t1 == null? 0: t1.id
+            , team2Id: t2 == null? 0: t2.id
         };
     }
 
@@ -167,7 +168,8 @@ export class MatrixDetailView extends AbstractDetailView {
     }
 
     save() {
-        for(let r of this.matrix.rows) {
+        for(let i=0; i<this.matrix.rows.length; i++) {
+            let r = this.matrix.rows[i];
             let sum: number = 0;
             for(let i=2; i<r.cells.length-1; i++) {
                 let c: Cell = r.cells[i];
@@ -175,12 +177,29 @@ export class MatrixDetailView extends AbstractDetailView {
                 if(c.points.label!="") {
                     c.style = 'totalStyle';
                 }
+
+                this.updateMeeting(c);
             }
             r.cells[r.cells.length-1].points = {label: "" + sum, value: sum};
+            this.selectedRound.classification[i].points = sum;
         }
 
         this.selectedRound.matrix = this.matrix;
+
+        this.selectedRound.classification = this.sortAsc(this.selectedRound.classification);
+
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+    }
+
+    private updateMeeting(c: Cell): any {
+        for(let m of this.selectedRound.meetings) {
+            if(m.team1.id == c.team1Id) {
+                m.score1 = c.points.value;
+            }
+            if(m.team2.id == c.team2Id) {
+                m.score2 = c.points.value;
+            }
+        }
     }
  
     onError(n:any) {
@@ -189,5 +208,21 @@ export class MatrixDetailView extends AbstractDetailView {
 
         msgerr = 'Modifica matrix fallita';
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+    }
+    
+    private sortAsc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        var sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+            if (c1.points > c2.points) {
+                return -1;
+            }
+        
+            if (c1.points < c2.points) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        return sortedClassification;
     }
 }

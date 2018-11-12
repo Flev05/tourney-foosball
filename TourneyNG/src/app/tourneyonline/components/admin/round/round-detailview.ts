@@ -232,6 +232,8 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
 
+        this.initClassification(this.selectedRound);
+
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  

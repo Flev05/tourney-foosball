@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 
 import { Round } from '../../../domain/round';
 import { Playoff } from '../../../domain/playoff';
-import { Eliminatory } from '../../../domain/eliminatory';
 
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';

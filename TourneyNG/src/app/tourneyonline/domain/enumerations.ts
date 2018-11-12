@@ -23,5 +23,5 @@ export enum TeamSortType {
 }
 
 export enum Direction {
-    OneWay='Andata', RoundTrip="Ritorno"
+    OneWay='A', RoundTrip="R"
 }

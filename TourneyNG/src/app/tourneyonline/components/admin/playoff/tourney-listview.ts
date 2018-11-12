@@ -23,7 +23,7 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
 
     onComplete(): any {
 
-        this.purgePhaseType(PhaseType.P);
+        this.selectPhaseType(PhaseType.P);
 
         if(this.tourneyService.selectedTourney != null) {
             // this.router.navigate([PlayoffListView.redirect]);

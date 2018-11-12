@@ -45,7 +45,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.gotoDetailView();
     }
 
-    purgePhaseType(pt : PhaseType) {
+    selectPhaseType(pt : PhaseType) {
         let tempTourneys = new Array<Tourney>();
         
         for(let t of this.tourneys) {
@@ -56,5 +56,19 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         }
 
         this.tourneys = tempTourneys;
+    }
+
+    purgeEliminatory() {
+        let tempTourneys = new Array<Tourney>();
+        
+        for(let t of this.tourneys) {
+            
+            if(this.containsPhase(PhaseType.R, t.phases) || this.containsPhase(PhaseType.P, t.phases)) {
+                tempTourneys.push(t);
+            }
+        }
+
+        this.tourneys = tempTourneys;
+ 
     }
 }

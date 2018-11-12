@@ -9,4 +9,6 @@ export interface Cell
     style  : string;
 
     points : Combobox;
+    team1Id     : number;
+    team2Id     : number;
 }

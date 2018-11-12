@@ -11,7 +11,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Direction, RoundType } from 'app/tourneyonline/domain/enumerations';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './rule-detailview.html'
@@ -162,7 +162,7 @@ export class RuleDetailView extends AbstractListView {
             this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
         }
     }
-    
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

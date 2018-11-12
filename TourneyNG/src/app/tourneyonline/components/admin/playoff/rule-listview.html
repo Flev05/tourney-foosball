@@ -93,33 +93,16 @@
 <div class="content-section implementation">      
     
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"    label="Indietro"></button>
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+
     <button *ngIf="atLeast2Rules" type="button" icon="fa-user-plus"  
+        label="Incontri" 
         pButton (click)="goMeeting()" 
-        label="Incontri" class="ui-button-success"></button>
+        class="ui-button-success">
+    </button>
 </div>                  
 
 <form [formGroup]="playoffFormGroup" (ngSubmit)="onSubmit(playoffFormGroup.value)">
-    
-    <!-- <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Nome Girone:
-        </div>
-        <div class="ui-grid-col-4">
-            <input pInputText type="text" formControlName="roundName"/>
-        </div>
-
-        <div class="ui-grid-col-5">
-            <div class="ui-message ui-messages-error ui-corner-all" 
-                *ngIf="!playoffFormGroup.controls['roundName'].valid && playoffFormGroup.controls['roundName'].dirty">
-                <i class="fa fa-close"></i>
-                <span *ngIf="playoffFormGroup.controls['roundName'].errors['required']">
-                    Il nome del girone è obbligatorio
-                </span>
-            </div>
-        </div>
-    </div> -->
-
     <p-table *ngIf="atLeast1Rule"
             [value]="playoffConfigs" 
             selectionMode="single" 

@@ -6,34 +6,26 @@
 </div>
 
 <div class="content-section documentation">
-
     <p>
         Vista elenco di tutti giocatori che compongono il torneo.
     </p>
     <p>
         Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
-    </p>
-    
+    </p>    
 </div>
 
 <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
 
 <div class="content-section implementation">    
-    <p-table [columns]="cols" 
+    <p-table 
         [value]="players" [responsive]="true" 
         selectionMode="single"
         [(selection)]="selectedPlayer" 
-        (onRowSelect)="onRowSelect($event)" 
-        [paginator]="true" 
-        [rows]="10">
+        (onRowSelect)="onRowSelect($event)" >
 
-        <ng-template pTemplate="caption">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()"></button>
-            <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
-            </div>
-        </ng-template>
- 
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 15mm;">
@@ -62,13 +54,12 @@
                 <td>{{rowData.phoneNumber}}</td>
                 <td>{{rowData.email}}</td>
             </tr>
+        </ng-template>          
+        <ng-template pTemplate="summary">
+            <div style="text-align:left">
+                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+            </div>
         </ng-template>
     
-        <ng-template pTemplate="summary" let-rowData>
-            Ci sono {{players?.length}} giocatori
-        </ng-template>        
-        
     </p-table>
-
 </div>
-    

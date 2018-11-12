@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
-import { Tourney } from '../../../domain/tourney';
 import { Round } from '../../../domain/round';
-import { CalendarDetailView } from '../calendar/calendar-detailview';
 import { Classification } from '../../../domain/classification';
-import { Meeting } from '../../../domain/meeting';
-import { TourneyService } from '../../../service/tourneyservice';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
 @Component({
     templateUrl: './classification-listview.html',
@@ -22,68 +21,38 @@ import { TourneyService } from '../../../service/tourneyservice';
         }
   `]
 })
-export class ClassificationListView extends CalendarDetailView {
+export class ClassificationListView extends AbstractListView {
 
-    selectedTourney: Tourney;
+    selectedRound: Round;
+    classification: Classification[] = [];
+    isEmpty: boolean;
 
-    rounds: Round[];
-
-    rows: any[] = [];
+    constructor(
+        protected tourneyService: TourneyService,
+        protected router: Router,
+        protected location: Location,
+    ) {
+        super("", tourneyService, router, location);
+    }
 
     ngOnInit() {
         super.ngOnInit();
-    }
-    
-    updateRowGroupMetaData() {
-        this.rounds = this.selectedTourney.rounds;
 
-        let row : number = 0;
+        this.selectedRound = this.tourneyService.selectedRound;
+        this.classification = this.selectedRound.classification;
 
-        var roundMap: Map<string, Meeting> = new Map<string, Meeting>();
-
-        for (let i = 0; i < this.rounds.length; i++) {
-            
-            let round : Round = this.rounds[i];
-
-            let len = round.classification.length;
-
-            for (let j = 0; j < len; j++) {
-                
-                let cla : Classification = round.classification[j];
-                let currentKey = this.makeKey(round);  
-
-                console.log(currentKey + " rowspan=" + len);
-
-                this.rows.push(cla);
-                this.rows[row].roundName = round.name ;    
-                this.rows[row].teamName = cla.team.teamName;    
-                if(!roundMap.has(currentKey)) {
-                    // roundMap.set(currentKey, cla);
-                    this.rows[row].rowspanSize = len;
-                } else {
-                    this.rows[row].rowspanSize = undefined;
-                }
-
-                this.rows[row].points = cla.points;
-                this.rows[row].played = cla.played;
-                this.rows[row].won = cla.won;
-                this.rows[row].lost = cla.lost;
-                this.rows[row].goalsDone = cla.goalsDone;
-                this.rows[row].goalsConceded = cla.goalsConceded;
-                this.rows[row].penalty = cla.penalty;
-                this.rows[row].goalsDiff = cla.goalsDiff;
-                
-                row++;
+        if(this.classification.length==0) {
+            for(let t of this.selectedRound.teams) {
+                let c = this.newClassification(t, 0);
+                this.classification.push(c);
             }
+        }
+
+        if(this.classification.length==0) {
+            this.isEmpty = true;
+        } else {
+            this.isEmpty = false;
         }
     }
 
-    makeKey( round : Round) : string {
-        let key = round.name;
-        return key;
-    }
-
-    goBack(): void {
-        this.location.back();
-    }
 }

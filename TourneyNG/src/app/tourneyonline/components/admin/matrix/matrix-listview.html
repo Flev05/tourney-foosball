@@ -48,7 +48,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Playoff">    
+    <p-tabPanel *ngIf="containPlayoff()" header="Playoff">    
         <p-table [responsive]="true" 
             [value]="playoffs" 
             selectionMode="single"
@@ -75,7 +75,5 @@
         </p-table>
     </p-tabPanel>
 </p-tabView>
-
-        
 </div>
     

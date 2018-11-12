@@ -34,4 +34,8 @@ export abstract class AbstractListView extends AbstractView {
     protected pow2(level : number) : number {
         return Math.pow(2, level);
     }
+
+    protected containPlayoff(): boolean {
+        return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
+    }
 }

@@ -22,15 +22,6 @@ export class MatrixTourneyListView extends AbstractTourneyListView {
     }
     
     onComplete(): any {
-        let tempTourneys = new Array<Tourney>();
-        
-        for(let t of this.tourneys) {
-            
-            if(this.containsPhase(PhaseType.R, t.phases) || this.containsPhase(PhaseType.P, t.phases)) {
-                tempTourneys.push(t);
-            }
-        }
-
-        this.tourneys = tempTourneys;
+        super.purgeEliminatory();
     }
 }

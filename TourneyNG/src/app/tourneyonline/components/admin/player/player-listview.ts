@@ -23,32 +23,13 @@ export class PlayerListView extends AbstractListView {
 
     selectedTourney: Tourney;
     selectedPlayer: Player;
-    rows: any[] = [];
-    cols: any[];
-
     players: Player[];
 
     ngOnInit() {
         super.ngOnInit();
       
-        this.updateRowGroupMetaData();
-    }
-
-    protected updateRowGroupMetaData() {
-
         this.selectedTourney = this.tourneyService.selectedTourney;
-        this.players = this.tourneyService.selectedTourney.players;
-
-        for (let row = 0; row < this.players.length; row++) {
-            this.rows.push(this.players[row]);
-        }
-
-        this.cols = [
-            { field: 'firstname', header: 'Nome' },
-            { field: 'lastname', header: 'Cognome' },
-            { field: 'phoneNumber', header: 'Telefono' },
-            { field: 'address', header: 'Indirizzo' },
-        ];        
+        this.players = this.selectedTourney.players;
     }
 
     create() {

@@ -48,8 +48,14 @@ export class PlayoffListView extends AbstractListView {
         this.displayDialog = true;
 
         this.newRound = {
-            id:this.tourneyService.getSequenceNumber()
-            , round:{id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.P, meetings: []}
+              id:this.tourneyService.getSequenceNumber()
+            , round:{id: this.tourneyService.getSequenceNumber()
+                , name: ""
+                , type: RoundType.P
+                , teams:[]
+                , meetings: []
+                , classification: []
+              }
             , playoffConfigs: null
         };
     }

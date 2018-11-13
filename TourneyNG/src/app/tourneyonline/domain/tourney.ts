@@ -1,6 +1,5 @@
 import { Round } from './round';
 import { Playoff } from './playoff';
-import { Eliminatory } from './eliminatory';
 
 import { Country } from './country';
 import { Team } from './team';
@@ -12,7 +11,6 @@ import { TourneyType, TeamSortType } from './enumerations';
 import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
-import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 export interface Tourney {
     id?: number;

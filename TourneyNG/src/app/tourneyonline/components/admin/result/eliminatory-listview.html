@@ -27,12 +27,13 @@
 </p-accordion>
 </div>
 
-<div class="content-section implementation">      
-
+<div class="content-section implementation">        
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <h4><span>Eliminazioni: {{selectedEliminatoryLevel.name}}</span></h4>
 
-    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>
                 
     <p-table [responsive]="true" 
             [value]="eliminatories" 

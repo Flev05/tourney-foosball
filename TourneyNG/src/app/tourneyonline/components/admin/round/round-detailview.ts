@@ -148,25 +148,25 @@ export class RoundDetailView extends AbstractDetailView {
 
     private addTeamToMeetings(team: Team) {
         for (let t of this.selectedRound.teams) {
-            let m = this.createMeeting(team, t, Direction.OneWay);
+            let m = this.createMeeting(team, t, null, null, Direction.OneWay);
 
             this.selectedRound.meetings.push(m);
             if (!this.selectedTourney.isOnewayRound) {
-                m = this.createMeeting(t, team, Direction.RoundTrip);
+                m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
             }
         }
     }
 
-    private createMeeting(t: Team, team: Team, d: Direction) {
+    private createMeeting1111(t1: Team, t2: Team, d: Direction) {
         let m : Meeting = {
             id: this.tourneyService.getSequenceNumber(),
-            name: t.teamName + " - " + team.teamName,
+            name: t1.teamName + " - " + t2.teamName,
             datetime: this.selectedTourney.datetime,
             address: this.selectedTourney.address,
             country: this.selectedTourney.country,
-            team1: t,
-            team2: team,
+            team1: t1,
+            team2: t2,
             direction: d
         };
         return m;
@@ -222,11 +222,11 @@ export class RoundDetailView extends AbstractDetailView {
             for(let j=i+1; j<this.selectedRound.teams.length; j++) {
                 let t1: Team = this.selectedRound.teams[i];
                 let t2: Team = this.selectedRound.teams[j];
-                let m : Meeting = this.createMeeting(t1, t2, Direction.OneWay);
+                let m : Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
                 this.selectedRound.meetings.push(m);
 
                 if(!this.selectedTourney.isOnewayRound) {
-                    let m : Meeting = this.createMeeting(t2, t1, Direction.RoundTrip);
+                    let m : Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
                     this.selectedRound.meetings.push(m);    
                 }
             }

@@ -1,13 +1,13 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Incontri</span>
-        <span>Scontro diretto: {{selectedMeeting.name}}</span>
+        <span>Vista di dettaglio per i risultati di un incontro</span>
     </div>
 </div>    
 
 <div class="content-section documentation">
 <p>
-    Vista per l'inserimento del risultato finale dell'incontro selezionato.
+    La vista permette l'inserimento del risultato finale dell'incontro selezionato.
 </p>
 
 <p-accordion>
@@ -15,45 +15,69 @@
             
     <h4>Istruzioni</h4>
     <p> 
-        La vista mostra l'incontro di andata e, se esiste, l'incontro di ritorno delle 2 squadre selezionate.
+        Per ciascuna squadra insirete il punteggio azionando opportunamente i bottoni +(più) e - (meno)
+        per aumentare e dimunire il punteggio rispettivamente.
     </p> 
     <p>
-        Inserire i risultati finali dei corrispondenti incontri e salvare.
+        A cose fatte, salvare il tutto con il bottone Salva.
     </p>
 </p-accordionTab>
 </p-accordion>
 </div>
 
 <div class="content-section implementation">      
-
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <h4><span>Incontro: {{selectedMeeting.name}}</span></h4>
 
-    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>       
 
-    <div class="ui-grid-col-3">
-        Squadra 1:
-    </div>
-    <div class="ui-grid-col-1">
-        <p-spinner ([ngModel])="selectedMeeting.team1.teamName" tooltipPosition="right"
-            pTooltip="Inserire il punteggio della squadra di casa">
-            [min]="0"
-        </p-spinner>
-    </div>                
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <h4>{{selectedMeeting.team1.teamName}}</h4>
+            </div>
+            <div class="ui-grid-col-5">
+                <table>
+                    <tr>
+                        <td>
+                            <button pButton type="button" icon="fa fa-minus" (click)="minus1()"></button>
+                        </td>
+                        <td>
+                            <span style="text-align: center; font-size: large; font-weight: bold;">{{selectedMeeting.score1}}</span>
+                        </td>
+                        <td>
+                            <button pButton type="button" icon="fa fa-plus" (click)="plus1()"></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-    <div class="ui-grid-col-3">
-        Squadra 2:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <h4>{{selectedMeeting.team2.teamName}}</h4>
+            </div>
+            <div class="ui-grid-col-5">
+                <table>
+                    <tr>
+                        <td>
+                            <button pButton type="button" icon="fa fa-minus" (click)="minus2()"></button>
+                        </td>
+                        <td>
+                            <span style="text-align: center; font-size: large; font-weight: bold;">{{selectedMeeting.score2}}</span>
+                        </td>
+                        <td>
+                            <button pButton type="button" icon="fa fa-plus" (click)="plus2()"></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>             
+        </div>
     </div>
-    <div class="ui-grid-col-1">
-        <p-spinner ([ngModel])="selectedMeeting.team2.teamName" tooltipPosition="right"
-            pTooltip="Inserire il punteggio della squadra fuori casa">
-            [min]="0"
-        </p-spinner>
-    </div>                
 
     <div style="text-align:left">
         <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
     </div>
-
 </div>
-    

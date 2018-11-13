@@ -156,6 +156,8 @@ export class InMemoryDataServiceCSI  {
               country: {id:1, city: "ZIBIDO SAN GIACOMO"},
               team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
               team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
+              ,score1: 0
+              ,score2: 0
           }
           ,{
               id: 2,
@@ -165,6 +167,8 @@ export class InMemoryDataServiceCSI  {
               country: {id:1, city: "ORIGGIO"},
               team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
               team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
+              ,score1: 0
+              ,score2: 0
           }
         ]
         ,classification:[]
@@ -181,9 +185,11 @@ export class InMemoryDataServiceCSI  {
             datetime: new Date(2018, 11, 30, 15, 0),
             address: "VIA S.PAOLO, 6 20020 SOLARO MI",
             country: {id:1, city: "SOLARO"},
-            team1: {id:4, teamName: ""},
+            team1: {id:4, teamName: "SOLAROSPORT"},
             team2: {id:1, teamName: "AURORA PREGNANA BLU"}
-        }
+            ,score1: 0
+            ,score2: 0
+      }
         ,{
             id: 2,
             name:  "AURORA PREGNANA BLU - SOLAROSPORT",
@@ -192,7 +198,9 @@ export class InMemoryDataServiceCSI  {
             country: {id:1, city: "PREGNANA MILANESE"},
             team1: {id:1, teamName: "AURORA PREGNANA BLU"},
             team2: {id:4, teamName: "SOLAROSPORT"}
-        }]
+            ,score1: 0
+            ,score2: 0
+      }]
         ,classification:[]
       }
     ]
@@ -214,7 +222,9 @@ export class InMemoryDataServiceCSI  {
                 direction: Direction.OneWay,
                 playoffConfig1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }},
                 playoffConfig2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-              }
+                ,score1: 0
+                ,score2: 0
+                }
             ,{
                 id: 2,
                 name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
@@ -226,7 +236,9 @@ export class InMemoryDataServiceCSI  {
                 direction: Direction.RoundTrip,
                 playoffConfig2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }},
                 playoffConfig1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-            }
+                ,score1: 0
+                ,score2: 0
+              }
           ]
           ,classification:[]
         }
@@ -252,6 +264,8 @@ export class InMemoryDataServiceCSI  {
               direction: Direction.OneWay,
               playoffConfig1: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
               playoffConfig2: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
+              ,score1: 0
+              ,score2: 0
           }
           ,{
               id: 2,
@@ -264,6 +278,8 @@ export class InMemoryDataServiceCSI  {
               direction: Direction.RoundTrip,
               playoffConfig2: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
               playoffConfig1: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
+              ,score1: 0
+              ,score2: 0
           }
         ]
         ,classification:[]

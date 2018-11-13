@@ -37,11 +37,11 @@ export class MeetingListView extends AbstractListView {
         
         this.meetings = this.selectedPlayoff.round.meetings;
         for(let m of this.meetings) {
-            let p1 = m.playoffConfig1.fromRound.position.label;
-            let r1 = m.playoffConfig1.fromRound.round.label;
+            let p1 = m.rule1.fromRound.position.label;
+            let r1 = m.rule1.fromRound.round.label;
  
-            let p2 = m.playoffConfig2.fromRound.position.label;
-            let r2 = m.playoffConfig2.fromRound.round.label;           
+            let p2 = m.rule2.fromRound.position.label;
+            let r2 = m.rule2.fromRound.round.label;           
 
             let rn1 = p1 + " " + r1;
             let rn2 = p2 + " " + r2;

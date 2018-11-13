@@ -1,6 +1,6 @@
 import { FromRound } from './from-round';
 
-export class PlayoffConfig {
+export class PlayoffRule {
     id: number;
     fromRound: FromRound;
 }

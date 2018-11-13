@@ -22,13 +22,13 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
             {path: 'adminmeeting',     loadChildren: './components/admin/meeting/meeting.module#AdminMeetingModule'},
             {path: 'adminresult',     loadChildren: './components/admin/result/result.module#AdminResultModule'},
-            {path: 'adminmatrix',     loadChildren: './components/admin/matrix/matrix.module#AdminMatrixModule'},
 
             // Presentation Section
             {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
             {path: 'round',     loadChildren: './components/show/round/round.module#RoundModule'},
             {path: 'calendar',  loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
             {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},
+            {path: 'matrix',     loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
             {path: 'classification',    loadChildren: './components/show/classification/classification.module#ClassificationModule'},
             {path: 'playoff',           loadChildren: './components/show/playoff/playoff.module#PlayoffModule'},
             {path: 'elimination',       loadChildren: './components/show/elimination/elimination.module#EliminationModule'},

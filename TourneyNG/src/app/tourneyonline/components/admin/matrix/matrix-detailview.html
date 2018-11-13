@@ -14,18 +14,14 @@
     </p>
 </div>
 
-<div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-</div>
 
 <div class="content-section implementation">
-    <h3>
-        Torneo: {{selectedTourney.tourneyName}}
-    </h3> 
+    <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
+    <h4>Girone: {{selectedRound.name}}</h4> 
 
-    <h4>
-        Girone: {{selectedRound.name}}
-    </h4> 
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>
     
     <p-table [columns]="cols" [value]="matrix.rows" (onEditComplete)="onEditComplete($event)">
         <ng-template pTemplate="header" let-columns>

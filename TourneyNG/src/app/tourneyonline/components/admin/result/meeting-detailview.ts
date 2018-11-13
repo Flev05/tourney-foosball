@@ -31,6 +31,28 @@ export class MeetingDetailView extends AbstractListView {
         this.selectedMeeting  = this.tourneyService.selectedMeeting;    
     }
 
+    minus1() {
+        this.selectedMeeting.score1--;
+        if(this.selectedMeeting.score1<0) {
+            this.selectedMeeting.score1=0;
+        }
+    }
+
+    plus1() {
+        this.selectedMeeting.score1++;
+    }
+
+    minus2() {
+        this.selectedMeeting.score2--;
+        if(this.selectedMeeting.score2<0) {
+            this.selectedMeeting.score2=0;
+        }
+    }
+
+    plus2() {
+        this.selectedMeeting.score2++;
+    }
+
     save() {
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

@@ -7,7 +7,6 @@ import { Playoff } from '../../../domain/playoff';
 
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
-import { PhaseType } from '../../../domain/enumerations';
 
 @Component({
     templateUrl: './tab-listview.html'

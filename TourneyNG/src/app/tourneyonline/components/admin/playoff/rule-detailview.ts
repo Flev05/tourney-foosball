@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
+import { PlayoffRule } from '../../../domain/playoff-rule';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
 
 @Component({
     templateUrl: './rule-detailview.html'
 })
-export class RuleDetailView extends AbstractListView {
+export class RuleDetailView extends AbstractDetailView {
     playoffConfigFormGroup: FormGroup;
 
     msgs: Message[] = [];
@@ -24,19 +24,19 @@ export class RuleDetailView extends AbstractListView {
     positions: Combobox[];
     rounds: Combobox[];
 
-    playoffConfigs: PlayoffConfig[];
+    playoffConfigs: PlayoffRule[];
 
     selectedPlayoff: Playoff;
-    selectedPlayoffConfig: PlayoffConfig; 
+    selectedPlayoffConfig: PlayoffRule; 
     selectedIndex: number;
  
     constructor(
         private fb: FormBuilder,
         protected tourneyService: TourneyService,
-        protected router: Router,
         protected location: Location,
+        protected countryService: CountryService
     ) {
-        super("", tourneyService, router, location);
+        super(tourneyService, location, countryService);
     }
 
     ngOnInit() {
@@ -63,7 +63,7 @@ export class RuleDetailView extends AbstractListView {
         });
     }
 
-    private newPlayoffConfig(): PlayoffConfig {
+    private newPlayoffConfig(): PlayoffRule {
         return {
             id: this.tourneyService.getSequenceNumber(),
             fromRound: {
@@ -91,11 +91,11 @@ export class RuleDetailView extends AbstractListView {
 
             if(this.playoffConfigs.length >= 1) {
                 for(let pc of this.playoffConfigs) {
-                    let m: Meeting = this.createMeeting(pc, this.selectedPlayoffConfig, Direction.OneWay);
+                    let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
                     this.selectedPlayoff.round.meetings.push(m);
     
                     if(!this.selectedTourney.isOnewayPlayoff) {
-                        m = this.createMeeting( this.selectedPlayoffConfig, pc, Direction.RoundTrip);
+                        m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
                         this.selectedPlayoff.round.meetings.push(m);
                     }        
                 }
@@ -104,18 +104,18 @@ export class RuleDetailView extends AbstractListView {
             this.playoffConfigs.push(this.selectedPlayoffConfig);
         } else {
             for(let m of this.selectedPlayoff.round.meetings) {
-                if(m.playoffConfig1==undefined) {
-                    m.playoffConfig1 = this.selectedPlayoffConfig;
+                if(m.rule1==undefined) {
+                    m.rule1 = this.selectedPlayoffConfig;
                 }
-                if(this.selectedPlayoffConfig.id == m.playoffConfig1.id) {
-                    m.playoffConfig1 = this.selectedPlayoffConfig;
+                if(this.selectedPlayoffConfig.id == m.rule1.id) {
+                    m.rule1 = this.selectedPlayoffConfig;
                 }
 
-                if(m.playoffConfig2==undefined) {
-                    m.playoffConfig2 = this.selectedPlayoffConfig;
+                if(m.rule2==undefined) {
+                    m.rule2 = this.selectedPlayoffConfig;
                 }
-                if(this.selectedPlayoffConfig.id == m.playoffConfig2.id) {
-                    m.playoffConfig2 = this.selectedPlayoffConfig;
+                if(this.selectedPlayoffConfig.id == m.rule2.id) {
+                    m.rule2 = this.selectedPlayoffConfig;
                 }
             }
         }
@@ -125,35 +125,18 @@ export class RuleDetailView extends AbstractListView {
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
-    private createMeeting(pc1: PlayoffConfig, pc2: PlayoffConfig, d: Direction): Meeting {
-        let m : Meeting = {
-            id: this.tourneyService.getSequenceNumber(),
-            name: "",
-            datetime: this.selectedTourney.datetime,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            team1: null,
-            team2: null,
-            playoffConfig1: pc1,
-            playoffConfig2: pc2,
-            direction: d
-        };
-
-        return m;
-    }
-
     doDelete() {
         console.log("doDelete(): " + this.selectedIndex);
         let popup = 'Sicuro di voler rimuovere la regola: ';
 
         if(confirm(popup + this.selectedIndex + "?")) {
 
-            let rm: PlayoffConfig[] = this.playoffConfigs.splice(this.selectedIndex-1, 1);
+            let rm: PlayoffRule[] = this.playoffConfigs.splice(this.selectedIndex-1, 1);
             this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
 
             let tmpMeetings: Array<Meeting> = new Array<Meeting>();
             for( let m of this.selectedPlayoff.round.meetings) {
-                if(m.playoffConfig1.id != rm[0].id && m.playoffConfig2.id != rm[0].id) {
+                if(m.rule1.id != rm[0].id && m.rule2.id != rm[0].id) {
                     tmpMeetings.push(m);
                 }
             }

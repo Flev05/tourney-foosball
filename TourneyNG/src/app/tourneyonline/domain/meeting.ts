@@ -1,7 +1,7 @@
 import { Team } from './team';
 import { Country } from './country';
 import { Match } from './match';
-import { PlayoffConfig } from './playoff-config';
+import { PlayoffRule } from './playoff-rule';
 import { Direction } from './enumerations';
 
 export interface Meeting
@@ -17,7 +17,7 @@ export interface Meeting
     score1?  : number;
     score2?  : number;
     matches? : Match[];
-    playoffConfig1?: PlayoffConfig;
-    playoffConfig2?: PlayoffConfig;
+    rule1?   : PlayoffRule;
+    rule2?   : PlayoffRule;
     ruleName?: string;
 }

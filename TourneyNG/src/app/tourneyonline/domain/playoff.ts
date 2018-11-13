@@ -1,8 +1,8 @@
 import { Round } from './round';
-import { PlayoffConfig } from './playoff-config';
+import { PlayoffRule } from './playoff-rule';
 
 export class Playoff  {
     id: number;
     round: Round;
-    playoffConfigs: PlayoffConfig[];
+    playoffConfigs: PlayoffRule[];
 }

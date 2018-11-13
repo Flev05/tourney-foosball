@@ -17,7 +17,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { PlayoffConfig } from '../domain/playoff-config';
+import { PlayoffRule } from '../domain/playoff-rule';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -66,7 +66,7 @@ export class TourneyService {
     originalTeams: Team[];
     meetings: Meeting[];
     isOneway: boolean;
-    selectedPlayoffConfig: PlayoffConfig;
+    selectedPlayoffConfig: PlayoffRule;
     selectedIndex: number;
     newRule: boolean;
 

@@ -1,12 +1,14 @@
 import { Location } from '@angular/common';
 
 import { AbstractView } from './abstract-view';
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
-import { Country } from '../../domain/country';
-import { CountryService } from '../../service/countryservice';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { PlayoffRule } from '../../domain/playoff-rule';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Team } from 'app/tourneyonline/domain/team';
 
 export abstract class AbstractDetailView extends AbstractView {
 
@@ -71,4 +73,26 @@ export abstract class AbstractDetailView extends AbstractView {
             r.classification.push(c);
         }
     }
+
+    protected createMeeting(t1: Team, t2: Team, pc1: PlayoffRule, pc2: PlayoffRule, d: Direction): Meeting {
+        let m : Meeting = {
+            id: this.tourneyService.getSequenceNumber(),
+            name: "",
+            datetime: this.selectedTourney.datetime,
+            address: this.selectedTourney.address,
+            country: this.selectedTourney.country,
+            team1: t1,
+            team2: t2,
+            score1: 0,
+            score2: 0,
+            rule1: pc1,
+            rule2: pc2,
+            ruleName: "",
+            direction: d,
+            matches: []
+        };
+
+        return m;
+    }
+
 }

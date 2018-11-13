@@ -6,7 +6,7 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { PlayoffConfig } from 'app/tourneyonline/domain/playoff-config';
+import { PlayoffRule } from '../../../domain/playoff-rule';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
@@ -21,11 +21,11 @@ export class RuleListView extends AbstractListView {
 
     msgs: Message[] = [];
 
-    playoffConfigs: PlayoffConfig[];
+    playoffConfigs: PlayoffRule[];
 
     selectedPlayoff: Playoff;
  
-    selectedPlayoffConfig: PlayoffConfig; 
+    selectedPlayoffConfig: PlayoffRule; 
 
     atLeast2Rules: boolean;
     atLeast1Rule: boolean;

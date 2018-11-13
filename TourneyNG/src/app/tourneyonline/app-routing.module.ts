@@ -20,8 +20,6 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminplayoff',      loadChildren: './components/admin/playoff/playoff.module#PlayoffModule'},
             {path: 'admineliminatory',  loadChildren: './components/admin/eliminatory/eliminatory.module#EliminatoryModule'},
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
-            {path: 'adminmeeting',     loadChildren: './components/admin/meeting/meeting.module#AdminMeetingModule'},
-            {path: 'adminresult',     loadChildren: './components/admin/result/result.module#AdminResultModule'},
 
             // Presentation Section
             {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},

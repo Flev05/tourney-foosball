@@ -16,6 +16,7 @@ export interface Tourney {
     id?: number;
     
     tourneyName? : string;
+    isDaily?: boolean;
     datetime? : Date;
 
     address? : string;
@@ -39,6 +40,10 @@ export interface Tourney {
     pointsNeededToWin? : number;
     pointsGoldenGoalTieBreakWin? : number;
     pointsGoldenGoalTieBreakDefeat? : number;
+
+    maxMatchesPerMeeting?: number;
+    isAllMatches?: boolean;
+    playersPerTeam?: number;
     
     objectives?: Final[];
     rounds?: Round[];

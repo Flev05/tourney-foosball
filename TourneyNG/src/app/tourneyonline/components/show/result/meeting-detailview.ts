@@ -61,17 +61,16 @@ export class MeetingDetailView extends AbstractDetailView {
 
     save() {
 
-        if(this.selectedRound.classification.length==0) {
-           super.initClassification(this.selectedRound);
-        }
+        super.initClassification(this.selectedRound);
 
-
-        for(let c of this.selectedRound.classification) {
-            if(c.team.id == this.selectedMeeting.team1.id) {
-                c.points += this.selectedMeeting.team1.id;
-            }
-            if(c.team.id == this.selectedMeeting.team2.id) {
-                c.points += this.selectedMeeting.team2.id;
+        for(let m of this.selectedRound.meetings) {
+            for(let c of this.selectedRound.classification) {
+                if(c.team.id == this.selectedMeeting.team1.id) {
+                    c.points += this.selectedMeeting.score1;
+                }
+                if(c.team.id == this.selectedMeeting.team2.id) {
+                    c.points += this.selectedMeeting.score2;
+                }
             }
         }
 

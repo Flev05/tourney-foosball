@@ -1,57 +1,65 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Gestione torneo</span>
-        <span>Creare o modificare un torneo</span>
+        <span>Vista di dettaglio</span>
     </div>
 </div>
 
 <div class="content-section documentation">
+<h4>Vista di dettaglio di un torneo</h4>
+<p>
+    Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno già esistente.
+    Prima proseguire, consultare la documentazione seguente per capire di che tipologia è 
+    il vostro torneo.
+</p>
 <p-accordion>
     <p-accordionTab header="Introduzione">            
-        <p>Vista di dettaglio di un torneo.
-            Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno già esistente.
-            Per utenti non connessi, ovvero non in possesso di un account, si possono creare
-            nuovi tornei ma non saranno salvati, pertanto il loro ciclo di vita è ristretto al 
-            tempo di vita del browser, quando il browser sarà chiuso o il PC spento, tutti i dati
-            inseriti saranno persi.
+        <p>            
+            Domanda: il vostro torneo si conclude in una sola giornata o su più giornate?
+
+            In funzione della risposta a questa domanda, capirete di che tipo di utenza avete bisogno.
+            Se si svolge in un solo giorno, diciamo in 12 ore consecutive, allora potrete anche 
+            non aveve bisogno di una utenza autorizzata e ve la potete cavare come utente anonimo.
+            Se inveve il vostro torneo richiede più giorni sia per l'organizzazione che per lo svolgimento
+            allora avete bisogno di un account autorizzato.
         </p>
         <p>
-            Per avere un account e salvare i dati inseriti, occorre procurarselo come descritto 
-            nella pagina         
-            <a class="home-button" [routerLink]="['/owner']">
-                Versione Noleggio
-            </a>
+            Per maggiori dettagli, leggete
+            prima la spiegazione riportata nella documentazie della vista elenco precedente.
         </p>
-    </p-accordionTab>
 
-    <p-accordionTab header="Nuovo torneo">            
-        <h3>Creare un nuovo torneo</h3>
-        <p>La creazione di un nuovo torneo è organizzata in più passi da eseguire nell'ordine:</p>
+        <p>
+            In ogni caso, sia per gli utenti anonimi che autorizzati, la creazione di un nuovo torneo deve essere 
+            organizzata per tappe consecutive da eseguire in un ordine ben preciso.
+        </p>
+        <p>Le tappe devono essere completate nel seguente ordine:</p>
         <ul>
-            <li>Definizione caratteristiche</li>
+            <li>Definizione torneo</li>
             <li>Caricamento anagrafica giocatori</li>
             <li>Configurazione squadre</li>
             <li>Configurazione gironi</li>
             <li>Configurazione playoff</li>
             <li>Configurazione eliminatorie</li>
             <li>Configurazione Obiettivo torneo</li>
-            <li>Creazione Calendario</li>
         </ul>            
-    
-        <h4>Definizione caratteristiche</h4>
+
         <p>
-            La definizione delle caratteristiche deve essere effettuata nella vista di dettaglio accessibile della voce di menù: 
-            <a class="home-button" [routerLink]="['/admintourney']" (click)="menuActive = false">Tornei</a>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
-            ed accederete alla corrispondente vista di dettaglio.
-            La vista espone 2 schede: una per l'anagrafica e una per le caratteristiche del torneo.
+            Alcune di essere hanno dati facoltativi e possono essere completate anche successivamente.
+        </p>
+
+        <h3>Definizione torneo</h3>
+        <p>
+            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Specificità" del torneo.
         </p>
         <p>
-            Nelle caratteristiche devono essere specificate tra le altre cose, anche se prevista la fass ad eliminazione diretta.
-            L'elimiazione diretta non è obbligatoria e dipende dalla natura del torneo, alcuni la prevedono altri no.
-            In pratica le eliminazioni dirette possono essere viste come mini gironi all'italiana in cui il girone
-            è composto di due squadre in cui passa solo la prima classificata.
-            Compilate tutti i campi obbligatori e salvare con il bottone Salva.             
+            Nelle "Generalità" dovete inserire il nome, la data di inizio, la tipologia del torneo, ecc
+        </p>
+        <p>
+            Nelle "Specificità" dovete specificate i dati specifici del torneo come la durata, il numero di
+            fasi, le eliminazioni dirette, i turni, ecc.
+        </p>
+        <p>
+            In entrambi i casi troverete maggiori dettagli nel paragrafo delle Istruzioni.
         </p>
 
         <h4>Caricamento anagrafica giocatori</h4>
@@ -61,17 +69,6 @@
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
-        </p>
-        <p>            
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
-            ed accederete alla vista elenco di tutti i giocatori del torneo.
-            Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
-            modificare i valori dei campi esistenti.
-            Se invece volete inserire un nuovo giocatore, premete il bottone: "Nuovo Giocatore" ed accederete alla
-            vista di dettaglio del giocatore nella quale dovete compilare tutti i campi obbligatori.            
-        </p>
-        <p>
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
         </p>
         
         <h4>Configurazione squadre</h4>
@@ -83,24 +80,8 @@
             La vista preposta allo scopo è accessibile alla voce di menù:
             <a class="home-button" [routerLink]="['/adminteam']" (click)="menuActive = false">Squadre</a>
         </p>
-        <p>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
-            ed accederete alla corrispondente lista elenco di tutte le squadre del torneo.
-            Se selezionate una dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
-            modificare i valori dei campi esistenti.
-        </p>
-        <p>
-            Se invece volete inserire una nuova squadra, premete il bottone: "Nuova Squadra" ed accederete alla
-            vista di dettaglio della squadra nella quale potete effettuare la composizione della vostra squadra 
-            inserendo il suo nome ed attingendo dalla lista dei giocatori disponibili non ancora inseriti in altre squadre.
-            Nel momento in cui il giocatore va a far parte di una squadra automaticamente viene rimosso dal sistema
-            dalla lista dei giocatori disponibili.            
-        </p>
-        <p>
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.
-        </p>
         
-        <h4>Configurazione gironi</h4>
+        <h3>Configurazione gironi</h3>
         <p>
             I gironi sono intesi come quelli all'italiana in cui tutte le squadre si incontrano e ne determinano
             una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
@@ -111,67 +92,30 @@
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminround']" (click)="menuActive = false">Gironi</a>
         </p>        
-        <p>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei, selezionate quello di vostro interesse
-            ed accederete alla vista elenco di tutti i gironi del torneo.
-            Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
-            modificare i valori dei campi esistenti.
-        </p>
-        <p>
-            Se invece volete inserire un nuovo girone, premete il bottone: "Nuovo Girone" ed accederete alla
-            vista di dettaglio del girone nella quale potete effettuare la composizione del vostro girone 
-            inserendo il suo nome ed attingendo dalla lista delle squadre disponibili non ancora inseriti in altri gironi.
-            Nel momento in cui la squadra va a far parte di un girone automaticamente viene rimossa dal sistema
-            dalla lista delle squadre disponibili.            
-        </p>
-        <p>
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.    
-        </p>
 
-        <h4>Configurazione playoff</h4>
+        <h3>Configurazione playoff</h3>
         <p>
             I playoff non sono obbligatori e dipende dalla natura del torneo, alcuni li prevedono altri no.
             Anche i playoff sono gironi all'italiana in cui tutte le squadre si incontrano e ne determinano
-            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.            
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
         </p>            
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminplayoff']" (click)="menuActive = false">Playoff</a>
         </p>
-        <p>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei che prevedono i playoff, 
-            selezionate quello di vostro interesse ed accederete alla vista elenco di tutti i playoff del torneo.
-            Se selezionate uno dell'elenco, accederete alla corrispondente vista di dettaglio nellaquale potete 
-            modificare i valori dei campi esistenti.            
-        </p>
-        <p>
-            Se invece volete inserire un nuovo playoff, premete il bottone: "Nuovo Playoff" ed accederete alla
-            vista di dettaglio del playoff nella quale potete effettuare la composizione del vostro playoff 
-            inserendo il suo nome e il numero di squadre previste, il popolamento dei playoff non viene 
-            specificato in questa fase ma in quella della configurazione del passaggio di turno.            
-        </p>
-        <p>
-            In entrambi i casi alla fine dovete salvare il lavoro svolto con il bottone Salva.    
-        </p>
 
-        <h4>Configurazione eliminatorie</h4>
+        <h3>Configurazione eliminatorie</h3>
         <p>
-            La fase della eliminazione diretta, deve essere configurata scegliendo il livello
-            di partenza - sedicesimi, ottavi, quarti, ecc. - e spcificando come popolare gli incontri 
-            a partire dai posizionamente di clssifica dei girone precedenti: gironi all'italiana e playoff.            
+            La fase delle eliminazioni dirette, deve essere configurata scegliendo il livello
+            di partenza - sedicesimi, ottavi, quarti, ecc. - e specificando come popolare gli incontri 
+            a partire dai posizionamenti di clssifica dei girone precedenti: gironi all'italiana e playoff.            
         </p>
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/admineliminatory']" (click)="menuActive = false">Eliminatorie</a>
         </p> 
-        <p>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali configurare le eliminatorie, 
-            selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
-            Nella vista troverete anche le istruzioni di dettaglio per la creazione delle regole di popolamento 
-            dell'eliminatorie.    
-        </p>
 
-        <h4>Obiettivi</h4>
+        <h3>Obiettivi</h3>
         <p>
             L'obiettivo del torneo è da configurare per scopi di memorizzazione dello scopo del torneo
             possibile da consultare anche in futuro.
@@ -182,47 +126,147 @@
             La vista preposta allo scopo è accessibile alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminobjective']" (click)="menuActive = false">Obiettivi</a>
         </p>
-
-        <h4>Calendario</h4>
-        <p>
-            Questo è l'ultimo e più lungo passo della configurazione del torneo.
-            Per ciascun girone del torneo, dovete creare il calendario di tutti gli incontri del girone,
-            stessa cosa per i playoff e le eliminatorie, se previsti.
-            In alcuni tornei le date degli incontri di playoff ed eliminatorie non sono definibili a priori e bisogna
-            aspettare la fine della fase di qualifiacazione, in tal caso potete accedere alla vista del calendario 
-            del torneo e completarlo quando disponete dei dati per la compilazione delle date e luoghi dove
-            svolgere gli incontri.
-        </p> 
-        <p>
-            La vista preposta allo scopo è accessibile alla voce di menù:
-            <a class="home-button" [routerLink]="['/adminmeeting']" (click)="menuActive = false">Calendario</a>
-        </p>
-        <p>
-            Nella pagina che si apre troverete la lista di tutti i vostri tornei dai quali iniziare la configurazione del 
-            calendario, selezionate quello di vostro interesse ed accederete alla vista di dettaglio corrispondente.
-            La vista successiva vi mostra l'elenco di tutti i gironi, playoff ed eliminatorie da configurare.
-            Selezionare un ruolo, playoff o eliminatoria ed accedere alla vista corrispondente contenente tutti
-            gli incontri sui quali dovete compilare tutti i dati per il calendario associato.
-        </p> 
     </p-accordionTab>
 
-    <p-accordionTab header="Gestione torneo">    
-        <p>Per gestione del torneo si intende la possibilità di modificare i suoi dati solo nella parte interessata: 
-            un nome, una data, un indirizzo, ecc. e di rimuovere completamente il torneo perchè non si ha più bisogno 
+    <p-accordionTab header="Istruzioni">    
+        <p>
+            La vista contiene tre bottoni:
+        </p>
+        <ul>
+            <li>Indietro</li>
+            <li>Salva</li>
+            <li>Rimuovi</li>
+        </ul>
+        <p>e due schede da compilare:</p>
+        <ul>
+            <li>Generalità</li>
+            <li>Specificità</li>
+        </ul>   
+        <h4>Indietro</h4>
+        <p>
+            Il bottone Indietro deve essere utilizzato per tornare alla vista precedente senza aver confermato nessun dato.
+            Anche se modificate dei dati nelle 2 schede e premete il bottone Indietro, i dati preesistenti resteranno inalterati.
+        </p>
+        <h4>Salva</h4>
+        <p>            
+            Il bottone Salva deve essere utilizzato per confermare le modifiche apportate alla schede.
+            Se effettuate delle modifiche e non premete il bottone Salva, i dati resteranno invariati e 
+            vi troverete con quelli preesistenti.
+        </p>
+        <h4>Rimuovi</h4>
+        <p>
+            Il bottone Rimuovi è indipendente dalle modifiche ai dati e rimuove completamente tutto il torneo con 
+            tutti i suoi dati annessi e connessi. A fronte di un click sul bottone Rimuovi sarete comunque invitati a 
+            confermare l'operazione in una box di pop up e, solo se risponderete affermativamente, il torneo sarà rimosso.
+        </p>
+
+        <p>
+            Sotto le istruzioni per la compiazione delle 2 schede. 
         </p>        
-        <h4>Modificare un torneo</h4>
-        <p>
-            Si possono modificare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
-            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-            essere svuotati.
-            Alla fine dell'operazione salvare con il bottone Salva
+        <h3>Generalità</h3>
+        <p>            
+            In questa scheda dovete impostare i seguenti campi:
         </p>
-        <h4>Rimuovere un torneo</h4>
+        <ul>
+            <li>Nome torneo</li>
+            <li>Giornaliero</li>
+            <li>Accesso</li>
+            <li>Data e luogo</li>
+            <li>Disciplina</li>
+        </ul>   
+
+        <h4>Accesso</h4>
         <p>
-            Si può rimuovere un torneo esistente con il bottore Rimuovi.
-            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, il torneo
-            sarà rimosso dal sistema. L'operazione di rimozione è distruttuiva e non può essere più recuperata
+            Per Accesso di intende se volete rendere pubblico o privato il vostro torneo. Se scegliete Pubblico, il sistema farà vedere
+            il vostro torneo a tutti gli utenti di Tourney Online, ovviamente nessuno di essi potrà modificare i dati del torneo
+            a meno che non sia un utente autorizzato dal proprietario del torneo, un utente creato dal proprietario con privilegio
+            di modifica. Se invece scegliete Privato, il torneo non sarà visibili agli utenti generici di Tourney Online ma solo
+            a quelli autorizzati ossia in possesso delle credenziali di login create dal proprietario del torneo.
         </p>
+        
+        <h3>Specificità</h3>
+        <p>            
+                In questa scheda dovete impostare i seguenti campi:
+        </p>
+        <ul>
+            <li>Gara</li>
+            <li>Durata</li>
+            <li>Fasi</li>
+            <li>Turni Gironi</li>
+            <li>Turni Playoff</li>
+            <li>Goals</li>
+            <li>Vittoria</li>
+            <li>Sconfitta</li>
+            <li>Pareggio</li>
+            <li>Partite</li>
+            <li>Giocatori</li>
+        </ul>   
+
+        <h4>Gara</h4>
+        <p>
+            Per Gara si intende se terminano a tempo o a punti. A tempo solo le gare che terminano entro un certo tempo, tipo
+            i 90 minuti nel calcio. Mentre a punti sono le gare come il volley o il tennis in cui le gare vanno avanti fino a 
+            quando una delle 2 squadre non raggiunge il punteggio prefissato.
+        </p>
+
+        <h4>Fasi</h4>
+        <p>
+            Per Fasi si intende le tre classiche: Gironi, Playoff, Eliminazioni Dirette. Non sono ammesse tutte le
+            combinazioni, per esempio non si può scegliere Playoff ed Eliminazioni senza Gironi perchè
+            non avrebbero senso. Se una combinazione non è ammessa, il sistema visualizzerà un messaggio di errore con
+            la spiegazione del caso.
+        </p>
+
+        <h4>Turni Gironi</h4>
+        <p>
+            In questo caso si deve specificare se ci sono i Turni di ritorno o solo andata per i gironi all'italiana.
+        </p>
+        <h4>Turni Playoff</h4>
+        <p>
+            Se previsti i Playoff, si deve specificare se ci sono i Turni di ritorno o solo andata.
+        </p>
+
+        <h4>Goals</h4>
+        <p>
+            Nei tornei a punti, specificare i Goals necessari da segnare per aggiudicarsi la vittoria
+        </p>
+        <h4>Vittoria</h4>
+        <p>
+            In entrambi i tornei a punti o a tempo, specificare i punti guadagnati in caso di vittoria
+        </p>
+        <h4>Pareggio</h4>
+        <p>
+            Solo nei tornei a tempo, specificare i punti guadagnati in caso di pareggio, nei tornei a punti il pareggio non esiste.
+        </p>
+        <h4>Sconfitta</h4>
+        <p>
+            Solo nei tornei a punti, specificare i punti guadagnati in caso di sconfitta al Golden Goal o Tie Break.
+            Nei tornei a tempo, la sconfitta vale sempre zero punti.
+        </p>            
+
+        <h4>Partite</h4>
+        <p>
+            Solo nei tornei a punti, specificare il numero massimo di partite da disputare in ciascun incontro. 
+            Per esempio in un incontro di tennis, dove le partite coincidono con i SET, si disputano massimo 5 partite.
+            In un incontro di volley anche si disputano massimo 5 partite.
+        </p>            
+        <h4>Tutte/Al Meglio</h4>
+        <p>
+            Solo nei tornei a punti, specificare se disputare Tutte le patite o il numero minimo per aggiudicarsi l'incontro. 
+            Se scegliete Al Meglio, il sistema automaticamente calcola il numero minimo di partite da vincere per aggiudicarsi l'incontro.            
+        </p>            
+        <p>
+            Per esempio in un incontro di tennis, si disputano massimo 5 partite al meglio delle 3, 
+            in un incontro di volley si disputano massimo 5 partite al meglio delle 3.
+            In un campionato CSI di calcio balilla si disputano tutte le 9 partite dell'incontro perchè si assegna un punto
+            per ciascuna partita vinta.
+        </p>
+        <h4>Giocatori</h4>
+        <p>
+            Indicare il numero di giocatori impiegato da ciascuna squadra in tutte le partite dell'incontro.
+            Se il numero di giocatori è uno, il nome della squadra può coincidere con il nome della squadra.
+        </p>
+
     </p-accordionTab>
 </p-accordion>
 </div>
@@ -238,7 +282,7 @@
 
     <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
         <p-tabView>
-            <p-tabPanel header="Anagrafica">
+            <p-tabPanel header="Generalità">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
@@ -257,6 +301,43 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Accesso:
+                    </div>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare se il torneo è visibile a tutti: pubblico o riservato solo a chi ha l'accesso: privato">
+                        <p-radioButton name="accessGroupname" 
+                            label="Pubblico" 
+                            value="public" 
+                            formControlName="access">
+                        </p-radioButton>
+                        <p-radioButton name="accessGroupname" 
+                            label="Privato" 
+                            value="private" 
+                            formControlName="access">
+                        </p-radioButton>
+                    </div>
+                </div>        
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Giornaliero:
+                    </div>
+                    <div class="ui-grid-col-4" tooltipPosition="right"
+                            pTooltip="Indicare se il torneo si svolge in un singolo giorno o su più giorni.">
+                        <p-radioButton name="isDailyGroupname" 
+                            label="Vero" 
+                            value="true" 
+                            formControlName="isDaily">
+                        </p-radioButton>
+                        <p-radioButton name="isDailyGroupname" 
+                            label="Falso" 
+                            value="false" 
+                            formControlName="isDaily">
+                        </p-radioButton>
+                    </div>
+                </div>        
                 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
@@ -319,29 +400,10 @@
             </div>
             </p-tabPanel>
 
-            <p-tabPanel header="Caratteristiche">
+            <p-tabPanel header="Specificità">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
                 <p-fieldset legend="Scelte">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            Accesso:
-                        </div>
-                        <div class="ui-grid-col-4" tooltipPosition="right"
-                                pTooltip="Indicare se il torneo è visibile a tutti: pubblico o riservato solo a chi ha l'accesso: privato">
-                            <p-radioButton name="accessGroupname" 
-                                label="Pubblico" 
-                                value="public" 
-                                formControlName="access">
-                            </p-radioButton>
-                            <p-radioButton name="accessGroupname" 
-                                label="Privato" 
-                                value="private" 
-                                formControlName="access">
-                            </p-radioButton>
-                        </div>
-                    </div>        
-
                    <div class="ui-grid-row">
                         <div class="ui-grid-col-3">
                             Gara:
@@ -436,12 +498,12 @@
                 <p-fieldset legend="Punteggi">
                     <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" class="ui-grid-row">
                         <div class="ui-grid-col-3">
-                            Si vince ai:
+                            Goals:
                         </div>
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
                                 [min]="1"
-                                pTooltip="Punti da segnare per aggiudicarsi la vittoria nei tornei a punti">
+                                pTooltip="Goals necessari per aggiudicarsi la vittoria nei tornei a punti">
                             </p-spinner>
                         </div>
                         <div class="ui-grid-col-3">
@@ -503,7 +565,7 @@
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="raceDuration" tooltipPosition="right"
                                 [min]="1"
-                                pTooltip="Indicare il tempo di durata in minuti della singola gara">
+                                pTooltip="Indicare la durata in minuti della singola gara per i tornei a tempo">
                             </p-spinner>
                         </div>
                     </div>
@@ -542,6 +604,52 @@
                         </div>
                     </div>                                
                 </p-fieldset> 
+
+                <p-fieldset legend="Incontro">
+                    <div class="ui-grid-row" >
+                        <div class="ui-grid-col-3">
+                            Partite:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="maxMatchesPerMeeting" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Numero massimo di partite in ciascun incontro">
+                            </p-spinner>
+                        </div>          
+                    </div>
+
+                    <div class="ui-grid-row" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'">
+                        <div class="ui-grid-col-3">
+                            Al Meglio:
+                        </div>
+
+                        <div class="ui-grid-col-5" tooltipPosition="right"
+                                pTooltip="Tutte le partite o il minimo per vincere l'incontro?">
+                            <p-radioButton name="allMatchesGroupname" 
+                                label="Tutte" 
+                                value="true" 
+                                formControlName="isAllMatches">
+                            </p-radioButton>
+                            <p-radioButton name="allMatchesGroupname" 
+                                label="Al Meglio" 
+                                value="false" 
+                                formControlName="isAllMatches">
+                            </p-radioButton>
+                        </div>        
+                    </div>
+
+                    <div class="ui-grid-row" >
+                        <div class="ui-grid-col-3">
+                            Giocatori:
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <p-spinner formControlName="playersPerTeam" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Numero di giocatori di una squadra per giocare una partita">
+                            </p-spinner>
+                        </div>          
+                    </div>
+                </p-fieldset>
             </div>
             </p-tabPanel>
         </p-tabView>

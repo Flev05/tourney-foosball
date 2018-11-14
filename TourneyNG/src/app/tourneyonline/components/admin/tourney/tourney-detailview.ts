@@ -35,6 +35,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
     isOnewayRound: string;
     isOnewayPlayoff: string;
+    isAllMatches: string;
+    isDaily: string;
 
     constructor(
         private fb: FormBuilder,
@@ -64,6 +66,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
             this.tourneyDate = today;
             this.selectedTourney.tourneyName = "";
+            this.selectedTourney.isDaily=true ;
+
             this.selectedTourney.address = "";
             this.selectedTourney.tourneyType = TourneyType.Score;
             this.selectedTourney.matchBalanceScores = 0;
@@ -82,6 +86,11 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.pointsNeededToWin=9;
             this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
             this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
+
+            this.selectedTourney.maxMatchesPerMeeting = 1;
+            this.selectedTourney.isAllMatches = false;
+            this.selectedTourney.playersPerTeam = 1;
+
             this.selectedTourney.phases=[PhaseType.R];
             this.selectedTourney.phases.push(PhaseType.E);   
             
@@ -98,6 +107,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.isOnewayRound = this.selectedTourney.isOnewayRound ? "true" : "false";
         this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff ? "true" : "false";
 
+        this.isAllMatches = this.selectedTourney.isAllMatches ? "true" : "false";
+        this.isDaily = this.selectedTourney.isDaily ? "true" : "false";
+
         if(this.selectedTourney.country != undefined ) {
             this.fullAddress = this.selectedTourney.address + " - " 
                 + this.selectedTourney.country.zipCode + " " + this.selectedTourney.country.city
@@ -106,6 +118,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
+            'isDaily': new FormControl(this.isDaily),
+
             'address': new FormControl(this.selectedTourney.address, Validators.compose([Validators.required])),
             'country': new FormControl(this.selectedTourney.country),
 
@@ -130,6 +144,10 @@ export class TourneyDetailView extends AbstractDetailView {
 
             'isOnewayRound': new FormControl(this.isOnewayRound),
             'isOnewayPlayoff': new FormControl(this.isOnewayPlayoff),
+
+            'maxMatchesPerMeeting': new FormControl(this.selectedTourney.maxMatchesPerMeeting),
+            'isAllMatches': new FormControl(this.isAllMatches),
+            'playersPerTeam': new FormControl(this.selectedTourney.playersPerTeam),
        });
     }
 
@@ -152,6 +170,8 @@ export class TourneyDetailView extends AbstractDetailView {
         this.submitted = true;
 
         this.selectedTourney.tourneyName = this.tourneyFormGroup.get('tourneyName').value;
+        this.selectedTourney.isDaily   = this.tourneyFormGroup.get('isDaily').value == "true"? true: false;
+
         this.selectedTourney.address = this.tourneyFormGroup.get('address').value;
         this.selectedTourney.country = this.tourneyFormGroup.get('country').value;
 
@@ -175,7 +195,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isOnewayRound   = this.tourneyFormGroup.get('isOnewayRound').value == "true"? true: false;
         this.selectedTourney.isOnewayPlayoff = this.tourneyFormGroup.get('isOnewayPlayoff').value == "true"? true: false;
 
-        console.log("selectedTourney.phases: " + this.selectedTourney.phases);
+        this.selectedTourney.isAllMatches = this.tourneyFormGroup.get('isAllMatches').value == "true"? true: false;
+        this.selectedTourney.maxMatchesPerMeeting = this.tourneyFormGroup.get('maxMatchesPerMeeting').value;
+        this.selectedTourney.playersPerTeam = this.tourneyFormGroup.get('playersPerTeam').value;
 
         if(this.tourneyService.newTourney) {
             this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());  

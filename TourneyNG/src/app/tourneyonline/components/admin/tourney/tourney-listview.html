@@ -6,6 +6,15 @@
 </div>
 
 <div class="content-section documentation">   
+<h4>Vista elenco tornei</h4>
+<p>
+    La vista contiene l'elenco di tutti i tornei di tipo "Pubblico" cioè visibili a tutti.
+    Chiunque si connette al sistema vedrebbe i tornei di tipo "Pubblico", anche gli utenti anonimi.
+    Se invece il proprietario di un torneo non volesse rendere "Pubblico" il proprio torneo, 
+    lo deve dichiarare di tipo privato al momento della creazione. 
+    Il default è "Pubblico"
+</p>
+
 <p-accordion>
     <p-accordionTab header="Introduzione">
 
@@ -19,22 +28,27 @@
         <h4>Utenti anonimi</h4>
         <p>
             Un utente anonimo è un utente qualsiasi che si connette al sistema Tourney Online senza effettuare alcuna forma 
-            di login, egli può disporre o non disporre affatto di alcun account di sistema.
-            Gli utenti anonimi possono consultare tornei già esistenti, quelli creati da altri utenti che pubblicano i loro tornei,
-            ma non possono in nessun modo modificarne i contenuti, a meno che non si tratti di un torneo di sessione.
+            di login, egli può disporre o non disporre affatto di un account di sistema.
+            Gli utenti anonimi possono consultare tornei già esistenti, quelli di tipo "Pubblico",
+            ma non possono in nessun modo modificarne i contenuti.
+            Possono invece crearne dei tornei propri sui quali hanno tutti i privilegi e li possono modificare 
+            o rimuovere per tutto il tempo di durata della sessione applicativa.
         </p>
     
         <p>
             Un torneo di sessione, nasce e muore all'interno di una sessione utente. La sessione utente può durare anche 
-            indefinitamente se il browser non viene utilizzato continuamente e non viene abbandonato per più di mezz'ora. 
-            Se il browser resta inutilizzato per più di mezzora o se il PC, portatile o altro device viene spento, 
-            la sessione utente preesistente scade e viene iniziata una nuova che non ha niente in comune con quella precedente.
+            indefinitamente se il browser non viene mai spento. 
+            Mettendo il PC, portatile o altro device in standby, 
+            la sessione utente continuerebbe a restare accessa e quando riaccendete il PC, se non avete chiuso il browser, 
+            potete continuare da dove avete lasciato senza perdita dei dati.
         </p>
-    
+        
         <p>
-            Durante la sessione, l'utente anonimo dispone di tutte le funzionalità del sistema, ma non appena scade la sessione, 
-            perde tutto il lavoro fatto. I dati dell'utente anonimo sono si fatto volatili e non sono salvati sul database di 
-            Tourney Online, pertanto sono visibili ed utilizzabili per tutta la durata della sessione ma non appena scade non sono 
+            Questa modalità potrebbe andar avanti per giorni, ma nel momento in cui spegnerete fisicamente il PC o chiuderetr il 
+            browser, perderete irrimediabilmente tutti i vostri dati del torneo.
+            Durante la sessione, infatti, l'utente anonimo dispone di tutte le funzionalità del sistema, 
+            ma i dati sono di fatto volatili, memorizzati nella memoria del vostro browser, e mai salvati sul database di Tourney Online, 
+            pertanto sono visibili ed utilizzabili finquando non viene spento il browser dopo di che non sono 
             più recuperabili.
         </p>
             
@@ -46,39 +60,32 @@
             modificare la configurazione dei contenuti o semplicemente per aggiornare i risultari di un incontro.
         </p>
         <p>
+            Inoltre, si possono avere più utenti per aggiornre i risultati degli incontri e avere il realtime 
+            per i partecipati o altri clienti.
+        </p>
+        <p>
             Per procurarsi un account si rimanda alla pagina di introduzione relativa al noleggio:
             <a [routerLink]="['/lease']">
                 Versione Noleggio
             </a>
         </p>
     </p-accordionTab>
-    <p-accordionTab header="Contenuti">
-        <h4>Vista elenco tornei</h4>
-        <p>
-            La vista contiene l'elenco dei tornei già creati e pubblicati dal proprietario. Il proprietario o responsabile di un torneo
-            può scegliere a sua discrezione se rendere visibile a chiunque il proprio torneo o limitarlo solo a quelli in possesso delle
-            credenziali di accesso: login o codice di accesso del torneo.
-        </p>
-    
+    <p-accordionTab header="Istruzioni">
+
         <h4>Creare un nuovo torneo</h4>
         <p>
             Con il bottone Nuovo Torneo si accede alla vista di dettaglio per la creazione di un nuovo torneo. 
             La creazione di un torneo si sviluppa su più fasi e bisogna compilare tante schede prima
-            di completarlo. La vista di dettaglio, oltre alla form per la compilazione dei dati del torneo, 
-            contiene anche le istruzioni da seguire per completare la creazione di tutto il torneo.
-            Leggere attentamente tutte le istruzioni prima di incominciare il lavoro di creazione.
+            di completarlo. 
         </p>
-    
+        
         <h4>Modificare un torneo esistente</h4>
         <p>
             Con un click sulla riga, si accede alla vista di dettaglio corrispondente in cui si possono 
             modificare i dati esistenti.
         </p>
-    
-        <h4>Rimuovere un torneo esistente</h4>
         <p>
-            Per rimuovere un torneo esistente bisogna comunque accedere alla vista di dettaglio del torneo selezionato e da lì 
-            rimuovere il torneo con il bottone corrispondente.
+            Per la documentazione completa si rimanda a quella presente della vista di dettaglio del torneo.
         </p>
     </p-accordionTab>
 </p-accordion>

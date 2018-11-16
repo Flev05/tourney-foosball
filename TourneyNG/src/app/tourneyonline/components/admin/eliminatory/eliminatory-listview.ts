@@ -10,6 +10,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { PhaseType, EliminatoryMode, Direction } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { Match } from 'app/tourneyonline/domain/match';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -100,7 +101,17 @@ export class EliminatoryListView extends AbstractListView {
     }
     
     private newMeeting(t1: Team, t2: Team): Meeting {
-        return {
+        let matches: Array<Match> = new Array<Match>();
+        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
+            let m: Match = {id:this.tourneyService.getSequenceNumber()
+                ,players1: []
+                ,players2: []
+                ,score1:0
+                ,score2:0
+            };
+            matches.push(m);
+        }
+        let m: Meeting = {
             id: this.tourneyService.getSequenceNumber(),
             name: t1.teamName + " - " + t2.teamName,
             datetime: this.selectedTourney.datetime,
@@ -110,8 +121,11 @@ export class EliminatoryListView extends AbstractListView {
             country: this.selectedTourney.country,
             score1: 0,
             score2: 0,
-            direction: Direction.OneWay
+            direction: Direction.OneWay,
+            matches: matches
         };
+        
+        return m;
     }
 }
 

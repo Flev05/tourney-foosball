@@ -29,6 +29,10 @@ static tourney =
       ,matchLoserScores:0
       ,matchBalanceScores:1
       
+      ,maxMatchesPerMeeting:1
+      ,isAllMatches:true
+      ,playersPerTeam: 2
+  
       ,pointsNeededToWin:9
       ,pointsGoldenGoalTieBreakWin:2
       ,pointsGoldenGoalTieBreakDefeat:1

@@ -25,7 +25,7 @@
         </p>
         <p>
             Per maggiori dettagli, leggete
-            prima la spiegazione riportata nella documentazie della vista elenco precedente.
+            prima la spiegazione riportata nella documentazione della vista elenco precedente.
         </p>
 
         <p>
@@ -175,6 +175,18 @@
             <li>Disciplina</li>
         </ul>   
 
+        <h4>Nome torneo</h4>
+        <p>
+            Il nome del torneo deve essere univoco all'interno dello spazio dei tornei, se tentate di inserire un nome già esistente 
+            riceverete un messaggio di errore.
+        </p>
+        <h4>Giornaliero</h4>
+        <p>
+            Dovete specificare se il torneo si svolge in uno o più giorni. Un torneo gioraliero, è un torneo che incomincia e finisce
+            nell'arco di massimo 24 0re, per esempio le coppe CSI del calcio balilla che durano circa 6 ore. 
+            Altrimenti si tratta di un torneo con durata temporale lunga tipica dei campionati.
+        </p>
+
         <h4>Accesso</h4>
         <p>
             Per Accesso di intende se volete rendere pubblico o privato il vostro torneo. Se scegliete Pubblico, il sistema farà vedere
@@ -182,6 +194,20 @@
             a meno che non sia un utente autorizzato dal proprietario del torneo, un utente creato dal proprietario con privilegio
             di modifica. Se invece scegliete Privato, il torneo non sarà visibili agli utenti generici di Tourney Online ma solo
             a quelli autorizzati ossia in possesso delle credenziali di login create dal proprietario del torneo.
+        </p>
+        <h4>Data e luogo</h4>
+        <p>
+            Per data, si intende la data di inizio del torneo anche se di tipo tipo non giornaliero. Per il luogo bisogna distinguere
+            se il torneo è giornaliero o no.
+            Se giornaliero, si intende l'indirizzo della località dove si svolgono tutte le partite, se non giornaliero,
+            si usa inserire l'indirizzo della sede dell'organizzazione o dove si svolge la prima partita, le location di tutti
+            gli incontri sono documentati uno per uno nelle corrispondenti viste di dettaglio. 
+        </p>
+        <h4>Disciplina</h4>
+        <p>
+            Per disciplina si intende la categoria di appartenenza del gioco, tipo Calcio, Basket, Volley, ecc.
+            Il programma non fa alcuna distinzione tra le varie discipline a livello di gestione, ma può usarle per 
+            dei link di rimando per regolamenti e normative.
         </p>
         
         <h3>Specificità</h3>
@@ -519,21 +545,6 @@
                             <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
                                 [min]="1"
                                 pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
-                            </p-spinner>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            punti
-                        </div>
-                    </div>
-        
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            Sconfitta:
-                        </div>
-                        <div class="ui-grid-col-1">
-                            <p-spinner formControlName="matchLoserScores" tooltipPosition="right"
-                                [min]="0"
-                                pTooltip="Punti assegnati alla squadra per la perdita della singola gara">
                             </p-spinner>
                         </div>
                         <div class="ui-grid-col-3">

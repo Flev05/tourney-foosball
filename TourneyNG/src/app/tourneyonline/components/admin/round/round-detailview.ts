@@ -158,20 +158,6 @@ export class RoundDetailView extends AbstractDetailView {
         }
     }
 
-    private createMeeting1111(t1: Team, t2: Team, d: Direction) {
-        let m : Meeting = {
-            id: this.tourneyService.getSequenceNumber(),
-            name: t1.teamName + " - " + t2.teamName,
-            datetime: this.selectedTourney.datetime,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            team1: t1,
-            team2: t2,
-            direction: d
-        };
-        return m;
-    }
-
     private alignMoveToSourceList(teamList: Team[]) {
         for (let t of teamList) {
             this.removeFromMeetings(t);

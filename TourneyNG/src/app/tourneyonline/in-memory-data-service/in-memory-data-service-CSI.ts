@@ -22,13 +22,17 @@ export class InMemoryDataServiceCSI  {
 
     ,raceDuration:90
 
-    ,matchWinnerScores:3
+    ,matchWinnerScores:1
     ,matchLoserScores:0
-    ,matchBalanceScores:1
-    
+    ,matchBalanceScores:0
+
+    ,maxMatchesPerMeeting:9
+    ,isAllMatches:true
+    ,playersPerTeam: 2
+
     ,pointsNeededToWin:9
-    ,pointsGoldenGoalTieBreakWin:2
-    ,pointsGoldenGoalTieBreakDefeat:1
+    ,pointsGoldenGoalTieBreakWin:1
+    ,pointsGoldenGoalTieBreakDefeat:0
     
     ,players:[
         {id:1, firstname:"Salvatore", lastname:"Amoroso", address:""
@@ -158,6 +162,8 @@ export class InMemoryDataServiceCSI  {
               team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
               ,score1: 0
               ,score2: 0
+              ,direction: Direction.RoundTrip
+              ,matches: []
           }
           ,{
               id: 2,
@@ -169,6 +175,8 @@ export class InMemoryDataServiceCSI  {
               team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
               ,score1: 0
               ,score2: 0
+              ,direction: Direction.RoundTrip
+              ,matches: []
           }
         ]
         ,classification:[]
@@ -189,7 +197,9 @@ export class InMemoryDataServiceCSI  {
             team2: {id:1, teamName: "AURORA PREGNANA BLU"}
             ,score1: 0
             ,score2: 0
-      }
+            ,direction: Direction.RoundTrip
+            ,matches: []
+    }
         ,{
             id: 2,
             name:  "AURORA PREGNANA BLU - SOLAROSPORT",
@@ -200,7 +210,9 @@ export class InMemoryDataServiceCSI  {
             team2: {id:4, teamName: "SOLAROSPORT"}
             ,score1: 0
             ,score2: 0
-      }]
+            ,direction: Direction.RoundTrip
+            ,matches: []
+        }]
         ,classification:[]
       }
     ]
@@ -212,18 +224,19 @@ export class InMemoryDataServiceCSI  {
             ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
           ]
           ,meetings:[{
-                id: 1,
-                name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-                datetime: new Date(2018, 11, 30, 15, 0),
-                address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-                country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-                team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
-                team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
-                direction: Direction.OneWay,
-                playoffConfig1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }},
-                playoffConfig2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-                ,score1: 0
-                ,score2: 0
+                  id: 1,
+                  name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
+                  datetime: new Date(2018, 11, 30, 15, 0),
+                  address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
+                  country: {id:1, city: "ZIBIDO SAN GIACOMO"},
+                  team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
+                  team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
+                  direction: Direction.OneWay
+                  ,matches: []
+                  ,playoffConfig1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
+                  ,playoffConfig2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+                  ,score1: 0
+                  ,score2: 0
                 }
             ,{
                 id: 2,
@@ -233,9 +246,10 @@ export class InMemoryDataServiceCSI  {
                 country: {id:1, city: "ORIGGIO"},
                 team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
                 team2: {id:6, teamName: "ORATORIO ZIBIDO B"},
-                direction: Direction.RoundTrip,
-                playoffConfig2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }},
-                playoffConfig1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+                direction: Direction.RoundTrip
+                ,matches: []
+                ,playoffConfig2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
+                ,playoffConfig1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
                 ,score1: 0
                 ,score2: 0
               }
@@ -261,8 +275,9 @@ export class InMemoryDataServiceCSI  {
               country: {id:1, city: "SOLARO"},
               team1: {id:6, teamName: "SOLAROSPORT"},
               team2: {id:3, teamName: "AURORA PREGNANA BLU"},
-              direction: Direction.OneWay,
-              playoffConfig1: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
+              direction: Direction.OneWay
+              ,matches: []
+              ,playoffConfig1: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
               playoffConfig2: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
               ,score1: 0
               ,score2: 0
@@ -276,7 +291,8 @@ export class InMemoryDataServiceCSI  {
               team1: {id:3, teamName: "AURORA PREGNANA BLU"},
               team2: {id:6, teamName: "SOLAROSPORT"},
               direction: Direction.RoundTrip,
-              playoffConfig2: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
+              matches: []
+              ,playoffConfig2: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
               playoffConfig1: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
               ,score1: 0
               ,score2: 0

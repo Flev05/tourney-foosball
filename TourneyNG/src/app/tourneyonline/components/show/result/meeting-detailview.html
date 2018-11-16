@@ -15,7 +15,7 @@
             
     <h4>Istruzioni</h4>
     <p> 
-        Per ciascuna squadra insirete il punteggio azionando opportunamente i bottoni +(più) e - (meno)
+        Per ciascuna partita inserite il punteggio azionando opportunamente i bottoni +(più) e - (meno)
         per aumentare e dimunire il punteggio rispettivamente.
     </p> 
     <p>
@@ -33,51 +33,63 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>       
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                <h4>{{selectedMeeting.team1.teamName}}</h4>
-            </div>
-            <div class="ui-grid-col-5">
-                <table>
-                    <tr>
-                        <td>
-                            <button pButton type="button" icon="fa fa-minus" (click)="minus1()"></button>
-                        </td>
-                        <td>
-                            <span style="text-align: center; font-size: large; font-weight: bold;">{{selectedMeeting.score1}}</span>
-                        </td>
-                        <td>
-                            <button pButton type="button" icon="fa fa-plus" (click)="plus1()"></button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+    <p-table  [value]="matches">
+        <ng-template pTemplate="colgroup">
+            <colgroup>
+                <col style="width: 20mm;">
+                <col style="width: 100%;">
+            </colgroup>
+        </ng-template>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                <h4>{{selectedMeeting.team2.teamName}}</h4>
-            </div>
-            <div class="ui-grid-col-5">
-                <table>
-                    <tr>
-                        <td>
-                            <button pButton type="button" icon="fa fa-minus" (click)="minus2()"></button>
-                        </td>
-                        <td>
-                            <span style="text-align: center; font-size: large; font-weight: bold;">{{selectedMeeting.score2}}</span>
-                        </td>
-                        <td>
-                            <button pButton type="button" icon="fa fa-plus" (click)="plus2()"></button>
-                        </td>
-                    </tr>
-                </table>
-            </div>             
-        </div>
-    </div>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Partita</th>
+                <th>{{selectedMeeting.name}}</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr>
+                <td>{{rowIndex + 1}}</td>
+
+                <td>
+                    <table>
+                        <tr>
+                            <td style="width: auto; text-align: right;">
+                                <span style="text-align: right; font-size: large; font-weight: bold;">{{selectedMeeting.team1.teamName}}</span>
+                            </td>
+                            <td style="width: 10mm;">
+                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
+                            </td>
+                            <td style="width: 10mm; text-align: center;">
+                                <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
+                            </td>
+                            <td style="width: 10mm;">
+                                <button pButton type="button" icon="fa fa-plus" (click)="plus1(rowData)"></button>
+                            </td>            
+                        </tr>
+                        <tr>
+                            <td style="width: auto; text-align: right;">
+                                <span style="font-size: large; font-weight: bold;">{{selectedMeeting.team2.teamName}}</span>
+                            </td>
+                            <td style="width: 10mm;">
+                                <button pButton type="button" icon="fa fa-minus" (click)="minus2(rowData)"></button>
+                            </td>
+                            <td style="width: 10mm; text-align: center;">
+                                <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
+                            </td>
+                            <td style="width: 10mm;">
+                                <button pButton type="button" icon="fa fa-plus" (click)="plus2(rowData)"></button>
+                            </td>            
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+        </ng-template>        
+    </p-table>
 
     <div style="text-align:left">
-        <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
+        <button type="button" pButton icon="pi pi-check" (click)="save()" label="Salva"></button>
     </div>
 </div>

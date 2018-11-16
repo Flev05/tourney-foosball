@@ -8,6 +8,7 @@ export interface Classification
     played?  : number;
     won?     : number;
     lost?    : number;
+    balanced?    : number;
     penalty? : number;
     goalsDone?     : number;
     goalsDiff?     : number;

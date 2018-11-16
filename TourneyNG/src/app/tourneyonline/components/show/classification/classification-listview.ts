@@ -6,6 +6,8 @@ import { Round } from '../../../domain/round';
 import { Classification } from '../../../domain/classification';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Match } from 'app/tourneyonline/domain/match';
 
 @Component({
     templateUrl: './classification-listview.html',
@@ -39,20 +41,96 @@ export class ClassificationListView extends AbstractListView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-        this.classification = this.selectedRound.classification;
-
-        if(this.classification.length==0) {
-            for(let t of this.selectedRound.teams) {
-                let c = this.newClassification(t, 0);
-                this.classification.push(c);
-            }
-        }
-
-        if(this.classification.length==0) {
+        if(this.selectedRound.teams.length==0) {
             this.isEmpty = true;
-        } else {
-            this.isEmpty = false;
+            return;
         }
+        this.isEmpty = false;
+
+
+        let classificationMap : Map<string, Classification> = new Map<string, Classification>();
+
+        for(let m of this.selectedRound.meetings) {
+            let t1 = m.team1;
+
+            let key1 = t1.teamName;
+            if(!classificationMap.has(key1)) {
+                let c = this.newClassification(t1, 0);
+                classificationMap.set(key1, c);
+            }
+            let c1 = classificationMap.get(key1);
+            this.updateClassification(c1, m.score1, m.score2, m.matches);
+ 
+            let t2 = m.team2;
+            let key2 = t2.teamName;
+            if(!classificationMap.has(key2)) {
+                let c2 = this.newClassification(t2, 0);
+                classificationMap.set(key2, c2);
+            }
+            let c2 = classificationMap.get(key2);
+            this.updateClassification(c2, m.score2, m.score1, m.matches);
+        }
+
+        this.classification = [];
+        for( let c of classificationMap.values()) {
+            this.classification.push(c);            
+        }
+
+        this.classification = this.sortDesc(this.classification);
+
+        this.selectedRound.classification = this.classification;
     }
 
+    private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        var sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+
+            if (c1.points > c2.points) {
+                return 1;
+            }
+            if (c1.points < c2.points) {
+                return -1;
+            }
+        
+            if( c1.goalsDiff > c2.goalsDiff ) {
+                return 1;
+            }
+            if( c1.goalsDiff < c2.goalsDiff ) {
+                return -1;
+            }
+
+            if( c1.goalsDone > c2.goalsDone ) {
+                return 1;
+            }
+            if( c1.goalsDone < c2.goalsDone ) {
+                return -1;
+            }
+
+            if( c1.goalsConceded < c2.goalsConceded ) {
+                return 1;
+            }
+            if( c1.goalsConceded > c2.goalsConceded ) {
+                return -1;
+            }
+
+            return 0;
+        });
+
+        return sortedClassification;
+    }
+
+    private updateClassification(c: Classification, score1: number, score2: number, matches: Match[]) {
+        c.points += score1;
+        if (score1 > score2) {
+            c.won++;
+        }
+        if (score1 == score2) {
+            c.balanced++;
+        }
+        c.played++;
+        for (let ma of matches) {
+            c.goalsDone += ma.score1;
+            c.goalsConceded += ma.score2;
+        }
+        c.goalsDiff = c.goalsDone - c.goalsConceded;
+    }
 }

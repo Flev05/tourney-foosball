@@ -8,6 +8,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { TourneyType } from 'app/tourneyonline/domain/enumerations';
+import { Match } from 'app/tourneyonline/domain/match';
 
 
 @Component({
@@ -21,6 +22,8 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedMeeting: Meeting;
     selectedRound: Round;
 
+    matches: Match[];
+
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
@@ -33,72 +36,92 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;    
-
         this.selectedMeeting  = this.tourneyService.selectedMeeting;    
+
+        if(this.selectedMeeting.matches.length==0) {
+            this.selectedMeeting.matches=[];
+            for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
+                let m: Match = {id:i
+                    ,players1: []
+                    ,players2: []
+                    ,score1:0
+                    ,score2:0
+                };
+                this.selectedMeeting.matches.push(m);
+            }
+        }
+        this.matches = [...this.selectedMeeting.matches];
     }
 
-    minus1() {
-        this.selectedMeeting.score1--;
-        if(this.selectedMeeting.score1<0) {
-            this.selectedMeeting.score1=0;
+    minus1(m: Match) {
+        let ii = m.id;
+        this.matches[ii].score1--;
+        if(this.matches[ii].score1 < 0) {
+            this.matches[ii].score1=0;
         }
     }
 
-    plus1() {
-        this.selectedMeeting.score1++;
+    plus1(m: Match) {
+        let ii = m.id;
+        this.matches[ii].score1++;
     }
 
-    minus2() {
-        this.selectedMeeting.score2--;
-        if(this.selectedMeeting.score2<0) {
-            this.selectedMeeting.score2=0;
+    minus2(m: Match) {
+        let ii = m.id;
+        this.matches[ii].score2--;
+        if(this.matches[ii].score2 < 0) {
+            this.matches[ii].score2=0;
         }
     }
 
-    plus2() {
-        this.selectedMeeting.score2++;
+    plus2(m: Match) {
+        let ii = m.id;
+        this.matches[ii].score2++;
     }
 
     save() {
 
-        super.initClassification(this.selectedRound);
+        this.selectedMeeting.matches = this.matches;
+        this.selectedMeeting.score1 = 0;
+        this.selectedMeeting.score2 = 0;
 
-        for(let m of this.selectedRound.meetings) {
-            for(let c of this.selectedRound.classification) {
-                if(c.team.id == this.selectedMeeting.team1.id) {
-                    c.points += this.selectedMeeting.score1;
+        let goals1 = 0;
+        let goals2 = 0;
+        for(let i=0; i<this.matches.length; i++) {
+            let m = this.matches[i];
+            goals1 = m.score1;
+            goals2 = m.score2;
+
+            if (goals1 > goals2) {
+
+                if (this.selectedTourney.discipline == TourneyType.Score) {
+                    if (this.selectedMeeting.score1 == this.selectedMeeting.score2 + 1) {
+                        this.selectedMeeting.score1 = this.selectedTourney.pointsGoldenGoalTieBreakWin;
+                        this.selectedMeeting.score2 = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                    }
+                } else {
+                    this.selectedMeeting.score1 += this.selectedTourney.matchWinnerScores;
                 }
-                if(c.team.id == this.selectedMeeting.team2.id) {
-                    c.points += this.selectedMeeting.score2;
+            } 
+                        
+            if (goals2 > goals1) {
+                if (this.selectedTourney.discipline == TourneyType.Score) {
+                    if (this.selectedMeeting.score2 == this.selectedMeeting.score1 + 1) {
+                        this.selectedMeeting.score2 += this.selectedTourney.pointsGoldenGoalTieBreakWin;
+                        this.selectedMeeting.score1 += this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                    }
+                } else {
+                    this.selectedMeeting.score2 += this.selectedTourney.matchWinnerScores;
                 }
+            }
+
+            if (goals1 == goals2) {
+                this.selectedMeeting.score2 += this.selectedTourney.matchBalanceScores;
+                this.selectedMeeting.score1 += this.selectedTourney.matchBalanceScores;
             }
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-
-    private updateMatchPoints() {
-        let points1 = this.selectedTourney.pointsNeededToWin;
-        let points2 = 0;
-        if (this.selectedMeeting.score1 > this.selectedMeeting.score2) {
-            if (this.selectedTourney.discipline == TourneyType.Score) {
-                if (this.selectedMeeting.score1 == this.selectedMeeting.score2 + 1) {
-                    points1 = this.selectedTourney.pointsGoldenGoalTieBreakWin;
-                    points2 = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
-                }
-            }
-        }
-        else {
-            points1 = 0;
-            points2 = this.selectedTourney.pointsNeededToWin;
-            if (this.selectedTourney.discipline == TourneyType.Score) {
-                if (this.selectedMeeting.score2 == this.selectedMeeting.score1 + 1) {
-                    points2 = this.selectedTourney.pointsGoldenGoalTieBreakWin;
-                    points1 = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
-                }
-            }
-        }
-        return { points1, points2 };
     }
 
     onError(n:any) {

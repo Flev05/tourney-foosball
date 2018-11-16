@@ -34,6 +34,10 @@ export class InMemoryDataServiceRoundElim  {
       ,matchLoserScores:0
       ,matchBalanceScores:1
 
+      ,maxMatchesPerMeeting:1
+      ,isAllMatches:true
+      ,playersPerTeam: 2
+  
       ,pointsNeededToWin:9
       ,pointsGoldenGoalTieBreakWin:2
       ,pointsGoldenGoalTieBreakDefeat:1
@@ -45,7 +49,6 @@ export class InMemoryDataServiceRoundElim  {
       ,rounds:  InMemoryDataServiceRoundElim.prepareDefaultRounds(InMemoryDataServiceRoundElim.teams, 2)
 
       ,playoffs:[]
-      ,meetings:[]  
       ,eliminatoryLevels: []
       ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
       ,objectives:[]  

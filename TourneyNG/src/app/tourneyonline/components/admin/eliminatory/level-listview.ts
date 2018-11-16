@@ -435,22 +435,6 @@ export class LevelListView extends AbstractListView {
         return sortedClassification;
     }
 
-    private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
-            if (t1.points > t2.points) {
-                return 1;
-            }
-        
-            if (t1.points < t2.points) {
-                return -1;
-            }
-        
-            return 0;
-        });
-
-        return sortedClassification;
-    }
-
     /**
      * Prepares the list view of the desired levels in function of the user selected 
      * number of teams to pass the qualification phase

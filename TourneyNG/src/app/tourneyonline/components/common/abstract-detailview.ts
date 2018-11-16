@@ -9,6 +9,7 @@ import { PlayoffRule } from '../../domain/playoff-rule';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
+import { Match } from 'app/tourneyonline/domain/match';
 
 export abstract class AbstractDetailView extends AbstractView {
 
@@ -75,6 +76,18 @@ export abstract class AbstractDetailView extends AbstractView {
     }
 
     protected createMeeting(t1: Team, t2: Team, pc1: PlayoffRule, pc2: PlayoffRule, d: Direction): Meeting {
+        let matches = new Array<Match>();
+
+        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
+            let m: Match = {id:this.tourneyService.getSequenceNumber()
+                ,players1: []
+                ,players2: []
+                ,score1:0
+                ,score2:0
+            };
+            matches.push(m);
+        }
+
         let m : Meeting = {
             id: this.tourneyService.getSequenceNumber(),
             name: "",
@@ -89,7 +102,7 @@ export abstract class AbstractDetailView extends AbstractView {
             rule2: pc2,
             ruleName: "",
             direction: d,
-            matches: []
+            matches: matches
         };
 
         return m;

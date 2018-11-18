@@ -30,33 +30,19 @@
         <p-message *ngIf="isEmpty" severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
     </div>     
         
-    <p-table *ngIf="!isEmpty" [value]="classification" [responsive]="true">
-
-        <ng-template pTemplate="colgroup" let-columns>
-            <colgroup>
-                <col style="width: 10mm;">
-                <col style="width: auto;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-                <col style="width: 10mm;">
-            </colgroup>
-        </ng-template>
+    <p-table *ngIf="!isEmpty" [value]="classification">
 
         <ng-template pTemplate="header">
             <tr>
                 <th>N°</th>
                 <th>Squadra</th>
-                <th>Punti</th>
-                <th>Giocate</th>
-                <th>Vinte</th>
-                <th>Perse</th>
-                <th>Reti Fatte</th>
-                <th>Reti Subite</th>
-                <th>Diff. Reti</th>
+                <th>Pt.</th>
+                <th>G</th>
+                <th>V</th>
+                <th>P</th>
+                <th>N</th>
+                <th>Gf:Gs</th>
+                <th>D</th>
             </tr>
         </ng-template>
 
@@ -68,8 +54,8 @@
                 <td>{{rowData.played}}</td>
                 <td>{{rowData.won}}</td>
                 <td>{{rowData.lost}}</td>
-                <td>{{rowData.goalsDone}}</td>
-                <td>{{rowData.goalsConceded}}</td>
+                <td>{{rowData.balanced}}</td>
+                <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
                 <td>{{rowData.goalsDiff}}</td>
             </tr>
         </ng-template>

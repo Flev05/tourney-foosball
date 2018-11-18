@@ -26,8 +26,7 @@
 
 <p-tabView>
     <p-tabPanel header="Gironi">    
-        <p-table [responsive]="true" 
-            [value]="rounds"
+        <p-table [value]="rounds"
             selectionMode="single"
             [(selection)]="selectedRound" 
             (onRowSelect)="onRoundSelect($event)" >
@@ -56,8 +55,7 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containPlayoff()" header="Playoff">    
-        <p-table [responsive]="true" 
-            [value]="playoffs" 
+        <p-table [value]="playoffs" 
             selectionMode="single"
             [(selection)]="selectedPlayoff" 
             (onRowSelect)="onPlayoffSelect($event)" >

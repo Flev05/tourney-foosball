@@ -63,6 +63,7 @@ export abstract class AbstractView implements OnInit {
             played: 0,
             won: 0,
             lost: 0,
+            balanced: 0,
             penalty: 0,
             goalsDone: 0,
             goalsConceded: 0,

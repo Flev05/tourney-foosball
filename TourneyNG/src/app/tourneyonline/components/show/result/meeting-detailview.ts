@@ -121,6 +121,15 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
 
+        let index = 0;
+        for(let i=0; i<this.selectedRound.meetings.length; i++) {
+            if(this.selectedRound.meetings[i].id == this.selectedMeeting.id) {
+                index = i;
+                break;
+            }
+        }
+        this.selectedRound.meetings[index] = this.selectedMeeting;
+
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 

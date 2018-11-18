@@ -23,7 +23,7 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
 
-    <p-table [responsive]="true" [value]="meetings"
+    <p-table [value]="meetings"
         selectionMode="single" 
         [(selection)]="selectedMeeting" 
         (onRowSelect)="onRowSelect($event)" >

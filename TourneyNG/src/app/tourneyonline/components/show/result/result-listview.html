@@ -25,8 +25,7 @@
 
 <p-tabView>
     <p-tabPanel header="Gironi">    
-        <p-table [responsive]="true" 
-            [value]="rounds"
+        <p-table [value]="rounds"
             selectionMode="single"
             [(selection)]="selectedRound" 
             (onRowSelect)="onRoundSelect($event)" >

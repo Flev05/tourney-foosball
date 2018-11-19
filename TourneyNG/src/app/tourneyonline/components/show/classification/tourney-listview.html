@@ -6,6 +6,8 @@
 </div>
 
 <div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">      
     <p>
         Selezionare il torneo ed accedere alla corrispondente vista delle schede dei gironi e, se previsti, 
         playoff che compogono il torneo. 
@@ -13,9 +15,12 @@
     <p>
         Ciascuna scheda contiene i gironi o playoff per accedere alle corrispondenti classifiche.
     </p>
+    </p-accordionTab>
+</p-accordion>    
 </div>
 
-<p-table [value]="tourneys" 
+<p-table [responsive]="true"
+    [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
     (onRowSelect)="onRowSelect($event)"  >

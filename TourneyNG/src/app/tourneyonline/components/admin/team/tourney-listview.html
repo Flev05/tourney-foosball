@@ -6,12 +6,18 @@
 </div>
 
 <div class="content-section documentation">
-    <p>Selezionare il torneo da cui accedere alla corrispondente vista elenco delle squadre che lo compongono. 
-        Una squadra è composta da un numero preciso di giocatori tutti già definiti e censiti nella corrispondente anagrafe dei giocatori.
-    </p>
+<p-accordion>
+    <p-accordionTab header="Introduzione">              
+        <p>
+            Selezionare il torneo da cui accedere alla corrispondente vista elenco delle squadre che lo compongono. 
+            Una squadra è composta da un numero preciso di giocatori tutti già definiti e censiti nella corrispondente anagrafe dei giocatori.
+        </p>
+    </p-accordionTab>
+</p-accordion>    
 </div>
 
-<p-table [columns]="cols" [value]="tourneys" 
+<p-table [columns]="cols" 
+    [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
     (onRowSelect)="onRowSelect($event)"  >

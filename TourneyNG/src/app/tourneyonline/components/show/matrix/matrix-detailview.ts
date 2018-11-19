@@ -194,10 +194,10 @@ export class MatrixDetailView extends AbstractDetailView {
     private updateMeeting(c: Cell): any {
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == c.team1Id) {
-                m.score1 = c.points.value;
+                m.points1 = c.points.value;
             }
             if(m.team2.id == c.team2Id) {
-                m.score2 = c.points.value;
+                m.points2 = c.points.value;
             }
         }
     }

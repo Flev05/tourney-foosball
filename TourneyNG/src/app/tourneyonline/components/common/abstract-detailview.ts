@@ -6,7 +6,7 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { PlayoffRule } from '../../domain/playoff-rule';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Match } from 'app/tourneyonline/domain/match';
@@ -96,12 +96,13 @@ export abstract class AbstractDetailView extends AbstractView {
             country: this.selectedTourney.country,
             team1: t1,
             team2: t2,
-            score1: 0,
-            score2: 0,
+            points1: 0,
+            points2: 0,
             rule1: pc1,
             rule2: pc2,
             ruleName: "",
             direction: d,
+            status: MeetingStatus.ToPlay,
             matches: matches
         };
 

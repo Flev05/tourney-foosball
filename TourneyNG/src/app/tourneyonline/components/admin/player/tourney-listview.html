@@ -1,15 +1,20 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Giocatori</span>
-        <span>Vista elenco dei tornei dai quali si accede ai giocatori</span>
+        <span>Vista elenco tornei per accedere ai giocatori</span>
     </div>
 </div>
 
 <div class="content-section documentation">
-    <p>Selezionare il torneo, per accedere alla corrispondente vista elenco dei
-        giocatori che compongono il torneo. 
-        I giocatori sono tutti quelli del torneo e non quelli intesi per girone.
-    </p>
+<p-accordion>
+    <p-accordionTab header="Introduzione">                        
+        <p>
+            Selezionare il torneo, per accedere alla corrispondente vista elenco dei
+            giocatori che compongono il torneo. 
+            I giocatori sono tutti quelli del torneo e non quelli intesi per girone.
+        </p>
+    </p-accordionTab>
+</p-accordion>    
 </div>
 
 <p-table [value]="tourneys" 

@@ -20,12 +20,14 @@ import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighli
 import {ClassificationRoutingModule} from './classification-routing.module';
 import {ClassificationTourneyListView} from './tourney-listview';
 import {ClassificationListView} from './classification-listview';
+import {AccordionModule} from 'primeng/accordion';
 
 @NgModule({
-	imports: [
+        imports: [
         CommonModule
         ,FormsModule
         ,ReactiveFormsModule
+        ,AccordionModule
         ,GrowlModule
         ,PanelModule
         ,DropdownModule
@@ -43,8 +45,8 @@ import {ClassificationListView} from './classification-listview';
         ,MessageModule
 	],
 	declarations: [
-        ClassificationTourneyListView,
-        TabListView,
+                ClassificationTourneyListView,
+                TabListView,
 		ClassificationListView
 	]
 })

@@ -6,6 +6,9 @@
 </div>
 
 <div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">              
+            
     <p>
         Vista elenco di tutti i gironi che compongono il torneo.
     </p>
@@ -13,12 +16,12 @@
         Qui potete aggiungere un nuovo girone con il bottone "Aggiungi Girone" e modificare uno esistente
         selezionando la riga di interesse.
     </p>
+    </p-accordionTab>
+</p-accordion>    
 </div>
 
 <div class="content-section implementation">    
-    <h3>
-        Torneo: {{selectedTourney.tourneyName}}
-    </h3> 
+    <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>

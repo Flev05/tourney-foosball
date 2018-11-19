@@ -7,7 +7,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { PhaseType, EliminatoryMode, TeamSortType, Direction } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, TeamSortType, Direction, MeetingStatus } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -328,9 +328,10 @@ export class LevelListView extends AbstractListView {
             team2: {},
             address: this.selectedTourney.address,
             country: this.selectedTourney.country,
-            score1: 0,
-            score2: 0,
-            direction: Direction.OneWay            
+            points1: 0,
+            points2: 0,
+            direction: Direction.OneWay,
+            status: MeetingStatus.ToPlay
         };
     }
 

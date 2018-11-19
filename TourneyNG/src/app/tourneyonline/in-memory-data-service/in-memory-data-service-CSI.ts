@@ -1,4 +1,4 @@
-import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, RoundType, Direction } from "../domain/enumerations";
+import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, RoundType, Direction, MeetingStatus } from "../domain/enumerations";
 
 export class InMemoryDataServiceCSI  {
 
@@ -154,6 +154,7 @@ export class InMemoryDataServiceCSI  {
         ]
         ,meetings:[{
               id: 1,
+              status: MeetingStatus.ToPlay,
               name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
               datetime: new Date(2018, 11, 24, 10, 33),
               address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
@@ -167,6 +168,7 @@ export class InMemoryDataServiceCSI  {
           }
           ,{
               id: 2,
+              status: MeetingStatus.ToPlay,
               name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
               datetime: new Date(2018, 11, 30, 15, 0),
               address: "VIA ZANZOTTERA 32 20153 MILANO MI",
@@ -190,6 +192,7 @@ export class InMemoryDataServiceCSI  {
         ,meetings:[{
             id: 1,
             name:  "SOLAROSPORT - AURORA PREGNANA BLU",
+            status: MeetingStatus.ToPlay,
             datetime: new Date(2018, 11, 30, 15, 0),
             address: "VIA S.PAOLO, 6 20020 SOLARO MI",
             country: {id:1, city: "SOLARO"},
@@ -203,6 +206,7 @@ export class InMemoryDataServiceCSI  {
         ,{
             id: 2,
             name:  "AURORA PREGNANA BLU - SOLAROSPORT",
+            status: MeetingStatus.ToPlay,
             datetime: new Date(2018, 11, 30, 15, 0),
             address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
             country: {id:1, city: "PREGNANA MILANESE"},
@@ -226,6 +230,7 @@ export class InMemoryDataServiceCSI  {
           ,meetings:[{
                   id: 1,
                   name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
+                  status: MeetingStatus.ToPlay,
                   datetime: new Date(2018, 11, 30, 15, 0),
                   address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
                   country: {id:1, city: "ZIBIDO SAN GIACOMO"},
@@ -241,6 +246,7 @@ export class InMemoryDataServiceCSI  {
             ,{
                 id: 2,
                 name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
+                status: MeetingStatus.ToPlay,
                 datetime: new Date(2018, 11, 30, 15, 0),
                 address: "VIA ZANZOTTERA 32 20153 MILANO MI",
                 country: {id:1, city: "ORIGGIO"},
@@ -270,6 +276,7 @@ export class InMemoryDataServiceCSI  {
         ,meetings:[{
               id: 1,
               name:  "SOLAROSPORT - AURORA PREGNANA BLU",
+              status: MeetingStatus.ToPlay,
               datetime: new Date(2018, 11, 30, 15, 0),
               address: "VIA S.PAOLO, 6 - 20020 SOLARO MI",
               country: {id:1, city: "SOLARO"},
@@ -285,6 +292,7 @@ export class InMemoryDataServiceCSI  {
           ,{
               id: 2,
               name:  "AURORA PREGNANA BLU - SOLAROSPORT",
+              status: MeetingStatus.ToPlay,
               datetime: new Date(2018, 11, 30, 15, 0),
               address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
               country: {id:1, city: "PREGNANA MILANESE"},

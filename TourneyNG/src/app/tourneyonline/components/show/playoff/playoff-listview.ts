@@ -65,8 +65,8 @@ export class PlayoffListView extends CalendarDetailView {
                 this.rows[row].date = m.datetime;    
                 this.rows[row].address = m.address;    
 
-                this.rows[row].score1 = m.score1;
-                this.rows[row].score2 = m.score2;
+                this.rows[row].score1 = m.points1;
+                this.rows[row].score2 = m.points2;
                 
                 row++;
             }

@@ -6,6 +6,8 @@
 </div>
 
 <div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Introduzione">      
     <p>
         La vista contiene fino a 2 schede: una per i gironi all'italiana e una per i playoff se previsti.
     </p>
@@ -13,6 +15,8 @@
         Ciascuna scheda a sua volta contiene la lista dei gironi che caratterizzano la fase.
         Selezionate il girone di vostro interesse per accedere alla classifica delle squadre del girone.
     </p>
+    </p-accordionTab>
+</p-accordion>    
 </div>
 
 <div class="content-section implementation">    
@@ -26,7 +30,7 @@
 
 <p-tabView>
     <p-tabPanel header="Gironi">    
-        <p-table [value]="rounds"
+        <p-table [value]="rounds" [responsive]="true"
             selectionMode="single"
             [(selection)]="selectedRound" 
             (onRowSelect)="onRoundSelect($event)" >
@@ -55,7 +59,7 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containPlayoff()" header="Playoff">    
-        <p-table [value]="playoffs" 
+        <p-table [value]="playoffs" [responsive]="true"
             selectionMode="single"
             [(selection)]="selectedPlayoff" 
             (onRowSelect)="onPlayoffSelect($event)" >

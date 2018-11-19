@@ -6,7 +6,8 @@
 </div>
     
 <div class="content-section documentation">
-
+<p-accordion>
+    <p-accordionTab header="Istruzioni">   
     <p> 
         Vista elenco degli incontri di playoff in termini di regole di passaggio di turno
         dai gironi all'italiana ai gironi di playoff.
@@ -19,12 +20,15 @@
         Attenzione! 
         Se la vista è vuota, significa che il girone contiene meno di 2 squadre.
     </p>
+    </p-accordionTab>
+</p-accordion>    
 </div>
 
 <div class="content-section implementation">    
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
-
+    <h4><span>Incontro: "{{selectedMeeting.name}}"</span></h4>
+  
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     
     <p-table

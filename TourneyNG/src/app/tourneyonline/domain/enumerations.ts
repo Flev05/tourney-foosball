@@ -25,3 +25,7 @@ export enum TeamSortType {
 export enum Direction {
     OneWay='A', RoundTrip="R"
 }
+
+export enum MeetingStatus {
+    ToPlay='P', InProgress='I', Terminated='T'
+}

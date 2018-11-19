@@ -6,22 +6,77 @@ import { Round } from '../../../domain/round';
 import { Classification } from '../../../domain/classification';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Match } from 'app/tourneyonline/domain/match';
+import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './classification-listview.html',
-    styles: [`        
-        .ui-table table {
-            border-collapse: collapse;
-            width: auto;
-            table-layout: fixed;
+    styles: [`
+        /* Column Priorities */
+        @media only all {
+            th.ui-p-6,
+            td.ui-p-6,
+            th.ui-p-5,
+            td.ui-p-5,
+            th.ui-p-4,
+            td.ui-p-4,
+            th.ui-p-3,
+            td.ui-p-3,
+            th.ui-p-2,
+            td.ui-p-2,
+            th.ui-p-1,
+            td.ui-p-1 {
+                display: none;
+            }
         }
-        .ui-table .ui-table-thead > tr > th, .ui-table .ui-table-tbody > tr > td, .ui-table .ui-table-tfoot > tr > td {
-            padding: .25em .5em;
-            text-align: center;
+        
+        /* Show priority 1 at 320px (20em x 16px) */
+        @media screen and (min-width: 20em) {
+            th.ui-p-1,
+            td.ui-p-1 {
+                display: table-cell;
+            }
         }
-  `]
+        
+        /* Show priority 2 at 480px (30em x 16px) */
+        @media screen and (min-width: 30em) {
+            th.ui-p-2,
+            td.ui-p-2 {
+                display: table-cell;
+            }
+        }
+        
+        /* Show priority 3 at 640px (40em x 16px) */
+        @media screen and (min-width: 40em) {
+            th.ui-p-3,
+            td.ui-p-3 {
+                display: table-cell;
+            }
+        }
+        
+        /* Show priority 4 at 800px (50em x 16px) */
+        @media screen and (min-width: 50em) {
+            th.ui-p-4,
+            td.ui-p-4 {
+                display: table-cell;
+            }
+        }
+        
+        /* Show priority 5 at 960px (60em x 16px) */
+        @media screen and (min-width: 60em) {
+            th.ui-p-5,
+            td.ui-p-5 {
+                display: table-cell;
+            }
+        }
+        
+        /* Show priority 6 at 1,120px (70em x 16px) */
+        @media screen and (min-width: 70em) {
+            th.ui-p-6,
+            td.ui-p-6 {
+                display: table-cell;
+            }
+        }
+    `]
 })
 export class ClassificationListView extends AbstractListView {
 
@@ -47,10 +102,13 @@ export class ClassificationListView extends AbstractListView {
         }
         this.isEmpty = false;
 
-
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of this.selectedRound.meetings) {
+            if(m.status == MeetingStatus.ToPlay) {
+                continue;
+            }
+
             let t1 = m.team1;
 
             let key1 = t1.teamName;
@@ -58,8 +116,7 @@ export class ClassificationListView extends AbstractListView {
                 let c = this.newClassification(t1, 0);
                 classificationMap.set(key1, c);
             }
-            let c1 = classificationMap.get(key1);
-            this.updateClassification(c1, m.score1, m.score2, m.matches);
+            let c1 = classificationMap.get(key1);            
  
             let t2 = m.team2;
             let key2 = t2.teamName;
@@ -68,7 +125,34 @@ export class ClassificationListView extends AbstractListView {
                 classificationMap.set(key2, c2);
             }
             let c2 = classificationMap.get(key2);
-            this.updateClassification(c2, m.score2, m.score1, m.matches);
+
+            c1.played++;
+            c2.played++;
+
+            c1.points += m.points1;
+            c2.points += m.points2;
+
+            if (m.points1 > m.points2) {
+                c1.won++;
+                c2.lost++;
+            }
+            if (m.points2 > m.points1) {
+                c2.won++;
+                c1.lost++;
+            }
+            if (m.points1 == m.points2) {
+                c1.balanced++;
+                c2.balanced++;
+            }
+            for (let ma of m.matches) {
+                c1.goalsDone += ma.score1;
+                c1.goalsConceded += ma.score2;
+
+                c2.goalsDone += ma.score2;
+                c2.goalsConceded += ma.score1;
+            }
+            c1.goalsDiff = c1.goalsDone - c1.goalsConceded;        
+            c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        
         }
 
         this.classification = [];
@@ -117,20 +201,5 @@ export class ClassificationListView extends AbstractListView {
 
         return sortedClassification;
     }
-
-    private updateClassification(c: Classification, score1: number, score2: number, matches: Match[]) {
-        c.points += score1;
-        if (score1 > score2) {
-            c.won++;
-        }
-        if (score1 == score2) {
-            c.balanced++;
-        }
-        c.played++;
-        for (let ma of matches) {
-            c.goalsDone += ma.score1;
-            c.goalsConceded += ma.score2;
-        }
-        c.goalsDiff = c.goalsDone - c.goalsConceded;
-    }
+ 
 }

@@ -48,7 +48,7 @@ export class RuleDetailView extends AbstractDetailView {
         this.rounds = this.tourneyService.roundsCombobox;
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
+        this.playoffConfigs = this.selectedPlayoff.playoffRules;
 
         this.selectedIndex = this.tourneyService.selectedIndex + 1;
 
@@ -119,7 +119,7 @@ export class RuleDetailView extends AbstractDetailView {
                 }
             }
         }
-        this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
+        this.selectedPlayoff.playoffRules = this.playoffConfigs;
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
@@ -132,7 +132,7 @@ export class RuleDetailView extends AbstractDetailView {
         if(confirm(popup + this.selectedIndex + "?")) {
 
             let rm: PlayoffRule[] = this.playoffConfigs.splice(this.selectedIndex-1, 1);
-            this.selectedPlayoff.playoffConfigs = this.playoffConfigs;
+            this.selectedPlayoff.playoffRules = this.playoffConfigs;
 
             let tmpMeetings: Array<Meeting> = new Array<Meeting>();
             for( let m of this.selectedPlayoff.round.meetings) {

@@ -1,13 +1,14 @@
 import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, RoundType, Direction, MeetingStatus } from "../domain/enumerations";
+import { Tourney } from "../domain/tourney";
 
 export class InMemoryDataServiceCSI  {
 
-  static tourney = {id: 1
+  static tourney: Tourney = {id: 1
     , tourneyName: 'CSI Open A 2017'
     ,datetime: new Date(2018, 11, 24, 10, 33)
     ,address: 'Via Roma, 110'
     ,country: {id:1, city: "Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
-    ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
+    ,discipline: {name:"Calcio Balilla", code:"cb"}
 
     ,tourneyType: TourneyType.Score
 
@@ -161,8 +162,8 @@ export class InMemoryDataServiceCSI  {
               country: {id:1, city: "ZIBIDO SAN GIACOMO"},
               team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
               team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
-              ,score1: 0
-              ,score2: 0
+              ,points1: 0
+              ,points2: 0
               ,direction: Direction.RoundTrip
               ,matches: []
           }
@@ -175,8 +176,8 @@ export class InMemoryDataServiceCSI  {
               country: {id:1, city: "ORIGGIO"},
               team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
               team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
-              ,score1: 0
-              ,score2: 0
+              ,points1: 0
+              ,points2: 0
               ,direction: Direction.RoundTrip
               ,matches: []
           }
@@ -198,8 +199,8 @@ export class InMemoryDataServiceCSI  {
             country: {id:1, city: "SOLARO"},
             team1: {id:4, teamName: "SOLAROSPORT"},
             team2: {id:1, teamName: "AURORA PREGNANA BLU"}
-            ,score1: 0
-            ,score2: 0
+            ,points1: 0
+            ,points2: 0
             ,direction: Direction.RoundTrip
             ,matches: []
     }
@@ -212,21 +213,18 @@ export class InMemoryDataServiceCSI  {
             country: {id:1, city: "PREGNANA MILANESE"},
             team1: {id:1, teamName: "AURORA PREGNANA BLU"},
             team2: {id:4, teamName: "SOLAROSPORT"}
-            ,score1: 0
-            ,score2: 0
+            ,points1: 0
+            ,points2: 0
             ,direction: Direction.RoundTrip
             ,matches: []
         }]
         ,classification:[]
       }
     ]
-    ,playoffs:[
+    ,playoffs: [
       {id:1, round:{
           id:1, name: "Playoff Girone A", type: RoundType.P
-          ,teams:[
-            {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
-            ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
-          ]
+          ,teams:[]
           ,meetings:[{
                   id: 1,
                   name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
@@ -234,14 +232,14 @@ export class InMemoryDataServiceCSI  {
                   datetime: new Date(2018, 11, 30, 15, 0),
                   address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
                   country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-                  team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
-                  team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
+                  team1: null,
+                  team2: null,
                   direction: Direction.OneWay
                   ,matches: []
-                  ,playoffConfig1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-                  ,playoffConfig2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-                  ,score1: 0
-                  ,score2: 0
+                  ,rule1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
+                  ,rule2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+                  ,points1: 0
+                  ,points2: 0
                 }
             ,{
                 id: 2,
@@ -250,29 +248,26 @@ export class InMemoryDataServiceCSI  {
                 datetime: new Date(2018, 11, 30, 15, 0),
                 address: "VIA ZANZOTTERA 32 20153 MILANO MI",
                 country: {id:1, city: "ORIGGIO"},
-                team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
-                team2: {id:6, teamName: "ORATORIO ZIBIDO B"},
+                team1: null,
+                team2: null,
                 direction: Direction.RoundTrip
                 ,matches: []
-                ,playoffConfig2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-                ,playoffConfig1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-                ,score1: 0
-                ,score2: 0
+                ,rule2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
+                ,rule1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+                ,points1: 0
+                ,points2: 0
               }
           ]
           ,classification:[]
         }
-        ,playoffConfigs:[
+        ,playoffRules:[
              {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
             ,{id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
           ]
       }
       ,{id:2, round:{
         id:2, name: "Playoff Girone B", type: RoundType.P
-        ,teams:[
-          {id:6,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 - 20020 SOLARO MI"}
-          ,{id:3,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
-        ]
+        ,teams:[]
         ,meetings:[{
               id: 1,
               name:  "SOLAROSPORT - AURORA PREGNANA BLU",
@@ -280,14 +275,14 @@ export class InMemoryDataServiceCSI  {
               datetime: new Date(2018, 11, 30, 15, 0),
               address: "VIA S.PAOLO, 6 - 20020 SOLARO MI",
               country: {id:1, city: "SOLARO"},
-              team1: {id:6, teamName: "SOLAROSPORT"},
-              team2: {id:3, teamName: "AURORA PREGNANA BLU"},
+              team1: null,
+              team2: null,
               direction: Direction.OneWay
               ,matches: []
-              ,playoffConfig1: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
-              playoffConfig2: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
-              ,score1: 0
-              ,score2: 0
+              ,rule1: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
+              ,rule2: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
+              ,points1: 0
+              ,points2: 0
           }
           ,{
               id: 2,
@@ -296,26 +291,25 @@ export class InMemoryDataServiceCSI  {
               datetime: new Date(2018, 11, 30, 15, 0),
               address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
               country: {id:1, city: "PREGNANA MILANESE"},
-              team1: {id:3, teamName: "AURORA PREGNANA BLU"},
-              team2: {id:6, teamName: "SOLAROSPORT"},
+              team1: null,
+              team2: null,
               direction: Direction.RoundTrip,
               matches: []
-              ,playoffConfig2: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }},
-              playoffConfig1: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
-              ,score1: 0
-              ,score2: 0
+              ,rule2: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
+              ,rule1: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
+              ,points1: 0
+              ,points2: 0
           }
         ]
         ,classification:[]
       }
-    ,playoffConfigs:[
+    ,playoffRules:[
          {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
         ,{id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
       ]
     }
     ]
     ,eliminatoryLevels: []
-    ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
     ,objectives:[]
   }
 }

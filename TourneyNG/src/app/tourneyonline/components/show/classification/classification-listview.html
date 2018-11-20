@@ -7,7 +7,7 @@
 
 <div class="content-section documentation">
 <p-accordion>
-    <p-accordionTab header="Introduzione">      
+    <p-accordionTab header="Istruzioni">      
     <p>Vista di dettaglio classifica del girone selezionato</p>
     
     <p>
@@ -19,7 +19,6 @@
 
 <div class="content-section implementation">
     <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
-    <h4>Girone: {{selectedRound.name}}</h4> 
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -29,7 +28,7 @@
         <p-message *ngIf="isEmpty" severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
     </div>     
         
-    <p-table *ngIf="!isEmpty" [value]="classification" [responsive]="true"> 
+    <p-table *ngIf="!isEmpty" [value]="rows" [responsive]="true"> 
 
         <ng-template pTemplate="header">
             <tr>
@@ -46,6 +45,12 @@
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                <td colspan="5">
+                    <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.team.teamName}}</span>
+                </td>
+            </tr>            
+        
             <tr>
                 <td>{{rowIndex + 1}}</td>
                 <td>{{rowData.team.teamName}}</td>

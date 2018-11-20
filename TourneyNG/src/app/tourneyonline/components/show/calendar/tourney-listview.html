@@ -10,9 +10,8 @@
     <p-accordionTab header="Istruzioni">
         <p>
             Vista elenco dei tornei dai quali si accede al corrispondente calendario dei gironi e playoff.
-            La vista prevede delle maschere dalle quali è possibile impostare criteri di ricerca del torneo 
-            di interesse. Una volta selezionato il torneo, si accede alla corrispondente vista di dettaglio del
-            calendario, girone per girone, in cui sono visualizzati in forma tabellare tutti gli incontri che costituiscono il torneo.
+            Selezionare il torneo ed accedete alla corrispondente vista elenco del calendario del torneo, 
+            girone per girone, in cui sono visualizzati in forma tabellare tutti gli incontri che costituiscono il torneo.
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -21,9 +20,7 @@
 <p-table [columns]="cols" [value]="tourneys" 
     selectionMode="single" 
     [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true" 
-    [rows]="15">
+    (onRowSelect)="onRowSelect($event)" >
 
     <ng-template pTemplate="colgroup" let-columns>
         <colgroup>

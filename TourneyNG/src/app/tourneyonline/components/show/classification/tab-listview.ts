@@ -7,6 +7,8 @@ import { Playoff } from '../../../domain/playoff';
 
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './tab-listview.html',
@@ -80,11 +82,9 @@ import { TourneyService } from '../../../service/tourneyservice';
 })
 export class TabListView extends AbstractListView {
     static tabDvRedirect: string = "classification/lv/classification";
-    selectedPlayoff: Playoff;
-    selectedRound: Round;
 
-    rounds: Round[];
-    playoffs: Playoff[];
+    roundsRows: any[] = [];
+    playoffRows: any[] = [];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -98,28 +98,66 @@ export class TabListView extends AbstractListView {
         super.ngOnInit();
         this.selectedTourney = this.tourneyService.selectedTourney;
 
-        this.rounds = this.selectedTourney.rounds;
-        this.playoffs = this.selectedTourney.playoffs;
+        let rounds = this.selectedTourney.rounds;
+        this.roundsRows = this.prepareRoundClassification(rounds);
+
+        let playoffs = this.selectedTourney.playoffs;
+        this.playoffRows = this.preparePlayoffClassification(playoffs, rounds);
     }
 
-    onRoundSelect(event) {
-        console.log(event.data);
+    private prepareRoundClassification(rounds: Round[]): any[] {
 
-        this.tourneyService.selectedRound = this.selectedRound;
+        let row : number = 0;
+        let rows: any[] = [];
 
-        this.gotoClassificationListView();
+        var roundMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            
+            for (let c of round.classification) {
+                
+                rows.push(c);
+                rows[row].roundName = round.name;    
+                rows[row].teamName = c.team.teamName;    
+                rows[row].points = c.points;    
+                rows[row].played = c.played;    
+                rows[row].won = c.won;    
+                rows[row].lost = c.lost;    
+                rows[row].balanced = c.balanced;    
+                rows[row].goalsDone = c.goalsDone;    
+                rows[row].goalsConceded = c.goalsConceded;    
+                rows[row].goalsDiff = c.goalsDiff;    
+
+                let len = round.meetings.length;
+
+                let currentKey = this.makeKey(round, c);  
+                if(!roundMap.has(currentKey)) {
+                    roundMap.set(currentKey, c);
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+
+        return rows;
     }
 
-    private gotoClassificationListView() {
-        this.router.navigate([TabListView.tabDvRedirect]);
+    private preparePlayoffClassification(playoffs: Playoff[], rounds: Round[]): any[] {
+        let rows: any[] = [];
+
+        let playoffRounds: Round[] = [];
+        for(let p of playoffs) {
+            playoffRounds.push(p.round);
+        }
+
+        return rows;
     }
 
-    onPlayoffSelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedRound = this.selectedPlayoff.round;
-
-        this.gotoClassificationListView();
+    private makeKey( round : Round, c : Classification) : string {
+        let key = round.name + " - " + c.team.teamName;
+        return key;
     }
 
     goBack(): void {

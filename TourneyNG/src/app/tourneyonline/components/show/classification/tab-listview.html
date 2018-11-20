@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Classifica gironi e playoff</span>
-        <span>Vista delle schede classifiche per gironi e playoff</span>
+        <span>Vista delle schede classifiche</span>
     </div>
 </div>
 
@@ -9,11 +9,20 @@
 <p-accordion>
     <p-accordionTab header="Introduzione">      
     <p>
-        La vista contiene fino a 2 schede: una per i gironi all'italiana e una per i playoff se previsti.
+        La vista contiene fino da una a tre schede:
+    </p>
+    <ul>
+        <li>Gironi all'italiana</li>
+        <li>Playoff</li>
+        <li>Eliminazioni dirette</li>
+    </ul>
+    <p>
+        La scheda dei gironi e playoff visualizza la calssifica di tutti i gironi.
+        Per le eliminazioni dirette invece, la scheda mostra una lista dei livelli di eliminazione,
+        da quello più alto: 16°, 8° di finale, alla finalissima: 1° e 2° posto e finalina: 3° e 4° posto.
     </p>
     <p>
-        Ciascuna scheda a sua volta contiene la lista dei gironi che caratterizzano la fase.
-        Selezionate il girone di vostro interesse per accedere alla classifica delle squadre del girone.
+        Se la vista è vuota, significa che non è stata giocata ancora alcuna partita.
     </p>
     </p-accordionTab>
 </p-accordion>    
@@ -24,66 +33,115 @@
     Torneo: {{selectedTourney.tourneyName}}
 </h3> 
 
+<div style="margin-top:30px">
+    <p-message *ngIf="isEmpty" severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
+</div>     
+    
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
 <p-tabView>
     <p-tabPanel header="Gironi">    
-        <p-table [value]="rounds" [responsive]="true"
-            selectionMode="single"
-            [(selection)]="selectedRound" 
-            (onRowSelect)="onRoundSelect($event)" >
-    
-            <ng-template pTemplate="colgroup">
+        <p-table [value]="roundsRows"> 
+            <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                     <col style="width: 10mm;">
                     <col style="width: auto;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 15mm;">
+                    <col style="width: 10mm;">
                 </colgroup>
-            </ng-template>
-
+            </ng-template>            
+        
             <ng-template pTemplate="header">
                 <tr>
                     <th>N°</th>
-                    <th>Girone</th>
+                    <th>Squadra</th>
+                    <th>Pt.</th>
+                    <th>G</th>
+                    <th>V</th>
+                    <th>P</th>
+                    <th>N</th>
+                    <th>Gf:Gs</th>
+                    <th>D</th>
                 </tr>
             </ng-template>
-
+    
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr  [pSelectableRow]="rowData">
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                    <td colspan="5">
+                        <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.team.teamName}}</span>
+                    </td>
+                </tr>            
+            
+                <tr>
                     <td>{{rowIndex + 1}}</td>
-                    <td>{{rowData.name}}</td>
+                    <td>{{rowData.team.teamName}}</td>
+                    <td>{{rowData.points}}</td>
+                    <td>{{rowData.played}}</td>
+                    <td>{{rowData.won}}</td>
+                    <td>{{rowData.lost}}</td>
+                    <td>{{rowData.balanced}}</td>
+                    <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
+                    <td>{{rowData.goalsDiff}}</td>
                 </tr>
-            </ng-template>        
+            </ng-template>
         </p-table>
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containPlayoff()" header="Playoff">    
-        <p-table [value]="playoffs" [responsive]="true"
-            selectionMode="single"
-            [(selection)]="selectedPlayoff" 
-            (onRowSelect)="onPlayoffSelect($event)" >
-    
-            <ng-template pTemplate="colgroup">
+        <p-table [value]="playoffRows"> 
+            <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
                     <col style="width: 10mm;">
                     <col style="width: auto;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 10mm;">
+                    <col style="width: 15mm;">
+                    <col style="width: 10mm;">
                 </colgroup>
-            </ng-template>
-
+            </ng-template>            
             <ng-template pTemplate="header">
                 <tr>
                     <th>N°</th>
-                    <th>Girone playoff</th>
+                    <th>Squadra</th>
+                    <th>Pt.</th>
+                    <th>G</th>
+                    <th>V</th>
+                    <th>P</th>
+                    <th>N</th>
+                    <th>Gf:Gs</th>
+                    <th>D</th>
                 </tr>
             </ng-template>
-
+    
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr  [pSelectableRow]="rowData">
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                    <td colspan="5">
+                        <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.team.teamName}}</span>
+                    </td>
+                </tr>            
+            
+                <tr>
                     <td>{{rowIndex + 1}}</td>
-                    <td>{{rowData.round.name}}</td>
+                    <td>{{rowData.team.teamName}}</td>
+                    <td>{{rowData.points}}</td>
+                    <td>{{rowData.played}}</td>
+                    <td>{{rowData.won}}</td>
+                    <td>{{rowData.lost}}</td>
+                    <td>{{rowData.balanced}}</td>
+                    <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
+                    <td>{{rowData.goalsDiff}}</td>
                 </tr>
-            </ng-template>        
+            </ng-template>
         </p-table>
     </p-tabPanel>
 </p-tabView>

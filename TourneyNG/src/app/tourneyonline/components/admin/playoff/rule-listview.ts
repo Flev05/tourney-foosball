@@ -7,7 +7,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from '../../../domain/playoff-rule';
-import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -44,7 +43,7 @@ export class RuleListView extends AbstractListView {
         this.tourneyService.prepareEliminatoriesComboBoxes();
         
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        this.playoffConfigs = this.selectedPlayoff.playoffConfigs;
+        this.playoffConfigs = this.selectedPlayoff.playoffRules;
 
         this.atLeast1Rule = this.playoffConfigs != null && this.playoffConfigs.length >= 0 ? true: false;
         this.atLeast2Rules = this.playoffConfigs != null && this.playoffConfigs.length >= 2 ? true: false;

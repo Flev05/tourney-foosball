@@ -56,7 +56,7 @@ export class PlayoffListView extends AbstractListView {
                 , meetings: []
                 , classification: []
               }
-            , playoffConfigs: null
+            , playoffRules: null
         };
     }
 

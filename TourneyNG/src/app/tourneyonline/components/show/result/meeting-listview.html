@@ -58,10 +58,10 @@
                 <td>{{rowIndex + 1}}</td>                
 
                 <td>
-                    {{rowData.team1.teamName}}
+                    {{rowData.team1==null ? "" : rowData.team1.teamName}}
                 </td>
                 <td>
-                    {{rowData.team2.teamName}}
+                    {{rowData.team2==null ? "" : rowData.team2.teamName}}
                 </td>
                 <td>
                     {{rowData.points1}}

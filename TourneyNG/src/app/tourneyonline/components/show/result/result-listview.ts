@@ -2,14 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Round } from '../../../domain/round';
-import { Playoff } from '../../../domain/playoff';
-import { Eliminatory } from '../../../domain/eliminatory';
-
-import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Round } from 'app/tourneyonline/domain/round';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { AbstractListView } from '../../common/abstract-listview';
 
 @Component({
     templateUrl: './result-listview.html'
@@ -40,9 +38,40 @@ export class ResultListView extends AbstractListView {
         super.ngOnInit();
         
         this.rounds = this.selectedTourney.rounds;
-        this.playoffs = this.selectedTourney.playoffs;
+
+        this.playoffs = this.comletePlayoff(this.selectedTourney.playoffs);
 
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+    }
+
+    comletePlayoff(playoffs: Playoff[]): Playoff[] {
+        let pls : Playoff[] = [];
+        for(let p of playoffs) {
+            if(p.playoffRules==undefined) {
+                continue;
+            }
+
+            p.round.teams = [];
+            
+            for(let rule of p.playoffRules) {
+                let pos = rule.fromRound.position.value;
+                let label = rule.fromRound.round.label;
+                let round: Round = null;
+                for(let r of this.selectedTourney.rounds) {
+                    if(r.name == label) {
+                        round = r;
+                        break;
+                    }
+                }
+                if(round != null && round.classification.length > 0) {
+                    let c = round.classification[pos];
+                    let team = c.team;
+                    p.round.teams.push(team);
+                    pls.push(p);
+                }
+            }
+        }
+        return pls;
     }
 
     onRoundSelect(event) {

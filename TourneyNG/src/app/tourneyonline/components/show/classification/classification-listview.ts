@@ -7,6 +7,7 @@ import { Classification } from '../../../domain/classification';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 @Component({
     templateUrl: './classification-listview.html',
@@ -80,9 +81,8 @@ import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 })
 export class ClassificationListView extends AbstractListView {
 
-    selectedRound: Round;
-    classification: Classification[] = [];
-    isEmpty: boolean;
+    
+    roundsRows: any[] = [];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -95,16 +95,57 @@ export class ClassificationListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedRound = this.tourneyService.selectedRound;
-        if(this.selectedRound.teams.length==0) {
-            this.isEmpty = true;
-            return;
-        }
-        this.isEmpty = false;
+        this.prepareRoundClassification(this.selectedTourney.rounds);
+    }
 
+    private prepareRoundClassification(rounds: Round[]) {
+
+        let row : number = 0;
+
+        var roundMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            
+            round.classification = this.createClassification(round);
+
+            for (let j = 0; j < round.classification.length; j++) {
+                
+                let c : Classification = round.classification[j];
+
+                let currentKey = this.makeKey(round, c);  
+                let len = round.meetings.length;
+                console.log(currentKey + " rowspan=" + len);       
+
+                this.roundsRows.push(c);
+                this.roundsRows[row].roundName = round.name;    
+                this.roundsRows[row].teamName = c.team.teamName;    
+                this.roundsRows[row].points = c.points;    
+                this.roundsRows[row].played = c.played;    
+                this.roundsRows[row].won = c.won;    
+                this.roundsRows[row].lost = c.lost;    
+                this.roundsRows[row].balanced = c.balanced;    
+                this.roundsRows[row].goalsDone = c.goalsDone;    
+                this.roundsRows[row].goalsConceded = c.goalsConceded;    
+                this.roundsRows[row].goalsDiff = c.goalsDiff;    
+                if(!roundMap.has(currentKey)) {
+                    roundMap.set(currentKey, c);
+                    this.roundsRows[row].rowspanSize = len;
+                } else {
+                    this.roundsRows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+    }
+
+    makeKey( round : Round, c : Classification) : string {
+        let key = round.name + " - " + c.team.teamName;
+        return key;
+    }
+    private createClassification(round: Round): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
-        for(let m of this.selectedRound.meetings) {
+        for(let m of round.meetings) {
             if(m.status == MeetingStatus.ToPlay) {
                 continue;
             }
@@ -155,14 +196,16 @@ export class ClassificationListView extends AbstractListView {
             c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        
         }
 
-        this.classification = [];
+        let classificationList: Classification[] = [];
         for( let c of classificationMap.values()) {
-            this.classification.push(c);            
+            classificationList.push(c);            
         }
 
-        this.classification = this.sortDesc(this.classification);
+        classificationList = this.sortDesc(classificationList);
 
-        this.selectedRound.classification = this.classification;
+        round.classification = classificationList;
+
+        return classificationList;
     }
 
     private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
@@ -200,6 +243,5 @@ export class ClassificationListView extends AbstractListView {
         });
 
         return sortedClassification;
-    }
- 
+    } 
 }

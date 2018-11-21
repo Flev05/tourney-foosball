@@ -186,8 +186,6 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.selectedRound.matrix = this.matrix;
 
-        this.selectedRound.classification = this.sortAsc(this.selectedRound.classification);
-
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
@@ -199,6 +197,7 @@ export class MatrixDetailView extends AbstractDetailView {
             if(m.team2.id == c.team2Id) {
                 m.points2 = c.points.value;
             }
+            this.tourneyService.sendMessage(m);
         }
     }
  
@@ -208,21 +207,5 @@ export class MatrixDetailView extends AbstractDetailView {
 
         msgerr = 'Modifica matrix fallita';
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
-    }
-    
-    private sortAsc(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        var sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
-            if (c1.points > c2.points) {
-                return -1;
-            }
-        
-            if (c1.points < c2.points) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        return sortedClassification;
     }
 }

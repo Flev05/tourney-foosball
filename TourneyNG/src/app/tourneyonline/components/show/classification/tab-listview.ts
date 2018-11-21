@@ -9,6 +9,8 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from '../../../service/tourneyservice';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './tab-listview.html',
@@ -85,13 +87,16 @@ export class TabListView extends AbstractListView {
 
     roundsRows: any[] = [];
     playoffRows: any[] = [];
+    subscription: Subscription;
 
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
-    ) {
+    ) 
+    {
         super(TabListView.tabDvRedirect, tourneyService, router, location);
+        this.subscription = this.tourneyService.getMessage().subscribe(n => this.process(n), e => this.onError(e));
     }
 
     ngOnInit() {
@@ -103,6 +108,19 @@ export class TabListView extends AbstractListView {
 
         let playoffs = this.selectedTourney.playoffs;
         this.playoffRows = this.preparePlayoffClassification(playoffs, rounds);
+    }
+
+    // unsubscribe to ensure no memory leaks
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+
+    onError(e:any) {
+        console.log(e);
+    }
+
+    private process(m: Meeting) {
+
     }
 
     private prepareRoundClassification(rounds: Round[]): any[] {
@@ -163,5 +181,6 @@ export class TabListView extends AbstractListView {
     goBack(): void {
         this.location.back();
     }
+
 }
 

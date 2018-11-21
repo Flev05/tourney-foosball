@@ -2,7 +2,7 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
@@ -70,11 +70,25 @@ export class TourneyService {
     selectedIndex: number;
     newRule: boolean;
 
+    private subject = new Subject<Meeting>();
+ 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
     }
 
+    sendMessage(m: Meeting) {
+        this.subject.next(m);
+    }
+ 
+    clearMessage() {
+        this.subject.next();
+    }
+ 
+    getMessage(): Observable<Meeting> {
+        return this.subject.asObservable();
+    }
+    
     prepareEliminatoriesComboBoxes(): number {
         if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return;

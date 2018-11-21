@@ -138,7 +138,8 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
         this.selectedRound.meetings[index] = this.selectedMeeting;
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+
     }
 
     onError(n:any) {
@@ -147,6 +148,11 @@ export class MeetingDetailView extends AbstractDetailView {
 
         msgerr = 'Modifica result fallita';
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+    }
+
+    onComplete(): void {
+        this.tourneyService.sendMessage(this.selectedMeeting);
+        this.location.back();
     }
 }
 

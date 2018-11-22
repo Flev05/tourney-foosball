@@ -89,7 +89,6 @@ export abstract class AbstractDetailView extends AbstractView {
         }
 
         let m : Meeting = {
-            id: this.tourneyService.getSequenceNumber(),
             name: "",
             datetime: this.selectedTourney.datetime,
             address: this.selectedTourney.address,

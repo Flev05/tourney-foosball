@@ -4,7 +4,7 @@ import { PlayersPool } from "./players-pool";
 
 export class InMemoryDataServiceELIM {
 
-static tourney = 
+private static tourney = 
   {id: 2
     , tourneyName: 'Eliminatore 2018/2019'
       ,datetime: new Date(2018, 10, 22, 20, 30)
@@ -47,4 +47,9 @@ static tourney =
       ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
       ,objectives:[]  
     };
+
+    static tourneyDb = {
+        id: InMemoryDataServiceELIM.tourney.id
+      , json: JSON.stringify(InMemoryDataServiceELIM.tourney)
+    } 
 }

@@ -18,15 +18,21 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { PlayoffRule } from '../domain/playoff-rule';
+import { MeetingDb } from '../domain/meeting-db';
+import { LoginService } from './loginservice';
+import { TourneyDb } from '../domain/tourney.db';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
 const tourneyUrl = 'api/tourneys';  // URL to web api
+const tourneyBeUrl = 'be/tourneys';  // URL to web api
 const tourneyPlayoffUrl = 'api/tourneys';  // URL to web api
 const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
 const typologiesUrl = 'api/typologies';  // URL to web api
+const meetingUrl = 'api/meetings';  // URL to web api
+const meetingBeUrl = 'be/meetings';  // URL to web api
 
 const classificationLabel = "°";
 
@@ -72,7 +78,7 @@ export class TourneyService {
 
     private subject = new Subject<Meeting>();
  
-    constructor(private http: HttpClient) { 
+    constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
     }
@@ -197,13 +203,36 @@ export class TourneyService {
         return this.sequenceNumber++;
     }
 
-    loadTourneySmall (): Observable<Tourney[]> {
- 
-        return this.http.get<Tourney[]>(tourneyUrl)
-        .pipe(
-            tap(_ => this.log('fetched all tourneys')),
-            catchError(this.handleError('loadTourneySmall', []))
+    /**
+     * Loads all tourneys published from the database
+     */
+    loadAllTourneys (): Observable<TourneyDb[]> {
+        let url = tourneyUrl;
+        if(this.loginService.userLogged) {
+            url = tourneyBeUrl + "?" + "userId=" + this.loginService.selectedLogin.id;
+        }
+        return this.http.get<TourneyDb[]>(url).pipe(
+            tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
+            catchError(this.handleError('loadTourneyDb', []))
           );
+    }
+
+    /** 
+     * Loads all the meetings of the receìved tourney and round
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadRoundMeeting(tourneyId: number, roundId: number): Observable<Meeting[]> {
+        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId + "&" + "playoffId=null";
+        let url = meetingUrl + queryString;
+
+        if(this.loginService.userLogged) {
+            url = tourneyBeUrl + queryString;
+        }
+
+        return this.http.get<MeetingDb[]>(url).pipe(
+            tap(_ => this.log('fetched MeetingDb url='+url)),
+            catchError(this.handleError<MeetingDb[]>('loadMeetingDb url='+url))
+        );
     }
 
     loadDisciplines (): Observable<Discipline[]> {
@@ -250,17 +279,55 @@ export class TourneyService {
         );
     }
 
-    /** PUT: update the tourney on the server */
+    /** PUT: prepare the TourneyDb by stringify of received tourney to save on the server */
     updateTourney (tourney: Tourney ): Observable<Tourney> {
+        let json: string = JSON.stringify(tourney);
+        let tourneyDb: TourneyDb = {id: tourney.id, json: json};
+
+        return this.updateTourneyDb(tourneyDb);
+    }
+
+    /** PUT: update the tourney on the server */
+    private updateTourneyDb (tourney: TourneyDb ): Observable<TourneyDb> {
         const id =  tourney.id;
-        const url = tourneyUrl + "/" + id;
+        let url = tourneyUrl + "/" + id;
+
+        if(this.loginService.userLogged) {
+            url = tourneyBeUrl +  "/" + id;
+        }
 
         return this.http.put(url, tourney, httpOptions).pipe(
-            tap(_ => this.log('updated Tourney id=' + id)),
-            catchError(this.handleError<Tourney>('updateTourney'))
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(this.handleError<TourneyDb>('updateTourneyDb'))
         );
     }
     
+    /** PUT: update the Meeting on the server */
+    updateMeeting (m: Meeting): Observable<Meeting> {
+        const id =  m.id;
+        const url = meetingUrl + "/" + id;
+
+        let json: string = JSON.stringify(m);
+        let mdb: TourneyDb = {id: m.id, json: json};
+
+        return this.updateMeetingDb(mdb);
+    }
+
+    /** PUT: update the MeetingDb on the db server */
+    private updateMeetingDb (mdb: MeetingDb ): Observable<MeetingDb> {
+        const id =  mdb.id;
+        let url = meetingUrl + "/" + id;
+
+        if(this.loginService.userLogged) {
+            url = meetingBeUrl +  "/" + id;
+        }
+
+        return this.http.put(url, mdb, httpOptions).pipe(
+            tap(_ => this.log('updated MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb>('updateMeetingDb'))
+        );
+    }
+ 
     /** DELETE: delete the tourney from the server */
     deleteTourney (tourney: Tourney | number): Observable<Tourney> {
         const id = typeof tourney === 'number' ? tourney : tourney.id;        

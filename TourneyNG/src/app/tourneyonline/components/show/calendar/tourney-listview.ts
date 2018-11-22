@@ -41,7 +41,7 @@ export class CalendarTourneyListView implements OnInit {
 
     protected loadTourney() {
         console.log("Entering CalendarTourneyListView.loadTourney()");
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t);
+        this.tourneyService.loadAllTourneys().subscribe(t => this.tourneys = t);
     }
 
     onRowSelect(event) {

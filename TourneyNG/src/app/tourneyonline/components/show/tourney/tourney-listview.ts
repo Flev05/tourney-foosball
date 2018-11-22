@@ -24,7 +24,7 @@ export class TourneyListView implements OnInit {
     ngOnInit() {
         console.log("TourneyListView.ngOnInit()");
 
-        this.carService.loadTourneySmall().subscribe(cs => this.tourneys = cs);
+        this.carService.loadAllTourneys().subscribe(cs => this.tourneys = cs);
 
         this.carService.newTourney = false;
 

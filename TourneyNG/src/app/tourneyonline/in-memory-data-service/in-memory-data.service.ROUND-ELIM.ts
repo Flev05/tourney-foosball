@@ -7,9 +7,9 @@ import { PlayersPool } from './players-pool';
 
 export class InMemoryDataServiceRoundElim  {
 
- static teams = TeamsPool.prepareTeams(10);
+static teams = TeamsPool.prepareTeams(10);
 
- static tourney =
+private static tourney =
       {id: 3
       ,tourneyName: 'Gironi+Eliminatore 2018/2019'
       ,datetime: new Date(2018, 10, 22, 20, 30)
@@ -52,7 +52,12 @@ export class InMemoryDataServiceRoundElim  {
       ,eliminatoryLevels: []
       ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
       ,objectives:[]  
-    };
+};
+
+static tourneyDb = {
+    id: InMemoryDataServiceRoundElim.tourney.id
+  , json: JSON.stringify(InMemoryDataServiceRoundElim.tourney)
+} 
 
 static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
 
@@ -84,21 +89,21 @@ static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
     }
 
     return rounds;
-  }
+}
  
-  static newRound(roundNo : number): Round {
-    return {
-        id: roundNo
-      , name: "GIRONE." + roundNo
-      , type: RoundType.R
-      , teams: []
-      , meetings: []
-      , classification: []
-      , matrix: null
-    };
-  }
+static newRound(roundNo : number): Round {
+  return {
+      id: roundNo
+    , name: "GIRONE." + roundNo
+    , type: RoundType.R
+    , teams: []
+    , meetings: []
+    , classification: []
+    , matrix: null
+  };
+}
 
-  static prepareDefaultMeeting(r : Round)  {
+static prepareDefaultMeeting(r : Round)  {
 
     let teams = r.teams;
     for(let i=0; i<teams.length; i++) {
@@ -107,7 +112,7 @@ static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
 
       for(let j=i+1; j < teams.length; j++) {
         let t2 = teams[j];
-        let m: Meeting = {id: i+j
+        let m: Meeting = {id:i+j
           , name: t1.teamName + " - " + t2.teamName
           , datetime: new Date(2018, 11, 22, 21, 0)
           , address: t1.address
@@ -118,10 +123,11 @@ static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
           , points1: 0
           , points2: 0
           , direction: Direction.OneWay
+          
         };
 
         r.meetings.push(m);
       }
     }
-  }
+}
 }

@@ -9,6 +9,8 @@ import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract
 import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { LoginService } from 'app/tourneyonline/service/loginservice';
 
 
 @Component({
@@ -24,6 +26,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
     matches: Match[];
 
+
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
@@ -36,7 +39,7 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;    
-        this.selectedMeeting  = this.tourneyService.selectedMeeting;    
+        this.selectedMeeting  = this.tourneyService.selectedMeeting;   
 
         if(this.selectedMeeting.matches.length==0) {
             this.selectedMeeting.matches=[];
@@ -136,10 +139,8 @@ export class MeetingDetailView extends AbstractDetailView {
         }
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
-        this.selectedRound.meetings[index] = this.selectedMeeting;
-
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
-
+       
+        this.tourneyService.updateMeeting(this.selectedMeeting).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
     }
 
     onError(n:any) {
@@ -152,6 +153,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onComplete(): void {
         this.tourneyService.sendMessage(this.selectedMeeting);
+
         this.location.back();
     }
 }

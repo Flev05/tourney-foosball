@@ -5,11 +5,13 @@ import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourneyservice';
 import { AbstractListView } from './abstract-listview';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
+import { TourneyDb } from 'app/tourneyonline/domain/tourney.db';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected tourneys: Tourney[];
     toggleable: boolean = false;
+    tdbs : TourneyDb[] = [];
 
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
@@ -26,7 +28,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected loadTourney() {
         console.log("Entering AbstractTourneyListView.loadTourney()");
-        this.tourneyService.loadTourneySmall().subscribe(t => this.tourneys = t, e => this.onError(e), () => this.onComplete());
+        this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onComplete());
     }
 
     onError(e: any): any {
@@ -35,6 +37,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     onComplete(): any {
         console.log("Entering onComplete()");
+        this.tourneys = [];
+        for(let tdb of this.tdbs) {
+            let t = JSON.parse(tdb.json);
+            this.tourneys.push(t);
+        }
     }
 
     onRowSelect(event) {

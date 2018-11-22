@@ -1,9 +1,11 @@
 import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, RoundType, Direction, MeetingStatus } from "../domain/enumerations";
 import { Tourney } from "../domain/tourney";
+import { TourneyDb } from "../domain/tourney.db";
 
 export class InMemoryDataServiceCSI  {
 
-  static tourney: Tourney = {id: 1
+   private static tourney: Tourney = {
+      id: 1
     , tourneyName: 'CSI Open A 2017'
     ,datetime: new Date(2018, 11, 24, 10, 33)
     ,address: 'Via Roma, 110'
@@ -153,35 +155,7 @@ export class InMemoryDataServiceCSI  {
             {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
           ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
         ]
-        ,meetings:[{
-              id: 1,
-              status: MeetingStatus.ToPlay,
-              name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-              datetime: new Date(2018, 11, 24, 10, 33),
-              address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-              country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-              team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
-              team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
-              ,points1: 0
-              ,points2: 0
-              ,direction: Direction.RoundTrip
-              ,matches: []
-          }
-          ,{
-              id: 2,
-              status: MeetingStatus.ToPlay,
-              name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-              datetime: new Date(2018, 11, 30, 15, 0),
-              address: "VIA ZANZOTTERA 32 20153 MILANO MI",
-              country: {id:1, city: "ORIGGIO"},
-              team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
-              team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
-              ,points1: 0
-              ,points2: 0
-              ,direction: Direction.RoundTrip
-              ,matches: []
-          }
-        ]
+        ,meetings:[]
         ,classification:[]
       }
       ,{
@@ -190,34 +164,7 @@ export class InMemoryDataServiceCSI  {
           {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
           ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
         ]
-        ,meetings:[{
-            id: 1,
-            name:  "SOLAROSPORT - AURORA PREGNANA BLU",
-            status: MeetingStatus.ToPlay,
-            datetime: new Date(2018, 11, 30, 15, 0),
-            address: "VIA S.PAOLO, 6 20020 SOLARO MI",
-            country: {id:1, city: "SOLARO"},
-            team1: {id:4, teamName: "SOLAROSPORT"},
-            team2: {id:1, teamName: "AURORA PREGNANA BLU"}
-            ,points1: 0
-            ,points2: 0
-            ,direction: Direction.RoundTrip
-            ,matches: []
-    }
-        ,{
-            id: 2,
-            name:  "AURORA PREGNANA BLU - SOLAROSPORT",
-            status: MeetingStatus.ToPlay,
-            datetime: new Date(2018, 11, 30, 15, 0),
-            address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
-            country: {id:1, city: "PREGNANA MILANESE"},
-            team1: {id:1, teamName: "AURORA PREGNANA BLU"},
-            team2: {id:4, teamName: "SOLAROSPORT"}
-            ,points1: 0
-            ,points2: 0
-            ,direction: Direction.RoundTrip
-            ,matches: []
-        }]
+        ,meetings:[]
         ,classification:[]
       }
     ]
@@ -225,39 +172,7 @@ export class InMemoryDataServiceCSI  {
       {id:1, round:{
           id:1, name: "Playoff Girone A", type: RoundType.P
           ,teams:[]
-          ,meetings:[{
-                  id: 1,
-                  name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-                  status: MeetingStatus.ToPlay,
-                  datetime: new Date(2018, 11, 30, 15, 0),
-                  address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-                  country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-                  team1: null,
-                  team2: null,
-                  direction: Direction.OneWay
-                  ,matches: []
-                  ,rule1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-                  ,rule2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-                  ,points1: 0
-                  ,points2: 0
-                }
-            ,{
-                id: 2,
-                name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-                status: MeetingStatus.ToPlay,
-                datetime: new Date(2018, 11, 30, 15, 0),
-                address: "VIA ZANZOTTERA 32 20153 MILANO MI",
-                country: {id:1, city: "ORIGGIO"},
-                team1: null,
-                team2: null,
-                direction: Direction.RoundTrip
-                ,matches: []
-                ,rule2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-                ,rule1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-                ,points1: 0
-                ,points2: 0
-              }
-          ]
+          ,meetings:[]
           ,classification:[]
         }
         ,playoffRules:[
@@ -268,39 +183,7 @@ export class InMemoryDataServiceCSI  {
       ,{id:2, round:{
         id:2, name: "Playoff Girone B", type: RoundType.P
         ,teams:[]
-        ,meetings:[{
-              id: 1,
-              name:  "SOLAROSPORT - AURORA PREGNANA BLU",
-              status: MeetingStatus.ToPlay,
-              datetime: new Date(2018, 11, 30, 15, 0),
-              address: "VIA S.PAOLO, 6 - 20020 SOLARO MI",
-              country: {id:1, city: "SOLARO"},
-              team1: null,
-              team2: null,
-              direction: Direction.OneWay
-              ,matches: []
-              ,rule1: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
-              ,rule2: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
-              ,points1: 0
-              ,points2: 0
-          }
-          ,{
-              id: 2,
-              name:  "AURORA PREGNANA BLU - SOLAROSPORT",
-              status: MeetingStatus.ToPlay,
-              datetime: new Date(2018, 11, 30, 15, 0),
-              address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
-              country: {id:1, city: "PREGNANA MILANESE"},
-              team1: null,
-              team2: null,
-              direction: Direction.RoundTrip,
-              matches: []
-              ,rule2: {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
-              ,rule1: {id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
-              ,points1: 0
-              ,points2: 0
-          }
-        ]
+        ,meetings:[]
         ,classification:[]
       }
     ,playoffRules:[
@@ -312,4 +195,10 @@ export class InMemoryDataServiceCSI  {
     ,eliminatoryLevels: []
     ,objectives:[]
   }
+    
+  static tourneyDb : TourneyDb = {
+      id: InMemoryDataServiceCSI.tourney.id
+    , json: JSON.stringify(InMemoryDataServiceCSI.tourney)
+  };
+
 }

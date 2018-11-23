@@ -22,6 +22,7 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
     }
 
     onComplete(): any {
+        super.onComplete();
 
         this.selectPhaseType(PhaseType.P);
 

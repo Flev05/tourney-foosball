@@ -12,8 +12,8 @@ import { MeetingListView } from './meeting-listview';
 		RouterModule.forChild([
 			{ path: '', component: PlayoffTourneyListView },
 			{ path: 'lv', component: PlayoffListView },
-			{ path: 'lv/playoffRoundLv', component: RuleListView },
-			{ path: 'lv/playoffRoundLv/dv', component: RuleDetailView },
+			{ path: 'lv/playoffRuleLv', component: RuleListView },
+			{ path: 'lv/playoffRuleLv/dv', component: RuleDetailView },
 			{ path: 'lv/meetingLv', component: MeetingListView },
 			{ path: 'lv/meetingLv/playoffRuledv', component: MeetingRuleDetailView },
 		])

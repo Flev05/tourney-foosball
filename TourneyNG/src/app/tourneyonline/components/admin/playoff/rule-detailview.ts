@@ -93,10 +93,12 @@ export class RuleDetailView extends AbstractDetailView {
                 for(let pc of this.playoffConfigs) {
                     let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
                     this.selectedPlayoff.round.meetings.push(m);
+                    this.tourneyService.addMeeting(m);
     
                     if(!this.selectedTourney.isOnewayPlayoff) {
                         m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
                         this.selectedPlayoff.round.meetings.push(m);
+                        this.tourneyService.addMeeting(m);
                     }        
                 }
             }
@@ -117,6 +119,7 @@ export class RuleDetailView extends AbstractDetailView {
                 if(this.selectedPlayoffConfig.id == m.rule2.id) {
                     m.rule2 = this.selectedPlayoffConfig;
                 }
+                this.tourneyService.updateMeeting(m);
             }
         }
         this.selectedPlayoff.playoffRules = this.playoffConfigs;

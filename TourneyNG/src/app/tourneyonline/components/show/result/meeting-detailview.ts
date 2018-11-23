@@ -26,7 +26,6 @@ export class MeetingDetailView extends AbstractDetailView {
 
     matches: Match[];
 
-
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
@@ -83,7 +82,6 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     save() {
-
         this.selectedMeeting.matches = this.matches;
         this.selectedMeeting.points1 = 0;
         this.selectedMeeting.points2 = 0;
@@ -140,7 +138,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        this.tourneyService.updateMeeting(this.selectedMeeting).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+        this.tourneyService.updateMeeting(this.selectedMeeting);
     }
 
     onError(n:any) {
@@ -153,7 +151,6 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onComplete(): void {
         this.tourneyService.sendMessage(this.selectedMeeting);
-
         this.location.back();
     }
 }

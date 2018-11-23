@@ -8,12 +8,14 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { Playoff } from '../../../domain/playoff';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Message } from 'primeng/api';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 @Component({
     templateUrl: './playoff-listview.html'
 })
 export class PlayoffListView extends AbstractListView {
-    static redirect: string = "adminplayoff/lv/playoffRoundLv";
+    static redirect: string = "adminplayoff/lv/playoffRuleLv";
     
     msgs: Message[] = [];
     selectedTourney: Tourney;
@@ -24,7 +26,8 @@ export class PlayoffListView extends AbstractListView {
     displayDialog: boolean;
     newRound: Playoff;
     newPlayoff: boolean;
-
+    mdbs: MeetingDb[];
+    
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -90,10 +93,24 @@ export class PlayoffListView extends AbstractListView {
 
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
 
+        const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
+
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+
         this.gotoDetailView();
     }
+
+    private onComplete(): void {
+        this.selectedPlayoff.round.meetings = [];
+        for(let mdb of this.mdbs) {
+            let m: Meeting = JSON.parse(mdb.json);
+            this.selectedPlayoff.round.meetings.push(m);
+        }
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+    }
  
-    onError(n:any) {
+    private onError(n:any) {
         this.msgs = [];
         let msgerr : string;
 

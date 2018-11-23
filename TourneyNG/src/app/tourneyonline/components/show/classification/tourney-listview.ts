@@ -87,6 +87,8 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
     }
 
     onComplete(): any {
+        super.onComplete();
+
         super.purgeEliminatory();
     }
 }

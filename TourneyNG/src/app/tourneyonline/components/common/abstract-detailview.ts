@@ -5,11 +5,6 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
-import { PlayoffRule } from '../../domain/playoff-rule';
-import { Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Team } from 'app/tourneyonline/domain/team';
-import { Match } from 'app/tourneyonline/domain/match';
 
 export abstract class AbstractDetailView extends AbstractView {
 
@@ -74,38 +69,4 @@ export abstract class AbstractDetailView extends AbstractView {
             r.classification.push(c);
         }
     }
-
-    protected createMeeting(t1: Team, t2: Team, pc1: PlayoffRule, pc2: PlayoffRule, d: Direction): Meeting {
-        let matches = new Array<Match>();
-
-        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
-            let m: Match = {id:this.tourneyService.getSequenceNumber()
-                ,players1: []
-                ,players2: []
-                ,score1:0
-                ,score2:0
-            };
-            matches.push(m);
-        }
-
-        let m : Meeting = {
-            name: "",
-            datetime: this.selectedTourney.datetime,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            team1: t1,
-            team2: t2,
-            points1: 0,
-            points2: 0,
-            rule1: pc1,
-            rule2: pc2,
-            ruleName: "",
-            direction: d,
-            status: MeetingStatus.ToPlay,
-            matches: matches
-        };
-
-        return m;
-    }
-
 }

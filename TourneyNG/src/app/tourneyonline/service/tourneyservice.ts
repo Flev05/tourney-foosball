@@ -21,6 +21,7 @@ import { PlayoffRule } from '../domain/playoff-rule';
 import { MeetingDb } from '../domain/meeting-db';
 import { LoginService } from './loginservice';
 import { TourneyDb } from '../domain/tourney.db';
+import { nextTick } from 'q';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -77,7 +78,7 @@ export class TourneyService {
     newRule: boolean;
 
     private subject = new Subject<Meeting>();
- 
+
     constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
@@ -221,22 +222,43 @@ export class TourneyService {
      * Loads all the meetings of the receìved tourney and round
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadRoundMeeting(tourneyId: number, roundId: number): Observable<Meeting[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId + "&" + "playoffId=null";
+    loadRoundMeeting(tourneyId: number, roundId: number) :  Observable<MeetingDb[]> {
+        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId + "&" + "playoffId=0";
+        let url = meetingUrl + queryString;
+        
+        if(this.loginService.userLogged) {
+            url = tourneyBeUrl + queryString;
+        }
+        
+        const obs :Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
+        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('loadMeetingDb url=' + url))
+        );
+
+        return obs;
+    }
+
+    /** 
+     * Loads all the meetings of the receìved tourney and playoff ids
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadPlayoffMeeting(tourneyId: number, playoffId: number) : Observable<MeetingDb[]> {
+        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "playoffId=" + playoffId + "&" + "roundId=1";
         let url = meetingUrl + queryString;
 
         if(this.loginService.userLogged) {
             url = tourneyBeUrl + queryString;
         }
-
-        return this.http.get<MeetingDb[]>(url).pipe(
-            tap(_ => this.log('fetched MeetingDb url='+url)),
-            catchError(this.handleError<MeetingDb[]>('loadMeetingDb url='+url))
+        
+        const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
+        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('loadMeetingDb url=' + url))
         );
+
+        return obs;
     }
 
     loadDisciplines (): Observable<Discipline[]> {
- 
         return this.http.get<Discipline[]>(typologiesUrl)
         .pipe(
             tap(_ => this.log('fetched all typologies of the tourney')),
@@ -301,16 +323,35 @@ export class TourneyService {
             catchError(this.handleError<TourneyDb>('updateTourneyDb'))
         );
     }
-    
-    /** PUT: update the Meeting on the server */
-    updateMeeting (m: Meeting): Observable<Meeting> {
+        
+    /** POST: add a new Meeting to the db server */
+    addMeeting (m: Meeting): void {
         const id =  m.id;
-        const url = meetingUrl + "/" + id;
+        let url = meetingUrl + "/" + id;
+
+        if(this.loginService.userLogged) {
+            url = meetingBeUrl +  "/" + id;
+        }
 
         let json: string = JSON.stringify(m);
-        let mdb: TourneyDb = {id: m.id, json: json};
+        let mdb: MeetingDb = {id: m.id, json: json};
 
-        return this.updateMeetingDb(mdb);
+        let obs = this.http.post<Meeting>(url, mdb, httpOptions).pipe(
+            tap((m: Meeting) => this.log('added Meeting, url=' + url)),
+            catchError(this.handleError<Meeting>('addMeeting, url=' + url))
+        );
+        obs.subscribe();
+    }
+
+    /** PUT: update the Meeting on the server */
+    updateMeeting (m: Meeting): void {
+
+        let json: string = JSON.stringify(m);
+        let mdb: MeetingDb = {id: m.id, json: json};
+
+        let obs = this.updateMeetingDb(mdb);
+
+        obs.subscribe();
     }
 
     /** PUT: update the MeetingDb on the db server */

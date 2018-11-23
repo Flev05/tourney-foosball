@@ -8,12 +8,14 @@ import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from '../../../domain/playoff-rule';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './rule-listview.html'
 })
 export class RuleListView extends AbstractListView {
-    static redirect: string = "adminplayoff/lv/playoffRoundLv/dv";
+    static redirect: string = "adminplayoff/lv/playoffRuleLv/dv";
     static redirectToMeeting: string = "adminplayoff/lv/meetingLv";
 
     playoffFormGroup: FormGroup;
@@ -28,6 +30,7 @@ export class RuleListView extends AbstractListView {
 
     atLeast2Rules: boolean;
     atLeast1Rule: boolean;
+    mdbs: MeetingDb[];
 
     constructor(private fb: FormBuilder,
         protected tourneyService: TourneyService,
@@ -54,6 +57,19 @@ export class RuleListView extends AbstractListView {
     }
 
     goMeeting() {
+
+        const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
+    }
+
+    private onComplete(): void {
+        this.selectedPlayoff.round.meetings = [];
+        for(let mdb of this.mdbs) {
+            let m: Meeting = JSON.parse(mdb.json);
+            this.selectedPlayoff.round.meetings.push(m);
+        }
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+
         this.router.navigate([RuleListView.redirectToMeeting]);
     }
 

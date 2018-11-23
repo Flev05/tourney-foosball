@@ -21,6 +21,7 @@ export class RoundTourneyListView extends AbstractTourneyListView {
     }
 
     onComplete(): any {
+        super.onComplete();
         this.selectPhaseType(PhaseType.R);
     }
 }

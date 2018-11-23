@@ -32,7 +32,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     }
 
     onError(e: any): any {
-        console.log("Entering onComplete()" + e);
+        console.log("Entering onError()" + e);
     }
 
     onComplete(): any {

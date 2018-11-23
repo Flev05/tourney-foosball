@@ -22,6 +22,8 @@ export class MatrixTourneyListView extends AbstractTourneyListView {
     }
     
     onComplete(): any {
+        super.onComplete();
+
         super.purgeEliminatory();
     }
 }

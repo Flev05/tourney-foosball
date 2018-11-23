@@ -94,39 +94,12 @@ export class EliminatoryListView extends AbstractListView {
                     e.round.meetings.splice(1, 1);
                 }
             } else {
-                let m = this.newMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1);
+                let m = this.createMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1, null, null, Direction.RoundTrip);
                 e.round.meetings.push(m);
+                this.tourneyService.addMeeting(m);
             }
         }
     }
-    
-    private newMeeting(t1: Team, t2: Team): Meeting {
-        let matches: Array<Match> = new Array<Match>();
-        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
-            let m: Match = {id:this.tourneyService.getSequenceNumber()
-                ,players1: []
-                ,players2: []
-                ,score1:0
-                ,score2:0
-            };
-            matches.push(m);
-        }
-        let m: Meeting = {
-            id: this.tourneyService.getSequenceNumber(),
-            name: t1.teamName + " - " + t2.teamName,
-            datetime: this.selectedTourney.datetime,
-            team1: t1,
-            team2: t2,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            points1: 0,
-            points2: 0,
-            direction: Direction.OneWay,
-            status: MeetingStatus.ToPlay,
-            matches: matches
-        };
-        
-        return m;
-    }
+
 }
 

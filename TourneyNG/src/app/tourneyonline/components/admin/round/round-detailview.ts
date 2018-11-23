@@ -15,6 +15,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Router } from '@angular/router';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './round-detailview.html',
@@ -31,6 +32,7 @@ export class RoundDetailView extends AbstractDetailView {
 
     availableTeams: string[] = [];
     targetTeams: string[] = [];
+    mdbs: MeetingDb[];
 
     constructor(
         private fb: FormBuilder,
@@ -89,6 +91,20 @@ export class RoundDetailView extends AbstractDetailView {
     }
 
     goMeeting() {
+
+        const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
+
+    }
+
+    private onComplete(): void {
+        this.selectedRound.meetings = [];
+        for(let mdb of this.mdbs) {
+            let m: Meeting = JSON.parse(mdb.json);
+            this.selectedRound.meetings.push(m);
+        }
+        this.tourneyService.selectedRound = this.selectedRound;
+
         this.router.navigate([RoundDetailView.meetingListviewRedirect]);
     }
 
@@ -210,10 +226,12 @@ export class RoundDetailView extends AbstractDetailView {
                 let t2: Team = this.selectedRound.teams[j];
                 let m : Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
                 this.selectedRound.meetings.push(m);
+                this.tourneyService.addMeeting(m);
 
                 if(!this.selectedTourney.isOnewayRound) {
                     let m : Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
                     this.selectedRound.meetings.push(m);    
+                    this.tourneyService.addMeeting(m);
                 }
             }
         }

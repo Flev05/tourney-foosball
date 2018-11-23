@@ -21,6 +21,8 @@ export class EliminatoryTourneyListView extends AbstractTourneyListView {
     }
 
     onComplete(): any {
+        super.onComplete();
+
         this.selectPhaseType(PhaseType.E); 
     }
 }

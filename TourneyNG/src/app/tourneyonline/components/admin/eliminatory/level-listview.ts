@@ -286,7 +286,7 @@ export class LevelListView extends AbstractListView {
 
             let e: Eliminatory = eliminatories[i];
 
-            let m: Meeting = this.newMeeting(c1.team, c2.team)
+            let m: Meeting = this.createMeeting(c1.team, c2.team, null, null, Direction.RoundTrip);
 
             e.round.meetings[0] = m;
 
@@ -307,32 +307,6 @@ export class LevelListView extends AbstractListView {
             }
         }
         console.log("Eliminatories.size=" + eliminatories.length);
-    }
-
-    private newMeeting(t1: Team, t2: Team): Meeting {
-
-        let m = this.newSmallMeeting();
-        m.name = t1.teamName + " - " + t2.teamName,
-        m.team1 = t1;
-        m.team2 = t2;
-
-        return m;
-    }
-
-    private newSmallMeeting(): Meeting {
-        return {
-        id: this.tourneyService.getSequenceNumber(),
-            name: "" + " - " + "",
-            datetime: this.selectedTourney.datetime,
-            team1: {},
-            team2: {},
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            points1: 0,
-            points2: 0,
-            direction: Direction.OneWay,
-            status: MeetingStatus.ToPlay
-        };
     }
 
     /**
@@ -530,7 +504,7 @@ export class LevelListView extends AbstractListView {
 
     private newEliminatory(index : number): Eliminatory {
 
-        let m: Meeting = this.newSmallMeeting();
+        let m: Meeting = this.createMeeting(null, null, null, null, Direction.RoundTrip);
 
         let e: Eliminatory = {
             id: this.tourneyService.getSequenceNumber(),

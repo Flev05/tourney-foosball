@@ -110,32 +110,32 @@ export class InMemoryDataService implements InMemoryDbService {
             id: 1,
             tourneyId: 1,
             roundId: 1,
-            playoffId: null,
-            eliminatoryId: null,
+            playoffId: 0,
+            eliminatoryId: 0,
             json: InMemoryDataService.json1
         }
         ,{
             id: 2,
             tourneyId: 1,
             roundId: 1,
-            playoffId: null,
-            eliminatoryId: null,
+            playoffId: 0,
+            eliminatoryId: 0,
             json: InMemoryDataService.json2
         }
         ,{
           id: 3,
           tourneyId: 1,
           roundId: 2,
-          playoffId: null,
-          eliminatoryId: null,
+          playoffId: 0,
+          eliminatoryId: 0,
           json: InMemoryDataService.json3
         }
         ,{
             id: 4,
             tourneyId: 1,
             roundId: 2,
-            playoffId: null,
-            eliminatoryId: null,
+            playoffId: 0,
+            eliminatoryId: 0,
             json: InMemoryDataService.json4            
         }
         ,{
@@ -143,7 +143,7 @@ export class InMemoryDataService implements InMemoryDbService {
           tourneyId: 1,
           roundId: 1,
           playoffId: 1,
-          eliminatoryId: null,
+          eliminatoryId: 0,
           json: InMemoryDataService.json5
         }
         ,{
@@ -151,7 +151,7 @@ export class InMemoryDataService implements InMemoryDbService {
             tourneyId: 1,
             roundId: 1,
             playoffId: 2,
-            eliminatoryId: null,
+            eliminatoryId: 0,
             json: InMemoryDataService.json6
           }
       ];

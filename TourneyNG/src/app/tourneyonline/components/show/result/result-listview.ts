@@ -14,7 +14,7 @@ import { AbstractListView } from '../../common/abstract-listview';
 })
 export class ResultListView extends AbstractListView {
     static meetingLvRedirect:   string = "result/lv/meetingLv";
-    static eliminatoryRedirect: string = '/result/lv/eliminatoryLv/dv';
+    static eliminatoryRedirect: string = 'result/lv/eliminatoryLv/dv';
 
     selectedPlayoff: Playoff;
     selectedRound: Round;
@@ -82,18 +82,18 @@ export class ResultListView extends AbstractListView {
         this.gotoMeetingListView();
     }
 
-    private gotoMeetingListView() {
-        this.router.navigate([ResultListView.meetingLvRedirect]);
-    }
-
     onPlayoffSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedRound = this.selectedPlayoff.round;
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
 
         this.gotoMeetingListView();
     }
     
+    private gotoMeetingListView() {
+        this.router.navigate([ResultListView.meetingLvRedirect]);
+    }
+
     onEliminatoryRowSelect(event) {
         console.log("Entering onRowSelect()");
       

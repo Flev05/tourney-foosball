@@ -364,12 +364,13 @@ export class TourneyService {
     }
      
     /** DELETE: delete the Meeting from the server */
-    deleteMeeting (id: number): void {
-        const url = tourneyUrl + "/" + id;
+    deleteMeeting (m: Meeting ): void {
+        let id: number = m.id;
+        const url = meetingUrl + "/" + id;
 
-        let obs = this.http.delete<Tourney>(url, httpOptions).pipe(
+        let obs = this.http.delete<Meeting>(url).pipe(
             tap(_ => this.log('deleted Meeting url=' + url)),
-            catchError(this.handleError<Tourney>('deleteMeeting'))
+            catchError(this.handleError<Meeting>('deleteMeeting'))
         );
         obs.subscribe();
     }

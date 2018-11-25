@@ -55,6 +55,7 @@ export class RoundDetailView extends AbstractDetailView {
             this.selectedRound.id = this.tourneyService.getSequenceNumber(); 
             this.selectedRound.teams = [];
             this.selectedRound.meetings = [];
+            this.selectedRound.classification = [];
             this.selectedRound.type = RoundType.R;
         }
 
@@ -124,49 +125,114 @@ export class RoundDetailView extends AbstractDetailView {
     }
     private removeRound(r: Round): any {
         for(let m of r.meetings) {
-            this.tourneyService.deleteMeeting(m.id);
+            this.tourneyService.deleteMeeting(m);
         }
     }
 
-    onMoveToTarget(teamList: Team[]) {
-        console.log("Entering onMoveToTarget(), teamList.length=" + teamList.length);
-        for(let t of this.targetTeams) {
-            console.log("Team=" + JSON.stringify(t));
+    // onMoveToTarget(teamNameList: string[]) {
+    //     let teamList: Team[] = this.getTeamList(teamNameList);
+    //     this.alignMoveToTargetList(teamList);
+    // }
+
+    // private getTeamList(teamNameList: string[]): Team[]  {
+    //     let teamList: Team[] = [];
+    //     for (let tn of teamNameList) {
+    //         for (let t of this.selectedTourney.teams) {
+    //             if (tn == t.teamName) {
+    //                 teamList.push(t);
+    //             }
+    //         }
+    //     }
+    //     return teamList;
+    // }
+
+    // onMoveToSource(teamNameList: string[]) {
+    //     let teamList: Team[] = this.getTeamList(teamNameList);
+    //     this.alignMoveToSourceList(teamList);
+    // }
+
+    // onMoveAllToTarget(teamNameList: string[]) {
+    //     let teamList: Team[] = this.getTeamList(teamNameList);
+    //     this.alignMoveToTargetList(teamList);
+    // }
+
+    // onMoveAllToSource(teamNameList: string[]) {
+    //     let teamList: Team[] = this.getTeamList(teamNameList);
+    //     this.alignMoveToSourceList(teamList);
+    // }
+
+    // private alignMoveToTargetList(teamList: Team[]) {
+    //     for (let t of teamList) {
+    //         this.addToMeetings(t);
+    //     }
+    // }
+
+    // private addToMeetings(team: Team) {
+    //     console.log("addToMeetings(" + team.teamName + ")");
+    //     this.addTeamToMeetings(team);
+    //     this.selectedRound.teams.push(team);
+    //     let cl: Classification = this.newClassification(team, 0);
+    //     this.selectedRound.classification.push(cl);
+    // }
+
+    // private alignMoveToSourceList(teamList: Team[]) {
+    //     for (let t of teamList) {
+    //         this.removeFromMeetings(t);
+    //     }
+    // }
+
+    onSubmit(value: string) {
+
+        this.selectedRound.name = this.roundFormGroup.get('name').value;
+        this.targetTeams = this.roundFormGroup.get('targetTeams').value;
+
+        let teamTourneyMap: Map<string,Team> = new Map<string,Team>();
+        for(let t of this.selectedTourney.teams) {
+            teamTourneyMap.set(t.teamName, t);
+        }
+        let teamMap: Map<string,Team> = new Map<string,Team>();
+        for(let t of this.selectedRound.teams) {
+            teamMap.set(t.teamName, t);
         }
 
-        this.alignMoveToTargetList(teamList);
-    }
-
-    onMoveToSource(teamList: Team[]) {
-        console.log("Entering onMoveToSource(), teamList.length=" + teamList.length);
-        this.alignMoveToSourceList(teamList);
-    }
-
-    onMoveAllToTarget(teamList: Team[]) {
-        console.log("Entering onMoveAllToTarget(), teamList.length=" + teamList.length);
-        this.alignMoveToTargetList(teamList);
-    }
-
-    onMoveAllToSource(teamList: Team[]) {
-        console.log("Entering onMoveAllToSource(), teamList.length=" + teamList.length);
-        this.alignMoveToSourceList(teamList);
-    }
-
-    private alignMoveToTargetList(teamList: Team[]) {
-        for (let t of teamList) {
-            this.addToMeetings(t);
+        if(this.tourneyService.newRound) {
+            this.tourneyService.newRound = false;
+            this.selectedTourney.rounds.push(this.selectedRound);
         }
+
+        for(let tn of this.targetTeams) {
+            if(!teamMap.has(tn)) {
+                let t = teamTourneyMap.get(tn);
+                teamMap.set(t.teamName, t);
+                this.addTeamToMeetings(t);
+                this.selectedRound.teams.push(t);
+                this.selectedRound.classification.push(t);
+            }
+        }
+
+        let teamNameMap: Map<string,string> = new Map<string,string>();
+        for(let tn of this.targetTeams) {
+            teamNameMap.set(tn, tn);
+        }
+        let tempTeams: Team[] = [];
+        for(let t of this.selectedRound.teams) {
+            if(teamNameMap.has(t.teamName)) {
+                tempTeams.push(t);
+            } else {
+                this.removeFromMeetings(t);
+                this.removeFromClassification(t);
+            }
+        }
+        this.selectedRound.teams = tempTeams;
+
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
-    private addToMeetings(team: Team) {
-        console.log("addToMeetings(" + team.teamName + ")");
-
-        this.addTeamToMeetings(team);
-
-        this.selectedRound.teams.push(team);
-        let cl: Classification = this.newClassification(team, 0);
-
-        this.selectedRound.classification.push(cl);
+    private removeFromClassification(t: Team): any {
+        let index = this.selectedRound.classification.indexOf(t);
+        if(index > -1) {
+            this.selectedRound.classification.splice(index, 1);
+        }
     }
 
     private addTeamToMeetings(team: Team) {
@@ -187,74 +253,20 @@ export class RoundDetailView extends AbstractDetailView {
         }
     }
 
-    private alignMoveToSourceList(teamList: Team[]) {
-        for (let t of teamList) {
-            this.removeFromMeetings(t);
-        }
-    }
-
-    private removeFromMeetings(team: Team): any {
+    private removeFromMeetings(team: Team): void {
         console.log("removeFromMeetings(" + team.teamName + ")");
-        let index: number = 0;
+
+        let temp : Meeting[] = [];
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == team.id || m.team2.id == team.id) {
-                this.tourneyService.deleteMeeting(m.id);
-                this.selectedRound.meetings.splice(index, 1);    
+                this.tourneyService.deleteMeeting(m);
+            } else {
+                temp.push(m);
             }
         }
-
-        index = this.selectedRound.teams.indexOf(team);
-        if (index > -1) {
-            this.selectedRound.teams.splice(index, 1);
-            this.selectedRound.classification.splice(index, 1);
-        }
+        this.selectedRound.meetings = temp;    
     }
 
-    onSubmit(value: string) {
-
-        this.selectedRound.name = this.roundFormGroup.get('name').value;
-
-        this.selectedRound.teams = this.roundFormGroup.get('targetTeams').value;
-
-        if(this.tourneyService.newRound) {
-            this.tourneyService.newRound = false;
-            this.selectedTourney.rounds.push(this.selectedRound);
-        }
-
-        this.selectedRound.teams = [];
-        for(let tn of this.targetTeams) {
-            for(let t of this.selectedTourney.teams) {
-                if(t.teamName == tn) {
-                    this.selectedRound.teams.push(t);
-                }
-            }
-        }
-
-        // this.selectedRound.meetings = [];
-        // for(let i=0; i<this.selectedRound.teams.length; i++) {
-        //     for(let j=i+1; j<this.selectedRound.teams.length; j++) {
-        //         let t1: Team = this.selectedRound.teams[i];
-        //         let t2: Team = this.selectedRound.teams[j];
-        //         let m : Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
-        //         this.selectedRound.meetings.push(m);
-
-        //         let mdb: MeetingDb = this.prepareMeetingDb(m);
-        //         this.tourneyService.addMeeting(mdb);
-
-        //         if(!this.selectedTourney.isOnewayRound) {
-        //             let m : Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
-        //             this.selectedRound.meetings.push(m);    
-        //             let mdb: MeetingDb = this.prepareMeetingDb(m);
-        //             this.tourneyService.addMeeting(mdb);
-        //         }
-        //     }
-        // }
-
-        this.initClassification(this.selectedRound);
-
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
- 
     static prepareMeetingDb(m: Meeting, tourneyId: number, roundId: number): MeetingDb {
         let json: string = JSON.stringify(m);
         return {

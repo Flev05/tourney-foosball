@@ -161,7 +161,7 @@ export class RuleDetailView extends AbstractDetailView {
                 if(m.rule1.id != rm[0].id && m.rule2.id != rm[0].id) {
                     tmpMeetings.push(m);                    
                 } else {
-                    this.tourneyService.deleteMeeting(m.id);
+                    this.tourneyService.deleteMeeting(m);
                 }
             }
             this.selectedPlayoff.round.meetings = tmpMeetings;

@@ -62,6 +62,13 @@
 </p-accordion>
 </div>
 
+
+<!-- (onMoveToTarget)="onMoveToTarget($event.items)"
+(onMoveToSource)="onMoveToSource($event.items)"
+(onMoveAllToTarget)="onMoveAllToTarget($event.items)"
+(onMoveAllToSource)="onMoveAllToSource($event.items)" 
+-->
+
 <div class="content-section implementation">
     <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
     <h4><span>Girone: {{selectedRound.name}}</span></h4>
@@ -95,11 +102,7 @@
                     dragdrop="true" 
                     dragdropScope="rounds" 
                     [sourceStyle]="{'height':'300px'}" 
-                    [targetStyle]="{'height':'300px'}"                    
-                    (onMoveToTarget)="onMoveToTarget($event.items)"
-                    (onMoveToSource)="onMoveToSource($event.items)"
-                    (onMoveAllToTarget)="onMoveAllToTarget($event.items)"
-                    (onMoveAllToSource)="onMoveAllToSource($event.items)"
+                    [targetStyle]="{'height':'300px'}"    
                     >
                 <ng-template let-team pTemplate="item">
                     <div class="ui-helper-clearfix">

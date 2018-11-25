@@ -110,7 +110,7 @@ export class RuleListView extends AbstractListView {
     }
     private removePlayoff(p: Playoff): any {
         for(let m of p.round.meetings) {
-            this.tourneyService.deleteMeeting(m.id);
+            this.tourneyService.deleteMeeting(m);
         }
     }
 

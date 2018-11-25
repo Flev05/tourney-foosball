@@ -98,10 +98,19 @@ export class RuleListView extends AbstractListView {
 
             let index = this.selectedTourney.playoffs.indexOf(this.selectedPlayoff);
             if(index > -1 ) {
-                this.selectedTourney.playoffs.splice(index, 1);
+
+                let pls: Playoff[] = this.selectedTourney.playoffs.splice(index, 1);
+                for(let p of pls) {
+                    this.removePlayoff(p);
+                }
     
                 this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
             }
+        }
+    }
+    private removePlayoff(p: Playoff): any {
+        for(let m of p.round.meetings) {
+            this.tourneyService.deleteMeeting(m.id);
         }
     }
 

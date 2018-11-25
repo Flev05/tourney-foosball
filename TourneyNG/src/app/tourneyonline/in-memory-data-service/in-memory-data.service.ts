@@ -4,159 +4,24 @@ import { InMemoryDataServiceELIM } from './in-memory-data.service.ELIM';
 import { InMemoryDataServiceRoundElim } from './in-memory-data.service.ROUND-ELIM';
 import { MeetingStatus, Direction } from '../domain/enumerations';
 import { MeetingDb } from '../domain/meeting-db';
-import { TourneyDb } from '../domain/tourney.db';
+import { Observable } from 'rxjs';
+
 
 export class InMemoryDataService implements InMemoryDbService {
 
-  static json1: string = JSON.stringify({
-      id: 1,
-      status: MeetingStatus.ToPlay,
-      name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-      datetime: new Date(2018, 11, 24, 10, 33),
-      address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-      country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-      team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
-      team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
-      ,points1: 0
-      ,points2: 0
-      ,direction: Direction.RoundTrip
-      ,matches: []
-    });
-    static json2: string = JSON.stringify( {
-      id: 2,
-      status: MeetingStatus.ToPlay,
-      name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "VIA ZANZOTTERA 32 20153 MILANO MI",
-      country: {id:1, city: "ORIGGIO"},
-      team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
-      team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
-      ,points1: 0
-      ,points2: 0
-      ,direction: Direction.RoundTrip
-      ,matches: []
-    });
+  meetings : MeetingDb[] = [];
 
-    static json3: string = JSON.stringify({
-      id: 3,
-      name:  "SOLAROSPORT - AURORA PREGNANA BLU",
-      status: MeetingStatus.ToPlay,
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "VIA S.PAOLO, 6 20020 SOLARO MI",
-      country: {id:1, city: "SOLARO"},
-      team1: {id:4, teamName: "SOLAROSPORT"},
-      team2: {id:1, teamName: "AURORA PREGNANA BLU"}
-      ,points1: 0
-      ,points2: 0
-      ,direction: Direction.RoundTrip
-      ,matches: []
-    });
-    static json4: string = JSON.stringify({
-      id: 4,
-      name:  "AURORA PREGNANA BLU - SOLAROSPORT",
-      status: MeetingStatus.ToPlay,
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
-      country: {id:1, city: "PREGNANA MILANESE"},
-      team1: {id:1, teamName: "AURORA PREGNANA BLU"},
-      team2: {id:4, teamName: "SOLAROSPORT"}
-      ,points1: 0
-      ,points2: 0
-      ,direction: Direction.RoundTrip
-      ,matches: []
-    });
-    static json5: string = JSON.stringify({
-      id: 5,
-      name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-      status: MeetingStatus.ToPlay,
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-      country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-      team1: null,
-      team2: null,
-      direction: Direction.OneWay
-      ,matches: []
-      ,rule1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-      ,rule2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-      ,points1: 0
-      ,points2: 0
-    });
-    static json6: string = JSON.stringify( {
-      id: 6,
-      name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-      status: MeetingStatus.ToPlay,
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "VIA ZANZOTTERA 32 20153 MILANO MI",
-      country: {id:1, city: "ORIGGIO"},
-      team1: null,
-      team2: null,
-      direction: Direction.RoundTrip
-      ,matches: []
-      ,rule2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-      ,rule1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
-      ,points1: 0
-      ,points2: 0
-    });
-
-
-  createDb() {
-      const tourneys = [
-          InMemoryDataServiceCSI.tourneyDb 
-        , InMemoryDataServiceELIM.tourneyDb
-        , InMemoryDataServiceRoundElim.tourneyDb
-      ];
-
-      const meetings : MeetingDb[] = [{
-            id: 1,
-            tourneyId: 1,
-            roundId: 1,
-            playoffId: 0,
-            eliminatoryId: 0,
-            json: InMemoryDataService.json1
-        }
-        ,{
-            id: 2,
-            tourneyId: 1,
-            roundId: 1,
-            playoffId: 0,
-            eliminatoryId: 0,
-            json: InMemoryDataService.json2
-        }
-        ,{
-          id: 3,
-          tourneyId: 1,
-          roundId: 2,
-          playoffId: 0,
-          eliminatoryId: 0,
-          json: InMemoryDataService.json3
-        }
-        ,{
-            id: 4,
-            tourneyId: 1,
-            roundId: 2,
-            playoffId: 0,
-            eliminatoryId: 0,
-            json: InMemoryDataService.json4            
-        }
-        ,{
-          id: 5,
-          tourneyId: 1,
-          roundId: 1,
-          playoffId: 1,
-          eliminatoryId: 0,
-          json: InMemoryDataService.json5
-        }
-        ,{
-            id: 6,
-            tourneyId: 1,
-            roundId: 1,
-            playoffId: 2,
-            eliminatoryId: 0,
-            json: InMemoryDataService.json6
-          }
-      ];
-
-      const login = [
+  createDb(): {} | Observable<{}> | Promise<{}> {
+    const tourneys = [
+        InMemoryDataServiceCSI.tourneyDb 
+      , InMemoryDataServiceELIM.tourneyDb
+      , InMemoryDataServiceRoundElim.getTourneyDb() 
+    ];
+    
+    this.meetings = this.meetings.concat(InMemoryDataServiceCSI.getMeetings());
+    this.meetings = this.meetings.concat(InMemoryDataServiceRoundElim.getMeetings());
+  
+    const login = [
       { id: 1
           , username: 'lmartino'
           , password: 'pippo0000'
@@ -345,9 +210,10 @@ export class InMemoryDataService implements InMemoryDbService {
             ,{name:"Calcio a 5", code:"c5"}
             ,{name:"Palla Canestro", code:"basket"}
             ,{name:"Palla Volo", code:"volley"}
-          ]  ;
+          ];
 
-      return {login
+      let arr = {
+          login
         , logout
         , tourneys
         , userng
@@ -357,7 +223,9 @@ export class InMemoryDataService implements InMemoryDbService {
         , changePassword
         , resetPassword
         , typologies
-        , meetings
+        , meetings: this.meetings
       };
+
+      return arr;
   }
 }

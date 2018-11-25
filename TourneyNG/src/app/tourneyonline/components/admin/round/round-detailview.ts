@@ -91,10 +91,8 @@ export class RoundDetailView extends AbstractDetailView {
     }
 
     goMeeting() {
-
         const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
-
     }
 
     private onComplete(): void {
@@ -115,9 +113,18 @@ export class RoundDetailView extends AbstractDetailView {
         if(confirm(popup + this.selectedRound.name + "?")) {
             let index: number = this.selectedTourney.rounds.indexOf(this.selectedRound);
             if(index > -1) {
-                this.selectedTourney.rounds.splice(index, 1);
+                let rounds: Round[] = this.selectedTourney.rounds.splice(index, 1);
+                for(let r of rounds) {
+                    this.removeRound(r);
+                }
+
                 this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
             }
+        }
+    }
+    private removeRound(r: Round): any {
+        for(let m of r.meetings) {
+            this.tourneyService.deleteMeeting(m.id);
         }
     }
 
@@ -165,11 +172,17 @@ export class RoundDetailView extends AbstractDetailView {
     private addTeamToMeetings(team: Team) {
         for (let t of this.selectedRound.teams) {
             let m = this.createMeeting(team, t, null, null, Direction.OneWay);
+            
+            let mdb: MeetingDb = RoundDetailView.prepareMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
+            this.tourneyService.addMeeting(mdb);
 
             this.selectedRound.meetings.push(m);
             if (!this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
+
+                let mdb: MeetingDb = RoundDetailView.prepareMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
+                this.tourneyService.addMeeting(mdb);
             }
         }
     }
@@ -184,12 +197,10 @@ export class RoundDetailView extends AbstractDetailView {
         console.log("removeFromMeetings(" + team.teamName + ")");
         let index: number = 0;
         for(let m of this.selectedRound.meetings) {
-            if(m.team1.id == team.id ) {
+            if(m.team1.id == team.id || m.team2.id == team.id) {
+                this.tourneyService.deleteMeeting(m.id);
                 this.selectedRound.meetings.splice(index, 1);    
             }
-            if(m.team2.id == team.id ) {
-                this.selectedRound.meetings.splice(index, 1);    
-            }            
         }
 
         index = this.selectedRound.teams.indexOf(team);
@@ -219,28 +230,43 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
 
-        this.selectedRound.meetings = [];
-        for(let i=0; i<this.selectedRound.teams.length; i++) {
-            for(let j=i+1; j<this.selectedRound.teams.length; j++) {
-                let t1: Team = this.selectedRound.teams[i];
-                let t2: Team = this.selectedRound.teams[j];
-                let m : Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
-                this.selectedRound.meetings.push(m);
-                this.tourneyService.addMeeting(m);
+        // this.selectedRound.meetings = [];
+        // for(let i=0; i<this.selectedRound.teams.length; i++) {
+        //     for(let j=i+1; j<this.selectedRound.teams.length; j++) {
+        //         let t1: Team = this.selectedRound.teams[i];
+        //         let t2: Team = this.selectedRound.teams[j];
+        //         let m : Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
+        //         this.selectedRound.meetings.push(m);
 
-                if(!this.selectedTourney.isOnewayRound) {
-                    let m : Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
-                    this.selectedRound.meetings.push(m);    
-                    this.tourneyService.addMeeting(m);
-                }
-            }
-        }
+        //         let mdb: MeetingDb = this.prepareMeetingDb(m);
+        //         this.tourneyService.addMeeting(mdb);
+
+        //         if(!this.selectedTourney.isOnewayRound) {
+        //             let m : Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
+        //             this.selectedRound.meetings.push(m);    
+        //             let mdb: MeetingDb = this.prepareMeetingDb(m);
+        //             this.tourneyService.addMeeting(mdb);
+        //         }
+        //     }
+        // }
 
         this.initClassification(this.selectedRound);
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  
+    static prepareMeetingDb(m: Meeting, tourneyId: number, roundId: number): MeetingDb {
+        let json: string = JSON.stringify(m);
+        return {
+            id: m.id,
+            tourneyId: tourneyId,
+            roundId: roundId,
+            playoffId: 0,
+            eliminatoryId: 0,
+            json: json
+        };
+    }
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

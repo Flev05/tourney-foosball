@@ -4,18 +4,34 @@ import { RoundType, TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSor
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TeamsPool } from './teams-pool';
 import { PlayersPool } from './players-pool';
+import { MeetingDb } from '../domain/meeting-db';
+import { TourneyService } from '../service/tourneyservice';
+import { Tourney } from '../domain/tourney';
+import { RoundDetailView } from '../components/admin/round/round-detailview';
+import { InMemoryDataService } from './in-memory-data.service';
+
+const tourneyId = 3;
 
 export class InMemoryDataServiceRoundElim  {
-
 static teams = TeamsPool.prepareTeams(10);
 
-private static tourney =
-      {id: 3
+private static meetingsDb: MeetingDb[] = [];
+
+static getMeetings() : MeetingDb[] {
+  return InMemoryDataServiceRoundElim.meetingsDb;
+}
+
+static getTourneyDb() {
+
+  let rounds =  InMemoryDataServiceRoundElim.prepareDefaultRounds(InMemoryDataServiceRoundElim.teams, 2)
+
+  let tourney: Tourney =
+      {id: tourneyId
       ,tourneyName: 'Gironi+Eliminatore 2018/2019'
       ,datetime: new Date(2018, 10, 22, 20, 30)
       ,address: 'Via Roma, 110'
       ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
-      ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
+      ,discipline: {name:"Calcio Balilla", code:"cb"}
 
       ,tourneyType: TourneyType.Score
 
@@ -27,7 +43,7 @@ private static tourney =
 
       ,isOnewayRound: false
       ,isOnewayPlayoff: false
-  
+
       ,raceDuration:90
 
       ,matchWinnerScores:3
@@ -37,7 +53,7 @@ private static tourney =
       ,maxMatchesPerMeeting:1
       ,isAllMatches:true
       ,playersPerTeam: 2
-  
+
       ,pointsNeededToWin:9
       ,pointsGoldenGoalTieBreakWin:2
       ,pointsGoldenGoalTieBreakDefeat:1
@@ -46,20 +62,23 @@ private static tourney =
 
       ,teams: InMemoryDataServiceRoundElim.teams
       
-      ,rounds:  InMemoryDataServiceRoundElim.prepareDefaultRounds(InMemoryDataServiceRoundElim.teams, 2)
+      ,rounds: rounds
 
       ,playoffs:[]
       ,eliminatoryLevels: []
-      ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
+      // ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
       ,objectives:[]  
-};
+    };
 
-static tourneyDb = {
-    id: InMemoryDataServiceRoundElim.tourney.id
-  , json: JSON.stringify(InMemoryDataServiceRoundElim.tourney)
+  let t = { 
+      id: tourney.id
+    , json: JSON.stringify(tourney)
+  };
+
+  return t;
 } 
 
-static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
+static prepareDefaultRounds(teams : Team[], roundNo: number ) : Round[] {
 
     let rounds = new Array<Round>();
 
@@ -83,9 +102,11 @@ static prepareDefaultRounds(teams : Team[], roundNo: number) : Round[] {
         r.teams.push(t);
       }
     }
- 
+
+    InMemoryDataServiceRoundElim.meetingsDb = [];
+
     for(let r=0; r<rounds.length; r++) {
-      InMemoryDataServiceRoundElim.prepareDefaultMeeting(rounds[r]);
+      InMemoryDataServiceRoundElim.prepareDefaultMeeting(rounds[r] );
     }
 
     return rounds;
@@ -103,7 +124,7 @@ static newRound(roundNo : number): Round {
   };
 }
 
-static prepareDefaultMeeting(r : Round)  {
+static prepareDefaultMeeting(r : Round  )  {
 
     let teams = r.teams;
     for(let i=0; i<teams.length; i++) {
@@ -123,11 +144,21 @@ static prepareDefaultMeeting(r : Round)  {
           , points1: 0
           , points2: 0
           , direction: Direction.OneWay
-          
         };
 
         r.meetings.push(m);
+        let json = JSON.stringify(m);
+        let mdb : MeetingDb =  {
+          id: m.id,
+          tourneyId: tourneyId,
+          roundId: r.id,
+          playoffId: 0,
+          eliminatoryId: 0,
+          json: json
+        };
+
+        InMemoryDataServiceRoundElim.meetingsDb.push(mdb);
       }
     }
-}
+  }
 }

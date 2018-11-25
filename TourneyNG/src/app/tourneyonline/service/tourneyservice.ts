@@ -325,29 +325,23 @@ export class TourneyService {
     }
         
     /** POST: add a new Meeting to the db server */
-    addMeeting (m: Meeting): void {
-        const id =  m.id;
+    addMeeting (mdb: MeetingDb): void {
+        const id =  mdb.id;
         let url = meetingUrl + "/" + id;
 
         if(this.loginService.userLogged) {
             url = meetingBeUrl +  "/" + id;
         }
 
-        let json: string = JSON.stringify(m);
-        let mdb: MeetingDb = {id: m.id, json: json};
-
-        let obs = this.http.post<Meeting>(url, mdb, httpOptions).pipe(
-            tap((m: Meeting) => this.log('added Meeting, url=' + url)),
-            catchError(this.handleError<Meeting>('addMeeting, url=' + url))
+        let obs = this.http.post<MeetingDb>(url, mdb, httpOptions).pipe(
+            tap((m: MeetingDb) => this.log('added Meeting, url=' + url)),
+            catchError(this.handleError<MeetingDb>('addMeeting, url=' + url))
         );
         obs.subscribe();
     }
 
     /** PUT: update the Meeting on the server */
-    updateMeeting (m: Meeting): void {
-
-        let json: string = JSON.stringify(m);
-        let mdb: MeetingDb = {id: m.id, json: json};
+    updateMeeting (mdb: MeetingDb): void {
 
         let obs = this.updateMeetingDb(mdb);
 
@@ -368,7 +362,18 @@ export class TourneyService {
             catchError(this.handleError<MeetingDb>('updateMeetingDb'))
         );
     }
- 
+     
+    /** DELETE: delete the Meeting from the server */
+    deleteMeeting (id: number): void {
+        const url = tourneyUrl + "/" + id;
+
+        let obs = this.http.delete<Tourney>(url, httpOptions).pipe(
+            tap(_ => this.log('deleted Meeting url=' + url)),
+            catchError(this.handleError<Tourney>('deleteMeeting'))
+        );
+        obs.subscribe();
+    }
+    
     /** DELETE: delete the tourney from the server */
     deleteTourney (tourney: Tourney | number): Observable<Tourney> {
         const id = typeof tourney === 'number' ? tourney : tourney.id;        

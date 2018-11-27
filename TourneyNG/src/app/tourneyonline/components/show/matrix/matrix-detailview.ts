@@ -6,11 +6,10 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Cell } from 'app/tourneyonline/domain/cell';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
-import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { Combobox, CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
@@ -54,8 +53,6 @@ export class MatrixDetailView extends AbstractDetailView {
     cols: any[];
     matrix: Matrix = null;
 
-    points: Combobox[];
-
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
@@ -73,11 +70,6 @@ export class MatrixDetailView extends AbstractDetailView {
         this.roundName = this.selectedRound.name;
         this.matrix = this.selectedRound.matrix;
 
-        this.points=[];
-        for(let i=0; i<=this.selectedTourney.matchWinnerScores; i++) {
-            let cb: Combobox = {label: "" + i, value: i};
-            this.points.push(cb);
-        }
         if(this.selectedRound.classification.length==0) {
             for(let t of this.selectedRound.teams) {
                 let cl: Classification = this.newClassification(t, 0);
@@ -120,10 +112,10 @@ export class MatrixDetailView extends AbstractDetailView {
                 this.matrix.rows.push(row);
                 
                 let c1 = this.selectedRound.classification[i];
-                let c : Cell = this.newCell(null, null, c1.team.teamName, 'style0', false, false);
+                let c : Cell = this.newCell(null, null, c1.team.teamName, 'style0', false, false, 0, 0);
                 cells.push(c);
 
-                c = this.newCell(null, null, letter.toString(), 'style1', false, false);
+                c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0);
                 cells.push(c);
                 letter = this.getNextLetter(letter);                            
 
@@ -131,30 +123,50 @@ export class MatrixDetailView extends AbstractDetailView {
                     let c2 = this.selectedRound.classification[j];
 
                     if(i==j) { 
-                        c = this.newCell(null, null, "", 'diagonalStyle', false, false);
+                        c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0);
                       } else {
-                        c = this.newCell(c1.team, c2.team, "", 'style0', true, false);
+                        c = this.newCell(c1.team, c2.team, "", 'style0', true, false, i, j);
                     }    
                     cells.push(c);
                 }          
 
-                c = this.newCell(null, null, "", 'totalStyle', false, true);     
+                c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0);     
                 cells.push(c);
             }            
         }
     }
 
-    private newCell(t1: Team, t2: Team, field: string, style: string, isEditable: boolean, isTotal: boolean): Cell {
-        return {
+    onPointChange(cell: CellCombobox) {
+        console.log( cell );
+
+        let r = cell.row;
+        let c = cell.col;
+
+    }
+
+    private newCell(t1: Team, t2: Team, field: string, style: string, isEditable: boolean, isTotal: boolean, row: number, col: number): Cell {
+
+        let options: CellCombobox[] = [];
+        if(t1 != null && t2 != null) {            
+            for(let i=0; i<=this.selectedTourney.matchWinnerScores; i++) {
+                let cb: CellCombobox = {label: "" + i, value: i, row: row, col: col};
+                options.push(cb);
+            }
+        }
+
+        let cell: Cell = {
               id: this.tourneyService.getSequenceNumber()
             , field: field
             , style: style
-            , points: { label: "", value: 0 }
+            , points: { label: "", value: 0, row: row, col: col }
             , isEditable: isEditable
             , isTotal: isTotal
             , team1Id: t1 == null? 0: t1.id
             , team2Id: t2 == null? 0: t2.id
+            , options: options
         };
+
+        return cell;
     }
 
     getNextLetter(char: String): String {
@@ -171,16 +183,18 @@ export class MatrixDetailView extends AbstractDetailView {
         for(let i=0; i<this.matrix.rows.length; i++) {
             let r = this.matrix.rows[i];
             let sum: number = 0;
-            for(let i=2; i<r.cells.length-1; i++) {
-                let c: Cell = r.cells[i];
+            for(let j=2; j<r.cells.length-1; j++) {
+                let c: Cell = r.cells[j];
                 sum += c.points.value;
                 if(c.points.label!="") {
                     c.style = 'totalStyle';
                 }
 
+                this.alignSimmetricCell(c, i, j);
+
                 this.updateMeeting(c);
             }
-            r.cells[r.cells.length-1].points = {label: "" + sum, value: sum};
+            r.cells[r.cells.length-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
             this.selectedRound.classification[i].points = sum;
         }
 
@@ -189,7 +203,34 @@ export class MatrixDetailView extends AbstractDetailView {
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
+    private alignSimmetricCell(cell: Cell, i: number, j: number){
+
+        let cb: CellCombobox = cell.points;
+        
+        let r = cb.row;
+        let c = cb.col;
+
+        if(cb.value == this.selectedTourney.matchWinnerScores) {
+            this.matrix.rows[c].cells[r].points.value = 0;
+            this.matrix.rows[c].cells[r].points.label = "0";
+        }
+        if(cb.value == 0) {
+            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.matchWinnerScores;
+            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.matchWinnerScores;
+        }
+
+        if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakWin) {
+            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+        }
+        if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakDefeat) {
+            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
+        }
+    }
+
     private updateMeeting(c: Cell): any {
+        
+
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == c.team1Id) {
                 m.points1 = c.points.value;

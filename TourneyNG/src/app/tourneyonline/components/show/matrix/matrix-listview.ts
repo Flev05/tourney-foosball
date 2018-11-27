@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-
-import { Round } from '../../../domain/round';
-import { Playoff } from '../../../domain/playoff';
-
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { Round } from 'app/tourneyonline/domain/round';
 import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
+
 
 const matrixDvRedirect: string = "matrix/lv/dv";
 

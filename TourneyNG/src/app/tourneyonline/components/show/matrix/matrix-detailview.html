@@ -37,11 +37,12 @@
                 <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
                     <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
                         <ng-template pTemplate="input" >
-                            <p-dropdown [options]="points" 
+                            <p-dropdown [options]="rowData.cells[i].options" 
                                 [(ngModel)]="rowData.cells[i].points" 
                                 optionLabel="label"
                                 [style]="{'width':'100%'}"
-                                placeholder="Punti">                                
+                                placeholder="Punti"
+                                (onChange)="onPointChange($event.value)">                                
                             </p-dropdown>
                         </ng-template>
                         <ng-template pTemplate="output">

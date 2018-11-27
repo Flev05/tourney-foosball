@@ -295,9 +295,12 @@ export class TourneyService {
 
     /** POST: add a new tourney to the server */
     addTourney (tourney: Tourney): Observable<Tourney> {
-        return this.http.post<Tourney>(tourneyUrl, tourney, httpOptions).pipe(
-            tap((tourney: Tourney) => this.log('added Tourney w/ id=' + tourney.id)),
-            catchError(this.handleError<Tourney>('addTourney'))
+        let json: string = JSON.stringify(tourney);
+        let tourneyDb: TourneyDb = {id: tourney.id, json: json};
+
+        return this.http.post<TourneyDb>(tourneyUrl, tourneyDb, httpOptions).pipe(
+            tap((tourney: TourneyDb) => this.log('added Tourney w/ id=' + tourney.id)),
+            catchError(this.handleError<TourneyDb>('addTourney'))
         );
     }
 

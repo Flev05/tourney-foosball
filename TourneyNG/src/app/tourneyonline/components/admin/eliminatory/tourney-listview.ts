@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
-import { TourneyService } from '../../../service/tourneyservice';
-import { PhaseType } from '../../../domain/enumerations';
 
 const redirect = '/admineliminatory/levelLv';
 

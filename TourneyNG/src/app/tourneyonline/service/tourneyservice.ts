@@ -323,9 +323,23 @@ export class TourneyService {
             catchError(this.handleError<TourneyDb>('updateTourneyDb'))
         );
     }
-        
+
+    addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+        let json: string = JSON.stringify(m);
+        let mdb: MeetingDb = {
+            id: m.id,
+            tourneyId: tourneyId,
+            roundId: roundId,
+            playoffId: playoffId,
+            eliminatoryId: eliminatoryId,
+            json: json
+        };
+
+        this.addMeeting(mdb);
+    }
+
     /** POST: add a new Meeting to the db server */
-    addMeeting (mdb: MeetingDb): void {
+    private addMeeting (mdb: MeetingDb): void {
         const id =  mdb.id;
         let url = meetingUrl + "/" + id;
 
@@ -368,10 +382,13 @@ export class TourneyService {
         let id: number = m.id;
         const url = meetingUrl + "/" + id;
 
+        let json = url + ", " + m.name + ", " + m.team1.id + ", " + m.team2.id;
+
         let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleted Meeting url=' + url)),
-            catchError(this.handleError<Meeting>('deleteMeeting'))
+            tap(_ => this.log('deleting Meeting:' + json)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + json))
         );
+
         obs.subscribe();
     }
     

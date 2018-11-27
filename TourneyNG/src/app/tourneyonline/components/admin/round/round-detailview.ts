@@ -13,7 +13,6 @@ import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
-import { Classification } from 'app/tourneyonline/domain/classification';
 import { Router } from '@angular/router';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
@@ -33,6 +32,7 @@ export class RoundDetailView extends AbstractDetailView {
     availableTeams: string[] = [];
     targetTeams: string[] = [];
     mdbs: MeetingDb[];
+    nextDeleteMeeting: MeetingDb;
 
     constructor(
         private fb: FormBuilder,
@@ -127,59 +127,9 @@ export class RoundDetailView extends AbstractDetailView {
         for(let m of r.meetings) {
             this.tourneyService.deleteMeeting(m);
         }
+
+        this.selectedRound.meetings = [];
     }
-
-    // onMoveToTarget(teamNameList: string[]) {
-    //     let teamList: Team[] = this.getTeamList(teamNameList);
-    //     this.alignMoveToTargetList(teamList);
-    // }
-
-    // private getTeamList(teamNameList: string[]): Team[]  {
-    //     let teamList: Team[] = [];
-    //     for (let tn of teamNameList) {
-    //         for (let t of this.selectedTourney.teams) {
-    //             if (tn == t.teamName) {
-    //                 teamList.push(t);
-    //             }
-    //         }
-    //     }
-    //     return teamList;
-    // }
-
-    // onMoveToSource(teamNameList: string[]) {
-    //     let teamList: Team[] = this.getTeamList(teamNameList);
-    //     this.alignMoveToSourceList(teamList);
-    // }
-
-    // onMoveAllToTarget(teamNameList: string[]) {
-    //     let teamList: Team[] = this.getTeamList(teamNameList);
-    //     this.alignMoveToTargetList(teamList);
-    // }
-
-    // onMoveAllToSource(teamNameList: string[]) {
-    //     let teamList: Team[] = this.getTeamList(teamNameList);
-    //     this.alignMoveToSourceList(teamList);
-    // }
-
-    // private alignMoveToTargetList(teamList: Team[]) {
-    //     for (let t of teamList) {
-    //         this.addToMeetings(t);
-    //     }
-    // }
-
-    // private addToMeetings(team: Team) {
-    //     console.log("addToMeetings(" + team.teamName + ")");
-    //     this.addTeamToMeetings(team);
-    //     this.selectedRound.teams.push(team);
-    //     let cl: Classification = this.newClassification(team, 0);
-    //     this.selectedRound.classification.push(cl);
-    // }
-
-    // private alignMoveToSourceList(teamList: Team[]) {
-    //     for (let t of teamList) {
-    //         this.removeFromMeetings(t);
-    //     }
-    // }
 
     onSubmit(value: string) {
 
@@ -239,22 +189,19 @@ export class RoundDetailView extends AbstractDetailView {
         for (let t of this.selectedRound.teams) {
             let m = this.createMeeting(team, t, null, null, Direction.OneWay);
             
-            let mdb: MeetingDb = RoundDetailView.prepareMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
-            this.tourneyService.addMeeting(mdb);
+            this.tourneyService.addMeetingDb(m, this.selectedTourney.id, this.selectedRound.id, 0, 0 );
 
             this.selectedRound.meetings.push(m);
             if (!this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
 
-                let mdb: MeetingDb = RoundDetailView.prepareMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
-                this.tourneyService.addMeeting(mdb);
+                this.tourneyService.addMeetingDb(m, this.selectedTourney.id, this.selectedRound.id, 0, 0);                
             }
         }
     }
 
     private removeFromMeetings(team: Team): void {
-        console.log("removeFromMeetings(" + team.teamName + ")");
 
         let temp : Meeting[] = [];
         for(let m of this.selectedRound.meetings) {
@@ -266,19 +213,7 @@ export class RoundDetailView extends AbstractDetailView {
         }
         this.selectedRound.meetings = temp;    
     }
-
-    static prepareMeetingDb(m: Meeting, tourneyId: number, roundId: number): MeetingDb {
-        let json: string = JSON.stringify(m);
-        return {
-            id: m.id,
-            tourneyId: tourneyId,
-            roundId: roundId,
-            playoffId: 0,
-            eliminatoryId: 0,
-            json: json
-        };
-    }
-
+ 
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

@@ -55,6 +55,8 @@ export class MeetingListView extends AbstractListView {
         for( let m of this.meetings) {
             if(m.direction == Direction.OneWay) {
                 tmpMeetings.push(m);
+            } else {
+                this.tourneyService.deleteMeeting(m);
             }
         }
         this.selectedRound.meetings = tmpMeetings;

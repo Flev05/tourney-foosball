@@ -6,11 +6,8 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { Team } from 'app/tourneyonline/domain/team';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { PhaseType, EliminatoryMode, Direction, MeetingStatus } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { Match } from 'app/tourneyonline/domain/match';
+import { EliminatoryMode, Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -96,7 +93,8 @@ export class EliminatoryListView extends AbstractListView {
             } else {
                 let m = this.createMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1, null, null, Direction.RoundTrip);
                 e.round.meetings.push(m);
-                this.tourneyService.addMeeting(m);
+
+                this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
             }
         }
     }

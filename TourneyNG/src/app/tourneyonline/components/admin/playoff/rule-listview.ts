@@ -112,6 +112,7 @@ export class RuleListView extends AbstractListView {
         for(let m of p.round.meetings) {
             this.tourneyService.deleteMeeting(m);
         }
+        p.round.meetings = [];
     }
 
     onError(n:any) {

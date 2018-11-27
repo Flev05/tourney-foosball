@@ -7,9 +7,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { PhaseType, EliminatoryMode, TeamSortType, Direction, MeetingStatus } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { RoundType } from 'app/tourneyonline/domain/enumerations';
+import { RoundType, EliminatoryMode, PhaseType, Direction, TeamSortType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
@@ -290,6 +289,8 @@ export class LevelListView extends AbstractListView {
 
             e.round.meetings[0] = m;
 
+            this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+
             sequenzialEliminatories.push(e);
         }
 
@@ -541,6 +542,8 @@ export class LevelListView extends AbstractListView {
                 }
             }
         };
+
+        this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
 
         return e;
     }

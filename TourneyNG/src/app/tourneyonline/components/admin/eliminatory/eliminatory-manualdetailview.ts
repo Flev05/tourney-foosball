@@ -74,7 +74,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
                 + m1.country.zipCode + " " + m1.country.city
                 + " (" + m1.country.provinceCode +")";
         }
-
+ 
         let m2: Meeting = m1;
         if(!this.isOneway) {
             m2 = this.selectedEliminatory.round.meetings[1];

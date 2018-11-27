@@ -13,6 +13,7 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { RoundDetailView } from '../round/round-detailview';
 
 @Component({
     templateUrl: './rule-detailview.html'
@@ -95,14 +96,12 @@ export class RuleDetailView extends AbstractDetailView {
                     let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
                     this.selectedPlayoff.round.meetings.push(m);
                     
-                    let mdb: MeetingDb = this.makeMeetingDb(m);
-                    this.tourneyService.addMeeting(mdb);
+                    this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
     
                     if(!this.selectedTourney.isOnewayPlayoff) {
                         m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
                         this.selectedPlayoff.round.meetings.push(m);
-                        let mdb: MeetingDb = this.makeMeetingDb(m);
-                        this.tourneyService.addMeeting(mdb);
+                        this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
                     }        
                 }
             }
@@ -124,27 +123,13 @@ export class RuleDetailView extends AbstractDetailView {
                     m.rule2 = this.selectedPlayoffConfig;
                 }
 
-                let mdb: MeetingDb = this.makeMeetingDb(m);
-                this.tourneyService.updateMeeting(mdb);
+                this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
             }
         }
         this.selectedPlayoff.playoffRules = this.playoffConfigs;
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-
-    private makeMeetingDb(m: Meeting): MeetingDb {
-        let json: string = JSON.stringify(m);
-        let mdb: MeetingDb = {
-            id: m.id,
-            tourneyId: this.selectedTourney.id,
-            playoffId: this.selectedPlayoff.id,
-            roundId: 1,
-            eliminatoryId: 0,
-            json: json
-        };
-        return mdb;
     }
 
     doDelete() {

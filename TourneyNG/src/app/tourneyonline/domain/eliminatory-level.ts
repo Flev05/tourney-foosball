@@ -1,5 +1,4 @@
 import { Eliminatory } from "./eliminatory";
-import { TeamSortType } from "./enumerations";
 
 export class EliminatoryLevel  {
     id: number;

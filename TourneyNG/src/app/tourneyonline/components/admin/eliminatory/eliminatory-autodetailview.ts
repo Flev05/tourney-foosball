@@ -118,6 +118,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.team2 = this.getTeam(team2CB);
 
         m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
+        this.tourneyService.updateMeeting(m1);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
@@ -129,6 +130,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             m2.team2 = m1.team1;
     
             m2.name = m2.team1.teamName + " - " + m2.team2.teamName;
+            this.tourneyService.updateMeeting(m2);
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

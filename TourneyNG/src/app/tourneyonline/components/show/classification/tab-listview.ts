@@ -104,10 +104,27 @@ export class TabListView extends AbstractListView {
         this.selectedTourney = this.tourneyService.selectedTourney;
 
         let rounds = this.selectedTourney.rounds;
+
+        for(let r of rounds) {
+            const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+            subscr.subscribe(t => r.meetings = t, e => this.onError(e), () => this.onComplete());   
+    
+        }
+
+
         this.roundsRows = this.prepareRoundClassification(rounds);
 
         let playoffs = this.selectedTourney.playoffs;
-        this.playoffRows = this.preparePlayoffClassification(playoffs, rounds);
+        this.playoffRows = this.preparePlayoffClassification(playoffs);
+    }
+    
+    private onComplete(): void {
+        this.selectedRound.meetings = [];
+        for(let mdb of this.mdbs) {
+            let m: Meeting = JSON.parse(mdb.json);
+            this.selectedRound.meetings.push(m);
+        }
+        this.tourneyService.selectedRound = this.selectedRound;
     }
 
     // unsubscribe to ensure no memory leaks
@@ -122,7 +139,7 @@ export class TabListView extends AbstractListView {
     private process(m: Meeting) {
         console.log("Entering process() ... " + m);
     }
-    private createClassification(round: Round): Classification[] {
+    private createClassification(round: Round, meetings: Meeting[]): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of round.meetings) {
@@ -224,7 +241,7 @@ export class TabListView extends AbstractListView {
 
         return sortedClassification;
     } 
-    private prepareRoundClassification(rounds: Round[]): any[] {
+    private prepareRoundClassification(rounds: Round[], meetings: Meeting[]): any[] {
 
         let row : number = 0;
         let rows: any[] = [];
@@ -233,6 +250,8 @@ export class TabListView extends AbstractListView {
 
         for (let round of rounds) {
             
+            round.classification = this.createClassification(round, meetings);
+
             for (let c of round.classification) {
                 
                 rows.push(c);
@@ -263,13 +282,14 @@ export class TabListView extends AbstractListView {
         return rows;
     }
 
-    private preparePlayoffClassification(playoffs: Playoff[], rounds: Round[]): any[] {
-        let rows: any[] = [];
+    private preparePlayoffClassification(playoffs: Playoff[] ): any[] {
 
         let playoffRounds: Round[] = [];
         for(let p of playoffs) {
             playoffRounds.push(p.round);
         }
+
+        let rows: any[] = this.prepareRoundClassification(playoffRounds);
 
         return rows;
     }

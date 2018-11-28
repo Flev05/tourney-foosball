@@ -6,11 +6,12 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Cell } from 'app/tourneyonline/domain/cell';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
-import { Combobox, CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { Team } from 'app/tourneyonline/domain/team';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './matrix-detailview.html',
@@ -41,7 +42,8 @@ import { Team } from 'app/tourneyonline/domain/team';
     ]
 })
 export class MatrixDetailView extends AbstractDetailView {
-
+    static matrixDvRedirect: string = "matrix/lv/dv";
+    
     msgs: Message[] = [];
 
     selectedRound: Round;
@@ -56,6 +58,7 @@ export class MatrixDetailView extends AbstractDetailView {
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
+        protected router: Router,
         protected countryService: CountryService
     ) { 
         super(tourneyService, location, countryService);
@@ -136,14 +139,39 @@ export class MatrixDetailView extends AbstractDetailView {
         }
     }
 
-    onPointChange(cell: CellCombobox) {
-        console.log( cell );
+    onPointChange(cb: CellCombobox) {
+        console.log( cb );
 
-        let r = cell.row;
-        let c = cell.col;
+        let r = cb.row;
+        let c = cb.col;
 
+        // this.alignSimmetricCell(cb, c, r);
+        // this.router.navigate([MatrixDetailView.matrixDvRedirect]);
     }
 
+    private alignSimmetricCell(cb: CellCombobox, i: number, j: number){
+        
+        let r = cb.row;
+        let c = cb.col;
+
+        if(cb.value == this.selectedTourney.matchWinnerScores) {
+            this.matrix.rows[c].cells[r].points.value = 0;
+            this.matrix.rows[c].cells[r].points.label = "0";
+        }
+        if(cb.value == 0) {
+            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.matchWinnerScores;
+            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.matchWinnerScores;
+        }
+
+        if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakWin) {
+            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+        }
+        if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakDefeat) {
+            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
+        }
+    }
+    
     private newCell(t1: Team, t2: Team, field: string, style: string, isEditable: boolean, isTotal: boolean, row: number, col: number): Cell {
 
         let options: CellCombobox[] = [];
@@ -174,11 +202,7 @@ export class MatrixDetailView extends AbstractDetailView {
         code++;
         return String.fromCharCode(code);
     }
-
-    onEditComplete(event) {
-        console.log("Entering onEditComplete(" + JSON.stringify(event) + ")");
-    }
-
+ 
     save() {
         for(let i=0; i<this.matrix.rows.length; i++) {
             let r = this.matrix.rows[i];
@@ -190,8 +214,6 @@ export class MatrixDetailView extends AbstractDetailView {
                     c.style = 'totalStyle';
                 }
 
-                this.alignSimmetricCell(c, i, j);
-
                 this.updateMeeting(c);
             }
             r.cells[r.cells.length-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
@@ -201,31 +223,6 @@ export class MatrixDetailView extends AbstractDetailView {
         this.selectedRound.matrix = this.matrix;
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-
-    private alignSimmetricCell(cell: Cell, i: number, j: number){
-
-        let cb: CellCombobox = cell.points;
-        
-        let r = cb.row;
-        let c = cb.col;
-
-        if(cb.value == this.selectedTourney.matchWinnerScores) {
-            this.matrix.rows[c].cells[r].points.value = 0;
-            this.matrix.rows[c].cells[r].points.label = "0";
-        }
-        if(cb.value == 0) {
-            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.matchWinnerScores;
-            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.matchWinnerScores;
-        }
-
-        if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakWin) {
-            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
-            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
-        }
-        if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakDefeat) {
-            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
-        }
     }
 
     private updateMeeting(c: Cell): any {

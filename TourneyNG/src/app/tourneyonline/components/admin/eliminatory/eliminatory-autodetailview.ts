@@ -14,8 +14,6 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryMode } from '../../../domain/enumerations';
 import { Team } from 'app/tourneyonline/domain/team';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { TourneyDb } from 'app/tourneyonline/domain/tourney.db';
-
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',

@@ -5,27 +5,27 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Round } from 'app/tourneyonline/domain/round';
 import { AbstractListView } from '../../common/abstract-listview';
+import { MatrixDetailView } from './matrix-detailview';
 
-
-const matrixDvRedirect: string = "matrix/lv/dv";
 
 @Component({
     templateUrl: './matrix-listview.html'
 })
 export class MatrixListView extends AbstractListView {
-    constructor(
-        protected tourneyService: TourneyService,
-        protected router: Router,
-        protected location: Location,
-    ) {
-        super(matrixDvRedirect, tourneyService, router, location);
-    }
-
+    
     selectedPlayoff: Playoff;
     selectedRound: Round;
 
     rounds: Round[];
     playoffs: Playoff[];
+
+    constructor(
+        protected tourneyService: TourneyService,
+        protected router: Router,
+        protected location: Location,
+    ) {
+        super(MatrixDetailView.matrixDvRedirect, tourneyService, router, location);
+    }
 
     ngOnInit() {
         super.ngOnInit();
@@ -44,7 +44,7 @@ export class MatrixListView extends AbstractListView {
     }
 
     private gotoMeetingListView() {
-        this.router.navigate([matrixDvRedirect]);
+        this.router.navigate([MatrixDetailView.matrixDvRedirect]);
     }
 
     onPlayoffSelect(event) {

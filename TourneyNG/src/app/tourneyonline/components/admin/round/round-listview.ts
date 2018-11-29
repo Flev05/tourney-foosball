@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';

@@ -11,6 +11,7 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Subscription } from 'rxjs';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './tab-listview.html',
@@ -88,6 +89,11 @@ export class TabListView extends AbstractListView {
     roundsRows: any[] = [];
     playoffRows: any[] = [];
     subscription: Subscription;
+    roundMeetings: MeetingDb[];
+    playoffMeetings: MeetingDb[];
+
+    roundMap: Map<number, Round>;
+    playoffRoundMap: Map<number, Round>;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -96,7 +102,8 @@ export class TabListView extends AbstractListView {
     ) 
     {
         super(TabListView.tabDvRedirect, tourneyService, router, location);
-        this.subscription = this.tourneyService.getMessage().subscribe(n => this.process(n), e => this.onError(e));
+        console.log("Entering TabListView.constructor()");
+        // this.subscription = this.tourneyService.getMessage().subscribe(n => this.process(n), e => this.onError(e));
     }
 
     ngOnInit() {
@@ -105,31 +112,54 @@ export class TabListView extends AbstractListView {
 
         let rounds = this.selectedTourney.rounds;
 
+        this.roundMap = new Map<number, Round>();
         for(let r of rounds) {
-            const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-            subscr.subscribe(t => r.meetings = t, e => this.onError(e), () => this.onComplete());   
-    
+            r.meetings = [];
+            this.roundMap.set(r.id, r);
+            const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, r.id);
+            subscr.subscribe(ms => this.roundMeetings = ms, e => this.onError(e), () => this.onLoadRoundMeetingComplete());       
         }
-
-
-        this.roundsRows = this.prepareRoundClassification(rounds);
 
         let playoffs = this.selectedTourney.playoffs;
-        this.playoffRows = this.preparePlayoffClassification(playoffs);
+
+        this.playoffRoundMap = new Map<number, Round>();
+        for(let po of playoffs) {
+            let r = po.round;
+            r.meetings = [];
+            this.playoffRoundMap.set(r.id, r);
+            const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
+            subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting());       
+        }
     }
     
-    private onComplete(): void {
-        this.selectedRound.meetings = [];
-        for(let mdb of this.mdbs) {
-            let m: Meeting = JSON.parse(mdb.json);
-            this.selectedRound.meetings.push(m);
-        }
-        this.tourneyService.selectedRound = this.selectedRound;
-    }
-
     // unsubscribe to ensure no memory leaks
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        console.log("Entering ngOnDestroy() ... ");
+        // this.subscription.unsubscribe();
+    }
+
+    private onLoadRoundMeetingComplete(): void {
+        for(let mdb of this.roundMeetings) {
+            
+            let r = this.roundMap.get(mdb.roundId);
+            
+            let m: Meeting = JSON.parse(mdb.json);
+            r.meetings.push(m);
+        }
+        
+        this.roundsRows = this.prepareRoundClassification(this.selectedTourney.rounds);
+    }
+
+    private onLoadPlayoffMeeting(): void {
+        for(let mdb of this.playoffMeetings) {
+            
+            let r = this.playoffRoundMap.get(mdb.playoffId);
+            
+            let m: Meeting = JSON.parse(mdb.json);
+            r.meetings.push(m);
+        }
+        
+        this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs);
     }
 
     onError(e:any) {
@@ -139,7 +169,8 @@ export class TabListView extends AbstractListView {
     private process(m: Meeting) {
         console.log("Entering process() ... " + m);
     }
-    private createClassification(round: Round, meetings: Meeting[]): Classification[] {
+
+    private createClassification(round: Round ): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of round.meetings) {
@@ -241,16 +272,17 @@ export class TabListView extends AbstractListView {
 
         return sortedClassification;
     } 
-    private prepareRoundClassification(rounds: Round[], meetings: Meeting[]): any[] {
+
+    private prepareRoundClassification(rounds: Round[]): any[] {
 
         let row : number = 0;
         let rows: any[] = [];
 
-        var roundMap: Map<string, Classification> = new Map<string, Classification>();
+        var classificationMap: Map<string, Classification> = new Map<string, Classification>();
 
         for (let round of rounds) {
             
-            round.classification = this.createClassification(round, meetings);
+            round.classification = this.createClassification(round );
 
             for (let c of round.classification) {
                 
@@ -268,9 +300,9 @@ export class TabListView extends AbstractListView {
 
                 let len = round.meetings.length;
 
-                let currentKey = this.makeKey(round, c);  
-                if(!roundMap.has(currentKey)) {
-                    roundMap.set(currentKey, c);
+                let currentKey = round.name;  
+                if(!classificationMap.has(currentKey)) {
+                    classificationMap.set(currentKey, c);
                     rows[row].rowspanSize = len;
                 } else {
                     rows[row].rowspanSize = undefined;
@@ -294,14 +326,8 @@ export class TabListView extends AbstractListView {
         return rows;
     }
 
-    private makeKey( round : Round, c : Classification) : string {
-        let key = round.name + " - " + c.team.teamName;
-        return key;
-    }
-
     goBack(): void {
         this.location.back();
     }
-
 }
 

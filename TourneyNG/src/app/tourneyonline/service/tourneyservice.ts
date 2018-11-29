@@ -77,11 +77,12 @@ export class TourneyService {
     selectedIndex: number;
     newRule: boolean;
 
-    private subject = new Subject<Meeting>();
+    private subject;
 
     constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
+        this.subject = new Subject<Meeting>();
     }
 
     sendMessage(m: Meeting) {
@@ -358,11 +359,11 @@ export class TourneyService {
     }
 
     /** PUT: update the Meeting on the server */
-    updateMeeting (mdb: MeetingDb): void {
+    updateMeeting (mdb: MeetingDb):  Observable<MeetingDb> {
 
         let obs = this.updateMeetingDb(mdb);
 
-        obs.subscribe();
+        return obs;
     }
 
     /** PUT: update the MeetingDb on the db server */

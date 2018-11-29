@@ -75,7 +75,7 @@
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
                     <td colspan="9">
-                        <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.team.teamName}}</span>
+                        <span style="font-weight:bold">{{rowData.roundName}}</span>
                     </td>
                 </tr>            
             
@@ -124,9 +124,9 @@
             </ng-template>
     
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize==rowIndex+1">
                     <td colspan="9">
-                        <span style="font-weight:bold">{{rowData.roundName}} - {{rowData.team.teamName}}</span>
+                        <span style="font-weight:bold">{{rowData.roundName}}</span>
                     </td>
                 </tr>            
             

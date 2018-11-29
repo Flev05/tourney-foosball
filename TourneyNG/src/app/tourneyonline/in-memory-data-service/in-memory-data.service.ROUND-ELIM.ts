@@ -142,6 +142,7 @@ static prepareDefaultMeeting(r : Round  )  {
           , points1: 0
           , points2: 0
           , direction: Direction.OneWay
+          , matches: []
         };
 
         r.meetings.push(m);

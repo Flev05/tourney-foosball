@@ -21,6 +21,7 @@ import {ClassificationRoutingModule} from './classification-routing.module';
 import {ClassificationTourneyListView} from './tourney-listview';
 import {ClassificationListView} from './classification-listview';
 import {AccordionModule} from 'primeng/accordion';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
 @NgModule({
         imports: [
@@ -50,4 +51,8 @@ import {AccordionModule} from 'primeng/accordion';
 		ClassificationListView
 	]
 })
-export class ClassificationModule {}
+export class ClassificationModule {
+        constructor(protected tourneyService: TourneyService ) {
+                console.log("Entering ClassificationModule.constructor()");
+        }
+}

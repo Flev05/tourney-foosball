@@ -10,8 +10,6 @@ import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { LoginService } from 'app/tourneyonline/service/loginservice';
-
 
 @Component({
     templateUrl: './meeting-detailview.html'
@@ -128,17 +126,17 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
 
-        let index = 0;
-        for(let i=0; i<this.selectedRound.meetings.length; i++) {
-            if(this.selectedRound.meetings[i].id == this.selectedMeeting.id) {
-                index = i;
-                break;
-            }
-        }
-
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        this.tourneyService.updateMeeting(this.selectedMeeting);
+        let mdb: MeetingDb = {id: this.selectedMeeting.id
+            ,tourneyId: this.selectedTourney.id
+            ,roundId: this.selectedRound.id
+            ,playoffId:0
+            ,eliminatoryId:0
+            ,json: JSON.stringify(this.selectedMeeting)
+        };
+
+        this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
     }
 
     onError(n:any) {
@@ -150,7 +148,7 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     onComplete(): void {
-        this.tourneyService.sendMessage(this.selectedMeeting);
+        // this.tourneyService.sendMessage(this.selectedMeeting);
         this.location.back();
     }
 }

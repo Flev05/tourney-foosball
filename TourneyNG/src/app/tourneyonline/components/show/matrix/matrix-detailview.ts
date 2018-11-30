@@ -235,7 +235,6 @@ export class MatrixDetailView extends AbstractDetailView {
             if(m.team2.id == c.team2Id) {
                 m.points2 = c.points.value;
             }
-            this.tourneyService.sendMessage(m);
         }
     }
  

@@ -2,7 +2,7 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
@@ -21,7 +21,6 @@ import { PlayoffRule } from '../domain/playoff-rule';
 import { MeetingDb } from '../domain/meeting-db';
 import { LoginService } from './loginservice';
 import { TourneyDb } from '../domain/tourney.db';
-import { nextTick } from 'q';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -77,25 +76,25 @@ export class TourneyService {
     selectedIndex: number;
     newRule: boolean;
 
-    private subject;
+    // private subject;
 
     constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
-        this.subject = new Subject<Meeting>();
+        // this.subject = new Subject<Meeting>();
     }
 
-    sendMessage(m: Meeting) {
-        this.subject.next(m);
-    }
+    // sendMessage(m: Meeting) {
+    //     this.subject.next(m);
+    // }
  
-    clearMessage() {
-        this.subject.next();
-    }
+    // clearMessage() {
+    //     this.subject.next();
+    // }
  
-    getMessage(): Observable<Meeting> {
-        return this.subject.asObservable();
-    }
+    // getMessage(): Observable<Meeting> {
+    //     return this.subject.asObservable();
+    // }
     
     prepareEliminatoriesComboBoxes(): number {
         if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
@@ -386,7 +385,7 @@ export class TourneyService {
         let id: number = m.id;
         const url = meetingUrl + "/" + id;
 
-        let json = url + ", " + m.name + ", " + m.team1.id + ", " + m.team2.id;
+        let json = url + ", " + m.name;
 
         let obs = this.http.delete<Meeting>(url).pipe(
             tap(_ => this.log('deleting Meeting:' + json)),

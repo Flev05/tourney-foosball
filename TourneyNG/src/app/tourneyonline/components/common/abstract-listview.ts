@@ -35,7 +35,11 @@ export abstract class AbstractListView extends AbstractView {
         return Math.pow(2, level);
     }
 
-    protected containPlayoff(): boolean {
+    protected containsPlayoff(): boolean {
         return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
+    }
+
+    protected containsEliminatory(): boolean {
+        return this.containsPhase(PhaseType.E, this.selectedTourney.phases);
     }
 }

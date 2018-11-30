@@ -72,8 +72,8 @@ export class InMemoryDataServiceCSI  {
     team2: null,
     direction: Direction.OneWay
     ,matches: []
-    ,rule1: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-    ,rule2: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+    ,rule1: {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1} }}
+    ,rule2: {id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2} }}
     ,points1: 0
     ,points2: 0
   });
@@ -88,8 +88,8 @@ export class InMemoryDataServiceCSI  {
     team2: null,
     direction: Direction.RoundTrip
     ,matches: []
-    ,rule2: {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-    ,rule1: {id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+    ,rule2: {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:1} }}
+    ,rule1: {id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:2} }}
     ,points1: 0
     ,points2: 0
   });
@@ -266,8 +266,8 @@ export class InMemoryDataServiceCSI  {
           ,classification:[]
         }
         ,playoffRules:[
-             {id:1, fromRound:{id:1, position:{label:"3°", value:3},round:{label:"Girone A", value:1} }}
-            ,{id:2, fromRound:{id:2, position:{label:"4°", value:4},round:{label:"Girone B", value:2} }}
+             {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1} }}
+            ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2} }}
           ]
       }
       ,{id:2, round:{
@@ -277,8 +277,8 @@ export class InMemoryDataServiceCSI  {
         ,classification:[]
       }
     ,playoffRules:[
-         {id:1, fromRound:{id:1, position:{label:"4°", value:4},round:{label:"Girone A", value:1} }}
-        ,{id:2, fromRound:{id:2, position:{label:"3°", value:3},round:{label:"Girone B", value:2} }}
+         {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:1} }}
+        ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:2} }}
       ]
     }
     ]

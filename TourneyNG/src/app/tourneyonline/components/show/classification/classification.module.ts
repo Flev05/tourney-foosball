@@ -19,7 +19,6 @@ import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighli
 
 import {ClassificationRoutingModule} from './classification-routing.module';
 import {ClassificationTourneyListView} from './tourney-listview';
-import {ClassificationListView} from './classification-listview';
 import {AccordionModule} from 'primeng/accordion';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
@@ -48,7 +47,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 	declarations: [
                 ClassificationTourneyListView,
                 TabListView,
-		ClassificationListView
 	]
 })
 export class ClassificationModule {

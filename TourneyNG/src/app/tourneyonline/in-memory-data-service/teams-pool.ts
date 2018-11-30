@@ -1,5 +1,4 @@
 import { Team } from "app/tourneyonline/domain/team";
-import { PlayersPool } from "./players-pool";
 
 export class TeamsPool {
 

@@ -8,9 +8,10 @@ import { MeetingDb } from '../domain/meeting-db';
 import { Tourney } from '../domain/tourney';
 
 const tourneyId = 3;
+const ROUND_NUM = 4;
 
 export class InMemoryDataServiceRoundElim  {
-static teams = TeamsPool.prepareTeams(10);
+static teams = TeamsPool.prepareTeams(19);
 
 private static meetingsDb: MeetingDb[] = [];
 private static counter: number = 100;
@@ -85,16 +86,16 @@ static prepareDefaultRounds(teams : Team[], roundNo: number ) : Round[] {
       rounds.push(round);
 
       let r: Round = rounds[i];
-      for(let j=0; j<4; j++ ) {
-        let t : Team = teams[i*4 + j];
+      for(let j=0; j<ROUND_NUM; j++ ) {
+        let t : Team = teams[i*ROUND_NUM + j];
         r.teams.push(t);
       }
     }
-    if(N % 4 > 0) {
+    if(N % ROUND_NUM > 0) {
       let r: Round = InMemoryDataServiceRoundElim.newRound(roundNo + 1);
       rounds.push(r);
 
-      for(let i=roundNo * 4; i<N; i++ ) {
+      for(let i=roundNo * ROUND_NUM; i<N; i++ ) {
         let t : Team = teams[i];
         r.teams.push(t);
       }

@@ -2,16 +2,17 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Round } from '../../../domain/round';
-import { Playoff } from '../../../domain/playoff';
-
-import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
 import { Classification } from 'app/tourneyonline/domain/classification';
-import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Subscription } from 'rxjs';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Round } from 'app/tourneyonline/domain/round';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { AbstractListView } from '../../common/abstract-listview';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './tab-listview.html',
@@ -88,6 +89,8 @@ export class TabListView extends AbstractListView {
 
     roundsRows: any[] = [];
     playoffRows: any[] = [];
+    eliminatoryRows: any[] = [];
+
     subscription: Subscription;
     roundMeetings: MeetingDb[];
     playoffMeetings: MeetingDb[];
@@ -103,7 +106,6 @@ export class TabListView extends AbstractListView {
     {
         super(TabListView.tabDvRedirect, tourneyService, router, location);
         console.log("Entering TabListView.constructor()");
-        // this.subscription = this.tourneyService.getMessage().subscribe(n => this.process(n), e => this.onError(e));
     }
 
     ngOnInit() {
@@ -120,13 +122,23 @@ export class TabListView extends AbstractListView {
             subscr.subscribe(ms => this.roundMeetings = ms, e => this.onError(e), () => this.onLoadRoundMeetingComplete());       
         }
 
+    }
+    
+    onChangePlayoff(e) {
+        let index=e.index;
+        console.log("Entering onChangePlayoff(): tab=" + index);
+
+        if(index!=1) {
+            return;
+        }
+
         let playoffs = this.selectedTourney.playoffs;
 
         this.playoffRoundMap = new Map<number, Round>();
         for(let po of playoffs) {
             let r = po.round;
             r.meetings = [];
-            this.playoffRoundMap.set(r.id, r);
+            this.playoffRoundMap.set(po.id, r);
             const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
             subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting());       
         }
@@ -141,13 +153,15 @@ export class TabListView extends AbstractListView {
     private onLoadRoundMeetingComplete(): void {
         for(let mdb of this.roundMeetings) {
             
-            let r = this.roundMap.get(mdb.roundId);
+            let r: Round = this.roundMap.get(mdb.roundId);
+
+            r.classification = this.createClassification(r);
             
             let m: Meeting = JSON.parse(mdb.json);
             r.meetings.push(m);
         }
         
-        this.roundsRows = this.prepareRoundClassification(this.selectedTourney.rounds);
+        this.roundsRows = this.prepareGuiRoundClassification(this.selectedTourney.rounds);
     }
 
     private onLoadPlayoffMeeting(): void {
@@ -155,28 +169,28 @@ export class TabListView extends AbstractListView {
             
             let r = this.playoffRoundMap.get(mdb.playoffId);
             
+            r.classification = this.createClassification(r);
+
             let m: Meeting = JSON.parse(mdb.json);
+            
             r.meetings.push(m);
         }
         
-        this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs);
+        this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs, this.selectedTourney.rounds);
     }
 
     onError(e:any) {
         console.log(e);
     }
 
-    private process(m: Meeting) {
-        console.log("Entering process() ... " + m);
-    }
+    // private process(m: Meeting) {
+    //     console.log("Entering process() ... " + m);
+    // }
 
-    private createClassification(round: Round ): Classification[] {
+    private createClassification(round: Round): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of round.meetings) {
-            if(m.status == MeetingStatus.ToPlay) {
-                continue;
-            }
 
             let t1 = m.team1;
 
@@ -193,6 +207,11 @@ export class TabListView extends AbstractListView {
                 let c2 = this.newClassification(t2, 0);
                 classificationMap.set(key2, c2);
             }
+            
+            if(m.status == MeetingStatus.ToPlay) {
+                continue;
+            }
+            
             let c2 = classificationMap.get(key2);
 
             c1.played++;
@@ -273,7 +292,7 @@ export class TabListView extends AbstractListView {
         return sortedClassification;
     } 
 
-    private prepareRoundClassification(rounds: Round[]): any[] {
+    private prepareGuiRoundClassification(rounds: Round[]): any[] {
 
         let row : number = 0;
         let rows: any[] = [];
@@ -282,7 +301,7 @@ export class TabListView extends AbstractListView {
 
         for (let round of rounds) {
             
-            round.classification = this.createClassification(round );
+            round.classification = this.createClassification(round);
 
             for (let c of round.classification) {
                 
@@ -314,16 +333,54 @@ export class TabListView extends AbstractListView {
         return rows;
     }
 
-    private preparePlayoffClassification(playoffs: Playoff[] ): any[] {
+    private preparePlayoffClassification(playoffs: Playoff[], rounds: Round[] ): any[] {
 
         let playoffRounds: Round[] = [];
         for(let p of playoffs) {
+            
+            p.round.teams = [];
             playoffRounds.push(p.round);
+
+            for(let pr of p.playoffRules) {
+                let pi: number = pr.fromRound.position.value;
+
+                let rn = pr.fromRound.round.label;
+                let round = this.findByName(rn, rounds);
+                
+                if(pi <= round.classification.length) {
+                    let c = round.classification[pi-1];
+                    let team = c.team;
+                    
+                    p.round.teams.push(team);
+
+                    this.updateMeeting(p.round.meetings, pr, team);
+                }
+            }
         }
 
-        let rows: any[] = this.prepareRoundClassification(playoffRounds);
+        let rows: any[] = this.prepareGuiRoundClassification(playoffRounds);
 
         return rows;
+    }
+
+    private updateMeeting(meetings: Meeting[], pr: PlayoffRule, team: Team): any {
+        for(let m of meetings) {
+            if( m.rule1.id == pr.id) {
+                m.team1 = team;
+            }
+            if( m.rule2.id == pr.id) {
+                m.team2 = team;
+            }
+        }
+    }
+
+    private findByName(rn: string, rounds: Round[]): Round {
+        for(let r of rounds) {
+            if(r.name == rn) {
+                return r;
+            }
+        }    
+        return null;
     }
 
     goBack(): void {

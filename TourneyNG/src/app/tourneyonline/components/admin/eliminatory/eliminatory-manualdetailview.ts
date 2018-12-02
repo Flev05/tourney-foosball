@@ -2,16 +2,15 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { Message } from '../../../../components/common/api';
 
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
-import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { EliminatoryMode } from '../../../domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { Message } from 'app/components/common/api';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { AbstractDetailView } from '../../common/abstract-detailview';
 
 @Component({
     templateUrl: './eliminatory-manualdetailview.html',
@@ -103,13 +102,13 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             'rounds':  new FormControl(this.rounds),
             'playoffs':  new FormControl(this.playoffs),
 
-            'position1':  new FormControl(this.selectedEliminatory.tc1.fromRound.position),
-            'round1':  new FormControl(this.selectedEliminatory.tc1.fromRound.round),
-            'playoff1':  new FormControl(this.selectedEliminatory.tc1.fromPlayoff.round),
+            'position1':  new FormControl(this.selectedEliminatory.rule1.fromRound.position),
+            'round1':  new FormControl(this.selectedEliminatory.rule1.fromRound.round),
+            'playoff1':  new FormControl(this.selectedEliminatory.rule1.fromPlayoff.round),
 
-            'position2':  new FormControl(this.selectedEliminatory.tc2.fromRound.position),            
-            'round2':  new FormControl(this.selectedEliminatory.tc2.fromRound.round),
-            'playoff2':  new FormControl(this.selectedEliminatory.tc2.fromPlayoff.round),            
+            'position2':  new FormControl(this.selectedEliminatory.rule2.fromRound.position),            
+            'round2':  new FormControl(this.selectedEliminatory.rule2.fromRound.round),
+            'playoff2':  new FormControl(this.selectedEliminatory.rule2.fromPlayoff.round),            
         });
     }
     
@@ -123,13 +122,13 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.tourneyService.updateMeeting(m1);
 
-        this.selectedEliminatory.tc1.fromRound.position = this.eliminatoryFormGroup.get('position1').value;
-        this.selectedEliminatory.tc1.fromRound.round = this.eliminatoryFormGroup.get('round1').value;
-        this.selectedEliminatory.tc1.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff1').value;
+        this.selectedEliminatory.rule1.fromRound.position = this.eliminatoryFormGroup.get('position1').value;
+        this.selectedEliminatory.rule1.fromRound.round = this.eliminatoryFormGroup.get('round1').value;
+        this.selectedEliminatory.rule1.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff1').value;
 
-        this.selectedEliminatory.tc2.fromRound.position = this.eliminatoryFormGroup.get('position2').value;
-        this.selectedEliminatory.tc2.fromRound.round = this.eliminatoryFormGroup.get('round2').value;
-        this.selectedEliminatory.tc2.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff2').value;
+        this.selectedEliminatory.rule2.fromRound.position = this.eliminatoryFormGroup.get('position2').value;
+        this.selectedEliminatory.rule2.fromRound.round = this.eliminatoryFormGroup.get('round2').value;
+        this.selectedEliminatory.rule2.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff2').value;
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];

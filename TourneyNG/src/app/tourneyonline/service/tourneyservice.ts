@@ -223,7 +223,7 @@ export class TourneyService {
         
         const obs :Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadMeetingDb url=' + url))
+            catchError(this.handleError<MeetingDb[]>('loadRoundMeeting url=' + url))
         );
 
         return obs;
@@ -243,12 +243,30 @@ export class TourneyService {
         
         const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadMeetingDb url=' + url))
+            catchError(this.handleError<MeetingDb[]>('loadPlayoffMeeting url=' + url))
         );
 
         return obs;
     }
+    /** 
+     * Loads all the meetings of the receìved tourney and eliminatory ids
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadEliminatoryMeeting(tourneyId: number, eliminatoryId: number) : Observable<MeetingDb[]> {
+        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "eliminatoryId=" + eliminatoryId;
+        let url = meetingUrl + queryString;
 
+        if(this.loginService.userLogged) {
+            url = tourneyBeUrl + queryString;
+        }
+        
+        const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
+        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeeting url=' + url))
+        );
+
+        return obs;
+    }
     loadDisciplines (): Observable<Discipline[]> {
         return this.http.get<Discipline[]>(typologiesUrl)
         .pipe(

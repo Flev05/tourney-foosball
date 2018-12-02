@@ -10,6 +10,8 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
  
 export abstract class AbstractListView extends AbstractView {
     roundMap: Map<number, Round>;
@@ -21,6 +23,9 @@ export abstract class AbstractListView extends AbstractView {
 
     roundMeetings: MeetingDb[];
     playoffMeetings: MeetingDb[];
+    eliminatoryMeetings: MeetingDb[][];
+    levelMap: Map<number, Eliminatory[]>;
+    totLevelLen: number;
 
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
@@ -97,14 +102,58 @@ export abstract class AbstractListView extends AbstractView {
             r.meetings = [];
             this.playoffRoundMap.set(po.id, po);
             const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
-            subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting());       
+            subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting() );       
+        }
+    }
+
+    protected loadEliminatory(): any {
+        
+        let levels: Array<EliminatoryLevel> = this.selectedTourney.eliminatoryLevels;
+
+        this.levelMap = new Map<number, Array<Eliminatory>>();
+        for(let l of levels) {
+            if(l.isTopLevel) {
+                this.totLevelLen = l.eliminatories.length;
+                for(let i=0; i<this.totLevelLen; i++) {
+
+                    let mdbArray: Array<MeetingDb> = new Array<MeetingDb>();
+                    this.eliminatoryMeetings.push(mdbArray);
+                    let e = l.eliminatories[i];
+    
+                    let elArray = new Array<Eliminatory>();
+                    this.levelMap.set(l.id, elArray);
+
+                    const subscr = this.tourneyService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
+                    subscr.subscribe(em => this.eliminatoryMeetings[i] = em, e => this.onError(e), () => this.onLoadEliminatoryMeeting() );       
+                }
+                break;
+            }
         }
     }
     
     /**
-     * Call back method to process the meetings selected from the database
+     * Call back method to process the Eliminatory meetings selected from the database
      */
-    private onLoadPlayoffMeeting(): void {
+    onLoadEliminatoryMeeting(): void {
+        if(this.eliminatoryMeetings.length==0) {
+            return;
+        }
+        for(let i=0; i<this.totLevelLen; i++) {
+
+            let topLevelMeetings: MeetingDb[] = this.eliminatoryMeetings[i];
+
+            // let r = po.round;
+            // let m: Meeting = JSON.parse(mdb.json);
+            // r.meetings.push(m);
+            // this.resolveEliminaotoryRules(po, this.selectedTourney.rounds);
+        }
+        // this.eliminatoryRows = this.prepareEliminatoryGui(this.selectedTourney.eliminatoryLevels);
+    }    
+
+    /**
+     * Call back method to process the Playoff meetings selected from the database
+     */
+    onLoadPlayoffMeeting(): void {
         if(this.playoffMeetings.length==0) {
             return;
         }
@@ -118,7 +167,7 @@ export abstract class AbstractListView extends AbstractView {
             
             r.meetings.push(m);
 
-            this.completePlayoff(po, this.selectedTourney.rounds);
+            this.resolvePlayoffRules(po, this.selectedTourney.rounds);
         }
         
         this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs);
@@ -131,7 +180,7 @@ export abstract class AbstractListView extends AbstractView {
      * @param po the playoff to complete
      * @param rounds the rounds containing the classifications
      */
-    private completePlayoff(po: Playoff, rounds: Round[]) {
+    private resolvePlayoffRules(po: Playoff, rounds: Round[]) {
         po.round.teams = [];
         for (let pr of po.playoffRules) {
             let pi: number = pr.fromRound.position.value;
@@ -141,12 +190,12 @@ export abstract class AbstractListView extends AbstractView {
                 let c = round.classification[pi - 1];
                 let team = c.team;
                 po.round.teams.push(team);
-                this.updateMeeting(po.round.meetings, pr, team);
+                this.resolvePlayoffRule(po.round.meetings, pr, team);
             }
         }
     }
 
-    private updateMeeting(meetings: Meeting[], pr: PlayoffRule, team: Team): any {
+    private resolvePlayoffRule(meetings: Meeting[], pr: PlayoffRule, team: Team): any {
         for(let m of meetings) {
             if( m.rule1.id == pr.id) {
                 m.team1 = team;

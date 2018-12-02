@@ -36,7 +36,14 @@ export class ResultListView extends AbstractListView {
 
         super.ngOnInit();
         
-        this.loadRounds();
+        super.loadRounds();
+
+        // if(super.containsPlayoff()) {
+        //     super.loadPlayoffs();
+        // }
+        // if(super.containsEliminatory()) {
+        //     super.loadEliminatory();
+        // }
     }
 
     onChangeTab(e) {
@@ -47,6 +54,9 @@ export class ResultListView extends AbstractListView {
         if(index==1 && super.containsPlayoff()) {
             super.loadPlayoffs();
         }
+        // if(index==2 && super.containsEliminatory()) {
+        //     super.loadEliminatory();
+        // }
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {

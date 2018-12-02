@@ -119,38 +119,44 @@
     <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">    
 
         <p-table [responsive]="true" 
-            [value]="eliminatoryLevels" 
+            [value]="eliminatoryRows" 
             selectionMode="single" 
-            [(selection)]="selectedEliminatoryLevel" 
+            [(selection)]="selectedMeetingRow" 
             (onRowSelect)="onEliminatoryRowSelect($event)">
 
             <ng-template pTemplate="colgroup">
                 <colgroup>
                     <col style="width: 10mm;">
-                    <col style="width: 20mm;">
                     <col style="width: auto;">
+                    <col style="width: auto;">
+                    <col style="width: 12mm;">
+                    <col style="width: 12mm;">
                 </colgroup>
             </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
                     <th>N°</th>
-                    <th>Livello</th>
-                    <th>Nome</th>
+                    <th>Squadra 1</th>
+                    <th>Squadra 2</th>
+                    <th>Pt.1</th>
+                    <th>Pt.2</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="3">
+                    <td colspan="5">
                         <span style="font-weight:bold">{{rowData.roundName}}</span>
                     </td>
                 </tr>      
-        
+
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowIndex + 1}}</td>
-                    <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
-                    <td>{{rowData.name}}</td>
+                    <td>{{rowIndex + 1}}</td>                
+                    <td>{{rowData.teamName1}}</td>
+                    <td>{{rowData.teamName2}}</td>
+                    <td>{{rowData.points1}}</td>
+                    <td>{{rowData.points2}}</td>
                 </tr>
             </ng-template>
         </p-table>

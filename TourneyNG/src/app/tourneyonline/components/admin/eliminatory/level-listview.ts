@@ -519,7 +519,7 @@ export class LevelListView extends AbstractListView {
                 ,classification: []
                 ,meetings: [m]
             },
-            tc1: {
+            rule1: {
                 id: this.tourneyService.getSequenceNumber(),
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "1°", value: 0 }
@@ -530,7 +530,7 @@ export class LevelListView extends AbstractListView {
                     , round: { label: "", value: 0 } 
                 }
             },
-            tc2: {
+            rule2: {
                 id: this.tourneyService.getSequenceNumber(),
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "1°", value: 0 }

@@ -1,11 +1,11 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
 import { AbstractListView } from './abstract-listview';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { TourneyDb } from 'app/tourneyonline/domain/tourney.db';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 

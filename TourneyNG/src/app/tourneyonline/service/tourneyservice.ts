@@ -53,7 +53,10 @@ export class TourneyService {
     selectedPlayoff : Playoff;
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
-    selectedMeeting : Meeting;
+
+    selectedMeetingDb: MeetingDb;
+    selectedMeeting: Meeting;
+
     availableTeams: Team[];
     selectedTeams:  Team[];
 
@@ -75,27 +78,15 @@ export class TourneyService {
     selectedPlayoffConfig: PlayoffRule;
     selectedIndex: number;
     newRule: boolean;
+    selectedTabIndex: number = 0;
 
     // private subject;
 
     constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
-        // this.subject = new Subject<Meeting>();
     }
 
-    // sendMessage(m: Meeting) {
-    //     this.subject.next(m);
-    // }
- 
-    // clearMessage() {
-    //     this.subject.next();
-    // }
- 
-    // getMessage(): Observable<Meeting> {
-    //     return this.subject.asObservable();
-    // }
-    
     prepareEliminatoriesComboBoxes(): number {
         if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return;
@@ -328,6 +319,12 @@ export class TourneyService {
     }
 
     addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+
+        this.addMeeting(mdb);
+    }
+
+    prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
         let json: string = JSON.stringify(m);
         let mdb: MeetingDb = {
             id: m.id,
@@ -337,8 +334,7 @@ export class TourneyService {
             eliminatoryId: eliminatoryId,
             json: json
         };
-
-        this.addMeeting(mdb);
+        return mdb;
     }
 
     /** POST: add a new Meeting to the db server */
@@ -357,16 +353,22 @@ export class TourneyService {
         obs.subscribe();
     }
 
+    updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+        let obs = this.updateMeeting(mdb);
+        obs.subscribe();
+    }
+
     /** PUT: update the Meeting on the server */
     updateMeeting (mdb: MeetingDb):  Observable<MeetingDb> {
 
-        let obs = this.updateMeetingDb(mdb);
+        let obs = this.updateMeetingMdb(mdb);
 
         return obs;
     }
 
     /** PUT: update the MeetingDb on the db server */
-    private updateMeetingDb (mdb: MeetingDb ): Observable<MeetingDb> {
+    private updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
         const id =  mdb.id;
         let url = meetingUrl + "/" + id;
 

@@ -19,8 +19,8 @@ export class MeetingDetailView extends AbstractDetailView {
     
     msgs: Message[] = [];
 
+    selectedMeetingDb: MeetingDb;
     selectedMeeting: Meeting;
-    selectedRound: Round;
 
     matches: Match[];
 
@@ -35,10 +35,10 @@ export class MeetingDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedRound = this.tourneyService.selectedRound;    
-        this.selectedMeeting  = this.tourneyService.selectedMeeting;   
+        this.selectedMeetingDb  = this.tourneyService.selectedMeetingDb;   
+        this.selectedMeeting = JSON.parse(this.selectedMeetingDb.json);
 
-        if(this.selectedMeeting.matches.length==0) {
+        if(this.selectedMeeting.matches.length!=this.selectedTourney.maxMatchesPerMeeting) {
             this.selectedMeeting.matches=[];
             for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
                 let m: Match = {id:i
@@ -88,6 +88,7 @@ export class MeetingDetailView extends AbstractDetailView {
         let goals1 = 0;
         let goals2 = 0;
         let terminated : boolean = true;
+
         for(let i=0; i<this.matches.length; i++) {
             let m = this.matches[i];
             goals1 = m.score1;
@@ -98,11 +99,12 @@ export class MeetingDetailView extends AbstractDetailView {
             }
 
             if (goals1 > goals2) {
-
-                if (this.selectedTourney.discipline == TourneyType.Score) {
-                    if (this.selectedMeeting.points1 == this.selectedMeeting.points2 + 1) {
-                        this.selectedMeeting.points1 = this.selectedTourney.pointsGoldenGoalTieBreakWin;
-                        this.selectedMeeting.points2 = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                if (this.selectedTourney.tourneyType == TourneyType.Score) {
+                    if (goals1==this.selectedTourney.pointsNeededToWin && (goals1 == goals2 + 1)) {
+                        this.selectedMeeting.points1 += this.selectedTourney.pointsGoldenGoalTieBreakWin;
+                        this.selectedMeeting.points2 += this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                    } else {
+                        this.selectedMeeting.points1 += this.selectedTourney.matchWinnerScores;
                     }
                 } else {
                     this.selectedMeeting.points1 += this.selectedTourney.matchWinnerScores;
@@ -110,10 +112,12 @@ export class MeetingDetailView extends AbstractDetailView {
             } 
                         
             if (goals2 > goals1) {
-                if (this.selectedTourney.discipline == TourneyType.Score) {
-                    if (this.selectedMeeting.points2 == this.selectedMeeting.points1 + 1) {
+                if (this.selectedTourney.tourneyType == TourneyType.Score) {
+                    if (goals2==this.selectedTourney.pointsNeededToWin && (goals2 == goals1 + 1)) {
                         this.selectedMeeting.points2 += this.selectedTourney.pointsGoldenGoalTieBreakWin;
                         this.selectedMeeting.points1 += this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                    } else {
+                        this.selectedMeeting.points2 += this.selectedTourney.matchWinnerScores;
                     }
                 } else {
                     this.selectedMeeting.points2 += this.selectedTourney.matchWinnerScores;
@@ -128,13 +132,12 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        let mdb: MeetingDb = {id: this.selectedMeeting.id
-            ,tourneyId: this.selectedTourney.id
-            ,roundId: this.selectedRound.id
-            ,playoffId:0
-            ,eliminatoryId:0
-            ,json: JSON.stringify(this.selectedMeeting)
-        };
+        let mdb: MeetingDb = this.tourneyService.prepareMdb(this.selectedMeeting
+            , this.selectedTourney.id
+            , this.tourneyService.selectedMeetingDb.roundId
+            , this.tourneyService.selectedMeetingDb.playoffId
+            , this.tourneyService.selectedMeetingDb.eliminatoryId
+        );
 
         this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
     }

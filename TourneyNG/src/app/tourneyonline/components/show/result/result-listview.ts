@@ -4,94 +4,167 @@ import { Location } from '@angular/common';
 
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractListView } from '../../common/abstract-listview';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
 
 @Component({
     templateUrl: './result-listview.html'
 })
 export class ResultListView extends AbstractListView {
-    static meetingLvRedirect:   string = "result/lv/meetingLv";
+    static meetingDvRedirect:   string = "result/lv/meetingLv/dv";
     static eliminatoryRedirect: string = 'result/lv/eliminatoryLv/dv';
 
-    selectedPlayoff: Playoff;
-    selectedRound: Round;
-
     selectedEliminatoryLevel: EliminatoryLevel;
-    eliminatoryLevels: Array<EliminatoryLevel>;
 
-    rounds: Round[];
-    playoffs: Playoff[];
-    eliminatories: Eliminatory[];
+    selectedMeetingRow: any;
+    indexTab: number;
 
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super(ResultListView.meetingLvRedirect, tourneyService, router, location);
+        super(ResultListView.meetingDvRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
+        // this.indexTab = this.tourneyService.selectedTabIndex;
+
         super.ngOnInit();
         
-        this.rounds = this.selectedTourney.rounds;
-
-        this.playoffs = this.comletePlayoff(this.selectedTourney.playoffs);
-
-        this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+        this.loadRounds();
     }
 
-    comletePlayoff(playoffs: Playoff[]): Playoff[] {
-        let pls : Playoff[] = [];
-        for(let p of playoffs) {
-            if(p.playoffRules==undefined) {
-                continue;
-            }
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.indexTab = index;
 
-            p.round.teams = [];
-            
-            for(let rule of p.playoffRules) {
-                let pos = rule.fromRound.position.value;
-                let label = rule.fromRound.round.label;
-                let round: Round = null;
-                for(let r of this.selectedTourney.rounds) {
-                    if(r.name == label) {
-                        round = r;
-                        break;
-                    }
-                }
-                if(round != null && round.classification.length > 0) {
-                    let c = round.classification[pos];
-                    let team = c.team;
-                    p.round.teams.push(team);
-                    pls.push(p);
-                }
-            }
+        if(index==1 && super.containsPlayoff()) {
+            super.loadPlayoffs();
         }
-        return pls;
+    }
+
+    protected prepareRoundsGui(rounds: Round[]): any[] {
+
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            row = this.prepareMeetingGui(null, round, rows, row, classificationMap);
+        }
+
+        return rows;
+    }
+
+    protected preparePlayoffGui(playoffs: Playoff[]): any[] {
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let p of playoffs) {
+            row = this.prepareMeetingGui(p, p.round, rows, row, classificationMap);
+        }
+
+        return rows;
+    }
+    
+    private prepareMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
+        for (let m of round.meetings) {
+            rows.push(m);
+
+            rows[row].id = m.id;
+            rows[row].roundId = round.id;
+            rows[row].eliminatoryId = 0;    
+            rows[row].playoffId = 0;
+            if(p!=null) {
+                rows[row].playoffId = p.id;
+            }
+            rows[row].roundName = round.name;
+            rows[row].teamName1 = m.team1.teamName;
+            rows[row].teamName2 = m.team2.teamName;
+            rows[row].points1 = m.points1;
+            rows[row].points2 = m.points2;
+
+            let currentKey = round.name;
+            if (!classificationMap.has(currentKey)) {
+                let len = round.meetings.length;
+                classificationMap.set(currentKey, m);
+                rows[row].rowspanSize = len;
+            }
+            else {
+                rows[row].rowspanSize = undefined;
+            }
+            row++;
+        }
+        return row;
     }
 
     onRoundSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedRound = this.selectedRound;
+        let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
+        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
-        this.gotoMeetingListView();
+        let mdb: MeetingDb = this.tourneyService.prepareMdb(m
+            , this.selectedTourney.id
+            , r.id
+            , 0
+            , 0
+        );
+        this.tourneyService.selectedMeetingDb = mdb;
+
+        this.gotoMeetingDetailView();
     }
-
+    
     onPlayoffSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        let playoffRounds: Round[] = this.makePlayoffRounds(this.selectedTourney.playoffs);
 
-        this.gotoMeetingListView();
+        let r = this.getRoundBy(this.selectedMeetingRow.roundId,  playoffRounds);
+        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
+
+        let mdb: MeetingDb = this.tourneyService.prepareMdb(m
+            , this.selectedTourney.id
+            , 1
+            , this.selectedMeetingRow.playoffId
+            , 0
+        );
+
+        this.tourneyService.selectedMeetingDb = mdb;
+
+        this.gotoMeetingDetailView();
     }
     
-    private gotoMeetingListView() {
-        this.router.navigate([ResultListView.meetingLvRedirect]);
+    private getRoundBy(roundId: number, rounds: Round[]): Round {
+        for(let r of rounds) {
+            if(r.id == roundId) {
+                return r;
+            }
+        }    
+        return null;
+    }
+
+    private getMeetingBy(id: any, round: Round):  Meeting {
+        for(let m of round.meetings) {
+            if(m.id == id) {
+                return m;
+            }
+        }    
+        return null;
+    }
+    
+    private gotoMeetingDetailView() {
+        this.tourneyService.selectedTabIndex = this.indexTab;
+        this.router.navigate([ResultListView.meetingDvRedirect]);
     }
 
     onEliminatoryRowSelect(event) {

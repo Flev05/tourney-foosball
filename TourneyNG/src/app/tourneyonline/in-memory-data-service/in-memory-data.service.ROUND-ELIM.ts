@@ -9,6 +9,7 @@ import { Tourney } from '../domain/tourney';
 
 const tourneyId = 3;
 const ROUND_NUM = 4;
+const BASE_ROUND_ID = 400;
 
 export class InMemoryDataServiceRoundElim  {
 static teams = TeamsPool.prepareTeams(19);
@@ -113,7 +114,7 @@ static prepareDefaultRounds(teams : Team[], roundNo: number ) : Round[] {
  
 static newRound(roundNo : number): Round {
   return {
-      id: roundNo
+      id: BASE_ROUND_ID + roundNo
     , name: "GIRONE." + roundNo
     , type: RoundType.R
     , teams: []

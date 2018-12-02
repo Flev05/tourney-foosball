@@ -26,67 +26,97 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
 
-<p-tabView>
+<p-tabView [activeIndex]="indexTab" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi">    
-        <p-table [value]="rounds"
+        <p-table [value]="roundRows"
             selectionMode="single"
-            [(selection)]="selectedRound" 
+            [(selection)]="selectedMeetingRow" 
             (onRowSelect)="onRoundSelect($event)" >
     
             <ng-template pTemplate="colgroup">
                 <colgroup>
                     <col style="width: 10mm;">
                     <col style="width: auto;">
+                    <col style="width: auto;">
+                    <col style="width: 12mm;">
+                    <col style="width: 12mm;">
                 </colgroup>
             </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
                     <th>N°</th>
-                    <th>Girone</th>
+                    <th>Squadra 1</th>
+                    <th>Squadra 2</th>
+                    <th>Pt.1</th>
+                    <th>Pt.2</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr  [pSelectableRow]="rowData">
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                    <td colspan="5">
+                        <span style="font-weight:bold">{{rowData.roundName}}</span>
+                    </td>
+                </tr>      
+        
+                <tr [pSelectableRow]="rowData">
                     <td>{{rowIndex + 1}}</td>                
-                    <td>{{rowData.name}}</td>
+                    <td>{{rowData.teamName1}}</td>
+                    <td>{{rowData.teamName2}}</td>
+                    <td>{{rowData.points1}}</td>
+                    <td>{{rowData.points2}}</td>
                 </tr>
             </ng-template>        
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Playoff">    
+    <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
         <p-table [responsive]="true" 
-            [value]="playoffs" 
+            [value]="playoffRows" 
             selectionMode="single"
-            [(selection)]="selectedPlayoff" 
+            [(selection)]="selectedMeetingRow" 
             (onRowSelect)="onPlayoffSelect($event)" >
     
             <ng-template pTemplate="colgroup">
                 <colgroup>
                     <col style="width: 10mm;">
                     <col style="width: auto;">
+                    <col style="width: auto;">
+                    <col style="width: 12mm;">
+                    <col style="width: 12mm;">
                 </colgroup>
             </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
                     <th>N°</th>
-                    <th>Nome playoff</th>
+                    <th>Squadra 1</th>
+                    <th>Squadra 2</th>
+                    <th>Pt.1</th>
+                    <th>Pt.2</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr  [pSelectableRow]="rowData">
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                    <td colspan="3">
+                        <span style="font-weight:bold">{{rowData.roundName}}</span>
+                    </td>
+                </tr>      
+
+                <tr [pSelectableRow]="rowData">
                     <td>{{rowIndex + 1}}</td>                
-                    <td>{{rowData.round.name}}</td>
+                    <td>{{rowData.teamName1}}</td>
+                    <td>{{rowData.teamName2}}</td>
+                    <td>{{rowData.points1}}</td>
+                    <td>{{rowData.points2}}</td>
                 </tr>
             </ng-template>        
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Eliminazioni dirette">    
+    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">    
 
         <p-table [responsive]="true" 
             [value]="eliminatoryLevels" 
@@ -111,6 +141,12 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                    <td colspan="3">
+                        <span style="font-weight:bold">{{rowData.roundName}}</span>
+                    </td>
+                </tr>      
+        
                 <tr [pSelectableRow]="rowData">
                     <td>{{rowIndex + 1}}</td>
                     <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>

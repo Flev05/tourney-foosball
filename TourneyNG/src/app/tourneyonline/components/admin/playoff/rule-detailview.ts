@@ -122,8 +122,8 @@ export class RuleDetailView extends AbstractDetailView {
                 if(this.selectedPlayoffConfig.id == m.rule2.id) {
                     m.rule2 = this.selectedPlayoffConfig;
                 }
-
-                this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
+                
+                this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
             }
         }
         this.selectedPlayoff.playoffRules = this.playoffConfigs;

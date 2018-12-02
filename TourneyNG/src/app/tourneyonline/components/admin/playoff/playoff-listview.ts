@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Tourney } from '../../../domain/tourney';
-import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
-import { Playoff } from '../../../domain/playoff';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Message } from 'primeng/api';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { AbstractListView } from '../../common/abstract-listview';
 
 @Component({
     templateUrl: './playoff-listview.html'
@@ -110,7 +110,7 @@ export class PlayoffListView extends AbstractListView {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
     }
  
-    private onError(n:any) {
+    onError(n:any) {
         this.msgs = [];
         let msgerr : string;
 

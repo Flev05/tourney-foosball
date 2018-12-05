@@ -1,19 +1,18 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
+import {FormControl,FormGroup,FormBuilder, Validators} from '@angular/forms';
 
-import {Message} from '../../../../components/common/api';
-
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
-import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { EliminatoryMode } from '../../../domain/enumerations';
 import { Team } from 'app/tourneyonline/domain/team';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { Message } from 'app/components/common/api';
+import { EliminatoryMode } from 'app/tourneyonline/domain/enumerations';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { AbstractDetailView } from '../../common/abstract-detailview';
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',
@@ -90,13 +89,14 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.eliminatoryFormGroup = this.fb.group({
 
             'meetingDate1': new FormControl(new Date(m1.datetime)),
-            'address1': new FormControl(m1.address),
+            'address1': new FormControl(m1.address, Validators.compose([Validators.required])),
             'country1': new FormControl(m1.country),
 
             'meetingDate2': new FormControl(new Date(m2.datetime)),
-            'address2': new FormControl(m2.address),
+            'address2': new FormControl(m2.address, Validators.compose([Validators.required])),
             'country2': new FormControl(m2.country),    
             'availableTeams': new FormControl(this.availableTeams),    
+
             'team1': new FormControl(team1CB),    
             'team2': new FormControl(team2CB),    
         });
@@ -116,7 +116,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.team2 = this.getTeam(team2CB);
 
         m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
-        this.tourneyService.updateMeeting(m1);
+        this.tourneyService.updateMeetingDb(m1, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
@@ -128,8 +128,10 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             m2.team2 = m1.team1;
     
             m2.name = m2.team1.teamName + " - " + m2.team2.teamName;
-            this.tourneyService.updateMeeting(m2);
+            this.tourneyService.updateMeetingDb(m2, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
         }
+
+        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }

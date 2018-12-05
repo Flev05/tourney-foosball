@@ -120,7 +120,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        this.tourneyService.updateMeeting(m1);
+        this.tourneyService.updateMeetingDb(m1, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
 
         this.selectedEliminatory.rule1.fromRound.position = this.eliminatoryFormGroup.get('position1').value;
         this.selectedEliminatory.rule1.fromRound.round = this.eliminatoryFormGroup.get('round1').value;
@@ -135,9 +135,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
-                                            
-            m2.name = m2.team2.teamName + " - " + m2.team1.teamName;
-            this.tourneyService.updateMeeting(m2);
+
+            this.tourneyService.updateMeetingDb(m2, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

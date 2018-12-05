@@ -47,6 +47,7 @@ export class EliminatoryListView extends AbstractListView {
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
     
         this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
+
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
     
         this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true" : "false" ;

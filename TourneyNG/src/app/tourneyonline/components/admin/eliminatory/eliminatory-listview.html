@@ -90,9 +90,9 @@
                 <col style="width: 10mm;">
                 <col *ngIf="isTopLevel" style="width: auto;">
                 <col *ngIf="isTopLevel" style="width: 10mm;">
-                <col *ngIf="isTopLevel" style="width: auto;">
-                <col style="width: 38mm;">
-                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: 38mm;">
+                <col *ngIf="isTopLevel" style="width: 100%;">
+                <col style="width: auto;">
+                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: auto;">
             </colgroup>
         </ng-template>
 
@@ -164,13 +164,13 @@
             <tr [pSelectableRow]="rowData">
                 <td>{{rowIndex + 1}}</td>
                 <td>{{rowData.round.meetings[0].datetime | date: 'dd/MM/y HH:mm'}}</td>
-                <td *ngIf="isTopLevel">{{rowData.tc1.fromRound.position.label}}</td>
-                <td *ngIf="isTopLevel">{{rowData.tc1.fromRound.round.label}}</td>
-                <td *ngIf="isPlayoff && isTopLevel">{{rowData.tc1.fromPlayoff.round.label}}</td>
+                <td *ngIf="isTopLevel">{{rowData.rule1.fromRound.position.label}}</td>
+                <td *ngIf="isTopLevel">{{rowData.rule1.fromRound.round.label}}</td>
+                <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule1.fromPlayoff.round.label}}</td>
                 <td *ngIf="isTopLevel"> - </td>
-                <td *ngIf="isTopLevel">{{rowData.tc2.fromRound.position.label}}</td>
-                <td *ngIf="isTopLevel">{{rowData.tc2.fromRound.round.label}}</td>
-                <td *ngIf="isPlayoff && isTopLevel">{{rowData.tc2.fromPlayoff.round.label}}</td>
+                <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.position.label}}</td>
+                <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.round.label}}</td>
+                <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule2.fromPlayoff.round.label}}</td>
                 <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date :  "dd/MM/y HH:mm"}}</td>
             </tr>
         </ng-template>

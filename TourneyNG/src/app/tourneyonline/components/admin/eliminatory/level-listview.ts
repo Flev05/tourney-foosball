@@ -47,19 +47,18 @@ export class LevelListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
-        let teamsNo = this.tourneyService.prepareEliminatoriesComboBoxes();
+        this.tourneyService.prepareEliminatoriesComboBoxes();
 
         this.selectedTourney = this.tourneyService.selectedTourney; 
 
         this.teamsCombobox = this.tourneyService.teamsCombobox;
-
+        this.selectedTeamsNumCombobox = this.selectedTourney.selectedTeamsNumCombobox;
+  
         this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
 
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
                 
-        this.isStandalone = false;
-
         if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
             this.containsPhase(PhaseType.P, this.selectedTourney.phases) &&
             this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
@@ -69,8 +68,9 @@ export class LevelListView extends AbstractListView {
              this.isModeEnabled = true;
         }
 
-        this.prepareEliminatoryLevels(teamsNo);
+        this.prepareEliminatoryLevels(this.selectedTeamsNumCombobox.value);
 
+        this.isStandalone = false;
         if( this.selectedTourney.phases.length == 1 && 
                 this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
             this.isStandalone = true;
@@ -79,7 +79,7 @@ export class LevelListView extends AbstractListView {
             this.processStandalone();
         }
         
-        if(!this.isManual || this.isStandalone) {
+        if(!this.isManual) {
             this.loadLocalRounds();
             this.prepateAutoEliminatories();
         }
@@ -91,25 +91,19 @@ export class LevelListView extends AbstractListView {
      * Always aligns the teams in the local round to the user selected teams
      */
     private processStandalone() {
+        
+        this.localRounds = [];
+        let round: Round = {id:this.tourneyService.getSequenceNumber()
+            , name:""
+            , type: RoundType.E
+            , teams: this.tourneyService.selectedTeams
+            , meetings:[]
+            , classification:[]                
+        };
+        this.localRounds.push(round);
 
-        if(this.localRounds == undefined) {
-            this.localRounds = [];
-            let round: Round = {id:this.tourneyService.getSequenceNumber()
-                , name:""
-                , type: RoundType.E
-                , teams: this.tourneyService.selectedTeams
-                , meetings:[]
-                , classification:[]                
-            };
-            this.localRounds.push(round);
-        }
-
-        let r = this.localRounds[0];
-
-        this.removeFromLocalRound(r, this.tourneyService.selectedTeams);
-        this.addToLocalRound(r, this.tourneyService.selectedTeams);
-
-        this.prepareDefaultClassification(r);
+        this.prepareDefaultClassification(round);
+        this.prepateAutoEliminatories();
     } 
 
     private loadLocalRounds(): any {
@@ -169,8 +163,8 @@ export class LevelListView extends AbstractListView {
     }
     
     private alignTeams(r: Round, st: Team[]) {
-        let ts = this.removeFromLocalRound(r, st);
-        ts = this.addToLocalRound(r, st);
+        this.removeFromLocalRound(r, st);
+        this.addTeamsToLocalRound(r, st);
     }
 
     private removeFromLocalRound(r: Round, selTeams: Team[])  {
@@ -191,7 +185,13 @@ export class LevelListView extends AbstractListView {
         }         
     }
 
-    private addToLocalRound(r: Round, selTeams: Team[]): any {
+    /**
+     * Adds the teams from the selected list if they don't exist among the teams of received round.
+     * 
+     * @param localTeams the local teams
+     * @param selTeams   the selected teams
+     */
+    private addTeamsToLocalRound(r: Round, selTeams: Team[]): void {
         let localTeams: Team[] = r.teams;
 
         for(let st of selTeams) {
@@ -219,7 +219,7 @@ export class LevelListView extends AbstractListView {
 
     /**
      * For each round, adds the correct dummy classifictions, having points=-1, so the total number 
-     * of teams will be equal to the next neatest power of 2.
+     * of teams will be equal to the next nearest power of 2.
      * 
      * Sorts by firsts classificated teams in each round, then the second in each round, and so on.
      * 
@@ -428,7 +428,7 @@ export class LevelListView extends AbstractListView {
                 let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);
                 this.eliminatoryLevels.push(el);
             }
-            this.addOptionaLevel();  
+            this.addOptionalLevel();  
             return;
         }     
         
@@ -468,12 +468,12 @@ export class LevelListView extends AbstractListView {
                 }
             }
             if(!found) {
-                this.addOptionaLevel();            
+                this.addOptionalLevel();            
             }
         }
     }    
             
-    private addOptionaLevel() {
+    private addOptionalLevel() {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
         let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, -1);
         el.level = -1;
@@ -586,7 +586,10 @@ export class LevelListView extends AbstractListView {
         console.log("Entering onTeamNumChange(): " + this.selectedTeamsNumCombobox);
 
         let N: number = this.selectedTeamsNumCombobox.value;
-        
+
+        this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+
         this.prepareEliminatoryLevels(N);
     }
 

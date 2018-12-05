@@ -95,7 +95,7 @@ export class TourneyService {
         let min: number = 2;
 
         let teamsNo = this.selectedTourney.rounds.length;
-        if( this.selectedTourney.rounds.length==0 ) {
+        if( this.selectedTourney.rounds.length == 0 ) {
             teamsNo = this.selectedTourney.teams.length;
         } else {
             teamsNo = 0;
@@ -138,7 +138,7 @@ export class TourneyService {
         }
 
         this.positionsCombobox = [{label: "", value: 0}];
-        if(this.selectedTourney.rounds.length>0) {
+        if(this.selectedTourney.rounds.length > 0) {
             let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
             if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {
                 maxPosition++;
@@ -147,6 +147,10 @@ export class TourneyService {
                 let vv: string = "" + p + classificationLabel;
                 this.positionsCombobox.push({label: vv, value: p});
             }                    
+        }
+
+        if(this.selectedTourney.selectedTeamsNumCombobox == undefined) {
+            this.selectedTourney.selectedTeamsNumCombobox = this.teamsCombobox[0];
         }
 
         return teamsNo;
@@ -373,11 +377,11 @@ export class TourneyService {
 
     updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
         let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-        let obs = this.updateMeeting(mdb);
+        let obs = this.updateMeetingMdb(mdb);
         obs.subscribe();
     }
 
-    /** PUT: update the Meeting on the server */
+    /** PsUT: update the Meeting on the server */
     updateMeeting (mdb: MeetingDb):  Observable<MeetingDb> {
 
         let obs = this.updateMeetingMdb(mdb);

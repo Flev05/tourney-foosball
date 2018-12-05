@@ -9,17 +9,14 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                                
     <h3>Istruzioni</h3>
-    <p>
-        Vista elenco delle configurazioni dei livelli delle Eliminazioni dirette di partenza che compongono il torneo.
-    </p>
     <p> 
-        La vista contiene l'elenco di tutti i livelli delle eliminazioni dirette minimo indispensabile
-        per effettuare la fase finale ad eliminazione diretta propria nei tornei a squadre.
+        La vista contiene l'elenco dei livelli delle eliminazioni dirette minimo indispensabile
+        per effettuare la fase finale da quello più ampio iniziale a quello della finalissima e finalina.
     </p> 
     <p>
         L'organizzatore, deve fornire fino a 2 tipi di informazioni: il numero di Squadre e, se il torneo prevede i gironi
-        e le eliminazioni dirette senza playoff, dovete inserire anche il Modo di selezione delle squadre di partenza 
-        delle eliminazioni dirette: Automatico o Manuale. 
+        e le eliminazioni dirette senza playoff, il Modo di selezione delle squadre di partenza 
+        delle eliminazioni dirette cge può essere Automatico o Manuale. 
     </p> 
     <ul>
         <li>Squadre</li>
@@ -28,17 +25,16 @@
 
     <h4>Squadre</h4>
     <p>
-        Scegliere il numero di squadre che incominciano le eliminazioni dirette, sia se proveniente dai gironi e/o playoff
+        Scegliere il numero N iniziale di squadre con cui iniziano le eliminazioni dirette, sia se proveniente dai gironi e/o playoff
         sia se si incomincia direttamente dai gironi eliminatori.
-        Con il numero N scelto dalla combo box, anche tutte, il sistema preleva le prime N squadre dalla lista 
-        delle squadre del torneo nell'ordine in cui si trovano.
+        Scegliendo il numero N dalla combo box, anche tutte, significa che il sistema preleva le prime N squadre dalla lista 
+        delle squadre configurate nel torneo nell'ordine in cui si trovano.
     </p>    
 
     <h4>Modo</h4>
     <p>
         A meno che il vostro torneo non contenga i gironi dei playoff, il sistema vi da la possibilità di scegliere 
-        se volete far calcolare in automatico le regole di accopiamento iniziale nelle eliminazioni dirette.         
-        Allo scopo, potete scegliere tra 2 punti di una radio button: Manuale e Automatico.
+        le regole di accopiamento iniziale nelle eliminazioni dirette in 2 modi: Manuale o Automatico.
     </p>                
     <p>
         Se il vostro torneo contiene anche i playoff, invece, non avete alcuna possibilità di far calcolare in Automatico
@@ -51,7 +47,7 @@
         e finalina per il 3° e 4° posto.
     </p>
     <p>
-        Solo la prima riga contiene le regole per il popolamento delle squadre provenienti dai posizionamenti
+        Solo la prima riga, il livello di partenza, contiene le regole per il popolamento delle squadre provenienti dai posizionamenti
         nei gironi, le altre devono essere configurate solo per inserire le date e i luoghi dove avverranno
         gli incontri. 
     </p>         
@@ -162,7 +158,7 @@
             <colgroup>
                 <col style="width: 10mm;">
                 <col style="width: 20mm;">
-                <col style="width: auto;">
+                <col style="width: 100%;">
             </colgroup>
         </ng-template>
 

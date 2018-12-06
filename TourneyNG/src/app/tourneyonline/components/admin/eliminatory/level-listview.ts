@@ -34,7 +34,7 @@ export class LevelListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
-    localRounds: Round[];
+    // localRounds: Round[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -81,7 +81,7 @@ export class LevelListView extends AbstractListView {
         
         if(!this.isManual) {
             this.loadLocalRounds();
-            this.prepateAutoEliminatories();
+            this.prepateAutoEliminatories(this.selectedTourney.rounds);
         }
     }
 
@@ -91,27 +91,31 @@ export class LevelListView extends AbstractListView {
      * Always aligns the teams in the local round to the user selected teams
      */
     private processStandalone() {
-        
-        this.localRounds = [];
-        let round: Round = {id:this.tourneyService.getSequenceNumber()
-            , name:""
-            , type: RoundType.E
-            , teams: this.tourneyService.selectedTeams
-            , meetings:[]
-            , classification:[]                
-        };
-        this.localRounds.push(round);
 
-        this.prepareDefaultClassification(round);
-        this.prepateAutoEliminatories();
+        let topElimLevel = this.eliminatoryLevels[0];
+        let rounds = topElimLevel.standaloneRounds;
+        if(rounds.length == 0) {
+            let round: Round = {id:this.tourneyService.getSequenceNumber()
+                , name:""
+                , type: RoundType.E
+                , teams: this.tourneyService.selectedTeams
+                , meetings:[]
+                , classification:[]                
+            };
+            rounds.push(round);
+
+            this.prepareDefaultClassification(round);
+        }    
+
+        this.prepateAutoEliminatories(rounds);
     } 
 
     private loadLocalRounds(): any {
-        if(this.localRounds == undefined ) {
-            for(let r of this.selectedTourney.rounds) {
-                this.localRounds.push(r);
-            }
-        }
+        // if(this.localRounds == undefined ) {
+        //     for(let r of this.selectedTourney.rounds) {
+        //         this.localRounds.push(r);
+        //     }
+        // }
 
         this.removeFromLocalRounds();
         this.addToLocalRounds();
@@ -120,8 +124,8 @@ export class LevelListView extends AbstractListView {
     }
 
     private removeFromLocalRounds(){
-        for(let i=0; i<this.localRounds.length; i++) {
-            let r = this.localRounds[i];
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r = this.selectedTourney.rounds[i];
             let found = false;
             for(let sr of this.selectedTourney.rounds) {
                 if(r.name == sr.name) {
@@ -130,7 +134,7 @@ export class LevelListView extends AbstractListView {
                 }
             }
             if(!found) {
-                this.localRounds.splice(i, 1);
+                this.selectedTourney.rounds.splice(i, 1);
             }
         }
     }
@@ -138,21 +142,21 @@ export class LevelListView extends AbstractListView {
     private addToLocalRounds(): any {
         for(let sr of this.selectedTourney.rounds) {
             let found = false;
-            for(let r of this.localRounds) {
+            for(let r of this.selectedTourney.rounds) {
                 if(r.name==sr.name) {
                     found = true;
                     break;
                 }
             } 
             if(!found) {
-                this.localRounds.push(sr);
+                this.selectedTourney.rounds.push(sr);
             }
         }
     }
 
     private alignRoundTeams( ): any {
-        for(let i=0; i<this.localRounds.length; i++) {
-            let r = this.localRounds[i];
+        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
+            let r = this.selectedTourney.rounds[i];
             for(let sr of this.selectedTourney.rounds) {
                 if(r.name == sr.name) {
                     this.alignTeams(r, sr.teams);
@@ -163,11 +167,11 @@ export class LevelListView extends AbstractListView {
     }
     
     private alignTeams(r: Round, st: Team[]) {
-        this.removeFromLocalRound(r, st);
-        this.addTeamsToLocalRound(r, st);
+        this.removeFromRound(r, st);
+        this.addTeamsToRound(r, st);
     }
 
-    private removeFromLocalRound(r: Round, selTeams: Team[])  {
+    private removeFromRound(r: Round, selTeams: Team[])  {
         let localTeams: Team[] = r.teams;
 
         for(let i=0; i<localTeams.length; i++) {
@@ -191,7 +195,7 @@ export class LevelListView extends AbstractListView {
      * @param localTeams the local teams
      * @param selTeams   the selected teams
      */
-    private addTeamsToLocalRound(r: Round, selTeams: Team[]): void {
+    private addTeamsToRound(r: Round, selTeams: Team[]): void {
         let localTeams: Team[] = r.teams;
 
         for(let st of selTeams) {
@@ -229,14 +233,13 @@ export class LevelListView extends AbstractListView {
      * 
      * So prepare the elemintories list by using the smart put algorithm
      */
-    private prepateAutoEliminatories(): any  {
-        let eliminatories = this.eliminatoryLevels[0].eliminatories;
+    private prepateAutoEliminatories(rounds : Round[]): any  {
 
-        this.paddingRound();
+        this.paddingRound(this.selectedTourney.rounds);
 
         let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
-        for(let i=0; i<this.localRounds.length; i++) {
-            let r = this.localRounds[i];
+        for(let i=0; i<rounds.length; i++) {
+            let r = rounds[i];
 
             let orderedClassification: Array<Classification> = this.teamSort(r.classification);
 
@@ -278,12 +281,13 @@ export class LevelListView extends AbstractListView {
 
         let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
 
+        let topLevelEliminatories = this.eliminatoryLevels[0].eliminatories;
         for(let i=0; i<ascClassification.length; i++) {
 
             let c1: Classification = ascClassification[i];
             let c2: Classification = descClassification[i];
 
-            let e: Eliminatory = eliminatories[i];
+            let e: Eliminatory = topLevelEliminatories[i];
 
             let m: Meeting = this.createMeeting(c1.team, c2.team, null, null, Direction.RoundTrip);
 
@@ -299,28 +303,28 @@ export class LevelListView extends AbstractListView {
         for (let step = N; step >= 1; step = step / 2) {
 
             for (let i = 0; i < N; i += step) {
-                if(eliminatories[i].round.meetings.length != 0) {
+                if(topLevelEliminatories[i].round.meetings.length != 0) {
                     continue;
                 }
                 let e = sequenzialEliminatories[p];
-                eliminatories[i] = e;
+                topLevelEliminatories[i] = e;
                 p++;
             }
         }
-        console.log("Eliminatories.size=" + eliminatories.length);
+        console.log("Eliminatories.size=" + topLevelEliminatories.length);
     }
 
     /**
      * Padds each classification round to the next upper power of 2 teams by adding
      * the dummies teams with points = -1
      */
-    private paddingRound(): any {
+    private paddingRound(rounds : Round[]): any {
 
         let maxDeep: number = 0;
         let N: number = 0;
 
-        for(let i=0; i<this.localRounds.length; i++) {
-            let r = this.localRounds[i];
+        for(let i=0; i<rounds.length; i++) {
+            let r = rounds[i];
             N+=r.classification.length;
 
             if(r.classification.length > maxDeep ) {
@@ -333,8 +337,8 @@ export class LevelListView extends AbstractListView {
             return;
         }
 
-        for(let i=0; i<this.localRounds.length; i++) {
-            let r = this.localRounds[i];
+        for(let i=0; i<rounds.length; i++) {
+            let r = rounds[i];
             while(r.classification.length < maxDeep && diff > 0 ) {
                 let t: Team = {id: 0, teamName: ""};
                 let dummy = this.newClassification(t, -1);
@@ -344,8 +348,8 @@ export class LevelListView extends AbstractListView {
         }
 
         while( diff > 0 ) {
-            for(let i=0; i<this.localRounds.length; i++) {
-                let r = this.localRounds[i];
+            for(let i=0; i<rounds.length; i++) {
+                let r = rounds[i];
                 let t: Team = {
                     id: this.tourneyService.getSequenceNumber()
                     ,teamName:""
@@ -438,8 +442,10 @@ export class LevelListView extends AbstractListView {
         if(selectedLevel > maxCurrentLevel) {
             let tempElimList: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
             
+            let lcb : Combobox = levelsCombobox[0];
+
             let i = 0;
-            let lcb : Combobox = levelsCombobox[i];
+            lcb = levelsCombobox[i];
             while( lcb.value > maxCurrentLevel ) {        
                 let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);
                 tempElimList.push(el);
@@ -453,6 +459,15 @@ export class LevelListView extends AbstractListView {
 
         if(selectedLevel < maxCurrentLevel) {
             this.eliminatoryLevels.splice(0, maxCurrentLevel - selectedLevel);
+        }
+
+        for(let i=0; i<this.eliminatoryLevels.length; i++) {
+            let el = this.eliminatoryLevels[i];
+            if(i == 0) {
+                el.isTopLevel = true;
+            } else {
+                el.isTopLevel = false;
+            }
         }
 
         if(selectedLevel == 1) {
@@ -498,6 +513,7 @@ export class LevelListView extends AbstractListView {
             , isTopLevel: top == 0 ? true : false
             , isOneway: true
             , eliminatories: els
+            , standaloneRounds: []
         };
 
         return el;
@@ -575,11 +591,11 @@ export class LevelListView extends AbstractListView {
         this.isManual = false;
         this.tourneyService.availableTeams = [];
 
-        for(let r of this.localRounds) {
+        for(let r of this.selectedTourney.rounds) {
             this.prepareDefaultClassification(r);
         }
 
-        this.prepateAutoEliminatories();
+        this.prepateAutoEliminatories(this.selectedTourney.rounds);
     }
  
     onTeamNumChange(event) {

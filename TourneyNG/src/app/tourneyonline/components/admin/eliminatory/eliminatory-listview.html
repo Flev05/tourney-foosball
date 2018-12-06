@@ -88,9 +88,9 @@
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
-                <col *ngIf="isTopLevel" style="width: auto;">
+                <col *ngIf="isTopLevel" style="width: 50%;">
                 <col *ngIf="isTopLevel" style="width: 10mm;">
-                <col *ngIf="isTopLevel" style="width: 100%;">
+                <col *ngIf="isTopLevel" style="width: 50%;">
                 <col style="width: auto;">
                 <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: auto;">
             </colgroup>
@@ -133,7 +133,7 @@
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">
-                <col style="width: 38mm;">
+                <col style="width: auto;">
                 <col *ngIf="isTopLevel" style="width: 10mm;">
                 <col *ngIf="isTopLevel" style="width: auto;">
                 <col *ngIf="isPlayoff && isTopLevel" style="width: auto;">
@@ -141,7 +141,7 @@
                 <col *ngIf="isTopLevel" style="width: 10mm;">
                 <col *ngIf="isTopLevel" style="width: auto;">
                 <col *ngIf="isPlayoff && isTopLevel" style="width: auto;">
-                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: 38mm;">
+                <col *ngIf="!selectedEliminatoryLevel.isOneway" style="width: auto;">
             </colgroup>
         </ng-template>
 

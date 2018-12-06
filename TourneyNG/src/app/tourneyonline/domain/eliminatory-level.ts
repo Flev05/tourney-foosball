@@ -1,4 +1,5 @@
 import { Eliminatory } from "./eliminatory";
+import { Round } from "./round";
 
 export class EliminatoryLevel  {
     id: number;
@@ -6,6 +7,8 @@ export class EliminatoryLevel  {
     level: number;
     isTopLevel: boolean;
     isOneway: boolean;
+
+    standaloneRounds: Round[];
 
     eliminatories: Array<Eliminatory>;
 }

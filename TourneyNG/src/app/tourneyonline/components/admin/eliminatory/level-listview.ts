@@ -18,7 +18,8 @@ import { Team } from 'app/tourneyonline/domain/team';
     templateUrl: './level-listview.html'
 })
 export class LevelListView extends AbstractListView {
-    static redirect: string = '/admineliminatory/levelLv/eliminatoryLv';
+    static autoRedirect: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
+    static manualRedirect: string = '/admineliminatory/levelLv/eliminatoryManualLv';
 
     msgs: Message[] = [];
    
@@ -34,14 +35,13 @@ export class LevelListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
-    // localRounds: Round[];
 
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super(LevelListView.redirect, tourneyService, router, location);
+        super(LevelListView.autoRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
@@ -74,11 +74,11 @@ export class LevelListView extends AbstractListView {
         if( this.selectedTourney.phases.length == 1 && 
                 this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
             this.isStandalone = true;
-            this.isManual = false;
             this.tourneyService.availableTeams = [];
             this.processStandalone();
         }
-        
+        this.tourneyService.isStandalone = this.isStandalone;
+
         if(!this.isManual) {
             this.loadLocalRounds();
             this.prepateAutoEliminatories(this.selectedTourney.rounds);
@@ -93,30 +93,25 @@ export class LevelListView extends AbstractListView {
     private processStandalone() {
 
         let topElimLevel = this.eliminatoryLevels[0];
-        let rounds = topElimLevel.standaloneRounds;
-        if(rounds.length == 0) {
-            let round: Round = {id:this.tourneyService.getSequenceNumber()
+        let round = topElimLevel.eliminatories[0].round;
+        if(round.classification.length == 0) {
+            round = {id:this.tourneyService.getSequenceNumber()
                 , name:""
                 , type: RoundType.E
                 , teams: this.tourneyService.selectedTeams
                 , meetings:[]
                 , classification:[]                
             };
-            rounds.push(round);
 
             this.prepareDefaultClassification(round);
+            topElimLevel.eliminatories[0].round = round;
+    
+            let rounds : Round[] = [round];
+            this.prepateAutoEliminatories(rounds);
         }    
-
-        this.prepateAutoEliminatories(rounds);
     } 
 
     private loadLocalRounds(): any {
-        // if(this.localRounds == undefined ) {
-        //     for(let r of this.selectedTourney.rounds) {
-        //         this.localRounds.push(r);
-        //     }
-        // }
-
         this.removeFromLocalRounds();
         this.addToLocalRounds();
 
@@ -235,7 +230,7 @@ export class LevelListView extends AbstractListView {
      */
     private prepateAutoEliminatories(rounds : Round[]): any  {
 
-        this.paddingRound(this.selectedTourney.rounds);
+        this.paddingRound(rounds);
 
         let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
         for(let i=0; i<rounds.length; i++) {
@@ -459,6 +454,8 @@ export class LevelListView extends AbstractListView {
 
         if(selectedLevel < maxCurrentLevel) {
             this.eliminatoryLevels.splice(0, maxCurrentLevel - selectedLevel);
+            let el = this.eliminatoryLevels[0];
+            el.eliminatories[0].round.classification = [];
         }
 
         for(let i=0; i<this.eliminatoryLevels.length; i++) {
@@ -513,7 +510,6 @@ export class LevelListView extends AbstractListView {
             , isTopLevel: top == 0 ? true : false
             , isOneway: true
             , eliminatories: els
-            , standaloneRounds: []
         };
 
         return el;
@@ -572,9 +568,11 @@ export class LevelListView extends AbstractListView {
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
         this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
 
-        this.selectedTourney.eliminatoryMode = this.isManual ? EliminatoryMode.M : EliminatoryMode.A;
-
-        this.router.navigate([LevelListView.redirect]);
+        let redirect: string = LevelListView.autoRedirect;
+        if(this.isManual) {
+            redirect = LevelListView.manualRedirect;
+        } 
+        this.router.navigate([redirect]);
     }
 
     onManualClick() {
@@ -582,20 +580,35 @@ export class LevelListView extends AbstractListView {
         this.eliminatoryMode=EliminatoryMode.M;
         this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
         this.isManual = true;
+
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onAutoClick() {
         console.log("Entering onAutoClick()");
-        this.eliminatoryMode=EliminatoryMode.A;
-        this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
-        this.isManual = false;
-        this.tourneyService.availableTeams = [];
+        let popup = 'Sicuro di voler passare alla modalità automatica?';
+        popup += 'Se si, il sistema rimuoverà tutte le impostazioni che avete inserito nel modo manuale';
 
-        for(let r of this.selectedTourney.rounds) {
-            this.prepareDefaultClassification(r);
+        if(confirm(popup)) {
+            this.eliminatoryMode=EliminatoryMode.A;
+            this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
+            this.isManual = false;
+            this.tourneyService.availableTeams = [];
+
+            for(let r of this.selectedTourney.rounds) {
+                this.prepareDefaultClassification(r);
+            }
+
+            let el = this.eliminatoryLevels[0];
+            for(let m of el.eliminatories[0].round.meetings) {
+                // m.team1 = null;
+                // m.team2 = null;
+            }
+
+            this.prepateAutoEliminatories(this.selectedTourney.rounds);
+
+            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
         }
-
-        this.prepateAutoEliminatories(this.selectedTourney.rounds);
     }
  
     onTeamNumChange(event) {
@@ -607,21 +620,9 @@ export class LevelListView extends AbstractListView {
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
 
         this.prepareEliminatoryLevels(N);
-    }
-
-    onOriginalClick() {
-        console.log("Entering onOriginalClick()");
-        this.selectedTourney.teamSortType = TeamSortType.O;
-    }
-
-    onAlphabeticalClick() {
-        console.log("Entering onAlphabeticalClick()");
-        this.selectedTourney.teamSortType = TeamSortType.A;
-    }
-
-    onRandomClick() {
-        console.log("Entering onRandomClick()");
-        this.selectedTourney.teamSortType = TeamSortType.R;
+        if(this.isStandalone) {
+            this.processStandalone();
+        }
     }
 }
 

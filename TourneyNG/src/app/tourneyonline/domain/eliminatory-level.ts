@@ -8,7 +8,7 @@ export class EliminatoryLevel  {
     isTopLevel: boolean;
     isOneway: boolean;
 
-    standaloneRounds: Round[];
+    // standaloneRounds: Round[];
 
     eliminatories: Array<Eliminatory>;
 }

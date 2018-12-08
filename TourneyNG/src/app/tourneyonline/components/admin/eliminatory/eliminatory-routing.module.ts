@@ -1,7 +1,8 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
 import {EliminatoryTourneyListView} from './tourney-listview';
-import {EliminatoryListView} from './eliminatory-listview';
+import {EliminatoryAutoListView} from './eliminatory-autolistview';
+import {EliminatoryManualListView} from './eliminatory-manuallistview';
 import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
 import { LevelListView } from './level-listview';
 import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
@@ -11,8 +12,9 @@ import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
 		RouterModule.forChild([
 			{ path: '', component: EliminatoryTourneyListView },
 			{ path: 'levelLv', component: LevelListView },
-			{ path: 'levelLv/eliminatoryLv', component: EliminatoryListView },
-			{ path: 'levelLv/eliminatoryLv/dv', component: AutoEliminatoryDetailView },
+			{ path: 'levelLv/eliminatoryAutoLv', component: EliminatoryAutoListView },
+			{ path: 'levelLv/eliminatoryManualLv', component: EliminatoryManualListView },
+			{ path: 'levelLv/eliminatoryLv/autodv', component: AutoEliminatoryDetailView },
 			{ path: 'levelLv/eliminatoryLv/manualdv', component: ManualEliminatoryDetailView },
 		])
 	],

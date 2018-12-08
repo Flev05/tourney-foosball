@@ -25,7 +25,8 @@ import {CodeHighlighterModule} from '../../../../components/codehighlighter/code
 import {SliderModule} from '../../../../components/slider/slider';
 
 import {EliminatoryTourneyListView} from './tourney-listview';
-import {EliminatoryListView} from './eliminatory-listview';
+import {EliminatoryAutoListView} from './eliminatory-autolistview';
+import {EliminatoryManualListView} from './eliminatory-manuallistview';
 import {LevelListView} from './level-listview';
 import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
 import { CalendarModule } from 'app/components/calendar/calendar';
@@ -61,7 +62,8 @@ import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
 	declarations: [
         EliminatoryTourneyListView
         ,LevelListView
-        ,EliminatoryListView
+        ,EliminatoryAutoListView
+        ,EliminatoryManualListView
         ,AutoEliminatoryDetailView        
         ,ManualEliminatoryDetailView        
     ]

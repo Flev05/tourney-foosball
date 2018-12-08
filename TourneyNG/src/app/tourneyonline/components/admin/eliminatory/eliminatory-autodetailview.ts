@@ -36,7 +36,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     isTopLevel: boolean;
     private isOneway: boolean;
 
-    availableTeams: Combobox[];
+    isStandalone: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -60,6 +60,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         let m1: Meeting = this.selectedEliminatory.round.meetings[0];
 
+        this.isStandalone = this.tourneyService.isStandalone;
+
         if(m1.country!=undefined) {
             this.fullAddress1 = m1.address + " - " 
                 + m1.country.zipCode + " " + m1.country.city
@@ -76,16 +78,6 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             }
         }
 
-        this.availableTeams = [{label:"", value: 0}];
-        
-        for(let t of this.tourneyService.selectedTeams) {
-            let cb = {label: t.teamName, value: t.id};
-            this.availableTeams.push(cb);
-        }
-
-        let team1CB = {label:m1.team1.teamName, value: m1.team1.id};
-        let team2CB = {label:m1.team2.teamName, value: m1.team2.id};
-
         this.eliminatoryFormGroup = this.fb.group({
 
             'meetingDate1': new FormControl(new Date(m1.datetime)),
@@ -95,10 +87,6 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             'meetingDate2': new FormControl(new Date(m2.datetime)),
             'address2': new FormControl(m2.address, Validators.compose([Validators.required])),
             'country2': new FormControl(m2.country),    
-            'availableTeams': new FormControl(this.availableTeams),    
-
-            'team1': new FormControl(team1CB),    
-            'team2': new FormControl(team2CB),    
         });
     }
 
@@ -110,44 +98,18 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
-        let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
-        m1.team1 = this.getTeam(team1CB);
-        m1.team2 = this.getTeam(team2CB);
-
-        m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
-        this.tourneyService.updateMeetingDb(m1, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
-
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            m2.team1 = m1.team2;
-            m2.team2 = m1.team1;
-    
-            m2.name = m2.team1.teamName + " - " + m2.team2.teamName;
             this.tourneyService.updateMeetingDb(m2, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-
-    private getTeam(teamName: Combobox) : Team {
-
-        for(let t of this.tourneyService.selectedTeams) {
-            if(t.teamName == teamName.label) {
-                return t;
-            }
-        }
-
-        let empty: Team = {
-            id:0, teamName: ""
-        };
-        return empty;
     }
 
     onError(n:any) {

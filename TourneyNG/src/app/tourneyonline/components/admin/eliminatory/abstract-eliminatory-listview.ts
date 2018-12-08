@@ -9,13 +9,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { EliminatoryMode, Direction } from 'app/tourneyonline/domain/enumerations';
 
-@Component({
-    templateUrl: './eliminatory-listview.html'
-})
-export class EliminatoryListView extends AbstractListView {
-    static autoRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/dv';
-    static manualRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/manualdv';
-
+export abstract class AbstractEliminatoryListView extends AbstractListView {
     msgs: Message[] = [];
    
     selectedEliminatoryLevel: EliminatoryLevel;
@@ -31,13 +25,15 @@ export class EliminatoryListView extends AbstractListView {
     isTopLevel: boolean;
 
     isOneway: string;
+    isStandalone: boolean;
 
     constructor(
+        protected redirect: string,
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super(EliminatoryListView.autoRedirect, tourneyService, router, location);
+        super(redirect, tourneyService, router, location);
     }
 
     ngOnInit() {
@@ -55,22 +51,10 @@ export class EliminatoryListView extends AbstractListView {
     
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
+
+        this.isStandalone = this.tourneyService.isStandalone;
     }
-    
-    onAutoEliminatoryRowSelect(event) {
-        console.log("Entering onAutoEliminatoryRowSelect()");
-
-        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
-        this.router.navigate([EliminatoryListView.autoRedirect]);
-    }
-
-    onManualEliminatoryRowSelect(event) {
-        console.log("Entering onManualEliminatoryRowSelect()");
-
-        this.tourneyService.selectedEliminatory = this.selectedEliminatory;
-        this.router.navigate([EliminatoryListView.manualRedirect]);
-    }
-
+ 
     onOnewayClick() {
         console.log("Entering onOnewayClick()");
         this.selectedEliminatoryLevel.isOneway=true;

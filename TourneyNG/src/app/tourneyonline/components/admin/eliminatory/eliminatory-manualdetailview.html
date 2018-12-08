@@ -11,11 +11,11 @@
             In questa vista devono essere definiti due tipi di informazioni:
         </p>
         <ul>
-            <li>Regole per il passaggio del turno</li>
-            <li>Data e luogo dell'incontro</li>
+            <li>Regole o squadre per il passaggio del turno</li>
+            <li>Data e luogo dell'incontro andata/ritorno</li>
         </ul>
 
-        <h4>Regole per il passaggio del turno</h4>
+        <h4>Regole o squadre per il passaggio del turno</h4>
         <p>
             Se avete selezionato il livello più alto, quello di ingresso alle eliminazioni dirette,
             la vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai 
@@ -23,9 +23,9 @@
             Se avete selezionato un livello più basso, la vista non contiene questa sezione di configurazione.
         </p>
 
-        <h4>Data e luogo dell'incontro</h4>
+        <h4>Data e luogo dell'incontro andata/ritorno</h4>
         <p>
-            A prescindere dal livello di eliminazione che avete selezionato, la vista contiene le box pre
+            A prescindere dal livello di eliminazione che avete selezionato, la vista contiene le box per
             inserire la data e il luogo degli incontri differenziando il turno di andata da quello 
             di ritorno, se esiste.
         </p>
@@ -53,7 +53,33 @@
 
             <h4>Regole di accoppiamento</h4>
 
-            <div *ngIf="isTopLevel">
+            <div *ngIf="isTopLevel && isStandalone">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        <label for="team1">Squadra 1</label>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-dropdown id="team1" [options]="availableTeams" formControlName="team1" 
+                            optionLabel="label" 
+                            placeholder="Selezionare">
+                        </p-dropdown>
+                    </div>
+                </div>
+                Vs         
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        <label for="team2">Squadra 2</label>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <p-dropdown id="team2" [options]="availableTeams" formControlName="team2" 
+                        optionLabel="label"
+                        placeholder="Selezionare">
+                    </p-dropdown>
+                    </div>
+                </div>                      
+            </div>
+
+            <div *ngIf="isTopLevel && !isStandalone">
                 <div class="ui-g ui-fluid">
                     <div class="ui-g-12">
                         <div class="ui-g-4">

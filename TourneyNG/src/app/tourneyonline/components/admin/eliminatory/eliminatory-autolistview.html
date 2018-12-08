@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Eliminazioni Dirette</span>
-        <span>Configurazione delle Eliminazioni Dirette</span>
+        <span>Elenco Eliminazioni Dirette di tipo automatico</span>
     </div>
 </div>    
 
@@ -10,7 +10,7 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         
-    <h4>Istruzioni</h4>
+    <h3>Istruzioni</h3>
     <p> 
         In questa vista dovete effettuare 2 operazioni:
     </p> 
@@ -19,27 +19,34 @@
         <li>2) Completare i livelli</li>
     </ul>
 
-    <h5>1) Scegliere il turno</h5>
+    <h4>1) Scegliere il turno</h4>
     <p>
-        Dovete specificare per ciascun livello di eliminazione diretta - finele, semifinale, quarti, ecc. - 
+        Dovete specificare per ciascun livello di eliminazione diretta - finale, semifinale, quarti, ecc. - 
         se gli incontri sono di solo andata o andata e ritorno. Il sistema lo userà 
         poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
     </p>
 
-    <h5>2) Completare i livelli</h5>
+    <h4>2) Completare i livelli</h4>
     <p> 
         Dovete selezionare tutti i livelli, uno per uno, accedere alla corrispondente vista di dettaglio
-        ed inserire i dati richiesti.
-    </p> 
-
-    <p>
+        di tipo automatico ed inserire i dati richiesti.
         Bisogna differenziare fra il primo livello, quello più alto, e tutti gli altri.
-        Il primo livello contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo.
+    </p> 
+    <ul>
+        <li>Livello più alto</li>
+        <li>Tutti gli altri</li>
+    </ul>
+
+    <h5>Livello più alto</h5>
+    <p>
+        Il livello più alto contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo.
+    </p>
+    <p>
         Gli altri livelli contengono solo la configurazione della data e del luogo.
     </p>
 
     <p>
-        Se il torneo è di tipo giornaliero, non dovete configurare la parte relativa alle date e ai luoghi
+        Se il torneo è di tipo giornaliero, non occorre configurare la parte relativa alle date e ai luoghi
         di svolgimento delle partite.
     </p>
 </p-accordionTab>
@@ -48,8 +55,8 @@
 
 <div class="content-section implementation">      
 
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <h4><span>Eliminazioni: {{selectedEliminatoryLevel.name}}</span></h4>
+    <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+    <h3><span>Eliminazioni: {{selectedEliminatoryLevel.name}}</span></h3>
 
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
@@ -74,7 +81,7 @@
         </div>
     </div>    
                 
-    <p-table *ngIf="!isManual"
+    <p-table *ngIf="isStandalone"
             [responsive]="true" 
             [value]="eliminatories" 
             selectionMode="single" 
@@ -119,12 +126,12 @@
         </ng-template>
     </p-table>
 
-    <p-table *ngIf="isManual" 
+    <p-table *ngIf="!isStandalone" 
             [responsive]="true" 
             [value]="eliminatories" 
             selectionMode="single" 
             [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onManualEliminatoryRowSelect($event)">
+            (onRowSelect)="onAutoEliminatoryRowSelect($event)">
 
         <ng-template pTemplate="caption">
             Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
@@ -171,7 +178,7 @@
                 <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.position.label}}</td>
                 <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.round.label}}</td>
                 <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule2.fromPlayoff.round.label}}</td>
-                <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date :  "dd/MM/y HH:mm"}}</td>
+                <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
             </tr>
         </ng-template>
     </p-table>

@@ -79,6 +79,7 @@ export class TourneyService {
     selectedIndex: number;
     newRule: boolean;
     selectedTabIndex: number = 0;
+    isStandalone: boolean;
 
     // private subject;
 

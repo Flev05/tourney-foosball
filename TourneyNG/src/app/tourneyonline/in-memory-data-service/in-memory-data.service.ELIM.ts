@@ -6,7 +6,7 @@ export class InMemoryDataServiceELIM {
 
 private static tourney = 
   {id: 2
-    , tourneyName: 'Eliminatory Standalone'
+    , tourneyName: 'Solo Eliminazioni'
       ,datetime: new Date(2018, 10, 22, 20, 30)
       ,address: 'Via Roma, 110'
       ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}

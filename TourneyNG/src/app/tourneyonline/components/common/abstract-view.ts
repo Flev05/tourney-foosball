@@ -75,7 +75,7 @@ export abstract class AbstractView implements OnInit {
         };
     }
 
-    protected createMeeting(t1: Team, t2: Team, pc1: PlayoffRule, pc2: PlayoffRule, d: Direction): Meeting {
+    protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, d: Direction): Meeting {
         let matches = new Array<Match>();
 
         for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
@@ -110,8 +110,8 @@ export abstract class AbstractView implements OnInit {
             team2: t2,
             points1: 0,
             points2: 0,
-            rule1: pc1,
-            rule2: pc2,
+            rule1: pr1,
+            rule2: pr2,
             ruleName: "",
             direction: d,
             status: MeetingStatus.ToPlay,
@@ -120,5 +120,4 @@ export abstract class AbstractView implements OnInit {
 
         return m;
     }
-
 }

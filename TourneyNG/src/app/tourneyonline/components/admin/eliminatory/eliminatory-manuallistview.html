@@ -56,7 +56,7 @@
 <div class="content-section implementation">      
 
     <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-    <h3><span>Eliminazioni: {{selectedEliminatoryLevel.name}}</span></h3>
+    <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
 
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
@@ -89,7 +89,7 @@
             (onRowSelect)="onManualEliminatoryRowSelect($event)">
 
         <ng-template pTemplate="caption">
-            Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
+            Eliminazione Diretta: {{selectedEliminatoryLevel.name}}
         </ng-template>
         
         <ng-template pTemplate="colgroup">
@@ -134,7 +134,7 @@
             (onRowSelect)="onManualEliminatoryRowSelect($event)">
 
         <ng-template pTemplate="caption">
-            Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
+            Eliminazione Diretta: {{selectedEliminatoryLevel.name}}
         </ng-template>
             
         <ng-template pTemplate="colgroup">

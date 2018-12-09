@@ -160,7 +160,8 @@ export class TourneyService {
     public prepareLevelCombobox(teamsNo: number) : Array<Combobox> {
 
         this.selectedTeams = [];
-        for(let t of this.selectedTourney.teams) {
+        for(let i=0; i<teamsNo; i++) {
+            let t = this.selectedTourney.teams[i];
             this.selectedTeams.push(t);
         }
 

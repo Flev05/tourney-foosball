@@ -96,7 +96,7 @@ export class InMemoryDataServiceCSI  {
 
    private static tourney: Tourney = {
       id: 1
-    , tourneyName: 'CSI Open A 2017'
+    , tourneyName: 'Gironi+Playoff+Eliminazioni'
     ,datetime: new Date(2018, 11, 24, 10, 33)
     ,address: 'Via Roma, 110'
     ,country: {id:1, city: "Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}

@@ -94,7 +94,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.phases=[PhaseType.R];
             this.selectedTourney.phases.push(PhaseType.E);   
             
-            this.selectedTourney.eliminatoryMode = EliminatoryMode.M
+            this.selectedTourney.eliminatoryMode = EliminatoryMode.A
             this.selectedTourney.teamSortType = TeamSortType.O;
 
             this.selectedTourney.isOnewayRound=true ;

@@ -27,7 +27,7 @@ static getTourneyDb() {
 
   let tourney: Tourney =
       {id: tourneyId
-      ,tourneyName: 'Gironi+Eliminatore 2018/2019'
+      ,tourneyName: 'Gironi+Eliminazioni Dirette'
       ,datetime: new Date(2018, 10, 22, 20, 30)
       ,address: 'Via Roma, 110'
       ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
@@ -38,7 +38,7 @@ static getTourneyDb() {
       ,access: AccessMode.PU
 
       ,phases: [PhaseType.R, PhaseType.E]
-      ,eliminatoryMode:EliminatoryMode.M
+      ,eliminatoryMode:EliminatoryMode.A
       ,teamSortType: TeamSortType.O
 
       ,isOnewayRound: false

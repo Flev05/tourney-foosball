@@ -73,6 +73,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for(let e of this.eliminatories) {
             if(isOneway) {
                 if(e.round.meetings.length == 2) {
+                    this.tourneyService.deleteMeeting(e.round.meetings[1]);
                     e.round.meetings.splice(1, 1);
                 }
             } else {

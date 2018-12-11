@@ -98,6 +98,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
+        this.tourneyService.updateMeetingDb(m1, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
+
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;

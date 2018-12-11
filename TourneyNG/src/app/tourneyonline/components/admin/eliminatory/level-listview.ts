@@ -13,6 +13,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Team } from 'app/tourneyonline/domain/team';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './level-listview.html'
@@ -36,7 +37,10 @@ export class LevelListView extends AbstractListView {
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
     isAutomatic: boolean;
-
+    meetingMap: Map<number, MeetingDb[]>;
+    httpCounter: number;
+    eliminatoryRoundMap: Map<number, Round>;
+    
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -69,22 +73,72 @@ export class LevelListView extends AbstractListView {
         } else {
              this.isModeEnabled = true;
         }
+        
+        this.loadMeetings();
+    }
 
+    private loadMeetings(): any {
+
+        if(this.eliminatoryLevels.length == 0) {
+            this.processEliminatoryLevels();
+            return;
+        }
+
+        this.meetingMap = new Map<number, MeetingDb[]>();        
+        this.eliminatoryRoundMap = new Map<number, Round>();        
+        this.httpCounter = 0;
+
+        for(let topElimLevel of this.eliminatoryLevels) {
+            for(let e of topElimLevel.eliminatories) {
+                this.eliminatoryRoundMap.set(e.id, e.round);
+                this.httpCounter++;
+
+                let abs = this.tourneyService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
+                abs.subscribe(mdbs => this.addToMeetingMap(mdbs), e => this.onError(e));
+            }
+        }
+    }
+
+    private addToMeetingMap(mdbs: MeetingDb[]): void {
+        let elid = mdbs[0].eliminatoryId;
+        this.meetingMap.set(elid, mdbs);
+
+        this.httpCounter--;
+
+        if(this.httpCounter == 0) {
+
+            for(let key of this.eliminatoryRoundMap.keys()) {
+                let eid: number = +key;
+                let round = this.eliminatoryRoundMap.get(eid);
+                let meetingsDb: MeetingDb[] = this.meetingMap.get(eid);
+                let meetings: Array<Meeting> = new Array<Meeting>();
+                for(let mdb of meetingsDb) {
+                    let m = JSON.parse(mdb.json);
+                    meetings.push(m);
+                }
+                round.meetings = meetings;
+            }
+
+            this.processEliminatoryLevels();
+        }
+    }
+
+    private processEliminatoryLevels() {
+        
         this.prepareEliminatoryLevels(this.selectedTeamsNumCombobox.value);
 
-        if( this.selectedTourney.phases.length == 1 && 
-            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
-        {
+        if (this.selectedTourney.phases.length == 1 &&
+            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
             this.isStandalone = true;
-        } else {
+        }
+        else {
             this.isStandalone = false;
         }
         this.tourneyService.isStandalone = this.isStandalone;
-
-        if(this.isStandalone) {
-            this.tourneyService.availableTeams = [];
+        if (this.isStandalone) {
             this.processStandalone();
-        } else if(this.isAutomatic) {
+        }
+        else if (this.isAutomatic) {
             this.loadLocalRounds();
             this.prepateAutoEliminatories(this.selectedTourney.rounds);
         }
@@ -92,9 +146,10 @@ export class LevelListView extends AbstractListView {
 
     /**
      * Prepares the list view of the desired levels in function of the user selected 
-     * number of teams to pass the qualification phase
+     * number of teams to begin the minimum top elimination phase containing the selected
+     * teams.
      * 
-     * @param teamsNo the number of teams to allocate on the eliminatory level
+     * @param teamsNo the number of teams to allocate on the top eliminatory level
      */
     private prepareEliminatoryLevels(teamsNo: number): any {
         console.log("Entering prepareEliminatoryLevels("+teamsNo+")");
@@ -117,9 +172,7 @@ export class LevelListView extends AbstractListView {
         if(selectedLevel > maxCurrentLevel) {
             let tempElimList: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
             
-            let el = this.eliminatoryLevels[0];
-            this.resetTopLevel(el);
-            
+
             let i = 0;
             let lcb = levelsCombobox[i];
             while( lcb.value > maxCurrentLevel ) {        
@@ -130,11 +183,15 @@ export class LevelListView extends AbstractListView {
                 lcb = levelsCombobox[i];
             }
 
+            let el: EliminatoryLevel = this.eliminatoryLevels[0];
+            el.isTopLevel = false;
+
             tempElimList =  tempElimList.concat(this.eliminatoryLevels);
             this.eliminatoryLevels = tempElimList;
         }
 
         if(selectedLevel < maxCurrentLevel) {
+
             let deleted: EliminatoryLevel[] = this.eliminatoryLevels.splice(0, maxCurrentLevel - selectedLevel);
             for(let d of deleted) {
                 for(let e of d.eliminatories) {
@@ -147,9 +204,6 @@ export class LevelListView extends AbstractListView {
             let el: EliminatoryLevel = this.eliminatoryLevels[0];
             el.isTopLevel = true;
         }
-
-        let el: EliminatoryLevel = this.eliminatoryLevels[0];
-        // this.updateTopLevel(el);
 
         if(selectedLevel == 1) {
             if(this.eliminatoryLevels.length == 2) {
@@ -169,18 +223,6 @@ export class LevelListView extends AbstractListView {
         }
     }    
 
-    resetTopLevel(el: EliminatoryLevel): any {
-        el.isTopLevel = false;
-
-        for(let e of el.eliminatories) {
-            e.round.meetings = [];
-            e.round.teams = [];
-            for(let m of e.round.meetings) {
-                this.tourneyService.deleteMeeting(m);
-            }
-        }
-    }
-
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
      * no rounds and no playoffs.
@@ -189,25 +231,57 @@ export class LevelListView extends AbstractListView {
     private processStandalone() {
 
         let topElimLevel = this.eliminatoryLevels[0];
-        let round = topElimLevel.eliminatories[0].round;
-        if(round.classification.length == 0) {
+
+        let round = topElimLevel.standaloneRound;
+        if(round==undefined) {
             round = {id:this.tourneyService.getSequenceNumber()
                 , name:""
                 , type: RoundType.E
-                , teams: null
+                , teams: []
                 , meetings:[]
                 , classification:[]                
             };
+            topElimLevel.standaloneRound = round;
+        }
 
-            topElimLevel.eliminatories[0].round = round;
+        if(round.teams.length != this.tourneyService.selectedTeams.length) {
+
+            let teamMap: Map<number, Team> = new Map<number, Team>();
+            for(let t of this.tourneyService.selectedTeams) {
+                teamMap.set(t.id, t);
+            }
+
+            for(let t of round.teams) {
+                if(!teamMap.has(t.id)) {
+                    for(let m of round.meetings) {
+                        if(m.team1.id == t.id || m.team2.id == t.id) {
+                            this.tourneyService.deleteMeeting(m);
+                        }
+                    }
+                }
+            }
+
+            let teamTmp = new Array<Team>();
+            for(let st of this.tourneyService.selectedTeams) {
+                let found: boolean = false;
+                for(let t of round.teams) {
+                    if(st.id==t.id) {
+                        found = true;;
+                        break;
+                    }
+                }
+                if(!found) {
+                    teamTmp.push(st);
+                }
+            }
+            round.teams = teamTmp;
         }    
-   
-        round.teams = this.tourneyService.selectedTeams;
 
         let rounds : Round[] = [round];
         this.prepateAutoEliminatories(rounds);
     } 
 
+    
     private loadLocalRounds(): any {
         this.removeFromLocalRounds();
         this.addToLocalRounds();
@@ -319,6 +393,19 @@ export class LevelListView extends AbstractListView {
                     r.classification.push(c);
                 }
             }
+
+            let classificationTmp = new Array<Classification>();
+            for (let cl of r.classification) {
+
+                for(let t of r.teams) {
+                    if(cl.team.id == t.id) {
+                        classificationTmp.push(cl);
+                        continue;
+                    }
+                }
+            }
+
+            r.classification = classificationTmp;
         }
     }
 
@@ -334,7 +421,7 @@ export class LevelListView extends AbstractListView {
      * 
      * So prepare the elemintories list by using the smart put algorithm
      */
-    private prepateAutoEliminatories(rounds : Round[]): any  {
+    private prepateAutoEliminatories(rounds : Round[]): void  {
         
         for(let r of rounds) {
             this.prepareDefaultClassification(r);
@@ -385,7 +472,8 @@ export class LevelListView extends AbstractListView {
 
         let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
 
-        let topLevelEliminatories = this.eliminatoryLevels[0].eliminatories;
+        const topLevel = this.eliminatoryLevels[0];
+        let topLevelEliminatories = topLevel.eliminatories;
         for(let i=0; i<ascClassification.length; i++) {
 
             let c1: Classification = ascClassification[i];
@@ -393,11 +481,11 @@ export class LevelListView extends AbstractListView {
 
             let e: Eliminatory = topLevelEliminatories[i];
 
-            let m: Meeting = this.createMeeting(c1.team, c2.team, null, null, Direction.RoundTrip);
-
-            e.round.meetings[0] = m;
-
-            this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+            let m = e.round.meetings[0];
+            m.team1 = c1.team;
+            m.team2 = c2.team;
+            
+            this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
 
             sequenzialEliminatories.push(e);
         }
@@ -505,11 +593,11 @@ export class LevelListView extends AbstractListView {
             return sortedClassification;
         }
 
-        sortedClassification = sortedClassification.sort((t1, t2) =>{
-            if(t1.team.teamName > t2.team.teamName) {
+        sortedClassification = sortedClassification.sort((c1, c2) =>{
+            if(c1.team.teamName > c2.team.teamName) {
                 return 1;
             }
-            if(t1.team.teamName < t2.team.teamName) {
+            if(c1.team.teamName < c2.team.teamName) {
                 return -1;
             }
 
@@ -525,14 +613,7 @@ export class LevelListView extends AbstractListView {
         el.level = -1;
         this.eliminatoryLevels.push(el);
     }
-
-    // private updateEliminatoryLevel(el : EliminatoryLevel, lcb: Combobox, top : number): void {
-    //     let els = el.eliminatories;
-    //     for(let e of els) {
-    //         e.round.meetings = [];
-    //     }
-    // }
-
+ 
     private newEliminatoryLevel(lcb: Combobox, top : number): EliminatoryLevel {
 
         let els = new Array<Eliminatory>();
@@ -558,7 +639,7 @@ export class LevelListView extends AbstractListView {
 
     private newEliminatory(index : number): Eliminatory {
 
-        let m: Meeting = this.createMeeting(null, null, null, null, Direction.RoundTrip);
+        let m: Meeting = this.createMeeting(null, null, null, null, Direction.OneWay);
 
         let e: Eliminatory = {
             id: this.tourneyService.getSequenceNumber(),
@@ -634,17 +715,6 @@ export class LevelListView extends AbstractListView {
             this.eliminatoryMode=EliminatoryMode.A;
             this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
             this.isManual = false;
-            this.tourneyService.availableTeams = [];
-
-            let rounds = this.selectedTourney.rounds;
-            if(this.isStandalone) {
-                let el = this.eliminatoryLevels[0];
-        
-                el.eliminatories[0].round.classification = [];
-                rounds = [el.eliminatories[0].round];
-            }
-
-            this.prepateAutoEliminatories(rounds);
 
             this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
         }

@@ -57,7 +57,6 @@ export class TourneyService {
     selectedMeetingDb: MeetingDb;
     selectedMeeting: Meeting;
 
-    availableTeams: Team[];
     selectedTeams:  Team[];
 
     newTourney : boolean = false;
@@ -117,10 +116,6 @@ export class TourneyService {
             this.teamsCombobox.push({label: "" + i, value: i});
         }
         
-        if(this.availableTeams==undefined) {
-            this.availableTeams = [];
-        }
-
         this.roundsCombobox = [];
         this.roundsCombobox.push({label: "", value: 0});
             
@@ -254,6 +249,7 @@ export class TourneyService {
 
         return obs;
     }
+
     /** 
      * Loads all the meetings of the receìved tourney and eliminatory ids
      *  GET meetings by params. Will 404 if meetings not found 
@@ -273,6 +269,7 @@ export class TourneyService {
 
         return obs;
     }
+    
     loadDisciplines (): Observable<Discipline[]> {
         return this.http.get<Discipline[]>(typologiesUrl)
         .pipe(

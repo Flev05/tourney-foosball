@@ -9,4 +9,5 @@ export class EliminatoryLevel  {
     isOneway: boolean;
 
     eliminatories: Array<Eliminatory>;
+    standaloneRound?: Round;
 }

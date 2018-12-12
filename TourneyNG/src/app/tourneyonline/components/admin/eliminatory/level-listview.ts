@@ -80,7 +80,7 @@ export class LevelListView extends AbstractListView {
     private loadMeetings(): any {
 
         if(this.eliminatoryLevels.length == 0) {
-            this.processEliminatoryLevels();
+            this.processEliminationTree();
             return;
         }
 
@@ -119,13 +119,13 @@ export class LevelListView extends AbstractListView {
                 round.meetings = meetings;
             }
 
-            this.processEliminatoryLevels();
+            this.processEliminationTree();
         }
     }
 
-    private processEliminatoryLevels() {
+    private processEliminationTree() {
         
-        this.prepareEliminatoryLevels(this.selectedTeamsNumCombobox.value);
+        this.prepareEliminationTree(this.selectedTeamsNumCombobox.value);
 
         if (this.selectedTourney.phases.length == 1 &&
             this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
@@ -139,20 +139,19 @@ export class LevelListView extends AbstractListView {
             this.processStandalone();
         }
         else if (this.isAutomatic) {
-            this.loadLocalRounds();
             this.prepateAutoEliminatories(this.selectedTourney.rounds);
         }
     }
 
     /**
-     * Prepares the list view of the desired levels in function of the user selected 
+     * Prepares elimination tree of the desired levels in function of the user selected 
      * number of teams to begin the minimum top elimination phase containing the selected
      * teams.
      * 
      * @param teamsNo the number of teams to allocate on the top eliminatory level
      */
-    private prepareEliminatoryLevels(teamsNo: number): any {
-        console.log("Entering prepareEliminatoryLevels("+teamsNo+")");
+    private prepareEliminationTree(teamsNo: number): any {
+        console.log("Entering prepareEliminationTree("+teamsNo+")");
 
         let levelsCombobox: Combobox[] =  this.tourneyService.prepareLevelCombobox(teamsNo);
 
@@ -171,7 +170,6 @@ export class LevelListView extends AbstractListView {
 
         if(selectedLevel > maxCurrentLevel) {
             let tempElimList: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
-            
 
             let i = 0;
             let lcb = levelsCombobox[i];
@@ -261,151 +259,18 @@ export class LevelListView extends AbstractListView {
                 }
             }
 
-            let teamTmp = new Array<Team>();
-            for(let st of this.tourneyService.selectedTeams) {
-                let found: boolean = false;
-                for(let t of round.teams) {
-                    if(st.id==t.id) {
-                        found = true;;
-                        break;
-                    }
-                }
-                if(!found) {
-                    teamTmp.push(st);
-                }
-            }
-            round.teams = teamTmp;
+            round.teams = this.tourneyService.selectedTeams;
         }    
 
         let rounds : Round[] = [round];
         this.prepateAutoEliminatories(rounds);
     } 
-
-    
-    private loadLocalRounds(): any {
-        this.removeFromLocalRounds();
-        this.addToLocalRounds();
-
-        this.alignRoundTeams();
-    }
-
-    private removeFromLocalRounds(){
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
-            let found = false;
-            for(let sr of this.selectedTourney.rounds) {
-                if(r.name == sr.name) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                this.selectedTourney.rounds.splice(i, 1);
-            }
-        }
-    }
-
-    private addToLocalRounds(): any {
-        for(let sr of this.selectedTourney.rounds) {
-            let found = false;
-            for(let r of this.selectedTourney.rounds) {
-                if(r.name==sr.name) {
-                    found = true;
-                    break;
-                }
-            } 
-            if(!found) {
-                this.selectedTourney.rounds.push(sr);
-            }
-        }
-    }
-
-    private alignRoundTeams( ): any {
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r = this.selectedTourney.rounds[i];
-            for(let sr of this.selectedTourney.rounds) {
-                if(r.name == sr.name) {
-                    this.alignTeams(r, sr.teams);
-                    break;
-                }
-            }
-        }
-    }
-    
-    private alignTeams(r: Round, st: Team[]) {
-        this.removeFromRound(r, st);
-        this.addTeamsToRound(r, st);
-    }
-
-    private removeFromRound(r: Round, selTeams: Team[])  {
-        let localTeams: Team[] = r.teams;
-
-        for(let i=0; i<localTeams.length; i++) {
-            let found = false;
-            let t = localTeams[i];
-            for(let st of selTeams) {
-                if(t.teamName == st.teamName) {
-                    found = true;                    
-                    break;
-                }
-            }
-            if(!found) {
-                localTeams.splice(i, 1);
-            }
-        }         
-    }
-
-    /**
-     * Adds the teams from the selected list if they don't exist among the teams of received round.
-     * 
-     * @param localTeams the local teams
-     * @param selTeams   the selected teams
-     */
-    private addTeamsToRound(r: Round, selTeams: Team[]): void {
-        let localTeams: Team[] = r.teams;
-
-        for(let st of selTeams) {
-            let found = false;
-            for(let i=0; i<localTeams.length; i++) {
-                let t = localTeams[i];
-                if(t.teamName == st.teamName) {
-                    found = true;                    
-                }
-            }
-            if(!found) {
-                localTeams.push(st);
-            }
-        }
-    }
     
     private prepareDefaultClassification(r: Round) {
-        if(r.classification.length != r.teams.length) {
-            for (let t of r.teams) {
-                let found: boolean = false;
-                for(let cl of r.classification) {
-                    if(t.id == cl.team.id) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found) {
-                    let c: Classification = this.newClassification(t, 0);
-                    r.classification.push(c);
-                }
-            }
-
-            let classificationTmp = new Array<Classification>();
-            for (let cl of r.classification) {
-
-                for(let t of r.teams) {
-                    if(cl.team.id == t.id) {
-                        classificationTmp.push(cl);
-                        continue;
-                    }
-                }
-            }
-
-            r.classification = classificationTmp;
+        r.classification = [];
+        for (let t of r.teams) {
+            let c: Classification = this.newClassification(t, 0);
+            r.classification.push(c);
         }
     }
 
@@ -426,6 +291,7 @@ export class LevelListView extends AbstractListView {
         for(let r of rounds) {
             this.prepareDefaultClassification(r);
         }
+
         this.paddingRound(rounds);
 
         let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
@@ -507,51 +373,37 @@ export class LevelListView extends AbstractListView {
     }
 
     /**
-     * Padds each classification round to the next upper power of 2 teams by adding
-     * the dummies teams with points = -1
+     * The padding process is for align the round classification length to the
+     * nearest upper power of 2 elimination level containing the teams in each round.
+     * 
+     * For example, if you have 3 rounds of length 4, 11 and 7 teams rispectively, you need
+     * 4, 16 and 8 initial elimination levels ripectively.
+     * 
+     * So we first need to compute the max team count of each round and
+     * next append the dummy teams to align all the round to the max length.
+     * 
+     * The dummy teams are teams having points = -1
      */
     private paddingRound(rounds : Round[]): any {
 
         let maxDeep: number = 0;
-        let N: number = 0;
 
         for(let i=0; i<rounds.length; i++) {
             let r = rounds[i];
-            N+=r.classification.length;
 
             if(r.classification.length > maxDeep ) {
                 maxDeep = r.classification.length;
             }
         }
 
-        let diff = this.tourneyService.power2Padding(N) - N;
-        if( diff <= 0) {
-            return;
-        }
+        let power2 = this.tourneyService.power2Padding(maxDeep);
 
         for(let i=0; i<rounds.length; i++) {
             let r = rounds[i];
-            while(r.classification.length < maxDeep && diff > 0 ) {
-                let t: Team = {id: 0, teamName: ""};
+            for(let i=r.classification.length; i < power2; i++ ) {
+                let t: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
                 let dummy = this.newClassification(t, -1);
                 r.classification.push(dummy);
-                diff--;
-            }
-        }
-
-        while( diff > 0 ) {
-            for(let i=0; i<rounds.length; i++) {
-                let r = rounds[i];
-                let t: Team = {
-                    id: this.tourneyService.getSequenceNumber()
-                    ,teamName:""
-                };
-                let dummy = this.newClassification(t, -1);
-                r.classification.push(dummy);
-                diff--;
-                if(diff==0) {
-                    break;
-                }
             }
         }
     }
@@ -723,14 +575,18 @@ export class LevelListView extends AbstractListView {
     onTeamNumChange(event) {
         console.log("Entering onTeamNumChange(): " + this.selectedTeamsNumCombobox);
 
-        this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
-
         let N: number = this.selectedTeamsNumCombobox.value;
-        this.prepareEliminatoryLevels(N);
-        if(this.isStandalone) {
+        this.prepareEliminationTree(N);
+
+        if (this.isStandalone) {
             this.processStandalone();
         }
+        else if (this.isAutomatic) {
+            this.prepateAutoEliminatories(this.selectedTourney.rounds);
+        }
+
+        this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 }
 

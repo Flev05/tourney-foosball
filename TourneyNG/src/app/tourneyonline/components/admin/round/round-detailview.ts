@@ -91,6 +91,14 @@ export class RoundDetailView extends AbstractDetailView {
         });
     }
 
+    availables() : string {
+        return "Disponibili(" +this.availableTeams.length+")";
+    }
+    
+    selected() : string {
+        return "Selezionati(" +this.targetTeams.length+")";
+    }
+    
     goMeeting() {
         const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   

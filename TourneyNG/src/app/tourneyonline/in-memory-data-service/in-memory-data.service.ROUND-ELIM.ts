@@ -12,7 +12,7 @@ const ROUND_NUM = 4;
 const BASE_ROUND_ID = 400;
 
 export class InMemoryDataServiceRoundElim  {
-static teams = TeamsPool.prepareTeams(19);
+static teams = TeamsPool.prepareTeams(12);
 
 private static meetingsDb: MeetingDb[] = [];
 private static counter: number = 100;
@@ -23,7 +23,7 @@ static getMeetings() : MeetingDb[] {
 
 static getTourneyDb() {
 
-  let rounds =  InMemoryDataServiceRoundElim.prepareDefaultRounds(InMemoryDataServiceRoundElim.teams, 2)
+  let rounds =  InMemoryDataServiceRoundElim.prepareDefaultRounds(InMemoryDataServiceRoundElim.teams, 3)
 
   let tourney: Tourney =
       {id: tourneyId

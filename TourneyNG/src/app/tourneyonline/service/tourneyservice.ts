@@ -80,8 +80,6 @@ export class TourneyService {
     selectedTabIndex: number = 0;
     isStandalone: boolean;
 
-    // private subject;
-
     constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;

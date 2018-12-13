@@ -39,7 +39,7 @@ export class TeamListView extends AbstractListView {
     }
 
     create() {
-        this.selectedTeam={};
+        this.selectedTeam={id:0, teamName:""};
         this.tourneyService.selectedTeam = this.selectedTeam;
         this.tourneyService.newTeam = true;
         this.gotoDetailView();

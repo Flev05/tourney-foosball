@@ -224,7 +224,6 @@ export class LevelListView extends AbstractListView {
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
      * no rounds and no playoffs.
-     * Always aligns the teams in the local round to the user selected teams
      */
     private processStandalone() {
 
@@ -242,35 +241,184 @@ export class LevelListView extends AbstractListView {
             topElimLevel.standaloneRound = round;
         }
 
-        if(round.teams.length != this.tourneyService.selectedTeams.length) {
+        let teamMap: Map<number, Team> = new Map<number, Team>();
+        for(let t of this.tourneyService.selectedTeams) {
+            teamMap.set(t.id, t);
+        }
 
-            let teamMap: Map<number, Team> = new Map<number, Team>();
-            for(let t of this.tourneyService.selectedTeams) {
-                teamMap.set(t.id, t);
-            }
-
-            for(let t of round.teams) {
-                if(!teamMap.has(t.id)) {
-                    for(let m of round.meetings) {
-                        if(m.team1.id == t.id || m.team2.id == t.id) {
-                            this.tourneyService.deleteMeeting(m);
-                        }
+        for(let t of round.teams) {
+            if(!teamMap.has(t.id)) {
+                for(let m of round.meetings) {
+                    if(m.team1.id == t.id || m.team2.id == t.id) {
+                        this.tourneyService.deleteMeeting(m);
                     }
                 }
             }
+        }
 
-            round.teams = this.tourneyService.selectedTeams;
-        }    
+        round.teams = this.tourneyService.selectedTeams;
 
-        let rounds : Round[] = [round];
-        this.prepateAutoEliminatories(rounds);
+        let tmpTeams: Array<Team> = this.sortAndPad(round.teams);
+
+        let ascTeam: Array<Team> = new Array<Team>();
+        for(let i=0; i<tmpTeams.length/2; i++) {
+            let c: Team = tmpTeams[i];
+            ascTeam.push(c);
+        }
+        let descTeam: Array<Team> = new Array<Team>();
+        for(let i=tmpTeams.length-1; i>=tmpTeams.length/2; i--) {
+            let c: Team = tmpTeams[i];
+            descTeam.push(c);
+        }
+
+        const topLevel = this.eliminatoryLevels[0];
+        let topLevelEliminatories = topLevel.eliminatories;
+
+        for(let i=0; i<ascTeam.length; i++) {
+
+            let t1: Team = ascTeam[i];
+            let t2: Team = descTeam[i];
+
+            let e: Eliminatory = topLevelEliminatories[i];
+
+            let m = e.round.meetings[0];
+            m.team1 = t1;
+            m.team2 = t2;
+            this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+            
+            m = e.round.meetings[1];
+            m.team1 = t2;
+            m.team2 = t1;
+            
+            this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+        }
     } 
+
+    /**
+     * First sorts the received array of teams in random order then padds, with dummy teams, the array 
+     * to the nearest power of 2 teams containg all the teams
+     * 
+     * @param teams the array of teams to sort and padd
+     */
+    private sortAndPad(teams : Array<Team>): Array<Team> {
+
+        let maxDeep: number = 0;
+        for(let i=0; i<teams.length; i++) {
+            if(teams.length > maxDeep ) {
+                maxDeep = teams.length;
+            }
+        }
+        let power2 = this.tourneyService.power2Padding(maxDeep);
+
+        let tmpTeams: Array<Team> = new Array<Team>();
+
+        tmpTeams = [...teams];
+
+        tmpTeams.sort((t1, t2) =>{
+            let rand = Math.random();
+            if(rand < 0.5) {
+                return 1;
+            }
+            return -1;
+        });
+
+        for(let i=tmpTeams.length; i < power2; i++ ) {
+            let t: Team = this.newDummyTeam();
+            tmpTeams.push(t);
+        }
+
+        return tmpTeams;
+    }
+
+    private newDummyTeam() : Team {
+        let dummy: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
+        return dummy;
+    }
+    private newDummyRound() : Round {
+        let dummy: Round = {id: this.tourneyService.getSequenceNumber(), name: "", type: RoundType.E};
+        return dummy;
+    }
     
     private prepareDefaultClassification(r: Round) {
         r.classification = [];
         for (let t of r.teams) {
             let c: Classification = this.newClassification(t, 0);
             r.classification.push(c);
+        }
+    }
+
+    private processAutomaticEliminatories(selectedTeamsNo: number) {
+        
+        let roundsNo = this.selectedTourney.rounds.length;
+        if(roundsNo == 0) {
+            return;
+        }
+
+        let bestOfMap: Map<string, Array<Round>> = new Map<string, Array<Round>>();
+        let minDeep = Math.floor(selectedTeamsNo/roundsNo);
+
+        for(let i=0; i<minDeep; i++) {
+            let key = "" + (i + 1);
+            if(!bestOfMap.has(key)) {
+                let list: Array<Round> = new Array<Round>();
+                bestOfMap.set(key, list);
+            }
+
+            let list: Array<Round> = bestOfMap.get(key);
+
+            for(let r of this.selectedTourney.rounds) {
+                list.push(r);
+            }
+        }
+
+        let list: Array<Round> = new Array<Round>();
+        let key = "" + (minDeep + 1);
+        bestOfMap.set(key, list);
+
+        let mod = selectedTeamsNo % roundsNo;
+        for(let i=0; i<mod; i++) {
+            let r = this.selectedTourney.rounds[i];
+            list.push(r);
+        }
+
+        let power2 = this.tourneyService.power2Padding(selectedTeamsNo);
+        for(let i=minDeep; i<power2; i++) {
+            let key = "" + (i + 1);
+            if(!bestOfMap.has(key)) {
+                let list: Array<Round> = new Array<Round>();
+                bestOfMap.set(key, list);
+            }
+
+            let list: Array<Round> = bestOfMap.get(key);
+
+            let r = this.newDummyRound();
+            list.push(r);
+        }
+
+        let fullRoundList: Array<Round> = new Array<Round>();
+        for(let key of bestOfMap.keys()) {
+            let list: Array<Round> = bestOfMap.get(key);
+            fullRoundList = fullRoundList.concat(list);
+        }
+        
+        let lastIndex: number = power2-1;
+
+        const topLevel = this.eliminatoryLevels[0];
+        let topLevelEliminatories = topLevel.eliminatories;
+
+        for(let i=0; i<topLevelEliminatories.length; i++) {
+
+            let e: Eliminatory = topLevelEliminatories[i];
+
+            let ascRound = fullRoundList[i];
+            e.rule1.fromPlayoff.id = ascRound.id;
+            e.rule1.fromPlayoff.position = {label:"" + i, value: i};
+            e.rule1.fromPlayoff.round = {label:ascRound.name, value: ascRound.id};
+
+            let descRound = fullRoundList[lastIndex--];
+            e.rule2.fromPlayoff.id = descRound.id;
+            e.rule2.fromPlayoff.position = {label:"" + i, value: i};
+            e.rule2.fromPlayoff.round = {label:descRound.name, value: descRound.id};
         }
     }
 
@@ -292,7 +440,7 @@ export class LevelListView extends AbstractListView {
             this.prepareDefaultClassification(r);
         }
 
-        this.paddingRound(rounds);
+        this.paddingRounds(rounds);
 
         let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
         for(let i=0; i<rounds.length; i++) {
@@ -384,7 +532,7 @@ export class LevelListView extends AbstractListView {
      * 
      * The dummy teams are teams having points = -1
      */
-    private paddingRound(rounds : Round[]): any {
+    private paddingRounds(rounds : Round[]): any {
 
         let maxDeep: number = 0;
 
@@ -490,8 +638,16 @@ export class LevelListView extends AbstractListView {
     }
 
     private newEliminatory(index : number): Eliminatory {
+        let meetings : Array<Meeting> = new Array<Meeting>();
 
-        let m: Meeting = this.createMeeting(null, null, null, null, Direction.OneWay);
+        let t1: Team = this.newDummyTeam();
+        let t2: Team = this.newDummyTeam();
+
+        let m1: Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
+        meetings.push(m1);
+
+        let m2: Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
+        meetings.push(m2);
 
         let e: Eliminatory = {
             id: this.tourneyService.getSequenceNumber(),
@@ -503,7 +659,7 @@ export class LevelListView extends AbstractListView {
                     ,{id:1, teamName:""}
                 ]
                 ,classification: []
-                ,meetings: [m]
+                ,meetings: meetings
             },
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),
@@ -529,7 +685,8 @@ export class LevelListView extends AbstractListView {
             }
         };
 
-        this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+        this.tourneyService.addMeetingDb(m1, this.selectedTourney.id, 0, 0, e.id);
+        this.tourneyService.addMeetingDb(m2, this.selectedTourney.id, 0, 0, e.id);
 
         return e;
     }
@@ -582,7 +739,8 @@ export class LevelListView extends AbstractListView {
             this.processStandalone();
         }
         else if (this.isAutomatic) {
-            this.prepateAutoEliminatories(this.selectedTourney.rounds);
+            // this.prepateAutoEliminatories(this.selectedTourney.rounds);
+            this.processAutomaticEliminatories(N);
         }
 
         this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;

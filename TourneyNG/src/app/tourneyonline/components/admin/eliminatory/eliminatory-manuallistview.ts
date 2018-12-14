@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { AbstractEliminatoryListView } from './abstract-eliminatory-listview';
+import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 
 @Component({
     templateUrl: './eliminatory-manuallistview.html'

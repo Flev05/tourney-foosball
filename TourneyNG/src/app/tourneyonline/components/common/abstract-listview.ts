@@ -10,7 +10,6 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
-import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
  
 export abstract class AbstractListView extends AbstractView {
@@ -54,6 +53,10 @@ export abstract class AbstractListView extends AbstractView {
 
     protected pow2(level : number) : number {
         return Math.pow(2, level);
+    }
+
+    protected containsRound(): boolean {
+        return this.containsPhase(PhaseType.R, this.selectedTourney.phases);
     }
 
     protected containsPlayoff(): boolean {
@@ -104,51 +107,7 @@ export abstract class AbstractListView extends AbstractView {
             const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
             subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting() );       
         }
-    }
-
-    protected loadEliminatory(): any {
-        
-        let levels: Array<EliminatoryLevel> = this.selectedTourney.eliminatoryLevels;
-
-        this.levelMap = new Map<number, Array<Eliminatory>>();
-        for(let l of levels) {
-            if(l.isTopLevel) {
-                this.totLevelLen = l.eliminatories.length;
-                for(let i=0; i<this.totLevelLen; i++) {
-
-                    let mdbArray: Array<MeetingDb> = new Array<MeetingDb>();
-                    this.eliminatoryMeetings.push(mdbArray);
-                    let e = l.eliminatories[i];
-    
-                    let elArray = new Array<Eliminatory>();
-                    this.levelMap.set(l.id, elArray);
-
-                    const subscr = this.tourneyService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
-                    subscr.subscribe(em => this.eliminatoryMeetings[i] = em, e => this.onError(e), () => this.onLoadEliminatoryMeeting() );       
-                }
-                break;
-            }
-        }
-    }
-    
-    /**
-     * Call back method to process the Eliminatory meetings selected from the database
-     */
-    onLoadEliminatoryMeeting(): void {
-        if(this.eliminatoryMeetings.length==0) {
-            return;
-        }
-        for(let i=0; i<this.totLevelLen; i++) {
-
-            let topLevelMeetings: MeetingDb[] = this.eliminatoryMeetings[i];
-
-            // let r = po.round;
-            // let m: Meeting = JSON.parse(mdb.json);
-            // r.meetings.push(m);
-            // this.resolveEliminaotoryRules(po, this.selectedTourney.rounds);
-        }
-        // this.eliminatoryRows = this.prepareEliminatoryGui(this.selectedTourney.eliminatoryLevels);
-    }    
+    } 
 
     /**
      * Call back method to process the Playoff meetings selected from the database
@@ -378,6 +337,15 @@ export abstract class AbstractListView extends AbstractView {
         for(let p of playoffs) {
             rounds.push(p.round);
         }
+        return this.prepareRoundsGui(rounds);
+    }
+    
+    protected prepareEliminatoryGui(rounds: Round[]): any[] {
+
+        for(let round of rounds) {
+            round.classification = this.createClassification(round);
+        }
+
         return this.prepareRoundsGui(rounds);
     }
 

@@ -2,23 +2,20 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Round } from 'app/tourneyonline/domain/round';
-import { AbstractListView } from '../../common/abstract-listview';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
+import { MeetingDetailView } from './meeting-detailview';
 
 @Component({
     templateUrl: './result-listview.html'
 })
-export class ResultListView extends AbstractListView {
-    static meetingDvRedirect:   string = "result/lv/meetingLv/dv";
+export class ResultListView extends AbstractEliminatoryListView {
     static eliminatoryRedirect: string = 'result/lv/eliminatoryLv/dv';
-
-    selectedEliminatoryLevel: EliminatoryLevel;
 
     selectedMeetingRow: any;
     indexTab: number;
@@ -28,22 +25,25 @@ export class ResultListView extends AbstractListView {
         protected router: Router,
         protected location: Location,
     ) {
-        super(ResultListView.meetingDvRedirect, tourneyService, router, location);
+        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
         // this.indexTab = this.tourneyService.selectedTabIndex;
 
         super.ngOnInit();
-        
-        super.loadRounds();
 
-        // if(super.containsPlayoff()) {
-        //     super.loadPlayoffs();
-        // }
-        // if(super.containsEliminatory()) {
-        //     super.loadEliminatory();
-        // }
+        if(super.containsRound()) {
+            super.loadRounds();
+        }
+
+        if(super.containsPlayoff()) {
+            super.loadPlayoffs();
+        }
+
+        if(super.containsEliminatory()) {
+            super.loadEliminatoryMeetings();
+        }
     }
 
     onChangeTab(e) {
@@ -52,11 +52,11 @@ export class ResultListView extends AbstractListView {
         this.indexTab = index;
 
         if(index==1 && super.containsPlayoff()) {
-            super.loadPlayoffs();
+            // super.loadPlayoffs();
         }
-        // if(index==2 && super.containsEliminatory()) {
-        //     super.loadEliminatory();
-        // }
+        if(index==2 && super.containsEliminatory()) {
+            // super.loadEliminatoryMeetings();
+        }
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {
@@ -154,6 +154,14 @@ export class ResultListView extends AbstractListView {
         this.gotoMeetingDetailView();
     }
     
+    onEliminatoryRowSelect(event) {
+        console.log("Entering onEliminatoryRowSelect()");
+      
+        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
+
+        this.router.navigate([ResultListView.eliminatoryRedirect]);
+    }
+
     private getRoundBy(roundId: number, rounds: Round[]): Round {
         for(let r of rounds) {
             if(r.id == roundId) {
@@ -174,15 +182,7 @@ export class ResultListView extends AbstractListView {
     
     private gotoMeetingDetailView() {
         this.tourneyService.selectedTabIndex = this.indexTab;
-        this.router.navigate([ResultListView.meetingDvRedirect]);
-    }
-
-    onEliminatoryRowSelect(event) {
-        console.log("Entering onRowSelect()");
-      
-        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
-
-        this.router.navigate([ResultListView.eliminatoryRedirect]);
+        this.router.navigate([MeetingDetailView.meetingDvRedirect]);
     }
 
     goBack(): void {

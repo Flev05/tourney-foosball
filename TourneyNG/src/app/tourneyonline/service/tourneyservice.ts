@@ -90,6 +90,10 @@ export class TourneyService {
             return;
         }
 
+        if(this.selectedEliminatoryLevel==undefined) {
+            this.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
+        }
+
         let min: number = 2;
 
         let teamsNo = this.selectedTourney.rounds.length;

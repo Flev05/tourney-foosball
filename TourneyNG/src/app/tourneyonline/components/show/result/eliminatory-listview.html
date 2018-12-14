@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Eliminazioni dirette</span>
-        <span>Vista elenco Eliminazioni dirette iniziale del torneo: {{selectedTourney.tourneyName}}</span>
+        <span class="feature-title">Risultati Eliminazioni Dirette</span>
+        <span>Vista elenco per inserire i risultati delle Eliminazioni Dirette</span>
     </div>
 </div>    
 
@@ -11,59 +11,85 @@
             
     <h4>Istruzioni</h4>
     <p>
-        Vista elenco delle delle Eliminazioni dirette di partenza che compongono il torneo per accedere
-        a tutti gli incontri dei livelli delle eliminazioni dirette.
+        La vista contiente l'elenco di tutti gli incontri previsti per il livello di eliminazione diretta selezionato.
     </p>
     <p> 
-        In questa vista dovete selezionare il livello delle eliminazioni dirette (16°, ottavi, quarti di finale, ecc.)
-        per accedere agli incontri e inserire i risultati dei vari incontri.        
+        Selezionate il livello delle eliminazioni dirette (16°, ottavi, quarti di finale, ecc.)
+        per accedere agli incontri e inserire i risultati incontro previsto.        
     </p> 
-
     <p>
         Selezionare la riga dell'eliminatoria corrente per accedere alla vista per impistare i risultati dell'incontro.    
     </p>
+    <p>
+        Attenziome! Se la parte destra della riga è vuota, significa che la squadra di sinistra passa automaticamente
+        al turno successivo senza ulteriore spareggio.
+    </p>
+    
 </p-accordionTab>
 </p-accordion>
 </div>
 
 <div class="content-section implementation">        
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <h4><span>Eliminazioni: {{selectedEliminatoryLevel.name}}</span></h4>
-
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+        <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
+    
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-    </div>
-                
-    <p-table [responsive]="true" 
-            [value]="eliminatories" 
-            selectionMode="single" 
-            [(selection)]="selectedEliminatory" 
-            (onRowSelect)="onEliminatoryRowSelect($event)">
+                    
+        <p-table [responsive]="true" 
+                [value]="eliminatories" 
+                selectionMode="single" 
+                [(selection)]="selectedEliminatory" 
+                (onRowSelect)="onEliminatoryRowSelect($event)">
+    
+            <ng-template pTemplate="caption">
+                Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
+            </ng-template>
+            
+            <ng-template pTemplate="colgroup">
+                <colgroup>
+                    <col style="width: 10mm;">
+                    <col style="width: 50%;">
+                    <col style="width: 10mm;">
+                    <col style="width: 50%;">
+                    <col style="width: auto;">
+                </colgroup>
+            </ng-template>
+    
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>N°</th>
+                    <th>Squadra 1</th>
+                    <th>Vs</th>
+                    <th>Squadra 2</th>
+                    <th>Data</th>
+                </tr>
+            </ng-template>
+    
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                <tr *ngIf="rowIndex==0">
+                    <td colspan="5">Andata</td>
+                </tr>
+                <tr [pSelectableRow]="rowData">
+                    <td>{{rowIndex + 1}}</td>
+                    <td>{{rowData.round.meetings[0].team1.teamName}}</td>
+                    <td> - </td>
+                    <td>{{rowData.round.meetings[0].team2.teamName}}</td>
+                    <td>{{rowData.round.meetings[0].datetime | date : "dd/MM/y HH:mm" }}</td>
+                </tr>
 
-        <ng-template pTemplate="caption">
-            Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
-        </ng-template>
-        
-        <ng-template pTemplate="colgroup">
-            <colgroup>
-                <col style="width: 10mm;">
-                <col style="width: auto;">
-            </colgroup>
-        </ng-template>
+                <tr *ngIf="!selectedEliminatoryLevel.isOneway && rowIndex==0">
+                    <td colspan="5">Ritorno</td>
+                </tr>
 
-        <ng-template pTemplate="header">
-            <tr>
-                <th>N°</th>
-                <th>Livello</th>
-            </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-            <tr [pSelectableRow]="rowData">
-                <td>{{rowIndex + 1}}</td>
-                <td>{{rowData.round.name}}</td>
-            </tr>
-        </ng-template>
-    </p-table>
+                <tr [pSelectableRow]="rowData" *ngIf="!selectedEliminatoryLevel.isOneway">
+                    <td>{{rowIndex + 1}}</td>
+                    <td>{{rowData.round.meetings[1].team2.teamName}}</td>
+                    <td> - </td>
+                    <td>{{rowData.round.meetings[1].team1.teamName}}</td>
+                    <td>{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm" }}</td>
+                </tr>
+    
+            </ng-template>
+        </p-table>   
 </div>
     

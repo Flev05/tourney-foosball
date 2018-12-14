@@ -9,14 +9,45 @@
     
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
-        
+
+    <h3>Premessa</h3>
+    <p> 
+        La vista elenco può contenere due tipi di liste:
+    </p> 
+    <ul>
+        <li>1) Lista delle regole</li>
+        <li>2) Lista delle coppie</li>
+    </ul>
+    
+    <h4>1) Lista delle regole</h4>
+    <p>
+        Se il torneo è composto di gironi ed eliminazioni dirette ed avete scelto la modalità automatica
+        di generazione dell'albero delle eliminazioni dirette, la vista contiene le regole di passaggio 
+        del turno dai gironi di qualificazione in termini di posioni di classifica nei propri gironi.
+    </p>
+    <p>
+        Se la regola di destra non è presente, significa che la squadra corrispondene alla regola di 
+        sinistra è già qualificata e passa automaticamente al turno successivo.
+    </p>
+    
+    <h4>2) Lista delle coppie</h4>
+    <p>
+        Se il torneo è composto di solo eliminazioni dirette, a prescindere dalla  modalità scelta,
+        la vista contiene le coppie che incominciano la prima fase di eliminazioni dirette, 
+        quella di livello più alto. 
+    </p>
+    <p>
+        Se la squadra di destra non è presente, significa che la squadra di 
+        sinistra è già qualificata e passa automaticamente al turno successivo.
+    </p>
+
     <h3>Istruzioni</h3>
     <p> 
         In questa vista dovete effettuare 2 operazioni:
     </p> 
     <ul>
         <li>1) Scegliere il turno</li>
-        <li>2) Completare i livelli</li>
+        <li>2) Completare le eliminazioni</li>
     </ul>
 
     <h4>1) Scegliere il turno</h4>
@@ -26,28 +57,13 @@
         poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
     </p>
 
-    <h4>2) Completare i livelli</h4>
+    <h4>2) Completare le eliminazioni</h4>
     <p> 
-        Dovete selezionare tutti i livelli, uno per uno, accedere alla corrispondente vista di dettaglio
-        di tipo automatico ed inserire i dati richiesti.
-        Bisogna differenziare fra il primo livello, quello più alto, e tutti gli altri.
+        Dovete accedere alle righe della vista elenco, una per una, accedere alla corrispondente vista di dettaglio
+        ed inserire i dati relativi alle date e locazione di scolgimento degli incontri.
     </p> 
-    <ul>
-        <li>Livello più alto</li>
-        <li>Tutti gli altri</li>
-    </ul>
-
-    <h5>Livello più alto</h5>
     <p>
-        Il livello più alto contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo.
-    </p>
-    <p>
-        Gli altri livelli contengono solo la configurazione della data e del luogo.
-    </p>
-
-    <p>
-        Se il torneo è di tipo giornaliero, non occorre configurare la parte relativa alle date e ai luoghi
-        di svolgimento delle partite.
+        Se il torneo è di tipo giornaliero, potete ignore questa parte di configurazione.
     </p>
 </p-accordionTab>
 </p-accordion>

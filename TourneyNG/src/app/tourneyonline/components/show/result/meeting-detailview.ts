@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { Round } from 'app/tourneyonline/domain/round';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
@@ -16,6 +15,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 })
 export class MeetingDetailView extends AbstractDetailView {
     static redirect: string = "";
+    static meetingDvRedirect:   string = "result/lv/meetingLv/dv";
     
     msgs: Message[] = [];
 
@@ -151,7 +151,6 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     onComplete(): void {
-        // this.tourneyService.sendMessage(this.selectedMeeting);
         this.location.back();
     }
 }

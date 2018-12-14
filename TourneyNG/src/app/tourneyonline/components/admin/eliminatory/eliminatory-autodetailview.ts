@@ -5,8 +5,6 @@ import {FormControl,FormGroup,FormBuilder, Validators} from '@angular/forms';
 
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { Team } from 'app/tourneyonline/domain/team';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Message } from 'app/components/common/api';
 import { EliminatoryMode } from 'app/tourneyonline/domain/enumerations';
@@ -37,6 +35,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     private isOneway: boolean;
 
     isStandalone: boolean;
+    m1: Meeting;
+    m2: Meeting;
 
     constructor(
         private fb: FormBuilder,
@@ -58,35 +58,35 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.isOneway = this.selectedEliminatoryLevel.isOneway;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
-        let m1: Meeting = this.selectedEliminatory.round.meetings[0];
+        this.m1 = this.selectedEliminatory.round.meetings[0];
 
         this.isStandalone = this.tourneyService.isStandalone;
 
-        if(m1.country!=undefined) {
-            this.fullAddress1 = m1.address + " - " 
-                + m1.country.zipCode + " " + m1.country.city
-                + " (" + m1.country.provinceCode +")";
+        if(this.m1.country!=undefined) {
+            this.fullAddress1 = this.m1.address + " - " 
+                + this.m1.country.zipCode + " " + this.m1.country.city
+                + " (" + this.m1.country.provinceCode +")";
         }
 
-        let m2: Meeting = m1;
+        this.m2 = this.m1;
         if(!this.isOneway) {
-            m2 = this.selectedEliminatory.round.meetings[1];
-            if(m2.country!=undefined) {
-                this.fullAddress2 = m2.address + " - " 
-                    + m2.country.zipCode + " " + m2.country.city
-                    + " (" + m2.country.provinceCode +")";
+            this.m2 = this.selectedEliminatory.round.meetings[1];
+            if(this.m2.country!=undefined) {
+                this.fullAddress2 = this.m2.address + " - " 
+                    + this.m2.country.zipCode + " " + this.m2.country.city
+                    + " (" + this.m2.country.provinceCode +")";
             }
         }
 
         this.eliminatoryFormGroup = this.fb.group({
 
-            'meetingDate1': new FormControl(new Date(m1.datetime)),
-            'address1': new FormControl(m1.address, Validators.compose([Validators.required])),
-            'country1': new FormControl(m1.country),
+            'meetingDate1': new FormControl(new Date(this.m1.datetime)),
+            'address1': new FormControl(this.m1.address, Validators.compose([Validators.required])),
+            'country1': new FormControl(this.m1.country),
 
-            'meetingDate2': new FormControl(new Date(m2.datetime)),
-            'address2': new FormControl(m2.address, Validators.compose([Validators.required])),
-            'country2': new FormControl(m2.country),    
+            'meetingDate2': new FormControl(new Date(this.m2.datetime)),
+            'address2': new FormControl(this.m2.address, Validators.compose([Validators.required])),
+            'country2': new FormControl(this.m2.country),    
         });
     }
 

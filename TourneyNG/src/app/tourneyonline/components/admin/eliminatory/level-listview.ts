@@ -8,7 +8,6 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { RoundType, EliminatoryMode, Direction, TeamSortType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
@@ -305,98 +304,99 @@ export class LevelListView extends AbstractEliminatoryListView {
         }
     }
     
-    private prepareDefaultClassification(r: Round) {
-        r.classification = [];
-        for (let t of r.teams) {
-            let c: Classification = this.newClassification(t, 0);
-            r.classification.push(c);
-        }
-    }
-    private prepateAutoEliminatories(rounds : Round[]): void  {
+    // private prepareDefaultClassification(r: Round) {
+    //     r.classification = [];
+    //     for (let t of r.teams) {
+    //         let c: Classification = this.newClassification(t, 0);
+    //         r.classification.push(c);
+    //     }
+    // }
+
+    // private prepateAutoEliminatories(rounds : Round[]): void  {
         
-        for(let r of rounds) {
-            this.prepareDefaultClassification(r);
-        }
+    //     for(let r of rounds) {
+    //         this.prepareDefaultClassification(r);
+    //     }
 
-        this.paddingRounds(rounds);
+    //     this.paddingRounds(rounds);
 
-        let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
-        for(let i=0; i<rounds.length; i++) {
-            let r = rounds[i];
+    //     let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
+    //     for(let i=0; i<rounds.length; i++) {
+    //         let r = rounds[i];
 
-            let orderedClassification: Array<Classification> = this.teamSort(r.classification);
+    //         let orderedClassification: Array<Classification> = this.teamSort(r.classification);
 
-            for(let j=0; j < orderedClassification.length; j++) {
-                let c: Classification = orderedClassification[j];
-                let key = "" + (j + 1);
-                if(!bestOfMap.has(key)) {
-                    let list: Array<Classification> = new Array<Classification>();
-                    bestOfMap.set(key, list);
-                }
+    //         for(let j=0; j < orderedClassification.length; j++) {
+    //             let c: Classification = orderedClassification[j];
+    //             let key = "" + (j + 1);
+    //             if(!bestOfMap.has(key)) {
+    //                 let list: Array<Classification> = new Array<Classification>();
+    //                 bestOfMap.set(key, list);
+    //             }
 
-                let list: Array<Classification> = bestOfMap.get(key);
+    //             let list: Array<Classification> = bestOfMap.get(key);
 
-                list.push(c);
-            }
-        }
+    //             list.push(c);
+    //         }
+    //     }
 
-        let allSortedClassification: Array<Classification> = new Array<Classification>();
-        for(let key of bestOfMap.keys()) {
+    //     let allSortedClassification: Array<Classification> = new Array<Classification>();
+    //     for(let key of bestOfMap.keys()) {
             
-            let unsortedClassification: Array<Classification> = bestOfMap.get(key);
+    //         let unsortedClassification: Array<Classification> = bestOfMap.get(key);
 
-            let sortedClassification: Array<Classification> = this.teamSort(unsortedClassification);
-            bestOfMap.set(key, sortedClassification);
+    //         let sortedClassification: Array<Classification> = this.teamSort(unsortedClassification);
+    //         bestOfMap.set(key, sortedClassification);
 
-            allSortedClassification = allSortedClassification.concat(sortedClassification);
-        }
+    //         allSortedClassification = allSortedClassification.concat(sortedClassification);
+    //     }
 
-        let ascClassification: Array<Classification> = new Array<Classification>();
-        for(let i=0; i<allSortedClassification.length/2; i++) {
-            let c: Classification = allSortedClassification[i];
-            ascClassification.push(c);
-        }
-        let descClassification: Array<Classification> = new Array<Classification>();
-        for(let i=allSortedClassification.length-1; i>=allSortedClassification.length/2; i--) {
-            let c: Classification = allSortedClassification[i];
-            descClassification.push(c);
-        }
+    //     let ascClassification: Array<Classification> = new Array<Classification>();
+    //     for(let i=0; i<allSortedClassification.length/2; i++) {
+    //         let c: Classification = allSortedClassification[i];
+    //         ascClassification.push(c);
+    //     }
+    //     let descClassification: Array<Classification> = new Array<Classification>();
+    //     for(let i=allSortedClassification.length-1; i>=allSortedClassification.length/2; i--) {
+    //         let c: Classification = allSortedClassification[i];
+    //         descClassification.push(c);
+    //     }
 
-        let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
+    //     let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
 
-        const topLevel = this.eliminatoryLevels[0];
-        let topLevelEliminatories = topLevel.eliminatories;
-        for(let i=0; i<ascClassification.length; i++) {
+    //     const topLevel = this.eliminatoryLevels[0];
+    //     let topLevelEliminatories = topLevel.eliminatories;
+    //     for(let i=0; i<ascClassification.length; i++) {
 
-            let c1: Classification = ascClassification[i];
-            let c2: Classification = descClassification[i];
+    //         let c1: Classification = ascClassification[i];
+    //         let c2: Classification = descClassification[i];
 
-            let e: Eliminatory = topLevelEliminatories[i];
+    //         let e: Eliminatory = topLevelEliminatories[i];
 
-            let m = e.round.meetings[0];
-            m.team1 = c1.team;
-            m.team2 = c2.team;
+    //         let m = e.round.meetings[0];
+    //         m.team1 = c1.team;
+    //         m.team2 = c2.team;
             
-            this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+    //         this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
 
-            sequenzialEliminatories.push(e);
-        }
+    //         sequenzialEliminatories.push(e);
+    //     }
 
-        let N: number = ascClassification.length;
-        let p: number=0;
-        for (let step = N; step >= 1; step = step / 2) {
+    //     let N: number = ascClassification.length;
+    //     let p: number=0;
+    //     for (let step = N; step >= 1; step = step / 2) {
 
-            for (let i = 0; i < N; i += step) {
-                if(topLevelEliminatories[i].round.meetings.length != 0) {
-                    continue;
-                }
-                let e = sequenzialEliminatories[p];
-                topLevelEliminatories[i] = e;
-                p++;
-            }
-        }
-        console.log("Eliminatories.size=" + topLevelEliminatories.length);
-    }
+    //         for (let i = 0; i < N; i += step) {
+    //             if(topLevelEliminatories[i].round.meetings.length != 0) {
+    //                 continue;
+    //             }
+    //             let e = sequenzialEliminatories[p];
+    //             topLevelEliminatories[i] = e;
+    //             p++;
+    //         }
+    //     }
+    //     console.log("Eliminatories.size=" + topLevelEliminatories.length);
+    // }
 
     /**
      * The padding process is for align the round classification length to the
@@ -410,29 +410,29 @@ export class LevelListView extends AbstractEliminatoryListView {
      * 
      * The dummy teams are teams having points = -1
      */
-    private paddingRounds(rounds : Round[]): any {
+    // private paddingRounds(rounds : Round[]): any {
 
-        let maxDeep: number = 0;
+    //     let maxDeep: number = 0;
 
-        for(let i=0; i<rounds.length; i++) {
-            let r = rounds[i];
+    //     for(let i=0; i<rounds.length; i++) {
+    //         let r = rounds[i];
 
-            if(r.classification.length > maxDeep ) {
-                maxDeep = r.classification.length;
-            }
-        }
+    //         if(r.classification.length > maxDeep ) {
+    //             maxDeep = r.classification.length;
+    //         }
+    //     }
 
-        let power2 = this.tourneyService.power2Padding(maxDeep);
+    //     let power2 = this.tourneyService.power2Padding(maxDeep);
 
-        for(let i=0; i<rounds.length; i++) {
-            let r = rounds[i];
-            for(let i=r.classification.length; i < power2; i++ ) {
-                let t: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
-                let dummy = this.newClassification(t, -1);
-                r.classification.push(dummy);
-            }
-        }
-    }
+    //     for(let i=0; i<rounds.length; i++) {
+    //         let r = rounds[i];
+    //         for(let i=r.classification.length; i < power2; i++ ) {
+    //             let t: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
+    //             let dummy = this.newClassification(t, -1);
+    //             r.classification.push(dummy);
+    //         }
+    //     }
+    // }
 
     /**
      * Team ordering, first sort the teams on the points basis so the dummy team having points=-1

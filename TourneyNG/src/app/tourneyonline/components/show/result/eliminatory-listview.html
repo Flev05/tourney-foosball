@@ -21,7 +21,7 @@
         Selezionare la riga dell'eliminatoria corrente per accedere alla vista per impistare i risultati dell'incontro.    
     </p>
     <p>
-        Attenziome! Se la parte destra della riga è vuota, significa che la squadra di sinistra passa automaticamente
+        Attenzione! Se la parte destra della riga è vuota, significa che la squadra di sinistra passa automaticamente
         al turno successivo senza ulteriore spareggio.
     </p>
     
@@ -42,54 +42,44 @@
                 (onRowSelect)="onEliminatoryRowSelect($event)">
     
             <ng-template pTemplate="caption">
-                Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
+                {{selectedEliminatoryLevel.name}}
             </ng-template>
             
             <ng-template pTemplate="colgroup">
                 <colgroup>
                     <col style="width: 10mm;">
-                    <col style="width: 50%;">
-                    <col style="width: 10mm;">
-                    <col style="width: 50%;">
                     <col style="width: auto;">
+                    <col style="width: auto;">
+                    <col style="width: 12mm;">
+                    <col style="width: 12mm;">
                 </colgroup>
             </ng-template>
-    
+
             <ng-template pTemplate="header">
                 <tr>
                     <th>N°</th>
                     <th>Squadra 1</th>
-                    <th>Vs</th>
                     <th>Squadra 2</th>
-                    <th>Data</th>
+                    <th>Pt.1</th>
+                    <th>Pt.2</th>
                 </tr>
             </ng-template>
-    
+
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                <tr *ngIf="rowIndex==0">
-                    <td colspan="5">Andata</td>
-                </tr>
+                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                    <td colspan="5">
+                        <span style="font-weight:bold">{{rowData.roundName}}° Eliminatoria</span>
+                    </td>
+                </tr>      
+
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowIndex + 1}}</td>
-                    <td>{{rowData.round.meetings[0].team1.teamName}}</td>
-                    <td> - </td>
-                    <td>{{rowData.round.meetings[0].team2.teamName}}</td>
-                    <td>{{rowData.round.meetings[0].datetime | date : "dd/MM/y HH:mm" }}</td>
+                    <td>{{rowData.roundNo}}</td>                
+                    <td>{{rowData.teamName1}}</td>
+                    <td>{{rowData.teamName2}}</td>
+                    <td>{{rowData.points1}}</td>
+                    <td>{{rowData.points2}}</td>
                 </tr>
-
-                <tr *ngIf="!selectedEliminatoryLevel.isOneway && rowIndex==0">
-                    <td colspan="5">Ritorno</td>
-                </tr>
-
-                <tr [pSelectableRow]="rowData" *ngIf="!selectedEliminatoryLevel.isOneway">
-                    <td>{{rowIndex + 1}}</td>
-                    <td>{{rowData.round.meetings[1].team2.teamName}}</td>
-                    <td> - </td>
-                    <td>{{rowData.round.meetings[1].team1.teamName}}</td>
-                    <td>{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm" }}</td>
-                </tr>
-    
-            </ng-template>
+            </ng-template>     
         </p-table>   
 </div>
     

@@ -79,7 +79,7 @@ export abstract class AbstractView implements OnInit {
         let matches = new Array<Match>();
 
         for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
-            let m: Match = {id:this.tourneyService.getSequenceNumber()
+            let m: Match = {id:i
                 ,players1: []
                 ,players2: []
                 ,score1:0

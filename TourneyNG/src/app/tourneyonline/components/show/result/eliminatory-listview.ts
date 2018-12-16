@@ -9,6 +9,9 @@ import { MeetingDetailView } from './meeting-detailview';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { ReorderableColumn } from 'primeng/table';
+import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -34,7 +37,6 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     
     protected processEliminationTree(): void {
 
-
         if(!this.isStandalone && this.isTopLevel) {
             for(let e of this.eliminatories) {
                 let fr = e.rule1.fromRound;
@@ -42,8 +44,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
                 let m = e.round.meetings[0];
 
-                if(position > 0) {
-                    let roundName = fr.round.label;
+                let roundName = fr.round.label;
+                if(position > 0 && roundName != "") {
                     let classification: Array<Classification>;
                     for(let r of this.selectedTourney.rounds) {
                         if(r.name == roundName) {
@@ -54,9 +56,9 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                     m.team1 = classification[position-1].team;
                 } else {
                     let fp = e.rule1.fromPlayoff;
-                    let position = fp.position.value;
-                    if(position > 0) {
-                        let roundName = fp.round.label;
+                    position = fp.position.value;
+                    roundName = fp.round.label;
+                    if(position > 0 && roundName != "") {
                         let classification: Array<Classification>;
                         for(let p of this.selectedTourney.playoffs) {
                             if(p.round.name == roundName) {
@@ -72,8 +74,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
                 fr = e.rule2.fromRound;
                 position = fr.position.value;
-                if(position > 0) {
-                    let roundName = fr.round.label;
+                roundName = fr.round.label;
+                if(position > 0 && roundName != "") {
                     let classification: Array<Classification>;
                     for(let r of this.selectedTourney.rounds) {
                         if(r.name == roundName) {
@@ -84,9 +86,9 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                     m.team2 = classification[position-1].team;
                 } else {
                     let fp = e.rule2.fromPlayoff;
-                    let position = fp.position.value;
-                    if(position > 0) {
-                        let roundName = fp.round.label;
+                    position = fp.position.value;
+                    roundName = fp.round.label;
+                    if(position > 0 && roundName != "") {
                         let classification: Array<Classification>;
                         for(let p of this.selectedTourney.playoffs) {
                             if(p.round.name == roundName) {
@@ -105,14 +107,55 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             }
         }
 
-        let rounds: Array<Round> = new Array<Round>();
+        this.eliminatoryRows = [];
+        for(let level=0; level<this.eliminatories.length; level++) {
+            let e = this.eliminatories[level];
+            let classificationMap: Map<string, Classification> = new Map<string, Classification>();
 
-        for(let e of this.eliminatories) {
-            rounds.push(e.round);
+            let row = this.prepareEliminatoryMeetingGui(e, 0, classificationMap);
+            this.eliminatoryRows = this.eliminatoryRows.concat(row);
+            if(!this.selectedEliminatoryLevel.isOneway) {
+                row = this.prepareEliminatoryMeetingGui(e, 1, classificationMap);
+                this.eliminatoryRows.push(row);
+            }
+        }
+        super.processEliminationTree();
+    }
+
+    private prepareEliminatoryMeetingGui(e: Eliminatory, meetingIndex: number,classificationMap: Map<string, Classification> ): any {
+        let round: Round = e.round;
+        let m: Meeting = round.meetings[meetingIndex];
+
+        let row: any = {m};
+
+        row.meetingIndex = meetingIndex;
+        row.id = m.id;
+        row.round = round;
+        row.roundNo = meetingIndex == 0 ? "A" : "R";
+        row.roundId = round.id;
+        row.eliminatoryId = e.id;    
+        
+        row.roundName = round.name;
+        row.teamName1 = m.team1.teamName;
+        row.teamName2 = m.team2.teamName;
+        row.points1 = m.points1;
+        row.points2 = m.points2;
+
+        if(row.teamName2 == "" || row.teamName1 == "") {
+            m.status = MeetingStatus.Terminated;
         }
 
-        this.eliminatoryRows = super.prepareEliminatoryGui(rounds);
-        super.processEliminationTree();
+        let currentKey = round.name;
+        if (!classificationMap.has(currentKey)) {
+            let len = round.meetings.length;
+            classificationMap.set(currentKey, m);
+            row.rowspanSize = len;
+        }
+        else {
+            row.rowspanSize = undefined;
+        }
+        
+        return row;
     }
 
     onEliminatoryRowSelect(event) {
@@ -120,16 +163,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         this.tourneyService.selectedRound = this.selectedMeetingRow.round;
 
-        if(this.selectedEliminatory.round.meetings) {
-
-        }
-        let m: Meeting = this.selectedEliminatory.round.meetings[0];
+        let m: Meeting = this.selectedMeetingRow.round.meetings[this.selectedMeetingRow.meetingIndex];
 
         let mdb: MeetingDb = this.tourneyService.prepareMdb(m
             , this.selectedTourney.id
             , 0
             , 0
-            , this.selectedEliminatory.id
+            , this.selectedMeetingRow.eliminatoryId
         );
         this.tourneyService.selectedMeetingDb = mdb;
 

@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Configurazione Eliminazione diretta manuale</span>
+        <span class="feature-title">Regole Eliminazioni Dirette manuale</span>
     </div>
 </div>
 
@@ -17,15 +17,15 @@
 
         <h4>Regole o squadre per il passaggio del turno</h4>
         <p>
-            Se avete selezionato il livello più alto, quello di ingresso alle eliminazioni dirette,
+            Se avete selezionato il livello più alto, quello di partenza delle eliminazioni dirette,
             la vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai 
-            gironi e playoff al primo livello di ingresso per le eliminazioni dirette.
+            gironi e/o playoff al primo livello di partenza per le eliminazioni dirette.
             Se avete selezionato un livello più basso, la vista non contiene questa sezione di configurazione.
         </p>
 
         <h4>Data e luogo dell'incontro andata/ritorno</h4>
         <p>
-            A prescindere dal livello di eliminazione che avete selezionato, la vista contiene le box per
+            A prescindere dal livello di eliminazione che avete selezionato, la vista contiene le boxes per
             inserire la data e il luogo degli incontri differenziando il turno di andata da quello 
             di ritorno, se esiste.
         </p>
@@ -85,7 +85,11 @@
                         <div class="ui-g-4">
                             <label for="positionId">Classificata</label>
                         </div>
-                        <p-dropdown id="positionId" [options]="positions" formControlName="position1" optionLabel="label"></p-dropdown>
+                        <p-dropdown id="positionId" 
+                            [options]="positions" 
+                            formControlName="position1" 
+                            optionLabel="label">
+                        </p-dropdown>
                     </div>
                     <div class="ui-g-12">
                         <div class="ui-g-4">
@@ -117,7 +121,11 @@
                             <label for="vin">Classificata</label>
                         </div>
                         <div class="ui-grid-col-3">
-                            <p-dropdown id="vin" [options]="positions" formControlName="position2" optionLabel="label"></p-dropdown>
+                            <p-dropdown id="vin" 
+                                [options]="positions" 
+                                formControlName="position2" 
+                                optionLabel="label">
+                            </p-dropdown>
                         </div>
                     </div>
                     <div class="ui-g-12">
@@ -249,11 +257,19 @@
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div style="margin-top:30px">
+                <p-message *ngIf="isDoubleSelection" 
+                    severity="error" 
+                    text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
+                </p-message>
+            </div>   
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva"
+                    [disabled]="!eliminatoryFormGroup.valid" ></button>
                 </div>
             </div>
+            
         </div>
 
     </form>   

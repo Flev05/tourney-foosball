@@ -217,8 +217,8 @@
             <li>Gara</li>
             <li>Durata</li>
             <li>Fasi</li>
-            <li>Turni Gironi</li>
-            <li>Turni Playoff</li>
+            <li>Gironi all'italiana</li>
+            <li>Playoff</li>
             <li>Goals</li>
             <li>Vittoria</li>
             <li>Sconfitta</li>
@@ -242,11 +242,11 @@
             la spiegazione del caso.
         </p>
 
-        <h4>Turni Gironi</h4>
+        <h4>Gironi all'italiana</h4>
         <p>
             In questo caso si deve specificare se ci sono i Turni di ritorno o solo andata per i gironi all'italiana.
         </p>
-        <h4>Turni Playoff</h4>
+        <h4>Playoff</h4>
         <p>
             Se previsti i Playoff, si deve specificare se ci sono i Turni di ritorno o solo andata.
         </p>
@@ -483,7 +483,7 @@
 
                     <div *ngIf="containsPhase('round')" class="ui-grid-row">
                         <div class="ui-grid-col-3">
-                            Turni Gironi:
+                            Gironi all'italiana:
                         </div>
                         <div class="ui-grid-col-5" tooltipPosition="right"
                                 pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
@@ -502,7 +502,7 @@
 
                     <div *ngIf="containsPhase('playoff')" class="ui-grid-row">
                         <div class="ui-grid-col-3">
-                            Turni Playoff:
+                            Playoff:
                         </div>
                         <div class="ui-grid-col-5" tooltipPosition="right"
                                 pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
@@ -634,7 +634,7 @@
                         </div>
 
                         <div class="ui-grid-col-5" tooltipPosition="right"
-                                pTooltip="Tutte le partite o il minimo per vincere l'incontro?">
+                                pTooltip="Scegliere se vanno giocate comunque tutte le partite o il minimo per vincere l'incontro">
                             <p-radioButton name="allMatchesGroupname" 
                                 label="Tutte" 
                                 value="true" 

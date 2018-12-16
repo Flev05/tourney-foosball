@@ -26,7 +26,7 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
 
-<p-tabView  (onChange)="onChangeTab($event)">
+<p-tabView (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
         <p-table [value]="roundRows"
             selectionMode="single"
@@ -61,7 +61,7 @@
                 </tr>      
         
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowIndex + 1}}</td>                
+                    <td>{{rowData.roundNo}}</td>                
                     <td>{{rowData.teamName1}}</td>
                     <td>{{rowData.teamName2}}</td>
                     <td>{{rowData.points1}}</td>
@@ -100,13 +100,13 @@
 
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="3">
+                    <td colspan="5">
                         <span style="font-weight:bold">{{rowData.roundName}}</span>
                     </td>
                 </tr>      
 
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowIndex + 1}}</td>                
+                    <td>{{rowData.roundNo}}</td>                
                     <td>{{rowData.teamName1}}</td>
                     <td>{{rowData.teamName2}}</td>
                     <td>{{rowData.points1}}</td>

@@ -13,6 +13,8 @@ import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 import { DialogModule } from 'primeng/dialog';
 import { GrowlModule } from 'app/components/growl/growl';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 
 import {EliminatoryRoutingModule} from './eliminatory-routing.module';
 import {PanelModule} from '../../../../components/panel/panel';
@@ -58,6 +60,8 @@ import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
         ,AccordionModule
         ,PickListModule
         ,DialogModule
+        ,MessagesModule
+        ,MessageModule
     ],
 	declarations: [
         EliminatoryTourneyListView

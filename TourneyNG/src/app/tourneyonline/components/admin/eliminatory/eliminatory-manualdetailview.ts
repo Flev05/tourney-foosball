@@ -41,6 +41,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
     isTopLevel: boolean;
     isStandalone: boolean;
     availableTeams: Combobox[];
+    isDoubleSelection: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -106,6 +107,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             team2CB = {label:m1.team2.teamName, value: m1.team2.id};
         }
 
+        this.isDoubleSelection = false;
+
         this.eliminatoryFormGroup = this.fb.group({
 
             'meetingDate1':  new FormControl(m1.datetime),
@@ -143,13 +146,34 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        this.selectedEliminatory.rule1.fromRound.position = this.eliminatoryFormGroup.get('position1').value;
-        this.selectedEliminatory.rule1.fromRound.round = this.eliminatoryFormGroup.get('round1').value;
-        this.selectedEliminatory.rule1.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff1').value;
+        let p1 = this.eliminatoryFormGroup.get('position1').value;
+        let p2 = this.eliminatoryFormGroup.get('position2').value;
 
-        this.selectedEliminatory.rule2.fromRound.position = this.eliminatoryFormGroup.get('position2').value;
-        this.selectedEliminatory.rule2.fromRound.round = this.eliminatoryFormGroup.get('round2').value;
-        this.selectedEliminatory.rule2.fromPlayoff.round = this.eliminatoryFormGroup.get('playoff2').value;
+        let r1  = this.eliminatoryFormGroup.get('round1').value;
+        let po1 = this.eliminatoryFormGroup.get('playoff1').value;
+        this.isDoubleSelection = false;
+        if(r1.value > 0 && po1.value > 0) {
+            this.isDoubleSelection = true;
+            return;
+        }
+
+        this.selectedEliminatory.rule1.fromRound.position = p1;
+        this.selectedEliminatory.rule1.fromRound.round = r1;
+        this.selectedEliminatory.rule1.fromPlayoff.round = po1;
+
+        this.selectedEliminatory.rule2.fromRound.position = p2;
+
+        let r2  = this.eliminatoryFormGroup.get('round2').value;
+        let po2 = this.eliminatoryFormGroup.get('playoff2').value;
+
+        this.isDoubleSelection = false;
+        if(r2.value > 0 && po2.value > 0) {
+            this.isDoubleSelection = true;
+            return;
+        }
+
+        this.selectedEliminatory.rule2.fromRound.round   = r2;
+        this.selectedEliminatory.rule2.fromPlayoff.round = po2;
 
         if(this.isStandalone) {
             let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
@@ -172,6 +196,10 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+    }
+
+    doubleSelection() {
+        return this.isDoubleSelection;
     }
 
     private getTeam(teamName: Combobox) : Team {

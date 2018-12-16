@@ -57,6 +57,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.tourneyService.prepareEliminatoriesComboBoxes();
  
         if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
+            // this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
             this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
             this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
             this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true" : "false" ;
@@ -97,6 +98,12 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected loadEliminatoryMeetings() {
         this.meetingMap = new Map<number, MeetingDb[]>();
         this.eliminatoryRoundMap = new Map<number, Round>();
+
+        this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+        if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {
+            return;
+        }
+
         this.httpCounter = 0;
         for (let topElimLevel of this.eliminatoryLevels) {
             for (let e of topElimLevel.eliminatories) {
@@ -164,6 +171,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
             }
         }
+        this.processEliminationTree();
     }
 
     protected newDummyTeam() : Team {

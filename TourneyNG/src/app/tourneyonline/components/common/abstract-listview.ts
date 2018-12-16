@@ -22,7 +22,6 @@ export abstract class AbstractListView extends AbstractView {
 
     roundMeetings: MeetingDb[];
     playoffMeetings: MeetingDb[];
-    eliminatoryMeetings: MeetingDb[][];
     levelMap: Map<number, Eliminatory[]>;
     totLevelLen: number;
 
@@ -86,7 +85,7 @@ export abstract class AbstractListView extends AbstractView {
         }
 
         for(let round of this.selectedTourney.rounds) {
-            round.classification = this.createClassification(round);
+            round.classification = this.updateClassification(round);
         }
 
         this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds);
@@ -174,7 +173,7 @@ export abstract class AbstractListView extends AbstractView {
         return null;
     }
     
-    private createClassification(round: Round): Classification[] {
+    private updateClassification(round: Round): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of round.meetings) {
@@ -287,7 +286,6 @@ export abstract class AbstractListView extends AbstractView {
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
 
         for (let round of rounds) {
-            
             for (let c of round.classification) {
                 
                 rows.push(c);
@@ -323,7 +321,7 @@ export abstract class AbstractListView extends AbstractView {
         let playoffRounds: Round[] = this.makePlayoffRounds(playoffs);
 
         for(let round of playoffRounds) {
-            round.classification = this.createClassification(round);
+            round.classification = this.updateClassification(round);
         }
 
         let rows: any[] = this.preparePlayoffGui(playoffs);
@@ -343,7 +341,7 @@ export abstract class AbstractListView extends AbstractView {
     protected prepareEliminatoryGui(rounds: Round[]): any[] {
 
         for(let round of rounds) {
-            round.classification = this.createClassification(round);
+            round.classification = this.updateClassification(round);
         }
 
         return this.prepareRoundsGui(rounds);

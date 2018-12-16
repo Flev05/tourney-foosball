@@ -85,12 +85,17 @@ export class ResultListView extends AbstractEliminatoryListView {
 
         return rows;
     }
-    
+
     private prepareMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
+        
+        let roundNo : number=0;
+
         for (let m of round.meetings) {
             rows.push(m);
 
+            roundNo++;
             rows[row].id = m.id;
+            rows[row].roundNo = roundNo;
             rows[row].roundId = round.id;
             rows[row].eliminatoryId = 0;    
             rows[row].playoffId = 0;
@@ -108,8 +113,7 @@ export class ResultListView extends AbstractEliminatoryListView {
                 let len = round.meetings.length;
                 classificationMap.set(currentKey, m);
                 rows[row].rowspanSize = len;
-            }
-            else {
+            } else {
                 rows[row].rowspanSize = undefined;
             }
             row++;

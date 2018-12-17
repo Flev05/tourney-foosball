@@ -24,7 +24,6 @@
         Attenzione! Se la parte destra della riga è vuota, significa che la squadra di sinistra passa automaticamente
         al turno successivo senza ulteriore spareggio.
     </p>
-    
 </p-accordionTab>
 </p-accordion>
 </div>
@@ -34,17 +33,20 @@
         <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
     
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-                    
-        <p-table [responsive]="true" 
+        <div style="margin-top:30px">
+            <p-message *ngIf="incompleteConfiguration" 
+                severity="error" 
+                text="Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!">
+            </p-message>
+        </div>     
+                                
+        <p-table *ngIf="!incompleteConfiguration" 
+                [responsive]="true" 
                 [value]="eliminatoryRows" 
                 selectionMode="single" 
                 [(selection)]="selectedMeetingRow" 
                 (onRowSelect)="onEliminatoryRowSelect($event)">
-    
-            <ng-template pTemplate="caption">
-                {{selectedEliminatoryLevel.name}}
-            </ng-template>
-            
+
             <ng-template pTemplate="colgroup">
                 <colgroup>
                     <col style="width: 10mm;">

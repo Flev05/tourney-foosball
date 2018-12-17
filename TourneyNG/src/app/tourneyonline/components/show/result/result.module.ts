@@ -11,20 +11,21 @@ import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 
 import {ResultRoutingModule} from './result-routing.module';
-import {GrowlModule} from '../../../../components/growl/growl';
-import {PanelModule} from '../../../../components/panel/panel';
-import {DropdownModule} from '../../../../components/dropdown/dropdown';
-import {InputTextModule} from '../../../../components/inputtext/inputtext';
-import {InputTextareaModule} from '../../../../components/inputtextarea/inputtextarea';
-import {ButtonModule} from '../../../../components/button/button';
-import {TabViewModule} from '../../../../components/tabview/tabview';
-import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
-import {SliderModule} from '../../../../components/slider/slider';
-
-import {CalendarModule} from '../../../../components/calendar/calendar';
-
+import { GrowlModule } from 'app/components/growl/growl';
+import { PanelModule } from 'app/components/panel/panel';
+import { DropdownModule } from 'app/components/dropdown/dropdown';
+import { InputTextModule } from 'app/components/inputtext/inputtext';
+import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
+import { ButtonModule } from 'app/components/button/button';
+import { TabViewModule } from 'app/components/tabview/tabview';
+import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
+import { SliderModule } from 'app/components/slider/slider';
+import { CalendarModule } from 'app/components/calendar/calendar';
+ 
 import {ResultTourneyListView } from './tourney-listview';
 import { ResultListView } from './result-listview';
 import { EliminatoryListView } from './eliminatory-listview';
@@ -32,8 +33,7 @@ import { MeetingDetailView } from './meeting-detailview';
 
 @NgModule({
 	imports: [
-
-		CommonModule
+		 CommonModule
         ,FormsModule
         ,ReactiveFormsModule
         ,GrowlModule
@@ -57,6 +57,8 @@ import { MeetingDetailView } from './meeting-detailview';
         ,ResultRoutingModule
         ,AccordionModule
         ,PickListModule
+        ,MessagesModule
+        ,MessageModule
     ],
 	declarations: [
 		 ResultTourneyListView

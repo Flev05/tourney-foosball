@@ -41,6 +41,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
     isAutomatic: boolean;
+    incompleteConfiguration: boolean;
 
     constructor(
         protected redirect: string,
@@ -57,7 +58,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.tourneyService.prepareEliminatoriesComboBoxes();
  
         if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
-            // this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
             this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
             this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
             this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true" : "false" ;
@@ -100,9 +100,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryRoundMap = new Map<number, Round>();
 
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+        this.incompleteConfiguration = true;
         if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {
             return;
         }
+        this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
 
         this.httpCounter = 0;
         for (let topElimLevel of this.eliminatoryLevels) {

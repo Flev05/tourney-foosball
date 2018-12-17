@@ -8,7 +8,6 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { RoundType, EliminatoryMode, Direction, TeamSortType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Classification } from 'app/tourneyonline/domain/classification';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 
@@ -441,49 +440,49 @@ export class LevelListView extends AbstractEliminatoryListView {
      * 
      * @param unsortedClassification the unsorted team list
      */
-    private teamSort(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
-            if (t1.points > t2.points) {
-                return -1;
-            }
+    // private teamSort(unsortedClassification: Array<Classification> ): Array<Classification>  {
+    //     var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
+    //         if (t1.points > t2.points) {
+    //             return -1;
+    //         }
         
-            if (t1.points < t2.points) {
-                return 1;
-            }
+    //         if (t1.points < t2.points) {
+    //             return 1;
+    //         }
         
-            return 0;
-        });
+    //         return 0;
+    //     });
 
-        if( this.selectedTourney.teamSortType==TeamSortType.O) {
-            return sortedClassification;
-        }
-        if( this.selectedTourney.teamSortType==TeamSortType.R) {
-            sortedClassification = sortedClassification.sort((t1, t2) =>{
-                let rand = Math.random();
-                if(rand < 0.33) {
-                    return 0;
-                }
-                if(rand > 0.66) {
-                    return 1;
-                }
-                return -1;
-            });
-            return sortedClassification;
-        }
+    //     if( this.selectedTourney.teamSortType==TeamSortType.O) {
+    //         return sortedClassification;
+    //     }
+    //     if( this.selectedTourney.teamSortType==TeamSortType.R) {
+    //         sortedClassification = sortedClassification.sort((t1, t2) =>{
+    //             let rand = Math.random();
+    //             if(rand < 0.33) {
+    //                 return 0;
+    //             }
+    //             if(rand > 0.66) {
+    //                 return 1;
+    //             }
+    //             return -1;
+    //         });
+    //         return sortedClassification;
+    //     }
 
-        sortedClassification = sortedClassification.sort((c1, c2) =>{
-            if(c1.team.teamName > c2.team.teamName) {
-                return 1;
-            }
-            if(c1.team.teamName < c2.team.teamName) {
-                return -1;
-            }
+    //     sortedClassification = sortedClassification.sort((c1, c2) =>{
+    //         if(c1.team.teamName > c2.team.teamName) {
+    //             return 1;
+    //         }
+    //         if(c1.team.teamName < c2.team.teamName) {
+    //             return -1;
+    //         }
 
-            return 0;
-        });
+    //         return 0;
+    //     });
 
-        return sortedClassification;
-    }
+    //     return sortedClassification;
+    // }
   
     private addOptionalLevel() {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
@@ -542,22 +541,22 @@ export class LevelListView extends AbstractEliminatoryListView {
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
+                    , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                 },
                 fromPlayoff: { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
+                    , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                 }
             },
             rule2: {
                 id: this.tourneyService.getSequenceNumber(),
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
+                    , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                 },
                 fromPlayoff: { id: this.tourneyService.getSequenceNumber()
-                    , position: { label: "1°", value: 0 }
+                    , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                 }
             }

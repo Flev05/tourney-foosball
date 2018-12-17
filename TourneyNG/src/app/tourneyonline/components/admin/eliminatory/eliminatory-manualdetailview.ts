@@ -109,6 +109,12 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.isDoubleSelection = false;
 
+        let p1 = this.selectedEliminatory.rule1.fromRound.position.value > 0 ?
+            this.selectedEliminatory.rule1.fromRound.position : this.selectedEliminatory.rule1.fromPlayoff.position;
+
+        let p2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
+            this.selectedEliminatory.rule2.fromRound.position : this.selectedEliminatory.rule2.fromPlayoff.position;
+
         this.eliminatoryFormGroup = this.fb.group({
 
             'meetingDate1':  new FormControl(m1.datetime),
@@ -123,11 +129,11 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             'rounds':  new FormControl(this.rounds),
             'playoffs':  new FormControl(this.playoffs),
 
-            'position1':  new FormControl(this.selectedEliminatory.rule1.fromRound.position),
+            'position1':  new FormControl(p1),
             'round1':  new FormControl(this.selectedEliminatory.rule1.fromRound.round),
             'playoff1':  new FormControl(this.selectedEliminatory.rule1.fromPlayoff.round),
 
-            'position2':  new FormControl(this.selectedEliminatory.rule2.fromRound.position),            
+            'position2':  new FormControl(p2),            
             'round2':  new FormControl(this.selectedEliminatory.rule2.fromRound.round),
             'playoff2':  new FormControl(this.selectedEliminatory.rule2.fromPlayoff.round),            
 
@@ -146,32 +152,45 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        let p1 = this.eliminatoryFormGroup.get('position1').value;
-        let p2 = this.eliminatoryFormGroup.get('position2').value;
+        let p1: Combobox = this.eliminatoryFormGroup.get('position1').value;
+        let p2: Combobox = this.eliminatoryFormGroup.get('position2').value;
 
-        let r1  = this.eliminatoryFormGroup.get('round1').value;
-        let po1 = this.eliminatoryFormGroup.get('playoff1').value;
+        let r1: Combobox  = this.eliminatoryFormGroup.get('round1').value;
+        let po1: Combobox = this.eliminatoryFormGroup.get('playoff1').value;
         this.isDoubleSelection = false;
         if(r1.value > 0 && po1.value > 0) {
             this.isDoubleSelection = true;
             return;
         }
 
-        this.selectedEliminatory.rule1.fromRound.position = p1;
-        this.selectedEliminatory.rule1.fromRound.round = r1;
+        if(r1.value > 0) {
+            this.selectedEliminatory.rule1.fromRound.position = p1;
+            this.selectedEliminatory.rule1.fromPlayoff.position = {label:"", value: 0};
+        } else {
+            this.selectedEliminatory.rule1.fromRound.position = {label:"", value: 0};
+            this.selectedEliminatory.rule1.fromPlayoff.position = p1;
+        }
+
+        this.selectedEliminatory.rule1.fromRound.round   = r1;
         this.selectedEliminatory.rule1.fromPlayoff.round = po1;
 
-        this.selectedEliminatory.rule2.fromRound.position = p2;
-
-        let r2  = this.eliminatoryFormGroup.get('round2').value;
-        let po2 = this.eliminatoryFormGroup.get('playoff2').value;
-
+        let r2: Combobox  = this.eliminatoryFormGroup.get('round2').value;
+        let po2: Combobox = this.eliminatoryFormGroup.get('playoff2').value;
+       
         this.isDoubleSelection = false;
         if(r2.value > 0 && po2.value > 0) {
             this.isDoubleSelection = true;
             return;
         }
 
+        if(r2.value > 0) {
+            this.selectedEliminatory.rule2.fromRound.position = p2;
+            this.selectedEliminatory.rule2.fromPlayoff.position = {label:"", value: 0};
+        } else {
+            this.selectedEliminatory.rule2.fromRound.position = {label:"", value: 0};
+            this.selectedEliminatory.rule2.fromPlayoff.position = p2;
+        }
+        
         this.selectedEliminatory.rule2.fromRound.round   = r2;
         this.selectedEliminatory.rule2.fromPlayoff.round = po2;
 

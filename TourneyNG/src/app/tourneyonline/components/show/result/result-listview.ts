@@ -55,6 +55,8 @@ export class ResultListView extends AbstractEliminatoryListView {
             // super.loadPlayoffs();
         }
         if(index==2 && super.containsEliminatory()) {
+            this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
+
             // super.loadEliminatoryMeetings();
         }
     }

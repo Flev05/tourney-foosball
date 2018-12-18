@@ -9,6 +9,8 @@ import { CountryService } from 'app/tourneyonline/service/countryservice';
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 @Component({
     templateUrl: './meeting-detailview.html'
@@ -137,9 +139,104 @@ export class MeetingDetailView extends AbstractDetailView {
             , this.tourneyService.selectedMeetingDb.roundId
             , this.tourneyService.selectedMeetingDb.playoffId
             , this.tourneyService.selectedMeetingDb.eliminatoryId
-        );
+            );            
+        this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
 
-        this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
+        this.updateNextLevel();
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
+    }
+
+    /**
+     * Fills the next eliminatory level, up to the final level, in function of the results in the current
+     * meeting of the current level. If the match is in balance, no fill will take place in the next level
+     * and all remain as is.
+     */
+    private updateNextLevel(): void {
+        if(this.tourneyService.selectedEliminatoryLevelIndex >=0 && this.tourneyService.selectedEliminatoryIndex >=0) {
+
+            const els = this.selectedTourney.eliminatoryLevels;
+            let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
+            let  l: Eliminatory = el.eliminatories[this.tourneyService.selectedEliminatoryIndex];
+
+            if(this.tourneyService.selectedEliminatoryLevelIndex < els.length-1) {
+                
+                let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
+                let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+
+                let nextEliminatoryIndex: number = Math.floor(this.tourneyService.selectedEliminatoryLevelIndex / 2);
+                let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+
+                for(let i=0; i<l.round.meetings.length; i++) {
+                    let m = l.round.meetings[i];
+                    if(m.id == this.selectedMeeting.id) {
+                        l.round.meetings[i] = this.selectedMeeting;
+                    }
+                }
+        
+                const m1: Meeting = l.round.meetings[0];
+                const m2: Meeting = l.round.meetings[1];
+
+                let points1 = m1.points1;
+                let points2 = m1.points2;
+                if(!el.isOneway) {
+                    points1 += m2.points1;
+                    points2 += m2.points2;
+                }
+                
+                if(points1 > points2) {
+                    let m: Meeting = nextEliminatory.round.meetings[0];
+                    if(m.team1.teamName == "" && m.team2.teamName == "") {
+                        let randomIndex = Math.random();                        
+                        if(randomIndex < 0.5) {
+                            m.team1 = m1.team1;
+                        } else {
+                            m.team2 = m1.team1;
+                        }
+                    } else {
+                        if(m.team1.teamName == "") {
+                            m.team1 = m1.team1;
+                        } else {
+                            m.team2 = m1.team1;
+                        }
+                    }
+                }
+
+                if(points2 > points1) {
+                    let m: Meeting = nextEliminatory.round.meetings[0];
+                    if(m.team1.teamName == "" && m.team2.teamName == "") {
+                        let randomIndex = Math.random();                        
+                        if(randomIndex < 0.5) {
+                            m.team1 = m1.team2;
+                        } else {
+                            m.team2 = m1.team2;
+                        }
+                    } else {
+                        if(m.team1.teamName == "") {
+                            m.team1 = m1.team2;
+                        } else {
+                            m.team2 = m1.team2;
+
+                        }
+                    }
+                }
+
+                let mdb: MeetingDb = this.tourneyService.prepareMdb(m1
+                    , this.selectedTourney.id
+                    , 0
+                    , 0
+                    , l.id
+                );        
+                this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+
+                mdb = this.tourneyService.prepareMdb(m2
+                    , this.selectedTourney.id
+                    , 0
+                    , 0
+                    , l.id
+                );        
+                this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+            }
+        }
     }
 
     onError(n:any) {

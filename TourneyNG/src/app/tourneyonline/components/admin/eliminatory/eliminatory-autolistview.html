@@ -103,10 +103,6 @@
             [(selection)]="selectedEliminatory" 
             (onRowSelect)="onAutoEliminatoryRowSelect($event)">
 
-        <ng-template pTemplate="caption">
-            Eliminazioni dirette: {{selectedEliminatoryLevel.name}}
-        </ng-template>
-        
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 10mm;">

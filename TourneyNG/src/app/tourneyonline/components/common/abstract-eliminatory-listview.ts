@@ -149,16 +149,16 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         console.log("Entering onOnewayClick()");
         this.selectedEliminatoryLevel.isOneway=true;
 
-        this.manageMeeting(true);
+        this.onClickManageMeeting(true);
     }
 
     onRoundtripClick() {
         console.log("Entering onRoundtripClick()");
         this.selectedEliminatoryLevel.isOneway=false;
-        this.manageMeeting(false);
+        this.onClickManageMeeting(false);
     }
 
-    private manageMeeting(isOneway: boolean) {
+    private onClickManageMeeting(isOneway: boolean) {
 
         for(let e of this.eliminatories) {
             if(isOneway) {

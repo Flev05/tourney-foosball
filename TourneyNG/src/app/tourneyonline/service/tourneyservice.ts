@@ -79,6 +79,8 @@ export class TourneyService {
     newRule: boolean;
     selectedTabIndex: number = 0;
     isStandalone: boolean;
+    selectedEliminatoryLevelIndex: number;
+    selectedEliminatoryIndex: number;
 
     constructor(private http: HttpClient, private loginService: LoginService) { 
         console.log("Constructor of TourneyService");

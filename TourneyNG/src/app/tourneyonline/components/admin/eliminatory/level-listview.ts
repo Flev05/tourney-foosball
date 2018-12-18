@@ -244,16 +244,11 @@ export class LevelListView extends AbstractEliminatoryListView {
     }
 
     /**
-     * For each round, adds the correct dummy classifictions, having points=-1, so the total number 
-     * of teams will be equal to the next nearest power of 2.
+     * Allocate a local list of teams padding the received number of teams, by adding dummy teams with -1 points,
+     * to the next nearest power of 2 nedeed to contains all of them.
      * 
-     * Sorts by firsts classificated teams in each round, then the second in each round, and so on.
-     * 
-     * Create a full list of each so sorted classificated teams and prepare 2 new lists:
-     * an ascendent list starting from the first to the half and a descendent list starting from 
-     * the ast team to the half.
-     * 
-     * So prepare the elemintories list by using the smart put algorithm
+     * Next, iterates on the eliminatories list and updates the meetings with the first against the last 
+     * team in the pad list
      */
     private processAutomaticEliminatories(selectedTeamsNo: number) {
         
@@ -262,7 +257,7 @@ export class LevelListView extends AbstractEliminatoryListView {
             return;
         }
 
-        let cblist:Array<Combobox> = new Array<Combobox>();
+        let padTeamList: Array<Combobox> = new Array<Combobox>();
  
         let power2 = this.tourneyService.power2Padding(selectedTeamsNo);
         let position: number = 0;
@@ -278,7 +273,7 @@ export class LevelListView extends AbstractEliminatoryListView {
                 let round = this.selectedTourney.rounds[mod];
                 cb = {label: round.name, value: position};
             }
-            cblist.push(cb);
+            padTeamList.push(cb);
         }
 
         const topLevel = this.eliminatoryLevels[0];
@@ -289,201 +284,24 @@ export class LevelListView extends AbstractEliminatoryListView {
 
             let e: Eliminatory = topLevelEliminatories[i];
 
-            let cb = cblist[i];
+            let up = padTeamList[i];
             e.rule1.fromRound.id = this.tourneyService.getSequenceNumber();
-            let label = cb.value == 0 ? "" : cb.value  + "°";
-            e.rule1.fromRound.position = {label:"" + label, value: cb.value};
-            e.rule1.fromRound.round = {label:cb.label, value: cb.value};
+            let label = up.value == 0 ? "" : up.value  + "°";
+            e.rule1.fromRound.position = {label:"" + label, value: up.value};
+            e.rule1.fromPlayoff.position = {label:"" + label, value: 1};
+            e.rule1.fromRound.round = {label:up.label, value: up.value};
+            e.rule1.fromPlayoff.round = {label:"" + label, value: 1};
 
-            let desccb = cblist[--lastIndex];
+            let down = padTeamList[--lastIndex];
             e.rule2.fromRound.id = this.tourneyService.getSequenceNumber();
-            label = desccb.value == 0 ? "" : desccb.value  + "°";
-            e.rule2.fromRound.position = {label:"" + label, value: desccb.value};
-            e.rule2.fromRound.round = {label:desccb.label, value: desccb.value};
+            label = down.value == 0 ? "" : down.value  + "°";
+            e.rule2.fromRound.position = {label:"" + label, value: down.value};
+            e.rule2.fromPlayoff.position = {label:"" + label, value: 1};
+            e.rule2.fromRound.round = {label:down.label, value: down.value};
+            e.rule2.fromPlayoff.round = {label:"" + label, value: 1};
         }
     }
     
-    // private prepareDefaultClassification(r: Round) {
-    //     r.classification = [];
-    //     for (let t of r.teams) {
-    //         let c: Classification = this.newClassification(t, 0);
-    //         r.classification.push(c);
-    //     }
-    // }
-
-    // private prepateAutoEliminatories(rounds : Round[]): void  {
-        
-    //     for(let r of rounds) {
-    //         this.prepareDefaultClassification(r);
-    //     }
-
-    //     this.paddingRounds(rounds);
-
-    //     let bestOfMap: Map<string, Array<Classification>> = new Map<string, Array<Classification>>();
-    //     for(let i=0; i<rounds.length; i++) {
-    //         let r = rounds[i];
-
-    //         let orderedClassification: Array<Classification> = this.teamSort(r.classification);
-
-    //         for(let j=0; j < orderedClassification.length; j++) {
-    //             let c: Classification = orderedClassification[j];
-    //             let key = "" + (j + 1);
-    //             if(!bestOfMap.has(key)) {
-    //                 let list: Array<Classification> = new Array<Classification>();
-    //                 bestOfMap.set(key, list);
-    //             }
-
-    //             let list: Array<Classification> = bestOfMap.get(key);
-
-    //             list.push(c);
-    //         }
-    //     }
-
-    //     let allSortedClassification: Array<Classification> = new Array<Classification>();
-    //     for(let key of bestOfMap.keys()) {
-            
-    //         let unsortedClassification: Array<Classification> = bestOfMap.get(key);
-
-    //         let sortedClassification: Array<Classification> = this.teamSort(unsortedClassification);
-    //         bestOfMap.set(key, sortedClassification);
-
-    //         allSortedClassification = allSortedClassification.concat(sortedClassification);
-    //     }
-
-    //     let ascClassification: Array<Classification> = new Array<Classification>();
-    //     for(let i=0; i<allSortedClassification.length/2; i++) {
-    //         let c: Classification = allSortedClassification[i];
-    //         ascClassification.push(c);
-    //     }
-    //     let descClassification: Array<Classification> = new Array<Classification>();
-    //     for(let i=allSortedClassification.length-1; i>=allSortedClassification.length/2; i--) {
-    //         let c: Classification = allSortedClassification[i];
-    //         descClassification.push(c);
-    //     }
-
-    //     let sequenzialEliminatories: Array<Eliminatory> = new Array<Eliminatory>();
-
-    //     const topLevel = this.eliminatoryLevels[0];
-    //     let topLevelEliminatories = topLevel.eliminatories;
-    //     for(let i=0; i<ascClassification.length; i++) {
-
-    //         let c1: Classification = ascClassification[i];
-    //         let c2: Classification = descClassification[i];
-
-    //         let e: Eliminatory = topLevelEliminatories[i];
-
-    //         let m = e.round.meetings[0];
-    //         m.team1 = c1.team;
-    //         m.team2 = c2.team;
-            
-    //         this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
-
-    //         sequenzialEliminatories.push(e);
-    //     }
-
-    //     let N: number = ascClassification.length;
-    //     let p: number=0;
-    //     for (let step = N; step >= 1; step = step / 2) {
-
-    //         for (let i = 0; i < N; i += step) {
-    //             if(topLevelEliminatories[i].round.meetings.length != 0) {
-    //                 continue;
-    //             }
-    //             let e = sequenzialEliminatories[p];
-    //             topLevelEliminatories[i] = e;
-    //             p++;
-    //         }
-    //     }
-    //     console.log("Eliminatories.size=" + topLevelEliminatories.length);
-    // }
-
-    /**
-     * The padding process is for align the round classification length to the
-     * nearest upper power of 2 elimination level containing the teams in each round.
-     * 
-     * For example, if you have 3 rounds of length 4, 11 and 7 teams rispectively, you need
-     * 4, 16 and 8 initial elimination levels ripectively.
-     * 
-     * So we first need to compute the max team count of each round and
-     * next append the dummy teams to align all the round to the max length.
-     * 
-     * The dummy teams are teams having points = -1
-     */
-    // private paddingRounds(rounds : Round[]): any {
-
-    //     let maxDeep: number = 0;
-
-    //     for(let i=0; i<rounds.length; i++) {
-    //         let r = rounds[i];
-
-    //         if(r.classification.length > maxDeep ) {
-    //             maxDeep = r.classification.length;
-    //         }
-    //     }
-
-    //     let power2 = this.tourneyService.power2Padding(maxDeep);
-
-    //     for(let i=0; i<rounds.length; i++) {
-    //         let r = rounds[i];
-    //         for(let i=r.classification.length; i < power2; i++ ) {
-    //             let t: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
-    //             let dummy = this.newClassification(t, -1);
-    //             r.classification.push(dummy);
-    //         }
-    //     }
-    // }
-
-    /**
-     * Team ordering, first sort the teams on the points basis so the dummy team having points=-1
-     * will be the last in the team list. Next, order the team list in function of team sort type 
-     * chosen by the user
-     * 
-     * @param unsortedClassification the unsorted team list
-     */
-    // private teamSort(unsortedClassification: Array<Classification> ): Array<Classification>  {
-    //     var sortedClassification: Array<Classification>  = unsortedClassification.sort((t1, t2) => {
-    //         if (t1.points > t2.points) {
-    //             return -1;
-    //         }
-        
-    //         if (t1.points < t2.points) {
-    //             return 1;
-    //         }
-        
-    //         return 0;
-    //     });
-
-    //     if( this.selectedTourney.teamSortType==TeamSortType.O) {
-    //         return sortedClassification;
-    //     }
-    //     if( this.selectedTourney.teamSortType==TeamSortType.R) {
-    //         sortedClassification = sortedClassification.sort((t1, t2) =>{
-    //             let rand = Math.random();
-    //             if(rand < 0.33) {
-    //                 return 0;
-    //             }
-    //             if(rand > 0.66) {
-    //                 return 1;
-    //             }
-    //             return -1;
-    //         });
-    //         return sortedClassification;
-    //     }
-
-    //     sortedClassification = sortedClassification.sort((c1, c2) =>{
-    //         if(c1.team.teamName > c2.team.teamName) {
-    //             return 1;
-    //         }
-    //         if(c1.team.teamName < c2.team.teamName) {
-    //             return -1;
-    //         }
-
-    //         return 0;
-    //     });
-
-    //     return sortedClassification;
-    // }
-  
     private addOptionalLevel() {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
         let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, -1);

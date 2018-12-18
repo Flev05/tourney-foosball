@@ -33,6 +33,9 @@ export class ResultListView extends AbstractEliminatoryListView {
 
         super.ngOnInit();
 
+        this.tourneyService.selectedEliminatoryLevelIndex = -1;
+        this.tourneyService.selectedEliminatoryIndex = -1;
+
         if(super.containsRound()) {
             super.loadRounds();
         }
@@ -52,12 +55,10 @@ export class ResultListView extends AbstractEliminatoryListView {
         this.indexTab = index;
 
         if(index==1 && super.containsPlayoff()) {
-            // super.loadPlayoffs();
         }
+
         if(index==2 && super.containsEliminatory()) {
             this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
-
-            // super.loadEliminatoryMeetings();
         }
     }
 
@@ -69,7 +70,7 @@ export class ResultListView extends AbstractEliminatoryListView {
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
 
         for (let round of rounds) {
-            row = this.prepareMeetingGui(null, round, rows, row, classificationMap);
+            row = this.prepareRoundPlayoffMeetingGui(null, round, rows, row, classificationMap);
         }
 
         return rows;
@@ -82,13 +83,13 @@ export class ResultListView extends AbstractEliminatoryListView {
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
 
         for (let p of playoffs) {
-            row = this.prepareMeetingGui(p, p.round, rows, row, classificationMap);
+            row = this.prepareRoundPlayoffMeetingGui(p, p.round, rows, row, classificationMap);
         }
 
         return rows;
     }
 
-    private prepareMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
+    private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
         
         let roundNo : number=0;
 
@@ -164,6 +165,15 @@ export class ResultListView extends AbstractEliminatoryListView {
         console.log("Entering onEliminatoryRowSelect()");
       
         this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
+
+        for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {
+            let el = this.selectedTourney.eliminatoryLevels[l];
+            if(el.id == this.selectedEliminatoryLevel.id) {
+                this.tourneyService.selectedEliminatoryLevelIndex = l;
+                this.tourneyService.selectedEliminatoryIndex = -1;
+                break;
+            }
+        }
 
         this.router.navigate([ResultListView.eliminatoryRedirect]);
     }

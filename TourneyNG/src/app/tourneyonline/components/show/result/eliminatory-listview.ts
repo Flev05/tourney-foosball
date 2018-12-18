@@ -10,7 +10,6 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { ReorderableColumn } from 'primeng/table';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
@@ -34,8 +33,6 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         super.ngOnInit();
         this.incompleteConfiguration = true;
         super.loadEliminatoryMeetings();
-
-        // this.processEliminationTree();
     }
     
     protected processEliminationTree(): void {
@@ -99,19 +96,19 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 for(let r of this.selectedTourney.rounds) {
                     if(r.name == roundName) {
                         classification = r.classification;
+                        m1.team1 = classification[pr1-1].team;
                         break;
                     }
                 }
-                m1.team1 = classification[pr1-1].team;
             } else {
                 let roundName = fp1.round.label;
                 for(let p of this.selectedTourney.playoffs) {
                     if(p.round.name == roundName) {
                         classification = p.round.classification;
+                        m1.team1 = classification[pp1-1].team;
                         break;
                     }
                 }
-                m1.team1 = classification[pp1-1].team;
             }
             
             if(pr2 > 0 && fr2.round.value > 0) {
@@ -119,19 +116,19 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 for(let r of this.selectedTourney.rounds) {
                     if(r.name == roundName) {
                         classification = r.classification;
+                        m1.team2 = classification[pr2-1].team;
                         break;
                     }
                 }
-                m1.team2 = classification[pr2-1].team;
             } else {
                 let roundName = fp2.round.label;
                 for(let p of this.selectedTourney.playoffs) {
                     if(p.round.name == roundName) {
                         classification = p.round.classification;
+                        m1.team2 = classification[pp2-1].team;
                         break;
                     }
                 }
-                m1.team2 = classification[pp2-1].team;
             }
 
             m2.team1 = m1.team2;
@@ -139,7 +136,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         }
     }
 
-    private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number,classificationMap: Map<string, Classification> ): any {
+    private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number, classificationMap: Map<string, Classification> ): any {
         let round: Round = e.round;
         let m: Meeting = round.meetings[meetingIndex];
 
@@ -189,6 +186,14 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             , this.selectedMeetingRow.eliminatoryId
         );
         this.tourneyService.selectedMeetingDb = mdb;
+
+        for(let level=0; level<this.eliminatories.length; level++) {
+            let e = this.eliminatories[level];
+            if(e.id == this.selectedMeetingRow.eliminatoryId) {
+                this.tourneyService.selectedEliminatoryIndex = level;
+                break;
+            }
+        }
 
         this.router.navigate([MeetingDetailView.meetingDvRedirect]);
     }

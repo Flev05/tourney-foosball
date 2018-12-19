@@ -11,6 +11,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -64,7 +65,9 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     private resolveRules(): void {
         this.incompleteConfiguration = false;
 
-        for(let e of this.eliminatories) {
+        for(let level=0; level<this.eliminatories.length; level++) {
+            let e = this.eliminatories[level];
+
             let fr1 = e.rule1.fromRound;
             let fp1 = e.rule1.fromPlayoff;
                        
@@ -131,8 +134,55 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 }
             }
 
+            e.round.teams[0] = m1.team1;
+            e.round.teams[1] = m1.team2;
             m2.team1 = m1.team2;
             m2.team2 = m1.team1;
+
+            if(this.tourneyService.selectedEliminatoryLevelIndex >= 2) {
+                continue;
+            }
+
+            if(e.round.teams[0].teamName != "" && e.round.teams[1].teamName == "") {
+                const els = this.selectedTourney.eliminatoryLevels;
+                let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
+    
+                let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
+                let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+
+                let nextEliminatoryIndex: number = Math.floor(level / 2);
+                let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+
+                nextEliminatory.round.teams[0] = e.round.teams[0];
+               
+                let m1 = nextEliminatory.round.meetings[0];
+                if(m1.team1.teamName == "") {
+                    m1.team1 = e.round.teams[0];
+                } else {
+                    m1.team2 = e.round.teams[0];
+                }
+                let mdb: MeetingDb = this.tourneyService.prepareMdb(m1
+                    , this.selectedTourney.id
+                    , 0
+                    , 0
+                    , nextEliminatory.id
+                );        
+                this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+
+                if(!el.isOneway) {
+                    let m2 = nextEliminatory.round.meetings[1];
+                    m2.team1 = m1.team2;
+                    m2.team2 = m1.team1;
+
+                    let mdb: MeetingDb = this.tourneyService.prepareMdb(m2
+                        , this.selectedTourney.id
+                        , 0
+                        , 0
+                        , nextEliminatory.id
+                    );        
+                    this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+                }
+            }
         }
     }
 

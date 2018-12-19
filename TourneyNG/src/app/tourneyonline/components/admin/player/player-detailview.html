@@ -52,7 +52,8 @@
                     <input pInputText type="text" formControlName="firstname"/>
                 </div>
                 <div class="ui-grid-col-3">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['firstname'].valid&&playerFormGroup.controls['firstname'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" 
+                        *ngIf="!playerFormGroup.controls['firstname'].valid&&playerFormGroup.controls['firstname'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="playerFormGroup.controls['firstname'].errors['required']">
                             Il nome del giocatore è obbligatorio
@@ -69,7 +70,8 @@
                     <input pInputText type="text" formControlName="lastname"/>
                 </div>
                 <div class="ui-grid-col-3">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['lastname'].valid&&playerFormGroup.controls['lastname'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" 
+                        *ngIf="!playerFormGroup.controls['lastname'].valid&&playerFormGroup.controls['lastname'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="playerFormGroup.controls['lastname'].errors['required']">
                             Il cognome del giocatore è obbligatorio
@@ -86,7 +88,8 @@
                     <input pInputText type="text" formControlName="address"/>
                 </div>
                 <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['address'].valid&&playerFormGroup.controls['address'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" 
+                        *ngIf="!playerFormGroup.controls['address'].valid&&playerFormGroup.controls['address'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="playerFormGroup.controls['address'].errors['required']">
                                 La via è obbligatoria
@@ -125,7 +128,8 @@
                     <input pInputText type="text" formControlName="phoneNumber"/>
                 </div>
                 <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['phoneNumber'].valid&&playerFormGroup.controls['phoneNumber'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all"
+                        *ngIf="!playerFormGroup.controls['phoneNumber'].valid&&playerFormGroup.controls['phoneNumber'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="playerFormGroup.controls['phoneNumber'].errors['required']">
                             Il numero di telefono del giocatore è obbligatorio
@@ -142,7 +146,8 @@
                     <input pInputText type="text" formControlName="email"/>
                 </div>
                 <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!playerFormGroup.controls['email'].valid&&playerFormGroup.controls['email'].dirty">
+                    <div class="ui-message ui-messages-error ui-corner-all" 
+                        *ngIf="!playerFormGroup.controls['email'].valid&&playerFormGroup.controls['email'].dirty">
                         <i class="fa fa-close"></i>
                         <span *ngIf="playerFormGroup.controls['email'].errors['required']">
                             L'indirizzo e-mail del giocatore è obbligatorio

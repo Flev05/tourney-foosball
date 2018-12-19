@@ -349,10 +349,7 @@ export class LevelListView extends AbstractEliminatoryListView {
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: "" + index
                 , type: RoundType.E
-                , teams:[
-                     {id:0, teamName:""}
-                    ,{id:1, teamName:""}
-                ]
+                , teams:[t1, t2]
                 ,classification: []
                 ,meetings: meetings
             },

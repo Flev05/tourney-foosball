@@ -32,7 +32,14 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>       
 
-    <p-table  [value]="matches">
+    <div style="margin-top:30px">
+        <p-message *ngIf="alreadyPassed" 
+            severity="success" 
+            text="Attenzione! La Squadra: {{selectedMeeting.team1.teamName}} passa automaticamente al turno successivo!">
+        </p-message>
+    </div>     
+
+    <p-table *ngIf="!alreadyPassed" [value]="matches">
         <ng-template pTemplate="colgroup">
             <colgroup>
                 <col style="width: 20mm;">
@@ -82,7 +89,7 @@
         </ng-template>        
     </p-table>
 
-    <div style="text-align:left">
+    <div *ngIf="!alreadyPassed" style="text-align:left">
         <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
     </div>
 </div>

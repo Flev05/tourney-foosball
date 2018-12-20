@@ -9,6 +9,8 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
             {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
 
+            {path: 'showcase',  loadChildren: './components/showcase/showcase.module#ShowCaseModule'},
+
             // Admin Section
             {path: 'admintourney',      loadChildren: './components/admin/tourney/tourney.module#TourneyModule'},
             {path: 'clients',           loadChildren: './components/admin/client/client.module#ClientModule'},

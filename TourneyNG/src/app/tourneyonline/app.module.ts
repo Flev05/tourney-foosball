@@ -47,7 +47,7 @@ import { InMemoryDataService } from 'app/tourneyonline/in-memory-data-service/in
     )
   ],
   providers: [
-      { provide: LocationStrategy, useClass: HashLocationStrategy }
+       { provide: LocationStrategy, useClass: HashLocationStrategy }
       , TourneyService
       , ClientService
       , UserngService

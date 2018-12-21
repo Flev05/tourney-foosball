@@ -20,13 +20,24 @@ const redirect = '/round/lv';
     `]
 })
 export class RoundTourneyListView extends CalendarTourneyListView {
-
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
+    
     onRowSelect(event) {
         super.onRowSelect(event);
+
+        this.tourneyService.selectedTourney = this.selectedRow.t;
+
         this.gotoDetailView();
     }
   
-    protected gotoDetailView() {
-        this.router.navigate([redirect]);
+    onComplete(): any {
+
+        this.rows = [];
+        for(let i=0;i<this.tourneys.length; i++) {
+            let t = this.tourneys[i];
+            this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: t.datetime});
+        }
     }
 }

@@ -13,6 +13,10 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     toggleable: boolean = false;
     tdbs : TourneyDb[] = [];
 
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
+
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
         , public router: Router
@@ -23,7 +27,14 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     ngOnInit() {
         console.log("AbstractTourneyListView.ngOnInit()");
 
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°' },
+            { field: 'tourneyName', header: 'Nome' },
+            { field: 'datetime',    header: 'Data' }
+        ];
+
         this.loadTourney();
+
     }
 
     protected loadTourney() {
@@ -42,12 +53,18 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             let t = JSON.parse(tdb.json);
             this.tourneys.push(t);
         }
+
+        this.rows = [];
+        for(let i=0;i<this.tourneys.length; i++) {
+            let t = this.tourneys[i];
+            this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: t.datetime});
+        }
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedTourney = this.selectedTourney;
+        this.tourneyService.selectedTourney = this.selectedRow.t;
 
         this.gotoDetailView();
     }

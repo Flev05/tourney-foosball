@@ -6,8 +6,8 @@ import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abs
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
 @Component({
-    templateUrl: './tourney-listview.html',
-    styles: [`
+    templateUrl: './tourney-listview.html'
+    , styles: [`
         /* Column Priorities */
         @media only all {
             th.ui-p-6,
@@ -81,14 +81,9 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
     constructor(protected tourneyService: TourneyService, public router: Router, public loc: Location) { 
         super(ClassificationTourneyListView.redirect, tourneyService, router, loc);
     }
-
-    ngOnInit() {
-        super.ngOnInit();
-    }
-
+ 
     onComplete(): any {
         super.onComplete();
-
         super.purgeEliminatory();
     }
 }

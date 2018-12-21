@@ -15,34 +15,27 @@
     </p>
 </div>
 
-<p-table [columns]="cols" [value]="tourneys" 
+<p-table [columns]="cols" 
+    [value]="row" 
+    [responsive]="true"
     selectionMode="single" 
-    [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true" 
-    [rows]="15">
-
-    <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-            <col style="width: auto;">
-            <col style="width: 30mm;">
-            <col style="width: 20mm;">
-            <col style="width: auto;">
-        </colgroup>
-    </ng-template>
+    [(selection)]="selectedRow" 
+    (onRowSelect)="onRowSelect($event)" >
 
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns">
-                {{col.header}}
+                &#123;&#123;col.header&#125;&#125;
             </th>
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
             <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
+                <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
+                &#123;&#123;rowData[col.field]&#125;&#125;
             </td>
         </tr>
     </ng-template>

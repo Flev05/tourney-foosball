@@ -77,31 +77,7 @@ const redirect = '/result/lv';
     `]    
 })
 export class ResultTourneyListView extends AbstractTourneyListView {
-    cols: any[];
-    rows: any[];
-
     constructor(protected tourneyService: TourneyService, public router: Router, public location: Location) { 
         super(redirect, tourneyService, router, location);
-    }
-    
-    ngOnInit() {
-        super.ngOnInit();
-
-        
-        this.cols = [
-            { field: 'rowNumber',   header: 'N°' },
-            { field: 'tourneyName', header: 'Nome' },
-            { field: 'datetime',    header: 'Data' }
-        ];
-    }
-
-    onComplete(): any {
-        super.onComplete();
-
-        this.rows = [];
-        for(let i=0;i<this.tourneys.length; i++) {
-            let t = this.tourneys[i];
-            this.rows.push({rowNumber: i+1, tourneyName: t.tourneyName, datetime: t.datetime});
-        }
     }
 }

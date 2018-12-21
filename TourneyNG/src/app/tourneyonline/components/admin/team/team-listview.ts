@@ -13,6 +13,13 @@ const redirect: string = "adminteam/lv/dv";
     templateUrl: './team-listview.html'
 })
 export class TeamListView extends AbstractListView {
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
+    selectedTeam: Team;
+
+    teams: Team[];
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -21,14 +28,20 @@ export class TeamListView extends AbstractListView {
         super(redirect, tourneyService, router, location);
     }
 
-    selectedTourney: Tourney;
-    selectedTeam: Team;
-
-    teams: Team[];
-
     ngOnInit() {
         super.ngOnInit();
         this.updateRowGroupMetaData();
+        this.cols = [
+            { field: 'rowNumber',  header: 'N°' },
+            { field: 'teamName',   header: 'Nome' },
+            { field: 'address',    header: 'Indirizzo' },
+        ];
+
+        this.rows = [];
+        for(let i=0;i<this.teams.length; i++) {
+            let t = this.teams[i];
+            this.rows.push({t:t, rowNumber: i+1, teamName: t.teamName, address: t.address});
+        }
     }
 
     protected updateRowGroupMetaData() {
@@ -40,6 +53,7 @@ export class TeamListView extends AbstractListView {
 
     create() {
         this.selectedTeam={id:0, teamName:""};
+        this.selectedRow = {t:this.selectedTeam, rowNumber: 1, teamName: "", address: ""};
         this.tourneyService.selectedTeam = this.selectedTeam;
         this.tourneyService.newTeam = true;
         this.gotoDetailView();
@@ -48,15 +62,7 @@ export class TeamListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        let sp = this.cloneObject(event.data);
-
-        for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-            if(this.selectedTourney.teams[i].id == sp.id) {
-                this.selectedTeam = this.selectedTourney.teams[i];
-                this.tourneyService.selectedTeam = this.selectedTeam;
-                break;
-            }
-        }
+        this.tourneyService.selectedTeam = this.selectedRow.t;
 
         this.gotoDetailView();
     }

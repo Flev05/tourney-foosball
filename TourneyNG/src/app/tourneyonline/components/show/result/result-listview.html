@@ -72,8 +72,7 @@
     </p-tabPanel>
 
     <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
-        <p-table [responsive]="true" 
-            [value]="playoffRows" 
+        <p-table [value]="playoffRows" 
             selectionMode="single"
             [(selection)]="selectedMeetingRow" 
             (onRowSelect)="onPlayoffSelect($event)" >
@@ -125,7 +124,6 @@
         </div>     
                     
         <p-table *ngIf="!incompleteConfiguration" 
-                [responsive]="true" 
                 [value]="eliminatoryLevels" 
                 selectionMode="single" 
                 [(selection)]="selectedEliminatoryLevel" 

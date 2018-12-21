@@ -15,33 +15,29 @@
 </p-accordion>    
 </div>
 
-<p-table [value]="tourneys" 
-    selectionMode="single" 
-    [(selection)]="selectedTourney" 
-    (onRowSelect)="onRowSelect($event)"  >
-
-    <ng-template pTemplate="colgroup">
-        <colgroup>
-            <col style="width: 10mm;">
-            <col style="width: auto;">
-            <col style="width: auto;">
-        </colgroup>
-    </ng-template>
-
-    <ng-template pTemplate="header">
+<p-table [columns]="cols" 
+        [value]="rows" 
+        [responsive]="true"
+        selectionMode="single" 
+        [(selection)]="selectedRow" 
+        (onRowSelect)="onRowSelect($event)"  >
+    
+    <ng-template pTemplate="header" let-columns>
         <tr>
-            <th>N°</th>
-            <th>Nome</th>
-            <th>Data</th>
+            <th *ngFor="let col of columns">
+                &#123;&#123;col.header&#125;&#125;
+            </th>
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
-            <td>{{rowIndex + 1}}</td>
-            <td>{{rowData.tourneyName}}</td>
-            <td>{{rowData.datetime | date : "dd/MM/y HH:mm"}}</td>
+            <td *ngFor="let col of columns">
+                <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
+                &#123;&#123;rowData[col.field]&#125;&#125;
+            </td>
         </tr>
     </ng-template>
 
 </p-table>
+

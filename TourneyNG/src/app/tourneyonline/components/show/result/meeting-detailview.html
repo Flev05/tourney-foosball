@@ -24,8 +24,6 @@
 
 <div class="content-section implementation">      
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <h4><span>Squadra 1: {{selectedMeeting.team1.teamName}}</span></h4>
-    <h4><span>Squadra 2: {{selectedMeeting.team2.teamName}}</span></h4>
     <h4><span>Data: {{selectedMeeting.datetime | date: 'dd/MM/y HH:mm'}}</span></h4>
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
@@ -50,7 +48,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Partita</th>
-                <th>Squadra 1 - Squadra 2</th>
+                <th>{{selectedMeeting.team1.teamName}} - {{selectedMeeting.team2.teamName}}</th>
             </tr>
         </ng-template>
 
@@ -90,6 +88,6 @@
     </p-table>
 
     <div *ngIf="!alreadyPassed" style="text-align:left">
-        <button type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
+        <button class="ui-button-success" type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
     </div>
 </div>

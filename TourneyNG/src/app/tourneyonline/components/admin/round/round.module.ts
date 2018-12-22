@@ -13,18 +13,6 @@ import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
 import {RoundRoutingModule} from './round-routing.module';
-import {GrowlModule} from '../../../../components/growl/growl';
-import {PanelModule} from '../../../../components/panel/panel';
-import {DropdownModule} from '../../../../components/dropdown/dropdown';
-import {InputTextModule} from '../../../../components/inputtext/inputtext';
-import {InputTextareaModule} from '../../../../components/inputtextarea/inputtextarea';
-import {ButtonModule} from '../../../../components/button/button';
-import {TabViewModule} from '../../../../components/tabview/tabview';
-import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
-import {SliderModule} from '../../../../components/slider/slider';
-
-import {CalendarModule} from '../../../../components/calendar/calendar';
-
 import {RoundTourneyListView} from './tourney-listview';
 import {RoundListView} from './round-listview';
 import {RoundDetailView} from './round-detailview';
@@ -32,6 +20,17 @@ import { MeetingListView } from './meeting-listview';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { MeetingDetailView } from './meeting-detailview';
+import { CalendarModule } from 'app/components/calendar/calendar';
+import { GrowlModule } from 'app/components/growl/growl';
+import { PanelModule } from 'app/components/panel/panel';
+import { DropdownModule } from 'app/components/dropdown/dropdown';
+import { InputTextModule } from 'app/components/inputtext/inputtext';
+import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
+import { ButtonModule } from 'app/components/button/button';
+import { TabViewModule } from 'app/components/tabview/tabview';
+import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
+import { SliderModule } from 'app/components/slider/slider';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @NgModule({
 	imports: [
@@ -62,13 +61,14 @@ import { MeetingDetailView } from './meeting-detailview';
         ,PickListModule
         ,MessagesModule
         ,MessageModule
-    ],
-	declarations: [
+    ]
+	,declarations: [
         RoundTourneyListView
         ,RoundListView
         ,RoundDetailView
         ,MeetingListView
         ,MeetingDetailView
 	]
+    ,providers: [DateFormatPipe]
 })
 export class RoundModule {}

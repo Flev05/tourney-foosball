@@ -13,6 +13,10 @@ import { PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations'
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
  
 export abstract class AbstractListView extends AbstractView {
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
+
     roundMap: Map<number, Round>;
     playoffRoundMap: Map<number, Playoff>;
 

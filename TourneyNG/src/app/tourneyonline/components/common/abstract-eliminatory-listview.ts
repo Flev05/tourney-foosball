@@ -12,8 +12,14 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Team } from 'app/tourneyonline/domain/team';
+import { DateFormatPipe } from './DateFormatPipe';
 
 export abstract class AbstractEliminatoryListView extends AbstractListView {
+         
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
+
     msgs: Message[] = [];
    
     selectedEliminatoryLevel: EliminatoryLevel;
@@ -42,12 +48,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     teamsCombobox: Combobox[];
     isAutomatic: boolean;
     incompleteConfiguration: boolean;
+    eliminatoryCols: { field: string; header: string; }[];
+    eliminatoryLevelRows: any[];
 
     constructor(
         protected redirect: string,
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        protected dateFormatPipe: DateFormatPipe
     ) {
         super(redirect, tourneyService, router, location);
     }
@@ -95,6 +104,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.tourneyService.isStandalone = this.isStandalone;
     }
  
+    /**
+        <th>N°</th>
+        <th>Squadre</th>
+        <th>Nome</th>
+
+        <td>{{rowIndex + 1}}</td>
+        <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
+        <td>{{rowData.name}}</td>
+     */
     protected loadEliminatoryMeetings() {
         this.meetingMap = new Map<number, MeetingDb[]>();
         this.eliminatoryRoundMap = new Map<number, Round>();
@@ -106,8 +124,23 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
         this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
 
+        this.eliminatoryCols = [
+            { field: 'rowNumber',   header: 'N°'},
+            { field: 'level',       header: 'Squadre'},
+            { field: 'name',        header: 'Nome'},
+        ];
+
         this.httpCounter = 0;
-        for (let topElimLevel of this.eliminatoryLevels) {
+        this.eliminatoryLevelRows = [];
+        
+        for (let rowNumber=0; rowNumber<this.eliminatoryLevels.length; rowNumber++) {
+
+            let topElimLevel = this.eliminatoryLevels[rowNumber];
+
+            let level = topElimLevel.level == -1 ? 2 : this.pow2(topElimLevel.level);
+            
+            this.eliminatoryLevelRows.push({e: topElimLevel, rowNumber: rowNumber+1 , level: level, name: topElimLevel.name});
+
             for (let e of topElimLevel.eliminatories) {
                 this.eliminatoryRoundMap.set(e.id, e.round);
                 this.httpCounter++;
@@ -179,6 +212,142 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected newDummyTeam() : Team {
         let dummy: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
         return dummy;
+    }
+
+     /**
+        <th>N°</th>
+        <th *ngIf="isTopLevel">Squadra 1</th>
+        <th *ngIf="isTopLevel">Vs</th>
+        <th *ngIf="isTopLevel">Squadra 2</th>
+        <th>Andata</th>
+        <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>
+
+        <td>{{rowIndex + 1}}</td>
+        <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team1.teamName}}</td>
+        <td *ngIf="isTopLevel"> - </td>
+        <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team2.teamName}}</td>
+        <td>{{rowData.round.meetings[0].datetime | date : "dd/MM/y HH:mm" }}</td>
+        <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
+     */
+    prepareStandaloneGui(): void {
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°' },
+        ];
+
+        if(this.isTopLevel) {
+            this.cols.push({ field: 'teamName1', header: 'Squadra 1'});
+            this.cols.push({ field: 'versus',    header: 'Vs' });
+            this.cols.push({ field: 'teamName2', header: 'Squadra 2'});
+        }
+
+        this.cols.push({ field: 'onewayDatetime', header: 'Andata' });
+        if(!this.selectedEliminatoryLevel.isOneway) {
+            this.cols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+        }
+        this.rows = [];
+        for(let i=0;i<this.eliminatories.length; i++) {
+            let e = this.eliminatories[i];
+
+            let onewayDatetime    = this.dateFormatPipe.transform(e.round.meetings[0].datetime);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
+
+            this.rows.push({e:e
+                , rowNumber: i+1
+                , teamName1: e.round.meetings[0].team1.teamName
+                , versus: " - "
+                , teamName2: e.round.meetings[0].team2.teamName
+                , onewayDatetime: onewayDatetime
+                , roundtripDatetime: roundtripDatetime
+            });
+        }
+    }
+
+    /**
+        <th>N°</th>
+        <th>Andata</th>
+        <th *ngIf="isTopLevel">C°</th>
+        <th *ngIf="isTopLevel">Girone</th>
+        <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
+        <th *ngIf="isTopLevel">Vs</th>
+        <th *ngIf="isTopLevel">C°</th>
+        <th *ngIf="isTopLevel">Girone</th>
+        <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
+        <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>     
+        
+        <td>{{rowIndex + 1}}</td>
+        <td>{{rowData.round.meetings[0].datetime | date: 'dd/MM/y HH:mm'}}</td>
+        <td *ngIf="isTopLevel">{{rowData.rule1.fromRound.position.value > 0 ? rowData.rule1.fromRound.position.label : rowData.rule1.fromPlayoff.position.label}}</td>
+        <td *ngIf="isTopLevel">{{rowData.rule1.fromRound.round.label}}</td>
+        <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule1.fromPlayoff.round.label}}</td>
+        <td *ngIf="isTopLevel"> - </td>
+        <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.position.value > 0 ? rowData.rule2.fromRound.position.label : rowData.rule2.fromPlayoff.position.label}}</td>
+        <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.round.label}}</td>
+        <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule2.fromPlayoff.round.label}}</td>
+        <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
+    */
+   protected prepareNotStandaloneGui(): void {
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°'},
+            { field: 'onewayDatetime', header: 'Andata'}
+        ];
+
+        if(this.isTopLevel) {
+            this.cols.push({ field: 'position1', header: 'C°'});
+            this.cols.push({ field: 'fromRound1', header: 'Girone' });
+            if(this.isPlayoff) {
+                this.cols.push({ field: 'fromPlayoff1', header: 'Playoff'});
+            }
+
+            this.cols.push({ field: 'versus',    header: 'Vs' });
+
+            this.cols.push({ field: 'position2', header: 'C°'});
+            this.cols.push({ field: 'fromRound2', header: 'Girone' });
+            if(this.isPlayoff) {
+                this.cols.push({ field: 'fromPlayoff2', header: 'Playoff'});
+            }
+        }
+
+        if(!this.selectedEliminatoryLevel.isOneway) {
+            this.cols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+        }
+
+        this.rows = [];
+        for(let i=0;i<this.eliminatories.length; i++) {
+            let e = this.eliminatories[i];
+
+            let onewayDatetime  = this.dateFormatPipe.transform(e.round.meetings[0].datetime);
+            let position1       = e.rule1.fromRound.position.value > 0 ? e.rule1.fromRound.position.label : e.rule1.fromPlayoff.position.label;
+            this.getPosition1(e);
+            let fromRound1      = e.rule1.fromRound.round.label
+            let fromPlayoff1    = e.rule1.fromPlayoff.round.label
+
+            let position2       = e.rule2.fromRound.position.value > 0 ? e.rule2.fromRound.position.label : e.rule2.fromPlayoff.position.label;
+            let fromRound2      = e.rule2.fromRound.round.label
+            let fromPlayoff2    = e.rule2.fromPlayoff.round.label
+
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
+
+            this.rows.push({e:e
+                , rowNumber: i+1
+                , onewayDatetime: onewayDatetime
+                , position1: position1
+                , fromRound1: fromRound1
+                , fromPlayoff1: fromPlayoff1
+                , versus: " - "
+                , position2: position2
+                , fromRound2: fromRound2
+                , fromPlayoff2: fromPlayoff2
+                , roundtripDatetime: roundtripDatetime
+            });
+        }
+    }
+
+    getPosition1(e: Eliminatory): string {
+        return "";
+    }
+    
+    getPosition2(e: Eliminatory): string{
+        return "";
     }
 }
 

@@ -12,6 +12,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -26,13 +27,36 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryListView.autoRedirect, tourneyService, router, location);
+        super(EliminatoryListView.autoRedirect, tourneyService, router, location, dfp);
     }
-    
+            
+    /**
+        <th>N°</th>
+        <th>Squadra 1</th>
+        <th>Squadra 2</th>
+        <th>Pt.1</th>
+        <th>Pt.2</th>
+
+        <td>{{rowData.rowNumber}}</td>                
+        <td>{{rowData.teamName1}}</td>
+        <td>{{rowData.teamName2}}</td>
+        <td>{{rowData.points1}}</td>
+        <td>{{rowData.points2}}</td>
+     */
     ngOnInit() {
         super.ngOnInit();
         this.incompleteConfiguration = true;
+
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°'},
+            { field: 'teamName1',   header: 'Squadra 1'},
+            { field: 'teamName2',   header: 'Squadra 2'},
+            { field: 'points1',     header: 'Pt.1'},
+            { field: 'points2',     header: 'Pt.1'},
+        ];
+
         super.loadEliminatoryMeetings();
     }
     
@@ -187,6 +211,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     }
 
     private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number, classificationMap: Map<string, Classification> ): any {
+
         let round: Round = e.round;
         let m: Meeting = round.meetings[meetingIndex];
 
@@ -195,7 +220,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         row.meetingIndex = meetingIndex;
         row.id = m.id;
         row.round = round;
-        row.roundNo = meetingIndex == 0 ? "A" : "R";
+        row.rowNumber = meetingIndex == 0 ? "A" : "R";
         row.roundId = round.id;
         row.eliminatoryId = e.id;    
         

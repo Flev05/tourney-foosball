@@ -28,32 +28,24 @@
 
 <p-tabView (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
-        <p-table [value]="roundRows"
+
+        <p-table [columns]="cols"
+            [value]="roundRows"
+            [responsive]="true"
             selectionMode="single"
             [(selection)]="selectedMeetingRow" 
             (onRowSelect)="onRoundSelect($event)" >
     
-            <ng-template pTemplate="colgroup">
-                <colgroup>
-                    <col style="width: 10mm;">
-                    <col style="width: auto;">
-                    <col style="width: auto;">
-                    <col style="width: 12mm;">
-                    <col style="width: 12mm;">
-                </colgroup>
-            </ng-template>
-
-            <ng-template pTemplate="header">
+            <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th>N°</th>
-                    <th>Squadra 1</th>
-                    <th>Squadra 2</th>
-                    <th>Pt.1</th>
-                    <th>Pt.2</th>
+                    <th *ngFor="let col of columns">
+                        &#123;&#123;col.header&#125;&#125;
+                    </th>
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
                     <td colspan="5">
                         <span style="font-weight:bold">{{rowData.roundName}}</span>
@@ -61,43 +53,32 @@
                 </tr>      
         
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowData.roundNo}}</td>                
-                    <td>{{rowData.teamName1}}</td>
-                    <td>{{rowData.teamName2}}</td>
-                    <td>{{rowData.points1}}</td>
-                    <td>{{rowData.points2}}</td>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
+                        &#123;&#123;rowData[col.field]&#125;&#125;
+                    </td>
                 </tr>
             </ng-template>        
         </p-table>
     </p-tabPanel>
 
     <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
-        <p-table [value]="playoffRows" 
-            selectionMode="single"
-            [(selection)]="selectedMeetingRow" 
-            (onRowSelect)="onPlayoffSelect($event)" >
-    
-            <ng-template pTemplate="colgroup">
-                <colgroup>
-                    <col style="width: 10mm;">
-                    <col style="width: auto;">
-                    <col style="width: auto;">
-                    <col style="width: 12mm;">
-                    <col style="width: 12mm;">
-                </colgroup>
-            </ng-template>
-
-            <ng-template pTemplate="header">
+        <p-table [columns]="cols"
+                [value]="playoffRows" 
+                [responsive]="true"
+                selectionMode="single"
+                [(selection)]="selectedMeetingRow" 
+                (onRowSelect)="onPlayoffSelect($event)" >
+           
+             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th>N°</th>
-                    <th>Squadra 1</th>
-                    <th>Squadra 2</th>
-                    <th>Pt.1</th>
-                    <th>Pt.2</th>
+                    <th *ngFor="let col of columns">
+                        &#123;&#123;col.header&#125;&#125;
+                    </th>
                 </tr>
             </ng-template>
-
-            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
                     <td colspan="5">
                         <span style="font-weight:bold">{{rowData.roundName}}</span>
@@ -105,11 +86,10 @@
                 </tr>      
 
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowData.roundNo}}</td>                
-                    <td>{{rowData.teamName1}}</td>
-                    <td>{{rowData.teamName2}}</td>
-                    <td>{{rowData.points1}}</td>
-                    <td>{{rowData.points2}}</td>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
+                        &#123;&#123;rowData[col.field]&#125;&#125;
+                    </td>
                 </tr>
             </ng-template>        
         </p-table>
@@ -124,36 +104,27 @@
         </div>     
                     
         <p-table *ngIf="!incompleteConfiguration" 
-                [value]="eliminatoryLevels" 
+                [columns]="eliminatoryCols"
+                [value]="eliminatoryLevelRows" 
+                [responsive]="true"
                 selectionMode="single" 
-                [(selection)]="selectedEliminatoryLevel" 
+                [(selection)]="selectedRow" 
                 (onRowSelect)="onEliminatoryRowSelect($event)">
 
-            <ng-template pTemplate="caption">
-                Livelli Eliminazioni dirette
-            </ng-template>
-            
-            <ng-template pTemplate="colgroup">
-                <colgroup>
-                    <col style="width: 10mm;">
-                    <col style="width: 20mm;">
-                    <col style="width: 100%;">
-                </colgroup>
-            </ng-template>
-
-            <ng-template pTemplate="header">
+            <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th>N°</th>
-                    <th>Squadre</th>
-                    <th>Nome</th>
+                    <th *ngFor="let col of columns">
+                        &#123;&#123;col.header&#125;&#125;
+                    </th>
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
-                    <td>{{rowIndex + 1}}</td>
-                    <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
-                    <td>{{rowData.name}}</td>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
+                        &#123;&#123;rowData[col.field]&#125;&#125;
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

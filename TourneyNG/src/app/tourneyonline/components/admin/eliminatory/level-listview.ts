@@ -10,26 +10,111 @@ import { RoundType, EliminatoryMode, Direction, TeamSortType } from 'app/tourney
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @Component({
     templateUrl: './level-listview.html'
+    , styles: [`
+    /* Column Priorities */
+    @media only all {
+        th.ui-p-6,
+        td.ui-p-6,
+        th.ui-p-5,
+        td.ui-p-5,
+        th.ui-p-4,
+        td.ui-p-4,
+        th.ui-p-3,
+        td.ui-p-3,
+        th.ui-p-2,
+        td.ui-p-2,
+        th.ui-p-1,
+        td.ui-p-1 {
+            display: none;
+        }
+    }
+    
+    /* Show priority 1 at 320px (20em x 16px) */
+    @media screen and (min-width: 20em) {
+        th.ui-p-1,
+        td.ui-p-1 {
+            display: table-cell;
+        }
+    }
+    
+    /* Show priority 2 at 480px (30em x 16px) */
+    @media screen and (min-width: 30em) {
+        th.ui-p-2,
+        td.ui-p-2 {
+            display: table-cell;
+        }
+    }
+    
+    /* Show priority 3 at 640px (40em x 16px) */
+    @media screen and (min-width: 40em) {
+        th.ui-p-3,
+        td.ui-p-3 {
+            display: table-cell;
+        }
+    }
+    
+    /* Show priority 4 at 800px (50em x 16px) */
+    @media screen and (min-width: 50em) {
+        th.ui-p-4,
+        td.ui-p-4 {
+            display: table-cell;
+        }
+    }
+    
+    /* Show priority 5 at 960px (60em x 16px) */
+    @media screen and (min-width: 60em) {
+        th.ui-p-5,
+        td.ui-p-5 {
+            display: table-cell;
+        }
+    }
+    
+    /* Show priority 6 at 1,120px (70em x 16px) */
+    @media screen and (min-width: 70em) {
+        th.ui-p-6,
+        td.ui-p-6 {
+            display: table-cell;
+        }
+    }
+`]      
 })
 export class LevelListView extends AbstractEliminatoryListView {
     static autoRedirect: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
     static manualRedirect: string = '/admineliminatory/levelLv/eliminatoryManualLv';
 
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        protected dfp: DateFormatPipe
     ) {
-        super(LevelListView.autoRedirect, tourneyService, router, location);
+        super(LevelListView.autoRedirect, tourneyService, router, location, dfp);
     }
 
     ngOnInit() {
         super.ngOnInit();
 
         this.loadMeetings();
+
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°' },
+            { field: 'level',       header: 'Squadre' },
+            { field: 'name',        header: 'Nome' }
+        ];
+
+        this.rows = [];
+        for(let i=0;i<this.eliminatoryLevels.length; i++) {
+            let el = this.eliminatoryLevels[i];
+            this.rows.push({el:el, rowNumber: i+1, level: el.level == -1 ? 2 : this.pow2(el.level), name: el.name});
+        }
     }
 
     private loadMeetings(): any {
@@ -389,7 +474,7 @@ export class LevelListView extends AbstractEliminatoryListView {
         this.tourneyService.teamsCombobox = this.teamsCombobox;
         
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
-        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
+        this.tourneyService.selectedEliminatoryLevel = this.selectedRow.el;
 
         let redirect: string = LevelListView.autoRedirect;
         if(this.isManual) {

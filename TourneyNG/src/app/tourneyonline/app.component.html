@@ -32,7 +32,10 @@
             <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
                 <a [routerLink]="['/demo']" (click)="menuActive = false">&#9679; Demo</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
-                <a [routerLink]="['/showcase']" (click)="menuActive = false">&#9679; Responsive</a>
+<!-- 
+                <a [routerLink]="['/showcase']" (click)="menuActive = false">&#9679; Responsive</a> 
+-->
+            
             </div>
         </div>
 

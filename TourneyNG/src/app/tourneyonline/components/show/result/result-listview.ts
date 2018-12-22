@@ -10,6 +10,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @Component({
     templateUrl: './result-listview.html'
@@ -24,8 +25,9 @@ export class ResultListView extends AbstractEliminatoryListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        protected dfp: DateFormatPipe
     ) {
-        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
+        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location, dfp);
     }
 
     ngOnInit() {
@@ -89,16 +91,39 @@ export class ResultListView extends AbstractEliminatoryListView {
         return rows;
     }
 
+    
+    /**
+        <th>N°</th>
+        <th>Squadra 1</th>
+        <th>Squadra 2</th>
+        <th>Pt.1</th>
+        <th>Pt.2</th>
+
+        <td>{{rowData.roundNo}}</td>                
+        <td>{{rowData.teamName1}}</td>
+        <td>{{rowData.teamName2}}</td>
+        <td>{{rowData.points1}}</td>
+        <td>{{rowData.points2}}</td>        
+     * @param rounds 
+     */
     private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
         
-        let roundNo : number=0;
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°'},
+            { field: 'teamName1',   header: 'Squadra 1'},
+            { field: 'teamName2',   header: 'Squadra 2'},
+            { field: 'points1',     header: 'Pt.1'},
+            { field: 'points2',     header: 'Pt.2'},
+        ];
+
+        let rowNumber : number=0;
 
         for (let m of round.meetings) {
             rows.push(m);
 
-            roundNo++;
+            rowNumber++;
             rows[row].id = m.id;
-            rows[row].roundNo = roundNo;
+            rows[row].rowNumber = rowNumber;
             rows[row].roundId = round.id;
             rows[row].eliminatoryId = 0;    
             rows[row].playoffId = 0;
@@ -164,6 +189,7 @@ export class ResultListView extends AbstractEliminatoryListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
       
+        this.selectedEliminatoryLevel = this.selectedRow.e;
         this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
 
         for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {

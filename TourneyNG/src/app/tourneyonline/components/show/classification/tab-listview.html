@@ -9,7 +9,7 @@
 <p-accordion>
     <p-accordionTab header="Introduzione">      
     <p>
-        La vista contiene fino da una a tre schede:
+        La vista contiene da una a tre schede:
     </p>
     <ul>
         <li>Gironi all'italiana</li>
@@ -17,7 +17,7 @@
         <li>Eliminazioni dirette</li>
     </ul>
     <p>
-        La scheda dei gironi e playoff visualizza la calssifica di tutti i gironi.
+        La scheda dei gironi e playoff visualizza la classifica di tutti i gironi e playoff.
         Per le eliminazioni dirette invece, la scheda mostra una lista dei livelli di eliminazione,
         da quello più alto: 16°, 8° di finale, alla finalissima: 1° e 2° posto e finalina: 3° e 4° posto.
     </p>
@@ -145,7 +145,14 @@
         </p-table>
     </p-tabPanel>
 
-    <!-- <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">    
+    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">  
+        <div style="margin-top:30px">
+            <p-message *ngIf="incompleteConfiguration" 
+                severity="error" 
+                text="Attenzione! Non ci sono ancora risultati inseriti!">
+            </p-message>
+        </div>     
+                            
         <p-table [value]="eliminatoryRows"> 
             <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
@@ -194,9 +201,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </p-tabPanel> -->
-
-
+    </p-tabPanel>
 </p-tabView>
 
 </div>

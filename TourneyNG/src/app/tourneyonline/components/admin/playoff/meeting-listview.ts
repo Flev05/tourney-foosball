@@ -7,12 +7,16 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @Component({
     templateUrl: './meeting-listview.html'
 })
 export class MeetingListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
+    cols: any[];
+    rows: any[];
+    selectedRow: any;
 
     msgs: Message[] = [];
 
@@ -24,6 +28,7 @@ export class MeetingListView extends AbstractListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        private   dateFormatPipe: DateFormatPipe
     ) {
         super(MeetingListView.redirect, tourneyService, router, location);
     }
@@ -48,6 +53,20 @@ export class MeetingListView extends AbstractListView {
             let rn = rn1 + " - " + rn2;
 
             m.ruleName = rn;
+        }
+
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°' },
+            { field: 'datetime',    header: 'Data/Ora' },
+            { field: 'direction',   header: 'A/R' },
+            { field: 'name',        header: 'Incontro' }
+        ];
+
+        this.rows = [];
+        for(let i=0;i<this.meetings.length; i++) {
+            let m = this.meetings[i];
+            let dt = this.dateFormatPipe.transform(m.datetime);
+            this.rows.push({m:m, rowNumber: i+1, datetime: dt, direction: m.direction, name: m.name});
         }
     }
  
@@ -75,7 +94,7 @@ export class MeetingListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedMeeting = this.selectedMeeting;
+        this.tourneyService.selectedMeeting = this.selectedRow.m;
 
         this.gotoDetailView();
     }

@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from '../../../service/tourneyservice';
-import { PlayoffListView } from './playoff-listview';
 import { PhaseType } from '../../../domain/enumerations';
 
 @Component({

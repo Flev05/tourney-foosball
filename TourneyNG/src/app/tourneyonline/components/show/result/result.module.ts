@@ -30,6 +30,7 @@ import {ResultTourneyListView } from './tourney-listview';
 import { ResultListView } from './result-listview';
 import { EliminatoryListView } from './eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @NgModule({
 	imports: [
@@ -65,6 +66,7 @@ import { MeetingDetailView } from './meeting-detailview';
         ,ResultListView
         ,EliminatoryListView
         ,MeetingDetailView
-	]
+    ]
+    ,providers: [DateFormatPipe]
 })
 export class ResultModule {}

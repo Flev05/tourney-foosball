@@ -32,6 +32,7 @@ import { RuleListView } from './rule-listview';
 import { RuleDetailView } from './rule-detailview';
 import { MeetingListView } from './meeting-listview';
 import { MeetingRuleDetailView } from './meeting-rule-detailview';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @NgModule({
 	imports: [
@@ -69,6 +70,7 @@ import { MeetingRuleDetailView } from './meeting-rule-detailview';
         ,RuleDetailView
         ,MeetingListView
         ,MeetingRuleDetailView
-	]
+    ]
+    ,providers: [DateFormatPipe]
 })
 export class PlayoffModule {}

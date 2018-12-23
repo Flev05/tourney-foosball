@@ -6,6 +6,7 @@ import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { TourneyDb } from 'app/tourneyonline/domain/tourney.db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { DateFormatPipe } from './DateFormatPipe';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 
@@ -20,13 +21,14 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
         , public router: Router
-        , protected location: Location) { 
+        , protected location: Location
+        , private dateFormatPipe: DateFormatPipe) { 
         super(redirect, tourneyService, router, location);
     }
 
     ngOnInit() {
         console.log("AbstractTourneyListView.ngOnInit()");
-
+        
         this.cols = [
             { field: 'rowNumber',   header: 'N°' },
             { field: 'tourneyName', header: 'Nome' },
@@ -57,7 +59,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
-            this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: t.datetime});
+            let dt = this.dateFormatPipe.transform(t.datetime);
+            this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: dt});
         }
     }
 

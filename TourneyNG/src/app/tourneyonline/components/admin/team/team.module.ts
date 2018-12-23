@@ -28,6 +28,7 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {TeamTourneyListView} from './tourney-listview';
 import {TeamListView} from './team-listview';
 import {TeamDetailView} from './team-detailview';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @NgModule({
 	imports: [
@@ -61,6 +62,7 @@ import {TeamDetailView} from './team-detailview';
 		TeamTourneyListView,
         TeamListView,
         TeamDetailView
-	]
+    ]
+    ,providers: [DateFormatPipe]
 })
 export class TeamModule {}

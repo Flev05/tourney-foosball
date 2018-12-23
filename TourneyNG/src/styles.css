@@ -5,3 +5,9 @@
 #layout-content div.content-section.implementation > p-table > div > div.ui-table-wrapper.ng-star-inserted > table{
     width: auto;
 }
+
+.roundNames {
+    font-weight:bold;
+    /* color: #5cb85c; */
+    color: #2399e5;
+}

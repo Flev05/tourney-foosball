@@ -91,7 +91,6 @@ export class ResultListView extends AbstractEliminatoryListView {
         return rows;
     }
 
-    
     /**
         <th>N°</th>
         <th>Squadra 1</th>
@@ -109,11 +108,10 @@ export class ResultListView extends AbstractEliminatoryListView {
     private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
         
         this.cols = [
-            { field: 'rowNumber',   header: 'N°'},
             { field: 'teamName1',   header: 'Squadra 1'},
+            { field: 'goals1',      header: 'Goal 1'},
+            { field: 'goals2',      header: 'Goal 2'},
             { field: 'teamName2',   header: 'Squadra 2'},
-            { field: 'points1',     header: 'Pt.1'},
-            { field: 'points2',     header: 'Pt.2'},
         ];
 
         let rowNumber : number=0;
@@ -135,6 +133,13 @@ export class ResultListView extends AbstractEliminatoryListView {
             rows[row].teamName2 = m.team2.teamName;
             rows[row].points1 = m.points1;
             rows[row].points2 = m.points2;
+
+            rows[row].goals1 = 0;
+            rows[row].goals2 = 0;
+            for(let ma of m.matches) {
+                rows[row].goals1 += ma.score1;
+                rows[row].goals2 += ma.score2;
+            }
 
             let currentKey = round.name;
             if (!classificationMap.has(currentKey)) {

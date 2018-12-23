@@ -32,7 +32,8 @@ export abstract class AbstractListView extends AbstractView {
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
         , protected router: Router
-        , protected location: Location) { 
+        , protected location: Location) 
+    { 
             super(tourneyService, location);
     }
 
@@ -89,7 +90,7 @@ export abstract class AbstractListView extends AbstractView {
         }
 
         for(let round of this.selectedTourney.rounds) {
-            round.classification = this.updateClassification(round);
+            round.classification = this.createClassification(round);
         }
 
         this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds);
@@ -167,6 +168,15 @@ export abstract class AbstractListView extends AbstractView {
             }
         }
     }
+    
+    protected prepareEliminatoryRound(rounds: Round[]): any[] {
+
+        for(let round of rounds) {
+            round.classification = this.createClassification(round);
+        }
+
+        return this.prepareRoundsGui(rounds);
+    }
 
     private findByName(rn: string, rounds: Round[]): Round {
         for(let r of rounds) {
@@ -177,7 +187,7 @@ export abstract class AbstractListView extends AbstractView {
         return null;
     }
     
-    private updateClassification(round: Round): Classification[] {
+    private createClassification(round: Round): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of round.meetings) {
@@ -282,7 +292,39 @@ export abstract class AbstractListView extends AbstractView {
         return sortedClassification;
     } 
 
+    /**
+        <th>N°</th>
+        <th>Squadra</th>
+        <th>Pt.</th>
+        <th>G</th>
+        <th>V</th>
+        <th>P</th>
+        <th>N</th>
+        <th>Gf:Gs</th>
+        <th>D</th>
+
+        <td>{{rowIndex + 1}}</td>
+        <td>{{rowData.team.teamName}}</td>
+        <td>{{rowData.points}}</td>
+        <td>{{rowData.played}}</td>
+        <td>{{rowData.won}}</td>
+        <td>{{rowData.lost}}</td>
+        <td>{{rowData.balanced}}</td>
+        <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
+        <td>{{rowData.goalsDiff}}</td>       
+     */
     protected prepareRoundsGui(rounds: Round[]): any[] {
+        this.cols = [
+            { field: 'rowNumber',   header: 'N°'},
+            { field: 'teamName',    header: 'Squadra'},
+            { field: 'points',      header: 'Pt.'},
+            { field: 'played',      header: 'G'},
+            { field: 'won',         header: 'V'},
+            { field: 'lost',        header: 'P'},
+            { field: 'balanced',    header: 'N'},
+            { field: 'goalsDone',   header: 'Gf:Gs'},
+            { field: 'goalsDiff',   header: 'D'},
+        ];
 
         let row : number = 0;
         let rows: any[] = [];
@@ -293,6 +335,7 @@ export abstract class AbstractListView extends AbstractView {
             for (let c of round.classification) {
                 
                 rows.push(c);
+                rows[row].rowNumber = row+1;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.team.teamName;    
                 rows[row].points = c.points;    
@@ -302,7 +345,7 @@ export abstract class AbstractListView extends AbstractView {
                 rows[row].balanced = c.balanced;    
                 rows[row].goalsDone = c.goalsDone;    
                 rows[row].goalsConceded = c.goalsConceded;    
-                rows[row].goalsDiff = c.goalsDiff;    
+                rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
 
                 let len = round.meetings.length;
 
@@ -325,7 +368,7 @@ export abstract class AbstractListView extends AbstractView {
         let playoffRounds: Round[] = this.makePlayoffRounds(playoffs);
 
         for(let round of playoffRounds) {
-            round.classification = this.updateClassification(round);
+            round.classification = this.createClassification(round);
         }
 
         let rows: any[] = this.preparePlayoffGui(playoffs);
@@ -339,15 +382,6 @@ export abstract class AbstractListView extends AbstractView {
         for(let p of playoffs) {
             rounds.push(p.round);
         }
-        return this.prepareRoundsGui(rounds);
-    }
-    
-    protected prepareEliminatoryGui(rounds: Round[]): any[] {
-
-        for(let round of rounds) {
-            round.classification = this.updateClassification(round);
-        }
-
         return this.prepareRoundsGui(rounds);
     }
 

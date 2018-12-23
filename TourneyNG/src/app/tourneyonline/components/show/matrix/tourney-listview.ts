@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 const redirect = '/matrix/lv';
 
@@ -11,8 +12,12 @@ const redirect = '/matrix/lv';
     templateUrl: './tourney-listview.html'
 })
 export class MatrixTourneyListView extends AbstractTourneyListView {
-    constructor(protected tourneyService: TourneyService, public router: Router, public location: Location) { 
-        super(redirect, tourneyService, router, location);
+    constructor(protected tourneyService: TourneyService
+        , public router: Router
+        , public location: Location
+        , protected dfp: DateFormatPipe) 
+    { 
+        super(redirect, tourneyService, router, location, dfp);
     }
 
     ngOnInit() {

@@ -49,14 +49,6 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         super.ngOnInit();
         this.incompleteConfiguration = true;
 
-        this.cols = [
-            { field: 'rowNumber',   header: 'N°'},
-            { field: 'teamName1',   header: 'Squadra 1'},
-            { field: 'teamName2',   header: 'Squadra 2'},
-            { field: 'points1',     header: 'Pt.1'},
-            { field: 'points2',     header: 'Pt.1'},
-        ];
-
         super.loadEliminatoryMeetings();
     }
     
@@ -212,6 +204,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
     private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number, classificationMap: Map<string, Classification> ): any {
 
+        this.cols = [
+            { field: 'teamName1',  header: 'Squadra 1'},
+            { field: 'teamName2',  header: 'Squadra 2'},
+            { field: 'goals1',     header: 'Goal 1'},
+            { field: 'goals2',     header: 'Goal 1'},
+        ];
+
         let round: Round = e.round;
         let m: Meeting = round.meetings[meetingIndex];
 
@@ -224,11 +223,18 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         row.roundId = round.id;
         row.eliminatoryId = e.id;    
         
-        row.roundName = round.name;
+        row.roundName = round.name  + "° Eliminatoria";
         row.teamName1 = m.team1.teamName;
         row.teamName2 = m.team2.teamName;
         row.points1 = m.points1;
         row.points2 = m.points2;
+
+        row.goals1 = 0;
+        row.goals2 = 0;
+        for(let ma of m.matches) {
+            row.goals1 += ma.score1;
+            row.goals2 += ma.score2;
+        }
 
         if(row.teamName2 == "" || row.teamName1 == "") {
             m.status = MeetingStatus.Terminated;

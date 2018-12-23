@@ -183,12 +183,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.selectedEliminatoryLevel.isOneway=true;
 
         this.onClickManageMeeting(true);
+
+        this.goBack();
     }
 
     onRoundtripClick() {
         console.log("Entering onRoundtripClick()");
         this.selectedEliminatoryLevel.isOneway=false;
         this.onClickManageMeeting(false);
+        this.goBack();
     }
 
     private onClickManageMeeting(isOneway: boolean) {
@@ -252,7 +255,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
 
             this.rows.push({e:e
-                , rowNumber: i+1
+                , rowNumber: i+1 
                 , teamName1: e.round.meetings[0].team1.teamName
                 , versus: " - "
                 , teamName2: e.round.meetings[0].team2.teamName

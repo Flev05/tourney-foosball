@@ -16,20 +16,20 @@
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
-                    &#123;&#123;col.header&#125;&#125;
+                    {{col.header}}
                 </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns">
             <tr>
                 <td *ngFor="let col of columns">
-                    <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
-                    &#123;&#123;rowData[col.field]&#125;&#125;
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
-            There are &#123;&#123;cars?.length&#125;&#125; cars
+            There are {{cars?.length}} cars
         </ng-template>
     </p-table>
 
@@ -48,14 +48,14 @@
             </ng-template>
             <ng-template pTemplate="body" let-car>
                 <tr>
-                    <td>&#123;&#123;car.vin&#125;&#125;</td>
-                    <td class="ui-p-4">&#123;&#123;car.year&#125;&#125;</td>
-                    <td class="ui-p-5">&#123;&#123;car.brand&#125;&#125;</td>
-                    <td class="ui-p-6">&#123;&#123;car.color&#125;&#125;</td>
+                    <td>{{car.vin}}</td>
+                    <td class="ui-p-4">{{car.year}}</td>
+                    <td class="ui-p-5">{{car.brand}}</td>
+                    <td class="ui-p-6">{{car.color}}</td>
                 </tr>
             </ng-template>
         <ng-template pTemplate="summary">
-            There are &#123;&#123;cars?.length&#125;&#125; cars
+            There are {{cars?.length}} cars
         </ng-template>
     </p-table>
 </div>

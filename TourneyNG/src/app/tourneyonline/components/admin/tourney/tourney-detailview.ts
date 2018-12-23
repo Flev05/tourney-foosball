@@ -204,6 +204,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } else  {
             this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
         }
+        this.tourneyService.newTourney = false;
     }
 
     containsPhase(value: string) : boolean{
@@ -263,5 +264,6 @@ export class TourneyDetailView extends AbstractDetailView {
             msgerr = 'Modifica torneo fallita';
         }
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        this.tourneyService.newTourney = false;
     }
 }

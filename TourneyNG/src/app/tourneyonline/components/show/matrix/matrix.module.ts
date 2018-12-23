@@ -28,6 +28,7 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {MatrixTourneyListView } from './tourney-listview';
 import { MatrixDetailView } from './matrix-detailview';
 import { MatrixListView } from './matrix-listview';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @NgModule({
 	imports: [
@@ -62,6 +63,7 @@ import { MatrixListView } from './matrix-listview';
         ,MatrixListView
         ,MatrixListView
         ,MatrixDetailView
-	]
+    ]
+    ,providers: [DateFormatPipe] 
 })
 export class MatrixModule {}

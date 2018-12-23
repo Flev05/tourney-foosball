@@ -9,7 +9,7 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">      
     <p>
-        Click sulla riga del torneo per accdere alla vista elenco dei risultati di gironi, playoff ed eliminatorie dirette.
+        Click sulla riga del torneo per accedere alla vista elenco dei risultati di gironi, playoff ed eliminatorie dirette.
     </p>
     </p-accordionTab>
 </p-accordion>    
@@ -25,7 +25,7 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns">
-                &#123;&#123;col.header&#125;&#125;
+                {{col.header}}
             </th>
         </tr>
     </ng-template>
@@ -33,8 +33,8 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
             <td *ngFor="let col of columns">
-                <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
-                &#123;&#123;rowData[col.field]&#125;&#125;
+                <span class="ui-column-title">{{col.header}}</span>
+                {{rowData[col.field]}}
             </td>
         </tr>
     </ng-template>

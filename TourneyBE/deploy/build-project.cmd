@@ -4,10 +4,10 @@ REM Ufficio
 rem set TOURNEY_DIR=D:\luciano\EREBUS\Tourneys
 
 REM Laptop LENOVO
-rem set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
+set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
 
 REM Desktop HP
-set TOURNEY_DIR=C:\DATA\DEVELOP\EREBUS\CalcioBalilla
+rem set TOURNEY_DIR=C:\DATA\DEVELOP\EREBUS\CalcioBalilla
 
 set FE_DIR=%TOURNEY_DIR%\TourneyNG
 set BE_DIR=%TOURNEY_DIR%\TourneyBE

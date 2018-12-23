@@ -21,6 +21,7 @@ import {ClassificationRoutingModule} from './classification-routing.module';
 import {ClassificationTourneyListView} from './tourney-listview';
 import {AccordionModule} from 'primeng/accordion';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { DateFormatPipe } from '../../common/DateFormatPipe';
 
 @NgModule({
         imports: [
@@ -47,7 +48,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 	declarations: [
                 ClassificationTourneyListView,
                 TabListView,
-	]
+        ]
+        ,providers: [DateFormatPipe]        
 })
 export class ClassificationModule {
         constructor(protected tourneyService: TourneyService ) {

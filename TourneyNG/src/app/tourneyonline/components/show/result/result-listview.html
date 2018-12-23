@@ -35,11 +35,11 @@
             selectionMode="single"
             [(selection)]="selectedMeetingRow" 
             (onRowSelect)="onRoundSelect($event)" >
-    
+
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th *ngFor="let col of columns">
-                        &#123;&#123;col.header&#125;&#125;
+                        {{col.header}}
                     </th>
                 </tr>
             </ng-template>
@@ -47,15 +47,15 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="5">
-                        <span style="font-weight:bold">{{rowData.roundName}}</span>
+                    <td colspan="4">
+                        <span class="roundNames">{{rowData.roundName}}</span>
                     </td>
                 </tr>      
         
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
-                        &#123;&#123;rowData[col.field]&#125;&#125;
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
                     </td>
                 </tr>
             </ng-template>        
@@ -73,22 +73,22 @@
              <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th *ngFor="let col of columns">
-                        &#123;&#123;col.header&#125;&#125;
+                        {{col.header}}
                     </th>
                 </tr>
             </ng-template>
             
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="5">
-                        <span style="font-weight:bold">{{rowData.roundName}}</span>
+                    <td colspan="4">
+                        <span class="roundNames">{{rowData.roundName}}</span>
                     </td>
                 </tr>      
 
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
-                        &#123;&#123;rowData[col.field]&#125;&#125;
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
                     </td>
                 </tr>
             </ng-template>        
@@ -114,7 +114,7 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th *ngFor="let col of columns">
-                        &#123;&#123;col.header&#125;&#125;
+                        {{col.header}}
                     </th>
                 </tr>
             </ng-template>
@@ -122,8 +122,8 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">&#123;&#123;col.header&#125;&#125;</span>
-                        &#123;&#123;rowData[col.field]&#125;&#125;
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
                     </td>
                 </tr>
             </ng-template>

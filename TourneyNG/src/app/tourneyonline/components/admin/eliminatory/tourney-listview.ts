@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 const redirect = '/admineliminatory/levelLv';
 

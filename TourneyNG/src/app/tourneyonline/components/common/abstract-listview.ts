@@ -34,7 +34,7 @@ export abstract class AbstractListView extends AbstractView {
         , protected router: Router
         , protected location: Location) 
     { 
-            super(tourneyService, location);
+        super(tourneyService, location);
     }
 
     ngOnInit() {
@@ -45,7 +45,7 @@ export abstract class AbstractListView extends AbstractView {
         this.router.navigate([this.redirect]);
     }
 
-    protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean{
+    protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean {
 
         for(let i=0; i<phases.length; i++ ) {
             if(phases[i] == value ) {
@@ -332,10 +332,11 @@ export abstract class AbstractListView extends AbstractView {
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
 
         for (let round of rounds) {
+            let r = 0;
             for (let c of round.classification) {
                 
                 rows.push(c);
-                rows[row].rowNumber = row+1;    
+                rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.team.teamName;    
                 rows[row].points = c.points;    

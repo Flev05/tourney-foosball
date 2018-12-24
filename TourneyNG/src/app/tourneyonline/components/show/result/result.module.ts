@@ -30,7 +30,7 @@ import {ResultTourneyListView } from './tourney-listview';
 import { ResultListView } from './result-listview';
 import { EliminatoryListView } from './eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
 	imports: [

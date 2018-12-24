@@ -9,7 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 
 @Component({

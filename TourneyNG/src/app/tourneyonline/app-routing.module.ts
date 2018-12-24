@@ -38,7 +38,7 @@ import { HomeComponent } from './components/home/home.component';
 
             // Login Section
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},
-        ])    
+        ], {onSameUrlNavigation: 'reload'})    
     ],
     exports: [RouterModule]
 })

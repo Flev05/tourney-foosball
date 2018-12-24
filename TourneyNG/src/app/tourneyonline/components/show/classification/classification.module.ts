@@ -21,7 +21,7 @@ import {ClassificationRoutingModule} from './classification-routing.module';
 import {ClassificationTourneyListView} from './tourney-listview';
 import {AccordionModule} from 'primeng/accordion';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
         imports: [

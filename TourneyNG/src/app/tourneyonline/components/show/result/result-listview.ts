@@ -10,7 +10,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
     templateUrl: './result-listview.html'

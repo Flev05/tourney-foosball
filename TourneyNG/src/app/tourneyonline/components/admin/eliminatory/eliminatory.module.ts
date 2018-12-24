@@ -32,7 +32,7 @@ import {EliminatoryManualListView} from './eliminatory-manuallistview';
 import {LevelListView} from './level-listview';
 import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
 import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
 	imports: [

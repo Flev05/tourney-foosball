@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 const redirect = '/matrix/lv';
 

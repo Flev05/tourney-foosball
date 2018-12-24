@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abstract-tourney-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 const redirect = '/result/lv';
 

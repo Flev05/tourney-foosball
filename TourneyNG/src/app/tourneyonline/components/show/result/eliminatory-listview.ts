@@ -12,7 +12,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -204,12 +204,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
     private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number, classificationMap: Map<string, Classification> ): any {
 
-        this.cols = [
-            { field: 'teamName1',  header: 'Squadra 1'},
-            { field: 'teamName2',  header: 'Squadra 2'},
-            { field: 'goals1',     header: 'Goal 1'},
-            { field: 'goals2',     header: 'Goal 1'},
-        ];
+        this.cols = [];
+
+        this.cols.push({ field: 'datetime',   header: 'A/R'});
+        this.cols.push({ field: 'teamName1',  header: 'Squadra 1'});
+        this.cols.push({ field: 'teamName2',  header: 'Squadra 2'});
+        this.cols.push({ field: 'goals1',     header: 'Goal 1'});
+        this.cols.push({ field: 'goals2',     header: 'Goal 2'});
 
         let round: Round = e.round;
         let m: Meeting = round.meetings[meetingIndex];
@@ -217,6 +218,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         let row: any = {m};
 
         row.meetingIndex = meetingIndex;
+        row.datetime = this.dfp.transform(m.datetime);
         row.id = m.id;
         row.round = round;
         row.rowNumber = meetingIndex == 0 ? "A" : "R";

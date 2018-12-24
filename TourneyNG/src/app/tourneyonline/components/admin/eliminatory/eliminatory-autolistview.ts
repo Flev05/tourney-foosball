@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 @Component({
@@ -12,7 +12,8 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 })
 export class EliminatoryAutoListView extends AbstractEliminatoryListView {
     static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
-    
+    static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
+
     cols: any[];
     rows: any[];
     selectedRow: any;
@@ -29,11 +30,7 @@ export class EliminatoryAutoListView extends AbstractEliminatoryListView {
     ngOnInit() {
         super.ngOnInit();
 
-        if(this.isStandalone) {
-            this.prepareStandaloneGui();
-        } else {
-            this.prepareNotStandaloneGui();
-        }
+        this.prepareGui();
     }
     
     getPosition1(e: Eliminatory): string {

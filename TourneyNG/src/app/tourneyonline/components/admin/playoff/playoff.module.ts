@@ -32,7 +32,7 @@ import { RuleListView } from './rule-listview';
 import { RuleDetailView } from './rule-detailview';
 import { MeetingListView } from './meeting-listview';
 import { MeetingRuleDetailView } from './meeting-rule-detailview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
 	imports: [

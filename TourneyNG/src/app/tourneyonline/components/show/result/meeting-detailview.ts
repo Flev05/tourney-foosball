@@ -27,6 +27,7 @@ export class MeetingDetailView extends AbstractDetailView {
     matches: Match[];
 
     alreadyPassed: boolean = false;
+    teamPassed: string | boolean;
 
     constructor(
         protected location: Location,
@@ -43,7 +44,9 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting = JSON.parse(this.selectedMeetingDb.json);
 
         this.alreadyPassed = false;
-        if(this.selectedMeeting.team1.teamName != "" && this.selectedMeeting.team2.teamName == "") {
+        if(this.selectedMeeting.team1.teamName == "" || this.selectedMeeting.team2.teamName == "") {
+            this.teamPassed = this.selectedMeeting.team1.teamName != "" ? 
+                this.selectedMeeting.team1.teamName : this.selectedMeeting.team2.teamName;
             this.alreadyPassed = true;
             return;
         }

@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 @Component({
@@ -12,7 +12,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 })
 export class EliminatoryManualListView extends AbstractEliminatoryListView {
     static manualRedirect: string = '/admineliminatory/levelLv/eliminatoryLv/manualdv';
-
+    static manualRedirectLV: string = '/admineliminatory/levelLv/eliminatoryManualLv';
 
     constructor(
         protected tourneyService: TourneyService,
@@ -26,11 +26,7 @@ export class EliminatoryManualListView extends AbstractEliminatoryListView {
     ngOnInit() {
         super.ngOnInit();
 
-        if(this.isStandalone) {
-            this.prepareStandaloneGui();
-        } else {
-            this.prepareNotStandaloneGui();
-        }
+        this.prepareGui();
     }
 
     getPosition1(e: Eliminatory): string {

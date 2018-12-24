@@ -12,7 +12,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Team } from 'app/tourneyonline/domain/team';
-import { DateFormatPipe } from './DateFormatPipe';
+import { DateFormatPipe } from './date-format-pipe';
 
 export abstract class AbstractEliminatoryListView extends AbstractListView {
          
@@ -103,7 +103,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
         this.tourneyService.isStandalone = this.isStandalone;
     }
- 
+
+    protected prepareGui() {
+        if (this.isStandalone) {
+            this.prepareStandaloneGui();
+        } else {
+            this.prepareNotStandaloneGui();
+        }
+    }
+
     /**
         <th>N°</th>
         <th>Squadre</th>
@@ -124,15 +132,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
         this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
 
-        this.eliminatoryCols = [
-            { field: 'rowNumber',   header: 'N°'},
-            { field: 'level',       header: 'Squadre'},
-            { field: 'name',        header: 'Nome'},
-        ];
-
         this.httpCounter = 0;
         this.eliminatoryLevelRows = [];
         
+        this.refreshELGui();
+
         for (let rowNumber=0; rowNumber<this.eliminatoryLevels.length; rowNumber++) {
 
             let topElimLevel = this.eliminatoryLevels[rowNumber];
@@ -149,7 +153,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
         }
     }
-
+    
+    private refreshELGui() {
+        this.eliminatoryCols = [
+            { field: 'rowNumber', header: 'N°' },
+            { field: 'level', header: 'Squadre' },
+            { field: 'name', header: 'Nome' },
+        ];
+    }
+    
     private addToMeetingMap(mdbs: MeetingDb[]): void {
         let elid = mdbs[0].eliminatoryId;
         this.meetingMap.set(elid, mdbs);
@@ -177,24 +189,21 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected processEliminationTree(): void {
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
-    
+
+
     onOnewayClick() {
         console.log("Entering onOnewayClick()");
         this.selectedEliminatoryLevel.isOneway=true;
-
         this.onClickManageMeeting(true);
-
-        this.goBack();
     }
 
     onRoundtripClick() {
         console.log("Entering onRoundtripClick()");
         this.selectedEliminatoryLevel.isOneway=false;
         this.onClickManageMeeting(false);
-        this.goBack();
     }
 
-    private onClickManageMeeting(isOneway: boolean) {
+    protected onClickManageMeeting(isOneway: boolean) {
 
         for(let e of this.eliminatories) {
             if(isOneway) {
@@ -210,6 +219,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
         }
         this.processEliminationTree();
+
+        this.prepareGui();
     }
 
     protected newDummyTeam() : Team {

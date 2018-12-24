@@ -7,7 +7,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
     templateUrl: './meeting-listview.html'

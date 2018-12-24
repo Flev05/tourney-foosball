@@ -27,7 +27,7 @@ import {CalendarModule} from '../../../../components/calendar/calendar';
 import {PlayerTourneyListView} from './tourney-listview';
 import {PlayerListView} from './player-listview';
 import {PlayerDetailView} from './player-detailview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
 	imports: [

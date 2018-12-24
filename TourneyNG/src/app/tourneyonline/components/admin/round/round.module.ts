@@ -30,7 +30,7 @@ import { ButtonModule } from 'app/components/button/button';
 import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { SliderModule } from 'app/components/slider/slider';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
 	imports: [

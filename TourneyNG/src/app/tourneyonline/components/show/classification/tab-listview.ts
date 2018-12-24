@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
-import { DateFormatPipe } from '../../common/DateFormatPipe';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Round } from 'app/tourneyonline/domain/round';
 
 @Component({

@@ -37,15 +37,12 @@ export class LevelListView extends AbstractEliminatoryListView {
 
         this.loadMeetings();
 
-        this.refreshConfigELGui();
+        this.prepareConfigELGui();
     }
 
-    private refreshConfigELGui() {
-        this.cols = [
-            { field: 'rowNumber',   header: 'N°' },
-            { field: 'level',       header: 'Squadre' },
-            { field: 'name',        header: 'Nome' }
-        ];
+    private prepareConfigELGui() {
+        this.cols = super.prepareELCols();
+        
         this.rows = [];
         for (let i = 0; i < this.eliminatoryLevels.length; i++) {
             let el = this.eliminatoryLevels[i];
@@ -60,7 +57,7 @@ export class LevelListView extends AbstractEliminatoryListView {
             return;
         }
 
-        this.loadEliminatoryMeetings();
+        this.loadEliminatoryLevels();
     }
 
     processEliminationTree(): void {
@@ -69,8 +66,7 @@ export class LevelListView extends AbstractEliminatoryListView {
 
         if (this.isStandalone) {
             this.processStandalone();
-        }
-        else if (this.isAutomatic) {
+        } else if (this.isAutomatic) {
             this.processAutomaticEliminatories(this.selectedTeamsNumCombobox.value);
         }
 
@@ -458,7 +454,7 @@ export class LevelListView extends AbstractEliminatoryListView {
         this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
 
-        this.refreshConfigELGui();
+        this.prepareConfigELGui();
     }
 }
 

@@ -49,13 +49,16 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         super.ngOnInit();
         this.incompleteConfiguration = true;
 
-        super.loadEliminatoryMeetings();
+        super.loadEliminatoryLevels();
     }
     
     protected processEliminationTree(): void {
-
-        if(!this.isStandalone && this.isTopLevel) {
-            this.resolveRules();
+        
+        if(this.isTopLevel) {
+            if(!this.isStandalone) {
+                this.resolveRules();
+            }
+            this.initNextLevel();
         }
 
         this.eliminatoryRows = [];
@@ -71,6 +74,10 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             }
         }
         super.processEliminationTree();
+    }
+
+    initNextLevel(): void {
+        throw new Error("Method not implemented.");
     }
 
     /**

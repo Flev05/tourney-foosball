@@ -47,7 +47,7 @@ export class ResultListView extends AbstractEliminatoryListView {
         }
 
         if(super.containsEliminatory()) {
-            super.loadEliminatoryMeetings();
+            super.loadEliminatoryLevels();
         }
     }
 

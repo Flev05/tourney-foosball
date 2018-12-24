@@ -121,7 +121,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
         <td>{{rowData.name}}</td>
      */
-    protected loadEliminatoryMeetings() {
+    protected loadEliminatoryLevels() {
         this.meetingMap = new Map<number, MeetingDb[]>();
         this.eliminatoryRoundMap = new Map<number, Round>();
 
@@ -135,7 +135,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.httpCounter = 0;
         this.eliminatoryLevelRows = [];
         
-        this.refreshELGui();
+        this.eliminatoryCols = this.prepareELCols();
 
         for (let rowNumber=0; rowNumber<this.eliminatoryLevels.length; rowNumber++) {
 
@@ -154,12 +154,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
     }
     
-    private refreshELGui() {
-        this.eliminatoryCols = [
-            { field: 'rowNumber', header: 'N°' },
-            { field: 'level', header: 'Squadre' },
-            { field: 'name', header: 'Nome' },
+    protected prepareELCols(): any[] {
+       let eliminatoryCols = [
+            { field: 'rowNumber',   header: 'N°' },
+            { field: 'level',       header: 'Squadre' },
+            { field: 'name',        header: 'Nome' },
         ];
+        return eliminatoryCols;
     }
     
     private addToMeetingMap(mdbs: MeetingDb[]): void {
@@ -189,7 +190,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected processEliminationTree(): void {
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
-
 
     onOnewayClick() {
         console.log("Entering onOnewayClick()");
@@ -330,12 +330,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             let e = this.eliminatories[i];
 
             let onewayDatetime  = this.dateFormatPipe.transform(e.round.meetings[0].datetime);
-            let position1       = e.rule1.fromRound.position.value > 0 ? e.rule1.fromRound.position.label : e.rule1.fromPlayoff.position.label;
-            this.getPosition1(e);
+            let position1       = this.getPosition1(e);
             let fromRound1      = e.rule1.fromRound.round.label
             let fromPlayoff1    = e.rule1.fromPlayoff.round.label
 
-            let position2       = e.rule2.fromRound.position.value > 0 ? e.rule2.fromRound.position.label : e.rule2.fromPlayoff.position.label;
+            let position2       = this.getPosition2(e);
             let fromRound2      = e.rule2.fromRound.round.label
             let fromPlayoff2    = e.rule2.fromPlayoff.round.label
 

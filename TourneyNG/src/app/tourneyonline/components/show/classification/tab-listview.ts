@@ -35,7 +35,7 @@ export class TabListView extends AbstractEliminatoryListView {
         }
 
         if(super.containsEliminatory()) {
-            super.loadEliminatoryMeetings();
+            super.loadEliminatoryLevels();
         }
     }
     
@@ -61,6 +61,5 @@ export class TabListView extends AbstractEliminatoryListView {
 
         this.loadPlayoffs();
     }
-
 }
 

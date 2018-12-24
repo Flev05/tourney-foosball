@@ -64,8 +64,6 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
         this.matches = [...this.selectedMeeting.matches];
-
-
     }
 
     minus1(m: Match) {

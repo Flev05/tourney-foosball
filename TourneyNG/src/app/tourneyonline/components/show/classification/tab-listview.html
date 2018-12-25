@@ -41,7 +41,7 @@
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
-<p-tabView (onChange)="onChangePlayoff($event)">
+<p-tabView>
     <p-tabPanel header="Gironi" *ngIf="containsRound()">    
         <p-table [columns]="cols"
             [value]="roundRows"
@@ -106,13 +106,14 @@
         <div style="margin-top:30px">
             <p-message *ngIf="incompleteConfiguration" 
                 severity="error" 
-                text="Attenzione! Non ci sono ancora risultati inseriti!">
+                text="Attenzione! Non non è stato inserito ancora nessun risultato!">
             </p-message>
         </div>     
                             
-        <p-table [columns]="cols"
-            [value]="eliminatoryRows"
-            [responsive]="true"> 
+        <p-table *ngIf="!incompleteConfiguration"
+                [columns]="cols"
+                [value]="eliminatoryRows"
+                [responsive]="true"> 
 
             <ng-template pTemplate="header" let-columns>
                 <tr>

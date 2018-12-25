@@ -9,7 +9,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
             {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
 
-            {path: 'showcase',  loadChildren: './components/showcase/showcase.module#ShowCaseModule'},
+            // {path: 'showcase',  loadChildren: './components/showcase/showcase.module#ShowCaseModule'},
 
             // Admin Section
             {path: 'admintourney',      loadChildren: './components/admin/tourney/tourney.module#TourneyModule'},
@@ -24,7 +24,8 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
 
             // Presentation Section
-            {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
+            // {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
+            
             {path: 'round',     loadChildren: './components/show/round/round.module#RoundModule'},
             {path: 'calendar',  loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
             {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},

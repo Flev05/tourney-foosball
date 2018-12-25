@@ -26,7 +26,7 @@
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
 
-<p-tabView (onChange)="onChangeTab($event)">
+<p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
 
         <p-table [columns]="cols"

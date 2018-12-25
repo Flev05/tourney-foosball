@@ -27,7 +27,7 @@ export class MeetingDetailView extends AbstractDetailView {
     matches: Match[];
 
     alreadyPassed: boolean = false;
-    teamPassed: string | boolean;
+    teamPassedMessage: string;
 
     constructor(
         protected location: Location,
@@ -44,10 +44,18 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting = JSON.parse(this.selectedMeetingDb.json);
 
         this.alreadyPassed = false;
+
         if(this.selectedMeeting.team1.teamName == "" || this.selectedMeeting.team2.teamName == "") {
-            this.teamPassed = this.selectedMeeting.team1.teamName != "" ? 
+            let teamPassed = this.selectedMeeting.team1.teamName != "" ? 
                 this.selectedMeeting.team1.teamName : this.selectedMeeting.team2.teamName;
             this.alreadyPassed = true;
+
+            if(this.tourneyService.selectedEliminatoryLevel.isTopLevel) {
+                this.teamPassedMessage = "Attenzione! La Squadra: " + teamPassed + " passa automaticamente al turno successivo!";
+            } else {
+                this.teamPassedMessage = "Attenzione! Non sono ancora terminati gli incontri del livello precedente!";
+            }
+
             return;
         }
 

@@ -26,7 +26,6 @@ private static tourney =
       ,raceDuration:90
 
       ,matchWinnerScores:3
-      ,matchLoserScores:0
       ,matchBalanceScores:1
       
       ,maxMatchesPerMeeting:1

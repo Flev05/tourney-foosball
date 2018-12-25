@@ -208,9 +208,11 @@ export class LevelListView extends AbstractEliminatoryListView {
 
             let t1: Team = ascTeam[i];
             let t2: Team = descTeam[i];
-
+            
             let e: Eliminatory = topLevelEliminatories[i];
-
+            e.round.teams[0] = t1;
+            e.round.teams[1] = t2;
+            
             let m = e.round.meetings[0];
             m.team1 = t1;
             m.team2 = t2;

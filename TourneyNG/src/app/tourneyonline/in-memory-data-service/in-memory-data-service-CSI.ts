@@ -116,7 +116,6 @@ export class InMemoryDataServiceCSI  {
     ,raceDuration:90
 
     ,matchWinnerScores:1
-    ,matchLoserScores:0
     ,matchBalanceScores:0
 
     ,maxMatchesPerMeeting:9

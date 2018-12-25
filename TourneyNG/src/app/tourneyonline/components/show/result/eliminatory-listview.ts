@@ -22,6 +22,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     
     selectedMeetingRow: any;
     incompleteConfiguration: boolean;
+    incompleteMessage: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -47,6 +48,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
      */
     ngOnInit() {
         super.ngOnInit();
+
+        this.incompleteMessage = "Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!";
         this.incompleteConfiguration = true;
 
         super.loadEliminatoryLevels();
@@ -56,9 +59,25 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         
         if(this.isTopLevel) {
             if(!this.isStandalone) {
-                this.resolveRules();
+                this.resolveNotStadaloneRules();
+            } else {
+                for(let level=0; level<this.eliminatories.length; level++) {
+                    let e = this.eliminatories[level];
+                    this.updateNextLevel(e, level);
+                }
             }
-            this.initNextLevel();
+        } else {
+            this.incompleteConfiguration = true;
+            this.incompleteMessage = "Attenzione! Non è stato giocato alcun incontro del livello precedente!";
+            for(let e of this.tourneyService.selectedEliminatoryLevel.eliminatories) {
+                if(e.round.teams[0].teamName != "" || e.round.teams[1].teamName != "") {
+                    this.incompleteConfiguration = false;
+                    break;
+                }
+            }
+            if(this.incompleteConfiguration) {
+                return;
+            }
         }
 
         this.eliminatoryRows = [];
@@ -76,16 +95,12 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         super.processEliminationTree();
     }
 
-    initNextLevel(): void {
-        throw new Error("Method not implemented.");
-    }
-
     /**
      * Resolves the rules, not stand alone, defined in the Round and Playoff classifications.
      * For a given position > 0, verify the round and, if doesn't exist, verify the playoff.
      * One of them must contains a valued name, otherwise the configuration was not completed
      */
-    private resolveRules(): void {
+    private resolveNotStadaloneRules(): void {
         this.incompleteConfiguration = false;
 
         for(let level=0; level<this.eliminatories.length; level++) {
@@ -166,45 +181,42 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 continue;
             }
 
-            if(e.round.teams[0].teamName != "" && e.round.teams[1].teamName == "") {
-                const els = this.selectedTourney.eliminatoryLevels;
-                let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
-    
-                let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
-                let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+            this.updateNextLevel(e, level);
+        }
+    }
 
-                let nextEliminatoryIndex: number = Math.floor(level / 2);
-                let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+    /**
+     * Updates the lower level in function of the results found in received current level
+     * 
+     * @param e the current eliminatory object
+     * @param level the current level
+     */
+    private updateNextLevel(e: Eliminatory, level: number) {
+        if (e.round.teams[0].teamName != "" && e.round.teams[1].teamName == "") {
+            const els = this.selectedTourney.eliminatoryLevels;
+            let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
+            let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
+            let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+            let nextEliminatoryIndex: number = Math.floor(level / 2);
+            let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+            
+            nextEliminatory.round.teams[0] = e.round.teams[0];
+            
+            let m1 = nextEliminatory.round.meetings[0];
+            if (m1.team1.teamName == "") {
+                m1.team1 = e.round.teams[0];
+            } else {
+                m1.team2 = e.round.teams[0];
+            }
+            let mdb: MeetingDb = this.tourneyService.prepareMdb(m1, this.selectedTourney.id, 0, 0, nextEliminatory.id);
+            this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
 
-                nextEliminatory.round.teams[0] = e.round.teams[0];
-               
-                let m1 = nextEliminatory.round.meetings[0];
-                if(m1.team1.teamName == "") {
-                    m1.team1 = e.round.teams[0];
-                } else {
-                    m1.team2 = e.round.teams[0];
-                }
-                let mdb: MeetingDb = this.tourneyService.prepareMdb(m1
-                    , this.selectedTourney.id
-                    , 0
-                    , 0
-                    , nextEliminatory.id
-                );        
+            if (!el.isOneway) {
+                let m2 = nextEliminatory.round.meetings[1];
+                m2.team1 = m1.team2;
+                m2.team2 = m1.team1;
+                let mdb: MeetingDb = this.tourneyService.prepareMdb(m2, this.selectedTourney.id, 0, 0, nextEliminatory.id);
                 this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
-
-                if(!el.isOneway) {
-                    let m2 = nextEliminatory.round.meetings[1];
-                    m2.team1 = m1.team2;
-                    m2.team2 = m1.team1;
-
-                    let mdb: MeetingDb = this.tourneyService.prepareMdb(m2
-                        , this.selectedTourney.id
-                        , 0
-                        , 0
-                        , nextEliminatory.id
-                    );        
-                    this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
-                }
             }
         }
     }
@@ -213,11 +225,18 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         this.cols = [];
 
-        this.cols.push({ field: 'datetime',   header: 'A/R'});
+        this.cols.push({ field: 'rowNumber',  header: 'A/R'});
+        this.cols.push({ field: 'datetime',   header: 'Data'});
         this.cols.push({ field: 'teamName1',  header: 'Squadra 1'});
         this.cols.push({ field: 'teamName2',  header: 'Squadra 2'});
-        this.cols.push({ field: 'goals1',     header: 'Goal 1'});
-        this.cols.push({ field: 'goals2',     header: 'Goal 2'});
+
+        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
+            this.cols.push({ field: 'goals1',     header: 'Goal 1'});
+            this.cols.push({ field: 'goals2',     header: 'Goal 2'});
+        } else {
+            this.cols.push({ field: 'points1',    header: 'Punti 1'});
+            this.cols.push({ field: 'points2',    header: 'Punti 2'});
+        }
 
         let round: Round = e.round;
         let m: Meeting = round.meetings[meetingIndex];

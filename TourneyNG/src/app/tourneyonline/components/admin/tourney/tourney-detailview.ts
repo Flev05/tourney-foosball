@@ -3,14 +3,13 @@ import { Location } from '@angular/common';
 
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import { Message } from '../../../../components/common/api';
-
-import { Tourney } from '../../../domain/tourney';
-import { TourneyService } from '../../../service/tourneyservice';
-import { CountryService } from '../../../service/countryservice';
-import { Discipline } from '../../../domain/discipline';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType } from '../../../domain/enumerations';
+import { Message } from 'app/components/common/api';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { Discipline } from 'app/tourneyonline/domain/discipline';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -71,7 +70,6 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.address = "";
             this.selectedTourney.tourneyType = TourneyType.Score;
             this.selectedTourney.matchBalanceScores = 0;
-            this.selectedTourney.matchLoserScores = 0;
             this.selectedTourney.matchWinnerScores = 3;
             this.selectedTourney.access = AccessMode.PU;
             
@@ -134,7 +132,6 @@ export class TourneyDetailView extends AbstractDetailView {
             'pointsNeededToWin': new FormControl(this.selectedTourney.pointsNeededToWin),
             
             'matchWinnerScores': new FormControl(this.selectedTourney.matchWinnerScores),
-            'matchLoserScores': new FormControl(this.selectedTourney.matchLoserScores),
             'matchBalanceScores': new FormControl(this.selectedTourney.matchBalanceScores),
 
             'pointsGoldenGoalTieBreakWin': new FormControl(this.selectedTourney.pointsGoldenGoalTieBreakWin),
@@ -186,6 +183,11 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.raceDuration = this.tourneyFormGroup.get('raceDuration').value;
 
         this.selectedTourney.pointsNeededToWin = this.tourneyFormGroup.get('pointsNeededToWin').value;
+
+        this.selectedTourney.matchWinnerScores = this.tourneyFormGroup.get('matchWinnerScores').value;
+        this.selectedTourney.matchBalanceScores = this.tourneyFormGroup.get('matchBalanceScores').value;
+
+        
 
         this.selectedTourney.pointsGoldenGoalTieBreakWin = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakWin').value;
         this.selectedTourney.pointsGoldenGoalTieBreakDefeat = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakDefeat').value;

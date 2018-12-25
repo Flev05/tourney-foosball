@@ -33,7 +33,7 @@
     <div style="margin-top:30px">
         <p-message *ngIf="alreadyPassed" 
             severity="success" 
-            text="Attenzione! La Squadra: {{teamPassed}} passa automaticamente al turno successivo!">
+            text="{{teamPassedMessage}}">
         </p-message>
     </div>     
 

@@ -50,16 +50,5 @@ export class TabListView extends AbstractEliminatoryListView {
         
         this.eliminatoryRows = super.prepareEliminatoryRound(allRounds);
     }
-
-    onChangePlayoff(e) {
-        let index=e.index;
-        console.log("Entering onChangePlayoff(): tab=" + index);
-
-        if(index!=1) {
-            return;
-        }
-
-        this.loadPlayoffs();
-    }
 }
 

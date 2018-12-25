@@ -35,8 +35,8 @@
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     <div style="margin-top:30px">
         <p-message *ngIf="incompleteConfiguration" 
-            severity="error" 
-            text="Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!">
+            severity="success" 
+            text="{{incompleteMessage}}">
         </p-message>
     </div>     
                             
@@ -59,7 +59,7 @@
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
                 <td colspan="5">
-                    <span style="font-weight:bold; color:#5cb85c;">{{rowData.roundName}}</span>
+                    <span class="roundNames">{{rowData.roundName}}</span>
                 </td>
             </tr>      
 

@@ -19,7 +19,7 @@ export class ResultListView extends AbstractEliminatoryListView {
     static eliminatoryRedirect: string = 'result/lv/eliminatoryLv/dv';
 
     selectedMeetingRow: any;
-    indexTab: number;
+    activeIndex: number;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -31,7 +31,7 @@ export class ResultListView extends AbstractEliminatoryListView {
     }
 
     ngOnInit() {
-        // this.indexTab = this.tourneyService.selectedTabIndex;
+        this.activeIndex = this.tourneyService.selectedTabIndex;
 
         super.ngOnInit();
 
@@ -54,7 +54,8 @@ export class ResultListView extends AbstractEliminatoryListView {
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.indexTab = index;
+        this.activeIndex = index;
+        this.tourneyService.selectedTabIndex = this.activeIndex;
 
         if(index==1 && super.containsPlayoff()) {
         }
@@ -196,7 +197,7 @@ export class ResultListView extends AbstractEliminatoryListView {
       
         this.selectedEliminatoryLevel = this.selectedRow.e;
         this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
-
+        
         for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {
             let el = this.selectedTourney.eliminatoryLevels[l];
             if(el.id == this.selectedEliminatoryLevel.id) {
@@ -228,7 +229,7 @@ export class ResultListView extends AbstractEliminatoryListView {
     }
     
     private gotoMeetingDetailView() {
-        this.tourneyService.selectedTabIndex = this.indexTab;
+        this.tourneyService.selectedTabIndex = this.activeIndex;
         this.router.navigate([MeetingDetailView.meetingDvRedirect]);
     }
 

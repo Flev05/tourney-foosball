@@ -141,6 +141,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds);
     }
+    
     protected prepareEliminatoryRound(rounds: Round[]): any[] {
 
         for(let round of rounds) {
@@ -336,7 +337,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
         }
     }
-    
 
     /**
         <th>N°</th>
@@ -409,6 +409,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         return rows;
     }
+
     private preparePlayoffClassification(playoffs: Playoff[]): any[] {
 
         let playoffRounds: Round[] = this.makePlayoffRounds(playoffs);
@@ -531,19 +532,20 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     protected onClickManageMeeting(isOneway: boolean) {
 
-        for(let e of this.eliminatories) {
-            if(isOneway) {
-                if(e.round.meetings.length == 2) {
-                    this.tourneyService.deleteMeeting(e.round.meetings[1]);
-                    e.round.meetings.splice(1, 1);
-                }
-            } else {
-                let m = this.createMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1, null, null, Direction.RoundTrip);
-                e.round.meetings.push(m);
+        // for(let e of this.eliminatories) {
+        //     if(isOneway) {
+        //         if(e.round.meetings.length == 2) {
+        //             this.tourneyService.deleteMeeting(e.round.meetings[1]);
+        //             e.round.meetings.splice(1, 1);
+        //         }
+        //     } else {
+        //         let m = this.createMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1, null, null, Direction.RoundTrip);
+        //         e.round.meetings[1] = m;
 
-                this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
-            }
-        }
+        //         this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+        //     }
+        // }
+        
         this.processEliminationTree();
 
         this.prepareGui();
@@ -554,6 +556,24 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         return dummy;
     }
 
+    protected prepareResultColums(): any[] {
+        let cols = [];
+        cols.push({ field: 'rowNumber', header: 'A/R' });
+        cols.push({ field: 'datetime', header: 'Data' });
+        cols.push({ field: 'teamName1', header: 'Squadra 1' });
+        cols.push({ field: 'teamName2', header: 'Squadra 2' });
+        if (this.selectedTourney.maxMatchesPerMeeting == 1) {
+            cols.push({ field: 'goals1', header: 'Goal 1' });
+            cols.push({ field: 'goals2', header: 'Goal 2' });
+        }
+        else {
+            cols.push({ field: 'points1', header: 'Punti 1' });
+            cols.push({ field: 'points2', header: 'Punti 2' });
+        }
+
+        return cols;
+    }
+    
      /**
         <th>N°</th>
         <th *ngIf="isTopLevel">Squadra 1</th>

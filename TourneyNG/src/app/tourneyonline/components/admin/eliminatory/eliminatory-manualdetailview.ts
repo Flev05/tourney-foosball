@@ -208,6 +208,9 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+            if(m2.datetime < m1.datetime) {
+                m2.datetime = m1.datetime;
+            }
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 

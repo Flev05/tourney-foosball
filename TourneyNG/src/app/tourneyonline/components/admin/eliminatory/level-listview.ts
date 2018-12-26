@@ -187,7 +187,6 @@ export class LevelListView extends AbstractEliminatoryListView {
         }
 
         round.teams = this.tourneyService.selectedTeams;
-
         let tmpTeams: Array<Team> = this.sortAndPad(round.teams);
 
         let ascTeam: Array<Team> = new Array<Team>();
@@ -246,13 +245,16 @@ export class LevelListView extends AbstractEliminatoryListView {
 
         tmpTeams = [...teams];
 
-        tmpTeams.sort((t1, t2) =>{
-            let rand = Math.random();
-            if(rand < 0.5) {
-                return 1;
-            }
-            return -1;
-        });
+        if( this.tourneyService.regenerateStandaloneTopLevel ) {
+            tmpTeams.sort((t1, t2) =>{
+                let rand = Math.random();
+                if(rand < 0.5) {
+                    return 1;
+                }
+                return -1;
+            });
+        }
+        this.tourneyService.regenerateStandaloneTopLevel = false;
 
         for(let i=tmpTeams.length; i < power2; i++ ) {
             let t: Team = this.newDummyTeam();
@@ -424,6 +426,7 @@ export class LevelListView extends AbstractEliminatoryListView {
         this.isManual = true;
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+        this.tourneyService.regenerateStandaloneTopLevel = true;
     }
 
     onAutoClick() {
@@ -437,6 +440,7 @@ export class LevelListView extends AbstractEliminatoryListView {
             this.isManual = false;
 
             this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+            this.tourneyService.regenerateStandaloneTopLevel = true;
         }
     }
  
@@ -446,6 +450,7 @@ export class LevelListView extends AbstractEliminatoryListView {
         let N: number = this.selectedTeamsNumCombobox.value;
         this.prepareEliminationTree(N);
 
+        this.tourneyService.regenerateStandaloneTopLevel = true;
         if (this.isStandalone) {
             this.processStandalone();
         }

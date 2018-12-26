@@ -63,7 +63,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             } else {
                 for(let level=0; level<this.eliminatories.length; level++) {
                     let e = this.eliminatories[level];
-                    this.updateNextLevel(e, level);
+                    this.updateDefaultNextLevel(e, level);
                 }
             }
         } else {
@@ -181,62 +181,43 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 continue;
             }
 
-            this.updateNextLevel(e, level);
+            this.updateDefaultNextLevel(e, level);
         }
     }
 
     /**
-     * Updates the lower level in function of the results found in received current level
+     * Updates the lower level in function of the default position found in received current level
      * 
      * @param e the current eliminatory object
      * @param level the current level
      */
-    private updateNextLevel(e: Eliminatory, level: number) {
+    private updateDefaultNextLevel(e: Eliminatory, level: number) {
         if (e.round.teams[0].teamName != "" && e.round.teams[1].teamName == "") {
             const els = this.selectedTourney.eliminatoryLevels;
-            let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
+
             let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
             let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
             let nextEliminatoryIndex: number = Math.floor(level / 2);
             let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
             
-            nextEliminatory.round.teams[0] = e.round.teams[0];
-            
-            let m1 = nextEliminatory.round.meetings[0];
-            if (m1.team1.teamName == "") {
-                m1.team1 = e.round.teams[0];
-            } else {
-                m1.team2 = e.round.teams[0];
-            }
-            let mdb: MeetingDb = this.tourneyService.prepareMdb(m1, this.selectedTourney.id, 0, 0, nextEliminatory.id);
-            this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+            let nr = nextEliminatory.round;
+            let nm = nr.meetings[0];
 
-            if (!el.isOneway) {
-                let m2 = nextEliminatory.round.meetings[1];
-                m2.team1 = m1.team2;
-                m2.team2 = m1.team1;
-                let mdb: MeetingDb = this.tourneyService.prepareMdb(m2, this.selectedTourney.id, 0, 0, nextEliminatory.id);
-                this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+            if (level % 2 == 0) {
+                nm.team1 = e.round.teams[0];
+                nr.teams[0] = e.round.teams[0];
+            } else {
+                nm.team2 = e.round.teams[0];
+                nr.teams[1] = e.round.teams[0];
             }
+            let mdb: MeetingDb = this.tourneyService.prepareMdb(nm, this.selectedTourney.id, 0, 0, nextEliminatory.id);
+            this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
         }
     }
 
     private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number, classificationMap: Map<string, Classification> ): any {
 
-        this.cols = [];
-
-        this.cols.push({ field: 'rowNumber',  header: 'A/R'});
-        this.cols.push({ field: 'datetime',   header: 'Data'});
-        this.cols.push({ field: 'teamName1',  header: 'Squadra 1'});
-        this.cols.push({ field: 'teamName2',  header: 'Squadra 2'});
-
-        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
-            this.cols.push({ field: 'goals1',     header: 'Goal 1'});
-            this.cols.push({ field: 'goals2',     header: 'Goal 2'});
-        } else {
-            this.cols.push({ field: 'points1',    header: 'Punti 1'});
-            this.cols.push({ field: 'points2',    header: 'Punti 2'});
-        }
+        this.cols = this.prepareResultColums();
 
         let round: Round = e.round;
         let m: Meeting = round.meetings[meetingIndex];

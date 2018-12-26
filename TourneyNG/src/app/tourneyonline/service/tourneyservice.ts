@@ -67,6 +67,7 @@ export class TourneyService {
     newPlayoffConfig : boolean = false;
 
     firstTime : boolean = true;
+    regenerateStandaloneTopLevel: boolean = true;
     
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;

@@ -9,8 +9,6 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
             {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
 
-            // {path: 'showcase',  loadChildren: './components/showcase/showcase.module#ShowCaseModule'},
-
             // Admin Section
             {path: 'admintourney',      loadChildren: './components/admin/tourney/tourney.module#TourneyModule'},
             {path: 'clients',           loadChildren: './components/admin/client/client.module#ClientModule'},
@@ -24,16 +22,11 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
 
             // Presentation Section
-            // {path: 'tourney',   loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
-            
-            {path: 'round',     loadChildren: './components/show/round/round.module#RoundModule'},
             {path: 'calendar',  loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
             {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},
             {path: 'matrix',     loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
             {path: 'classification',    loadChildren: './components/show/classification/classification.module#ClassificationModule'},
             {path: 'playoff',           loadChildren: './components/show/playoff/playoff.module#PlayoffModule'},
-            {path: 'elimination',       loadChildren: './components/show/elimination/elimination.module#EliminationModule'},
-            {path: 'team',      loadChildren: './components/show/team/team.module#TeamModule'},
             {path: 'match',     loadChildren: './components/show/match/match.module#MatchModule'},
             {path: 'player',    loadChildren: './components/show/player/player.module#PlayerModule'},
 

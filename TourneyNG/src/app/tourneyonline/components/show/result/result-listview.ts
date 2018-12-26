@@ -108,12 +108,7 @@ export class ResultListView extends AbstractEliminatoryListView {
      */
     private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
         
-        this.cols = [
-            { field: 'teamName1',   header: 'Squadra 1'},
-            { field: 'goals1',      header: 'Goal 1'},
-            { field: 'goals2',      header: 'Goal 2'},
-            { field: 'teamName2',   header: 'Squadra 2'},
-        ];
+        this.cols = this.prepareResultColums();
 
         let rowNumber : number=0;
 
@@ -122,6 +117,7 @@ export class ResultListView extends AbstractEliminatoryListView {
 
             rowNumber++;
             rows[row].id = m.id;
+            rows[row].datetime = this.dfp.transform(m.datetime);
             rows[row].rowNumber = rowNumber;
             rows[row].roundId = round.id;
             rows[row].eliminatoryId = 0;    

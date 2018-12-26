@@ -171,83 +171,86 @@ export class MeetingDetailView extends AbstractDetailView {
      * and all remain as is.
      */
     private updateNextLevel(): void {
-        if(this.tourneyService.selectedEliminatoryLevelIndex >= 0 && this.tourneyService.selectedEliminatoryIndex >= 0) {
+        if(this.tourneyService.selectedEliminatoryLevelIndex < 0 || this.tourneyService.selectedEliminatoryIndex < 0) {
+            return;
+        }
 
-            const els = this.selectedTourney.eliminatoryLevels;
-            let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
-            let  l: Eliminatory = el.eliminatories[this.tourneyService.selectedEliminatoryIndex];
+        const els = this.selectedTourney.eliminatoryLevels;
+        if(this.tourneyService.selectedEliminatoryLevelIndex >= els.length-2) {
+            return;
+        }
 
-            if(this.tourneyService.selectedEliminatoryLevelIndex < els.length-1) {
-                
-                let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
-                let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+        let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
+        let  l: Eliminatory = el.eliminatories[this.tourneyService.selectedEliminatoryIndex];
 
-                let nextEliminatoryIndex: number = Math.floor(this.tourneyService.selectedEliminatoryIndex / 2);
-                let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+        let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
+        let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
 
-                for(let i=0; i<l.round.meetings.length; i++) {
-                    let m = l.round.meetings[i];
-                    if(m.id == this.selectedMeeting.id) {
-                        l.round.meetings[i] = this.selectedMeeting;
-                    }
-                }
-        
-                const onewayMeeting:    Meeting = l.round.meetings[0];
-                const roundtripMeeting: Meeting = l.round.meetings[1];
+        let nextEliminatoryIndex: number = Math.floor(this.tourneyService.selectedEliminatoryIndex / 2);
+        let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
 
-                let points1 = onewayMeeting.points1;
-                let points2 = onewayMeeting.points2;
-                if(!el.isOneway) {
-                    points1 += roundtripMeeting.points1;
-                    points2 += roundtripMeeting.points2;
-                }
-                
-                let nextMeeing: Meeting = nextEliminatory.round.meetings[0];
-                if(points1 > points2) {
-                    nextEliminatory.round.teams[0] = onewayMeeting.team1;
-
-                    if(nextMeeing.team1.teamName == "" && nextMeeing.team2.teamName == "") {
-                        let randomIndex = Math.random();                        
-                        if(randomIndex < 0.5) {
-                            nextMeeing.team1 = onewayMeeting.team1;
-                        } else {
-                            nextMeeing.team2 = onewayMeeting.team1;
-                        }
-                    } else {
-                        if(nextMeeing.team1.teamName == "") {
-                            nextMeeing.team1 = onewayMeeting.team1;
-                        } else {
-                            nextMeeing.team2 = onewayMeeting.team1;
-                        }
-                    }
-                }
-
-                if(points2 > points1) {
-                    nextEliminatory.round.teams[1] = onewayMeeting.team2;
-                    if(nextMeeing.team1.teamName == "" && nextMeeing.team2.teamName == "") {
-                        let randomIndex = Math.random();                        
-                        if(randomIndex < 0.5) {
-                            nextMeeing.team1 = onewayMeeting.team2;
-                        } else {
-                            nextMeeing.team2 = onewayMeeting.team2;
-                        }
-                    } else {
-                        if(nextMeeing.team1.teamName == "") {
-                            nextMeeing.team1 = onewayMeeting.team2;
-                        } else {
-                            nextMeeing.team2 = onewayMeeting.team2;
-                        }
-                    }
-                }
-                let mdb: MeetingDb = this.tourneyService.prepareMdb(nextMeeing
-                    , this.selectedTourney.id
-                    , 0
-                    , 0
-                    , nextEliminatory.id
-                );        
-                this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+        for(let i=0; i<l.round.meetings.length; i++) {
+            let m = l.round.meetings[i];
+            if(m.id == this.selectedMeeting.id) {
+                l.round.meetings[i] = this.selectedMeeting;
             }
         }
+
+        const onewayLevelMeeting:    Meeting = l.round.meetings[0];
+        const roundtripLevelMeeting: Meeting = l.round.meetings[1];
+
+        let points1 = onewayLevelMeeting.points1 + roundtripLevelMeeting.points2;
+        let points2 = onewayLevelMeeting.points2 + roundtripLevelMeeting.points1;
+        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
+            points1 = onewayLevelMeeting.matches[0].score1 + roundtripLevelMeeting.matches[0].score2;
+            points2 = onewayLevelMeeting.matches[0].score2 + roundtripLevelMeeting.matches[0].score1;
+        }
+        if(points1 == points2) {
+            let offHome1: number = 0;
+            let offHome2: number = 0;
+            for(let i=0; i<onewayLevelMeeting.matches.length; i++) {
+                let ma = onewayLevelMeeting.matches[i];
+                offHome2 += ma.score2;
+            }
+            for(let i=0; i<roundtripLevelMeeting.matches.length; i++) {
+                let ma = roundtripLevelMeeting.matches[i];
+                offHome1 += ma.score2;
+            }
+            if(offHome1 > offHome2) {
+                points1++;
+            }
+            if(offHome2 > offHome1) {
+                points2++;
+            }
+        }
+ 
+        let nextMeeting: Meeting = nextEliminatory.round.meetings[0];
+        if(points1 > points2) {
+            if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
+                nextEliminatory.round.teams[0] = onewayLevelMeeting.team1;
+                nextMeeting.team1 = onewayLevelMeeting.team1;
+            } else {
+                nextMeeting.team2 = onewayLevelMeeting.team1;
+                nextEliminatory.round.teams[1] = onewayLevelMeeting.team1;
+            }
+        }
+
+        if(points2 > points1) {
+            if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
+                nextEliminatory.round.teams[0] = onewayLevelMeeting.team2;
+                nextMeeting.team1 = onewayLevelMeeting.team2;
+            } else {
+                nextEliminatory.round.teams[1] = onewayLevelMeeting.team2;
+                nextMeeting.team2 = onewayLevelMeeting.team2;
+            }
+        }
+        let mdb: MeetingDb = this.tourneyService.prepareMdb(nextMeeting
+            , this.selectedTourney.id
+            , 0
+            , 0
+            , nextEliminatory.id
+        );        
+        this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onError(n:any) {

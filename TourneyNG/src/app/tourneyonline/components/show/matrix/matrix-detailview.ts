@@ -80,95 +80,100 @@ export class MatrixDetailView extends AbstractDetailView {
             }        
         }
 
-        this.cols = [];
-        let col = { field: 'teamName', header: 'Squadre', style: 'style0' };
-        this.cols.push(col);
-        col = { field: 'littleName', header: '+', style: 'style1' };
-        this.cols.push(col);
-
-        var letter: String = "A";
-        for(let i=0; i<this.selectedRound.classification.length; i++) {
-            let t = this.selectedRound.classification[i];
-            let col = {field: 'points', header: letter, style: 'style0'};
-            this.cols.push(col);
-            letter = this.getNextLetter(letter);
-        }
-        col = { field: 'total', header: 'Tot', style: 'style1' };
-        this.cols.push(col);
+        this.cols = this.prepareCols(this.cols);
         
         // Create matrix
         if(this.matrix == null ) {
-            this.matrix = {
-                  id:this.tourneyService.getSequenceNumber()
-                , rows:[]
-            };
-
-            var letter: String = "A";
-            for(let i=0; i<this.selectedRound.classification.length; i++ ) {
-                
-                let cells = new Array<Cell>();
-                
-                let row = {
-                      id: i
-                    , cells: cells
-                }
-                this.matrix.rows.push(row);
-                
-                let c1 = this.selectedRound.classification[i];
-                let c : Cell = this.newCell(null, null, c1.team.teamName, 'style0', false, false, 0, 0);
-                cells.push(c);
-
-                c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0);
-                cells.push(c);
-                letter = this.getNextLetter(letter);                            
-
-                for(let j=0; j<this.selectedRound.classification.length; j++ ) {
-                    let c2 = this.selectedRound.classification[j];
-
-                    if(i==j) { 
-                        c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0);
-                      } else {
-                        c = this.newCell(c1.team, c2.team, "", 'style0', true, false, i, j);
-                    }    
-                    cells.push(c);
-                }          
-
-                c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0);     
-                cells.push(c);
-            }            
+            this.prepareMatrix();            
         }
+    }
+
+    private prepareCols([]): any[]  {
+        let cols = [];
+        let col = { field: 'teamName', header: 'Squadre', style: 'style0' };
+        cols.push(col);
+        col = { field: 'littleName', header: '+', style: 'style1' };
+        cols.push(col);
+
+        var letter: String = "A";
+        for (let i = 0; i < this.selectedRound.classification.length; i++) {
+            let t = this.selectedRound.classification[i];
+            let col = { field: 'points', header: letter, style: 'style0' };
+            cols.push(col);
+            letter = this.getNextLetter(letter);
+        }
+        col = { field: 'total', header: 'Tot', style: 'style1' };
+        cols.push(col);
+        
+        return cols;
+    }
+
+    private prepareMatrix() {
+        this.matrix = {
+            id: this.tourneyService.getSequenceNumber(),
+            rows: []
+        };
+
+        let letter: String = "A";
+        for (let i = 0; i < this.selectedRound.classification.length; i++) {
+            let cells = new Array<Cell>();
+            let row = {
+                id: i,
+                cells: cells
+            };
+            this.matrix.rows.push(row);
+            let c1 = this.selectedRound.classification[i];
+            let c: Cell = this.newCell(null, null, c1.team.teamName, 'style0', false, false, 0, 0);
+            cells.push(c);
+            c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0);
+            cells.push(c);
+            letter = this.getNextLetter(letter);
+            for (let j = 0; j < this.selectedRound.classification.length; j++) {
+                let c2 = this.selectedRound.classification[j];
+                if (i == j) {
+                    c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0);
+                }
+                else {
+                    c = this.newCell(c1.team, c2.team, "", 'style0', true, false, i, j);
+                }
+                cells.push(c);
+            }
+            c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0);
+            cells.push(c);
+        }
+         
     }
 
     onPointChange(cb: CellCombobox) {
         console.log( cb );
 
-        let r = cb.row;
-        let c = cb.col;
+        this.alignSimmetricCell(cb);
 
-        // this.alignSimmetricCell(cb, c, r);
+        this.save();
         // this.router.navigate([MatrixDetailView.matrixDvRedirect]);
     }
 
-    private alignSimmetricCell(cb: CellCombobox, i: number, j: number){
+    private alignSimmetricCell(cb: CellCombobox){
         
-        let r = cb.row;
-        let c = cb.col;
+        let c = cb.row + 2;
+        let r = cb.col;
 
         if(cb.value == this.selectedTourney.matchWinnerScores) {
-            this.matrix.rows[c].cells[r].points.value = 0;
-            this.matrix.rows[c].cells[r].points.label = "0";
+            this.matrix.rows[r].cells[c].points.value = 0;
+            this.matrix.rows[r].cells[c].points.label = "0";
         }
         if(cb.value == 0) {
-            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.matchWinnerScores;
-            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.matchWinnerScores;
+            this.matrix.rows[r].cells[c].points.value = this.selectedTourney.matchWinnerScores;
+            this.matrix.rows[r].cells[c].points.label = "" + this.selectedTourney.matchWinnerScores;
         }
 
         if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakWin) {
-            this.matrix.rows[c].cells[r].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
-            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+            this.matrix.rows[r].cells[c].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+            this.matrix.rows[r].cells[c].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
         }
         if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakDefeat) {
-            this.matrix.rows[c].cells[r].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
+            this.matrix.rows[r].cells[c].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
+            this.matrix.rows[r].cells[c].points.value = this.selectedTourney.pointsGoldenGoalTieBreakWin;
         }
     }
     
@@ -222,7 +227,7 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.selectedRound.matrix = this.matrix;
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n));
     }
 
     private updateMeeting(c: Cell): any {

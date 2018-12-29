@@ -36,58 +36,58 @@
             text="{{teamPassedMessage}}">
         </p-message>
     </div>     
+</div>
 
-    <p-table *ngIf="!alreadyPassed" [value]="matches">
-        <ng-template pTemplate="colgroup">
-            <colgroup>
-                <col style="width: 20mm;">
-                <col style="width: 100%;">
-            </colgroup>
-        </ng-template>
+<p-table *ngIf="!alreadyPassed" [value]="matches">
+    <ng-template pTemplate="colgroup">
+        <colgroup>
+            <col style="width: 20mm;">
+            <col style="width: 100%;">
+        </colgroup>
+    </ng-template>
 
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Partita</th>
-                <th>{{selectedMeeting.team1.teamName}} - {{selectedMeeting.team2.teamName}}</th>
-            </tr>
-        </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Partita</th>
+            <th>{{selectedMeeting.team1.teamName}} - {{selectedMeeting.team2.teamName}}</th>
+        </tr>
+    </ng-template>
 
-        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-            <tr>
-                <td>{{rowIndex + 1}}</td>
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+        <tr>
+            <td>{{rowIndex + 1}}</td>
 
-                <td>
-                    <table>
-                        <tr>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
-                            </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
-                            </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa-plus" (click)="plus1(rowData)"></button>
-                            </td>            
-                        </tr>
-                        <tr>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa-minus" (click)="minus2(rowData)"></button>
-                            </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
-                            </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa-plus" (click)="plus2(rowData)"></button>
-                            </td>            
-                        </tr>
-                    </table>
-                </td>
+            <td>
+                <table>
+                    <tr>
+                        <td style="width: 10mm; text-align: center;">
+                            <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
+                        </td>
+                        <td style="width: 10mm; text-align: center;">
+                            <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
+                        </td>
+                        <td style="width: 10mm; text-align: center;">
+                            <button pButton type="button" icon="fa fa-plus" (click)="plus1(rowData)"></button>
+                        </td>            
+                    </tr>
+                    <tr>
+                        <td style="width: 10mm; text-align: center;">
+                            <button pButton type="button" icon="fa fa-minus" (click)="minus2(rowData)"></button>
+                        </td>
+                        <td style="width: 10mm; text-align: center;">
+                            <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
+                        </td>
+                        <td style="width: 10mm; text-align: center;">
+                            <button pButton type="button" icon="fa fa-plus" (click)="plus2(rowData)"></button>
+                        </td>            
+                    </tr>
+                </table>
+            </td>
 
-            </tr>
-        </ng-template>        
-    </p-table>
+        </tr>
+    </ng-template>        
+</p-table>
 
-    <div *ngIf="!alreadyPassed" style="text-align:left">
-        <button class="ui-button-success" type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
-    </div>
+<div *ngIf="!alreadyPassed" style="text-align:left">
+    <button class="ui-button-success" type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
 </div>

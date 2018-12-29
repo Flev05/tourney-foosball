@@ -9,7 +9,6 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractListView } from '../../common/abstract-listview';
 
-
 @Component({
     templateUrl: './round-listview.html'
 })

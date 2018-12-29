@@ -53,7 +53,7 @@ export class MatrixDetailView extends AbstractDetailView {
     roundName: string;
 
     cols: any[];
-    matrix: Matrix = null;
+    matrix: Matrix;
 
     constructor(
         protected location: Location,
@@ -96,8 +96,7 @@ export class MatrixDetailView extends AbstractDetailView {
         cols.push(col);
 
         var letter: String = "A";
-        for (let i = 0; i < this.selectedRound.classification.length; i++) {
-            let t = this.selectedRound.classification[i];
+        for (let i = 0; i < this.selectedRound.teams.length; i++) {
             let col = { field: 'points', header: letter, style: 'style0' };
             cols.push(col);
             letter = this.getNextLetter(letter);
@@ -115,33 +114,32 @@ export class MatrixDetailView extends AbstractDetailView {
         };
 
         let letter: String = "A";
-        for (let i = 0; i < this.selectedRound.classification.length; i++) {
+        for (let i = 0; i < this.selectedRound.teams.length; i++) {
             let cells = new Array<Cell>();
             let row = {
                 id: i,
                 cells: cells
             };
             this.matrix.rows.push(row);
-            let c1 = this.selectedRound.classification[i];
-            let c: Cell = this.newCell(null, null, c1.team.teamName, 'style0', false, false, 0, 0);
+            let c1 = this.selectedRound.teams[i];
+            let c: Cell = this.newCell(null, null, c1.teamName, 'style0', false, false, 0, 0);
             cells.push(c);
             c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0);
             cells.push(c);
             letter = this.getNextLetter(letter);
-            for (let j = 0; j < this.selectedRound.classification.length; j++) {
-                let c2 = this.selectedRound.classification[j];
+            for (let j = 0; j < this.selectedRound.teams.length; j++) {
+                let c2 = this.selectedRound.teams[j];
                 if (i == j) {
                     c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0);
                 }
                 else {
-                    c = this.newCell(c1.team, c2.team, "", 'style0', true, false, i, j);
+                    c = this.newCell(c1, c2, "", 'style0', true, false, i, j);
                 }
                 cells.push(c);
             }
             c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0);
             cells.push(c);
-        }
-         
+        }         
     }
 
     onPointChange(cb: CellCombobox) {
@@ -150,7 +148,6 @@ export class MatrixDetailView extends AbstractDetailView {
         this.alignSimmetricCell(cb);
 
         this.save();
-        // this.router.navigate([MatrixDetailView.matrixDvRedirect]);
     }
 
     private alignSimmetricCell(cb: CellCombobox){
@@ -231,8 +228,6 @@ export class MatrixDetailView extends AbstractDetailView {
     }
 
     private updateMeeting(c: Cell): any {
-        
-
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == c.team1Id) {
                 m.points1 = c.points.value;

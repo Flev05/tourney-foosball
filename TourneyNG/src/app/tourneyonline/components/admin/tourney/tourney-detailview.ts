@@ -97,7 +97,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
             this.selectedTourney.isOnewayRound=true ;
             this.selectedTourney.isOnewayPlayoff=true;
-    
         } else {
             this.tourneyDate = new Date(this.selectedTourney.datetime);
         }

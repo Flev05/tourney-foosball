@@ -57,6 +57,4 @@ export interface Tourney {
 
     teams?: Team[];
     players?: Player[];
-
-
 }

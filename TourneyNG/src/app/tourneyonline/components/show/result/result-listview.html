@@ -25,6 +25,7 @@
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
+</div>
 
 <p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
@@ -47,7 +48,7 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="4">
+                    <td colspan="6">
                         <span class="roundNames">{{rowData.roundName}}</span>
                     </td>
                 </tr>      
@@ -80,7 +81,7 @@
             
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="4">
+                    <td colspan="6">
                         <span class="roundNames">{{rowData.roundName}}</span>
                     </td>
                 </tr>      
@@ -131,5 +132,4 @@
 
     </p-tabPanel>
 </p-tabView>        
-</div>
     

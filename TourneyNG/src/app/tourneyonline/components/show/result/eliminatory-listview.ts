@@ -225,7 +225,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         let row: any = {m};
 
         row.meetingIndex = meetingIndex;
-        row.datetime = this.dfp.transform(m.datetime);
+        row.dateAndTime = this.dfp.transform(m.datetime);
         row.id = m.id;
         row.round = round;
         row.rowNumber = meetingIndex == 0 ? "A" : "R";

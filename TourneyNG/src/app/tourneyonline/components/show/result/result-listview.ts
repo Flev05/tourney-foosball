@@ -117,7 +117,7 @@ export class ResultListView extends AbstractEliminatoryListView {
 
             rowNumber++;
             rows[row].id = m.id;
-            rows[row].datetime = this.dfp.transform(m.datetime);
+            rows[row].dateAndTime = this.dfp.transform(m.datetime);
             rows[row].rowNumber = rowNumber;
             rows[row].roundId = round.id;
             rows[row].eliminatoryId = 0;    

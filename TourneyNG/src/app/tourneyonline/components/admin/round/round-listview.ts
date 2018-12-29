@@ -58,6 +58,13 @@ export class RoundListView extends AbstractListView {
         this.tourneyService.selectedRound = this.selectedRound;
     }
 
+    add() {
+
+        this.tourneyService.newRound = true;
+        this.tourneyService.selectedIndex = 0;
+        this.router.navigate([RoundListView.redirect]);
+    }
+
     onError(n:any) {
         let msgerr : string = 'Meeting reload failed';
         console.log(msgerr);

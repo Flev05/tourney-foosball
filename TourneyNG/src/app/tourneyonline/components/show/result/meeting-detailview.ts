@@ -162,6 +162,7 @@ export class MeetingDetailView extends AbstractDetailView {
         this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
 
         this.updateNextLevel();
+
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
     }
 

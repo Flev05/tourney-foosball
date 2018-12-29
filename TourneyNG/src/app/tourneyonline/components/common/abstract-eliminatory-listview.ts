@@ -559,7 +559,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected prepareResultColums(): any[] {
         let cols = [];
         cols.push({ field: 'rowNumber', header: 'A/R' });
-        cols.push({ field: 'datetime', header: 'Data' });
+        cols.push({ field: 'dateAndTime', header: 'Data' });
         cols.push({ field: 'teamName1', header: 'Squadra 1' });
         cols.push({ field: 'teamName2', header: 'Squadra 2' });
         if (this.selectedTourney.maxMatchesPerMeeting == 1) {

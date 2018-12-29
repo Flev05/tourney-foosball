@@ -49,15 +49,18 @@ export class RoundDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
-        this.selectedRound = this.tourneyService.selectedRound;
-
         if(this.tourneyService.newRound) {
-            this.selectedRound.id = this.tourneyService.getSequenceNumber(); 
-            this.selectedRound.teams = [];
-            this.selectedRound.meetings = [];
-            this.selectedRound.classification = [];
-            this.selectedRound.type = RoundType.R;
+            this.selectedRound = { id: this.tourneyService.getSequenceNumber(),
+                name: "",
+                teams: [],
+                meetings: [],
+                classification: [],
+                type: RoundType.R,
+            };
+            this.tourneyService.selectedRound = this.selectedRound;
         }
+
+        this.selectedRound = this.tourneyService.selectedRound;
 
         this.targetTeams = [];
         for(let t of this.selectedRound.teams) {

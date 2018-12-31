@@ -158,7 +158,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         let r1: Combobox  = this.eliminatoryFormGroup.get('round1').value;
         let po1: Combobox = this.eliminatoryFormGroup.get('playoff1').value;
         this.isDoubleSelection = false;
-        if(r1.value > 0 && po1.value > 0) {
+        if(this.isPlayoff && r1.value > 0 && po1.value > 0) {
             this.isDoubleSelection = true;
             return;
         }
@@ -178,7 +178,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         let po2: Combobox = this.eliminatoryFormGroup.get('playoff2').value;
        
         this.isDoubleSelection = false;
-        if(r2.value > 0 && po2.value > 0) {
+        if(this.isPlayoff && r2.value > 0 && po2.value > 0) {
             this.isDoubleSelection = true;
             return;
         }

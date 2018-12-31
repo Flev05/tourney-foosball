@@ -66,18 +66,12 @@
 
             <div *ngIf="isTopLevel && !isStandalone">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
-                        <label for="team1">Regola 1</label>
-                    </div>
                     <div class="ui-grid-col-4">
                         {{selectedEliminatory.rule1.fromRound.position.label}} - {{selectedEliminatory.rule1.fromRound.round.label}}
                     </div>
                 </div>
                 Vs         
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
-                        <label for="team2">Regola 2</label>
-                    </div>
                     <div class="ui-grid-col-4">
                         {{selectedEliminatory.rule2.fromRound.position.label}} - {{selectedEliminatory.rule2.fromRound.round.label}}
                     </div>

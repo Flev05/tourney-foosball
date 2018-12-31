@@ -232,31 +232,31 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
 
             if (c1.points > c2.points) {
-                return 1;
+                return -1;
             }
             if (c1.points < c2.points) {
-                return -1;
+                return 1;
             }
         
             if( c1.goalsDiff > c2.goalsDiff ) {
-                return 1;
+                return -1;
             }
             if( c1.goalsDiff < c2.goalsDiff ) {
-                return -1;
+                return 1;
             }
 
             if( c1.goalsDone > c2.goalsDone ) {
-                return 1;
+                return -1;
             }
             if( c1.goalsDone < c2.goalsDone ) {
-                return -1;
+                return 1;
             }
 
             if( c1.goalsConceded < c2.goalsConceded ) {
-                return 1;
+                return -1;
             }
             if( c1.goalsConceded > c2.goalsConceded ) {
-                return -1;
+                return 1;
             }
 
             return 0;
@@ -532,20 +532,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     protected onClickManageMeeting(isOneway: boolean) {
 
-        // for(let e of this.eliminatories) {
-        //     if(isOneway) {
-        //         if(e.round.meetings.length == 2) {
-        //             this.tourneyService.deleteMeeting(e.round.meetings[1]);
-        //             e.round.meetings.splice(1, 1);
-        //         }
-        //     } else {
-        //         let m = this.createMeeting(e.round.meetings[0].team2, e.round.meetings[0].team1, null, null, Direction.RoundTrip);
-        //         e.round.meetings[1] = m;
-
-        //         this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
-        //     }
-        // }
-        
         this.processEliminationTree();
 
         this.prepareGui();
@@ -557,8 +543,22 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     protected prepareResultColums(): any[] {
+        return this.prepareColums(true);
+    }
+
+    protected prepareResultRoundPlayoffColums(): any[] {
+        return this.prepareColums(false);
+    }
+
+    private prepareColums(isElimininatory: boolean): any[] {
         let cols = [];
-        cols.push({ field: 'rowNumber', header: 'A/R' });
+        if(isElimininatory) {
+            cols.push({ field: 'rowNumber', header: 'A/R' });
+        } else {
+            cols.push({ field: 'rowNumber', header: 'N°' });
+            cols.push({ field: 'roundtrip', header: 'A/R' });
+        }
+
         cols.push({ field: 'dateAndTime', header: 'Data' });
         cols.push({ field: 'teamName1', header: 'Squadra 1' });
         cols.push({ field: 'teamName2', header: 'Squadra 2' });
@@ -573,7 +573,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         return cols;
     }
-    
+
      /**
         <th>N°</th>
         <th *ngIf="isTopLevel">Squadra 1</th>

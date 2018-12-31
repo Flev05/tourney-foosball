@@ -11,6 +11,7 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './result-listview.html'
@@ -108,7 +109,7 @@ export class ResultListView extends AbstractEliminatoryListView {
      */
     private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
         
-        this.cols = this.prepareResultColums();
+        this.cols = this.prepareResultRoundPlayoffColums();
 
         let rowNumber : number=0;
 
@@ -119,6 +120,7 @@ export class ResultListView extends AbstractEliminatoryListView {
             rows[row].id = m.id;
             rows[row].dateAndTime = this.dfp.transform(m.datetime);
             rows[row].rowNumber = rowNumber;
+            rows[row].roundtrip = m.direction == Direction.OneWay ? "A" : "R";
             rows[row].roundId = round.id;
             rows[row].eliminatoryId = 0;    
             rows[row].playoffId = 0;

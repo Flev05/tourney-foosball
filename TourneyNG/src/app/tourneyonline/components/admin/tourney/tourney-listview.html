@@ -8,6 +8,7 @@
 <div class="content-section documentation">   
 
 <p-accordion>
+
     <p-accordionTab header="Introduzione">
         <p>
             La vista contiene l'elenco di tutti i tornei di tipo "Pubblico" cioè visibili a tutti.
@@ -68,7 +69,125 @@
                 Versione Noleggio
             </a>
         </p>
+
+        <p>
+            A prescindere dalla modalità di accesso in vostro possesso, per creare un torneo per
+            la prima volta, dovete leggere attentamente i paragrafi seguenti per capire a fondo la tipologia
+            del torneo che andrete a costruire.
+        </p>
+        <p>            
+            Domanda: il vostro torneo si conclude in una sola giornata o su più giornate?
+
+            In funzione della risposta a questa domanda, capirete di che tipo di utenza avete bisogno.
+            Se si svolge in un solo giorno, diciamo in 12 ore consecutive, allora potrete anche 
+            non aveve bisogno di una utenza a autorizzato e ve la potete cavare come utente anonimo.        
+        </p>
+        <p>
+            Se inveve il vostro torneo richiede più giorni sia per l'organizzazione che per lo svolgimento
+            allora avete bisogno di un account autorizzato.
+        </p>
+
+        <p>
+            In ogni caso, sia per gli utenti anonimi che autorizzati, la creazione di un nuovo torneo deve essere 
+            organizzata per tappe consecutive da eseguire in un ordine ben preciso.
+        </p>
+
+        <p>Le tappe devono essere completate nel seguente ordine:</p>
+        <ul>
+            <li>Definizione torneo</li>
+            <li>Caricamento anagrafica giocatori</li>
+            <li>Configurazione squadre</li>
+            <li>Configurazione gironi</li>
+            <li>Configurazione playoff</li>
+            <li>Configurazione eliminatorie</li>
+            <li>Configurazione Obiettivo torneo</li>
+        </ul>            
+
+        <p>
+            Alcune di esse hanno dati facoltativi e possono essere completate anche successivamente.
+        </p>
+
+        <h3>Definizione torneo</h3>
+        <p>
+            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Specificità".
+        </p>
+        <p>
+            Nelle "Generalità" dovete inserire il nome, la data di inizio, la tipologia del torneo, ecc
+        </p>
+        <p>
+            Nelle "Specificità" dovete definire i dati specifici del torneo come la durata, il numero di
+            fasi, le eliminazioni dirette, i turni, ecc.
+        </p>
+        <p>
+            In entrambi i casi troverete maggiori dettagli nel paragrafo delle Istruzioni.
+        </p>
+
+        <h4>Caricamento anagrafica giocatori</h4>
+        <p>
+            I giocatori che partecipano al torneo devono essere caricati a sistema inserendo i loro dati anagrafici.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
+        </p>
+        
+        <h4>Configurazione squadre</h4>
+        <p>
+            Le squadre che compongono il torneo, devono essere create a valle della creazione dei giocatori.
+            Una squadra contiene un sottoinsieme dei giocatori del torneo.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù:
+            <a class="home-button" [routerLink]="['/adminteam']" (click)="menuActive = false">Squadre</a>
+        </p>
+        
+        <h3>Configurazione gironi</h3>
+        <p>
+            I gironi sono intesi come quelli all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+            Il torneo contiene sempre almeno un girone, nel caso di campionato, ci sarà un unico girone che contiene
+            tutte le squadre del torneo.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminround']" (click)="menuActive = false">Gironi</a>
+        </p>        
+
+        <h3>Configurazione playoff</h3>
+        <p>
+            I playoff non sono obbligatori e dipende dalla natura del torneo, alcuni li prevedono altri no.
+            Anche i playoff sono gironi all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+        </p>            
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayoff']" (click)="menuActive = false">Playoff</a>
+        </p>
+
+        <h3>Configurazione eliminatorie</h3>
+        <p>
+            La fase delle eliminazioni dirette, deve essere configurata scegliendo il livello
+            di partenza - sedicesimi, ottavi, quarti, ecc. - e specificando come popolare gli incontri 
+            a partire dai posizionamenti di clssifica dei girone precedenti: gironi all'italiana e playoff.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/admineliminatory']" (click)="menuActive = false">Eliminatorie</a>
+        </p> 
+
+        <h3>Obiettivi</h3>
+        <p>
+            L'obiettivo del torneo è da configurare per scopi di memorizzazione dello scopo del torneo
+            possibile da consultare anche in futuro.
+            Per esempio, per il campionato di calcio di serie B, l'obiettivo è salire in serie A e ci 
+            arrivano le prime due squadre del campionato più quella che vince i playoff corrispondenti.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminobjective']" (click)="menuActive = false">Obiettivi</a>
+        </p>
     </p-accordionTab>
+
     <p-accordionTab header="Istruzioni">
 
         <h4>Creare un nuovo torneo</h4>

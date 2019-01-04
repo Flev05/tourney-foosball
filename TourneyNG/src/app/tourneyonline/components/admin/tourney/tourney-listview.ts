@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const redirect: string = '/admintourney/dv';
 
@@ -29,5 +30,9 @@ export class TourneyListView extends AbstractTourneyListView {
 
         this.tourneyService.newTourney = true;
         this.gotoDetailView();
+    }
+
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return tourneys;
     }
 }

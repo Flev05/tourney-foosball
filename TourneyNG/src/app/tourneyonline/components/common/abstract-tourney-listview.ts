@@ -36,7 +36,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         ];
 
         this.loadTourney();
-
     }
 
     protected loadTourney() {
@@ -56,6 +55,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             this.tourneys.push(t);
         }
 
+        this.tourneys = this.filter(this.tourneys);
+
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
@@ -63,6 +64,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: dt});
         }
     }
+
+    protected abstract filter(tourneys: Tourney[]): Tourney[];
 
     onRowSelect(event) {
         console.log(event.data);
@@ -72,30 +75,27 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.gotoDetailView();
     }
 
-    selectPhaseType(pt : PhaseType) {
+    protected selectPhaseType(tourneys: Array<Tourney>, pt : PhaseType): Array<Tourney> {
         let tempTourneys = new Array<Tourney>();
         
-        for(let t of this.tourneys) {
-            
+        for(let t of tourneys) {
             if(this.containsPhase(pt, t.phases)) {
                 tempTourneys.push(t);
             }
         }
 
-        this.tourneys = tempTourneys;
+        return tempTourneys;
     }
 
-    purgeEliminatory() {
+    protected purgeEliminatory(tourneys: Array<Tourney>): Array<Tourney> {
         let tempTourneys = new Array<Tourney>();
         
-        for(let t of this.tourneys) {
-            
+        for(let t of tourneys) {
             if(this.containsPhase(PhaseType.R, t.phases) || this.containsPhase(PhaseType.P, t.phases)) {
                 tempTourneys.push(t);
             }
         }
 
-        this.tourneys = tempTourneys;
- 
+        return tempTourneys;
     }
 }

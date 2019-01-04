@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
-import { TourneyService } from '../../../service/tourneyservice';
-import { PhaseType } from '../../../domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './tourney-listview.html'       
@@ -25,13 +26,7 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
         super.ngOnInit();
     }
 
-    onComplete(): any {
-        super.onComplete();
-
-        this.selectPhaseType(PhaseType.P);
-
-        if(this.tourneyService.selectedTourney != null) {
-            // this.router.navigate([PlayoffListView.redirect]);
-        }
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return this.selectPhaseType(tourneys, PhaseType.P);
     }
 }

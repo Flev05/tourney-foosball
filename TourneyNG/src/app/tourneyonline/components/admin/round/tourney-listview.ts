@@ -6,6 +6,7 @@ import { AbstractTourneyListView } from '../../common/abstract-tourney-listview'
 import { TourneyService } from '../../../service/tourneyservice';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const redirect = '/adminround/lv';
 
@@ -21,8 +22,7 @@ export class RoundTourneyListView extends AbstractTourneyListView {
         super(redirect, tourneyService, router, loc, dfp);
     }
 
-    onComplete(): any {
-        super.onComplete();
-        this.selectPhaseType(PhaseType.R);
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return this.selectPhaseType(tourneys, PhaseType.R);
     }
 }

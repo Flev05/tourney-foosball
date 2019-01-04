@@ -104,7 +104,7 @@
     selectionMode="single" 
     [(selection)]="selectedRow"  
     (onRowSelect)="onEliminatoryRowSelect($event)">
-
+    
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns">

@@ -490,12 +490,14 @@
                             <p-radioButton name="isOnewayRoundGroupname" 
                                 label="Solo andata" 
                                 value="true" 
-                                formControlName="isOnewayRound">
+                                formControlName="isOnewayRound"
+                                (onClick)="onOnewayRoundClick()">
                             </p-radioButton>
                             <p-radioButton name="isOnewayRoundGroupname" 
                                 label="Andata e ritorno" 
                                 value="false" 
-                                formControlName="isOnewayRound">
+                                formControlName="isOnewayRound"
+                                (onClick)="onRoundtripRoundClick()">
                             </p-radioButton>
                         </div>
                     </div>                          
@@ -510,13 +512,13 @@
                                 label="Solo andata" 
                                 value="true" 
                                 formControlName="isOnewayPlayoff"
-                                (onClick)="onOnewayClick()">
+                                (onClick)="onOnewayPlayoffClick()">
                             </p-radioButton>
                             <p-radioButton name="isOnewayGroupname" 
                                 label="Andata e ritorno" 
                                 value="false" 
                                 formControlName="isOnewayPlayoff"
-                                (onClick)="onRoundtripClick()">
+                                (onClick)="onRoundtripPlayoffClick()">
                             </p-radioButton>
                         </div>
                     </div>                          

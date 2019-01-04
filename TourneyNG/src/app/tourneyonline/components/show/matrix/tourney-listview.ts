@@ -5,6 +5,8 @@ import { Location } from '@angular/common';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
 const redirect = '/matrix/lv';
 
@@ -23,10 +25,8 @@ export class MatrixTourneyListView extends AbstractTourneyListView {
     ngOnInit() {
         super.ngOnInit();
     }
-    
-    onComplete(): any {
-        super.onComplete();
 
-        super.purgeEliminatory();
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return this.purgeEliminatory(tourneys);
     }
 }

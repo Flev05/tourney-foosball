@@ -5,6 +5,7 @@ export interface Cell
     id          : number;
     isEditable  : boolean;
     isTotal     : boolean;
+    isVisited   : boolean;
     field       : string;
     style       : string;
 

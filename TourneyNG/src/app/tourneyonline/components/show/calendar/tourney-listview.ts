@@ -1,66 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { Tourney } from '../../../domain/tourney';
-import { TourneyService } from '../../../service/tourneyservice';
-
-const redirect = '/calendar/lv';
+import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abstract-tourney-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 @Component({
-    templateUrl: './tourney-listview.html',
-    styles: [`        
-        .ui-table table {
-            border-collapse: collapse;
-            width: auto;
-            table-layout: fixed;
-        }
-    `]
+    templateUrl: './tourney-listview.html'
 })
-export class CalendarTourneyListView implements OnInit {
+export class CalendarTourneyListView extends AbstractTourneyListView  {
+    static redirect = '/classification/lv';
 
-    protected tourneys: Tourney[];
-
-    cols: any[];
-
-    constructor(protected tourneyService: TourneyService, public router: Router) { 
-        console.log("CalendarTourneyListView.constructor()");
+    constructor(protected tourneyService: TourneyService
+        , public router: Router
+        , public loc: Location
+        , protected dfp: DateFormatPipe) 
+    { 
+        super(CalendarTourneyListView.redirect, tourneyService, router, loc, dfp);
     }
 
-    ngOnInit() {
-        console.log("CalendarTourneyListView.ngOnInit()");
-
-        this.loadTourney();
-
-        this.cols = [
-            { field: 'tourneyName', header: 'Torneo' },
-            { field: 'date', header: 'Data' },
-            { field: 'time', header: 'Ora' },
-            { field: 'address', header: 'Indirizzo' }
-        ];
-    }
-
-    protected loadTourney() {
-        console.log("Entering CalendarTourneyListView.loadTourney()");
-        this.tourneyService.loadAllTourneys().subscribe(t => this.tourneys = t);
-    }
-
-    onRowSelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedTourney = this.cloneTourney(event.data);
-
-        this.gotoDetailView();
-    }
-  
-    protected gotoDetailView() {
-        this.router.navigate([redirect]);
-    }
-
-    cloneTourney(c: any): any {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
-        }
-        return car;
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return tourneys;
     }
 }

@@ -6,6 +6,7 @@ import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const redirect = '/admineliminatory/levelLv';
 
@@ -21,9 +22,7 @@ export class EliminatoryTourneyListView extends AbstractTourneyListView {
         super(redirect, tourneyService, router, location, dfp);
     }
 
-    onComplete(): any {
-        super.onComplete();
-
-        this.selectPhaseType(PhaseType.E); 
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return this.selectPhaseType(tourneys, PhaseType.E);
     }
 }

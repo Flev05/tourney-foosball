@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abstract-tourney-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -18,5 +19,9 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
         , protected dfp: DateFormatPipe) 
     { 
         super(ClassificationTourneyListView.redirect, tourneyService, router, loc, dfp);
+    }
+
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return tourneys;
     }
 }

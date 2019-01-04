@@ -1,11 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
-
+import { Component } from '@angular/core';
  
-import { Tourney } from '../../../domain/tourney';
-import { TourneyService } from '../../../service/tourneyservice';
-import { CalendarTourneyListView } from '../calendar/tourney-listview';
+import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const redirect = '/match/meetinglv';
 
@@ -19,7 +15,7 @@ const redirect = '/match/meetinglv';
         }
     `]
 })
-export class MatchTourneyListView extends CalendarTourneyListView {
+export class MatchTourneyListView extends AbstractTourneyListView {
 
     onRowSelect(event) {
         super.onRowSelect(event);
@@ -28,5 +24,9 @@ export class MatchTourneyListView extends CalendarTourneyListView {
   
     protected gotoDetailView() {
         this.router.navigate([redirect]);
+    }
+
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return tourneys;
     }
 }

@@ -4,12 +4,14 @@ import { Location } from '@angular/common';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Direction } from '../../../domain/enumerations';
 import { Message } from 'app/components/common/api';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Discipline } from 'app/tourneyonline/domain/discipline';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Round } from 'app/tourneyonline/domain/round';
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -147,14 +149,71 @@ export class TourneyDetailView extends AbstractDetailView {
        });
     }
 
-    onOnewayClick() {
-        console.log("Entering onOnewayClick()");
-        this.onClickManageMeeting(true);
+    onOnewayRoundClick() {
+        console.log("Entering onOnewayRoundClick()");
+        this.selectedTourney.isOnewayRound = true;
+        this.onClickRoundManageMeeting(this.selectedTourney.rounds, true, null);
     }
 
-    onRoundtripClick() {
-        console.log("Entering onRoundtripClick()");
-        this.onClickManageMeeting(false);
+    onRoundtripRoundClick() {
+        console.log("Entering onRoundtripRoundClick()");
+        this.selectedTourney.isOnewayRound = false;
+        this.onClickRoundManageMeeting(this.selectedTourney.rounds, false, null);
+    }
+    
+    onOnewayPlayoffClick() {
+        console.log("Entering onOnewayPlayoffClick()");
+        this.selectedTourney.isOnewayPlayoff = true;
+        for(let po of this.selectedTourney.playoffs) {
+            this.onClickRoundManageMeeting([po.round], true, po.id);
+        }
+    }
+
+    onRoundtripPlayoffClick() {
+        console.log("Entering onRoundtripPlayoffClick()");
+        this.selectedTourney.isOnewayPlayoff = false;
+        for(let po of this.selectedTourney.playoffs) {
+            this.onClickRoundManageMeeting([po.round], false, po.id);
+        }
+    }
+    
+    private onClickRoundManageMeeting(rounds: Array<Round>, isOneway: boolean, poid: number): void {
+        for(let r of rounds) {
+            if(isOneway) {
+                let newMeetings: Array<Meeting> = new Array<Meeting>();
+                for(let m of r.meetings) {
+                    if(m.direction == Direction.OneWay) {
+                        newMeetings.push(m);
+                    }
+                    if(m.direction == Direction.RoundTrip) {
+                        this.tourneyService.deleteMeeting(m);
+                    }
+                }
+                r.meetings = newMeetings;
+            } else {
+                let newMeetings: Array<Meeting> = new Array<Meeting>();
+                for(let m of r.meetings) {
+                    let newMeeting: Meeting = this.cloneObject(m);
+                    
+                    newMeeting.id = this.tourneyService.getSequenceNumber();
+                    newMeeting.direction = Direction.RoundTrip;
+                    newMeeting.team2 = m.team1;
+                    newMeeting.team1 = m.team2;
+
+                    newMeeting.name = newMeeting.team1.teamName + " - " + newMeeting.team2.teamName;
+                    
+                    newMeetings.push(newMeeting);
+                    this.tourneyService.addMeetingDb(newMeeting
+                        , this.selectedTourney.id
+                        , poid == null ? r.id : 0
+                        , poid == null ? 0 : poid
+                        , 0);   
+                }
+
+                r.meetings = r.meetings.concat(newMeetings);
+            }
+        }
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     search(event) {
@@ -195,8 +254,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.selectedTourney.matchWinnerScores = this.tourneyFormGroup.get('matchWinnerScores').value;
         this.selectedTourney.matchBalanceScores = this.tourneyFormGroup.get('matchBalanceScores').value;
-
-        
 
         this.selectedTourney.pointsGoldenGoalTieBreakWin = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakWin').value;
         this.selectedTourney.pointsGoldenGoalTieBreakDefeat = this.tourneyFormGroup.get('pointsGoldenGoalTieBreakDefeat').value;

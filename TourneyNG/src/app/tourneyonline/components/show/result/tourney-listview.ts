@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abstract-tourney-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const redirect = '/result/lv';
 
@@ -17,5 +18,9 @@ export class ResultTourneyListView extends AbstractTourneyListView {
         , protected dfp: DateFormatPipe) 
     { 
         super(redirect, tourneyService, router, location,dfp);
+    }
+
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return tourneys;
     }
 }

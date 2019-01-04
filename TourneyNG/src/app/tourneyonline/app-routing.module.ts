@@ -26,9 +26,7 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},
             {path: 'matrix',     loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
             {path: 'classification',    loadChildren: './components/show/classification/classification.module#ClassificationModule'},
-            {path: 'playoff',           loadChildren: './components/show/playoff/playoff.module#PlayoffModule'},
             {path: 'match',     loadChildren: './components/show/match/match.module#MatchModule'},
-            {path: 'player',    loadChildren: './components/show/player/player.module#PlayerModule'},
 
             // Login Section
             {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},

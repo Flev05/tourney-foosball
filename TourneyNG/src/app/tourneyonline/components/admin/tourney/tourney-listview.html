@@ -44,14 +44,18 @@
         </p>
         
         <p>
-            Questa modalità potrebbe andar avanti per giorni, ma nel momento in cui spegnerete fisicamente il PC o chiuderetr il 
+            Questa modalità potrebbe andar avanti per giorni, ma nel momento in cui spegnerete fisicamente il PC o chiuderete il 
             browser, perderete irrimediabilmente tutti i vostri dati del torneo.
             Durante la sessione, infatti, l'utente anonimo dispone di tutte le funzionalità del sistema, 
             ma i dati sono di fatto volatili, memorizzati nella memoria del vostro browser, e mai salvati sul database di Tourney Online, 
             pertanto sono visibili ed utilizzabili finquando non viene spento il browser dopo di che non sono 
             più recuperabili.
         </p>
-            
+        <p>
+            Per maggior informazioni si rimanda alla pagina di introduzione relativa alla:
+            <a class="home-button" [routerLink]="['/demo']" (click)="menuActive = false">Versione Demo</a>
+        </p>
+    
         <h4>Utenti con account</h4>
         <p>
             L'utente in possesso di un account con diritti di amministrazione può fare tutto ciò che fa un utente anonimo 
@@ -64,26 +68,26 @@
             per i partecipati o altri clienti.
         </p>
         <p>
-            Per procurarsi un account si rimanda alla pagina di introduzione relativa al noleggio:
-            <a [routerLink]="['/lease']">
-                Versione Noleggio
-            </a>
+            Per procurarsi un account si rimanda alla pagina di introduzione relativa alla:
+            <a class="home-button" [routerLink]="['/lease']" (click)="menuActive = false">Versione Noleggio</a>
         </p>
 
+        <h3>Definizione torneo</h3>
         <p>
             A prescindere dalla modalità di accesso in vostro possesso, per creare un torneo per
             la prima volta, dovete leggere attentamente i paragrafi seguenti per capire a fondo la tipologia
             del torneo che andrete a costruire.
         </p>
         <p>            
-            Domanda: il vostro torneo si conclude in una sola giornata o su più giornate?
-
+            La prima domanda da porsi è: il vostro torneo si conclude in una sola giornata o su più giornate?
+        </p>
+        <p>
             In funzione della risposta a questa domanda, capirete di che tipo di utenza avete bisogno.
             Se si svolge in un solo giorno, diciamo in 12 ore consecutive, allora potrete anche 
             non aveve bisogno di una utenza a autorizzato e ve la potete cavare come utente anonimo.        
         </p>
         <p>
-            Se inveve il vostro torneo richiede più giorni sia per l'organizzazione che per lo svolgimento
+            Se inveve il vostro torneo richiede più giorni, sia per l'organizzazione che per lo svolgimento,
             allora avete bisogno di un account autorizzato.
         </p>
 
@@ -107,7 +111,6 @@
             Alcune di esse hanno dati facoltativi e possono essere completate anche successivamente.
         </p>
 
-        <h3>Definizione torneo</h3>
         <p>
             La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Specificità".
         </p>

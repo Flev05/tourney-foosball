@@ -530,7 +530,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.onClickManageMeeting(false);
     }
 
-    protected onClickManageMeeting(isOneway: boolean) {
+    private onClickManageMeeting(isOneway: boolean) {
 
         this.processEliminationTree();
 

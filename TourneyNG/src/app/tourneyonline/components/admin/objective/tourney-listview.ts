@@ -3,8 +3,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
-import { TourneyService } from '../../../service/tourneyservice';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
 const redirect = '/adminobjective/lv';
 
@@ -22,5 +23,9 @@ export class ObjectiveTourneyListView extends AbstractTourneyListView {
 
     ngOnInit() {
         super.ngOnInit();
+    }
+
+    protected filter(tourneys: Tourney[]): Tourney[] {
+        return tourneys;
     }
 }

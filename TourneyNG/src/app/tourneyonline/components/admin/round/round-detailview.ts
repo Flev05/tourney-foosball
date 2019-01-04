@@ -158,8 +158,8 @@ export class RoundDetailView extends AbstractDetailView {
         }
 
         if(this.tourneyService.newRound) {
-            this.tourneyService.newRound = false;
             this.selectedTourney.rounds.push(this.selectedRound);
+            this.tourneyService.newRound = false;
         }
 
         for(let tn of this.targetTeams) {

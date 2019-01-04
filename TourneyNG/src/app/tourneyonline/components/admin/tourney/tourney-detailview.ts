@@ -147,6 +147,16 @@ export class TourneyDetailView extends AbstractDetailView {
        });
     }
 
+    onOnewayClick() {
+        console.log("Entering onOnewayClick()");
+        this.onClickManageMeeting(true);
+    }
+
+    onRoundtripClick() {
+        console.log("Entering onRoundtripClick()");
+        this.onClickManageMeeting(false);
+    }
+
     search(event) {
         let query = event.query;
         this.filteredCountriesSingle =this.filterCountry(query, this.countries);

@@ -19,7 +19,7 @@
     <p>
         La scheda dei gironi e playoff visualizza la classifica di tutti i gironi e playoff.
         Per le eliminazioni dirette invece, la scheda mostra una lista dei livelli di eliminazione,
-        da quello più alto: 16°, 8° di finale, alla finalissima: 1° e 2° posto e finalina: 3° e 4° posto.
+        da quello più alto, esempio: 16°, 8° di finale, alla finalissima: 1° e 2° posto e finalina: 3° e 4° posto.
     </p>
     <p>
         Se la vista è vuota, significa che non è stata giocata ancora alcuna partita.
@@ -33,15 +33,15 @@
     Torneo: {{selectedTourney.tourneyName}}
 </h3> 
 
-<div style="margin-top:30px">
-    <p-message *ngIf="isEmpty" severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
+<div *ngIf="isEmpty" style="margin-top:30px">
+    <p-message severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
 </div>     
     
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
-<p-tabView>
+<p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()">    
         <p-table [columns]="cols"
             [value]="roundRows"
@@ -109,11 +109,14 @@
                 text="Attenzione! Non non è stato inserito ancora nessun risultato!">
             </p-message>
         </div>     
-                            
-        <p-table *ngIf="!incompleteConfiguration"
-                [columns]="cols"
-                [value]="eliminatoryRows"
-                [responsive]="true"> 
+
+        <p-table *ngIf="!incompleteConfiguration" 
+                [columns]="eliminatoryCols"
+                [value]="eliminatoryLevelRows" 
+                [responsive]="true"
+                selectionMode="single" 
+                [(selection)]="selectedRow" 
+                (onRowSelect)="onEliminatoryRowSelect($event)">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -121,15 +124,9 @@
                         {{col.header}}
                     </th>
                 </tr>
-            </ng-template>            
-    
+            </ng-template>
+
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="9">
-                        <span class="roundNames">{{rowData.roundName}}° Eliminatoria</span>
-                    </td>
-                </tr>            
-            
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
                         <span class="ui-column-title">{{col.header}}</span>
@@ -138,6 +135,7 @@
                 </tr>
             </ng-template>
         </p-table>
+
     </p-tabPanel>
 </p-tabView>
 

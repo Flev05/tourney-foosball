@@ -6,7 +6,7 @@ import { DialogModule }  from 'primeng/dialog';
 import {OrderListModule} from 'primeng/orderlist';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-import { TabListView } from './tab-listview';
+import { ClassificationTabListView } from './tab-listview';
 import { SliderModule } from 'app/components/slider/slider';
 import { GrowlModule } from 'app/components/growl/growl';
 import { PanelModule } from 'app/components/panel/panel';
@@ -20,8 +20,8 @@ import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighli
 import {ClassificationRoutingModule} from './classification-routing.module';
 import {ClassificationTourneyListView} from './tourney-listview';
 import {AccordionModule} from 'primeng/accordion';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { ClassificationEliminatoryListView } from './eliminatory-listview';
 
 @NgModule({
         imports: [
@@ -46,13 +46,10 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,MessageModule
 	],
 	declarations: [
-                ClassificationTourneyListView,
-                TabListView,
+                ClassificationTourneyListView
+                ,ClassificationTabListView
+                ,ClassificationEliminatoryListView
         ]
         ,providers: [DateFormatPipe]        
 })
-export class ClassificationModule {
-        constructor(protected tourneyService: TourneyService ) {
-                console.log("Entering ClassificationModule.constructor()");
-        }
-}
+export class ClassificationModule {}

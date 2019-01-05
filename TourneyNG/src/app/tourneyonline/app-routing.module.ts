@@ -22,14 +22,14 @@ import { HomeComponent } from './components/home/home.component';
             {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
 
             // Presentation Section
-            {path: 'calendar',  loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
-            {path: 'result',    loadChildren: './components/show/result/result.module#ResultModule'},
-            {path: 'matrix',     loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
-            {path: 'classification',    loadChildren: './components/show/classification/classification.module#ClassificationModule'},
-            {path: 'match',     loadChildren: './components/show/match/match.module#MatchModule'},
+            {path: 'calendar',       loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
+            {path: 'result',         loadChildren: './components/show/result/result.module#ResultModule'},
+            {path: 'matrix',         loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
+            {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},
+            {path: 'match',          loadChildren: './components/show/match/match.module#MatchModule'},
 
             // Login Section
-            {path: 'login',     loadChildren: './components/login/login.module#LoginModule'},
+            {path: 'login',          loadChildren: './components/login/login.module#LoginModule'},
         ], {onSameUrlNavigation: 'reload'})    
     ],
     exports: [RouterModule]

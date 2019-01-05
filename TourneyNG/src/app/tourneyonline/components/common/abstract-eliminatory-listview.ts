@@ -362,7 +362,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected prepareRoundsGui(rounds: Round[]): any[] {
         this.cols = [
             { field: 'rowNumber',   header: 'N°'},
-            { field: 'teamName',    header: 'Squadra'},
+            { field: 'teamName',    header: 'Team'},
             { field: 'points',      header: 'Pt.'},
             { field: 'played',      header: 'G'},
             { field: 'won',         header: 'V'},

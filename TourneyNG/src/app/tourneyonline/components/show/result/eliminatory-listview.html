@@ -14,12 +14,9 @@
         La vista contiente l'elenco di tutti gli incontri previsti per il livello di eliminazione diretta selezionato.
     </p>
     <p> 
-        Selezionate il livello delle eliminazioni dirette (16°, ottavi, quarti di finale, ecc.)
-        per accedere agli incontri e inserire i risultati incontro previsto.        
+        Selezionate il livello di eliminazione diretta (esempio: 16°, ottavi, quarti di finale, ecc.)
+        per accedere agli incontri e inserire i risultati dell'incontro previsto.        
     </p> 
-    <p>
-        Selezionare la riga dell'eliminatoria corrente ed accedere alla vista per impostare i risultati dell'incontro.    
-    </p>
     <p>
         Attenzione! Se la parte destra della riga è vuota, significa che la squadra di sinistra passa automaticamente
         al turno successivo senza ulteriore spareggio.
@@ -28,40 +25,40 @@
 </p-accordion>
 </div>
 
-<div class="content-section implementation">        
-    <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-    <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
+<div *ngIf="incompleteConfiguration" style="margin-top:3px">
+    <p-message severity="success"  text="{{incompleteMessage}}">
+    </p-message>
+</div>                                 
 
-    <div style="margin-top:3px">
-        <p-message *ngIf="incompleteConfiguration" 
-            severity="success" 
-            text="{{incompleteMessage}}">
-        </p-message>
-    </div>                                 
-        
-    <div class="ui-g">
-        <div class="ui-md-6">
-            <div class="ui-g-4">
-                <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-            </div>
-        </div>
+<h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+<h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
 
-        <div class="ui-md-6">
-            <div class="ui-g-4">
-                <button type="button" icon="fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
-            </div>
+<!-- <div class="ui-g">
+    <div class="ui-md-6">
+        <div class="ui-g-4">
+            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
         </div>
     </div>
-</div>
 
-<p-table *ngIf="!incompleteConfiguration" 
-        [columns]="cols"
+    <div class="ui-md-6">
+        <div class="ui-g-4">
+            <button type="button" icon="fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
+        </div>
+    </div>
+</div> -->
+
+<p-table [columns]="cols"
         [responsive]="true" 
         [value]="eliminatoryRows" 
         selectionMode="single" 
         [(selection)]="selectedMeetingRow" 
         (onRowSelect)="onEliminatoryRowSelect($event)">
 
+    <ng-template pTemplate="caption">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
+    </ng-template>
+        
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns">

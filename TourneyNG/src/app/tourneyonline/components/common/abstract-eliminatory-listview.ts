@@ -166,16 +166,16 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for(let m of round.meetings) {
 
             let t1 = m.team1;
-
+            let t2 = m.team2;
             let key1 = t1.teamName;
+            let key2 = t2.teamName;
+
             if(!classificationMap.has(key1)) {
                 let c = this.newClassification(t1, 0);
                 classificationMap.set(key1, c);
             }
             let c1 = classificationMap.get(key1);            
  
-            let t2 = m.team2;
-            let key2 = t2.teamName;
             if(!classificationMap.has(key2)) {
                 let c2 = this.newClassification(t2, 0);
                 classificationMap.set(key2, c2);
@@ -218,6 +218,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         let classificationList: Classification[] = [];
         for( let c of classificationMap.values()) {
+            if(c.team.teamName == "") {
+                continue;
+            }
             classificationList.push(c);            
         }
 

@@ -186,7 +186,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     }
 
     /**
-     * Updates the lower level in function of the default position found in received current level
+     * Updates the next lower level in function of the default position found in received current level
      * 
      * @param e the current eliminatory object
      * @param level the current level

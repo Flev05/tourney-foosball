@@ -35,7 +35,6 @@ export class ClassificationEliminatoryListView extends AbstractEliminatoryListVi
         let allRounds: Array<Round> = new Array<Round>();
 
         let el = this.selectedEliminatoryLevel;
-        
 
         for(let e of el.eliminatories) {
             allRounds.push(e.round);

@@ -6,32 +6,26 @@
 </div>
 
 <div class="content-section documentation">   
-
 <p-accordion>
-
     <p-accordionTab header="Introduzione">
         <p>
-            La vista contiene l'elenco di tutti i tornei di tipo "Pubblico" cioè visibili a tutti.
-            Chiunque si connette al sistema vedrebbe i tornei di tipo "Pubblico", anche gli utenti anonimi.
-            Se invece il proprietario di un torneo non volesse rendere "Pubblico" il proprio torneo, 
-            lo deve dichiarare di tipo privato al momento della creazione. 
-            Il default è "Pubblico"
+            La vista contiene l'elenco di tutti i tornei visibbili all'utente connesso.
+            Quando l'utente si connette al sito Tourney Online, può vedere tutti i tornei
+            in funzione di che tipo di utente egli sia.
         </p>
         
-        <p>Per gestire un torneo bisogna essere un utente del Sistema.</p>
-        <p>Esistono due tipi di utenti:</p>
+        <p>Esistono tre tipi di utenti:</p>
         <ul>
             <li>Utenti anonimi</li>
             <li>Utenti con account</li>
+            <li>Utenti follower</li>
         </ul>
  
         <h4>Utenti anonimi</h4>
         <p>
             Un utente anonimo è un utente qualsiasi che si connette al sistema Tourney Online senza effettuare alcuna forma 
             di login, egli può disporre o non disporre affatto di un account di sistema.
-            Gli utenti anonimi possono consultare tornei già esistenti, quelli di tipo "Pubblico",
-            ma non possono in nessun modo modificarne i contenuti.
-            Possono invece crearne dei tornei propri sui quali hanno tutti i privilegi e li possono modificare 
+            Possono creare nuovi tornei sui quali hanno tutti i privilegi e li possono modificare 
             o rimuovere per tutto il tempo di durata della sessione applicativa.
         </p>
     
@@ -45,7 +39,7 @@
         
         <p>
             Questa modalità potrebbe andar avanti per giorni, ma nel momento in cui spegnerete fisicamente il PC o chiuderete il 
-            browser, perderete irrimediabilmente tutti i vostri dati del torneo.
+            browser, perderete irrimediabilmente tutti i dati dei vostri tornei.
             Durante la sessione, infatti, l'utente anonimo dispone di tutte le funzionalità del sistema, 
             ma i dati sono di fatto volatili, memorizzati nella memoria del vostro browser, e mai salvati sul database di Tourney Online, 
             pertanto sono visibili ed utilizzabili finquando non viene spento il browser dopo di che non sono 
@@ -72,6 +66,16 @@
             <a class="home-button" [routerLink]="['/lease']" (click)="menuActive = false">Versione Noleggio</a>
         </p>
 
+        <h4>Utenti foolower</h4>
+        <p>
+            Sono utenti che possono accedere solo a quei tornei per i quali hanno avuto il codice di accesso e
+            sono autorizzati a vedere lo svolgimento del torneo.
+            Tipicamente sono i partecipanti al torneo o tifosi che seguono l'andamento del torneo e vogliono
+            vedere l'evoluzione in tempo reale.
+            Per maggiori dettagli si veda la pagina:
+            <a class="home-button" [routerLink]="['/realtime']" (click)="menuActive = false">Tempo Reale</a>
+        </p>
+
         <h3>Definizione torneo</h3>
         <p>
             A prescindere dalla modalità di accesso in vostro possesso, per creare un torneo per
@@ -93,7 +97,7 @@
 
         <p>
             In ogni caso, sia per gli utenti anonimi che autorizzati, la creazione di un nuovo torneo deve essere 
-            organizzata per tappe consecutive da eseguire in un ordine ben preciso.
+            organizzata per tappe successive da eseguire in un ordine ben preciso.
         </p>
 
         <p>Le tappe devono essere completate nel seguente ordine:</p>
@@ -210,7 +214,7 @@
         </p>
     </p-accordionTab>
 </p-accordion>
- </div>
+</div>
 
 <p-table [columns]="cols" 
         [value]="rows" 

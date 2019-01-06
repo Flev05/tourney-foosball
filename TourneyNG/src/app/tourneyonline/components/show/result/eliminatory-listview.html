@@ -33,20 +33,6 @@
 <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
 <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
 
-<!-- <div class="ui-g">
-    <div class="ui-md-6">
-        <div class="ui-g-4">
-            <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </div>
-    </div>
-
-    <div class="ui-md-6">
-        <div class="ui-g-4">
-            <button type="button" icon="fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
-        </div>
-    </div>
-</div> -->
-
 <p-table [columns]="cols"
         [responsive]="true" 
         [value]="eliminatoryRows" 

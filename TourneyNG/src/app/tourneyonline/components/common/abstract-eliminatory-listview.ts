@@ -117,18 +117,18 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
     }
 
-    protected loadRounds() {
+    protected loadRounds(isOneway: boolean) {
         let rounds = this.selectedTourney.rounds;
         this.roundMap = new Map<number, Round>();
         for (let r of rounds) {
             r.meetings = [];
             this.roundMap.set(r.id, r);
             const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, r.id);
-            subscr.subscribe(ms => this.roundMeetings = ms, e => this.onError(e), () => this.onLoadRoundMeetingComplete());
+            subscr.subscribe(ms => this.roundMeetings = ms, e => this.onError(e), () => this.onLoadRoundMeetingComplete(isOneway));
         }
     }
 
-    private onLoadRoundMeetingComplete(): void {
+    private onLoadRoundMeetingComplete(isOneway: boolean): void {
         for(let mdb of this.roundMeetings) {
             let r: Round = this.roundMap.get(mdb.roundId);           
             let m: Meeting = JSON.parse(mdb.json);
@@ -139,16 +139,16 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             round.classification = this.createClassification(round);
         }
 
-        this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds);
+        this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds, isOneway);
     }
     
-    protected prepareEliminatoryRound(rounds: Round[]): any[] {
+    protected prepareEliminatoryRound(rounds: Round[], isOneway: boolean): any[] {
 
         for(let round of rounds) {
             round.classification = this.createClassification(round);
         }
 
-        return this.prepareRoundsGui(rounds);
+        return this.prepareRoundsGui(rounds, isOneway);
     }
 
     private findByName(rn: string, rounds: Round[]): Round {
@@ -268,7 +268,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         return sortedClassification;
     } 
 
-    protected loadPlayoffs(): any {
+    protected loadPlayoffs(isOneway: boolean): any {
         
         let playoffs = this.selectedTourney.playoffs;
 
@@ -281,14 +281,14 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             r.meetings = [];
             this.playoffRoundMap.set(po.id, po);
             const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
-            subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting() );       
+            subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting(isOneway) );       
         }
     } 
 
     /**
      * Call back method to process the Playoff meetings selected from the database
      */
-    onLoadPlayoffMeeting(): void {
+    onLoadPlayoffMeeting(isOneway: boolean): void {
         if(this.playoffMeetings.length==0) {
             return;
         }
@@ -305,7 +305,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.resolvePlayoffRules(po, this.selectedTourney.rounds);
         }
         
-        this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs);
+        this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs, isOneway);
     }
 
     /**
@@ -362,7 +362,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
         <td>{{rowData.goalsDiff}}</td>       
      */
-    protected prepareRoundsGui(rounds: Round[]): any[] {
+    protected prepareRoundsGui(rounds: Round[], isOneway: boolean): any[] {
         this.cols = [
             { field: 'rowNumber',   header: 'N°'},
             { field: 'teamName',    header: 'Team'},
@@ -383,8 +383,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for (let round of rounds) {
             let r = 0;
             for (let c of round.classification) {
-                
+
                 rows.push(c);
+
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.team.teamName;    
@@ -413,7 +414,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         return rows;
     }
 
-    private preparePlayoffClassification(playoffs: Playoff[]): any[] {
+    private preparePlayoffClassification(playoffs: Playoff[], isOneway: boolean): any[] {
 
         let playoffRounds: Round[] = this.makePlayoffRounds(playoffs);
 
@@ -421,7 +422,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             round.classification = this.createClassification(round);
         }
 
-        let rows: any[] = this.preparePlayoffGui(playoffs);
+        let rows: any[] = this.preparePlayoffGui(playoffs, isOneway);
 
         return rows;
     }
@@ -434,13 +435,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         return playoffRounds;
     }
 
-    protected preparePlayoffGui(playoffs: Playoff[]): any[] {
+    protected preparePlayoffGui(playoffs: Playoff[], isOneway: boolean): any[] {
         let rounds: Array<Round> = new Array<Round>();
 
         for(let p of playoffs) {
             rounds.push(p.round);
         }
-        return this.prepareRoundsGui(rounds);
+        return this.prepareRoundsGui(rounds, isOneway);
     }
 
     /**
@@ -710,6 +711,66 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     
     getPosition2(e: Eliminatory): string{
         return "";
+    }
+
+     /**
+     * Prepare the meeting list GUI found in the received list of rounds
+     * 
+     * @param rounds the list of round containg the meetings
+     */
+    protected prepareCalendarGui(rounds: Round[], isOneway: boolean): any[] {
+        this.cols = [
+            { field: 'rowNumber', header: 'N°'},
+            { field: 'teamName1', header: 'Team 1'},
+            { field: 'teamName2', header: 'Team 2'},
+            { field: 'dateAndTime',   header: 'DataOra'},
+            { field: 'address',   header: 'Indirizzo'},
+        ];
+
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let raoundMap: Map<string, Round> = new Map<string, Round>();
+
+        for (let round of rounds) {
+            let r = 0;
+            for (let m of round.meetings) {
+                if(isOneway && m.direction == Direction.RoundTrip) {
+                    continue;
+                }
+
+                rows.push(m);
+
+                rows[row].rowNumber = ++r;    
+                rows[row].roundName = round.name;    
+                rows[row].teamName1 = m.team1.teamName;    
+                rows[row].teamName2 = m.team2.teamName;    
+
+                rows[row].dateAndTime = this.dateFormatPipe.transform(m.datetime);    
+
+                let currentKey = round.name;  
+                if(!raoundMap.has(currentKey)) {
+                    raoundMap.set(currentKey, round);
+                    let len = this.cols.length;
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+
+        let sortedRows: any[]  = rows.sort((m1, m2) => {
+            if (m1.dateAndTime > m2.dateAndTime) {
+                return -1;
+            }
+            if (m1.dateAndTime < m2.dateAndTime) {
+                return 1;
+            }
+            return 0;
+        })
+
+        return sortedRows;
     }
 }
 

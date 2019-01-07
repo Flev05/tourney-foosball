@@ -1,0 +1,59 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Classifica Eliminazioni Dirette</span>
+        <span>Vista elenco classifica Eliminazioni Dirette</span>
+    </div>
+</div>    
+
+<div class="content-section documentation">    
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+            
+    <h4>Istruzioni</h4>
+    <p>
+        La vista contiente l'elenco di tutte le squadre per il livello di eliminazione diretta selezionato.
+    </p>
+    <p> 
+        Selezionate il livello delle eliminazioni dirette (esempio: 16°, ottavi, quarti di finale, ecc.)
+        per accedere alla classifica per tale livello.        
+    </p> 
+</p-accordionTab>
+</p-accordion>
+</div>
+
+<h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+<h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
+
+<p-table *ngIf="!incompleteConfiguration" 
+        [columns]="cols"
+        [value]="eliminatoryRows"
+        [responsive]="true">
+
+    <ng-template pTemplate="caption">
+        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </ng-template>
+        
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+            <td colspan="5">
+                <span class="roundNames">{{rowData.roundName}}</span>
+            </td>
+        </tr>      
+
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                <span class="ui-column-title">{{col.header}}</span>
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>     
+</p-table>   
+    

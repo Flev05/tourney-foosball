@@ -11,7 +11,7 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
     templateUrl: './tourney-listview.html'
 })
 export class CalendarTourneyListView extends AbstractTourneyListView  {
-    static redirect = '/classification/lv';
+    static redirect = '/calendar/lv';
 
     constructor(protected tourneyService: TourneyService
         , public router: Router

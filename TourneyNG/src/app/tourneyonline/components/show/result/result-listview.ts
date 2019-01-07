@@ -40,11 +40,11 @@ export class ResultListView extends AbstractEliminatoryListView {
         this.tourneyService.selectedEliminatoryIndex = -1;
 
         if(super.containsRound()) {
-            super.loadRounds();
+            super.loadRounds(this.selectedTourney.isOnewayRound);
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs();
+            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff);
         }
 
         if(super.containsEliminatory()) {

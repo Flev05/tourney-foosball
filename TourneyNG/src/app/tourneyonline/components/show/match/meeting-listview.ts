@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
-import { Meeting } from '../../../domain/meeting';
-import { TourneyService } from '../../../service/tourneyservice';
-import { CalendarDetailView } from '../calendar/calendar-detailview';
+import { AbstractListView } from '../../common/abstract-listview';
 
 const redirect = '/match/matchlv';
 
@@ -18,9 +18,9 @@ const redirect = '/match/matchlv';
         }
   `]
 })
-export class MeetingListView extends CalendarDetailView {
+export class MeetingListView extends AbstractListView {
     constructor(protected tourneyService: TourneyService, protected location: Location, public router: Router) { 
-        super(tourneyService,location);
+        super(redirect, tourneyService, router, location);
         console.log("MeetingListView.constructor()");
     }
 

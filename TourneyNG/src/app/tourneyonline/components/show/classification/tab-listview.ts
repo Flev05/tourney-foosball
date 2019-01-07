@@ -30,11 +30,11 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         super.ngOnInit();
 
         if(super.containsRound()) {
-            super.loadRounds();
+            super.loadRounds(this.selectedTourney.isOnewayRound);
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs();
+            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff);
         }
 
         if(super.containsEliminatory()) {
@@ -59,7 +59,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
                 allRounds.push(e.round);
             }
             
-            const eRows = super.prepareEliminatoryRound(allRounds);
+            const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
             for(let er of eRows) {
                 er.roundName = el.name + " - " + er.roundName;
             }

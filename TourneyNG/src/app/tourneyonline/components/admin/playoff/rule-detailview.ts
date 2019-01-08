@@ -61,7 +61,7 @@ export class RuleDetailView extends AbstractDetailView {
 
         this.playoffConfigFormGroup = this.fb.group({
             'position':  new FormControl(this.selectedPlayoffConfig.fromRound.position),
-            'round':  new FormControl(this.selectedPlayoffConfig.fromRound.round),
+            'round':     new FormControl(this.selectedPlayoffConfig.fromRound.round),
         });
     }
 
@@ -123,7 +123,7 @@ export class RuleDetailView extends AbstractDetailView {
                     m.rule2 = this.selectedPlayoffConfig;
                 }
                 
-                this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
+                this.tourneyService.updatePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
             }
         }
         this.selectedPlayoff.playoffRules = this.playoffConfigs;

@@ -203,7 +203,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
         }
 
-        this.tourneyService.updateMeetingDb(m1, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
+        this.tourneyService.updateEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
@@ -214,7 +214,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            this.tourneyService.updateMeetingDb(m2, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
+            this.tourneyService.updateEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

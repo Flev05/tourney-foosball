@@ -42,10 +42,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     isOneway: string;
     isStandalone: boolean;
     
-    meetingMap: Map<number, MeetingDb[]>;
-    httpCounter: number;
-    eliminatoryRoundMap: Map<number, Round>;
-
     isModeEnabled: boolean;
 
     selectedLevelCombobox: Combobox;
@@ -55,6 +51,21 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     incompleteConfiguration: boolean;
     eliminatoryCols: { field: string; header: string; }[];
     eliminatoryLevelRows: any[];
+    
+    elHttpCounter: number;
+    eliminatoryRoundMap: Map<number, Round>;
+    meetingMap: Map<number, MeetingDb[]>;
+
+    roundHttpCounter: number;
+    roundMap: Map<number, Round>;
+    roundMeetingMap: Map<number, MeetingDb[]>;
+
+    playoffHttpCounter: number;
+    playoffRoundMap: Map<number, Playoff>;
+    playoffMeetingMap: Map<number, MeetingDb[]>;
+
+    roundRows:   any[] = [];
+    playoffRows: any[] = [];
 
     constructor(
         protected redirect: string,
@@ -119,27 +130,43 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     protected loadRounds(isOneway: boolean) {
         let rounds = this.selectedTourney.rounds;
+
         this.roundMap = new Map<number, Round>();
+        this.roundHttpCounter = 0;
+        this.roundMeetingMap = new Map<number, MeetingDb[]>();
+
         for (let r of rounds) {
             r.meetings = [];
+            this.roundHttpCounter++;
             this.roundMap.set(r.id, r);
             const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, r.id);
-            subscr.subscribe(ms => this.roundMeetings = ms, e => this.onError(e), () => this.onLoadRoundMeetingComplete(isOneway));
+            subscr.subscribe(ms => this.onLoadRoundMeetings(ms, isOneway), e => this.onError(e));
         }
     }
 
-    private onLoadRoundMeetingComplete(isOneway: boolean): void {
-        for(let mdb of this.roundMeetings) {
-            let r: Round = this.roundMap.get(mdb.roundId);           
-            let m: Meeting = JSON.parse(mdb.json);
-            r.meetings.push(m);
-        }
+    private onLoadRoundMeetings(roundMeetings: MeetingDb[], isOneway: boolean): void {
+        let rid = roundMeetings[0].roundId;
+        this.roundMeetingMap.set(rid, roundMeetings);
 
-        for(let round of this.selectedTourney.rounds) {
-            round.classification = this.createClassification(round);
-        }
+        this.roundHttpCounter--;
 
-        this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds, isOneway);
+        if(this.roundHttpCounter == 0) {
+            for(let key of this.roundMeetingMap.keys()) {
+                let mdbs = this.roundMeetingMap.get(key);
+                for(let mdb of mdbs) {
+                    let r: Round = this.roundMap.get(mdb.roundId);           
+                    let m: Meeting = JSON.parse(mdb.json);
+                    r.meetings.push(m);
+                    r.meetings  = this.sortMeetings(r.meetings)
+                }
+                
+                for(let round of this.selectedTourney.rounds) {
+                    round.classification = this.createClassification(round);
+                }
+                
+                this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds, isOneway);
+            }
+        }
     }
     
     protected prepareEliminatoryRound(rounds: Round[], isOneway: boolean): any[] {
@@ -272,40 +299,53 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         
         let playoffs = this.selectedTourney.playoffs;
 
+        this.playoffHttpCounter = 0;
+
         this.playoffRoundMap = new Map<number, Playoff>();
+        this.playoffMeetingMap = new Map<number, MeetingDb[]>();
         for(let po of playoffs) {
             if(po.playoffRules == null || po.playoffRules.length==0) {
                 continue;
             }
+            this.playoffHttpCounter++;
             let r = po.round;
             r.meetings = [];
             this.playoffRoundMap.set(po.id, po);
             const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
-            subscr.subscribe(ms => this.playoffMeetings = ms, e => this.onError(e), () => this.onLoadPlayoffMeeting(isOneway) );       
+            subscr.subscribe(ms => this.onLoadPlayoffMeeting(ms, isOneway), e => this.onError(e));       
         }
     } 
 
     /**
      * Call back method to process the Playoff meetings selected from the database
      */
-    onLoadPlayoffMeeting(isOneway: boolean): void {
-        if(this.playoffMeetings.length==0) {
+    private onLoadPlayoffMeeting(playoffMeetings: MeetingDb[], isOneway: boolean): void {
+        if(playoffMeetings.length==0) {
             return;
         }
+        let poid = playoffMeetings[0].playoffId;
+        this.playoffMeetingMap.set(poid, playoffMeetings);
 
-        for(let mdb of this.playoffMeetings) {
-            
-            let po = this.playoffRoundMap.get(mdb.playoffId);
-            
-            let r = po.round;
-            let m: Meeting = JSON.parse(mdb.json);
-            
-            r.meetings.push(m);
+        this.playoffHttpCounter--;
 
-            this.resolvePlayoffRules(po, this.selectedTourney.rounds);
+        if(this.playoffHttpCounter == 0) {
+            for(let key of this.playoffMeetingMap.keys()) {
+                let mdbs = this.playoffMeetingMap.get(key);
+                for(let mdb of mdbs) {
+                    let po = this.playoffRoundMap.get(mdb.playoffId);
+                    
+                    let r = po.round;
+                    let m: Meeting = JSON.parse(mdb.json);
+                    
+                    r.meetings.push(m);
+                    r.meetings  = this.sortMeetings(r.meetings)
+
+                    this.resolvePlayoffRules(po, this.selectedTourney.rounds);
+                }
+            }
+            
+            this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs, isOneway);
         }
-        
-        this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs, isOneway);
     }
 
     /**
@@ -464,7 +504,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
         this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
 
-        this.httpCounter = 0;
+        this.elHttpCounter = 0;
         this.eliminatoryLevelRows = [];
         
         this.eliminatoryCols = this.prepareELCols();
@@ -479,7 +519,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             for (let e of topElimLevel.eliminatories) {
                 this.eliminatoryRoundMap.set(e.id, e.round);
-                this.httpCounter++;
+                this.elHttpCounter++;
                 let abs = this.tourneyService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
                 abs.subscribe(mdbs => this.addToMeetingMap(mdbs), e => this.onError(e));
             }
@@ -498,9 +538,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         let elid = mdbs[0].eliminatoryId;
         this.meetingMap.set(elid, mdbs);
 
-        this.httpCounter--;
+        this.elHttpCounter--;
 
-        if(this.httpCounter == 0) {
+        if(this.elHttpCounter == 0) {
 
             for(let key of this.eliminatoryRoundMap.keys()) {
                 let eid: number = +key;
@@ -512,6 +552,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                     meetings.push(m);
                 }
                 round.meetings = meetings;
+                round.meetings = this.sortMeetings(round.meetings)
             }
 
             this.processEliminationTree();
@@ -723,7 +764,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             { field: 'rowNumber', header: 'N°'},
             { field: 'teamName1', header: 'Team 1'},
             { field: 'teamName2', header: 'Team 2'},
-            { field: 'dateAndTime',   header: 'DataOra'},
+            { field: 'dateAndTime',   header: 'Data Ora'},
             { field: 'address',   header: 'Indirizzo'},
         ];
 
@@ -760,7 +801,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
         }
 
-        let sortedRows: any[]  = rows.sort((m1, m2) => {
+        return rows;
+    }
+
+    protected sortMeetings(rows: any[]): any[] {
+        return rows.sort((m1, m2) => {
             if (m1.dateAndTime > m2.dateAndTime) {
                 return -1;
             }
@@ -768,9 +813,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 return 1;
             }
             return 0;
-        })
-
-        return sortedRows;
+        });
     }
 }
 

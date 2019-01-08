@@ -61,12 +61,14 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
     onSubmit(value: string) {
 
-        this.dateAndTime = this.meetingFormGroup.get('dateAndTime').value;
+        let dt = this.meetingFormGroup.get('dateAndTime').value;
 
-        this.selectedMeeting.datetime = this.dateAndTime;
+        this.selectedMeeting.datetime = new Date(dt);
 
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
+
+        this.tourneyService.updatePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
 
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }

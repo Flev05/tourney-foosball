@@ -379,7 +379,19 @@ export class TourneyService {
         obs.subscribe();
     }
 
-    updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
+    updateRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number) {
+        this.updateMeetingDb(m, tourneyId, roundId, 0, 0);
+    }
+
+    updatePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number) {
+        this.updateMeetingDb(m, tourneyId, 1, playoffId, 0);
+    }
+
+    updateEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number) {
+        this.updateMeetingDb(m, tourneyId, 0, 0, eliminatoryId);
+    }
+
+    private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
         let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
         let obs = this.updateMeetingMdb(mdb);
         obs.subscribe();

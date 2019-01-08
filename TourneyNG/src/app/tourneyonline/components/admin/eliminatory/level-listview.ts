@@ -215,13 +215,13 @@ export class LevelListView extends AbstractEliminatoryListView {
             let m = e.round.meetings[0];
             m.team1 = t1;
             m.team2 = t2;
-            this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+            this.tourneyService.updateEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
             
             m = e.round.meetings[1];
             m.team1 = t2;
             m.team2 = t1;
             
-            this.tourneyService.updateMeetingDb(m, this.selectedTourney.id, 0, 0, e.id);
+            this.tourneyService.updateEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
         }
     } 
 

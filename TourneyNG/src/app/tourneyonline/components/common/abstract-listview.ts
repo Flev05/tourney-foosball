@@ -10,14 +10,9 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
  
 export abstract class AbstractListView extends AbstractView {
 
-    roundMap: Map<number, Round>;
-    playoffRoundMap: Map<number, Playoff>;
+    // roundMeetings: MeetingDb[];
+    // playoffMeetings: MeetingDb[];
 
-    roundRows: any[] = [];
-    playoffRows: any[] = [];
-
-    roundMeetings: MeetingDb[];
-    playoffMeetings: MeetingDb[];
     levelMap: Map<number, Eliminatory[]>;
     totLevelLen: number;
 
@@ -68,5 +63,17 @@ export abstract class AbstractListView extends AbstractView {
     }
     onError(e:any) {
         console.log(e);
+    }
+
+    protected sortMeetings(meetings: any[]): any[] {
+        return meetings.sort((m1, m2) => {
+            if (m1.dateAndTime > m2.dateAndTime) {
+                return 1;
+            }
+            if (m1.dateAndTime < m2.dateAndTime) {
+                return -1;
+            }
+            return 0;
+        });
     }
 }

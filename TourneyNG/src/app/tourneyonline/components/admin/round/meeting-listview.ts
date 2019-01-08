@@ -46,7 +46,7 @@ export class MeetingListView extends AbstractListView {
 
         this.cols = [
             { field: 'rowNumber',   header: 'N°' },
-            { field: 'datetime',    header: 'Data/Ora' },
+            { field: 'dateAndTime', header: 'Data/Ora' },
             { field: 'direction',   header: 'A/R' },
             { field: 'name',        header: 'Incontro' }
         ];
@@ -55,8 +55,9 @@ export class MeetingListView extends AbstractListView {
         for(let i=0;i<this.meetings.length; i++) {
             let m = this.meetings[i];
             let dt = this.dateFormatPipe.transform(m.datetime);
-            this.rows.push({m:m, rowNumber: i+1, datetime: dt, direction: m.direction, name: m.name});
+            this.rows.push({m:m, rowNumber: i+1, dateAndTime: dt, direction: m.direction, name: m.name});
         }
+        this.rows = this.sortMeetings(this.rows);
     }
 
     private removeRoundTrip() {

@@ -98,7 +98,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        this.tourneyService.updateMeetingDb(m1, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
+        this.tourneyService.updateEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
@@ -109,7 +109,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            this.tourneyService.updateMeetingDb(m2, this.selectedTourney.id, 0, 0, this.selectedEliminatory.id);
+            this.tourneyService.updateEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;

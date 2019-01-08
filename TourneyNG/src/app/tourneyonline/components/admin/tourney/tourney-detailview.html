@@ -316,38 +316,26 @@
 
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        Accesso:
-                    </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
-                            pTooltip="Indicare se il torneo è visibile a tutti: pubblico o riservato solo a chi ha l'accesso: privato">
-                        <p-radioButton name="accessGroupname" 
-                            label="Pubblico" 
-                            value="public" 
-                            formControlName="access">
-                        </p-radioButton>
-                        <p-radioButton name="accessGroupname" 
-                            label="Privato" 
-                            value="private" 
-                            formControlName="access">
-                        </p-radioButton>
-                    </div>
-                </div>        
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
                         Giornaliero:
                     </div>
-                    <div class="ui-grid-col-4" tooltipPosition="right"
+                    <div class="ui-grid-col-3" tooltipPosition="right"
                             pTooltip="Indicare se il torneo si svolge in un singolo giorno o su più giorni.">
-                        <p-radioButton name="isDailyGroupname" 
-                            label="Vero" 
-                            value="true" 
-                            formControlName="isDaily">
-                        </p-radioButton>
-                        <p-radioButton name="isDailyGroupname" 
-                            label="Falso" 
-                            value="false" 
-                            formControlName="isDaily">
-                        </p-radioButton>
+                        <div class="ui-g radiobuttons">
+                            <div class="ui-g-12">
+                                <p-radioButton name="isDailyGroupname" 
+                                    label="Vero" 
+                                    value="true" 
+                                    formControlName="isDaily">
+                                </p-radioButton>
+                            </div>
+                            <div class="ui-g-12">
+                                <p-radioButton name="isDailyGroupname" 
+                                    label="Falso" 
+                                    value="false" 
+                                    formControlName="isDaily">
+                                </p-radioButton>
+                            </div>
+                        </div>
                     </div>
                 </div>        
                 
@@ -422,16 +410,22 @@
                         </div>
                         <div class="ui-grid-col-4" tooltipPosition="right"
                                 pTooltip="Indicare se le gare terminano a tempo o a punteggio">
-                            <p-radioButton name="tourneyTypeGroupname" 
-                                label="A punti" 
-                                value="score" 
-                                formControlName="tourneyType">
-                            </p-radioButton>
-                            <p-radioButton name="tourneyTypeGroupname" 
-                                label="A tempo" 
-                                value="time" 
-                                formControlName="tourneyType">
-                            </p-radioButton>
+                            <div class="ui-g radiobuttons">
+                                <div class="ui-g-12">
+                                    <p-radioButton name="tourneyTypeGroupname" 
+                                        label="A punti" 
+                                        value="score" 
+                                        formControlName="tourneyType">
+                                    </p-radioButton>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p-radioButton name="tourneyTypeGroupname" 
+                                        label="A tempo" 
+                                        value="time" 
+                                        formControlName="tourneyType">
+                                    </p-radioButton>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -441,18 +435,26 @@
                         </div>
                         <div class="ui-grid-col-6" tooltipPosition="right"
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
-                            <p-checkbox name="phasesGroupname" label="Gironi"     
-                                value="round"     
-                                [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox>
-                            <p-checkbox name="phasesGroupname" label="Play Off"     
-                                value="playoff"     
-                                [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox>
-                            <p-checkbox name="phasesGroupname" label="Eliminatorie" 
-                                value="eliminatory" 
-                                [formControl]="tourneyFormGroup.controls['phases']">
-                            </p-checkbox>                            
+                            <div class="ui-g radiobuttons">
+                                <div class="ui-g-12">
+                                    <p-checkbox name="phasesGroupname" label="Gironi"     
+                                        value="round"     
+                                        [formControl]="tourneyFormGroup.controls['phases']">
+                                    </p-checkbox>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p-checkbox name="phasesGroupname" label="Play Off"     
+                                        value="playoff"     
+                                        [formControl]="tourneyFormGroup.controls['phases']">
+                                    </p-checkbox>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p-checkbox name="phasesGroupname" label="Eliminatorie" 
+                                        value="eliminatory" 
+                                        [formControl]="tourneyFormGroup.controls['phases']">
+                                    </p-checkbox>        
+                                </div>          
+                            </div>          
                         </div>
                         <div class="ui-grid-col-3">
                             <div *ngIf="notAllowedPhases()" class="ui-message ui-messages-error ui-corner-all">
@@ -474,18 +476,24 @@
                         </div>
                         <div class="ui-grid-col-5" tooltipPosition="right"
                                 pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
-                            <p-radioButton name="isOnewayRoundGroupname" 
-                                label="Solo andata" 
-                                value="true" 
-                                formControlName="isOnewayRound"
-                                (onClick)="onOnewayRoundClick()">
-                            </p-radioButton>
-                            <p-radioButton name="isOnewayRoundGroupname" 
-                                label="Andata e ritorno" 
-                                value="false" 
-                                formControlName="isOnewayRound"
-                                (onClick)="onRoundtripRoundClick()">
-                            </p-radioButton>
+                            <div class="ui-g radiobuttons">
+                                <div class="ui-g-12">
+                                    <p-radioButton name="isOnewayRoundGroupname" 
+                                        label="Solo andata" 
+                                        value="true" 
+                                        formControlName="isOnewayRound"
+                                        (onClick)="onOnewayRoundClick()">
+                                    </p-radioButton>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p-radioButton name="isOnewayRoundGroupname" 
+                                        label="Andata e ritorno" 
+                                        value="false" 
+                                        formControlName="isOnewayRound"
+                                        (onClick)="onRoundtripRoundClick()">
+                                    </p-radioButton>
+                                </div>
+                            </div>
                         </div>
                     </div>                          
 
@@ -495,18 +503,24 @@
                         </div>
                         <div class="ui-grid-col-5" tooltipPosition="right"
                                 pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
-                            <p-radioButton name="isOnewayGroupname" 
-                                label="Solo andata" 
-                                value="true" 
-                                formControlName="isOnewayPlayoff"
-                                (onClick)="onOnewayPlayoffClick()">
-                            </p-radioButton>
-                            <p-radioButton name="isOnewayGroupname" 
-                                label="Andata e ritorno" 
-                                value="false" 
-                                formControlName="isOnewayPlayoff"
-                                (onClick)="onRoundtripPlayoffClick()">
-                            </p-radioButton>
+                            <div class="ui-g radiobuttons">
+                                <div class="ui-g-12">
+                                    <p-radioButton name="isOnewayGroupname" 
+                                        label="Solo andata" 
+                                        value="true" 
+                                        formControlName="isOnewayPlayoff"
+                                        (onClick)="onOnewayPlayoffClick()">
+                                    </p-radioButton>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p-radioButton name="isOnewayGroupname" 
+                                        label="Andata e ritorno" 
+                                        value="false" 
+                                        formControlName="isOnewayPlayoff"
+                                        (onClick)="onRoundtripPlayoffClick()">
+                                    </p-radioButton>
+                                </div>
+                            </div>
                         </div>
                     </div>                          
                 </p-fieldset>
@@ -626,16 +640,22 @@
 
                         <div class="ui-grid-col-5" tooltipPosition="right"
                                 pTooltip="Scegliere se vanno giocate comunque tutte le partite o il minimo per vincere l'incontro">
-                            <p-radioButton name="allMatchesGroupname" 
-                                label="Tutte" 
-                                value="true" 
-                                formControlName="isAllMatches">
-                            </p-radioButton>
-                            <p-radioButton name="allMatchesGroupname" 
-                                label="Al Meglio" 
-                                value="false" 
-                                formControlName="isAllMatches">
-                            </p-radioButton>
+                            <div class="ui-g radiobuttons">
+                                <div class="ui-g-12">                                
+                                    <p-radioButton name="allMatchesGroupname" 
+                                        label="Tutte" 
+                                        value="true" 
+                                        formControlName="isAllMatches">
+                                    </p-radioButton>
+                                </div>
+                                <div class="ui-g-12">                                
+                                    <p-radioButton name="allMatchesGroupname" 
+                                        label="Al Meglio" 
+                                        value="false" 
+                                        formControlName="isAllMatches">
+                                    </p-radioButton>
+                                </div>
+                            </div>
                         </div>        
                     </div>
 

@@ -398,8 +398,8 @@ export class LevelListView extends AbstractEliminatoryListView {
             }
         };
 
-        this.tourneyService.addMeetingDb(m1, this.selectedTourney.id, 0, 0, e.id);
-        this.tourneyService.addMeetingDb(m2, this.selectedTourney.id, 0, 0, e.id);
+        this.tourneyService.addEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
+        this.tourneyService.addEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
 
         return e;
     }

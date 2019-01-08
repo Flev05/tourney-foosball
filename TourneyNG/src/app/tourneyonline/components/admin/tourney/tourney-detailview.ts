@@ -203,11 +203,11 @@ export class TourneyDetailView extends AbstractDetailView {
                     newMeeting.name = newMeeting.team1.teamName + " - " + newMeeting.team2.teamName;
                     
                     newMeetings.push(newMeeting);
-                    this.tourneyService.addMeetingDb(newMeeting
-                        , this.selectedTourney.id
-                        , poid == null ? r.id : 0
-                        , poid == null ? 0 : poid
-                        , 0);   
+                    if(poid == null) {
+                        this.tourneyService.addRoundMeetingDb(newMeeting, this.selectedTourney.id, r.id);
+                    } else {
+                        this.tourneyService.addPlayoffMeetingDb(newMeeting, this.selectedTourney.id, poid);
+                    }
                 }
 
                 r.meetings = r.meetings.concat(newMeetings);

@@ -344,7 +344,19 @@ export class TourneyService {
         );
     }
 
-    addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+    addRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
+        this.addMeetingDb(m, tourneyId, roundId, 0, 0)
+    }
+
+    addPlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
+        this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
+    }
+
+    addEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
+        this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
+    }
+
+    private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
         let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
 
         this.addMeeting(mdb);

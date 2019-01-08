@@ -96,12 +96,12 @@ export class RuleDetailView extends AbstractDetailView {
                     let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
                     this.selectedPlayoff.round.meetings.push(m);
                     
-                    this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
+                    this.tourneyService.addPlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
     
                     if(!this.selectedTourney.isOnewayPlayoff) {
                         m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
                         this.selectedPlayoff.round.meetings.push(m);
-                        this.tourneyService.addMeetingDb(m, this.selectedTourney.id, 1, this.selectedPlayoff.id, 0);
+                        this.tourneyService.addPlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
                     }        
                 }
             }

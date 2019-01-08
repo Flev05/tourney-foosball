@@ -201,14 +201,14 @@ export class RoundDetailView extends AbstractDetailView {
         for (let t of this.selectedRound.teams) {
             let m = this.createMeeting(team, t, null, null, Direction.OneWay);
             
-            this.tourneyService.addMeetingDb(m, this.selectedTourney.id, this.selectedRound.id, 0, 0 );
+            this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
 
             this.selectedRound.meetings.push(m);
             if (!this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
 
-                this.tourneyService.addMeetingDb(m, this.selectedTourney.id, this.selectedRound.id, 0, 0);                
+                this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);                
             }
         }
     }

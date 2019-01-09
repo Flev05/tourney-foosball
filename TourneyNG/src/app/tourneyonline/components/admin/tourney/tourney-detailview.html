@@ -533,11 +533,8 @@
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
                                 [min]="1"
-                                pTooltip="Goals necessari per aggiudicarsi la vittoria nei tornei a punti">
+                                pTooltip="Goals necessari per aggiudicarsi la vittoria della partita">
                             </p-spinner>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            punti
                         </div>
                     </div>
 
@@ -548,7 +545,7 @@
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
                                 [min]="1"
-                                pTooltip="Punti assegnati alla squadra per la vittoria della singola gara">
+                                pTooltip="Punti assegnati alla squadra per la vittoria della singola partita">
                             </p-spinner>
                         </div>
                         <div class="ui-grid-col-3">
@@ -628,18 +625,18 @@
                         <div class="ui-grid-col-1">
                             <p-spinner formControlName="maxMatchesPerMeeting" tooltipPosition="right"
                                 [min]="1"
-                                pTooltip="Numero massimo di partite in ciascun incontro">
+                                pTooltip="Numero di partite in ciascun incontro">
                             </p-spinner>
                         </div>          
                     </div>
 
                     <div class="ui-grid-row" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'">
                         <div class="ui-grid-col-3">
-                            Al Meglio:
+                            Fine Incontro:
                         </div>
 
                         <div class="ui-grid-col-5" tooltipPosition="right"
-                                pTooltip="Scegliere se vanno giocate comunque tutte le partite o il minimo per vincere l'incontro">
+                                pTooltip="Scegliere se giocare tutte le partite o al meglio di ...">
                             <div class="ui-g radiobuttons">
                                 <div class="ui-g-12">                                
                                     <p-radioButton name="allMatchesGroupname" 
@@ -659,7 +656,7 @@
                         </div>        
                     </div>
 
-                    <div class="ui-grid-row" >
+                    <!-- <div class="ui-grid-row" >
                         <div class="ui-grid-col-3">
                             Giocatori:
                         </div>
@@ -669,7 +666,8 @@
                                 pTooltip="Numero di giocatori di una squadra per giocare una partita">
                             </p-spinner>
                         </div>          
-                    </div>
+                    </div> -->
+
                 </p-fieldset>
             </div>
             </p-tabPanel>

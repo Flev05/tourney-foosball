@@ -14,7 +14,7 @@ const httpOptions = {
 
 @Injectable()
 export class RoleService {
-    private apiUrl = 'api/roles';  // URL to web api
+    private apiUrl = 'be/roles';  // URL to web api
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of RoleService");

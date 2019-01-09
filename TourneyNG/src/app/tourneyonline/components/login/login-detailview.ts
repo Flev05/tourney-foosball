@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-
-import { Login } from '../../domain/login';
-import { LoginService } from '../../service/loginservice';
-import {Message,SelectItem} from '../../../components/common/api';
+import { Login } from 'app/tourneyonline/domain/login';
+import { Message } from 'app/components/common/api';
+import { LoginService } from 'app/tourneyonline/service/loginservice';
 
 @Component({
     templateUrl: './login-detailview.html',
@@ -37,7 +35,7 @@ export class LoginDetailView implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.formLogin = {"id":1, "username":"", "password" : ""};
+        this.formLogin = {"id": 1, "username": "", "password" : ""};
 
         const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
 

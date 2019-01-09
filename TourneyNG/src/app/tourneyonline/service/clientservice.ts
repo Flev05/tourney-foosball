@@ -14,7 +14,7 @@ const httpOptions = {
 
 @Injectable()
 export class ClientService {
-    private clientUrl = 'api/clients';  // URL to web api
+    private clientUrl = 'be/clients';  // URL to web api
 
     selectedClient : Client;
 

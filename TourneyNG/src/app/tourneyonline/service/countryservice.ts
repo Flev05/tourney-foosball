@@ -15,7 +15,7 @@ const httpOptions = {
 
 @Injectable()
 export class CountryService {
-    private countryUrl = 'api/countries';  // URL to web api
+    private countryUrl = 'be/countries';  // URL to web api
 
     selectedCountry : Country;
 

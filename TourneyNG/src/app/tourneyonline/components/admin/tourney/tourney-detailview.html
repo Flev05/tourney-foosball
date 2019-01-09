@@ -408,7 +408,7 @@
                         <div class="ui-grid-col-3">
                             Gara:
                         </div>
-                        <div class="ui-grid-col-4" tooltipPosition="right"
+                        <div class="ui-grid-col-3" tooltipPosition="right"
                                 pTooltip="Indicare se le gare terminano a tempo o a punteggio">
                             <div class="ui-g radiobuttons">
                                 <div class="ui-g-12">
@@ -433,7 +433,7 @@
                         <div class="ui-grid-col-3">
                             Fasi:
                         </div>
-                        <div class="ui-grid-col-6" tooltipPosition="right"
+                        <div class="ui-grid-col-3" tooltipPosition="right"
                                 pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
                             <div class="ui-g radiobuttons">
                                 <div class="ui-g-12">
@@ -474,7 +474,7 @@
                         <div class="ui-grid-col-3">
                             Gironi all'italiana:
                         </div>
-                        <div class="ui-grid-col-5" tooltipPosition="right"
+                        <div class="ui-grid-col-3" tooltipPosition="right"
                                 pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
                             <div class="ui-g radiobuttons">
                                 <div class="ui-g-12">
@@ -501,7 +501,7 @@
                         <div class="ui-grid-col-3">
                             Playoff:
                         </div>
-                        <div class="ui-grid-col-5" tooltipPosition="right"
+                        <div class="ui-grid-col-3" tooltipPosition="right"
                                 pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
                             <div class="ui-g radiobuttons">
                                 <div class="ui-g-12">
@@ -530,7 +530,7 @@
                         <div class="ui-grid-col-3">
                             Goals:
                         </div>
-                        <div class="ui-grid-col-1">
+                        <div class="ui-grid-col-3">
                             <p-spinner formControlName="pointsNeededToWin" tooltipPosition="right"
                                 [min]="1"
                                 pTooltip="Goals necessari per aggiudicarsi la vittoria della partita">
@@ -542,7 +542,7 @@
                         <div class="ui-grid-col-3">
                             Vittoria:
                         </div>
-                        <div class="ui-grid-col-1">
+                        <div class="ui-grid-col-3">
                             <p-spinner formControlName="matchWinnerScores" tooltipPosition="right"
                                 [min]="1"
                                 pTooltip="Punti assegnati alla squadra per la vittoria della singola partita">
@@ -557,7 +557,7 @@
                         <div class="ui-grid-col-3">
                             Pareggio:
                         </div>
-                        <div class="ui-grid-col-1">
+                        <div class="ui-grid-col-3">
                             <p-spinner formControlName="matchBalanceScores" tooltipPosition="right"
                                 [min]="1"
                                 pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
@@ -567,29 +567,13 @@
                             punti
                         </div>
                     </div>
-                </p-fieldset>
-                                                            
-                <p-fieldset legend="Durata" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            Minuti:
-                        </div>
-                        <div class="ui-grid-col-1">
-                            <p-spinner formControlName="raceDuration" tooltipPosition="right"
-                                [min]="1"
-                                pTooltip="Indicare la durata in minuti della singola gara per i tornei a tempo">
-                            </p-spinner>
-                        </div>
-                    </div>
-                </p-fieldset>
-                            
-                <p-fieldset legend="Goldel goal o Tie break" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'">
+
                     <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'" 
                         class="ui-grid-row" >
                         <div class="ui-grid-col-3">
-                            Vittoria:
+                            Vittoria(Goldel goal/Tie break):
                         </div>
-                        <div class="ui-grid-col-1">
+                        <div class="ui-grid-col-3">
                             <p-spinner formControlName="pointsGoldenGoalTieBreakWin" tooltipPosition="right"
                                 [min]="1"
                                 pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
@@ -603,9 +587,9 @@
                     <div *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'"
                         class="ui-grid-row" >
                         <div class="ui-grid-col-3">
-                            Sconfitta:
+                            Sconfitta(Goldel goal/Tie break):
                         </div>
-                        <div class="ui-grid-col-1">
+                        <div class="ui-grid-col-3">
                             <p-spinner formControlName="pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
                                 [min]="0"
                                 pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
@@ -614,40 +598,56 @@
                         <div class="ui-grid-col-3">
                             punti
                         </div>
-                    </div>                                
-                </p-fieldset> 
+                    </div>      
+
+                </p-fieldset>
+                                                            
+                <p-fieldset legend="Durata" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='time'">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3">
+                            Minuti:
+                        </div>
+                        <div class="ui-grid-col-3">
+                            <p-spinner formControlName="raceDuration" tooltipPosition="right"
+                                [min]="1"
+                                pTooltip="Indicare la durata in minuti della singola gara per i tornei a tempo">
+                            </p-spinner>
+                        </div>
+                    </div>
+                </p-fieldset>
 
                 <p-fieldset legend="Incontro">
                     <div class="ui-grid-row" >
                         <div class="ui-grid-col-3">
                             Partite:
                         </div>
-                        <div class="ui-grid-col-1">
+                        <div class="ui-grid-col-3">
                             <p-spinner formControlName="maxMatchesPerMeeting" tooltipPosition="right"
                                 [min]="1"
-                                pTooltip="Numero di partite in ciascun incontro">
+                                pTooltip="Numero di partite in ciascun incontro"
+                                (onChange)="onSpinnerChange($event)">
                             </p-spinner>
                         </div>          
                     </div>
 
-                    <div class="ui-grid-row" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score'">
+                    <div class="ui-grid-row" *ngIf="tourneyFormGroup.controls['tourneyType'].value=='score' && allMatchesEnabled">
                         <div class="ui-grid-col-3">
                             Fine Incontro:
                         </div>
 
-                        <div class="ui-grid-col-5" tooltipPosition="right"
-                                pTooltip="Scegliere se giocare tutte le partite o al meglio di ...">
+                        <div class="ui-grid-col-3" tooltipPosition="right"
+                                pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{bestOffWinner}} partite">
                             <div class="ui-g radiobuttons">
                                 <div class="ui-g-12">                                
                                     <p-radioButton name="allMatchesGroupname" 
-                                        label="Tutte" 
+                                        label="Tutte le partite" 
                                         value="true" 
                                         formControlName="isAllMatches">
                                     </p-radioButton>
                                 </div>
-                                <div class="ui-g-12">                                
+                                <div class="ui-g-12">
                                     <p-radioButton name="allMatchesGroupname" 
-                                        label="Al Meglio" 
+                                        label="Al Meglio delle {{bestOffWinner}} partite" 
                                         value="false" 
                                         formControlName="isAllMatches">
                                     </p-radioButton>
@@ -655,18 +655,6 @@
                             </div>
                         </div>        
                     </div>
-
-                    <!-- <div class="ui-grid-row" >
-                        <div class="ui-grid-col-3">
-                            Giocatori:
-                        </div>
-                        <div class="ui-grid-col-1">
-                            <p-spinner formControlName="playersPerTeam" tooltipPosition="right"
-                                [min]="1"
-                                pTooltip="Numero di giocatori di una squadra per giocare una partita">
-                            </p-spinner>
-                        </div>          
-                    </div> -->
 
                 </p-fieldset>
             </div>

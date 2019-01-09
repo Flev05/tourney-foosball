@@ -5,6 +5,27 @@
     </div>
 </div>
 
+<div class="content-section documentation">
+    <p-accordion>
+        <p-accordionTab header="Introduzione">            
+                
+        <p>Pagina di login per chi è già in possesso di credenziali per accedere al sistema 
+            di gestione dei tornei.
+            Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sopra.</p>
+        <p>
+            Se non disponete di credenziali, potete continuare ad utilizzare il sistema come utente anonimo.
+            Imparate l'uso del sistema e solo in un secondo momento potete noleggiarlo per il periodo desiderato.
+        </p>
+        <p>
+            Per maggiori dettagli sul noleggio, si veda il link:
+            <a class="home-button" [routerLink]="['/lease']">
+                Versione Noleggio
+            </a>
+        </p>
+        </p-accordionTab>
+    </p-accordion>    
+</div>
+        
 <div class="content-section implementation">
 
     <p-growl [value]="msgs" sticky="sticky"></p-growl>    
@@ -59,21 +80,5 @@
             </div>
         </p-panel>
     </form>                
-</div>
-
-<div class="content-section documentation">
-    <p>Pagina di login per chi è già in possesso di credenziali per accedere al sistema 
-        di gestione dei tornei.
-        Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sopra.</p>
-    <p>
-        Se non disponete di credenziali, potete continuare ad utilizzare il sistema come utente anonimo.
-        Imparate l'uso del sistema e solo in un secondo momento potete noleggiarlo per il periodo desiderato.
-    </p>
-    <p>
-        Per maggiori dettagli sul noleggio, si veda il link:
-        <a class="home-button" [routerLink]="['/lease']">
-            Versione Noleggio
-        </a>
-    </p>
 </div>
 

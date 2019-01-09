@@ -27,12 +27,12 @@ const httpOptions = {
 };
 
 const tourneyUrl = 'api/tourneys';  // URL to web api
-const tourneyBeUrl = 'be/tourneys';  // URL to web api
+const tourneyBeUrl = 'be/tourneys';  // URL to Back End api
 const tourneyPlayoffUrl = 'api/tourneys';  // URL to web api
 const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
 const typologiesUrl = 'api/typologies';  // URL to web api
 const meetingUrl = 'api/meetings';  // URL to web api
-const meetingBeUrl = 'be/meetings';  // URL to web api
+const meetingBeUrl = 'be/meetings';  // URL to Back End api
 
 const classificationLabel = "°";
 

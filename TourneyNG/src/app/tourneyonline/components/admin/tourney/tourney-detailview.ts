@@ -38,6 +38,8 @@ export class TourneyDetailView extends AbstractDetailView {
     isOnewayPlayoff: string;
     isAllMatches: string;
     isDaily: string;
+    allMatchesEnabled: boolean = true;
+    bestOffWinner: number;
 
     constructor(
         private fb: FormBuilder,
@@ -114,6 +116,13 @@ export class TourneyDetailView extends AbstractDetailView {
                 + this.selectedTourney.country.zipCode + " " + this.selectedTourney.country.city
                 + " (" + this.selectedTourney.country.provinceCode +")";
         }
+
+        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
+            this.allMatchesEnabled = false;
+        }
+
+        let spin = this.selectedTourney.maxMatchesPerMeeting;
+        this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -219,6 +228,17 @@ export class TourneyDetailView extends AbstractDetailView {
     search(event) {
         let query = event.query;
         this.filteredCountriesSingle =this.filterCountry(query, this.countries);
+    }
+
+    onSpinnerChange(event) {
+        let spin: number = this.tourneyFormGroup.get('maxMatchesPerMeeting').value;
+        if(spin == 1) {
+            this.allMatchesEnabled = false;
+        } else {
+            this.allMatchesEnabled = true;
+        }
+
+        this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
     }
 
     doDelete() {

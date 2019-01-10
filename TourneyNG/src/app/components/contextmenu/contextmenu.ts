@@ -2,7 +2,6 @@ import { NgModule, Component, ElementRef, AfterViewInit, OnDestroy, Input, Outpu
 import { CommonModule } from '@angular/common';
 import { DomHandler } from '../dom/domhandler';
 import { MenuItem } from '../common/menuitem';
-import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -10,29 +9,28 @@ import { RouterModule } from '@angular/router';
     template: `
         <ul [ngClass]="{'ui-widget-content ui-corner-all ui-submenu-list ui-shadow':!root}" class="ui-menu-list" (click)="listClick($event)">
             <ng-template ngFor let-child [ngForOf]="(root ? item : item.items)">
-                <li *ngIf="child.separator" class="ui-menu-separator ui-widget-content">
-                <li *ngIf="!child.separator" #item [ngClass]="{'ui-menuitem ui-corner-all':true,'ui-menuitem-active':item==activeItem}"
+                <li *ngIf="child.separator" class="ui-menu-separator ui-widget-content" [ngClass]="{'ui-helper-hidden': child.visible === false}">
+                <li *ngIf="!child.separator" #item [ngClass]="{'ui-menuitem ui-corner-all':true,'ui-menuitem-active':item==activeItem,'ui-helper-hidden': child.visible === false}"
                     (mouseenter)="onItemMouseEnter($event,item,child)" (mouseleave)="onItemMouseLeave($event,item)">
                     <a *ngIf="!child.routerLink" [href]="child.url||'#'" [attr.target]="child.target" [attr.title]="child.title" [attr.id]="child.id" (click)="itemClick($event, child)"
                         [ngClass]="{'ui-menuitem-link ui-corner-all':true,'ui-state-disabled':child.disabled}" [ngStyle]="child.style" [class]="child.styleClass">
-                        <span class="ui-submenu-icon fa fa-fw fa-caret-right" *ngIf="child.items"></span>
-                        <span class="ui-menuitem-icon fa fa-fw" *ngIf="child.icon" [ngClass]="child.icon"></span>
+                        <span class="ui-submenu-icon pi pi-fw pi-caret-right" *ngIf="child.items"></span>
+                        <span class="ui-menuitem-icon" *ngIf="child.icon" [ngClass]="child.icon"></span>
                         <span class="ui-menuitem-text">{{child.label}}</span>
                     </a>
-                    <a *ngIf="child.routerLink" [routerLink]="child.routerLink" [queryParams]="child.queryParams" [routerLinkActive]="'ui-state-active'" 
+                    <a *ngIf="child.routerLink" [routerLink]="child.routerLink" [queryParams]="child.queryParams" [routerLinkActive]="'ui-state-active'"
                         [routerLinkActiveOptions]="child.routerLinkActiveOptions||{exact:false}" [attr.target]="child.target" [attr.title]="child.title" [attr.id]="child.id"
-                        (click)="itemClick($event, child)" [ngClass]="{'ui-menuitem-link ui-corner-all':true,'ui-state-disabled':child.disabled}" 
+                        (click)="itemClick($event, child)" [ngClass]="{'ui-menuitem-link ui-corner-all':true,'ui-state-disabled':child.disabled}"
                         [ngStyle]="child.style" [class]="child.styleClass">
-                        <span class="ui-submenu-icon fa fa-fw fa-caret-right" *ngIf="child.items"></span>
-                        <span class="ui-menuitem-icon fa fa-fw" *ngIf="child.icon" [ngClass]="child.icon"></span>
+                        <span class="ui-submenu-icon pi pi-fw pi-caret-right" *ngIf="child.items"></span>
+                        <span class="ui-menuitem-icon" *ngIf="child.icon" [ngClass]="child.icon"></span>
                         <span class="ui-menuitem-text">{{child.label}}</span>
                     </a>
                     <p-contextMenuSub class="ui-submenu" [item]="child" *ngIf="child.items"></p-contextMenuSub>
                 </li>
             </ng-template>
         </ul>
-    `,
-    providers: [DomHandler]
+    `
 })
 export class ContextMenuSub {
 
@@ -40,11 +38,11 @@ export class ContextMenuSub {
 
     @Input() root: boolean;
 
-    constructor(public domHandler: DomHandler, @Inject(forwardRef(() => ContextMenu)) public contextMenu: ContextMenu) { }
+    constructor(@Inject(forwardRef(() => ContextMenu)) public contextMenu: ContextMenu) { }
 
     activeItem: any;
 
-    containerLeft: any;
+    containerOffset: any;
 
     hideTimeout: any;
 
@@ -96,14 +94,21 @@ export class ContextMenuSub {
     }
 
     position(sublist, item) {
-        this.containerLeft = this.domHandler.getOffset(item.parentElement)
-        let viewport = this.domHandler.getViewport();
-        let sublistWidth = sublist.offsetParent ? sublist.offsetWidth : this.domHandler.getHiddenElementOuterWidth(sublist);
-        let itemOuterWidth = this.domHandler.getOuterWidth(item.children[0]);
+        this.containerOffset = DomHandler.getOffset(item.parentElement)
+        let viewport = DomHandler.getViewport();
+        let sublistWidth = sublist.offsetParent ? sublist.offsetWidth : DomHandler.getHiddenElementOuterWidth(sublist);
+        let itemOuterWidth = DomHandler.getOuterWidth(item.children[0]);
+        let itemOuterHeight = DomHandler.getOuterHeight(item.children[0]);
+        let sublistHeight = sublist.offsetHeight ? sublist.offsetHeight : DomHandler.getHiddenElementOuterHeight(sublist);
 
-        sublist.style.top = '0px';
+        if ((parseInt(this.containerOffset.top) + itemOuterHeight + sublistHeight) > (viewport.height - DomHandler.calculateScrollbarHeight())) {
+            sublist.style.bottom = '0px';
+        }
+        else {
+            sublist.style.top = '0px';
+        }
 
-        if ((parseInt(this.containerLeft.left) + itemOuterWidth + sublistWidth) > (viewport.width - this.calculateScrollbarWidth())) {
+        if ((parseInt(this.containerOffset.left) + itemOuterWidth + sublistWidth) > (viewport.width - DomHandler.calculateScrollbarWidth())) {
             sublist.style.left = -sublistWidth + 'px';
         }
         else {
@@ -111,27 +116,16 @@ export class ContextMenuSub {
         }
     }
 
-    calculateScrollbarWidth(): number {
-        let scrollDiv = document.createElement("div");
-        scrollDiv.className = "ui-scrollbar-measure";
-        document.body.appendChild(scrollDiv);
-
-        let scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-        document.body.removeChild(scrollDiv);
-
-        return scrollbarWidth;
-    }
 }
 
 @Component({
     selector: 'p-contextMenu',
     template: `
-        <div #container [ngClass]="'ui-contextmenu ui-widget ui-widget-content ui-corner-all ui-shadow'" 
+        <div #container [ngClass]="'ui-contextmenu ui-widget ui-widget-content ui-corner-all ui-shadow'"
             [class]="styleClass" [ngStyle]="style">
             <p-contextMenuSub [item]="model" root="root"></p-contextMenuSub>
         </div>
-    `,
-    providers: [DomHandler]
+    `
 })
 export class ContextMenu implements AfterViewInit, OnDestroy {
 
@@ -151,25 +145,27 @@ export class ContextMenu implements AfterViewInit, OnDestroy {
 
     @Input() baseZIndex: number = 0;
 
+    @Input() triggerEvent: string = 'contextmenu';
+
     @ViewChild('container') containerViewChild: ElementRef;
 
     documentClickListener: any;
 
     windowResizeListener: any;
 
-    rightClickListener: any;
+    triggerEventListener: any;
 
-    constructor(public el: ElementRef, public domHandler: DomHandler, public renderer: Renderer2, public zone: NgZone) { }
+    constructor(public el: ElementRef, public renderer: Renderer2, public zone: NgZone) { }
 
     ngAfterViewInit() {
         if (this.global) {
-            this.rightClickListener = this.renderer.listen('document', 'contextmenu', (event) => {
+            this.triggerEventListener = this.renderer.listen('document', this.triggerEvent, (event) => {
                 this.show(event);
                 event.preventDefault();
             });
         }
         else if (this.target) {
-            this.rightClickListener = this.renderer.listen(this.target, 'contextmenu', (event) => {
+            this.triggerEventListener = this.renderer.listen(this.target, this.triggerEvent, (event) => {
                 this.show(event);
                 event.preventDefault();
                 event.stopPropagation();
@@ -180,7 +176,7 @@ export class ContextMenu implements AfterViewInit, OnDestroy {
             if (this.appendTo === 'body')
                 document.body.appendChild(this.containerViewChild.nativeElement);
             else
-                this.domHandler.appendChild(this.containerViewChild.nativeElement, this.appendTo);
+                DomHandler.appendChild(this.containerViewChild.nativeElement, this.appendTo);
         }
     }
 
@@ -188,7 +184,7 @@ export class ContextMenu implements AfterViewInit, OnDestroy {
         this.position(event);
         this.moveOnTop();
         this.containerViewChild.nativeElement.style.display = 'block';
-        this.domHandler.fadeIn(this.containerViewChild.nativeElement, 250);
+        DomHandler.fadeIn(this.containerViewChild.nativeElement, 250);
         this.bindGlobalListeners();
 
         if (event) {
@@ -218,9 +214,9 @@ export class ContextMenu implements AfterViewInit, OnDestroy {
         if (event) {
             let left = event.pageX + 1;
             let top = event.pageY + 1;
-            let width = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetWidth : this.domHandler.getHiddenElementOuterWidth(this.containerViewChild.nativeElement);
-            let height = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetHeight : this.domHandler.getHiddenElementOuterHeight(this.containerViewChild.nativeElement);
-            let viewport = this.domHandler.getViewport();
+            let width = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetWidth : DomHandler.getHiddenElementOuterWidth(this.containerViewChild.nativeElement);
+            let height = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetHeight : DomHandler.getHiddenElementOuterHeight(this.containerViewChild.nativeElement);
+            let viewport = DomHandler.getViewport();
 
             //flip
             if (left + width - document.body.scrollLeft > viewport.width) {
@@ -285,8 +281,8 @@ export class ContextMenu implements AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.unbindGlobalListeners();
 
-        if (this.rightClickListener) {
-            this.rightClickListener();
+        if (this.triggerEventListener) {
+            this.triggerEventListener();
         }
 
         if (this.appendTo) {

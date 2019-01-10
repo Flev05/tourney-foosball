@@ -289,7 +289,7 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
     <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
@@ -664,11 +664,11 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" 
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
                     [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" 
+                    <button class="ui-button-danger" pButton type="button" icon="fa fa-close" (click)="doDelete()" label="Rimuovi" 
                     [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
             </div>

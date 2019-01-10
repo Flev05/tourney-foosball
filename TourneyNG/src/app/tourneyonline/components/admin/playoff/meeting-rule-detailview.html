@@ -31,7 +31,7 @@
     <h4><span>Regola: "{{selectedMeeting.ruleName}}"</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
     <form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
@@ -90,7 +90,7 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!meetingFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!meetingFormGroup.valid"></button>
                 </div>
             </div>
         </div>

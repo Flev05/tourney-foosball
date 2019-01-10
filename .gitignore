@@ -36,6 +36,7 @@ build.metadata
 **/.metadata/
 **/.recommenders/
 **/*.jar
+**/*.zip
 **/*.class
 **/build/
 **/classes/

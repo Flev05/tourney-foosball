@@ -23,7 +23,6 @@ import { UserngService } from './service/userngservice';
 import { RoleService } from './service/roleservice';
 import { CountryService } from './service/countryservice';
 import { InMemoryDataService } from 'app/tourneyonline/in-memory-data-service/in-memory-data.service';
-import { environment } from 'environments/environment';
 
 @NgModule({
   declarations: [
@@ -42,6 +41,7 @@ import { environment } from 'environments/environment';
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
+    
     ,  HttpClientInMemoryWebApiModule.forRoot(
         InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
       )

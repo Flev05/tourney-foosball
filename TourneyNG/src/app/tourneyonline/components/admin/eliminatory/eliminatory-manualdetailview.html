@@ -45,7 +45,7 @@
     <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
     <form [formGroup]="eliminatoryFormGroup" (ngSubmit)="onSubmit(eliminatoryFormGroup.value)">
@@ -259,7 +259,7 @@
             </div>   
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva"
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva"
                     [disabled]="!eliminatoryFormGroup.valid" ></button>
                 </div>
             </div>

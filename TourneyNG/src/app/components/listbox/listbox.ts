@@ -1,4 +1,4 @@
-import { NgModule, Component, ElementRef, Input, Output, EventEmitter, AfterContentInit, ContentChildren, ContentChild, QueryList, TemplateRef, IterableDiffers, forwardRef, ChangeDetectorRef } from '@angular/core';
+import { NgModule, Component, ElementRef, Input, Output, EventEmitter, AfterContentInit, ContentChildren, ContentChild, QueryList, TemplateRef,forwardRef, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectItem } from '../common/selectitem';
 import { SharedModule, PrimeTemplate, Footer, Header } from '../common/shared';
@@ -22,31 +22,28 @@ export const LISTBOX_VALUE_ACCESSOR: any = {
       <div class="ui-widget-header ui-corner-all ui-listbox-header ui-helper-clearfix" *ngIf="headerFacet">
         <ng-content select="p-header"></ng-content>
       </div>
-      <div class="ui-widget-header ui-corner-all ui-listbox-header ui-helper-clearfix" *ngIf="(checkbox && multiple) || filter" [ngClass]="{'ui-listbox-header-w-checkbox': checkbox}">
+      <div class="ui-widget-header ui-corner-all ui-listbox-header ui-helper-clearfix" *ngIf="(checkbox && multiple && showToggleAll) || filter" [ngClass]="{'ui-listbox-header-w-checkbox': checkbox}">
         <div class="ui-chkbox ui-widget" *ngIf="checkbox && multiple && showToggleAll">
           <div class="ui-helper-hidden-accessible">
-            <input #cb type="checkbox" readonly="readonly" [checked]="allChecked">
+            <input type="checkbox" readonly="readonly" [checked]="allChecked" (focus)="onHeaderCheckboxFocus()" (blur)="onHeaderCheckboxBlur()" (keydown.space)="toggleAll($event)">
           </div>
-          <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" [ngClass]="{'ui-state-active':allChecked}" (click)="toggleAll($event,cb)">
-            <span class="ui-chkbox-icon ui-clickable" [ngClass]="{'fa fa-check':allChecked}"></span>
+          <div #headerchkbox class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" [ngClass]="{'ui-state-active': allChecked, 'ui-state-focus': headerCheckboxFocus}" (click)="toggleAll($event)">
+            <span class="ui-chkbox-icon ui-clickable" [ngClass]="{'pi pi-check':allChecked}"></span>
           </div>
         </div>
         <div class="ui-listbox-filter-container" *ngIf="filter">
-          <input type="text" role="textbox" (input)="onFilter($event)" class="ui-inputtext ui-widget ui-state-default ui-corner-all" [disabled]="disabled">
-          <span class="fa fa-search"></span>
+          <input type="text" role="textbox" [value]="filterValue||''" (input)="onFilter($event)" class="ui-inputtext ui-widget ui-state-default ui-corner-all" [disabled]="disabled">
+          <span class="ui-listbox-filter-icon pi pi-search"></span>
         </div>
       </div>
       <div class="ui-listbox-list-wrapper" [ngStyle]="listStyle">
         <ul class="ui-listbox-list">
-          <li *ngFor="let option of options; let i = index;" [style.display]="isItemVisible(option) ? 'block' : 'none'"
-              [ngClass]="{'ui-listbox-item ui-corner-all':true,'ui-state-highlight':isSelected(option)}"
-              (click)="onOptionClick($event,option)" (dblclick)="onDoubleClick($event,option)" (touchend)="onOptionTouchEnd($event,option)">
-            <div class="ui-chkbox ui-widget" *ngIf="checkbox && multiple" (click)="onCheckboxClick($event,option)">
-              <div class="ui-helper-hidden-accessible">
-                <input type="checkbox" [checked]="isSelected(option)" [disabled]="disabled">
-              </div>
+          <li *ngFor="let option of options; let i = index;" [style.display]="isItemVisible(option) ? 'block' : 'none'" [attr.tabindex]="option.disabled ? null : '0'"
+              [ngClass]="{'ui-listbox-item ui-corner-all':true,'ui-state-highlight':isSelected(option), 'ui-state-disabled': option.disabled}"
+              (click)="onOptionClick($event,option)" (dblclick)="onOptionDoubleClick($event,option)" (touchend)="onOptionTouchEnd($event,option)" (keydown)="onOptionKeyDown($event,option)">
+            <div class="ui-chkbox ui-widget" *ngIf="checkbox && multiple">
               <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default" [ngClass]="{'ui-state-active':isSelected(option)}">
-                <span class="ui-chkbox-icon ui-clickable" [ngClass]="{'fa fa-check':isSelected(option)}"></span>
+                <span class="ui-chkbox-icon ui-clickable" [ngClass]="{'pi pi-check':isSelected(option)}"></span>
               </div>
             </div>
             <span *ngIf="!itemTemplate">{{option.label}}</span>
@@ -59,7 +56,7 @@ export const LISTBOX_VALUE_ACCESSOR: any = {
       </div>
     </div>
   `,
-    providers: [DomHandler, ObjectUtils, LISTBOX_VALUE_ACCESSOR]
+    providers: [LISTBOX_VALUE_ACCESSOR]
 })
 export class Listbox implements AfterContentInit, ControlValueAccessor {
 
@@ -93,6 +90,8 @@ export class Listbox implements AfterContentInit, ControlValueAccessor {
 
     @Output() onDblClick: EventEmitter<any> = new EventEmitter();
 
+    @ViewChild('headerchkbox') headerCheckboxViewChild: ElementRef;
+
     @ContentChild(Header) headerFacet;
 
     @ContentChild(Footer) footerFacet;
@@ -101,7 +100,7 @@ export class Listbox implements AfterContentInit, ControlValueAccessor {
 
     public itemTemplate: TemplateRef<any>;
 
-    public filterValue: string;
+    public _filterValue: string;
 
     public filtered: boolean;
 
@@ -111,23 +110,31 @@ export class Listbox implements AfterContentInit, ControlValueAccessor {
 
     public onModelTouched: Function = () => { };
 
-    public checkboxClick: boolean;
-
     public optionTouched: boolean;
 
     public focus: boolean;
 
     public _options: any[];
 
-    constructor(public el: ElementRef, public domHandler: DomHandler, public objectUtils: ObjectUtils, public cd: ChangeDetectorRef) { }
+    public headerCheckboxFocus: boolean;
+    
+    constructor(public el: ElementRef, public cd: ChangeDetectorRef) { }
 
     @Input() get options(): any[] {
         return this._options;
     }
 
     set options(val: any[]) {
-        let opts = this.optionLabel ? this.objectUtils.generateSelectItems(val, this.optionLabel) : val;
+        let opts = this.optionLabel ? ObjectUtils.generateSelectItems(val, this.optionLabel) : val;
         this._options = opts;
+    }
+    
+    @Input() get filterValue(): string {
+        return this._filterValue;
+    }
+    
+    set filterValue(val: string) {
+        this._filterValue = val;
     }
 
     ngAfterContentInit() {
@@ -162,29 +169,39 @@ export class Listbox implements AfterContentInit, ControlValueAccessor {
     }
 
     onOptionClick(event, option) {
-        if (this.disabled || this.readonly) {
+        if (this.disabled || option.disabled || this.readonly) {
             return;
         }
 
-        if (!this.checkboxClick) {
-            if (this.multiple)
-                this.onOptionClickMultiple(event, option);
+        if (this.multiple) {
+            if (this.checkbox)
+                this.onOptionClickCheckbox(event, option);
             else
-                this.onOptionClickSingle(event, option);
+                this.onOptionClickMultiple(event, option);
         }
         else {
-            this.checkboxClick = false;
+            this.onOptionClickSingle(event, option);
         }
-
         this.optionTouched = false;
     }
 
     onOptionTouchEnd(event, option) {
-        if (this.disabled || this.readonly) {
+        if (this.disabled || option.disabled || this.readonly) {
             return;
         }
 
         this.optionTouched = true;
+    }
+
+    onOptionDoubleClick(event: Event, option: SelectItem): any {
+        if (this.disabled || option.disabled || this.readonly) {
+            return;
+        }
+
+        this.onDblClick.emit({
+            originalEvent: event,
+            value: this.value
+        })
     }
 
     onOptionClickSingle(event, option) {
@@ -263,124 +280,11 @@ export class Listbox implements AfterContentInit, ControlValueAccessor {
         }
     }
 
-    removeOption(option: any): void {
-        this.value = this.value.filter(val => !this.objectUtils.equals(val, option.value, this.dataKey));
-    }
-
-    isSelected(option: SelectItem) {
-        let selected = false;
-
-        if (this.multiple) {
-            if (this.value) {
-                for (let val of this.value) {
-                    if (this.objectUtils.equals(val, option.value, this.dataKey)) {
-                        selected = true;
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            selected = this.objectUtils.equals(this.value, option.value, this.dataKey);
-        }
-
-        return selected;
-    }
-
-    get allChecked(): boolean {
-        if (this.filterValue)
-            return this.allFilteredSelected();
-        else
-            return this.value && this.options && (this.value.length === this.options.length);
-    }
-
-    allFilteredSelected(): boolean {
-        let allSelected: boolean;
-        if (this.value && this.options && this.options.length)  {
-            allSelected = true;
-            for (let opt of this.options) {
-                if (this.isItemVisible(opt)) {
-                    if (!this.isSelected(opt)) {
-                        allSelected = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return allSelected;
-    }
-
-    onFilter(event) {
-        let query = event.target.value.trim().toLowerCase();
-        this.filterValue = query.length ? query : null;
-    }
-
-    toggleAll(event, checkbox) {
-        if (this.disabled || this.readonly || !this.options || this.options.length === 0) {
-            return;
-        }
-
-        if (checkbox.checked) {
-            this.value = [];
-        }
-        else {
-            if (this.options) {
-                this.value = [];
-                for (let i = 0; i < this.options.length; i++) {
-                    let opt = this.options[i];
-                    if (this.isItemVisible(opt)) {
-                        this.value.push(opt.value);
-                    }
-                }
-            }
-        }
-        checkbox.checked = !checkbox.checked;
-        this.onModelChange(this.value);
-        this.onChange.emit({ originalEvent: event, value: this.value });
-    }
-
-    isItemVisible(option: SelectItem): boolean {
-        if (this.filterValue) {
-            let visible;
-
-            switch (this.filterMode) {
-                case 'startsWith':
-                    visible = option.label.toLowerCase().indexOf(this.filterValue.toLowerCase()) === 0;
-                    break;
-
-                case 'contains':
-                    visible = option.label.toLowerCase().indexOf(this.filterValue.toLowerCase()) > -1;
-                    break;
-
-                default:
-                    visible = true;
-            }
-
-            return visible;
-        }
-        else {
-            return true;
-        }
-    }
-
-    onDoubleClick(event: Event, option: SelectItem): any {
+    onOptionClickCheckbox(event, option) {
         if (this.disabled || this.readonly) {
             return;
         }
 
-        this.onDblClick.emit({
-            originalEvent: event,
-            value: this.value
-        })
-    }
-
-    onCheckboxClick(event: Event, option: SelectItem) {
-        if (this.disabled || this.readonly) {
-            return;
-        }
-
-        this.checkboxClick = true;
         let selected = this.isSelected(option);
 
         if (selected) {
@@ -398,12 +302,210 @@ export class Listbox implements AfterContentInit, ControlValueAccessor {
         });
     }
 
+    removeOption(option: any): void {
+        this.value = this.value.filter(val => !ObjectUtils.equals(val, option.value, this.dataKey));
+    }
+
+    isSelected(option: SelectItem) {
+        let selected = false;
+
+        if (this.multiple) {
+            if (this.value) {
+                for (let val of this.value) {
+                    if (ObjectUtils.equals(val, option.value, this.dataKey)) {
+                        selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            selected = ObjectUtils.equals(this.value, option.value, this.dataKey);
+        }
+
+        return selected;
+    }
+
+    get allChecked(): boolean {
+        if (this.filterValue)
+            return this.allFilteredSelected();
+        else
+            return this.value && this.options && (this.value.length > 0 && this.value.length === this.getEnabledOptionCount());
+    }
+
+    getEnabledOptionCount(): number {
+        if (this.options) {
+            let count = 0;
+            for (let opt of this.options) {
+                if (!opt.disabled) {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    allFilteredSelected(): boolean {
+        let allSelected: boolean;
+        let options = this.filterValue ? this.getFilteredOptions() : this.options;
+
+        if (this.value && options && options.length)  {
+            allSelected = true;
+            for (let opt of this.options) {
+                if (this.isItemVisible(opt)) {
+                    if (!this.isSelected(opt)) {
+                        allSelected = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return allSelected;
+    }
+
+    onFilter(event) {
+        this._filterValue = event.target.value;
+    }
+
+    toggleAll(event) {
+        if (this.disabled || this.readonly || !this.options || this.options.length === 0) {
+            return;
+        }
+
+        if (this.allChecked) {
+            this.value = [];
+        }
+        else {
+            if (this.options) {
+                this.value = [];
+                for (let i = 0; i < this.options.length; i++) {
+                    let opt = this.options[i];
+                    if (this.isItemVisible(opt) && !opt.disabled) {
+                        this.value.push(opt.value);
+                    }
+                }
+            }
+        }
+
+        this.onModelChange(this.value);
+        this.onChange.emit({ originalEvent: event, value: this.value });
+        event.preventDefault();
+    }
+
+    isItemVisible(option: SelectItem): boolean {
+        if (this.filterValue) {
+            let visible;
+            let filterText = ObjectUtils.removeAccents(this.filterValue).toLowerCase();
+
+            switch (this.filterMode) {
+                case 'startsWith':
+                    visible = ObjectUtils.removeAccents(option.label).toLowerCase().indexOf(filterText) === 0;
+                    break;
+
+                case 'contains':
+                    visible = ObjectUtils.removeAccents(option.label).toLowerCase().indexOf(filterText) > -1;
+                    break;
+
+                default:
+                    visible = true;
+            }
+
+            return visible;
+        }
+        else {
+            return true;
+        }
+    }
+
     onInputFocus(event) {
         this.focus = true;
     }
 
     onInputBlur(event) {
         this.focus = false;
+    }
+    
+    onOptionKeyDown(event:KeyboardEvent, option) {
+        if (this.readonly) {
+            return;
+        }
+        
+        let item = <HTMLLIElement> event.currentTarget;
+        
+        switch(event.which) {
+            //down
+            case 40:
+                var nextItem = this.findNextItem(item);
+                if(nextItem) {
+                    nextItem.focus();
+                }
+                
+                event.preventDefault();
+            break;
+            
+            //up
+            case 38:
+                var prevItem = this.findPrevItem(item);
+                if(prevItem) {
+                    prevItem.focus();
+                }
+                
+                event.preventDefault();
+            break;
+            
+            //enter
+            case 13:
+                this.onOptionClick(event, option);
+                event.preventDefault();
+            break;
+        }
+    }
+    
+    findNextItem(item) {
+        let nextItem = item.nextElementSibling;
+
+        if (nextItem)
+            return DomHandler.hasClass(nextItem, 'ui-state-disabled') || DomHandler.isHidden(nextItem) ? this.findNextItem(nextItem) : nextItem;
+        else
+            return null;
+    }
+
+    findPrevItem(item) {
+        let prevItem = item.previousElementSibling;
+        
+        if (prevItem)
+            return DomHandler.hasClass(prevItem, 'ui-state-disabled') || DomHandler.isHidden(prevItem) ? this.findPrevItem(prevItem) : prevItem;
+        else
+            return null;
+    } 
+    
+    getFilteredOptions() {
+        let filteredOptions = [];
+        if(this.filterValue) {
+            for (let i = 0; i < this.options.length; i++) {
+                let opt = this.options[i];
+                if (this.isItemVisible(opt) && !opt.disabled) {
+                    filteredOptions.push(opt);
+                }
+            }
+            return filteredOptions;
+        }
+        else {
+            return this.options;
+        }
+    }
+
+    onHeaderCheckboxFocus() {
+        this.headerCheckboxFocus = true;
+    }
+
+    onHeaderCheckboxBlur() {
+        this.headerCheckboxFocus = false;
     }
 }
 

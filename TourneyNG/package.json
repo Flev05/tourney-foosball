@@ -45,7 +45,7 @@
     "gulp-uglify": "^3.0.1",
     "gulp-uglifycss": "1.1.0",
     "install": "0.12.2",
-    "intl": "1.2.5",
+    "intl": "^1.2.5",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",

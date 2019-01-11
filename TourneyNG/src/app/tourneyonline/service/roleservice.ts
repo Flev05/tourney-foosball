@@ -14,7 +14,7 @@ const httpOptions = {
 
 @Injectable()
 export class RoleService {
-    private apiUrl = 'be/roles';  // URL to web api
+    private apiUrl = 'api/roles';  // URL to web api
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of RoleService");
@@ -22,7 +22,7 @@ export class RoleService {
 
     loadRolesSmall (): Observable<Role[]> {
  
-        return this.http.get<Role[]>(this.apiUrl)
+        return this.http.get<Role[]>(this.apiUrl, httpOptions)
         .pipe(
             tap(_ => this.log(`fetched all Roles`)),
             catchError(this.handleError('loadRolesSmall', []))

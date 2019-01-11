@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-
+import { Message } from 'primeng/api';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import {Message} from '../../../../components/common/api';
-
-import { Team } from '../../../domain/team';
-import { Player } from '../../../domain/player';
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
-
+import { Team } from 'app/tourneyonline/domain/team';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { TeamService } from 'app/tourneyonline/service/teamService';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -23,8 +20,8 @@ export class TeamDetailView extends AbstractDetailView {
     teamFormGroup: FormGroup;
     toggleable: boolean = false;
 
-    availablePlayers: Player[] = [];
-    targetPlayers: Player[] = [];
+    // availablePlayers: Player[] = [];
+    // targetPlayers: Player[] = [];
 
     fullAddress: string;
 
@@ -32,7 +29,8 @@ export class TeamDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService
+        protected countryService: CountryService,
+        private   teamService: TeamService
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -42,41 +40,41 @@ export class TeamDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
-        this.selectedTeam = this.tourneyService.selectedTeam;
+        this.selectedTeam = this.teamService.selectedTeam;
 
-        if(this.tourneyService.newTeam) {
+        if(this.teamService.newTeam) {
             this.selectedTeam.id = this.tourneyService.getSequenceNumber(); 
             this.selectedTeam.players = [];
         }
 
-        this.targetPlayers = this.selectedTeam.players;
-        this.availablePlayers = [];
+        // this.targetPlayers = this.selectedTeam.players;
+        // this.availablePlayers = [];
 
-        let alreadyInTeam: Player[] = [];
-        for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-            let t = this.selectedTourney.teams[i];
-            let p = t.players;
-            for(let j=0; j<p.length; j++ ) {
-                alreadyInTeam.push(p[j]);
-            }
-        }
+        // let alreadyInTeam: Player[] = [];
+        // for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
+        //     let t = this.selectedTourney.teams[i];
+        //     let p = t.players;
+        //     for(let j=0; j<p.length; j++ ) {
+        //         alreadyInTeam.push(p[j]);
+        //     }
+        // }
 
-        for(let i=0; i<this.selectedTourney.players.length; i++ ) {
-            let ap = this.selectedTourney.players[i];
+        // for(let i=0; i<this.selectedTourney.players.length; i++ ) {
+        //     let ap = this.selectedTourney.players[i];
 
-            let found: boolean = false;
-            for(let j=0; j<alreadyInTeam.length; j++ ) {
-                let tp = alreadyInTeam[j];
+        //     let found: boolean = false;
+        //     for(let j=0; j<alreadyInTeam.length; j++ ) {
+        //         let tp = alreadyInTeam[j];
         
-                if(ap.id == tp.id) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                this.availablePlayers.push(ap);
-            }
-        }
+        //         if(ap.id == tp.id) {
+        //             found = true;
+        //             break;
+        //         }
+        //     }
+        //     if(!found) {
+        //         this.availablePlayers.push(ap);
+        //     }
+        // }
 
         if(this.selectedTeam.country!=undefined) {
             this.fullAddress = this.selectedTeam.address + " - " 
@@ -89,8 +87,8 @@ export class TeamDetailView extends AbstractDetailView {
             'address':  new FormControl(this.selectedTeam.address ),
 
             'country':          new FormControl(this.selectedTeam.country),
-            'availablePlayers': new FormControl(this.availablePlayers),
-            'targetPlayers':    new FormControl(this.targetPlayers),
+            // 'availablePlayers': new FormControl(this.availablePlayers),
+            // 'targetPlayers':    new FormControl(this.targetPlayers),
         });
     }
 
@@ -99,23 +97,23 @@ export class TeamDetailView extends AbstractDetailView {
         let popup = 'Sicuro di voler rimuovere la squadra: ' + this.selectedTeam.teamName;
 
         if(confirm(popup + this.selectedTeam.teamName + "?")) {
-            let index: number = this.selectedTourney.teams.indexOf(this.selectedTeam);
-            if(index > -1) {
-                this.selectedTourney.teams.splice(index, 1);
-            }
+            // let index: number = this.selectedTourney.teams.indexOf(this.selectedTeam);
+            // if(index > -1) {
+            //     this.selectedTourney.teams.splice(index, 1);
+            // }
 
-            for(let r of this.selectedTourney.rounds) {
-                let index: number = r.teams.indexOf(this.selectedTeam);
-                if(index > -1) {
-                    r.teams.splice(index, 1);
-                }    
-                 index = r.classification.indexOf(this.selectedTeam);
-                if(index > -1) {
-                    r.classification.splice(index, 1);
-                }    
-            }
+            // for(let r of this.selectedTourney.rounds) {
+            //     let index: number = r.teams.indexOf(this.selectedTeam);
+            //     if(index > -1) {
+            //         r.teams.splice(index, 1);
+            //     }    
+            //      index = r.classification.indexOf(this.selectedTeam);
+            //     if(index > -1) {
+            //         r.classification.splice(index, 1);
+            //     }    
+            // }
 
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+            this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
         }
     }
 
@@ -124,20 +122,20 @@ export class TeamDetailView extends AbstractDetailView {
         this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
         this.selectedTeam.address = this.teamFormGroup.get('address').value;
         this.selectedTeam.country = this.teamFormGroup.get('country').value;
-        this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
+        // this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
 
-        if(this.tourneyService.newTeam) {
-            this.selectedTourney.teams.push(this.selectedTeam);
-        }
+        // if(this.teamService.newTeam) {
+        //     this.selectedTourney.teams.push(this.selectedTeam);
+        // }
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;
 
-        if(this.tourneyService.newTeam) {
+        if(this.teamService.newTeam) {
             msgerr = 'Creazione nuova squadra fallita';
         } else {
             msgerr = 'Modifica squadra fallita';

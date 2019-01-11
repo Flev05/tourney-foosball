@@ -27,12 +27,8 @@ const httpOptions = {
 };
 
 const tourneyUrl = 'api/tourneys';  // URL to web api
-const tourneyBeUrl = 'be/tourneys';  // URL to Back End api
-const tourneyPlayoffUrl = 'api/tourneys';  // URL to web api
-const tourneyEliminationUrl = 'api/tourneys';  // URL to web api
 const typologiesUrl = 'api/typologies';  // URL to web api
 const meetingUrl = 'api/meetings';  // URL to web api
-const meetingBeUrl = 'be/meetings';  // URL to Back End api
 
 const classificationLabel = "°";
 
@@ -47,8 +43,6 @@ export class TourneyService {
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
-    selectedPlayer : Player;
-    selectedTeam: Team;
     selectedRound : Round;
     selectedPlayoff : Playoff;
     selectedEliminatory : Eliminatory;
@@ -60,8 +54,6 @@ export class TourneyService {
     selectedTeams:  Team[];
 
     newTourney : boolean = false;
-    newPlayer : boolean = false;
-    newTeam : boolean = false;
     newRound : boolean = false;
     
     newPlayoffConfig : boolean = false;
@@ -207,7 +199,7 @@ export class TourneyService {
     loadAllTourneys (): Observable<TourneyDb[]> {
         let url = tourneyUrl;
         if(this.loginService.userLogged) {
-            url = tourneyBeUrl + "?" + "userId=" + this.loginService.selectedLogin.id;
+            url = tourneyUrl + "?" + "userId=" + this.loginService.selectedLogin.id;
         }
         return this.http.get<TourneyDb[]>(url).pipe(
             tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
@@ -224,7 +216,7 @@ export class TourneyService {
         let url = meetingUrl + queryString;
         
         if(this.loginService.userLogged) {
-            url = tourneyBeUrl + queryString;
+            url = tourneyUrl + queryString;
         }
         
         const obs :Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
@@ -244,7 +236,7 @@ export class TourneyService {
         let url = meetingUrl + queryString;
 
         if(this.loginService.userLogged) {
-            url = tourneyBeUrl + queryString;
+            url = tourneyUrl + queryString;
         }
         
         const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
@@ -264,7 +256,7 @@ export class TourneyService {
         let url = meetingUrl + queryString;
 
         if(this.loginService.userLogged) {
-            url = tourneyBeUrl + queryString;
+            url = tourneyUrl + queryString;
         }
         
         const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
@@ -285,7 +277,7 @@ export class TourneyService {
 
     loadTourneyPlayoff (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(tourneyPlayoffUrl)
+        return this.http.get<Tourney[]>(tourneyUrl)
         .pipe(
             tap(_ => this.log('fetched all Playoff tourneys')),
             catchError(this.handleError('loadTourneyPlayoff', []))
@@ -294,7 +286,7 @@ export class TourneyService {
 
     loadTourneyElimination (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(tourneyEliminationUrl)
+        return this.http.get<Tourney[]>(tourneyUrl)
         .pipe(
             tap(_ => this.log('fetched all Elimination tourneys')),
             catchError(this.handleError('loadTourneyElimination', []))
@@ -335,7 +327,7 @@ export class TourneyService {
         let url = tourneyUrl + "/" + id;
 
         if(this.loginService.userLogged) {
-            url = tourneyBeUrl +  "/" + id;
+            url = tourneyUrl +  "/" + id;
         }
 
         return this.http.put(url, tourney, httpOptions).pipe(
@@ -381,7 +373,7 @@ export class TourneyService {
         let url = meetingUrl + "/" + id;
 
         if(this.loginService.userLogged) {
-            url = meetingBeUrl +  "/" + id;
+            url = tourneyUrl +  "/" + id;
         }
 
         let obs = this.http.post<MeetingDb>(url, mdb, httpOptions).pipe(
@@ -423,7 +415,7 @@ export class TourneyService {
         let url = meetingUrl + "/" + id;
 
         if(this.loginService.userLogged) {
-            url = meetingBeUrl +  "/" + id;
+            url = tourneyUrl +  "/" + id;
         }
 
         return this.http.put(url, mdb, httpOptions).pipe(

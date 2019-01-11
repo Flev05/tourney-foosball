@@ -1,17 +1,11 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AbstractView } from './abstract-view';
-import { Round } from 'app/tourneyonline/domain/round';
-import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
  
 export abstract class AbstractListView extends AbstractView {
-
-    // roundMeetings: MeetingDb[];
-    // playoffMeetings: MeetingDb[];
 
     levelMap: Map<number, Eliminatory[]>;
     totLevelLen: number;

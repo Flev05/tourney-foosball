@@ -21,16 +21,19 @@ import { ButtonModule } from 'app/components/button/button';
 import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { SliderModule } from 'app/components/slider/slider';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { CalendarModule } from 'app/components/calendar/calendar';
+import { PlayerModule } from '../player/player.module';
 
 @NgModule({
 	imports: [
-		CommonModule
+		 CommonModule
         ,FormsModule
         ,ReactiveFormsModule
 		,TourneyRoutingModule
@@ -53,6 +56,9 @@ import { CalendarModule } from 'app/components/calendar/calendar';
         ,TooltipModule
         ,CalendarModule
         ,AccordionModule
+        ,PlayerModule
+        ,MessagesModule
+        ,MessageModule
 	],
 	declarations: [
 		TourneyListView,

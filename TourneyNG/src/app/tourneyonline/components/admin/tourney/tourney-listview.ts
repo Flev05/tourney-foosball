@@ -32,6 +32,20 @@ export class TourneyListView extends AbstractTourneyListView {
         this.gotoDetailView();
     }
 
+    doDelete(tourney: any) {
+        console.log("doDelete(): " + tourney.tourneyName);
+        let popup = 'Sicuro di voler rimuovere il torneo: ' + tourney.tourneyName + "?";
+
+        if(confirm(popup)) {
+            this.tourneyService.deleteTourney(tourney.t).subscribe(n => this.next(n), e => this.onError(e));
+            let index: number = this.tourneys.indexOf(tourney.t);
+            if(index > -1) {
+                this.tourneys.splice(index, 1);
+                this.rows.splice(index, 1);
+            }
+        }
+    }
+
     protected filter(tourneys: Tourney[]): Tourney[] {
         return tourneys;
     }

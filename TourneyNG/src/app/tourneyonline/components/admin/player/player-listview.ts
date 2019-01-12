@@ -31,23 +31,12 @@ export class PlayerListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
       
-        this.cols = [
-            { field: 'rowNumber',   header: 'N°' },
-            { field: 'firstname',   header: 'Nome' },
-            { field: 'lastname',    header: 'Cognome' },
-            { field: 'phoneNumber', header: 'Telefono' },
-            { field: 'email',       header: 'Email' }
-        ];
-
-        this.playerService.loadAllPlayers().subscribe(p => this.players = p, e => this.onError(e), () => this.onComplete());
+        this.cols = PlayerService.cols;
+        this.playerService.loadAllPlayers().subscribe(t => this.players = t, e => this.onError(e), () => this.onComplete());
     }
 
-    private onComplete(): void {
-        this.rows = [];
-        for(let i=0;i<this.players.length; i++) {
-            let p = this.players[i];
-            this.rows.push({p:p, rowNumber: i+1, firstname: p.firstname, lastname: p.lastname, phoneNumber: p.phoneNumber, email: p.email});
-        }
+    onComplete(): void {
+        this.rows = this.playerService.prepareRows(this.players);
     }
 
     create() {
@@ -70,7 +59,7 @@ export class PlayerListView extends AbstractListView {
 
     doDelete(player: any) {
         console.log(player);
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + player.lastname + " " + player.firstname;
+        let popup = 'Sicuro di voler rimuovere il giocatore: ' + player.lastname + " " + player.firstname;
 
         if(confirm(popup + "?")) {
             this.playerService.deletePlayer(player.p).subscribe(n => this.next(n));
@@ -78,10 +67,9 @@ export class PlayerListView extends AbstractListView {
             let index: number = this.players.indexOf(player.p);
             if(index > -1) {
                 this.players.splice(index, 1);
+                this.rows.splice(index, 1);
             }
-            this.onComplete();
         }
     }
-
 }
 

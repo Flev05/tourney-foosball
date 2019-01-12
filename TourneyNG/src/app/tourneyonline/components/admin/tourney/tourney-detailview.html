@@ -702,7 +702,8 @@
             <p-tabPanel header="Giocatori">
                 <p-table [columns]="playersCols"
                     [value]="playersRows"
-                    [responsive]="true">        
+                    [responsive]="true"
+                    [(selection)]="selectedPlayers">        
         
                     <ng-template pTemplate="header" let-columns>
                         <tr>
@@ -732,7 +733,8 @@
             <p-tabPanel header="Squadre">
                 <p-table [columns]="teamsCols"
                     [value]="teamsRows"
-                    [responsive]="true">        
+                    [responsive]="true"
+                    [(selection)]="selectedTeams">        
         
                     <ng-template pTemplate="header" let-columns>
                         <tr>
@@ -861,11 +863,6 @@
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
-                    [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
-                </div>
-                
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa fa-close" (click)="doDelete()" label="Rimuovi" 
                     [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
             </div>

@@ -32,21 +32,12 @@ export class TeamListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         
-        this.cols = [
-            { field: 'rowNumber',  header: 'N°' },
-            { field: 'teamName',   header: 'Nome' },
-            { field: 'address',    header: 'Indirizzo' },
-        ];
-
-        this.teamService.loadAllTeams().subscribe(p => this.teams = p, e => this.onError(e), () => this.onComplete());
+        this.cols = TeamService.cols;
+        this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e), () => this.onComplete());
     }
 
     onComplete(): void {
-        this.rows = [];
-        for(let i=0;i<this.teams.length; i++) {
-            let t = this.teams[i];
-            this.rows.push({t:t, rowNumber: i+1, teamName: t.teamName, address: t.address});
-        }
+        this.rows = this.teamService.prepareRows(this.teams);
     }
 
     doDelete(team: any) {
@@ -59,8 +50,8 @@ export class TeamListView extends AbstractListView {
             let index: number = this.teams.indexOf(team.t);
             if(index > -1) {
                 this.teams.splice(index, 1);
+                this.rows.splice(index, 1);
             }
-            this.onComplete();
         }
     }
 

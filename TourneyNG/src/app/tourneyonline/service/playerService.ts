@@ -15,12 +15,27 @@ const clientUrl = 'api/players';  // URL to web api
 
 @Injectable()
 export class PlayerService {
-
     selectedPlayer : Player;
     newPlayer : boolean = false;
+    static cols = [
+        { field: 'rowNumber',   header: 'N°' },
+        { field: 'firstname',   header: 'Nome' },
+        { field: 'lastname',    header: 'Cognome' },
+        { field: 'phoneNumber', header: 'Telefono' },
+        { field: 'email',       header: 'Email' }
+    ];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of PlayerService");
+    }
+
+    prepareRows(players: Player[]): any[] {
+        let rows = [];
+        for(let i=0;i<players.length; i++) {
+            let p = players[i];
+            rows.push({p:p, rowNumber: i+1, firstname: p.firstname, lastname: p.lastname, phoneNumber: p.phoneNumber, email: p.email});
+        }
+        return rows;
     }
 
     loadAllPlayers (): Observable<Player[]> {

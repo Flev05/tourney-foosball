@@ -54,6 +54,7 @@ build.metadata
 **/gradle.properties
 **/local.properties
 **/dist/
+**/TourneyNG/e2e/
 **/TourneyNG/src/assets/
 **/TourneyNG/src/app/components/
 **/TourneyNG/src/app/showcase/

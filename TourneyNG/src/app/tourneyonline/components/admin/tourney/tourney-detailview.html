@@ -123,10 +123,16 @@
             <li>Salva</li>
             <li>Rimuovi</li>
         </ul>
-        <p>e due schede da compilare:</p>
+        <p>e le seguenti schede da compilare:</p>
         <ul>
             <li>Generalità</li>
             <li>Specificità</li>
+            <li>Giocatori</li>
+            <li>Squadre</li>
+            <li>Gironi</li>
+            <li>Playoff</li>
+            <li>Eliminazioni Dirette</li>
+            <li>Campi</li>
         </ul>   
         <h4>Indietro</h4>
         <p>
@@ -265,20 +271,53 @@
         <h4>Tutte/Al Meglio</h4>
         <p>
             Solo nei tornei a punti, specificare se disputare Tutte le patite o il numero minimo per aggiudicarsi l'incontro. 
-            Se scegliete Al Meglio, il sistema automaticamente calcola il numero minimo di partite da vincere per aggiudicarsi l'incontro.            
+            Se scegliete Al Meglio, il sistema automaticamente calcola il numero minimo di partite da vincere per aggiudicarsi l'incontro.
         </p>            
         <p>
-            Per esempio in un incontro di tennis, si disputano massimo 5 partite al meglio delle 3, 
-            in un incontro di volley si disputano massimo 5 partite al meglio delle 3.
+            Per esempio in un incontro di tennis, si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie, 
+            in un incontro di volley si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie.
             In un campionato CSI di calcio balilla si disputano tutte le 9 partite dell'incontro perchè si assegna un punto
             per ciascuna partita vinta.
         </p>
-        <h4>Giocatori</h4>
+        
+        <h3>Giocatori</h3>
         <p>
-            Indicare il numero di giocatori impiegato da ciascuna squadra in tutte le partite dell'incontro.
-            Se il numero di giocatori è uno, il nome della squadra può coincidere con il nome della squadra.
+            Selezionare, con la spunta sulla check box, il sottoinsieme di giocatori che componono il torneo dal pool dei giocatori esistenti.
+            Solo i giocatori con il segno di spunta faranno parte del torneo.
         </p>
 
+        <h3>Squadre</h3>
+        <p>
+            Selezionare i nomi delle squadre che parteciperanno al torneo apponendo il segno di spunta sulla sinistra della riga.
+            La squadra all'inizio non contiene nessun giocatore, per popolarla selezionarla ed aprire al corrispondente vista di
+            dettaglio in cui caricare i giocatori della squadra.
+        </p>
+
+        <h3>Gironi</h3>
+        <p>
+            Specificare i gironi che compongono il torneo, inserendo i loro nomi e le squadre che li compongono
+            scegliendole dalla lista di squadre proposte. Quando si aggiunge una squadra ad un girone, automaticamente
+            il sistema la rimuove dal pool delle squadre diponibili per il torneo ed, allo stesso modo, se rimuovete
+            un squadra da un girone, il sistema la rimette nel pool delle squadre disponilibi.
+        </p>
+        
+        <h3>Playoff</h3>
+        <p>
+            Specificare, se previsti, i playoff del torneo. Allo scopo occorre definire le regole per il passaggio
+            del turno dai gironi all'italiana che approdono ai playoff in funzione delle posizioni di classifica conseguite.
+        </p>
+
+        <h3>Eliminazioni Dirette</h3>
+        <p>
+            Specificare, se previsti, i livelli di eliminazioni dirette del torneo. Allo scopo il sistema automaticamente
+            propone le diverse possibilità in funzione delle scelte effettuate nella scheda Specificità.
+        </p>
+
+        <h3>Campi</h3>
+        <p>
+            Se previsti si possono registrare i campi di gioco utilizzati durante il torneo.
+            Questa fase dipende fortemente della disciplina del torneo e potrebbe essere presente solo per alcune di loro.
+        </p>
     </p-accordionTab>
 </p-accordion>
 </div>
@@ -289,11 +328,11 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
     <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSubmit(tourneyFormGroup.value)">
-        <p-tabView>
+        <p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
             <p-tabPanel header="Generalità">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
@@ -659,16 +698,174 @@
                 </p-fieldset>
             </div>
             </p-tabPanel>
+
+            <p-tabPanel header="Giocatori">
+                <p-table [columns]="playersCols"
+                    [value]="playersRows"
+                    [responsive]="true">        
+        
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>                            
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+            
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+                        <tr [pSelectableRow]="rowData">
+                            <td>
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>                            
+                            <td *ngFor="let col of columns">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>     
+                        
+            <p-tabPanel header="Squadre">
+                <p-table [columns]="teamsCols"
+                    [value]="teamsRows"
+                    [responsive]="true">        
+        
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>                            
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+            
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+                        <tr [pSelectableRow]="rowData">
+                            <td>
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>                            
+                            <td *ngFor="let col of columns">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>                   
+<!-- 
+            <p-tabPanel header="Gironi" *ngIf="containsRound()">    
+                <p-table [columns]="roundCols"
+                    [value]="roundRows"
+                    [responsive]="true">        
+        
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+            
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                        <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                            <td colspan="9">
+                                <span class="roundNames">{{rowData.roundName}}</span>
+                            </td>
+                        </tr>            
+                    
+                        <tr [pSelectableRow]="rowData">
+                            <td *ngFor="let col of columns">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+        
+            <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
+                <p-table [columns]="playoffCols"
+                    [value]="playoffRows"
+                    [responsive]="true">        
+        
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+            
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                        <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
+                            <td colspan="9">
+                                <span class="roundNames">{{rowData.roundName}}</span>
+                            </td>
+                        </tr>            
+                    
+                        <tr [pSelectableRow]="rowData">
+                            <td *ngFor="let col of columns">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+
+            <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">  
+                <div style="margin-top:30px">
+                    <p-message *ngIf="incompleteConfiguration" 
+                        severity="error" 
+                        text="Attenzione! Non non è stato inserito ancora nessun risultato!">
+                    </p-message>
+                </div>     
+        
+                <p-table *ngIf="!incompleteConfiguration" 
+                        [columns]="eliminatoryCols"
+                        [value]="eliminatoryLevelRows" 
+                        [responsive]="true"
+                        selectionMode="single" 
+                        [(selection)]="selectedRow" 
+                        (onRowSelect)="onEliminatoryRowSelect($event)">
+        
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                        </tr>
+                    </ng-template>
+        
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                        <tr [pSelectableRow]="rowData">
+                            <td *ngFor="let col of columns">
+                                <span class="ui-column-title">{{col.header}}</span>
+                                {{rowData[col.field]}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>            
+        -->
+            
         </p-tabView>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" 
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
                     [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
+                
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" 
+                    <button class="ui-button-danger" pButton type="button" icon="fa fa-close" (click)="doDelete()" label="Rimuovi" 
                     [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
             </div>

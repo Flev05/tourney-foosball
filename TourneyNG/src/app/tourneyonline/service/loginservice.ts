@@ -10,8 +10,8 @@ import { Login } from '../domain/login';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const loginUrl  = 'be/login';  // URL to web server api
-const logoutUrl = 'be/logout';  // URL to web server api
+const loginUrl  = 'api/login';  // URL to web server api
+const logoutUrl = 'api/logout';  // URL to web server api
 
 @Injectable()
 export class LoginService {

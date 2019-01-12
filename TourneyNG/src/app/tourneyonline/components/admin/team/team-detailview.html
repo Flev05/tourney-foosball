@@ -40,11 +40,10 @@
 
 <div class="content-section implementation">
   
-    <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
     <h4><span>Squadra: {{selectedTeam.teamName}}</span></h4>
   
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>                  
 
     <form [formGroup]="teamFormGroup" (ngSubmit)="onSubmit(teamFormGroup.value)">
@@ -105,7 +104,7 @@
                 </div>
             </div>           
 
-            <p-pickList [source]="availablePlayers" [target]="targetPlayers" sourceHeader="Disponibili" targetHeader="Selezionati" 
+            <!-- <p-pickList [source]="availablePlayers" [target]="targetPlayers" sourceHeader="Disponibili" targetHeader="Selezionati" 
                     [responsive]="true"
                     dragdrop="true" 
                     dragdropScope="players" 
@@ -116,17 +115,14 @@
                         <div>{{player.firstname}} {{player.lastname}}</div>
                     </div>
                 </ng-template>
-            </p-pickList>            
+            </p-pickList>             -->
                     
         </div>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="fa-save" label="Salva" [disabled]="!teamFormGroup.valid"></button>
-                </div>
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa-close" (click)="doDelete()" label="Rimuovi" [disabled]="!teamFormGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!teamFormGroup.valid"></button>
                 </div>
             </div>
         </div>

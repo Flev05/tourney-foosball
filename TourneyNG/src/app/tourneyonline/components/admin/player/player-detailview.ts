@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-
-import {Message} from '../../../../components/common/api';
-
-import { Player } from '../../../domain/player';
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { Player } from 'app/tourneyonline/domain/player';
+import { Message } from 'primeng/api';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { PlayerService } from 'app/tourneyonline/service/playerService';
 
 
 @Component({
@@ -27,7 +26,8 @@ export class PlayerDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService
+        protected countryService: CountryService,
+        private   playerService: PlayerService
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -37,9 +37,9 @@ export class PlayerDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
-        this.selectedPlayer = this.tourneyService.selectedPlayer;
+        this.selectedPlayer = this.playerService.selectedPlayer;
 
-        if(this.tourneyService.newPlayer) {
+        if(this.playerService.newPlayer) {
             this.selectedPlayer.firstname = "";
             this.selectedPlayer.lastname = "";
             this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
@@ -61,18 +61,15 @@ export class PlayerDetailView extends AbstractDetailView {
         });
     }
 
-    doDelete() {
-        console.log("doDelete(): " + this.selectedPlayer.firstname);
-        let popup = 'Sicuro di voler rimuovere il giocatore: ';
+    // doDelete() {
+    //     let name = this.selectedPlayer.firstname + " " + this.selectedPlayer.lastname;
+    //     console.log("doDelete(): " + name);
+    //     let popup = 'Sicuro di voler rimuovere il giocatore: ';
 
-        if(confirm(popup + this.selectedPlayer.firstname + "?")) {
-            let index: number = this.selectedTourney.players.indexOf(this.selectedPlayer);
-            if(index > -1) {
-                this.selectedTourney.players.splice(index, 1);
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-            }
-        }
-    }
+    //     if(confirm(popup + name + "?")) {
+    //         this.playerService.deletePlayer(this.selectedPlayer);
+    //     }
+    // }
 
     onSubmit(value: string) {
 
@@ -84,19 +81,19 @@ export class PlayerDetailView extends AbstractDetailView {
         this.selectedPlayer.phoneNumber = this.playerFormGroup.get('phoneNumber').value;
         this.selectedPlayer.email = this.playerFormGroup.get('email').value;
 
-        if(this.tourneyService.newPlayer) {
-            this.tourneyService.newPlayer = false;
-            this.selectedTourney.players.push(this.selectedPlayer);
+        if(this.playerService.newPlayer) {
+            this.playerService.newPlayer = false;
+            // this.selectedTourney.players.push(this.selectedPlayer);
         }
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.playerService.updatePlayer(this.selectedPlayer).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;
 
-        if(this.tourneyService.newPlayer) {
+        if(this.playerService.newPlayer) {
             msgerr = 'Creazione nuovo giocatore fallita';
         } else {
             msgerr = 'Modifica giocatore fallita';

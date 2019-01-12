@@ -41,6 +41,10 @@ export class TourneyDetailView extends AbstractDetailView {
     allMatchesEnabled: boolean = true;
     bestOffWinner: number;
 
+    activeIndex: number;
+    playersCols: any[];
+    playersRows: any[];
+
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -52,6 +56,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
+        this.activeIndex = this.tourneyService.selectedTabIndex;
 
         super.ngOnInit();
         
@@ -158,6 +163,14 @@ export class TourneyDetailView extends AbstractDetailView {
        });
     }
 
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.activeIndex = index;
+        this.tourneyService.selectedTabIndex = this.activeIndex;
+    }
+    
+    
     onOnewayRoundClick() {
         console.log("Entering onOnewayRoundClick()");
         this.selectedTourney.isOnewayRound = true;
@@ -323,6 +336,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         return false;
     }
+
     notAllowedPhases(): boolean {
         let phases = this.tourneyFormGroup.get('phases').value;
 

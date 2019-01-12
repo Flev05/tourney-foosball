@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Tourney } from '../../../domain/tourney';
-import { Team } from '../../../domain/team';
+import { TeamService } from 'app/tourneyonline/service/teamService';
 import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from '../../../service/tourneyservice';
+import { Team } from 'app/tourneyonline/domain/team';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
-const redirect: string = "adminteam/lv/dv";
+const redirect: string = "adminteam/dv";
 
 @Component({
     templateUrl: './team-listview.html'
@@ -24,19 +24,24 @@ export class TeamListView extends AbstractListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        private   teamService: TeamService
     ) {
         super(redirect, tourneyService, router, location);
     }
 
     ngOnInit() {
         super.ngOnInit();
-        this.updateRowGroupMetaData();
+        
         this.cols = [
             { field: 'rowNumber',  header: 'N°' },
             { field: 'teamName',   header: 'Nome' },
             { field: 'address',    header: 'Indirizzo' },
         ];
 
+        this.teamService.loadAllTeams().subscribe(p => this.teams = p, e => this.onError(e), () => this.onComplete());
+    }
+
+    onComplete(): void {
         this.rows = [];
         for(let i=0;i<this.teams.length; i++) {
             let t = this.teams[i];
@@ -44,25 +49,40 @@ export class TeamListView extends AbstractListView {
         }
     }
 
+    doDelete(team: any) {
+        console.log(team.teamName);
+        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName;
+
+        if(confirm(popup + "?")) {
+            this.teamService.deleteTeam(team.t).subscribe(n => this.next(n), e => this.onError(e));
+
+            let index: number = this.teams.indexOf(team.t);
+            if(index > -1) {
+                this.teams.splice(index, 1);
+            }
+            this.onComplete();
+        }
+    }
+
     protected updateRowGroupMetaData() {
 
         this.selectedTourney = this.tourneyService.selectedTourney;
         this.teams = this.tourneyService.selectedTourney.teams;
-        this.tourneyService.newTeam = false;
+        this.teamService.newTeam = false;
     }
 
     create() {
         this.selectedTeam={id:0, teamName:""};
         this.selectedRow = {t:this.selectedTeam, rowNumber: 1, teamName: "", address: ""};
-        this.tourneyService.selectedTeam = this.selectedTeam;
-        this.tourneyService.newTeam = true;
+        this.teamService.selectedTeam = this.selectedTeam;
+        this.teamService.newTeam = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedTeam = this.selectedRow.t;
+        this.teamService.selectedTeam = this.selectedRow.t;
 
         this.gotoDetailView();
     }

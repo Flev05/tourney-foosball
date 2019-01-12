@@ -4,10 +4,16 @@ import { InMemoryDataServiceELIM } from './in-memory-data.service.ELIM';
 import { InMemoryDataServiceRoundElim } from './in-memory-data.service.ROUND-ELIM';
 import { MeetingDb } from '../domain/meeting-db';
 import { Observable } from 'rxjs';
+import { Player } from '../domain/player';
+import { Team } from '../domain/team';
+import { InMemoryPlayersDataService } from './in-memory-players-data.service';
+import { InMemoryTeamsDataService } from './in-memory-teams-data.service';
 
 export class InMemoryDataService implements InMemoryDbService {
 
   meetings : MeetingDb[] = [];
+  players  : Player[]    = InMemoryPlayersDataService.players;
+  teams    : Team[]      = InMemoryTeamsDataService.teams;
 
   createDb(): {} | Observable<{}> | Promise<{}> {
     const tourneys = [
@@ -222,6 +228,8 @@ export class InMemoryDataService implements InMemoryDbService {
         , resetPassword
         , typologies
         , meetings: this.meetings
+        , players: this.players
+        , teams: this.teams
       };
 
       return arr;

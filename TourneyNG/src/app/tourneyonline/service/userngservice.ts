@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Userng } from '../domain/userng';
 import { Password } from '../domain/password';
@@ -15,9 +15,9 @@ const httpOptions = {
 
 @Injectable()
 export class UserngService {
-    private apiUrl = 'be/userng';                       // URL to Back End api
-    private changePasswordUrl = 'be/changePassword';    // URL to Back End api
-    private resetPasswordUrl = 'be/resetPassword';      // URL to Back End api
+    private apiUrl = 'api/userng';                       // URL to Back End api
+    private changePasswordUrl = 'api/changePassword';    // URL to Back End api
+    private resetPasswordUrl = 'api/resetPassword';      // URL to Back End api
 
     selectedUser : Userng;
 

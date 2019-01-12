@@ -19,9 +19,6 @@
 </div>
 
 <div class="content-section implementation">    
-    <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-
-    <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
     <p-table [responsive]="true" 
         [columns]="cols" 
@@ -32,7 +29,7 @@
 
         <ng-template pTemplate="caption">
             <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
+                <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
             </div>
         </ng-template>
 
@@ -41,6 +38,7 @@
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
+                <th style="width:4em"></th>
             </tr>
         </ng-template>
     
@@ -50,12 +48,15 @@
                     <span class="ui-column-title">{{col.header}}</span>
                     {{rowData[col.field]}}
                 </td>
+                <td>
+                    <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
+                </td>                
             </tr>
         </ng-template>
 
         <ng-template pTemplate="summary">
             <div style="text-align:left">
-                <button pButton icon="fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
+                <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
             </div>
         </ng-template>
     </p-table>

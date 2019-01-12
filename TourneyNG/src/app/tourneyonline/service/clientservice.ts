@@ -4,17 +4,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Client } from '../domain/client';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
+const clientUrl = 'api/clients';  // URL to web api
 
 @Injectable()
 export class ClientService {
-    private clientUrl = 'be/clients';  // URL to web api
 
     selectedClient : Client;
 
@@ -26,7 +26,7 @@ export class ClientService {
 
     loadClientSmall (): Observable<Client[]> {
  
-        return this.http.get<Client[]>(this.clientUrl)
+        return this.http.get<Client[]>(clientUrl)
         .pipe(
             tap(_ => this.log(`fetched all tornei`)),
             catchError(this.handleError('loadClientSmall', []))
@@ -35,7 +35,7 @@ export class ClientService {
 
     /** GET hero by id. Will 404 if id not found */
     getClient(id: number): Observable<Client> {
-        const url = `${this.clientUrl}/${id}`;
+        const url = `${clientUrl}/${id}`;
         return this.http.get<Client>(url).pipe(
             tap(_ => this.log(`fetched Client id=${id}`)),
             catchError(this.handleError<Client>(`getClient id=${id}`))
@@ -44,7 +44,7 @@ export class ClientService {
 
     /** POST: add a new Client to the server */
     addClient (client: Client): Observable<Client> {
-        return this.http.post<Client>(this.clientUrl, client, httpOptions).pipe(
+        return this.http.post<Client>(clientUrl, client, httpOptions).pipe(
             tap((client: Client) => this.log(`added Client w/ id=${client.id}`)),
             catchError(this.handleError<Client>('addClient'))
         );
@@ -52,7 +52,7 @@ export class ClientService {
 
     /** PUT: update the Client on the server */
     updateClient (client: Client ): Observable<Client> {
-        const url = `${this.clientUrl}`;
+        const url = `${clientUrl}`;
         
         console.log(client);
 
@@ -65,7 +65,7 @@ export class ClientService {
     /** DELETE: delete the Client from the server */
     deleteClient (client: Client | number): Observable<Client> {
         const id = typeof client === 'number' ? client : client.id;
-        const url = `${this.clientUrl}/${id}`;
+        const url = `${clientUrl}/${id}`;
 
         return this.http.delete<Client>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Client id=${id}`)),

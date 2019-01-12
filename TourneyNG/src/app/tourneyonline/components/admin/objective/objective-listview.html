@@ -15,7 +15,7 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
 
     <p-table [responsive]="true" 
@@ -50,7 +50,7 @@
 
         <ng-template pTemplate="summary" let-rowData>
             <div style="text-align:left">
-                <button type="button" pButton icon="fa fa-save" (click)="create()" label="Aggiungi Obiettivo"></button>
+                <button type="button" pButton icon="pi pi-save" (click)="create()" label="Aggiungi Obiettivo"></button>
             </div>
         </ng-template> 
 

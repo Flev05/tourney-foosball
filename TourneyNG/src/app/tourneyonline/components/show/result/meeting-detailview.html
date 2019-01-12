@@ -27,7 +27,7 @@
     <h4><span>Data: {{selectedMeeting.datetime | date: 'dd/MM/y HH:mm'}}</span></h4>
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>       
 
     <div style="margin-top:30px">
@@ -67,7 +67,7 @@
                             <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
                         </td>
                         <td style="width: 10mm; text-align: center;">
-                            <button pButton type="button" icon="fa fa-plus" (click)="plus1(rowData)"></button>
+                            <button pButton type="button" icon="fa fa fa-plus" (click)="plus1(rowData)"></button>
                         </td>            
                     </tr>
                     <tr>
@@ -78,7 +78,7 @@
                             <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
                         </td>
                         <td style="width: 10mm; text-align: center;">
-                            <button pButton type="button" icon="fa fa-plus" (click)="plus2(rowData)"></button>
+                            <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)"></button>
                         </td>            
                     </tr>
                 </table>
@@ -89,5 +89,5 @@
 </p-table>
 
 <div *ngIf="!alreadyPassed" style="text-align:left">
-    <button class="ui-button-success" type="button" pButton icon="fa fa-save" (click)="save()" label="Salva"></button>
+    <button class="ui-button-success" type="button" pButton icon="pi pi-save" (click)="save()" label="Salva"></button>
 </div>

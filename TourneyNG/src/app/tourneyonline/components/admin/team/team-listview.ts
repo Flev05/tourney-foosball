@@ -37,7 +37,7 @@ export class TeamListView extends AbstractListView {
     }
 
     onComplete(): void {
-        this.rows = this.teamService.prepareRows(this.teams);
+        this.rows = this.teams;
     }
 
     doDelete(team: any) {
@@ -45,9 +45,9 @@ export class TeamListView extends AbstractListView {
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName;
 
         if(confirm(popup + "?")) {
-            this.teamService.deleteTeam(team.t).subscribe(n => this.next(n), e => this.onError(e));
+            this.teamService.deleteTeam(team).subscribe(n => this.next(n), e => this.onError(e));
 
-            let index: number = this.teams.indexOf(team.t);
+            let index: number = this.teams.indexOf(team);
             if(index > -1) {
                 this.teams.splice(index, 1);
                 this.rows.splice(index, 1);
@@ -64,7 +64,7 @@ export class TeamListView extends AbstractListView {
 
     create() {
         this.selectedTeam={id:0, teamName:""};
-        this.selectedRow = {t:this.selectedTeam, rowNumber: 1, teamName: "", address: ""};
+        this.selectedRow = this.selectedTeam;
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = true;
         this.gotoDetailView();
@@ -73,7 +73,7 @@ export class TeamListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.teamService.selectedTeam = this.selectedRow.t;
+        this.teamService.selectedTeam = this.selectedRow;
 
         this.gotoDetailView();
     }

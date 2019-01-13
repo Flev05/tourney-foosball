@@ -20,9 +20,6 @@ export class TeamDetailView extends AbstractDetailView {
     teamFormGroup: FormGroup;
     toggleable: boolean = false;
 
-    // availablePlayers: Player[] = [];
-    // targetPlayers: Player[] = [];
-
     fullAddress: string;
 
     constructor(
@@ -47,35 +44,6 @@ export class TeamDetailView extends AbstractDetailView {
             this.selectedTeam.players = [];
         }
 
-        // this.targetPlayers = this.selectedTeam.players;
-        // this.availablePlayers = [];
-
-        // let alreadyInTeam: Player[] = [];
-        // for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-        //     let t = this.selectedTourney.teams[i];
-        //     let p = t.players;
-        //     for(let j=0; j<p.length; j++ ) {
-        //         alreadyInTeam.push(p[j]);
-        //     }
-        // }
-
-        // for(let i=0; i<this.selectedTourney.players.length; i++ ) {
-        //     let ap = this.selectedTourney.players[i];
-
-        //     let found: boolean = false;
-        //     for(let j=0; j<alreadyInTeam.length; j++ ) {
-        //         let tp = alreadyInTeam[j];
-        
-        //         if(ap.id == tp.id) {
-        //             found = true;
-        //             break;
-        //         }
-        //     }
-        //     if(!found) {
-        //         this.availablePlayers.push(ap);
-        //     }
-        // }
-
         if(this.selectedTeam.country!=undefined) {
             this.fullAddress = this.selectedTeam.address + " - " 
                 + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
@@ -87,8 +55,6 @@ export class TeamDetailView extends AbstractDetailView {
             'address':  new FormControl(this.selectedTeam.address ),
 
             'country':          new FormControl(this.selectedTeam.country),
-            // 'availablePlayers': new FormControl(this.availablePlayers),
-            // 'targetPlayers':    new FormControl(this.targetPlayers),
         });
     }
 
@@ -97,22 +63,6 @@ export class TeamDetailView extends AbstractDetailView {
         let popup = 'Sicuro di voler rimuovere la squadra: ' + this.selectedTeam.teamName;
 
         if(confirm(popup + this.selectedTeam.teamName + "?")) {
-            // let index: number = this.selectedTourney.teams.indexOf(this.selectedTeam);
-            // if(index > -1) {
-            //     this.selectedTourney.teams.splice(index, 1);
-            // }
-
-            // for(let r of this.selectedTourney.rounds) {
-            //     let index: number = r.teams.indexOf(this.selectedTeam);
-            //     if(index > -1) {
-            //         r.teams.splice(index, 1);
-            //     }    
-            //      index = r.classification.indexOf(this.selectedTeam);
-            //     if(index > -1) {
-            //         r.classification.splice(index, 1);
-            //     }    
-            // }
-
             this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
         }
     }
@@ -122,11 +72,6 @@ export class TeamDetailView extends AbstractDetailView {
         this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
         this.selectedTeam.address = this.teamFormGroup.get('address').value;
         this.selectedTeam.country = this.teamFormGroup.get('country').value;
-        // this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
-
-        // if(this.teamService.newTeam) {
-        //     this.selectedTourney.teams.push(this.selectedTeam);
-        // }
 
         this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }

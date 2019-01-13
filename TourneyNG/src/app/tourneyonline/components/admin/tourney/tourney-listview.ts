@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../../service/tourneyservice';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
 
-const redirect: string = '/admintourney/dv';
-
+const REDIRECT = 'admintourney/dv';
 @Component({
     templateUrl: './tourney-listview.html'
 })
@@ -19,7 +18,7 @@ export class TourneyListView extends AbstractTourneyListView {
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(redirect, tourneyService, router, loc, dfp);
+        super(REDIRECT, tourneyService, router, loc, dfp);
     }
 
     create() {

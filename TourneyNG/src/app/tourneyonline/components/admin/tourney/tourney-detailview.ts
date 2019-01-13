@@ -16,12 +16,15 @@ import { PlayerService } from 'app/tourneyonline/service/playerService';
 import { TeamService } from 'app/tourneyonline/service/teamService';
 import { Player } from 'app/tourneyonline/domain/player';
 import { Team } from 'app/tourneyonline/domain/team';
+import { Router } from '@angular/router';
+
+const REDIRECT_TEAM_DV   = 'admintourney/dv/team';
 
 @Component({
     templateUrl: './tourney-detailview.html',
 })
-export class TourneyDetailView extends AbstractDetailView {
-    
+export class   TourneyDetailView extends AbstractDetailView {
+
     selectedTourney: Tourney;
 
     tourneyDate: Date;
@@ -46,15 +49,11 @@ export class TourneyDetailView extends AbstractDetailView {
     bestOffWinner: number;
 
     activeIndex: number;
-    playersCols: any[];
-    playersRows: any[];
-    cols: { field: string; header: string; }[];
 
-    players: Player[];
     teams: Team[];
-    teamsCols: any[];
-    teamsRows: any[];
-    selectedPlayers: any;
+    teamCols: any[];   
+    selectedTeam: any;
+    displayTeamDialog: boolean = false;
     selectedTeams: any[];
 
     constructor(
@@ -64,6 +63,7 @@ export class TourneyDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
+        public router: Router
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -143,10 +143,8 @@ export class TourneyDetailView extends AbstractDetailView {
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
 
-        this.playersCols = PlayerService.cols;
-        this.playerService.loadAllPlayers().subscribe(t => this.players = t, e => this.onError(e), () => this.onPlayerComplete());
-
-        this.teamsCols = TeamService.cols;
+        this.displayTeamDialog = false;
+        this.teamCols = TeamService.cols;
         this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e), () => this.onTeamComplete());
 
         this.tourneyFormGroup = this.fb.group({
@@ -182,46 +180,44 @@ export class TourneyDetailView extends AbstractDetailView {
             'playersPerTeam': new FormControl(this.selectedTourney.playersPerTeam),
        });
     }
+   
+    openTeamsDialog() {
+        this.displayTeamDialog = true;
+    }
+    saveTeamDialog() {
+        this.displayTeamDialog = false;
+
+        this.selectedTourney.teams = this.selectedTeams;
+        // for(let t of this.selectedTeams) {
+        //     this.selectedTourney.teams.push(t);
+        // }
+
+        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
+    }
 
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
         this.activeIndex = index;
         this.tourneyService.selectedTabIndex = this.activeIndex;
-
-        if(index==2) {
-            this.playersCols = PlayerService.cols;
-            this.playerService.loadAllPlayers().subscribe(t => this.players = t, e => this.onError(e), () => this.onPlayerComplete());
-        }
         
-        if(index==3) {
-            this.teamsCols = TeamService.cols;
+        if(index==2) {
+            this.teamCols = TeamService.cols;
             this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e), () => this.onTeamComplete());
         }
     }
+ 
+    onTeamRowSelect(event) {
+        console.log(event.data);
 
-    private onPlayerComplete(): void {
-        this.playersRows = this.playerService.prepareRows(this.players);
-        this.selectedPlayers = [];
-        for(let t of this.selectedTourney.players) {
-            for(let r of this.playersRows) {
-                if(t.id == r.t.id) {
-                    this.selectedPlayers.push(r);
-                }
-            }
-        }
+        this.teamService.selectedTeam = this.selectedTeam;
+
+        this.router.navigate([REDIRECT_TEAM_DV]);
     }
+ 
 
     private onTeamComplete(): void {
-        this.teamsRows = this.teamService.prepareRows(this.teams);
-        this.selectedTeams = [];
-        for(let t of this.selectedTourney.teams) {
-            for(let r of this.teamsRows) {
-                if(t.id == r.t.id) {
-                    this.selectedTeams.push(r);
-                }
-            }
-        }
+        this.selectedTeams = this.selectedTourney.teams;
     }
 
     onOnewayRoundClick() {
@@ -343,11 +339,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.maxMatchesPerMeeting = this.tourneyFormGroup.get('maxMatchesPerMeeting').value;
         this.selectedTourney.playersPerTeam = this.tourneyFormGroup.get('playersPerTeam').value;
         
-        this.selectedTourney.players = [];
-        for(let p of this.selectedPlayers) {
-            this.selectedTourney.players.push(p.p);
-        }
-
         this.selectedTourney.teams = [];
         for(let t of this.selectedTeams) {
             this.selectedTourney.teams.push(t.t);

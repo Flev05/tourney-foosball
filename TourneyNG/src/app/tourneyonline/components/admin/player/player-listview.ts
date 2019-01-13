@@ -36,7 +36,7 @@ export class PlayerListView extends AbstractListView {
     }
 
     onComplete(): void {
-        this.rows = this.playerService.prepareRows(this.players);
+        this.rows = this.players;
     }
 
     create() {
@@ -48,7 +48,7 @@ export class PlayerListView extends AbstractListView {
 
     onRowSelect(event) {
         console.log(event.data);
-        this.playerService.selectedPlayer = this.selectedRow.p;
+        this.playerService.selectedPlayer = this.selectedRow;
 
         this.gotoDetailView();
     }
@@ -62,9 +62,9 @@ export class PlayerListView extends AbstractListView {
         let popup = 'Sicuro di voler rimuovere il giocatore: ' + player.lastname + " " + player.firstname;
 
         if(confirm(popup + "?")) {
-            this.playerService.deletePlayer(player.p).subscribe(n => this.next(n));
+            this.playerService.deletePlayer(player).subscribe(n => this.next(n));
 
-            let index: number = this.players.indexOf(player.p);
+            let index: number = this.players.indexOf(player);
             if(index > -1) {
                 this.players.splice(index, 1);
                 this.rows.splice(index, 1);

@@ -29,7 +29,8 @@ import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { CalendarModule } from 'app/components/calendar/calendar';
-import { PlayerModule } from '../player/player.module';
+import { TeamDetailView } from './team-detailview';
+import { PickListModule } from 'app/components/picklist/picklist';
 
 @NgModule({
 	imports: [
@@ -56,14 +57,16 @@ import { PlayerModule } from '../player/player.module';
         ,TooltipModule
         ,CalendarModule
         ,AccordionModule
-        ,PlayerModule
         ,MessagesModule
         ,MessageModule
+        ,PickListModule
 	],
 	declarations: [
 		TourneyListView,
-		TourneyDetailView
+        TourneyDetailView,
+        TeamDetailView
     ]
     ,providers: [DateFormatPipe]
 })
-export class TourneyModule {}
+export class TourneyModule {
+}

@@ -21,22 +21,12 @@ export class TeamService {
     newTeam : boolean = false;
 
     static cols = [
-        { field: 'rowNumber',  header: 'N°' },
         { field: 'teamName',   header: 'Nome' },
         { field: 'address',    header: 'Indirizzo' },
     ];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of TeamService");
-    }
-
-    prepareRows(teams : Team[]): any[] {
-        let rows = [];
-        for(let i=0;i<teams.length; i++) {
-            let t = teams[i];
-            rows.push({t:t, rowNumber: i+1, teamName: t.teamName, address: t.address});
-        }
-        return rows;
     }
 
     loadAllTeams (): Observable<Team[]> {

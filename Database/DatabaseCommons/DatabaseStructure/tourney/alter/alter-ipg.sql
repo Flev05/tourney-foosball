@@ -9,5 +9,4 @@ ALTER TABLE ONLY ipg
 
 ALTER TABLE ipg OWNER TO :SCHEMA_USER_NAME;
 
-CREATE UNIQUE INDEX ipg_name_key_index 
-	ON ipg (name);
+CREATE UNIQUE INDEX ipg_name_key_index ON ipg (name);

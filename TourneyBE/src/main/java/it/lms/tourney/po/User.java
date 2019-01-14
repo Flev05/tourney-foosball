@@ -38,7 +38,7 @@ public class User extends AbstractPO implements Serializable {
     private String            description;
 
     private Client            client;
-    private Country          location;
+    private Country           country;
 
     private Set<Role>         roles;
 
@@ -52,7 +52,7 @@ public class User extends AbstractPO implements Serializable {
 
         return "User [firstname=" + firstname + ", lastname=" + lastname + ", address=" + address + ", email=" + email
                 + ", phoneNumber=" + phoneNumber + ", username=" + username + ", password=" + password
-                + ", description=" + description + ", client=" + client + ", location=" + location + "]";
+                + ", description=" + description + ", client=" + client + ", country=" + country + "]";
     }
 
     @Id
@@ -157,16 +157,16 @@ public class User extends AbstractPO implements Serializable {
         this.roles = roles;
     }
 
-    // bi-directional many-to-one association to Location
+    // bi-directional many-to-one association to Country
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    public Country getLocation() {
+    @JoinColumn(name = "country_id")
+    public Country getCountry() {
 
-        return location;
+        return country;
     }
 
-    public void setLocation(Country location) {
+    public void setCountry(Country country) {
 
-        this.location = location;
+        this.country = country;
     }
 }

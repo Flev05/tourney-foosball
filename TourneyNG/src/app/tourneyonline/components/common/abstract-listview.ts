@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AbstractView } from './abstract-view';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
  

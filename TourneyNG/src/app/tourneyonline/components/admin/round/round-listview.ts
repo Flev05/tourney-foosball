@@ -6,7 +6,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Round } from 'app/tourneyonline/domain/round';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
 
 @Component({

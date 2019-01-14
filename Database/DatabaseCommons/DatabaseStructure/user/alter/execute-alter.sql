@@ -3,10 +3,11 @@
 \i alter-location.sql
 \i alter-client.sql
 
-\i alter-resource.sql
+-- \i alter-resource.sql
 
 \i alter-role.sql
 \i alter-user_table.sql
 \i alter-user_role.sql
 
-\i alter-permission.sql
+-- \i alter-permission.sql
+\i alter-session.sql

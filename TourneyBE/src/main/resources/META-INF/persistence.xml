@@ -12,13 +12,15 @@
 		<jta-data-source>java:/TourneyDS</jta-data-source>
 		
 		<class>it.lms.tourney.po.Country</class>
-
 		<class>it.lms.tourney.po.User</class>
 		<class>it.lms.tourney.po.Role</class>
-		<class>it.lms.tourney.po.Resource</class>
-		<class>it.lms.tourney.po.Permission</class>
-
 		<class>it.lms.tourney.po.Client</class>
+		<class>it.lms.tourney.po.Session</class>
+
+		<class>it.lms.tourney.po.Tourney</class>
+		<class>it.lms.tourney.po.Player</class>
+		<class>it.lms.tourney.po.Team</class>
+		<class>it.lms.tourney.po.Meeting</class>
 		
 		<properties>
             <property name="hibernate.dialect" 		value="org.hibernate.dialect.PostgreSQL9Dialect"/>

@@ -8,8 +8,8 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Message } from 'app/components/common/api';
 import { EliminatoryMode } from 'app/tourneyonline/domain/enumerations';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 
 @Component({

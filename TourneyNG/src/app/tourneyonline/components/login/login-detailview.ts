@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { Login } from 'app/tourneyonline/domain/login';
 import { Message } from 'app/components/common/api';
-import { LoginService } from 'app/tourneyonline/service/loginservice';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './login-detailview.html',

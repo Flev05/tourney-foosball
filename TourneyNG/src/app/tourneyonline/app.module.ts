@@ -16,15 +16,15 @@ import { TableModule }  from 'primeng/table';
 import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule }  from 'primeng/dialog';
 
-import { LoginService } from './service/loginservice';
-import { TourneyService } from './service/tourneyservice';
-import { ClientService } from './service/clientservice';
-import { UserngService } from './service/userngservice';
-import { RoleService } from './service/roleservice';
-import { CountryService } from './service/countryservice';
+import { LoginService } from './service/login-service';
+import { TourneyService } from './service/tourney-service';
+import { ClientService } from './service/client-service';
+import { UserngService } from './service/user-service';
+import { RoleService } from './service/role-service';
+import { CountryService } from './service/country-service';
 import { InMemoryDataService } from 'app/tourneyonline/in-memory-data-service/in-memory-data.service';
-import { PlayerService } from './service/playerService';
-import { TeamService } from './service/teamService';
+import { PlayerService } from './service/player-service';
+import { TeamService } from './service/team-service';
 
 @NgModule({
   declarations: [

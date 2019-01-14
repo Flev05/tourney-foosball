@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from '../../../domain/playoff-rule';
@@ -11,7 +11,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { RoundDetailView } from '../round/round-detailview';
 

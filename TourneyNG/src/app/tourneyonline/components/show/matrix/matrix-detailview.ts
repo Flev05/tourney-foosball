@@ -8,8 +8,8 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
 import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
 

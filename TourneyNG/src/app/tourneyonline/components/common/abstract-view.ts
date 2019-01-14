@@ -2,7 +2,7 @@ import { OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourneyservice';
+import { TourneyService } from '../../service/tourney-service';
 import { Country } from '../../domain/country';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Classification } from 'app/tourneyonline/domain/classification';

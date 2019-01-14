@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
-import { TourneyService } from '../../../service/tourneyservice';
+import { TourneyService } from '../../../service/tourney-service';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';

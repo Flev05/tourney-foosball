@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 
 import { Round } from '../../domain/round';
 import { Meeting } from '../../domain/meeting';
-import { TourneyService } from '../../service/tourneyservice';
+import { TourneyService } from '../../service/tourney-service';
 import { AbstractTourneyDetailView } from './tourney-detailview';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 export abstract class RoundDetailView extends AbstractTourneyDetailView {
 

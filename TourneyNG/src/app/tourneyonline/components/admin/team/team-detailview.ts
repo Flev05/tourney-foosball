@@ -5,9 +5,9 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
-import { TeamService } from 'app/tourneyonline/service/teamService';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './team-detailview.html',

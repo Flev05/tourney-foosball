@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../service/tourneyservice';
+import { TourneyService } from '../../service/tourney-service';
 import { AbstractDetailView } from './abstract-detailview';
-import { CountryService } from '../../service/countryservice';
+import { CountryService } from '../../service/country-service';
 
 export abstract class AbstractTourneyDetailView extends AbstractDetailView {
     constructor(

@@ -1,4 +1,5 @@
 export interface TourneyDb {
-    id?   : number;    
-    json? : string;
+    id?         : number;    
+    clientId?   : number;    
+    json?       : string;
 }

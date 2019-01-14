@@ -5,7 +5,7 @@ import { Message } from 'app/components/common/api';
 
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { AbstractListView } from '../../common/abstract-listview';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';

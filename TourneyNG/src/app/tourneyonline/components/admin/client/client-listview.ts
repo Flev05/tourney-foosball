@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Client } from '../../../domain/client';
-import { ClientService } from '../../../service/clientservice';
+import { ClientService } from '../../../service/client-service';
 
 @Component({
     templateUrl: './client-listview.html'

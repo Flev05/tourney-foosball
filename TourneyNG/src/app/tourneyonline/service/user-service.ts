@@ -15,7 +15,7 @@ const httpOptions = {
 
 @Injectable()
 export class UserngService {
-    private apiUrl = 'api/userng';                       // URL to Back End api
+    private apiUrl = 'api/users';                         // URL to Back End api
     private changePasswordUrl = 'api/changePassword';    // URL to Back End api
     private resetPasswordUrl = 'api/resetPassword';      // URL to Back End api
 

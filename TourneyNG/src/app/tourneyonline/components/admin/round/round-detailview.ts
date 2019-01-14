@@ -8,8 +8,8 @@ import {Message} from '../../../../components/common/api';
 import { Round } from '../../../domain/round';
 import { Team } from '../../../domain/team';
 
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
+import { CountryService } from '../../../service/country-service';
+import { TourneyService } from '../../../service/tourney-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';

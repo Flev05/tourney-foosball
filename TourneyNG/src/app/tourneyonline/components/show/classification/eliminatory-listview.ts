@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { Round } from 'app/tourneyonline/domain/round';
 import { DateFormatPipe } from '../../common/date-format-pipe';

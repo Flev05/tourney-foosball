@@ -5,8 +5,8 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import {Message} from '../../../../components/common/api';
 import { Password } from '../../../domain/password';
-import { UserngService } from '../../../service/userngservice';
-import { LoginService } from '../../../service/loginservice';
+import { UserngService } from '../../../service/user-service';
+import { LoginService } from '../../../service/login-service';
 
 @Component({
     templateUrl: './user-changepassword.html',

@@ -32,13 +32,8 @@ public class User extends AbstractPO implements Serializable {
     private String            email;
     private String            phoneNumber;
 
-    private String            username;
-    private String            password;
-
-    private String            description;
-
     private Client            client;
-    private Country          location;
+    private Country           country;
 
     private Set<Role>         roles;
 
@@ -50,9 +45,9 @@ public class User extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return "User [firstname=" + firstname + ", lastname=" + lastname + ", address=" + address + ", email=" + email
-                + ", phoneNumber=" + phoneNumber + ", username=" + username + ", password=" + password
-                + ", description=" + description + ", client=" + client + ", location=" + location + "]";
+        return super.toString() + " User [firstname=" + firstname + ", lastname=" + lastname + ", address=" + address
+                + ", email=" + email + ", phoneNumber=" + phoneNumber + ", client=" + client + ", country=" + country
+                + ", roles=" + roles + "]";
     }
 
     @Id
@@ -89,11 +84,6 @@ public class User extends AbstractPO implements Serializable {
         this.lastname = lastname;
     }
 
-    public void setPassword(String password) {
-
-        this.password = password;
-    }
-
     @Column(name = "email")
     public String getEmail() {
 
@@ -127,23 +117,6 @@ public class User extends AbstractPO implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    @Column(name = "username")
-    public String getUsername() {
-
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    @Column(name = "password")
-    public String getPassword() {
-
-        return this.password;
-    }
-
     // bi-directional many-to-many association to Role
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "ID"))
@@ -157,16 +130,29 @@ public class User extends AbstractPO implements Serializable {
         this.roles = roles;
     }
 
-    // bi-directional many-to-one association to Location
+    // bi-directional many-to-one association to Client
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    public Country getLocation() {
+    @JoinColumn(name = "client_id")
+    public Client getClient() {
 
-        return location;
+        return client;
     }
 
-    public void setLocation(Country location) {
+    public void setClient(Client client) {
 
-        this.location = location;
+        this.client = client;
+    }
+
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    public Country getCountry() {
+
+        return country;
+    }
+
+    public void setCountry(Country country) {
+
+        this.country = country;
     }
 }

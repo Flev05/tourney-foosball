@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Userng } from '../../../domain/userng';
-import { UserngService } from '../../../service/userngservice';
+import { UserngService } from '../../../service/user-service';
 
 @Component({
     templateUrl: './user-listview.html'

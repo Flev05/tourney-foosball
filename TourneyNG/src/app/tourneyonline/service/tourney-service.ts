@@ -8,7 +8,6 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
-import { Player } from '../domain/player';
 import { Round } from '../domain/round';
 import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
@@ -19,7 +18,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { PlayoffRule } from '../domain/playoff-rule';
 import { MeetingDb } from '../domain/meeting-db';
-import { LoginService } from './loginservice';
+import { LoginService } from './login-service';
 import { TourneyDb } from '../domain/tourney.db';
 
 const httpOptions = {

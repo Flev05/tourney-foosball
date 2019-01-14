@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 const redirect = '/adminobjective/lv';
 

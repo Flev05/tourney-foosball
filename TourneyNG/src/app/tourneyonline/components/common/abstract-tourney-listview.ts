@@ -5,7 +5,7 @@ import { AbstractListView } from './abstract-listview';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { TourneyDb } from 'app/tourneyonline/domain/tourney.db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from './date-format-pipe';
  
 export abstract class AbstractTourneyListView extends AbstractListView {

@@ -37,6 +37,12 @@ public class Role extends AbstractPO implements Serializable {
         users = new HashSet<>();
     }
 
+    @Override
+    public String toString() {
+
+        return super.toString() + " Role [name=" + name + ", description=" + description + ", users=" + users + "]";
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {

@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
@@ -16,15 +15,14 @@ import { TableModule }  from 'primeng/table';
 import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule }  from 'primeng/dialog';
 
-import { LoginService } from './service/loginservice';
-import { TourneyService } from './service/tourneyservice';
-import { ClientService } from './service/clientservice';
-import { UserngService } from './service/userngservice';
-import { RoleService } from './service/roleservice';
-import { CountryService } from './service/countryservice';
-import { InMemoryDataService } from 'app/tourneyonline/in-memory-data-service/in-memory-data.service';
-import { PlayerService } from './service/playerService';
-import { TeamService } from './service/teamService';
+import { LoginService } from './service/login-service';
+import { TourneyService } from './service/tourney-service';
+import { ClientService } from './service/client-service';
+import { UserngService } from './service/user-service';
+import { RoleService } from './service/role-service';
+import { CountryService } from './service/country-service';
+import { PlayerService } from './service/player-service';
+import { TeamService } from './service/team-service';
 
 @NgModule({
   declarations: [
@@ -43,10 +41,6 @@ import { TeamService } from './service/teamService';
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
-    
-    ,  HttpClientInMemoryWebApiModule.forRoot(
-        InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
-      )
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from '../../../domain/playoff-rule';

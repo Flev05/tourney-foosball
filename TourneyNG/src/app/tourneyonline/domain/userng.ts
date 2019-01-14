@@ -1,14 +1,12 @@
 import { Role } from './role';
 import { Country } from './country';
 import { Client } from './client';
+import { Login } from './login';
 
-export interface Userng
+export interface Userng extends Login
 {
-    id?             : number;
     firstname?      : string;
     lastname?       : string;
-    username?       : string;
-    password?       : string;
 
     address?        : string;
     email?          : string;

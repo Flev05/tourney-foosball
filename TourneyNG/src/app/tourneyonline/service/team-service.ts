@@ -7,6 +7,8 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Team } from '../domain/team';
+import { LoginService } from './login-service';
+import { ClientService } from './client-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -25,13 +27,19 @@ export class TeamService {
         { field: 'address',    header: 'Indirizzo' },
     ];
 
-    constructor(private http: HttpClient) { 
+    constructor(private http: HttpClient, private loginService: LoginService, private clientService: ClientService) { 
         console.log("Constructor of TeamService");
     }
 
     loadAllTeams (): Observable<Team[]> {
  
-        return this.http.get<Team[]>(clientUrl)
+        let url = clientUrl;
+
+        if(this.loginService.userLogged) {
+            url = clientUrl + "?" + "clientId=" + this.clientService.selectedClient.id;
+        }
+
+        return this.http.get<Team[]>(url)
         .pipe(
             tap(_ => this.log(`fetched all teams`)),
             catchError(this.handleError('loadAllTeams', []))

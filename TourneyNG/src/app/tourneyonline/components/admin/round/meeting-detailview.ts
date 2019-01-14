@@ -5,8 +5,8 @@ import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import {Message} from '../../../../components/common/api';
 
-import { CountryService } from '../../../service/countryservice';
-import { TourneyService } from '../../../service/tourneyservice';
+import { CountryService } from '../../../service/country-service';
+import { TourneyService } from '../../../service/tourney-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';

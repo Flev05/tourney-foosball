@@ -8,12 +8,12 @@ import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Dire
 import { Message } from 'app/components/common/api';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Discipline } from 'app/tourneyonline/domain/discipline';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
-import { PlayerService } from 'app/tourneyonline/service/playerService';
-import { TeamService } from 'app/tourneyonline/service/teamService';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Player } from 'app/tourneyonline/domain/player';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';

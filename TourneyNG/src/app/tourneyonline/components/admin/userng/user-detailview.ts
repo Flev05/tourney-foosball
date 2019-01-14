@@ -3,8 +3,8 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { Userng } from '../../../domain/userng';
-import { UserngService } from '../../../service/userngservice';
-import { RoleService } from '../../../service/roleservice';
+import { UserngService } from '../../../service/user-service';
+import { RoleService } from '../../../service/role-service';
 
 import { Role } from '../../../domain/role';
 

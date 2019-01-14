@@ -3,9 +3,9 @@ import { Location } from '@angular/common';
 
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Message } from 'primeng/api';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';

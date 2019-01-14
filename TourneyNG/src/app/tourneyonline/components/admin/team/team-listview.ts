@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TeamService } from 'app/tourneyonline/service/teamService';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { Team } from 'app/tourneyonline/domain/team';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 const redirect: string = "adminteam/dv";
 

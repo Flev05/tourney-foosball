@@ -8,6 +8,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Country } from '../domain/country';
 
+const countryUrl = 'api/countries';  // URL to web api
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -15,7 +16,6 @@ const httpOptions = {
 
 @Injectable()
 export class CountryService {
-    private countryUrl = 'api/countries';  // URL to web api
 
     selectedCountry : Country;
 
@@ -27,7 +27,7 @@ export class CountryService {
 
     loadCountries (): Observable<Country[]> {
  
-        return this.http.get<Country[]>(this.countryUrl)
+        return this.http.get<Country[]>(countryUrl)
         .pipe(
             tap(_ => this.log(`fetched all countries`)),
             catchError(this.handleError('loadCountries', []))
@@ -36,7 +36,7 @@ export class CountryService {
 
     /** GET hero by id. Will 404 if id not found */
     getCountry(id: number): Observable<Country> {
-        const url = `${this.countryUrl}/${id}`;
+        const url = `${countryUrl}/${id}`;
         return this.http.get<Country>(url).pipe(
             tap(_ => this.log(`fetched Country id=${id}`)),
             catchError(this.handleError<Country>(`getCountry id=${id}`))
@@ -45,7 +45,7 @@ export class CountryService {
 
     /** POST: add a new Country to the server */
     addCountry (country: Country): Observable<Country> {
-        return this.http.post<Country>(this.countryUrl, country, httpOptions).pipe(
+        return this.http.post<Country>(countryUrl, country, httpOptions).pipe(
             tap((country: Country) => this.log(`added Country w/ id=${country.id}`)),
             catchError(this.handleError<Country>('addCountry'))
         );
@@ -54,8 +54,8 @@ export class CountryService {
     /** PUT: update the Country on the server */
     updateCountry (country: Country ): Observable<Country> {
         const id =  country.id;
-        // const url = `${this.countryUrl}/${country.id}`;
-        const url = `${this.countryUrl}`;
+        // const url = `${countryUrl}/${country.id}`;
+        const url = `${countryUrl}`;
 
         console.log(country);
 
@@ -68,7 +68,7 @@ export class CountryService {
     /** DELETE: delete the Country from the server */
     deleteCountry (country: Country | number): Observable<Country> {
         const id = typeof country === 'number' ? country : country.id;
-        const url = `${this.countryUrl}/${id}`;
+        const url = `${countryUrl}/${id}`;
 
         return this.http.delete<Country>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Country id=${id}`)),

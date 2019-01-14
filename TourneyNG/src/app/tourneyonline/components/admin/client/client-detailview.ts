@@ -3,8 +3,8 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { Client } from '../../../domain/client';
-import { ClientService } from '../../../service/clientservice';
-import { CountryService } from '../../../service/countryservice';
+import { ClientService } from '../../../service/client-service';
+import { CountryService } from '../../../service/country-service';
 import { Country } from '../../../domain/country';
 
 @Component({

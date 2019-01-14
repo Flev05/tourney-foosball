@@ -141,13 +141,20 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>		
+
 		<!-- Needed for running tests (you may also use TestNG) -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<!-- Bean Validation Implementation Provides portable constraints such 
 			as @Email Hibernate Validator is shipped in JBoss EAP -->
 		<dependency>
@@ -297,3 +304,4 @@
 	</build>
 
 </project>
+

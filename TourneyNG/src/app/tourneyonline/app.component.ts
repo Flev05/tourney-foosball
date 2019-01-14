@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {trigger,state,style,transition,animate} from '@angular/animations';
 import { Router } from '@angular/router';
-import { LoginService } from './service/loginservice';
+import { LoginService } from './service/login-service';
 
 @Component({
   selector: 'app-root',

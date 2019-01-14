@@ -5,9 +5,9 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Player } from 'app/tourneyonline/domain/player';
 import { Message } from 'primeng/api';
-import { TourneyService } from 'app/tourneyonline/service/tourneyservice';
-import { CountryService } from 'app/tourneyonline/service/countryservice';
-import { PlayerService } from 'app/tourneyonline/service/playerService';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 
 
 @Component({

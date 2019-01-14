@@ -36,15 +36,14 @@ public class Client extends AbstractPO implements Serializable {
     public Client() {
 
         super();
-        // location = new Location();
     }
 
     @Override
     public String toString() {
 
-        return "Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName=" + businessName
-                + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl
-                + ", country=" + country + "]";
+        return super.toString() + " Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName="
+                + businessName + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email
+                + ", siteUrl=" + siteUrl + ", country=" + country + "]";
     }
 
     @Override
@@ -142,7 +141,7 @@ public class Client extends AbstractPO implements Serializable {
         this.siteUrl = url;
     }
 
-    // bi-directional many-to-one association to Location
+    // bi-directional many-to-one association to Country
     @ManyToOne
     @JoinColumn(name = "country_id")
     public Country getCountry() {

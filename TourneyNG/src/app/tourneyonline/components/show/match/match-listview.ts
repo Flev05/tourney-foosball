@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../../service/tourneyservice';
+import { TourneyService } from '../../../service/tourney-service';
 import { Tourney } from '../../../domain/tourney';
  
 import { Meeting } from '../../../domain/meeting';

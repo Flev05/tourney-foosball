@@ -14,9 +14,9 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
-import { Player } from 'app/tourneyonline/domain/player';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
+import { TeamListView } from '../team/team-listview';
 
 const REDIRECT_TEAM_DV   = 'admintourney/dv/team';
 
@@ -50,11 +50,13 @@ export class   TourneyDetailView extends AbstractDetailView {
 
     activeIndex: number;
 
-    teams: Team[];
+    availableTeams: Team[];
+    poolTeams: Team[];
     teamCols: any[];   
-    selectedTeam: any;
+    selectedTeam: Team;
     displayTeamDialog: boolean = false;
-    selectedTeams: any[];
+    selectedTeams: Team[];
+    tourneyTeams: Team[];
 
     constructor(
         private fb: FormBuilder,
@@ -124,6 +126,8 @@ export class   TourneyDetailView extends AbstractDetailView {
             this.tourneyDate = new Date(this.selectedTourney.datetime);
         }
 
+        this.tourneyTeams = this.selectedTourney.teams;
+
         this.isOnewayRound = this.selectedTourney.isOnewayRound ? "true" : "false";
         this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff ? "true" : "false";
 
@@ -145,7 +149,7 @@ export class   TourneyDetailView extends AbstractDetailView {
 
         this.displayTeamDialog = false;
         this.teamCols = TeamService.cols;
-        this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e), () => this.onTeamComplete());
+        this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -180,19 +184,50 @@ export class   TourneyDetailView extends AbstractDetailView {
             'playersPerTeam': new FormControl(this.selectedTourney.playersPerTeam),
        });
     }
-   
+
+    doTeamDelete(team: Team) {
+        console.log("doTeamDelete(): " + team.teamName);
+        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName + "?";
+
+        if(confirm(popup)) {
+            let index: number = this.selectedTourney.teams.indexOf(team);
+            if(index > -1) {
+                this.selectedTourney.teams.splice(index, 1);
+                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
+            }
+        }
+    }
+
     openTeamsDialog() {
         this.displayTeamDialog = true;
+        this.availableTeams = [...this.poolTeams];
+        this.selectedTeams = [];
+
+        for(let pt of this.poolTeams) {            
+            for(let t of this.selectedTourney.teams) {
+                if( pt.id == t.id ) {
+                    let index: number = this.availableTeams.indexOf(pt);
+                    if(index > -1) {
+                        this.availableTeams.splice(index, 1);
+                    }
+                }
+            }
+        }
     }
+
     saveTeamDialog() {
         this.displayTeamDialog = false;
 
-        this.selectedTourney.teams = this.selectedTeams;
-        // for(let t of this.selectedTeams) {
-        //     this.selectedTourney.teams.push(t);
-        // }
+        for(let t of this.selectedTeams) {
+            this.tourneyTeams.push(t);
+        }
+    }
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
+    newTeamDialog() {
+        this.selectedTeam={id:0, teamName:""};
+        this.teamService.selectedTeam = this.selectedTeam;
+        this.teamService.newTeam = true;
+        this.router.navigate([TeamListView.redirect]);
     }
 
     onChangeTab(e) {
@@ -203,7 +238,7 @@ export class   TourneyDetailView extends AbstractDetailView {
         
         if(index==2) {
             this.teamCols = TeamService.cols;
-            this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e), () => this.onTeamComplete());
+            this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
         }
     }
  
@@ -214,10 +249,21 @@ export class   TourneyDetailView extends AbstractDetailView {
 
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
- 
 
     private onTeamComplete(): void {
-        this.selectedTeams = this.selectedTourney.teams;
+        this.availableTeams = [...this.poolTeams];
+        this.selectedTeams = [];
+
+        for(let pt of this.poolTeams) {            
+            for(let t of this.selectedTourney.teams) {
+                if( pt.id == t.id ) {
+                    let index: number = this.availableTeams.indexOf(pt);
+                    if(index > -1) {
+                        this.availableTeams.splice(index, 1);
+                    }
+                }
+            }
+        }
     }
 
     onOnewayRoundClick() {
@@ -339,10 +385,7 @@ export class   TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.maxMatchesPerMeeting = this.tourneyFormGroup.get('maxMatchesPerMeeting').value;
         this.selectedTourney.playersPerTeam = this.tourneyFormGroup.get('playersPerTeam').value;
         
-        this.selectedTourney.teams = [];
-        for(let t of this.selectedTeams) {
-            this.selectedTourney.teams.push(t.t);
-        }
+        this.selectedTourney.teams = this.tourneyTeams;
 
         if(this.tourneyService.newTourney) {
             this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());  

@@ -13,7 +13,7 @@ import { ClientService } from './client-service';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const clientUrl = 'api/teams';  // URL to web api
+const teamUrl = 'api/teams';  // URL to web api
 
 @Injectable()
 export class TeamService {
@@ -33,10 +33,10 @@ export class TeamService {
 
     loadAllTeams (): Observable<Team[]> {
  
-        let url = clientUrl;
+        let url = teamUrl;
 
         if(this.loginService.userLogged) {
-            url = clientUrl + "?" + "clientId=" + this.clientService.selectedClient.id;
+            url = teamUrl + "?" + "clientId=" + this.clientService.selectedClient.id;
         }
 
         return this.http.get<Team[]>(url)
@@ -48,7 +48,7 @@ export class TeamService {
 
     /** GET hero by id. Will 404 if id not found */
     getTeam(id: number): Observable<Team> {
-        const url = `${clientUrl}/${id}`;
+        const url = `${teamUrl}/${id}`;
         return this.http.get<Team>(url).pipe(
             tap(_ => this.log(`fetched Team id=${id}`)),
             catchError(this.handleError<Team>(`getTeam id=${id}`))
@@ -57,7 +57,7 @@ export class TeamService {
 
     /** POST: add a new Team to the server */
     addTeam (team: Team): Observable<Team> {
-        return this.http.post<Team>(clientUrl, team, httpOptions).pipe(
+        return this.http.post<Team>(teamUrl, team, httpOptions).pipe(
             tap((team: Team) => this.log(`added Team w/ id=${team.id}`)),
             catchError(this.handleError<Team>('addTeam'))
         );
@@ -65,7 +65,7 @@ export class TeamService {
 
     /** PUT: update the Team on the server */
     updateTeam (team: Team ): Observable<Team> {
-        const url = `${clientUrl}`;
+        const url = `${teamUrl}`;
         
         console.log(team);
 
@@ -78,7 +78,7 @@ export class TeamService {
     /** DELETE: delete the Team from the server */
     deleteTeam (team: Team) : Observable<Team> {
         const id = team.id;
-        const url = `${clientUrl}/${id}`;
+        const url = `${teamUrl}/${id}`;
 
         return this.http.delete<Team>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Team id=${id}`)),

@@ -31,6 +31,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { CalendarModule } from 'app/components/calendar/calendar';
 import { TeamDetailView } from './team-detailview';
 import { PickListModule } from 'app/components/picklist/picklist';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
 
 @NgModule({
 	imports: [
@@ -60,6 +61,7 @@ import { PickListModule } from 'app/components/picklist/picklist';
         ,MessagesModule
         ,MessageModule
         ,PickListModule
+        ,ScrollPanelModule
 	],
 	declarations: [
 		TourneyListView,

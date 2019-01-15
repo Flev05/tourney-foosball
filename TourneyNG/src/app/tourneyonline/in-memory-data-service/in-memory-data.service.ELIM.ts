@@ -48,7 +48,8 @@ private static tourney =
     };
 
     static tourneyDb = {
-        id: InMemoryDataServiceELIM.tourney.id
-      , json: JSON.stringify(InMemoryDataServiceELIM.tourney)
+          id: InMemoryDataServiceELIM.tourney.id
+        , clientId: null
+        , json: JSON.stringify(InMemoryDataServiceELIM.tourney)
     } 
 }

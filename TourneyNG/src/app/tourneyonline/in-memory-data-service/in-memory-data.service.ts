@@ -6,14 +6,14 @@ import { MeetingDb } from '../domain/meeting-db';
 import { Observable } from 'rxjs';
 import { Player } from '../domain/player';
 import { Team } from '../domain/team';
-import { InMemoryPlayersDataService } from './in-memory-players-data.service';
-import { InMemoryTeamsDataService } from './in-memory-teams-data.service';
+import { TeamsPool } from './teams-pool';
+import { PlayersPool } from './players-pool';
 
 export class InMemoryDataService implements InMemoryDbService {
 
   meetings : MeetingDb[] = [];
-  players  : Player[]    = InMemoryPlayersDataService.players;
-  teams    : Team[]      = InMemoryTeamsDataService.teams;
+  players  : Player[]    = PlayersPool.players;
+  teams    : Team[]      = TeamsPool.teams;
 
   createDb(): {} | Observable<{}> | Promise<{}> {
     const tourneys = [

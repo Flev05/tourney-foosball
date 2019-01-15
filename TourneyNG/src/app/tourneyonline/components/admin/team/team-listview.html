@@ -25,7 +25,9 @@
         [value]="rows" 
         selectionMode="single"
         [(selection)]="selectedRow" 
-        (onRowSelect)="onRowSelect($event)" >
+        (onRowSelect)="onRowSelect($event)" 
+        [scrollable]="true" 
+        scrollHeight="600px">
 
         <ng-template pTemplate="caption">
             <div style="text-align:left">

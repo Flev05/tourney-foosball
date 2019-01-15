@@ -7,12 +7,13 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
-const redirect: string = "adminteam/dv";
 
 @Component({
     templateUrl: './team-listview.html'
 })
 export class TeamListView extends AbstractListView {
+    public static redirect: string = "adminteam/dv";
+
     cols: any[];
     rows: any[];
     selectedRow: any;
@@ -26,7 +27,7 @@ export class TeamListView extends AbstractListView {
         protected location: Location,
         private   teamService: TeamService
     ) {
-        super(redirect, tourneyService, router, location);
+        super(TeamListView.redirect, tourneyService, router, location);
     }
 
     ngOnInit() {

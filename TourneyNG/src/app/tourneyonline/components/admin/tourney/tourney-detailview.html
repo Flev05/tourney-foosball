@@ -700,65 +700,45 @@
             </div>
             </p-tabPanel>
 
-            <p-tabPanel header="Giocatori">
-                <p-table [columns]="playersCols"
-                    [value]="playersRows"
-                    [responsive]="true">        
-        
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th style="width: 3em">
-                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                            </th>                            
-                            <th *ngFor="let col of columns">
-                                {{col.header}}
-                            </th>
-                        </tr>
-                    </ng-template>
-            
-                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
-                        <tr [pSelectableRow]="rowData">
-                            <td>
-                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                            </td>                            
-                            <td *ngFor="let col of columns">
-                                <span class="ui-column-title">{{col.header}}</span>
-                                {{rowData[col.field]}}
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </p-tabPanel>     
-                        
             <p-tabPanel header="Squadre">
-                <p-table [columns]="teamsCols"
-                    [value]="teamsRows"
-                    [responsive]="true">        
-        
+                <p-table [columns]="teamCols"
+                        [value]="tourneyTeams"
+                        [responsive]="true"
+                        selectionMode="single" 
+                        [(selection)]="selectedTeam"
+                        (onRowSelect)="onTeamRowSelect($event)"
+                        [scrollable]="true" 
+                        scrollHeight="600px">
+            
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th style="width: 3em">
-                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                            </th>                            
                             <th *ngFor="let col of columns">
                                 {{col.header}}
                             </th>
+                            <th style="width:4em"></th>
                         </tr>
                     </ng-template>
             
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                         <tr [pSelectableRow]="rowData">
-                            <td>
-                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                            </td>                            
                             <td *ngFor="let col of columns">
                                 <span class="ui-column-title">{{col.header}}</span>
                                 {{rowData[col.field]}}
                             </td>
+                            <td>
+                                <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doTeamDelete(rowData)"></button>
+                            </td>                
                         </tr>
                     </ng-template>
+                    <ng-template pTemplate="summary" let-rowData>
+                        <div style="text-align:left">
+                            <button pButton icon="fa fa-plus" type="button" (click)="openTeamsDialog()" label="Aggiungi Squadre" ></button>
+                            <button pButton class="ui-button-success" type="button" icon="fa fa-plus" (click)="newTeamDialog()" label="Crea Squadra" ></button>
+                        </div>
+                    </ng-template>        
                 </p-table>
-            </p-tabPanel>                   
+            </p-tabPanel>
+
 <!-- 
             <p-tabPanel header="Gironi" *ngIf="containsRound()">    
                 <p-table [columns]="roundCols"
@@ -864,12 +844,76 @@
                     <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
                     [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
                 </div>
-                
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa fa-close" (click)="doDelete()" label="Rimuovi" 
-                    [disabled]="!tourneyFormGroup.valid || notAllowedPhases()"></button>
-                </div>
             </div>
         </div>
     </form>   
+
+    <p-dialog header="Aggiungi Squadre" [(visible)]="displayTeamDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="600">
+        <p-table [columns]="teamCols" 
+                [value]="availableTeams" 
+                [(selection)]="selectedTeams"
+                [scrollable]="true" 
+                scrollHeight="600px">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 3em">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>                            
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td>                            
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button pButton class="ui-button-success" type="button" icon="pi pi-save" (click)="saveTeamDialog()" label="Salva"></button>
+        </div>
+    </p-dialog>       
+
+    <p-dialog header="Crea Squadra" [(visible)]="createTeamDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+        <p-table [columns]="teamCols" 
+                [value]="allTeams" 
+                [(selection)]="selectedTeams">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 3em">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>                            
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td>                            
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button class="ui-button-success" type="button" pButton icon="pi pi-save" (click)="saveTeamDialog()" label="Salva"></button>
+        </div>
+    </p-dialog>       
+
 </div>

@@ -136,6 +136,49 @@ export class TeamsPool {
         ,{id:3, firstname:"Salvatore",  lastname:"Amoroso"}
       ]
     }
+    ,
+    {id:20,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110"
+    ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+    ,players:[
+      {id:2, firstname:"Luciano",   lastname:"Martino"}
+      ,{id:3, firstname:"Raimondo",  lastname:"Brancaccio"}
+    ]
+  }
+  ,{id:21,teamName:"AURORA PREGNANA", address:"Via Roma, 110"
+    ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
+    ,players:[
+        {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+      ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+    ]              
+  }
+  ,{id:22,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA, 32"
+    ,country: {id:1, city:"ORIGGIO", cityCode:"F206", provinceCode: "MI", zipCode:"20153", countryCode:"IT"}
+    ,players:[
+        {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+      ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+    ]              
+  }
+  , {id:23,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6"
+    ,country: {id:1, city:"SOLARO", cityCode:"F206", provinceCode: "MI", zipCode:"20020", countryCode:"IT"}
+    ,players:[
+        {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+      ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+    ]              
+  }
+  , {id:24,teamName:"ORATORIO ZIBIDO A", address:"VIA BINASCO / LARGO GARIBALDI"
+    ,country: {id:1, city:"ZIBIDO SAN GIACOMO", cityCode:"F206", provinceCode: "MI", zipCode:"20080", countryCode:"IT"}
+    ,players:[
+        {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+      ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+    ]              
+  }
+  , {id:25,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI"
+    ,country: {id:1, city:"ZIBIDO SAN GIACOMO", cityCode:"F206", provinceCode: "MI", zipCode:"20080", countryCode:"IT"}
+    ,players:[
+        {id:1, firstname:"Salvatore", lastname:"Amoroso"}
+      ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi"}
+    ]              
+  }
   ];
 
   static prepareTeams(count : number) : Array<Team> {

@@ -17,43 +17,95 @@
 
 package it.lms.tourney.dao;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import org.apache.log4j.Logger;
-
+import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Session;
+import it.lms.tourney.po.Session_;
+import it.lms.tourney.po.User;
 
 @Stateless
-public class SessionDao {
+public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
-    @Inject
-    private Logger         log;
-
-    @Inject
-    private EntityManager  em;
-
-    @Inject
-    private Event<Session> sessionEventSrc;
-
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Session session) throws Exception {
 
-        log.debug("Entering insert(" + session + ")");
+        logger.debug("Entering insert(" + session + ")");
 
-        em.persist(session);
+        insertPo(session);
 
         sessionEventSrc.fire(session);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Session session) throws Exception {
 
-        log.debug("Entering save(" + session + ")");
+        logger.debug("Entering save(" + session + ")");
 
-        Session cpo = em.merge(session);
-        em.persist(cpo);
+        Session cpo = super.merge(session);
+        super.updatePo(cpo);
 
         sessionEventSrc.fire(session);
     }
+
+    public Session findSessionBy(User u) {
+
+        logger.debug("Entering findSessionBy(" + u + ")");
+
+        CriteriaBuilder cb = getEm().getCriteriaBuilder();
+        CriteriaQuery<Session> criteria = cb.createQuery(Session.class);
+        Root<Session> root = criteria.from(Session.class);
+
+        Predicate p = cb.equal(root.get(Session_.user), u);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Session> cq = getEm().createQuery(criteria);
+
+        List<Session> poList = cq.getResultList();
+        String info = "[Found " + poList.size() + " Session(s)] ";
+        logger.info(info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        Session po = poList.get(0);
+        return po;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void insert(User u, String requestedSessionId, String userInfo) {
+
+        Session s = new Session();
+        s.setUser(u);
+        s.setUserSession(requestedSessionId);
+        s.setUserInfo(userInfo);
+        s.setCreationDate(new Date());
+
+        super.insertPo(s);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void update(Session s, String requestedSessionId, String userInfo) {
+
+        s.setUserSession(requestedSessionId);
+        s.setUserInfo(userInfo);
+        s.setCreationDate(new Date());
+
+        Session mpo = super.merge(s);
+        super.updatePo(mpo);
+    }
+
 }

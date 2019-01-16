@@ -4,7 +4,10 @@ package it.lms.cb.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,8 +15,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import it.lms.tourney.po.Session;
 
 /**
  * BaseHibernateCrudDao Class. Root(base) class to manage data access using Hibernate to perform CRUD operations on only
@@ -21,14 +25,17 @@ import org.apache.log4j.Logger;
  */
 public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
 
-    private static Logger   logger = LogManager.getLogger(BaseJPACrudDao.class);
+    @Inject
+    protected Logger         logger;
 
-    private Class<PO>       entityClass;
+    @Inject
+    protected Event<Session> sessionEventSrc;
 
-    // @PersistenceContext
-    private EntityManager   em;
+    @PersistenceContext
+    private EntityManager    em;
 
-    private CriteriaBuilder cb     = null;
+    private Class<PO>        entityClass;
+    private CriteriaBuilder  cb = null;
 
     public BaseJPACrudDao() {
 
@@ -56,7 +63,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
         em.persist(entity);
     }
 
-    protected void insert(PO entity) {
+    protected void insertPo(PO entity) {
 
         makePersistent(entity);
         logger.debug("insert successful");
@@ -67,7 +74,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
      * 
      * @param entity to update
      */
-    protected void update(PO entity) {
+    protected void updatePo(PO entity) {
 
         makePersistent(entity);
         logger.debug("update successful");
@@ -86,7 +93,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
         logger.debug("detach successful");
     }
 
-    protected void delete(PO entity) {
+    protected void deletePo(PO entity) {
 
         makeTransient(entity);
         logger.debug("delete successful");

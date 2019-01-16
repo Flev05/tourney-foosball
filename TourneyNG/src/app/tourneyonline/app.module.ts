@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
@@ -22,7 +21,6 @@ import { ClientService } from './service/client-service';
 import { UserngService } from './service/user-service';
 import { RoleService } from './service/role-service';
 import { CountryService } from './service/country-service';
-import { InMemoryDataService } from 'app/tourneyonline/in-memory-data-service/in-memory-data.service';
 import { PlayerService } from './service/player-service';
 import { TeamService } from './service/team-service';
 
@@ -43,10 +41,6 @@ import { TeamService } from './service/team-service';
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
-    
-    ,  HttpClientInMemoryWebApiModule.forRoot(
-        InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
-      )
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

@@ -10,8 +10,8 @@ import { Login } from '../domain/login';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const loginUrl  = 'api/login';  // URL to web server api
-const logoutUrl = 'api/logout';  // URL to web server api
+const loginUrl  = 'api/logon/login';  // URL to web server api
+const logoutUrl = 'api/logon/logout';  // URL to web server api
 
 @Injectable()
 export class LoginService {
@@ -27,22 +27,21 @@ export class LoginService {
 
     /** PUT: send the request login to the server */
     sendLogin (login: Login ): Observable<Login> {
-        const id =  login.id;
-        const url = `${loginUrl}/${id}`;
+        const url = loginUrl;
+        console.log("Entering sendLogin(" + login.username + ")"); 
 
         this.userLogged=true;
-        this.selectedLogin=login;
+        this.selectedLogin = login;
 
         return this.http.put(url, login, httpOptions).pipe(
-            tap(_ => this.log(`sendLogin url=${url}  successful`) ),
+            tap(_ => this.log(`sendLogin url=${url}  successful`)),
             catchError(this.handleLoginError<Login>('sendLogin'))
         );
     }
   
     /** PUT: send the request logout to the server */
     sendLogout (): Observable<Login> {
-        const id =  this.selectedLogin.id;
-        const url = `${logoutUrl}/${id}`;
+        const url = logoutUrl;
 
         this.userLogged=undefined;
 
@@ -57,6 +56,7 @@ export class LoginService {
 
             console.error("Entering handleLoginError()"); // log to console instead
       
+            this.userLogged=false;
             this.userLogged=undefined;
         
             // TODO: send the error to remote logging infrastructure
@@ -75,6 +75,7 @@ export class LoginService {
 
             console.error("Entering handleLogoutError()"); // log to console instead
       
+            this.userLogged=false;
             this.userLogged=undefined;
         
             // TODO: send the error to remote logging infrastructure

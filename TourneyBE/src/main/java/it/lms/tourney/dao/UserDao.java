@@ -1,5 +1,5 @@
 
-package it.lms.cb.dao;
+package it.lms.tourney.dao;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +16,9 @@ import javax.persistence.criteria.Root;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import it.lms.cb.dao.BaseJPACrudDao;
+import it.lms.cb.dao.DaoException;
+import it.lms.cb.dao.NoDataFoundException;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.User_;
@@ -70,33 +73,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         User po = getPoBy(username);
 
-        return po;
-    }
-
-    public User findUserBy(String username, String md5Password) throws DaoException {
-
-        logger.debug("Entering findUserBy(" + username + "," + md5Password + ")");
-
-        CriteriaQuery<User> cq = getCb().createQuery(User.class);
-
-        Root<User> root = cq.from(User.class);
-
-        Predicate p = getCb().equal(root.get(User_.username), username);
-        Predicate q = getCb().equal(root.get(User_.password), md5Password);
-        Predicate pAndQ = getCb().and(p, q);
-        cq.select(root).where(pAndQ);
-
-        TypedQuery<User> nq = getEm().createQuery(cq);
-
-        List<User> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(info);
-
-        if (poList.isEmpty()) {
-            throw new NoDataFoundException(info);
-        }
-
-        User po = poList.get(0);
         return po;
     }
 
@@ -183,24 +159,24 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User insertPo(User po) throws DaoException {
+    public User insert(User po) throws DaoException {
 
-        insert(po);
+        insertPo(po);
 
         return po;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User updatePo(User po) throws DaoException {
+    public User update(User po) throws DaoException {
 
         User mpo = merge(po);
-        update(mpo);
+        updatePo(mpo);
 
         return po;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void deletePo(User po) throws DaoException {
+    public void delete(User po) throws DaoException {
 
         logger.debug("Entering deletePo(" + po + ")");
 
@@ -211,7 +187,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         }
 
         User mpo = merge(po);
-        delete(mpo);
+        deletePo(mpo);
     }
 
 }

@@ -25,6 +25,9 @@ import javax.persistence.Table;
 public class User extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String            username;
+    private String            password;
+
     private String            firstname;
     private String            lastname;
 
@@ -45,9 +48,9 @@ public class User extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + " User [firstname=" + firstname + ", lastname=" + lastname + ", address=" + address
-                + ", email=" + email + ", phoneNumber=" + phoneNumber + ", client=" + client + ", country=" + country
-                + ", roles=" + roles + "]";
+        return super.toString() + " User [username=" + username + ", password=" + password + ", firstname=" + firstname
+                + ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
+                + phoneNumber + ", client=" + client + ", country=" + country + "roles=" + roles + "]";
     }
 
     @Id
@@ -60,6 +63,28 @@ public class User extends AbstractPO implements Serializable {
     public void setId(Integer id) {
 
         super.setId(id);
+    }
+
+    @Column(name = "username")
+    public String getUsername() {
+
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
+    }
+
+    @Column(name = "password")
+    public String getPassword() {
+
+        return password;
+    }
+
+    public void setPassword(String password) {
+
+        this.password = password;
     }
 
     @Column(name = "firstname")

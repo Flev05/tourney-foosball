@@ -1,5 +1,5 @@
 
-package it.lms.cb.dao;
+package it.lms.tourney.dao;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ import javax.persistence.criteria.Root;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import it.lms.cb.dao.BaseJPACrudDao;
+import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
 
@@ -97,7 +99,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
         logger.debug("Updating Role: " + po);
 
         Role mpo = merge(po);
-        update(mpo);
+        updatePo(mpo);
     }
 
     /**
@@ -107,12 +109,12 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * @throws DaoException if a problem occurs during the insert operation
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insertPo(Role po) throws DaoException {
+    public void insert(Role po) throws DaoException {
 
         logger.debug("Entering insertPo()");
 
         try {
-            super.insert(po);
+            super.insertPo(po);
             logger.debug("Insert of " + po + " successful");
         } catch (Exception e) {
             String msg = "Insert of " + po + " failed";
@@ -128,12 +130,12 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * @throws DaoException if a problem occurs during the delete operation
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void deletePo(Role po) throws DaoException {
+    public void delete(Role po) throws DaoException {
 
         logger.debug("Entering deletePo()");
 
         try {
-            super.delete(po);
+            super.deletePo(po);
             logger.debug("Delete of " + po + " successful");
         } catch (Exception e) {
             String msg = "Delete of " + po + " failed";

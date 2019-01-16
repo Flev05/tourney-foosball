@@ -40,7 +40,7 @@ public class Role extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + " Role [name=" + name + ", description=" + description + ", users=" + users + "]";
+        return super.toString() + " Role [name=" + name + ", description=" + description + "]";
     }
 
     @Id

@@ -9,6 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Player } from 'app/tourneyonline/domain/player';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -32,7 +33,7 @@ export class TeamDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
-        private   teamService: TeamService
+        private   teamService: TeamService,
     ) { 
         super(tourneyService, location, countryService);
     }

@@ -16,9 +16,9 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
-import { TeamListView } from '../team/team-listview';
 
-const REDIRECT_TEAM_DV   = 'admintourney/dv/team';
+const REDIRECT_TEAM_DV     = 'admintourney/dv/team';
+const REDIRECT_ADD_TEAM_DV = 'admintourney/dv/addteam';
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -50,13 +50,9 @@ export class   TourneyDetailView extends AbstractDetailView {
 
     activeIndex: number;
 
-    availableTeams: Team[];
-    poolTeams: Team[];
-    teamCols: any[];   
     selectedTeam: Team;
-    displayTeamDialog: boolean = false;
-    selectedTeams: Team[];
     tourneyTeams: Team[];
+    teamCols: { field: string; header: string; }[];
 
     constructor(
         private fb: FormBuilder,
@@ -65,7 +61,7 @@ export class   TourneyDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
-        public router: Router
+        private router: Router
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -128,6 +124,8 @@ export class   TourneyDetailView extends AbstractDetailView {
 
         this.tourneyTeams = this.selectedTourney.teams;
 
+        this.teamCols = TeamService.cols;
+
         this.isOnewayRound = this.selectedTourney.isOnewayRound ? "true" : "false";
         this.isOnewayPlayoff = this.selectedTourney.isOnewayPlayoff ? "true" : "false";
 
@@ -146,10 +144,6 @@ export class   TourneyDetailView extends AbstractDetailView {
 
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
-
-        this.displayTeamDialog = false;
-        this.teamCols = TeamService.cols;
-        this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
 
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -185,6 +179,24 @@ export class   TourneyDetailView extends AbstractDetailView {
        });
     }
 
+    addTeams() {
+        // this.availableTeams = [...this.poolTeams];
+        // this.selectedTeams = [];
+
+        // for(let pt of this.poolTeams) {            
+        //     for(let t of this.selectedTourney.teams) {
+        //         if( pt.id == t.id ) {
+        //             let index: number = this.availableTeams.indexOf(pt);
+        //             if(index > -1) {
+        //                 this.availableTeams.splice(index, 1);
+        //             }
+        //         }
+        //     }
+        // }
+
+        this.router.navigate([REDIRECT_ADD_TEAM_DV]);
+    }
+
     doTeamDelete(team: Team) {
         console.log("doTeamDelete(): " + team.teamName);
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName + "?";
@@ -198,38 +210,6 @@ export class   TourneyDetailView extends AbstractDetailView {
         }
     }
 
-    openTeamsDialog() {
-        this.displayTeamDialog = true;
-        this.availableTeams = [...this.poolTeams];
-        this.selectedTeams = [];
-
-        for(let pt of this.poolTeams) {            
-            for(let t of this.selectedTourney.teams) {
-                if( pt.id == t.id ) {
-                    let index: number = this.availableTeams.indexOf(pt);
-                    if(index > -1) {
-                        this.availableTeams.splice(index, 1);
-                    }
-                }
-            }
-        }
-    }
-
-    saveTeamDialog() {
-        this.displayTeamDialog = false;
-
-        for(let t of this.selectedTeams) {
-            this.tourneyTeams.push(t);
-        }
-    }
-
-    newTeamDialog() {
-        this.selectedTeam={id:0, teamName:""};
-        this.teamService.selectedTeam = this.selectedTeam;
-        this.teamService.newTeam = true;
-        this.router.navigate([TeamListView.redirect]);
-    }
-
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
@@ -237,11 +217,11 @@ export class   TourneyDetailView extends AbstractDetailView {
         this.tourneyService.selectedTabIndex = this.activeIndex;
         
         if(index==2) {
-            this.teamCols = TeamService.cols;
-            this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
+            // this.teamCols = TeamService.cols;
+            // this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
         }
     }
- 
+
     onTeamRowSelect(event) {
         console.log(event.data);
 
@@ -250,21 +230,21 @@ export class   TourneyDetailView extends AbstractDetailView {
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
 
-    private onTeamComplete(): void {
-        this.availableTeams = [...this.poolTeams];
-        this.selectedTeams = [];
+    // private onTeamComplete(): void {
+    //     this.availableTeams = [...this.poolTeams];
+    //     this.selectedTeams = [];
 
-        for(let pt of this.poolTeams) {            
-            for(let t of this.selectedTourney.teams) {
-                if( pt.id == t.id ) {
-                    let index: number = this.availableTeams.indexOf(pt);
-                    if(index > -1) {
-                        this.availableTeams.splice(index, 1);
-                    }
-                }
-            }
-        }
-    }
+    //     for(let pt of this.poolTeams) {            
+    //         for(let t of this.selectedTourney.teams) {
+    //             if( pt.id == t.id ) {
+    //                 let index: number = this.availableTeams.indexOf(pt);
+    //                 if(index > -1) {
+    //                     this.availableTeams.splice(index, 1);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     onOnewayRoundClick() {
         console.log("Entering onOnewayRoundClick()");

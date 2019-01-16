@@ -1,0 +1,67 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Aggiungi Squadre</span>
+        <span>Vista elenco per aggiungere le squadre al torneo</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Introduzione">            
+        <p>
+            Da questa vista potete aggiungere una o più squadra selezionandole da quelle disponibili.
+            Se la squadra non esiste, la potete creare con il bottone Nuova Squadra
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="content-section implementation">
+    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+
+    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+  
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
+
+    <p-table [columns]="teamCols" 
+            [value]="availableTeams" 
+            [(selection)]="selectedTeams"
+            [responsive]="true"
+            [scrollable]="true" 
+            scrollHeight="600px"
+            dataKey="teamName">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th>
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>                            
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>                            
+                <td *ngFor="let col of columns">
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="summary" let-rowData>
+            <div style="text-align:left">
+                <button pButton class="ui-button-success" type="button" icon="fa fa-save" (click)="save()" label="Salva" ></button>
+                <button pButton type="button" icon="fa fa-plus" (click)="newTeam()" label="Crea Squadra" ></button>
+            </div>
+        </ng-template>        
+    </p-table>        
+
+</div>

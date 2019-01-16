@@ -2,9 +2,9 @@
 @import 'assets/showcase/css/code.css';
 @import 'assets/showcase/css/site.css';
 
-#layout-content div.content-section.implementation > p-table > div > div.ui-table-wrapper.ng-star-inserted > table{
+/* #layout-content div.content-section.implementation > p-table > div > div.ui-table-wrapper.ng-star-inserted > table{
     width: auto;
-}
+} */
 
 .roundNames {
     font-weight:bold;

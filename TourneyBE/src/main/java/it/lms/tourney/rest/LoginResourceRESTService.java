@@ -27,7 +27,6 @@ import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -83,11 +82,11 @@ public class LoginResourceRESTService {
 
         logger.debug("PUT: doLogin(" + login + ")");
         Response.ResponseBuilder builder;
-        String res = this.login(login);
-        if (res != null) {
-            builder = Response.ok();
-            return builder.build();
-        }
+        // String res = this.login(login);
+        // if (res != null) {
+        // builder = Response.ok();
+        // return builder.build();
+        // }
 
         Map<String, String> responseObj = new HashMap<String, String>();
 
@@ -122,21 +121,6 @@ public class LoginResourceRESTService {
             // prepareUserBean();
 
             builder = Response.ok();
-        } catch (ServletException e) {
-            String err = e.getMessage();
-            if (err.contains(ALREADY_LOGGED)) {
-                builder = Response.ok();
-            } else {
-                logger.error("Login failed", e);
-                responseObj = new HashMap<String, String>();
-                responseObj.put("error", e.getMessage());
-                builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-            }
-        } catch (NullPointerException e) {
-            logger.error("Unable to Login", e);
-            responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
         } catch (Exception e) {
 
             logger.error("Login failed", e);
@@ -149,8 +133,6 @@ public class LoginResourceRESTService {
     }
 
     private void doLogin(String username, String md5Pssword) {
-
-        userDao.findUserBy(username, md5Pssword);
 
     }
 

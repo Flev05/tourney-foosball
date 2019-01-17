@@ -28,8 +28,6 @@
         
 <div class="content-section implementation">
 
-    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
-
     <form [formGroup]="loginformGroup" (ngSubmit)="onSubmit(loginformGroup.value)">
         <p-panel header="Form Login">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -70,15 +68,12 @@
                     </div>
                     <div class="ui-grid-col-4"></div>
                 </div>
-
-                <!-- <div style="text-align:center;margin-top:20px" *ngIf="submitted">
-                    Login
-                    <br>
-                    {{diagnostic}}
-                </div> -->
-
             </div>
         </p-panel>
     </form>                
+    
+    <div *ngIf="isLoginFailed" style="margin-top:30px">
+        <p-message severity="error" text="Login fallito"></p-message>
+    </div>
 </div>
 

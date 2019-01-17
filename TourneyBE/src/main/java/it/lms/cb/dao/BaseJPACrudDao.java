@@ -17,25 +17,25 @@ import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
 
-import it.lms.tourney.po.Session;
+import it.lms.tourney.cdi.AbstractLogger;
 
 /**
  * BaseHibernateCrudDao Class. Root(base) class to manage data access using Hibernate to perform CRUD operations on only
  * one entity.
  */
-public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
+public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends AbstractLogger {
 
     @Inject
-    protected Logger         logger;
-
-    @Inject
-    protected Event<Session> sessionEventSrc;
+    protected Logger        logger;
 
     @PersistenceContext
-    private EntityManager    em;
+    private EntityManager   em;
 
-    private Class<PO>        entityClass;
-    private CriteriaBuilder  cb = null;
+    @Inject
+    private Event<PO>       clientEventSrc;
+
+    private Class<PO>       entityClass;
+    private CriteriaBuilder cb = null;
 
     public BaseJPACrudDao() {
 
@@ -44,7 +44,6 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
     protected BaseJPACrudDao(Class<PO> entityClass) {
 
         this.entityClass = entityClass;
-        // cb = em.getCriteriaBuilder();
     }
 
     protected CriteriaBuilder getCb() {
@@ -61,12 +60,14 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
     private void makePersistent(PO entity) {
 
         em.persist(entity);
+        clientEventSrc.fire(entity);
     }
 
     protected void insertPo(PO entity) {
 
         makePersistent(entity);
-        logger.debug("insert successful");
+
+        logger.debug(logId() + "insert successful");
     }
 
     /**
@@ -76,33 +77,37 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
      */
     protected void updatePo(PO entity) {
 
-        makePersistent(entity);
-        logger.debug("update successful");
+        PO mpo = this.merge(entity);
+
+        makePersistent(mpo);
+        logger.debug(logId() + "update successful");
     }
 
     protected PO merge(PO entity) {
 
         PO po = em.merge(entity);
-        logger.debug("merge successful");
+        logger.debug(logId() + "merge successful");
         return po;
     }
 
     protected void detach(PO entity) {
 
         em.detach(entity);
-        logger.debug("detach successful");
+        logger.debug(logId() + "detach successful");
     }
 
     protected void deletePo(PO entity) {
 
-        makeTransient(entity);
-        logger.debug("delete successful");
+        PO mpo = this.merge(entity);
+
+        makePersistent(mpo);
+        logger.debug(logId() + "delete successful");
     }
 
-    private void makeTransient(PO entity) {
-
-        em.remove(entity);
-    }
+    // private void makeTransient(PO entity) {
+    //
+    // em.remove(entity);
+    // }
 
     protected void refresh(PO entity) {
 
@@ -121,7 +126,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         return poList;
     }
@@ -138,7 +143,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         return poList;
     }
@@ -153,7 +158,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
      */
     protected PO getPoByPk(String pk, String name) throws DaoException {
 
-        logger.debug("Entering getPoByPk(" + name + ")");
+        logger.debug(logId() + "Entering getPoByPk(" + name + ")");
 
         CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
 
@@ -166,13 +171,13 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> {
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " PO(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         PO po = poList.get(0);
         return po;
     }
 
-    protected PO findById(Object primaryKey) throws DaoException {
+    protected PO findById(Object primaryKey) {
 
         return em.find(entityClass, primaryKey);
     }

@@ -42,10 +42,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
 import it.lms.tourney.dao.ClientDao;
-import it.lms.tourney.dao.ClientRepository;
 import it.lms.tourney.po.Client;
 
 /**
@@ -55,27 +52,21 @@ import it.lms.tourney.po.Client;
  */
 @Path("/clients")
 @RequestScoped
-public class ClientResourceRESTService {
+public class ClientResourceRESTService extends AbstractRESTService {
 
     @Inject
-    private Logger           log;
+    private Validator validator;
 
     @Inject
-    private Validator        validator;
-
-    @Inject
-    private ClientRepository repository;
-
-    @Inject
-    private ClientDao        clientDao;
+    private ClientDao clientDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Client> listAllClients() {
 
-        log.debug("GET: listAllClients()");
+        logger.debug("GET: listAllClients()");
 
-        return repository.findAllOrderedByName();
+        return clientDao.findAllOrderedByName();
     }
 
     @GET
@@ -83,9 +74,9 @@ public class ClientResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Client lookupClientById(@PathParam("id") Integer id) {
 
-        log.debug("GET: lookupClientById(" + id + ")");
+        logger.debug("GET: lookupClientById(" + id + ")");
 
-        Client client = repository.getById(id);
+        Client client = clientDao.getById(id);
         if (client == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -101,7 +92,7 @@ public class ClientResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createClient(Client client) {
 
-        log.debug("POST: createClient(" + client + ")");
+        logger.debug("POST: createClient(" + client + ")");
 
         // Validates client using bean validation
         validateClient(client);
@@ -120,7 +111,7 @@ public class ClientResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateClient(Client client) {
 
-        log.debug("PUT: updateClient(" + client.getId() + ")");
+        logger.debug("PUT: updateClient(" + client.getId() + ")");
 
         Response.ResponseBuilder builder = update(client);
 
@@ -137,12 +128,13 @@ public class ClientResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteClient(@PathParam("id") Integer id) {
 
-        log.debug("DELETE: deleteClient(" + id + ")");
+        logger.debug("DELETE: deleteClient(" + id + ")");
 
         Response.ResponseBuilder builder;
         try {
 
-            clientDao.delete(id);
+            Client client = clientDao.getById(id);
+            clientDao.delete(client);
 
             // Create an "ok" response
             builder = Response.ok();
@@ -158,7 +150,7 @@ public class ClientResourceRESTService {
 
     private Response.ResponseBuilder insert(Client client) {
 
-        log.debug("Entering insert()");
+        logger.debug("Entering insert()");
 
         Response.ResponseBuilder builder;
         try {
@@ -186,7 +178,7 @@ public class ClientResourceRESTService {
 
     private Response.ResponseBuilder update(Client client) {
 
-        log.debug("Entering update()");
+        logger.debug("Entering update()");
 
         Response.ResponseBuilder builder;
         try {
@@ -251,7 +243,7 @@ public class ClientResourceRESTService {
      */
     private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
 
-        log.debug("Validation completed. violations found: " + violations.size());
+        logger.debug("Validation completed. violations found: " + violations.size());
 
         Map<String, String> responseObj = new HashMap<String, String>();
 
@@ -273,7 +265,7 @@ public class ClientResourceRESTService {
 
         Client client = null;
         try {
-            client = repository.findByEmail(email);
+            client = clientDao.findByEmail(email);
         } catch (NoResultException e) {
             // ignore
         }

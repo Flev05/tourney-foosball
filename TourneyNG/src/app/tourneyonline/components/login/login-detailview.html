@@ -64,16 +64,16 @@
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-2"></div>
                     <div class="ui-grid-col-6">
-                        <button pButton type="submit" icon="fa-check" label="Login" [disabled]="!loginformGroup.valid"></button>
+                        <button pButton type="submit" icon="fa fa-check" label="Login" [disabled]="!loginformGroup.valid"></button>
                     </div>
                     <div class="ui-grid-col-4"></div>
                 </div>
+                <div *ngIf="isLoginFailed" style="margin-top:30px">
+                    <p-message severity="error" text="Login fallito"></p-message>
+                </div>
             </div>
+            
         </p-panel>
     </form>                
-    
-    <div *ngIf="isLoginFailed" style="margin-top:30px">
-        <p-message severity="error" text="Login fallito"></p-message>
-    </div>
 </div>
 

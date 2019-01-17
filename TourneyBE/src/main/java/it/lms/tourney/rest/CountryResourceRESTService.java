@@ -30,7 +30,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -41,10 +40,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
 import it.lms.tourney.dao.CountryDao;
-import it.lms.tourney.dao.CountryRepository;
 import it.lms.tourney.po.Country;
 
 /**
@@ -54,27 +50,21 @@ import it.lms.tourney.po.Country;
  */
 @Path("/countries")
 @RequestScoped
-public class CountryResourceRESTService {
+public class CountryResourceRESTService extends AbstractRESTService {
 
     @Inject
-    private Logger            log;
+    private Validator  validator;
 
     @Inject
-    private Validator         validator;
-
-    @Inject
-    private CountryRepository repository;
-
-    @Inject
-    private CountryDao        countryDao;
+    private CountryDao countryDao;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Country> listAllCountrys() {
 
-        log.debug("GET: listAllCountrys()");
+        logger.debug(logId() + "GET: listAllCountrys()");
 
-        return repository.findAllOrderedByCity();
+        return countryDao.findAllOrderedByCity();
     }
 
     @GET
@@ -82,9 +72,9 @@ public class CountryResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Country lookupCountryById(@PathParam("id") Integer id) {
 
-        log.debug("GET: lookupCountryById(" + id + ")");
+        logger.debug(logId() + "GET: lookupCountryById(" + id + ")");
 
-        Country country = repository.getById(id);
+        Country country = countryDao.getById(id);
         if (country == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -100,7 +90,7 @@ public class CountryResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCountry(Country country) {
 
-        log.debug("POST: createCountry(" + country.getId() + ")");
+        logger.debug(logId() + "POST: createCountry(" + country.getId() + ")");
 
         // Validates country using bean validation
         validateCountry(country);
@@ -119,7 +109,7 @@ public class CountryResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateCountry(Country country) {
 
-        log.debug("PUT: updateCountry(" + country.getId() + ")");
+        logger.debug(logId() + "PUT: updateCountry(" + country.getId() + ")");
 
         Response.ResponseBuilder builder = update(country);
 
@@ -130,34 +120,34 @@ public class CountryResourceRESTService {
      * Removes a the received country from the persistent store. Return a JAX-RS response with either 200 ok, or with a
      * map of fields, and related errors.
      */
-    @DELETE
-    @Path("/{id:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteCountry(@PathParam("id") Integer id) {
-
-        log.debug("DELETE: deleteCountry(" + id + ")");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            countryDao.delete(id);
-
-            // Create an "ok" response
-            builder = Response.ok();
-
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
-        return builder.build();
-    }
+    // @DELETE
+    // @Path("/{id:[0-9][0-9]*}")
+    // @Consumes(MediaType.APPLICATION_JSON)
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response deleteCountry(@PathParam("id") Integer id) {
+    //
+    // logger.debug("DELETE: deleteCountry(" + id + ")");
+    //
+    // Response.ResponseBuilder builder;
+    // try {
+    //
+    // countryDao.delete(id);
+    //
+    // // Create an "ok" response
+    // builder = Response.ok();
+    //
+    // } catch (Exception e) {
+    // // Handle generic exceptions
+    // Map<String, String> responseObj = new HashMap<String, String>();
+    // responseObj.put("error", e.getMessage());
+    // builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+    // }
+    // return builder.build();
+    // }
 
     private Response.ResponseBuilder insert(Country country) {
 
-        log.debug("Entering insert()");
+        logger.debug(logId() + "Entering insert()");
 
         Response.ResponseBuilder builder;
         try {
@@ -185,7 +175,7 @@ public class CountryResourceRESTService {
 
     private Response.ResponseBuilder update(Country country) {
 
-        log.debug("Entering update()");
+        logger.debug(logId() + "Entering update()");
 
         Response.ResponseBuilder builder;
         try {
@@ -250,7 +240,7 @@ public class CountryResourceRESTService {
      */
     private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
 
-        log.debug("Validation completed. violations found: " + violations.size());
+        logger.debug(logId() + "Validation completed. violations found: " + violations.size());
 
         Map<String, String> responseObj = new HashMap<String, String>();
 

@@ -43,7 +43,8 @@ export class LoginService {
     sendLogout (): Observable<Login> {
         const url = logoutUrl;
 
-        this.userLogged=undefined;
+        this.userLogged=false;
+        this.selectedLogin=undefined;
 
         return this.http.put(url, this.selectedLogin, httpOptions).pipe(
             tap(_ => this.log(`sendLogout url=${url} successful`) ),
@@ -57,7 +58,7 @@ export class LoginService {
             console.error("Entering handleLoginError()"); // log to console instead
       
             this.userLogged=false;
-            this.userLogged=undefined;
+            this.selectedLogin=undefined;
         
             // TODO: send the error to remote logging infrastructure
             console.error(error); // log to console instead
@@ -72,11 +73,7 @@ export class LoginService {
       
       private handleLogoutError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-
             console.error("Entering handleLogoutError()"); // log to console instead
-      
-            this.userLogged=false;
-            this.userLogged=undefined;
         
             // TODO: send the error to remote logging infrastructure
             console.error(error); // log to console instead

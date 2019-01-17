@@ -10,9 +10,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Role;
@@ -21,16 +18,14 @@ import it.lms.tourney.po.Role_;
 @Stateless
 public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
-    private static Logger logger = LogManager.getLogger(RoleDao.class);
-
     public RoleDao() throws DaoException {
 
         super(Role.class);
     }
 
-    public Role getRoleById(Integer id) throws DaoException {
+    public Role getRoleById(Integer id) {
 
-        logger.debug("Entering getRoleById()");
+        logger.debug(logId() + "Entering getRoleById()");
 
         Role role = getById(id);
 
@@ -46,7 +41,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public List<Role> findAllRoles() throws DaoException {
 
-        logger.debug("Entering findAllRoles()");
+        logger.debug(logId() + "Entering findAllRoles()");
 
         CriteriaQuery<Role> cq = getCb().createQuery(Role.class);
 
@@ -59,7 +54,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
         List<Role> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Role(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         return poList;
     }
@@ -71,16 +66,16 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * @return the BO found
      * @throws DaoException id the select fails
      */
-    public Role getById(Integer id) throws DaoException {
+    public Role getById(Integer id) {
 
-        logger.debug("Entering RoleDao.getById(" + id + ")");
+        logger.debug(logId() + "Entering RoleDao.getById(" + id + ")");
 
         Role po = getPoById(id);
 
         return po;
     }
 
-    public Role getPoById(Integer id) throws DaoException {
+    public Role getPoById(Integer id) {
 
         Role po = findById(id);
         return po;
@@ -90,13 +85,13 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     public void save(Role po) throws DaoException {
 
         if (po.isNull()) {
-            logger.debug("Inserting Role: " + po);
+            logger.debug(logId() + "Inserting Role: " + po);
 
             insert(po);
             return;
         }
 
-        logger.debug("Updating Role: " + po);
+        logger.debug(logId() + "Updating Role: " + po);
 
         Role mpo = merge(po);
         updatePo(mpo);
@@ -111,16 +106,9 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Role po) throws DaoException {
 
-        logger.debug("Entering insertPo()");
+        logger.debug(logId() + "Entering insertPo()");
 
-        try {
-            super.insertPo(po);
-            logger.debug("Insert of " + po + " successful");
-        } catch (Exception e) {
-            String msg = "Insert of " + po + " failed";
-            logger.error(msg, e);
-            throw new DaoException(msg);
-        }
+        super.insertPo(po);
     }
 
     /**
@@ -132,15 +120,8 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(Role po) throws DaoException {
 
-        logger.debug("Entering deletePo()");
+        logger.debug(logId() + "Entering deletePo()");
 
-        try {
-            super.deletePo(po);
-            logger.debug("Delete of " + po + " successful");
-        } catch (Exception e) {
-            String msg = "Delete of " + po + " failed";
-            logger.error(msg, e);
-            throw new DaoException(msg);
-        }
+        super.deletePo(po);
     }
 }

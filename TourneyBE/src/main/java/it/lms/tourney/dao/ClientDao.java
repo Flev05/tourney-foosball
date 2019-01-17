@@ -17,60 +17,90 @@
 
 package it.lms.tourney.dao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import org.apache.log4j.Logger;
-
+import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Client_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
-public class ClientDao {
+public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
-    @Inject
-    private Logger           log;
+    public Client getById(Integer id) {
 
-    @Inject
-    private EntityManager    em;
+        return super.findById(id);
+    }
 
-    @Inject
-    private Event<Client>    clientEventSrc;
+    public Client findByEmail(String email) {
 
-    @Inject
-    private ClientRepository cr;
+        logger.debug(logId() + "Entering findByEmail(" + email + ")");
 
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+        Root<Client> root = criteria.from(Client.class);
+
+        Predicate p = cb.equal(root.get(Client_.email), email);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Client> cq = getEm().createQuery(criteria);
+
+        return cq.getSingleResult();
+    }
+
+    public List<Client> findAllOrderedByName() {
+
+        logger.debug(logId() + "Entering findAllOrderedByName()");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Client> cq = cb.createQuery(Client.class);
+        Root<Client> root = cq.from(Client.class);
+
+        cq = cq.select(root);
+        cq = cq.orderBy(cb.asc(root.get(Client_.firstname)), cb.asc(root.get(Client_.lastname)));
+
+        TypedQuery<Client> tq = getEm().createQuery(cq);
+
+        List<Client> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Client client) throws Exception {
 
-        log.debug("Entering insert(" + client.getFirstname() + " " + client.getLastname() + " "
-                + client.getBusinessName() + ")");
+        logger.debug(logId() + "Entering delete(" + client + ")");
 
-        em.persist(client);
+        super.insertPo(client);
 
-        clientEventSrc.fire(client);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Client client) throws Exception {
 
-        log.debug("Entering save(" + client.getFirstname() + " " + client.getLastname() + " " + client.getBusinessName()
-                + ")");
+        logger.debug(logId() + "Entering delete(" + client + ")");
 
-        Client cpo = em.merge(client);
-        em.persist(cpo);
-
-        clientEventSrc.fire(client);
+        super.updatePo(client);
     }
 
-    public void delete(Integer id) throws Exception {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void delete(Client client) throws Exception {
 
-        log.debug("Entering delete(" + id + ")");
+        logger.debug(logId() + "Entering delete(" + client + ")");
 
-        Client client = cr.getById(id);
-
-        em.remove(client);
-
-        clientEventSrc.fire(client);
+        super.deletePo(client);
     }
 }

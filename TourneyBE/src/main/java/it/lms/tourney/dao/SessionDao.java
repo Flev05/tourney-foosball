@@ -37,30 +37,9 @@ import it.lms.tourney.po.User;
 @Stateless
 public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insert(Session session) throws Exception {
-
-        logger.debug("Entering insert(" + session + ")");
-
-        insertPo(session);
-
-        sessionEventSrc.fire(session);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(Session session) throws Exception {
-
-        logger.debug("Entering save(" + session + ")");
-
-        Session cpo = super.merge(session);
-        super.updatePo(cpo);
-
-        sessionEventSrc.fire(session);
-    }
-
     public Session findSessionBy(User u) {
 
-        logger.debug("Entering findSessionBy(" + u + ")");
+        logger.debug(logId() + "Entering findSessionBy(" + u + ")");
 
         CriteriaBuilder cb = getEm().getCriteriaBuilder();
         CriteriaQuery<Session> criteria = cb.createQuery(Session.class);
@@ -75,7 +54,7 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
         List<Session> poList = cq.getResultList();
         String info = "[Found " + poList.size() + " Session(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -104,8 +83,23 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         s.setUserInfo(userInfo);
         s.setCreationDate(new Date());
 
-        Session mpo = super.merge(s);
-        super.updatePo(mpo);
+        super.updatePo(s);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void insert(Session session) throws Exception {
+
+        logger.debug(logId() + "Entering insert(" + session + ")");
+
+        insertPo(session);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void update(Session session) throws Exception {
+
+        logger.debug(logId() + "Entering save(" + session + ")");
+
+        super.updatePo(session);
     }
 
 }

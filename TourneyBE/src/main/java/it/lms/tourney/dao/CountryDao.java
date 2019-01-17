@@ -17,58 +17,90 @@
 
 package it.lms.tourney.dao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import org.apache.log4j.Logger;
-
+import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Country;
+import it.lms.tourney.po.Country_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
-public class CountryDao {
+public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
-    @Inject
-    private Logger            log;
+    public Country getById(Integer id) {
 
-    @Inject
-    private EntityManager     em;
+        return super.findById(id);
+    }
 
-    @Inject
-    private Event<Country>    countryEventSrc;
+    public Country findByCity(String city) {
 
-    @Inject
-    private CountryRepository cr;
+        logger.debug(logId() + "Entering findByCity(" + city + ")");
 
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Country> criteria = cb.createQuery(Country.class);
+        Root<Country> root = criteria.from(Country.class);
+
+        Predicate p = cb.equal(root.get(Country_.city), city);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Country> cq = getEm().createQuery(criteria);
+
+        return cq.getSingleResult();
+    }
+
+    public List<Country> findAllOrderedByCity() {
+
+        logger.debug(logId() + "Entering findAllOrderedByCity()");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Country> cq = cb.createQuery(Country.class);
+        Root<Country> root = cq.from(Country.class);
+
+        cq = cq.select(root);
+        cq = cq.orderBy(cb.asc(root.get(Country_.city)));
+
+        TypedQuery<Country> tq = getEm().createQuery(cq);
+
+        List<Country> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Country country) throws Exception {
 
-        log.debug("Entering insert(" + country.getCity() + ")");
+        logger.debug(logId() + "Entering insert(" + country.getCity() + ")");
 
-        em.persist(country);
-
-        countryEventSrc.fire(country);
+        super.insertPo(country);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Country country) throws Exception {
 
-        log.debug("Entering save(" + country.getCity() + ")");
+        logger.debug(logId() + "Entering save(" + country + ")");
 
-        Country cpo = em.merge(country);
-        em.persist(cpo);
-
-        countryEventSrc.fire(country);
+        super.updatePo(country);
     }
 
-    public void delete(Integer id) throws Exception {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void delete(Country country) throws Exception {
 
-        log.debug("Entering delete(" + id + ")");
+        logger.debug(logId() + "Entering delete(" + country + ")");
 
-        Country country = cr.getById(id);
-
-        em.remove(country);
-
-        countryEventSrc.fire(country);
+        super.deletePo(country);
     }
+
 }

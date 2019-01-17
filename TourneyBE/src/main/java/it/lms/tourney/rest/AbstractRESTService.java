@@ -9,18 +9,15 @@ import javax.ws.rs.core.Context;
 
 import org.apache.log4j.Logger;
 
-public abstract class AbstractRESTService {
+import it.lms.tourney.cdi.AbstractLogger;
+
+public abstract class AbstractRESTService extends AbstractLogger {
 
     @Inject
-    protected Logger           logger;
+    Logger                       logger;
 
     @Context
-    private HttpServletRequest request;
-
-    protected String getSessionId() {
-
-        return request.getSession().getId();
-    }
+    protected HttpServletRequest request;
 
     protected String getUserAgent() {
 
@@ -31,30 +28,30 @@ public abstract class AbstractRESTService {
     protected void printAuthentication() {
 
         String host = request.getRemoteHost();
-        logger.debug("RemoteHost=" + host);
+        logger.debug(logId() + "RemoteHost=" + host);
 
         String addr = request.getRemoteAddr();
-        logger.debug("RemoteAddr=" + addr);
+        logger.debug(logId() + "RemoteAddr=" + addr);
 
         String path = request.getContextPath();
-        logger.debug("ContextPath=" + path);
+        logger.debug(logId() + "PATH=" + path);
 
         String uri = request.getRequestURI();
-        logger.debug("URI=" + uri);
+        logger.debug(logId() + "URI=" + uri);
 
         String url = request.getRequestURI();
-        logger.debug("URL=" + url);
+        logger.debug(logId() + "URL=" + url);
 
         String authType = request.getAuthType();
-        logger.debug("AuthType=" + authType);
+        logger.debug(logId() + "AuthType=" + authType);
 
         String remoteUser = request.getRemoteUser();
-        logger.debug("RemoteUser=" + remoteUser);
+        logger.debug(logId() + "RemoteUser=" + remoteUser);
 
         Principal principal = getPrincipal();
-        logger.debug("Principal=" + principal);
+        logger.debug(logId() + "Principal=" + principal);
         if (principal != null) {
-            logger.debug("Principal.getName()=" + principal.getName());
+            logger.debug(logId() + "Principal.getName()=" + principal.getName());
         }
     }
 

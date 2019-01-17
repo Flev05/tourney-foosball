@@ -19,8 +19,6 @@ package it.lms.tourney.cdi;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -40,18 +38,23 @@ import org.apache.log4j.Logger;
  */
 public class Resources {
 
-    @Produces
-    @PersistenceContext
-    private EntityManager em;
+    // @Produces
+    // @PersistenceContext
+    // private EntityManager em;
 
     @Produces
     public Logger produceLog(InjectionPoint injectionPoint) {
 
         Logger logger = LogManager.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
 
-        // return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
-
         return logger;
     }
 
+    // @Produces
+    // public CdiLogger produceCdiLog(InjectionPoint injectionPoint) {
+    //
+    // CdiLogger cl = CdiLogger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+    //
+    // return cl;
+    // }
 }

@@ -13,9 +13,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.cb.dao.NoDataFoundException;
@@ -25,8 +22,6 @@ import it.lms.tourney.po.User_;
 
 @Stateless
 public class UserDao extends BaseJPACrudDao<User, Integer> {
-
-    private static Logger logger = LogManager.getLogger(UserDao.class);
 
     public UserDao() throws DaoException {
 
@@ -49,7 +44,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         if (poList.isEmpty()) {
             throw new NoDataFoundException(info);
@@ -69,7 +64,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      */
     public User findUserBy(String username) throws DaoException {
 
-        logger.debug("Entering findUserBy(" + username + ")");
+        logger.debug(logId() + "Entering findUserBy(" + username + ")");
 
         User po = getPoBy(username);
 
@@ -79,7 +74,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getUserById(Integer userId) throws DaoException {
 
-        logger.debug("Entering getUserById(" + userId + ")");
+        logger.debug(logId() + "Entering getUserById(" + userId + ")");
 
         User po = super.findById(userId);
 
@@ -95,7 +90,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private boolean isUserBelongingTo(String username, List<String> roles) throws DaoException {
 
-        logger.debug("Entering isUserBelongingTo()");
+        logger.debug(logId() + "Entering isUserBelongingTo()");
 
         String[] sa = new String[0];
         sa = roles.toArray(sa);
@@ -105,7 +100,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private boolean isUserBelongingTo(String username, String[] roles) throws DaoException {
 
-        logger.debug("Entering isUserBelongingTo()");
+        logger.debug(logId() + "Entering isUserBelongingTo()");
 
         List<String> roleList = new ArrayList<>();
         for (String s : roles) {
@@ -126,7 +121,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(info);
+        logger.info(logId() + info);
 
         if (poList.isEmpty()) {
             return false;
@@ -143,7 +138,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      */
     public List<User> findAllUsers() throws DaoException {
 
-        logger.debug("Entering findAllUsers()");
+        logger.debug(logId() + "Entering findAllUsers()");
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
@@ -153,32 +148,54 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         TypedQuery<User> tq = getEm().createQuery(cq);
 
         List<User> poList = tq.getResultList();
-        logger.debug("Found " + poList.size() + " User record(s)");
+        logger.debug(logId() + "Found " + poList.size() + " User record(s)");
 
         return poList;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User insert(User po) throws DaoException {
+    public User findUserBy(String username, String md5Password) throws DaoException {
 
-        insertPo(po);
+        logger.debug(logId() + "Entering findUserBy(" + username + "," + md5Password + ")");
 
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<User> root = cq.from(User.class);
+
+        Predicate p = getCb().equal(root.get(User_.username), username);
+        Predicate q = getCb().equal(root.get(User_.password), md5Password);
+        Predicate pAndQ = getCb().and(p, q);
+        cq.select(root).where(pAndQ);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        logger.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        User po = poList.get(0);
         return po;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User update(User po) throws DaoException {
+    public void insert(User po) throws DaoException {
 
-        User mpo = merge(po);
-        updatePo(mpo);
+        insertPo(po);
+    }
 
-        return po;
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void update(User po) throws DaoException {
+
+        updatePo(po);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(User po) throws DaoException {
 
-        logger.debug("Entering deletePo(" + po + ")");
+        logger.debug(logId() + "Entering deletePo(" + po + ")");
 
         Iterator<Role> it = po.getRoles().iterator();
         while (it.hasNext()) {
@@ -186,8 +203,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
             it.remove();
         }
 
-        User mpo = merge(po);
-        deletePo(mpo);
+        deletePo(po);
     }
 
 }

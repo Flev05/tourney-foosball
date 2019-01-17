@@ -27,7 +27,7 @@ export class LoginDetailView implements OnInit {
     loginformGroup: FormGroup;
 
     submitted: boolean;
-    isLoginFailed: boolean;
+    isLoginFailed: any;
 
     constructor(
         private fb: FormBuilder,
@@ -36,10 +36,10 @@ export class LoginDetailView implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.isLoginFailed = false;
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
         const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
-        this.isLoginFailed = false;
 
         this.loginformGroup = this.fb.group({
             'username': new FormControl(username, Validators.required),
@@ -53,22 +53,33 @@ export class LoginDetailView implements OnInit {
         this.formLogin.username = this.loginformGroup.get('username').value;
         this.formLogin.password = this.loginformGroup.get('password').value;
 
+        this.isLoginFailed = false;
+
         this.loginService.sendLogin(this.formLogin).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
     }
     
     next(n:any) {
+        console.log(n);
     }
 
     onError(n:any) {
-        this.isLoginFailed = true;
+        console.log("Entering LoginDetailView.onError()");
+
         this.msgs = [];
         this.msgs.push({severity:'error', summary:'Errore', detail:'Login fallito'});
     }
 
     onComplete() {
-        let redirect = 'admintourney';
-this.isLoginFailed = false;
-        this.router.navigate([redirect]);
+        console.log("Entering LoginDetailView.onComplete()" );
+
+        if(this.loginService.userLogged) {
+            this.isLoginFailed = false;
+            let redirect = 'admintourney';
+            this.router.navigate([redirect]);
+        } else {
+            this.isLoginFailed = true;
+        }
+        console.log("isLoginFailed=" + this.isLoginFailed);
     }
 
     get diagnostic() { return JSON.stringify(this.loginformGroup.value); }

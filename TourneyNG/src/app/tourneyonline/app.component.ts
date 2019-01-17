@@ -72,7 +72,7 @@ export class AppComponent implements OnInit{
     }
 
     goHome(): void {
-        let redirect = '';
+        let redirect = '/login';
         this.router.navigate([redirect]);
     }
   }

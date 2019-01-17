@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -34,9 +35,15 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Hex;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import it.lms.cb.gui.vo.RoleVO;
+import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.dao.SessionDao;
-import it.lms.tourney.dao.UserRepository;
+import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.po.Login;
+import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.User;
 
@@ -47,19 +54,19 @@ import it.lms.tourney.po.User;
  */
 @Path("/logon")
 @RequestScoped
+@Transactional
 public class LoginResourceRESTService extends AbstractRESTService {
 
-    // private static final String LOGIN_OK = "Login Succesfull";
-    // private static String ALREADY_LOGGED = "already been authenticated";
+    @Inject
+    private SessionDao sessionDao;
 
     @Inject
-    private SessionDao     sessionDao;
+    private UserDao    userDao;
 
-    // @Inject
-    // private UserDao userDao;
+    public LoginResourceRESTService() {
 
-    @Inject
-    private UserRepository userRepo;
+        super();
+    }
 
     /**
      * Called to perform the system login
@@ -70,7 +77,7 @@ public class LoginResourceRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response doLogin(Login login) {
 
-        logger.debug("PUT: doLogin(" + login + ")");
+        logger.debug(logId() + "PUT: doLogin(" + login + ")");
         Response.ResponseBuilder builder;
 
         Map<String, String> responseObj = new HashMap<String, String>();
@@ -78,12 +85,12 @@ public class LoginResourceRESTService extends AbstractRESTService {
         String username = login.getUsername();
         String password = login.getPassword();
 
-        logger.debug("Entering login() [username=" + username + ", password=" + password + "]");
+        logger.debug(logId() + "Entering login() [username=" + username + ", password=" + password + "]");
 
         printAuthentication();
 
         if (username == null || username.equals("")) {
-            String errmsg = "Username is empty, re-logging";
+            String errmsg = logId() + "Username is empty, re-logging";
             logger.debug(errmsg);
 
             responseObj = new HashMap<String, String>();
@@ -95,17 +102,16 @@ public class LoginResourceRESTService extends AbstractRESTService {
 
             String md5Pssword = doMD5(password);
 
-            logger.debug("Calling HttpServletRequest.login(" + username + ", " + md5Pssword + ")...");
+            logger.debug(logId() + "Calling HttpServletRequest.login(" + username + ", " + md5Pssword + ")...");
 
-            // request.login(username, md5Pssword);
+            User u = userDao.findUserBy(username, md5Pssword);
 
-            User u = userRepo.findUserBy(username, md5Pssword);
             if (u == null) {
-                String message = "HttpServletRequest.login(" + username + ", " + password + ") failed";
+                String message = logId() + "HttpServletRequest.login(" + username + ", " + password + ") failed";
                 logger.error(message);
                 responseObj = new HashMap<String, String>();
                 responseObj.put("error", "Login failed");
-                builder = Response.status(Response.Status.NOT_FOUND).entity(responseObj);
+                builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
                 return builder.build();
             }
 
@@ -114,7 +120,7 @@ public class LoginResourceRESTService extends AbstractRESTService {
 
             Session s = sessionDao.findSessionBy(u);
             if (s == null) {
-                String message = "User Session doesn't exist, create a new one";
+                String message = logId() + "User Session doesn't exist, create a new one";
                 logger.error(message);
 
                 sessionDao.insert(u, sessionId, userAgent);
@@ -122,20 +128,55 @@ public class LoginResourceRESTService extends AbstractRESTService {
                 sessionDao.update(s, sessionId, userAgent);
             }
 
-            String message = "HttpServletRequest.login(" + username + ", " + password + ") successful";
+            String message = logId() + "HttpServletRequest.login(" + username + ", " + password + ") successful";
             logger.debug(message);
 
-            builder = Response.ok();
+            String jsonString = prepareResponse(u);
+
+            builder = Response.status(Response.Status.OK).entity(jsonString);
+
+            // builder = Response.ok();
 
         } catch (Exception e) {
 
-            logger.error("Login failed", e);
+            logger.error(logId() + "Login failed", e);
             responseObj = new HashMap<String, String>();
             responseObj.put("error", e.getMessage());
             builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
         }
 
         return builder.build();
+    }
+
+    private String prepareResponse(User u) throws JsonProcessingException {
+
+        ObjectMapper om = new ObjectMapper();
+
+        UserVO uvo = new UserVO();
+        for (Role r : u.getRoles()) {
+
+            uvo.setAddress(u.getAddress());
+            uvo.setClient(u.getClient());
+            uvo.setCountry(u.getCountry());
+            uvo.setEmail(u.getEmail());
+            uvo.setFirstname(u.getFirstname());
+            uvo.setLastname(u.getLastname());
+            uvo.setPassword(u.getPassword());
+            uvo.setPhoneNumber(u.getPhoneNumber());
+            uvo.setUsername(u.getUsername());
+
+            RoleVO rvo = new RoleVO();
+            uvo.getRoles().add(rvo);
+
+            rvo.setDescription(r.getDescription());
+            rvo.setName(r.getName());
+            uvo.getRoles().add(rvo);
+
+        }
+
+        String jsonString = om.writeValueAsString(uvo);
+        logger.debug(logId() + jsonString);
+        return jsonString;
     }
 
     private String doMD5(String password) throws UnsupportedEncodingException {
@@ -146,7 +187,7 @@ public class LoginResourceRESTService extends AbstractRESTService {
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            logger.error("Unable to generate MD5 password", e);
+            logger.error(logId() + "Unable to generate MD5 password", e);
             throw new UnsupportedEncodingException(e.getMessage());
         }
 
@@ -155,7 +196,7 @@ public class LoginResourceRESTService extends AbstractRESTService {
         char[] md5Array = Hex.encodeHex(thedigest);
         String md5 = new String(md5Array).toUpperCase();
 
-        logger.debug("MD5=" + md5);
+        logger.debug(logId() + "MD5=" + md5);
         return md5;
     }
 
@@ -173,7 +214,7 @@ public class LoginResourceRESTService extends AbstractRESTService {
         try {
             super.invalidateSession();
         } catch (Exception e) {
-            logger.error("Ignore logout Exception:" + e);
+            logger.error(logId() + "Ignore logout Exception:" + e);
         }
 
         return builder.build();

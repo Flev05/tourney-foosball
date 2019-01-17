@@ -27,6 +27,7 @@ export class LoginDetailView implements OnInit {
     loginformGroup: FormGroup;
 
     submitted: boolean;
+    isLoginFailed: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -38,12 +39,12 @@ export class LoginDetailView implements OnInit {
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
         const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
+        this.isLoginFailed = false;
 
         this.loginformGroup = this.fb.group({
             'username': new FormControl(username, Validators.required),
             'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
         });
-
     }
 
     onSubmit(value: string) {
@@ -59,12 +60,14 @@ export class LoginDetailView implements OnInit {
     }
 
     onError(n:any) {
+        this.isLoginFailed = true;
         this.msgs = [];
         this.msgs.push({severity:'error', summary:'Errore', detail:'Login fallito'});
     }
 
     onComplete() {
         let redirect = 'admintourney';
+this.isLoginFailed = false;
         this.router.navigate([redirect]);
     }
 

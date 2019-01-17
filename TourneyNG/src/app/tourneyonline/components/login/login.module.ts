@@ -17,6 +17,8 @@ import { SliderModule } from 'app/components/slider/slider';
 
 import {LoginRoutingModule} from './login-routing.module';
 import {LoginDetailView} from './login-detailview';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
 	imports: [
@@ -37,9 +39,11 @@ import {LoginDetailView} from './login-detailview';
         ,SliderModule
         ,AutoCompleteModule
         ,AccordionModule
+        ,MessagesModule
+        ,MessageModule
 	],
 	declarations: [
-		LoginDetailView,
+                LoginDetailView,
 	]
 })
 export class LoginModule {}

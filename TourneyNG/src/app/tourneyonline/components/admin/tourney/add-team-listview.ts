@@ -49,7 +49,6 @@ export class AddTeamListView extends AbstractListView {
 
         this.teamCols = TeamService.cols;
         this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
-
     }
 
     private onTeamComplete(): void {
@@ -72,6 +71,10 @@ export class AddTeamListView extends AbstractListView {
  
         if(this.teamService.newTeam) {
             this.selectedTourney.teams.push(this.selectedTeam);
+        }
+
+        for(let t of this.selectedTeams) {
+            this.selectedTourney.teams.push(t);
         }
 
         this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

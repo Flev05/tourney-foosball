@@ -180,20 +180,6 @@ export class   TourneyDetailView extends AbstractDetailView {
     }
 
     addTeams() {
-        // this.availableTeams = [...this.poolTeams];
-        // this.selectedTeams = [];
-
-        // for(let pt of this.poolTeams) {            
-        //     for(let t of this.selectedTourney.teams) {
-        //         if( pt.id == t.id ) {
-        //             let index: number = this.availableTeams.indexOf(pt);
-        //             if(index > -1) {
-        //                 this.availableTeams.splice(index, 1);
-        //             }
-        //         }
-        //     }
-        // }
-
         this.router.navigate([REDIRECT_ADD_TEAM_DV]);
     }
 
@@ -217,8 +203,6 @@ export class   TourneyDetailView extends AbstractDetailView {
         this.tourneyService.selectedTabIndex = this.activeIndex;
         
         if(index==2) {
-            // this.teamCols = TeamService.cols;
-            // this.teamService.loadAllTeams().subscribe(t => this.poolTeams = t, e => this.onError(e), () => this.onTeamComplete());
         }
     }
 
@@ -229,22 +213,6 @@ export class   TourneyDetailView extends AbstractDetailView {
 
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
-
-    // private onTeamComplete(): void {
-    //     this.availableTeams = [...this.poolTeams];
-    //     this.selectedTeams = [];
-
-    //     for(let pt of this.poolTeams) {            
-    //         for(let t of this.selectedTourney.teams) {
-    //             if( pt.id == t.id ) {
-    //                 let index: number = this.availableTeams.indexOf(pt);
-    //                 if(index > -1) {
-    //                     this.availableTeams.splice(index, 1);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     onOnewayRoundClick() {
         console.log("Entering onOnewayRoundClick()");
@@ -377,8 +345,6 @@ export class   TourneyDetailView extends AbstractDetailView {
 
     containsPhase(value: string) : boolean{
         let phases = this.tourneyFormGroup.get('phases').value;
-
-        // console.log("selectedTourney.phases: " + phases);
 
         for(let i=0; i<phases.length; i++ ) {
             if(phases[i].toLowerCase().indexOf(value) == 0) {

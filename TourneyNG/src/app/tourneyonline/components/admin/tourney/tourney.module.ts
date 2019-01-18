@@ -1,7 +1,6 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
-import {AccordionModule} from 'primeng/accordion';
 
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {TableModule}  from 'primeng/table';
@@ -21,6 +20,7 @@ import { ButtonModule } from 'app/components/button/button';
 import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { SliderModule } from 'app/components/slider/slider';
+import {AccordionModule} from 'primeng/accordion';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
@@ -58,11 +58,11 @@ import { AddTeamListView } from './add-team-listview';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
+        ,PickListModule
+        ,ScrollPanelModule
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
-        ,PickListModule
-        ,ScrollPanelModule
 	],
 	declarations: [
 		TourneyListView,

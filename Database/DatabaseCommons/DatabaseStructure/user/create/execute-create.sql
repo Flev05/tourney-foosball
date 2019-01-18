@@ -12,3 +12,4 @@
 \i create-user_table.sql
 
 \i create-session.sql
+\i create-user_client.sql

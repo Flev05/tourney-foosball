@@ -3,11 +3,11 @@ package it.lms.cb.gui.vo;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public abstract class AbstractVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private Integer           id;
 
     private boolean           selected         = false;
     private boolean           enabled          = true;
@@ -16,7 +16,17 @@ public abstract class AbstractVO implements Serializable {
     @Override
     public String toString() {
 
-        return new ToStringBuilder(this).append("\n").toString();
+        return "AbstractVO [id=" + id + "]";
+    }
+
+    public Integer getId() {
+
+        return id;
+    }
+
+    public void setId(Integer id) {
+
+        this.id = id;
     }
 
     public boolean isSelected() {

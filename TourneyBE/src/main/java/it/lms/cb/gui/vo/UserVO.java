@@ -1,16 +1,16 @@
 
 package it.lms.cb.gui.vo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Country;
 
-public class UserVO implements Serializable {
+public class UserVO extends AbstractVO {
 
     private static final long serialVersionUID = 1L;
+
     private String            username;
     private String            password;
 
@@ -25,18 +25,20 @@ public class UserVO implements Serializable {
     private Country           country;
 
     private List<RoleVO>      roles;
+    private List<ClientVO>    clients;
 
     public UserVO() {
 
         roles = new ArrayList<RoleVO>();
+        clients = new ArrayList<ClientVO>();
     }
 
     @Override
     public String toString() {
 
-        return "UserVO [username=" + username + ", password=" + password + ", firstname=" + firstname + ", lastname="
-                + lastname + ", address=" + address + ", email=" + email + ", phoneNumber=" + phoneNumber + ", client="
-                + client + ", country=" + country + ", roles=" + roles + "]";
+        return super.toString() + " UserVO [username=" + username + ", password=" + password + ", firstname="
+                + firstname + ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
+                + phoneNumber + ", client=" + client + ", country=" + country + "]";
     }
 
     public String getUsername() {
@@ -134,4 +136,8 @@ public class UserVO implements Serializable {
         return roles;
     }
 
+    public List<ClientVO> getClients() {
+
+        return clients;
+    }
 }

@@ -2,6 +2,7 @@
 package it.lms.tourney.po;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -33,6 +35,8 @@ public class Client extends AbstractPO implements Serializable {
 
     private Country           country;
 
+    private Set<User>         users;
+
     public Client() {
 
         super();
@@ -41,9 +45,9 @@ public class Client extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + " Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName="
-                + businessName + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email
-                + ", siteUrl=" + siteUrl + ", country=" + country + "]";
+        return "Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName=" + businessName
+                + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl
+                + ", country=" + country + "]";
     }
 
     @Override
@@ -152,5 +156,17 @@ public class Client extends AbstractPO implements Serializable {
     public void setCountry(Country country) {
 
         this.country = country;
+    }
+
+    // bi-directional many-to-many association to User
+    @ManyToMany(mappedBy = "clients")
+    public Set<User> getUsers() {
+
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+
+        this.users = users;
     }
 }

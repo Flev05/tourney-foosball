@@ -3,6 +3,9 @@ import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
+import {AccordionModule} from 'primeng/accordion';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 import {UserListView} from './user-listview';
 import {UserDetailView} from './user-detailview';
@@ -36,7 +39,10 @@ import { UserRoutingModule } from './user-routing.module';
         TableModule,
         DialogModule,
         SliderModule,
-		UserRoutingModule,
+        UserRoutingModule,
+        ,AccordionModule
+        ,MessagesModule
+        ,MessageModule        
 	],
 	declarations: [
 		UserListView,

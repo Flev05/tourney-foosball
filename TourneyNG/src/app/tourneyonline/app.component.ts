@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {trigger,state,style,transition,animate} from '@angular/animations';
 import { Router } from '@angular/router';
 import { LoginService } from './service/login-service';
+import { RoleService } from './service/role-service';
 
 @Component({
   selector: 'app-root',
@@ -42,8 +43,9 @@ export class AppComponent implements OnInit{
     notification: boolean = false;
     
     constructor(
-        private loginService: LoginService
-        ,private router: Router
+          protected loginService: LoginService
+        , protected roleService: RoleService
+        , private router: Router
     ) {}
 
     ngOnInit() {
@@ -68,6 +70,9 @@ export class AppComponent implements OnInit{
 
     logout(event) {
         this.menuActive = false;
+
+        this.loginService.userLogged=false;
+
         this.loginService.sendLogout().subscribe(() => this.goHome());  
     }
 

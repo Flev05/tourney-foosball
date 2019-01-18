@@ -18,7 +18,7 @@ import { DialogModule }  from 'primeng/dialog';
 import { LoginService } from './service/login-service';
 import { TourneyService } from './service/tourney-service';
 import { ClientService } from './service/client-service';
-import { UserngService } from './service/user-service';
+import { UserService } from './service/user-service';
 import { RoleService } from './service/role-service';
 import { CountryService } from './service/country-service';
 import { PlayerService } from './service/player-service';
@@ -46,7 +46,7 @@ import { TeamService } from './service/team-service';
        { provide: LocationStrategy, useClass: HashLocationStrategy }
       , TourneyService
       , ClientService
-      , UserngService
+      , UserService
       , RoleService
       , CountryService
       , LoginService

@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Userng } from '../../../domain/userng';
-import { UserngService } from '../../../service/user-service';
-
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { UserService } from 'app/tourneyonline/service/user-service';
+ 
 @Component({
     templateUrl: './user-reset-password-lv.html'
 })
 export class UserResetPasswordLv implements OnInit {
 
-    selectedUser: Userng;
+    selectedUser: UserVO;
 
-    users: Userng[];
+    users: UserVO[];
 
     cols: any[];
 
-    constructor(private userService: UserngService, public router: Router) { 
+    constructor(private userService: UserService, public router: Router) { 
         console.log("UserListView.constructor()");
     }
 
@@ -58,7 +57,7 @@ export class UserResetPasswordLv implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    cloneUser(c: Userng): Userng {
+    cloneUser(c: UserVO): UserVO {
         let car = {};
         for (let prop in c) {
             car[prop] = c[prop];

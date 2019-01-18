@@ -11,3 +11,4 @@
 
 -- \i alter-permission.sql
 \i alter-session.sql
+\i alter-user_client.sql

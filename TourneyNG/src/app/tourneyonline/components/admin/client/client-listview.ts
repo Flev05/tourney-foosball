@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Client } from 'app/tourneyonline/domain/client';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { AbstractListView } from '../../common/abstract-listview';
 
-import { Client } from '../../../domain/client';
-import { ClientService } from '../../../service/client-service';
+const redirect = '/clients/dv';
 
 @Component({
     templateUrl: './client-listview.html'
 })
-export class ClientListView implements OnInit {
+export class ClientListView extends AbstractListView {
 
     selectedClient: Client;
 
@@ -15,14 +19,19 @@ export class ClientListView implements OnInit {
 
     cols: any[];
 
-    constructor(private clientService: ClientService, public router: Router) { 
-        console.log("ClientListView.constructor()");
+    constructor(
+        protected tourneyService: TourneyService,
+        protected clientService:   ClientService,
+        protected router:    Router,
+        protected location: Location
+    ) {
+        super(redirect, tourneyService, router, location);
     }
 
     ngOnInit() {
         console.log("ClientListView.ngOnInit()");
 
-        this.clientService.loadClientSmall().subscribe(cs => this.clients = cs);
+        this.clientService.loadAllClients().subscribe(cs => this.clients = cs);
 
         this.clientService.newClient = false;
 
@@ -46,6 +55,23 @@ export class ClientListView implements OnInit {
         this.gotoDetailView();
     }
 
+    
+    doDelete(client: Client) {
+        console.log(client);
+
+        let name = client.firstname != "" ? client.firstname + " " + client.lastname: client.businessName;
+        let popup = 'Sicuro di voler rimuovere il cliente: [' + name + "]?";
+
+        if(confirm(popup)) {
+            this.clientService.deleteClient(client).subscribe(n => this.next(n));
+        
+            let index: number = this.clients.indexOf(client);
+            if(index > -1) {
+                this.clients.splice(index, 1);
+            }
+        }
+    }
+
     onRowSelect(event) {
         console.log(event.data);
 
@@ -55,11 +81,6 @@ export class ClientListView implements OnInit {
         this.gotoDetailView();
     }
   
-    private gotoDetailView() {
-        let redirect = '/clients/dv';
-        this.router.navigate([redirect]);
-    }
-
     cloneClient(c: Client): Client {
         let car = {};
         for (let prop in c) {

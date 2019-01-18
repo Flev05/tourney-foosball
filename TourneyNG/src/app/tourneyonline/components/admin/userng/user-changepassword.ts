@@ -5,7 +5,7 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import {Message} from '../../../../components/common/api';
 import { Password } from '../../../domain/password';
-import { UserngService } from '../../../service/user-service';
+import { UserService } from '../../../service/user-service';
 import { LoginService } from '../../../service/login-service';
 
 @Component({
@@ -35,7 +35,7 @@ export class UserChangePassword implements OnInit {
     constructor(
         private fb: FormBuilder,
         private router: Router,
-        private userngService: UserngService,
+        private userngService: UserService,
         private loginService: LoginService
     ) {}
 

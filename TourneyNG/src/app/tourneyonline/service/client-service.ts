@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Client } from '../domain/client';
+import { Combobox } from '../domain/tourney-combobox';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,6 +17,9 @@ const clientUrl = 'api/clients';  // URL to web api
 @Injectable()
 export class ClientService {
 
+    selectedClientOption : Combobox;
+    clientOptions : Combobox[];
+    selectedClients : Client[];
     selectedClient : Client;
 
     newClient : boolean = false;
@@ -24,9 +28,22 @@ export class ClientService {
         console.log("Constructor of ClientService");
     }
 
-    loadClientSmall (): Observable<Client[]> {
+    setSelectClients(clients: Client[]): any {
+        this.selectedClients = clients;
+
+        this.selectedClient = clients[0];
+        this.selectedClientOption = {label: this.selectedClient.businessName, value: this.selectedClient.id};
+        this.clientOptions = [];
+
+        for(let c of clients ) {
+            this.clientOptions.push({label: c.businessName, value: c.id});
+        }
+    }
+
+    loadAllClients (): Observable<Client[]> {
+        const url = `${clientUrl}/findAll`;
  
-        return this.http.get<Client[]>(clientUrl)
+        return this.http.get<Client[]>(url)
         .pipe(
             tap(_ => this.log(`fetched all tornei`)),
             catchError(this.handleError('loadClientSmall', []))
@@ -35,7 +52,7 @@ export class ClientService {
 
     /** GET hero by id. Will 404 if id not found */
     getClient(id: number): Observable<Client> {
-        const url = `${clientUrl}/${id}`;
+        const url = `${clientUrl}/find/${id}`;
         return this.http.get<Client>(url).pipe(
             tap(_ => this.log(`fetched Client id=${id}`)),
             catchError(this.handleError<Client>(`getClient id=${id}`))
@@ -44,7 +61,9 @@ export class ClientService {
 
     /** POST: add a new Client to the server */
     addClient (client: Client): Observable<Client> {
-        return this.http.post<Client>(clientUrl, client, httpOptions).pipe(
+        let url = clientUrl + "/insert";
+
+        return this.http.post<Client>(url, client, httpOptions).pipe(
             tap((client: Client) => this.log(`added Client w/ id=${client.id}`)),
             catchError(this.handleError<Client>('addClient'))
         );
@@ -52,7 +71,7 @@ export class ClientService {
 
     /** PUT: update the Client on the server */
     updateClient (client: Client ): Observable<Client> {
-        const url = `${clientUrl}`;
+        const url = clientUrl + "/update";
         
         console.log(client);
 
@@ -65,7 +84,7 @@ export class ClientService {
     /** DELETE: delete the Client from the server */
     deleteClient (client: Client | number): Observable<Client> {
         const id = typeof client === 'number' ? client : client.id;
-        const url = `${clientUrl}/${id}`;
+        const url = `${clientUrl}/delete/${id}`;
 
         return this.http.delete<Client>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Client id=${id}`)),

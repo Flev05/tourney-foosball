@@ -5,13 +5,6 @@
 
 ALTER TABLE ONLY user_table
     ADD CONSTRAINT user_id_pk PRIMARY KEY (id); 
-
-ALTER TABLE ONLY user_table
-    ADD CONSTRAINT user_table_client_id_fk 
-    FOREIGN KEY (client_id) REFERENCES client(id)
-  	ON UPDATE NO ACTION 
-  	ON DELETE NO ACTION 
-  	DEFERRABLE INITIALLY IMMEDIATE;
   	
 ALTER TABLE ONLY user_table
     ADD CONSTRAINT user_table_country_id_fk 

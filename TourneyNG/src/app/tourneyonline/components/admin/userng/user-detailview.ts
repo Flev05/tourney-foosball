@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-
-import { Userng } from '../../../domain/userng';
-import { UserngService } from '../../../service/user-service';
-import { RoleService } from '../../../service/role-service';
-
-import { Role } from '../../../domain/role';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { Role } from 'app/tourneyonline/domain/role';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { RoleService } from 'app/tourneyonline/service/role-service';
 
 @Component({
     templateUrl: './user-detailview.html',
@@ -20,7 +18,7 @@ import { Role } from '../../../domain/role';
 })
 export class UserDetailView implements OnInit {
 
-    selectedUser: Userng;
+    selectedUser: UserVO;
     cols: any[];
 
     roles : Role[];
@@ -29,7 +27,7 @@ export class UserDetailView implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private userngService: UserngService,
+        private userngService: UserService,
         private roleService: RoleService,
         private location: Location
     ) {}

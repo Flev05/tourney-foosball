@@ -12,6 +12,5 @@ CREATE TABLE user_table
   	, username 		character varying(30) NOT NULL 	-- the unique user name of the user
   	, password 		character varying(64) DEFAULT 	'D41D8CD98F00B204E9800998ECF8427E'::character varying 	-- the empty password associated to the user
   	, description	character varying(2048) DEFAULT ''::character varying
-  	, client_id 	integer NOT NULL		-- reference to CLIENT table
   	, country_id	integer NOT NULL
 );

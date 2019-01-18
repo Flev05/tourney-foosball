@@ -10,7 +10,6 @@ insert into USER_table(id
 , username
 , password
 , description
-, client_id
 , country_id) 
 values(
   DEFAULT
@@ -22,6 +21,5 @@ values(
 , 'lmartino'
 , 'D20B282FEE15FFFE2BACAE246857D3DC'
 , 'Utente sviluppatore del sistema'
-, (select id from client where firstname= 'Luciano' and lastname='Martino') 
 , (select id from country where city = 'PREGNANA MILANESE') 
 );

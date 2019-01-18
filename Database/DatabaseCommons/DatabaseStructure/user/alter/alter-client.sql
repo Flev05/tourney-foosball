@@ -12,5 +12,4 @@ ALTER TABLE ONLY client
   	
 ALTER TABLE client OWNER TO :SCHEMA_USER_NAME;
 
-
 CREATE UNIQUE INDEX client_email_key_index ON client (email);

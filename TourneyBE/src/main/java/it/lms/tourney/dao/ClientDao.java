@@ -54,9 +54,16 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
         criteria = criteria.select(root);
         criteria = criteria.where(p);
 
-        TypedQuery<Client> cq = getEm().createQuery(criteria);
+        TypedQuery<Client> tq = getEm().createQuery(criteria);
 
-        return cq.getSingleResult();
+        List<Client> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        if (resultList.isEmpty()) {
+            return null;
+        }
+
+        return resultList.get(0);
     }
 
     public List<Client> findAllOrderedByName() {
@@ -91,7 +98,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Client client) throws Exception {
 
-        logger.debug(logId() + "Entering delete(" + client + ")");
+        logger.debug(logId() + "Entering update(" + client + ")");
 
         super.updatePo(client);
     }

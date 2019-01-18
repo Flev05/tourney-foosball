@@ -17,10 +17,8 @@
 
 package it.lms.tourney.rest;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
@@ -33,11 +31,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.codec.binary.Hex;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.lms.cb.gui.vo.ClientVO;
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.dao.SessionDao;
@@ -55,7 +52,7 @@ import it.lms.tourney.po.User;
 @Path("/logon")
 @RequestScoped
 @Transactional
-public class LoginResourceRESTService extends AbstractRESTService {
+public class LoginRESTService extends AbstractRESTService {
 
     @Inject
     private SessionDao sessionDao;
@@ -63,7 +60,7 @@ public class LoginResourceRESTService extends AbstractRESTService {
     @Inject
     private UserDao    userDao;
 
-    public LoginResourceRESTService() {
+    public LoginRESTService() {
 
         super();
     }
@@ -83,9 +80,9 @@ public class LoginResourceRESTService extends AbstractRESTService {
         Map<String, String> responseObj = new HashMap<String, String>();
 
         String username = login.getUsername();
-        String password = login.getPassword();
+        String md5Pssword = login.getPassword().toUpperCase();
 
-        logger.debug(logId() + "Entering login() [username=" + username + ", password=" + password + "]");
+        logger.debug(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
 
         printAuthentication();
 
@@ -100,14 +97,10 @@ public class LoginResourceRESTService extends AbstractRESTService {
 
         try {
 
-            String md5Pssword = doMD5(password);
-
-            logger.debug(logId() + "Calling HttpServletRequest.login(" + username + ", " + md5Pssword + ")...");
-
             User u = userDao.findUserBy(username, md5Pssword);
 
             if (u == null) {
-                String message = logId() + "HttpServletRequest.login(" + username + ", " + password + ") failed";
+                String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
                 logger.error(message);
                 responseObj = new HashMap<String, String>();
                 responseObj.put("error", "Login failed");
@@ -128,15 +121,12 @@ public class LoginResourceRESTService extends AbstractRESTService {
                 sessionDao.update(s, sessionId, userAgent);
             }
 
-            String message = logId() + "HttpServletRequest.login(" + username + ", " + password + ") successful";
+            String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") successful";
             logger.debug(message);
 
             String jsonString = prepareResponse(u);
 
             builder = Response.status(Response.Status.OK).entity(jsonString);
-
-            // builder = Response.ok();
-
         } catch (Exception e) {
 
             logger.error(logId() + "Login failed", e);
@@ -155,8 +145,8 @@ public class LoginResourceRESTService extends AbstractRESTService {
         UserVO uvo = new UserVO();
         for (Role r : u.getRoles()) {
 
+            uvo.setId(u.getId());
             uvo.setAddress(u.getAddress());
-            uvo.setClient(u.getClient());
             uvo.setCountry(u.getCountry());
             uvo.setEmail(u.getEmail());
             uvo.setFirstname(u.getFirstname());
@@ -171,33 +161,14 @@ public class LoginResourceRESTService extends AbstractRESTService {
             rvo.setDescription(r.getDescription());
             rvo.setName(r.getName());
             uvo.getRoles().add(rvo);
-
         }
+
+        List<ClientVO> clientVoList = ClientRESTService.prepareClientVoList(u.getClients());
+        uvo.getClients().addAll(clientVoList);
 
         String jsonString = om.writeValueAsString(uvo);
         logger.debug(logId() + jsonString);
         return jsonString;
-    }
-
-    private String doMD5(String password) throws UnsupportedEncodingException {
-
-        byte[] md5Password = password.getBytes();
-
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            logger.error(logId() + "Unable to generate MD5 password", e);
-            throw new UnsupportedEncodingException(e.getMessage());
-        }
-
-        byte[] thedigest = md.digest(md5Password);
-
-        char[] md5Array = Hex.encodeHex(thedigest);
-        String md5 = new String(md5Array).toUpperCase();
-
-        logger.debug(logId() + "MD5=" + md5);
-        return md5;
     }
 
     /**

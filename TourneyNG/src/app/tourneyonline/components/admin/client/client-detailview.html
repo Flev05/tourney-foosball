@@ -28,79 +28,113 @@
 </div>
 
 <div class="content-section implementation">
-    <div class="ui-g ui-fluid">
-            
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="name">Nome**</label>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
+    </div>
+        
+<form [formGroup]="clientformGroup" (ngSubmit)="onSubmit(clientformGroup.value)">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Nome *:
             </div>
-            <div class="ui-g-8">
-                <input pInputText id="name" [(ngModel)]="selectedClient.firstname" />
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" formControlName="firstname" placeholder="Obbligatoria"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" 
+                    *ngIf="!clientformGroup.controls['firstname'].valid && clientformGroup.controls['firstname'].dirty">
+                    <i class="fa fa-close"></i>
+                    Il nome è obbligatorio
+                </div>
             </div>
         </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="name">Cognome**</label>
+
+        <div class="ui-grid-col-2">
+                Cognome *:
             </div>
-            <div class="ui-g-8">
-                <input pInputText id="name" [(ngModel)]="selectedClient.lastname" />
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" formControlName="lastname" placeholder="Obbligatoria"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" 
+                    *ngIf="!clientformGroup.controls['lastname'].valid && clientformGroup.controls['lastname'].dirty">
+                    <i class="fa fa-close"></i>
+                    Il nome è obbligatorio
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-grid-col-2">
+                Ragione Sociale**:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" formControlName="lastname" placeholder="Obbligatoria"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" 
+                    *ngIf="!clientformGroup.controls['lastname'].valid && clientformGroup.controls['lastname'].dirty">
+                    <i class="fa fa-close"></i>
+                    La ragione sociale può essere alternativa al nome e cognome
+                </div>
+            </div>
+        </div>
+            
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{fullAddress}}
+            </div>
+        </div>             
+                    
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Telefono:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="phoneNumber"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all"
+                    *ngIf="!clientformGroup.controls['phoneNumber'].valid && clientformGroup.controls['phoneNumber'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="clientformGroup.controls['phoneNumber'].errors['required']">
+                        Il numero di telefono del cliente è obbligatorio
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                E-mail:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="email"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" 
+                    *ngIf="!clientformGroup.controls['email'].valid && clientformGroup.controls['email'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="clientformGroup.controls['email'].errors['required']">
+                        L'indirizzo e-mail del cliente è obbligatorio
+                    </span>
+                </div>
             </div>
         </div>
         
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="businessName">Ragione Sociale**</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="businessName" [(ngModel)]="selectedClient.businessName" />
-            </div>
-        </div>
-
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="address">Indirizzo*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="address" [(ngModel)]="selectedClient.address" />
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!clientformGroup.valid"></button>
+                </div>
             </div>
         </div>
-
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="country-id">Comune di residenza*</label>
-            </div>
-            <div class="ui-g-8">
-                <p-autoComplete id="country-id" [(ngModel)]="country" 
-                    [suggestions]="filteredCountriesSingle" 
-                    (completeMethod)="search($event)" field="city" [size]="30"
-                    placeholder="Comuni" [minLength]="1"></p-autoComplete>
-            </div>
-        </div>
-
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="companyEmail">E-mail*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="companyEmail" [(ngModel)]="selectedClient.email" />
-            </div>
-        </div>        
-
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="phoneNumber">Telefono*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="phoneNumber" [(ngModel)]="selectedClient.phoneNumber" />
-            </div>
-        </div>        
     </div>
+</form> 
 
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
-        <button type="button" pButton icon="fa fa-check" (click)="save()"   label="Salva"></button>
-        <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Rimuovi"></button>
-    </div>
     <p>* Sono campi obbligatori</p>
     <p>** Se si sta creando un nuovo cliente di tipo persona fisica, 
             deve essere inserito Nome e Cognome altrimenti la Ragione sociale.

@@ -69,6 +69,7 @@
   "dependencies": {
     "@angular/animation": "^4.0.0-beta.8",
     "angular-in-memory-web-api": "^0.8.0",
+    "md5-typescript": "^1.0.5",
     "moment": "^2.23.0",
     "primeng": "^7.0.4",
     "rxjs-compat": "^6.3.3"

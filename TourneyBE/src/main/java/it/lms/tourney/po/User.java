@@ -35,10 +35,10 @@ public class User extends AbstractPO implements Serializable {
     private String            email;
     private String            phoneNumber;
 
-    private Client            client;
     private Country           country;
 
     private Set<Role>         roles;
+    private Set<Client>       clients;
 
     public User() {
 
@@ -50,7 +50,7 @@ public class User extends AbstractPO implements Serializable {
 
         return super.toString() + " User [username=" + username + ", password=" + password + ", firstname=" + firstname
                 + ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
-                + phoneNumber + ", client=" + client + ", country=" + country + "roles=" + roles + "]";
+                + phoneNumber + ", clients=" + clients + ", country=" + country + "roles=" + roles + "]";
     }
 
     @Id
@@ -155,17 +155,17 @@ public class User extends AbstractPO implements Serializable {
         this.roles = roles;
     }
 
-    // bi-directional many-to-one association to Client
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    public Client getClient() {
+    // bi-directional many-to-many association to Client
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_client", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "client_id", referencedColumnName = "ID"))
+    public Set<Client> getClients() {
 
-        return client;
+        return this.clients;
     }
 
-    public void setClient(Client client) {
+    public void setClients(Set<Client> clients) {
 
-        this.client = client;
+        this.clients = clients;
     }
 
     // bi-directional many-to-one association to Country

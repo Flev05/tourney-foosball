@@ -6,27 +6,32 @@
 </div>
 
 <div class="content-section documentation">
-    <h4>Premessa</h4>
+    <p-accordion>
+        <p-accordionTab header="Introduzione">            
+            <p>
+                Per cliente si intende chiunque, persona fisica o società, abbia acquisito il diritto di utilizzare 
+                il programma TorneiNG come proprietario e quindi in possesso di tutte le feature del sistema.
+            </p>
 
-    <p>Per cliente si intende chiunque, persona fisica o società, abbia acquisito il diritto di utilizzare 
-        il programma TorneiNG come proprietario e quindi in possesso di tutte le feature del sistema.
-    </p>
+            <p>Sotto la vista elenco dei Clienti esistenti nel sistema.
+            </p>
+            <p>La vista contiene l'elenco dei Clienti già creati. Con un click sull'ultima 
+                colonna della riga, si accede alla vista di dettaglio corrispondente in cui si possono 
+                modificare i dati esistenti o rimuovere il Cliente
+            </p>
 
-    <p>Sotto la vista elenco dei Clienti esistenti nel sistema.
-    </p>
-    <p>La vista contiene l'elenco dei Clienti già creati. Con un click sull'ultima 
-        colonna della riga, si accede alla vista di dettaglio corrispondente in cui si possono 
-        modificare i dati esistenti o rimuovere il Cliente
-    </p>
-
-    <h4>Creazione nuovo Cliente</h4>
-    <p>Con il bottone Nuovo Cliente si può crere un nuovo Cliente. Con un click su di esso si apre
-        la vista di dettaglio di un Cliente vuota in cui inserire tutti i dati obbligatori, contrassegnati
-        con un asterisco (*) e alla fine salvare.
-    </p>
+            <h4>Creazione nuovo Cliente</h4>
+            <p>Con il bottone Nuovo Cliente si può crere un nuovo Cliente. Con un click su di esso si apre
+                la vista di dettaglio di un Cliente vuota in cui inserire tutti i dati obbligatori, contrassegnati
+                con un asterisco (*) e alla fine salvare.
+            </p>
+        </p-accordionTab>
+    </p-accordion>    
 </div>
 
-<p-table [columns]="cols" [value]="clients" 
+<p-table [columns]="cols" 
+    [responsive]="true"
+    [value]="clients" 
     selectionMode="single" 
     [(selection)]="selectedClient" 
     (onRowSelect)="onRowSelect($event)" 
@@ -38,6 +43,7 @@
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
+            <th>X</th>
         </tr>
     </ng-template>
 
@@ -45,6 +51,9 @@
         <tr [pSelectableRow]="rowData">
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
+            </td>
+            <td>
+                <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
             </td>
         </tr>
     </ng-template>

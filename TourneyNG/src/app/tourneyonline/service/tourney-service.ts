@@ -20,6 +20,7 @@ import { PlayoffRule } from '../domain/playoff-rule';
 import { MeetingDb } from '../domain/meeting-db';
 import { LoginService } from './login-service';
 import { TourneyDb } from '../domain/tourney.db';
+import { ClientService } from './client-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -74,7 +75,10 @@ export class TourneyService {
     selectedEliminatoryLevelIndex: number;
     selectedEliminatoryIndex: number;
 
-    constructor(private http: HttpClient, private loginService: LoginService) { 
+    constructor(private http: HttpClient
+        , private loginService: LoginService
+        , private clientService: ClientService) 
+    { 
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
     }
@@ -197,9 +201,27 @@ export class TourneyService {
      */
     loadAllTourneys (): Observable<TourneyDb[]> {
         let url = tourneyUrl;
+
         if(this.loginService.userLogged) {
-            url = tourneyUrl + "?" + "userId=" + this.loginService.selectedLogin.id;
+            url = tourneyUrl + "?" + "clientId=" + this.clientService.selectedClientOption.value;
         }
+        
+        return this.http.get<TourneyDb[]>(url).pipe(
+            tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
+            catchError(this.handleError('loadTourneyDb', []))
+          );
+    }
+
+    loadTourneys(fromDate: Date, toDate: Date): any {
+        let url = tourneyUrl;
+
+        if(this.loginService.userLogged) {
+            url = tourneyUrl 
+            + "?" + "clientId=" + this.clientService.selectedClientOption.value
+            + "&" + "fromDate=" + fromDate 
+            + "&" + "toDate="   + toDate;
+        }
+        
         return this.http.get<TourneyDb[]>(url).pipe(
             tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
             catchError(this.handleError('loadTourneyDb', []))

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-
-import { Client } from '../../../domain/client';
-import { ClientService } from '../../../service/client-service';
-import { CountryService } from '../../../service/country-service';
-import { Country } from '../../../domain/country';
+import { Client } from 'app/tourneyonline/domain/client';
+import { Country } from 'app/tourneyonline/domain/country';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -26,7 +24,6 @@ export class ClientDetailView implements OnInit {
     country: Country;
 
     constructor(
-        private route: ActivatedRoute,
         private location: Location,
         private clientService: ClientService,
         private countryService: CountryService,
@@ -72,10 +69,10 @@ export class ClientDetailView implements OnInit {
         }
     }
 
-    delete() {
-        this.clientService.deleteClient(this.selectedClient)
-          .subscribe(() => this.goBack());
-    }
+    // delete() {
+    //     this.clientService.deleteClient(this.selectedClient)
+    //       .subscribe(() => this.goBack());
+    // }
 
     goBack(): void {
         this.location.back();

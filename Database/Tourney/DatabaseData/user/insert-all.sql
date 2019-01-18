@@ -11,8 +11,11 @@
 
 \i insert-client.sql
 
+
 \i insert-roles.sql
 
 \i insert-user.sql
 
 \i insert-user_roles.sql
+
+\i insert-user_client.sql

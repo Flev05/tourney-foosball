@@ -4,6 +4,10 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { Login } from 'app/tourneyonline/domain/login';
 import { Message } from 'app/components/common/api';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import {Md5} from "md5-typescript";
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './login-detailview.html',
@@ -32,7 +36,8 @@ export class LoginDetailView implements OnInit {
     constructor(
         private fb: FormBuilder,
         private router: Router,
-        private loginService: LoginService
+        private loginService: LoginService,
+        private userService: UserService,
     ) {}
 
     ngOnInit() {
@@ -51,30 +56,57 @@ export class LoginDetailView implements OnInit {
         this.submitted = true;
 
         this.formLogin.username = this.loginformGroup.get('username').value;
-        this.formLogin.password = this.loginformGroup.get('password').value;
+
+        let md5 = Md5.init(this.loginformGroup.get('password').value)
+        this.formLogin.password = md5;
+        console.log("MD5(password)=" + md5);
 
         this.isLoginFailed = false;
+        this.loginService.userLogged=true;
 
-        this.loginService.sendLogin(this.formLogin).subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());  
+        const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
+        
+        subscr.subscribe(uvo=> this.next(uvo), e => this.onError(e), () => this.onComplete());  
+    }
+
+    private handleLoginError<Login> (operation: string, result?: Login) {
+        console.error("Entering handleLoginError()"); // log to console instead
+  
+        return (error: any): Observable<Login> => {                      
+            console.error("Entering Observable<Login>"); // log to console instead
+
+            this.loginService.userLogged=false;
+  
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+      
+            // TODO: better job of transforming error for user consumption
+            console.error(`${operation} failed: ${error.message}`);
+      
+            // Let the app keep running by returning an empty result.
+            return of(result as Login);
+        };
     }
     
-    next(n:any) {
-        console.log(n);
+    next(uvo: UserVO) {
+        console.log("Entering next()"); // log to console instead
+        console.log(uvo);
+        
+        this.userService.selectedUser = uvo;
     }
 
-    onError(n:any) {
-        console.log("Entering LoginDetailView.onError()");
-
-        this.msgs = [];
-        this.msgs.push({severity:'error', summary:'Errore', detail:'Login fallito'});
+    onError(e:any) {
+        console.error("Entering LoginDetailView.onError()");
+        console.error(e);
     }
 
     onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.userLogged)  {
             this.isLoginFailed = false;
-            let redirect = 'admintourney';
+            this.userService.setSelectedUser(this.userService.selectedUser);
+            let redirect = '/admintourney';
             this.router.navigate([redirect]);
         } else {
             this.isLoginFailed = true;

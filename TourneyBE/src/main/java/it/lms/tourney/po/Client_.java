@@ -1,6 +1,7 @@
 package it.lms.tourney.po;
 
 import javax.annotation.Generated;
+import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -16,6 +17,7 @@ public abstract class Client_ {
 	public static volatile SingularAttribute<Client, String> businessName;
 	public static volatile SingularAttribute<Client, Integer> id;
 	public static volatile SingularAttribute<Client, String> email;
+	public static volatile SetAttribute<Client, User> users;
 	public static volatile SingularAttribute<Client, String> lastname;
 
 }

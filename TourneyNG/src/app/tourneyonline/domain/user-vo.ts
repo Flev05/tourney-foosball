@@ -3,7 +3,7 @@ import { Country } from './country';
 import { Client } from './client';
 import { Login } from './login';
 
-export interface Userng extends Login
+export interface UserVO extends Login
 {
     firstname?      : string;
     lastname?       : string;
@@ -14,8 +14,8 @@ export interface Userng extends Login
 
     description?    : string;
 
-    client?         : Client;
     country?        : Country;
-
+    
     roles?          : [ Role ];
+    clients?        : [Client];
 }

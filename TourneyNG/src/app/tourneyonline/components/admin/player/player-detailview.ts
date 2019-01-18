@@ -61,16 +61,6 @@ export class PlayerDetailView extends AbstractDetailView {
         });
     }
 
-    // doDelete() {
-    //     let name = this.selectedPlayer.firstname + " " + this.selectedPlayer.lastname;
-    //     console.log("doDelete(): " + name);
-    //     let popup = 'Sicuro di voler rimuovere il giocatore: ';
-
-    //     if(confirm(popup + name + "?")) {
-    //         this.playerService.deletePlayer(this.selectedPlayer);
-    //     }
-    // }
-
     onSubmit(value: string) {
 
         this.selectedPlayer.firstname = this.playerFormGroup.get('firstname').value;
@@ -83,7 +73,6 @@ export class PlayerDetailView extends AbstractDetailView {
 
         if(this.playerService.newPlayer) {
             this.playerService.newPlayer = false;
-            // this.selectedTourney.players.push(this.selectedPlayer);
         }
 
         this.playerService.updatePlayer(this.selectedPlayer).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());

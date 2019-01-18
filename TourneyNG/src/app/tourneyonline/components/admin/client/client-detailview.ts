@@ -4,6 +4,9 @@ import { Client } from 'app/tourneyonline/domain/client';
 import { Country } from 'app/tourneyonline/domain/country';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
+import { AbstractDetailView } from '../../common/abstract-detailview';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -15,52 +18,58 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
         }
   `]
 })
-export class ClientDetailView implements OnInit {
+export class ClientDetailView extends AbstractDetailView {
 
     selectedClient: Client;
   
     countries: Country[];
     filteredCountriesSingle: Country[];
     country: Country;
+    clientFormGroup: FormGroup;
 
     constructor(
-        private location: Location,
-        private clientService: ClientService,
-        private countryService: CountryService,
-    ) {}
+        private fb: FormBuilder,
+        protected location: Location,
+        protected tourneyService: TourneyService,
+        protected countryService: CountryService,
+        private   clientService: ClientService
+    ) { 
+        super(tourneyService, location, countryService);
+    }
 
     ngOnInit() {
+        console.log("ClientDetailView.ngOnInit() ");
 
+        super.ngOnInit();
         this.getClient();
         this.countryService.loadCountries().subscribe(data => {
             this.countries = data;
         });
+
+        this.clientFormGroup = this.fb.group({
+            'firstname': new FormControl(this.selectedClient.firstname, Validators.compose([Validators.required])),
+            'lastname': new FormControl(this.selectedClient.lastname, Validators.compose([Validators.required])),
+            'address': new FormControl(this.selectedClient.address),
+            'country': new FormControl(this.selectedClient.country),
+            'phoneNumber': new FormControl(this.selectedClient.phoneNumber),
+            'email': new FormControl(this.selectedClient.email),
+        });
     }
 
-    search(event) {
-        let query = event.query;
-        this.filteredCountriesSingle =this.filterCountry(query, this.countries);
-    }
+    onSubmit(value: string) {
 
-    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-    filterCountry(query, countries: Country[]) : Country[] {
-        let filtered : Country[] = [];
-        for(let i = 0; i < countries.length; i++) {
-            let country = countries[i];
-            if(country.city.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
+        this.selectedClient.firstname = this.clientFormGroup.get('firstname').value;
+        this.selectedClient.lastname = this.clientFormGroup.get('lastname').value;
+        this.selectedClient.address = this.clientFormGroup.get('address').value;
+        this.selectedClient.country = this.clientFormGroup.get('country').value;
+
+        this.selectedClient.phoneNumber = this.clientFormGroup.get('phoneNumber').value;
+        this.selectedClient.email = this.clientFormGroup.get('email').value;
+
+        if(this.clientService.newClient) {
+            this.clientService.newClient = false;
         }
-        return filtered;
-    }
 
-    getClient(): void {
-        this.selectedClient = this.clientService.selectedClient;
-        this.country=this.selectedClient.country;
-    }
-
-    save(): void {
-        console.log("save(" + this.country+")");
         this.selectedClient.country=this.country;
         if(this.clientService.newClient) {
             this.clientService.addClient(this.selectedClient).subscribe(() => this.goBack());  
@@ -69,12 +78,8 @@ export class ClientDetailView implements OnInit {
         }
     }
 
-    // delete() {
-    //     this.clientService.deleteClient(this.selectedClient)
-    //       .subscribe(() => this.goBack());
-    // }
-
-    goBack(): void {
-        this.location.back();
-    }
+    getClient(): void {
+        this.selectedClient = this.clientService.selectedClient;
+        this.country=this.selectedClient.country;
+    } 
 }

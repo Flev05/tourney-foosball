@@ -23,6 +23,8 @@ import { RoleService } from './service/role-service';
 import { CountryService } from './service/country-service';
 import { PlayerService } from './service/player-service';
 import { TeamService } from './service/team-service';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data-service/in-memory-data.service';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,9 @@ import { TeamService } from './service/team-service';
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
+    ,  HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
+    )
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

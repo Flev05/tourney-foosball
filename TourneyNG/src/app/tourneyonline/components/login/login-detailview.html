@@ -7,11 +7,11 @@
 
 <div class="content-section documentation">
     <p-accordion>
-        <p-accordionTab header="Introduzione">            
-                
-        <p>Pagina di login per chi è già in possesso di credenziali per accedere al sistema 
+        <p-accordionTab header="Istruzioni">                
+        <p>
+            Pagina di login per chi è già in possesso di credenziali per accedere al sistema 
             di gestione dei tornei.
-            Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sopra.</p>
+            Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sotto.</p>
         <p>
             Se non disponete di credenziali, potete continuare ad utilizzare il sistema come utente anonimo.
             Imparate l'uso del sistema e solo in un secondo momento potete noleggiarlo per il periodo desiderato.
@@ -27,7 +27,6 @@
 </div>
         
 <div class="content-section implementation">
-
     <form [formGroup]="loginformGroup" (ngSubmit)="onSubmit(loginformGroup.value)">
         <p-panel header="Form Login">
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -39,7 +38,8 @@
                         <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
                     </div>
                     <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!loginformGroup.controls['username'].valid&&loginformGroup.controls['username'].dirty">
+                        <div class="ui-message ui-messages-error ui-corner-all" 
+                            *ngIf="!loginformGroup.controls['username'].valid && loginformGroup.controls['username'].dirty">
                             <i class="fa fa-close"></i>
                             La Username è obbligatoria
                         </div>
@@ -53,7 +53,8 @@
                         <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(8)"/>
                     </div>
                     <div class="ui-grid-col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!loginformGroup.controls['password'].valid&&loginformGroup.controls['password'].dirty">
+                        <div class="ui-message ui-messages-error ui-corner-all" 
+                            *ngIf="!loginformGroup.controls['password'].valid && loginformGroup.controls['password'].dirty">
                             <i class="fa fa-close"></i>
                             <span *ngIf="loginformGroup.controls['password'].errors['required']">La Password è obbligatoria</span>
                             <span *ngIf="loginformGroup.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
@@ -72,7 +73,6 @@
                     <p-message severity="error" text="Login fallito"></p-message>
                 </div>
             </div>
-            
         </p-panel>
     </form>                
 </div>

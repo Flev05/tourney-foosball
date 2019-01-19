@@ -39,7 +39,7 @@ export class TourneyListView extends AbstractTourneyListView {
 
         super.ngOnInit();
 
-        this.fromDate = new Date(this.selectedTourney.datetime);
+        this.fromDate = new Date();
         this.toDate = new Date();
         this.clientOptions = this.clientService.clientOptions;
 

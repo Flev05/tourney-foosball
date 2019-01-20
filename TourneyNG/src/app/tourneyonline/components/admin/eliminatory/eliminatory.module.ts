@@ -33,6 +33,7 @@ import {LevelListView} from './level-listview';
 import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
 import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { LevelService } from './level-service';
 
 @NgModule({
 	imports: [
@@ -71,6 +72,6 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,AutoEliminatoryDetailView        
         ,ManualEliminatoryDetailView        
     ]
-    ,providers: [DateFormatPipe]
+    ,providers: [DateFormatPipe, LevelService]
 })
 export class EliminatoryModule {}

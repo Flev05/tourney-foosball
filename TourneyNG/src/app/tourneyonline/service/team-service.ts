@@ -9,6 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { Team } from '../domain/team';
 import { LoginService } from './login-service';
 import { ClientService } from './client-service';
+import { TableCols } from '../domain/table-cols';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,7 +23,7 @@ export class TeamService {
 
     newTeam : boolean = false;
 
-    static cols = [
+    static cols: TableCols[] = [
         { field: 'teamName',   header: 'Nome' },
         { field: 'address',    header: 'Indirizzo' },
     ];

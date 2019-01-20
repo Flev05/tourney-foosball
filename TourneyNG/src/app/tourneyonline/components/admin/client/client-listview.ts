@@ -5,6 +5,7 @@ import { Client } from 'app/tourneyonline/domain/client';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 const redirect = '/clients/dv';
 
@@ -17,7 +18,7 @@ export class ClientListView extends AbstractListView {
 
     clients: Client[];
 
-    cols: any[];
+    cols:  TableCols[] ;
 
     constructor(
         protected tourneyService: TourneyService,

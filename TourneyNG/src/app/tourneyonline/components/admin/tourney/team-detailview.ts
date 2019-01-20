@@ -95,31 +95,6 @@ export class TeamDetailView extends AbstractDetailView {
         });
     }
 
-    doDelete() {
-        console.log("doDelete(): " + this.selectedTeam.teamName);
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + this.selectedTeam.teamName;
-
-        if(confirm(popup + this.selectedTeam.teamName + "?")) {
-            let index: number = this.selectedTourney.teams.indexOf(this.selectedTeam);
-            if(index > -1) {
-                this.selectedTourney.teams.splice(index, 1);
-            }
-
-            for(let r of this.selectedTourney.rounds) {
-                let index: number = r.teams.indexOf(this.selectedTeam);
-                if(index > -1) {
-                    r.teams.splice(index, 1);
-                }    
-                 index = r.classification.indexOf(this.selectedTeam);
-                if(index > -1) {
-                    r.classification.splice(index, 1);
-                }    
-            }
-
-            this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        }
-    }
-
     onSubmit(value: string) {
 
         this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;

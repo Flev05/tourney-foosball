@@ -27,19 +27,21 @@ import { MessageModule } from 'primeng/message';
 import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
 import { CalendarModule } from 'app/components/calendar/calendar';
 import { TeamDetailView } from './team-detailview';
 import { PickListModule } from 'app/components/picklist/picklist';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { AddTeamListView } from './add-team-listview';
+import { DateFormatPipe } from '../../common/date-format-pipe';
+import { RoundModule } from '../round/round.module';
+import { PlayoffModule } from '../playoff/playoff.module';
+import { LevelService } from '../eliminatory/level-service';
 
 @NgModule({
 	imports: [
 		 CommonModule
         ,FormsModule
         ,ReactiveFormsModule
-		,TourneyRoutingModule
         ,GrowlModule
         ,PanelModule
         ,DropdownModule
@@ -63,14 +65,17 @@ import { AddTeamListView } from './add-team-listview';
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
+		,TourneyRoutingModule
+		,RoundModule
+		,PlayoffModule
 	],
 	declarations: [
-		TourneyListView,
-        TourneyDetailView,
-        TeamDetailView,
-        AddTeamListView
+        TourneyListView
+        ,TourneyDetailView
+        ,TeamDetailView
+        ,AddTeamListView
     ]
-    ,providers: [DateFormatPipe]
+    ,providers: [DateFormatPipe, LevelService]
 })
 export class TourneyModule {
 }

@@ -58,22 +58,18 @@ export class TeamDetailView extends AbstractDetailView {
         });
     }
 
-    doDelete() {
-        console.log("doDelete(): " + this.selectedTeam.teamName);
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + this.selectedTeam.teamName;
-
-        if(confirm(popup + this.selectedTeam.teamName + "?")) {
-            this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        }
-    }
-
     onSubmit(value: string) {
 
         this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
         this.selectedTeam.address = this.teamFormGroup.get('address').value;
         this.selectedTeam.country = this.teamFormGroup.get('country').value;
-
-        this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        
+        if(this.teamService.newTeam) {
+            this.teamService.addTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        } else {
+            this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        }
+        this.teamService.newTeam = false;
     }
  
     onError(n:any) {

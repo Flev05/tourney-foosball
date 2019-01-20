@@ -27,7 +27,6 @@ import {ClientDetailView} from './client-detailview';
 		CommonModule,
         FormsModule,
         ReactiveFormsModule,
-		ClientRoutingModule,
         GrowlModule,
         PanelModule,
         DropdownModule,
@@ -43,6 +42,7 @@ import {ClientDetailView} from './client-detailview';
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
+		,ClientRoutingModule,
 	],
 	declarations: [
 		ClientListView,

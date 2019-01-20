@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Player } from '../domain/player';
+import { TableCols } from '../domain/table-cols';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,7 +18,8 @@ const clientUrl = 'api/players';  // URL to web api
 export class PlayerService {
     selectedPlayer : Player;
     newPlayer : boolean = false;
-    static cols = [
+    
+    static cols: TableCols[]  = [
         { field: 'firstname',   header: 'Nome' },
         { field: 'lastname',    header: 'Cognome' },
         { field: 'phoneNumber', header: 'Telefono' },

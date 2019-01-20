@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { UserService } from 'app/tourneyonline/service/user-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './user-listview.html'
@@ -12,7 +13,7 @@ export class UserListView implements OnInit {
 
     users: UserVO[];
 
-    cols: any[];
+    cols: TableCols[] ;
 
     constructor(private userngService: UserService, public router: Router) { 
         console.log("UserListView.constructor()");

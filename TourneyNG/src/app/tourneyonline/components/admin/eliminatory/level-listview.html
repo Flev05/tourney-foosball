@@ -133,46 +133,43 @@
 </p-accordion>
 </div>
 
-<div class="content-section implementation">      
+<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Squadre:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right" 
-                pTooltip="Scegliere il numero di squadre iniziali delle eliminazioni dirette, anche tutte">
-            <p-dropdown id="teamsId" 
-                [options]="teamsCombobox" 
-                [(ngModel)]="selectedTeamsNumCombobox"  
-                optionLabel="label"
-                (onChange)="onTeamNumChange($event.value)" 
-                placeholder="Seleziona">
-            </p-dropdown>
-        </div>
-    </div>             
-        
-    <div *ngIf="isModeEnabled" class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Modo:
-        </div>
-        <div class="ui-grid-col-4" tooltipPosition="right"
-                pTooltip="Si veda le istruzioni per maggiori dettagli">
-            <p-radioButton name="eliminatoryModeGroupname" 
-                label="Manuale" 
-                value="manual" 
-                [(ngModel)]="eliminatoryMode" (onClick)="onManualClick()">
-            </p-radioButton>
-            <p-radioButton name="eliminatoryModeGroupname" 
-                label="Automatico" 
-                value="auto" 
-                [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
-            </p-radioButton>
-        </div>
-    </div>       
-</div>
+<div class="ui-grid-row">
+    <div class="ui-grid-col-2">
+        Squadre:
+    </div>
+    <div class="ui-grid-col-4" tooltipPosition="right" 
+            pTooltip="Scegliere il numero di squadre iniziali delle eliminazioni dirette, anche tutte">
+        <p-dropdown id="teamsId" 
+            [options]="teamsCombobox" 
+            [(ngModel)]="selectedTeamsNumCombobox"  
+            optionLabel="label"
+            (onChange)="onTeamNumChange($event.value)" 
+            placeholder="Seleziona">
+        </p-dropdown>
+    </div>
+</div>             
+    
+<div *ngIf="isModeEnabled" class="ui-grid-row">
+    <div class="ui-grid-col-2">
+        Modo:
+    </div>
+    <div class="ui-grid-col-4" tooltipPosition="right"
+            pTooltip="Si veda le istruzioni per maggiori dettagli">
+        <p-radioButton name="eliminatoryModeGroupname" 
+            label="Manuale" 
+            value="manual" 
+            [(ngModel)]="eliminatoryMode" (onClick)="onManualClick()">
+        </p-radioButton>
+        <p-radioButton name="eliminatoryModeGroupname" 
+            label="Automatico" 
+            value="auto" 
+            [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
+        </p-radioButton>
+    </div>
+</div>       
 
 <p-table [columns]="cols"
     [value]="rows" 

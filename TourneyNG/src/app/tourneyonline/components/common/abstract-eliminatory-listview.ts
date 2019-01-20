@@ -16,10 +16,11 @@ import { DateFormatPipe } from './date-format-pipe';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 export abstract class AbstractEliminatoryListView extends AbstractListView {
          
-    cols: any[];
+    cols: TableCols[] ;
     rows: any[];
     selectedRow: any;
 
@@ -526,7 +527,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
     }
     
-    protected prepareELCols(): any[] {
+    protected prepareELCols(): TableCols[] {
        let eliminatoryCols = [
            { field: 'name',        header: 'Livello' },
            { field: 'level',       header: 'Squadre' },
@@ -596,7 +597,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     private prepareColums(isElimininatory: boolean): any[] {
-        let cols = [];
+        let cols: TableCols[] = [];
         if(isElimininatory) {
             cols.push({ field: 'rowNumber', header: 'A/R' });
         } else {

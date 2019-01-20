@@ -119,30 +119,6 @@ export class RoundDetailView extends AbstractDetailView {
         this.router.navigate([RoundDetailView.meetingListviewRedirect]);
     }
 
-    doDelete() {
-        console.log("doDelete(): " + this.selectedRound.name);
-        let popup = 'Sicuro di voler rimuovere il girone: ';
-
-        if(confirm(popup + this.selectedRound.name + "?")) {
-            let index: number = this.selectedTourney.rounds.indexOf(this.selectedRound);
-            if(index > -1) {
-                let rounds: Round[] = this.selectedTourney.rounds.splice(index, 1);
-                for(let r of rounds) {
-                    this.removeRound(r);
-                }
-
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-            }
-        }
-    }
-    private removeRound(r: Round): any {
-        for(let m of r.meetings) {
-            this.tourneyService.deleteMeeting(m);
-        }
-
-        this.selectedRound.meetings = [];
-    }
-
     onSubmit(value: string) {
 
         this.selectedRound.name = this.roundFormGroup.get('name').value;

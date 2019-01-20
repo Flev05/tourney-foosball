@@ -8,8 +8,6 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 
 export abstract class AbstractDetailView extends AbstractView {
 
-    it: any;
-
     constructor(
         protected tourneyService: TourneyService,
         protected location: Location,
@@ -19,37 +17,13 @@ export abstract class AbstractDetailView extends AbstractView {
     }
 
     ngOnInit() {
+        super.ngOnInit();
+        
         this.selectedTourney = this.tourneyService.selectedTourney;
 
         this.countryService.loadCountries().subscribe(c => {
             this.countries = c;
         });
-
-        this.it = {
-        	firstDayOfWeek: 1,
-        	dayNames: [ "domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato" ],
-        	dayNamesShort: [ "dom","lun","mar","mer","gio","ven","sab" ],
-        	dayNamesMin: [ "D","L","M","M","G","V","S" ],
-            
-            monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno"
-                         ,"Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
-
-        	monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic" ],
-            today: 'Oggi',
-            clear: 'Clear'
-        };
-
-        let today = new Date();
-
-        let month = today.getMonth();
-        let year = today.getFullYear();
-        let prevMonth = (month === 0) ? 11 : month -1;
-        let prevYear = (prevMonth === 11) ? year - 1 : year;
-        let nextMonth = (month === 11) ? 0 : month + 1;
-        let nextYear = (nextMonth === 0) ? year + 1 : year;
-        
-        let invalidDate = new Date();
-        invalidDate.setDate(today.getDate() - 1);
     }
 
     protected initClassification(r : Round) {

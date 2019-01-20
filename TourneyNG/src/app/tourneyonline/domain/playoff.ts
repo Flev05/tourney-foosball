@@ -5,4 +5,5 @@ export class Playoff  {
     id: number;
     round: Round;
     playoffRules: PlayoffRule[];
+    playoffName?: string;
 }

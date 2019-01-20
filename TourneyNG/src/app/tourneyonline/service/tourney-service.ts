@@ -21,6 +21,8 @@ import { MeetingDb } from '../domain/meeting-db';
 import { LoginService } from './login-service';
 import { TourneyDb } from '../domain/tourney.db';
 import { ClientService } from './client-service';
+import { TableCols } from '../domain/table-cols';
+import { Router } from '@angular/router';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -34,7 +36,6 @@ const classificationLabel = "°";
 
 @Injectable()
 export class TourneyService {
-
     tourneys: Tourney[];
 
     positionsCombobox: Combobox[];
@@ -66,6 +67,7 @@ export class TourneyService {
 
     originalTeams: Team[];
     meetings: Meeting[];
+    mdbs: MeetingDb[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
     selectedIndex: number;
@@ -74,8 +76,18 @@ export class TourneyService {
     isStandalone: boolean;
     selectedEliminatoryLevelIndex: number;
     selectedEliminatoryIndex: number;
+ 
+    static roundCols: TableCols[] = [
+        { field: 'name',   header: 'Girone' },
+    ];
+
+    static playoffCols: TableCols[] = [
+        { field: 'playoffName',   header: 'Playoff' },
+    ];
+    redirect: string;
 
     constructor(private http: HttpClient
+        , protected router: Router
         , private loginService: LoginService
         , private clientService: ClientService) 
     { 
@@ -444,7 +456,76 @@ export class TourneyService {
             catchError(this.handleError<MeetingDb>('updateMeetingDb'))
         );
     }
-     
+
+    doRoundDelete(round: Round): void {
+        console.log("doDelete(): " + round.name);
+        let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";
+
+        if(confirm(popup)) {
+            let index: number = this.selectedTourney.rounds.indexOf(round);
+            if(index > -1) {
+                let rounds: Round[] = this.selectedTourney.rounds.splice(index, 1);
+                for(let r of rounds) {
+                    this.removeRound(r);
+                }
+                this.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+            }
+        }
+    }
+
+    doPlayoffDelete(playoff: Playoff): any {
+        console.log(playoff);
+        let popup = 'Sicuro di voler rimuovere la regola di playoff: '+ playoff.playoffName + "?";
+
+        if(confirm(popup)) {
+
+            for( let m of playoff.round.meetings) {
+                this.deleteMeeting(m);
+            }
+
+            let index = this.selectedTourney.playoffs.indexOf(playoff);
+            if(index > -1) {
+                this.selectedTourney.playoffs.splice(index, 1);
+                this.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+            }
+            
+        }
+    }
+
+    onPlayoffRowSelect(playoff: Playoff, redirect: string): any {
+        
+        this.redirect = redirect;
+
+        this.selectedPlayoff = playoff;
+        const subscr = this.loadPlayoffMeeting(playoff.id, playoff.id);
+        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
+    }
+
+    private onComplete(): void {
+        this.selectedPlayoff.round.meetings = [];
+        for(let mdb of this.mdbs) {
+            let m: Meeting = JSON.parse(mdb.json);
+            this.selectedPlayoff.round.meetings.push(m);
+        }
+        this.router.navigate([this.redirect]);
+    }
+
+    private next(n:any) {
+    }
+
+    private onError(n:any) {
+        let msgerr : string = 'Meeting reload failed';
+        console.log(msgerr);
+    }
+
+    private removeRound(r: Round): any {
+        for(let m of r.meetings) {
+            this.deleteMeeting(m);
+        }
+
+        r.meetings = [];
+    }
+
     /** DELETE: delete the Meeting from the server */
     deleteMeeting (m: Meeting ): void {
         let id: number = m.id;

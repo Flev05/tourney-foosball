@@ -8,13 +8,14 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './meeting-listview.html'
 })
 export class MeetingListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
-    cols: any[];
+    cols: TableCols[] ;
     rows: any[];
     selectedRow: any;
 

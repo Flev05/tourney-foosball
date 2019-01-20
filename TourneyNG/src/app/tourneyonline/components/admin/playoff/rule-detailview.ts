@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { PlayoffRule } from '../../../domain/playoff-rule';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -12,8 +11,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { CountryService } from 'app/tourneyonline/service/country-service';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { RoundDetailView } from '../round/round-detailview';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
 @Component({
     templateUrl: './rule-detailview.html'
@@ -30,7 +28,6 @@ export class RuleDetailView extends AbstractDetailView {
 
     selectedPlayoff: Playoff;
     selectedPlayoffConfig: PlayoffRule; 
-    selectedIndex: number;
  
     constructor(
         private fb: FormBuilder,
@@ -51,8 +48,6 @@ export class RuleDetailView extends AbstractDetailView {
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         this.playoffConfigs = this.selectedPlayoff.playoffRules;
-
-        this.selectedIndex = this.tourneyService.selectedIndex + 1;
 
         if(this.tourneyService.newRule) {
             this.tourneyService.selectedPlayoffConfig = this.newPlayoffConfig();
@@ -130,29 +125,6 @@ export class RuleDetailView extends AbstractDetailView {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
-
-    doDelete() {
-        console.log("doDelete(): " + this.selectedIndex);
-        let popup = 'Sicuro di voler rimuovere la regola: ';
-
-        if(confirm(popup + this.selectedIndex + "?")) {
-
-            let rm: PlayoffRule[] = this.playoffConfigs.splice(this.selectedIndex-1, 1);
-            this.selectedPlayoff.playoffRules = this.playoffConfigs;
-
-            let tmpMeetings: Array<Meeting> = new Array<Meeting>();
-            for( let m of this.selectedPlayoff.round.meetings) {
-                if(m.rule1.id != rm[0].id && m.rule2.id != rm[0].id) {
-                    tmpMeetings.push(m);                    
-                } else {
-                    this.tourneyService.deleteMeeting(m);
-                }
-            }
-            this.selectedPlayoff.round.meetings = tmpMeetings;
-            
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        }
     }
 
     onError(n:any) {

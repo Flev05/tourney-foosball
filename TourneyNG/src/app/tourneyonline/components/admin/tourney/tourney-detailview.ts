@@ -16,14 +16,21 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { LevelService } from '../eliminatory/level-service';
 
-const REDIRECT_TEAM_DV     = 'admintourney/dv/team';
-const REDIRECT_ADD_TEAM_DV = 'admintourney/dv/addteam';
+const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
+const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
+
+const REDIRECT_ROUND_DV     = 'admintourney/dv/round';
+const REDIRECT_PLAYOFF_DV   = 'admintourney/dv/playoff';
 
 @Component({
     templateUrl: './tourney-detailview.html',
 })
-export class   TourneyDetailView extends AbstractDetailView {
+export class TourneyDetailView extends AbstractDetailView {
 
     selectedTourney: Tourney;
 
@@ -51,8 +58,24 @@ export class   TourneyDetailView extends AbstractDetailView {
     activeIndex: number;
 
     selectedTeam: Team;
+
+    teamCols: TableCols[];
     tourneyTeams: Team[];
-    teamCols: { field: string; header: string; }[];
+
+    roundCols: TableCols[] = TourneyService.roundCols;
+    roundRows: Round[];
+    selectedRound: Round;
+
+    playoffCols: TableCols[] = TourneyService.playoffCols;
+    playoffRows: Playoff[];
+    selectedPlayoff: Playoff;
+    
+    teamsCombobox: Combobox[];
+    selectedTeamsNumCombobox: Combobox;
+    eliminatoryMode: EliminatoryMode;
+    eliminatoryCols: TableCols[];
+    eliminatoryRows: any[];
+    eliminatorySelectedRow: any;
 
     constructor(
         private fb: FormBuilder,
@@ -61,6 +84,7 @@ export class   TourneyDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
+        protected levelService: LevelService,
         private router: Router
     ) { 
         super(tourneyService, location, countryService);
@@ -71,7 +95,14 @@ export class   TourneyDetailView extends AbstractDetailView {
         this.activeIndex = this.tourneyService.selectedTabIndex;
 
         super.ngOnInit();
-        
+        this.levelService.ngOnInit();
+
+        this.teamsCombobox = this.levelService.teamsCombobox;
+
+        this.eliminatoryMode = this.levelService.eliminatoryMode;
+        this.eliminatoryCols = this.levelService.cols;
+        this.eliminatoryRows = this.levelService.rows;
+
         let today = new Date();
 
         this.tourneyService.loadDisciplines().subscribe(t => {
@@ -145,6 +176,11 @@ export class   TourneyDetailView extends AbstractDetailView {
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
 
+        this.roundRows = this.selectedTourney.rounds;
+        this.playoffRows = this.selectedTourney.playoffs;
+        for(let p of this.playoffRows) {
+            p.playoffName = p.round.name;
+        }
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
             'isDaily': new FormControl(this.isDaily),
@@ -179,23 +215,6 @@ export class   TourneyDetailView extends AbstractDetailView {
        });
     }
 
-    addTeams() {
-        this.router.navigate([REDIRECT_ADD_TEAM_DV]);
-    }
-
-    doTeamDelete(team: Team) {
-        console.log("doTeamDelete(): " + team.teamName);
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName + "?";
-
-        if(confirm(popup)) {
-            let index: number = this.selectedTourney.teams.indexOf(team);
-            if(index > -1) {
-                this.selectedTourney.teams.splice(index, 1);
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
-            }
-        }
-    }
-
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
@@ -206,6 +225,10 @@ export class   TourneyDetailView extends AbstractDetailView {
         }
     }
 
+    addTeams() {
+        this.router.navigate([REDIRECT_ADD_TEAM_DV]);
+    }
+
     onTeamRowSelect(event) {
         console.log(event.data);
 
@@ -214,6 +237,70 @@ export class   TourneyDetailView extends AbstractDetailView {
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
 
+    doTeamDelete(team: Team) {
+        console.log("doTeamDelete(" + team.teamName+")");
+        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName + "?";
+
+        if(confirm(popup)) {
+            let index: number = this.selectedTourney.teams.indexOf(team);
+            if(index > -1) {
+                this.selectedTourney.teams.splice(index, 1);
+                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
+            }
+        }
+    }
+    
+    onRoundRowSelect(event) {
+        console.log(event.data);
+
+        this.tourneyService.selectedRound = this.selectedRound;
+
+        this.router.navigate([REDIRECT_ROUND_DV]);
+    }
+
+    doRoundDelete(round: Round) {
+        this.tourneyService.doRoundDelete(round);
+    }
+
+    addRound() {
+        this.tourneyService.newRound = true;
+        this.tourneyService.selectedIndex = 0;
+        this.router.navigate([REDIRECT_ROUND_DV]);
+    }
+
+    onPlayoffRowSelect(event) {
+        let playoff= event.data;
+        this.tourneyService.onPlayoffRowSelect(playoff, REDIRECT_PLAYOFF_DV);
+    }
+
+    doPlayoffDelete(playoff: Playoff) {
+        this.tourneyService.doPlayoffDelete(playoff);
+    }
+
+    addPlayoff() {
+        this.tourneyService.selectedIndex = 0;
+        this.router.navigate([REDIRECT_PLAYOFF_DV]);
+    }
+    
+    onTeamNumChange(event) {
+        console.log(event);
+
+        this.levelService.selectedTeamsNumCombobox = event;
+        this.levelService.onTeamNumChange(event);
+        this.eliminatoryRows = this.levelService.rows;
+    }
+
+    onManualClick()  {
+        this.levelService.onManualClick();
+    }
+    onAutoClick(){
+        this.levelService.onAutoClick();
+    }
+
+    onEliminatoryRowSelect(event) {
+        this.levelService.selectedRow = this.eliminatorySelectedRow;
+        this.levelService.onRowSelect(event);
+    }
     onOnewayRoundClick() {
         console.log("Entering onOnewayRoundClick()");
         this.selectedTourney.isOnewayRound = true;

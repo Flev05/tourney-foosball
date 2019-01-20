@@ -12,6 +12,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './matrix-detailview.html',
@@ -55,7 +56,7 @@ export class MatrixDetailView extends AbstractDetailView {
     cols: any[];
     matrix: Matrix;
     classificationRows: any[];
-    classificationCols: { field: string; header: string; }[];
+    classificationCols: TableCols[];
 
     constructor(
         protected location: Location,

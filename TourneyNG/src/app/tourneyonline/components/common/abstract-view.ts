@@ -7,13 +7,13 @@ import { Country } from '../../domain/country';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
-import { Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { Direction, MeetingStatus, PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';
 
 export abstract class AbstractView implements OnInit {
-
-    protected selectedTourney: Tourney;
+    it: any;
+    selectedTourney: Tourney;
     countries: Country[];
     filteredCountriesSingle: Country[];
     toggleable: boolean = false;
@@ -33,8 +33,55 @@ export abstract class AbstractView implements OnInit {
 
     ngOnInit() {
         this.selectedTourney = this.tourneyService.selectedTourney;
+        
+        this.it = {
+        	firstDayOfWeek: 1,
+        	dayNames: [ "domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato" ],
+        	dayNamesShort: [ "dom","lun","mar","mer","gio","ven","sab" ],
+        	dayNamesMin: [ "D","L","M","M","G","V","S" ],
+            
+            monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno"
+                         ,"Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
+
+        	monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic" ],
+            today: 'Oggi',
+            clear: 'Clear'
+        };
+
+        let today = new Date();
+
+        let month = today.getMonth();
+        let year = today.getFullYear();
+        let prevMonth = (month === 0) ? 11 : month -1;
+        let prevYear = (prevMonth === 11) ? year - 1 : year;
+        let nextMonth = (month === 11) ? 0 : month + 1;
+        let nextYear = (nextMonth === 0) ? year + 1 : year;
+        
+        let invalidDate = new Date();
+        invalidDate.setDate(today.getDate() - 1);
     }
     
+    protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean {
+
+        for(let i=0; i<phases.length; i++ ) {
+            if(phases[i] == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected containsRound(): boolean {
+        return this.containsPhase(PhaseType.R, this.selectedTourney.phases);
+    }
+
+    protected containsPlayoff(): boolean {
+        return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
+    }
+
+    protected containsEliminatory(): boolean {
+        return this.containsPhase(PhaseType.E, this.selectedTourney.phases);
+    }
     next(n:any) {
     }
 

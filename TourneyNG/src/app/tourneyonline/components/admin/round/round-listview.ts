@@ -8,6 +8,7 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './round-listview.html'
@@ -19,6 +20,8 @@ export class RoundListView extends AbstractListView {
     selectedRound: Round;
 
     rounds: Round [];
+    roundCols: TableCols[] = TourneyService.roundCols;
+
     mdbs: MeetingDb[];
 
     constructor(
@@ -35,6 +38,7 @@ export class RoundListView extends AbstractListView {
         this.selectedTourney = this.tourneyService.selectedTourney;
         this.rounds = this.tourneyService.selectedTourney.rounds;
         this.tourneyService.newRound = false;
+        this.roundCols = TourneyService.roundCols;
     }
 
     onRowSelect(event) {
@@ -58,10 +62,13 @@ export class RoundListView extends AbstractListView {
     }
 
     add() {
-
         this.tourneyService.newRound = true;
         this.tourneyService.selectedIndex = 0;
         this.router.navigate([RoundListView.redirect]);
+    }
+
+    doDelete(round: Round) {
+        this.tourneyService.doRoundDelete(round);
     }
 
     onError(n:any) {

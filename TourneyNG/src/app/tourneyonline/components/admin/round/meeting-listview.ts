@@ -9,13 +9,14 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './meeting-listview.html'
 })
 export class MeetingListView extends AbstractListView {
     static redirect: string = "adminround/lv/meetingLv/dv";
-    cols: any[];
+    cols: TableCols[] ;
     rows: any[];
     selectedRow: any;
 

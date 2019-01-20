@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Car } from './car';
 import { CarService } from './carservice';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './tableresponsivedemo.html',
@@ -76,7 +77,7 @@ export class TableResponsiveDemo implements OnInit {
 
     cars: Car[];
 
-    cols: any[];
+    cols: TableCols[] ;
 
     constructor(private carService: CarService) { }
 

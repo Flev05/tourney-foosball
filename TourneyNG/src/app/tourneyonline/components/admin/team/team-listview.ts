@@ -6,6 +6,7 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 
 @Component({
@@ -14,9 +15,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 export class TeamListView extends AbstractListView {
     public static redirect: string = "adminteam/dv";
 
-    cols: any[];
-    rows: any[];
-    selectedRow: any;
+    cols: TableCols[] = TeamService.cols;
+    selectedRow: Team;
     selectedTeam: Team;
 
     teams: Team[];
@@ -33,25 +33,17 @@ export class TeamListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         
-        this.cols = TeamService.cols;
-        this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e), () => this.onComplete());
+        this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e));
     }
 
-    onComplete(): void {
-        this.rows = this.teams;
-    }
-
-    doDelete(team: any) {
+    doDelete(team: Team) {
         console.log(team.teamName);
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName;
+        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName ;
 
-        if(confirm(popup + "?")) {
-            this.teamService.deleteTeam(team).subscribe(n => this.next(n), e => this.onError(e));
-
+        if(confirm(popup)) {            
             let index: number = this.teams.indexOf(team);
             if(index > -1) {
-                this.teams.splice(index, 1);
-                this.rows.splice(index, 1);
+                this.teamService.deleteTeam(team).subscribe(n => this.next(n), e => this.onError(e));
             }
         }
     }
@@ -77,10 +69,6 @@ export class TeamListView extends AbstractListView {
         this.teamService.selectedTeam = this.selectedRow;
 
         this.gotoDetailView();
-    }
-
-    goBack(): void {
-        this.location.back();
     }
 }
 

@@ -86,35 +86,29 @@
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>              
 
-<div class="content-section implementation">      
-    <form [formGroup]="playoffConfigFormGroup" (ngSubmit)="onSubmit(playoffConfigFormGroup.value)">
-        <div class="ui-g ui-fluid">
-            <div class="ui-g-12">
-                <div class="ui-g-2">
-                    <label for="positionId">Classificata: </label>
-                </div>
-                <p-dropdown id="positionId" [options]="positions" formControlName="position" optionLabel="label" ></p-dropdown>
+<form [formGroup]="playoffConfigFormGroup" (ngSubmit)="onSubmit(playoffConfigFormGroup.value)">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-2">
+                <label for="positionId">Classificata: </label>
             </div>
-            <div class="ui-g-12">
-                <div class="ui-g-2">
-                    <label for="roundId">Girone: </label>
-                </div>
-                <p-dropdown id="roundId" [options]="rounds" formControlName="round" optionLabel="label"></p-dropdown>
-            </div>
-        </div>   
-
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">            
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
-                    [disabled]="!playoffConfigFormGroup.valid"></button>
-                </div>
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-danger" pButton type="button" icon="fa fa-close" (click)="doDelete()" label="Rimuovi" 
-                    [disabled]="!playoffConfigFormGroup.valid"></button>
-                </div>
-            </div>    
+            <p-dropdown id="positionId" [options]="positions" formControlName="position" optionLabel="label" ></p-dropdown>
         </div>
-    </form>
-</div>
+        <div class="ui-g-12">
+            <div class="ui-g-2">
+                <label for="roundId">Girone: </label>
+            </div>
+            <p-dropdown id="roundId" [options]="rounds" formControlName="round" optionLabel="label"></p-dropdown>
+        </div>
+    </div>   
+
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">            
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
+                [disabled]="!playoffConfigFormGroup.valid"></button>
+            </div>
+        </div>    
+    </div>
+</form>
     

@@ -5,6 +5,7 @@ import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { Role } from 'app/tourneyonline/domain/role';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { RoleService } from 'app/tourneyonline/service/role-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './user-detailview.html',
@@ -19,7 +20,7 @@ import { RoleService } from 'app/tourneyonline/service/role-service';
 export class UserDetailView implements OnInit {
 
     selectedUser: UserVO;
-    cols: any[];
+    cols: TableCols[] ;
 
     roles : Role[];
     

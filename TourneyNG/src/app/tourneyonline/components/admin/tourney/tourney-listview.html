@@ -217,13 +217,13 @@
 </div>
 
 <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSearch(tourneyFormGroup.value)">
-<div *ngIf="userLogged" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="userLogged" class="ui-grid-row">
         <div class="ui-grid-col-3">
             Cliente:
         </div>
         <div class="ui-grid-col-3">
-            <p-dropdown [options]="clientOptions" formControlName="selectedClientOption" optionLabel="businessName"></p-dropdown>
+            <p-dropdown [options]="clientOptions" formControlName="selectedClientOption" optionLabel="label"></p-dropdown>
         </div>
     </div>    
 
@@ -232,7 +232,7 @@
             Da:
         </div>
         <div class="ui-grid-col-3">
-            <p-calendar formControlName="fromDate" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+            <p-calendar formControlName="fromDate" [locale]="it" dateFormat="dd/mm/yy" [showIcon]="true">
             </p-calendar>
         </div>
     </div>
@@ -242,7 +242,7 @@
             A:
         </div>
         <div class="ui-grid-col-3">
-            <p-calendar formControlName="toDate" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+            <p-calendar formControlName="toDate" [locale]="it" dateFormat="dd/mm/yy" [showIcon]="true">
             </p-calendar>
         </div>
     </div>
@@ -250,7 +250,7 @@
     <div class="ui-grid-row">
         <div class="ui-grid-col-2"></div>
         <div class="ui-grid-col-6">
-            <button pButton type="submit" icon="fa fa-search" label="Cerca" [disabled]="!loginformGroup.valid"></button>
+            <button pButton type="submit" icon="fa fa-search" label="Cerca" [disabled]="!tourneyFormGroup.valid"></button>
         </div>
         <div class="ui-grid-col-4"></div>
     </div>

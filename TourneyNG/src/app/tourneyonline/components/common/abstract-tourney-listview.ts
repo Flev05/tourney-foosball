@@ -7,6 +7,7 @@ import { TourneyDb } from 'app/tourneyonline/domain/tourney.db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from './date-format-pipe';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 
@@ -14,7 +15,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     toggleable: boolean = false;
     tdbs : TourneyDb[] = [];
 
-    cols: any[];
+    cols: TableCols[] ;
     rows: any[];
     selectedRow: any;
 
@@ -28,7 +29,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     ngOnInit() {
         console.log("AbstractTourneyListView.ngOnInit()");
-        
+        super.ngOnInit();
+
         this.cols = [
             { field: 'rowNumber',   header: 'N°' },
             { field: 'tourneyName', header: 'Nome' },

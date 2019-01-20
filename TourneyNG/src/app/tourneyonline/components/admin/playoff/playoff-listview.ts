@@ -5,11 +5,11 @@ import { Location } from '@angular/common';
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Message } from 'primeng/api';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './playoff-listview.html'
@@ -20,14 +20,16 @@ export class PlayoffListView extends AbstractListView {
     msgs: Message[] = [];
     selectedTourney: Tourney;
     selectedPlayoff: Playoff;
-    playoffs: Playoff[];
+    playoffs: any[];
+    playoffRows: Playoff[];
 
-    atLeastOneRound: boolean;
+    atLeastOnePlayoff: boolean;
     displayDialog: boolean;
     newRound: Playoff;
     newPlayoff: boolean;
-    mdbs: MeetingDb[];
-    
+
+    playoffCols: TableCols[] = TourneyService.playoffCols;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -43,7 +45,10 @@ export class PlayoffListView extends AbstractListView {
         this.playoffs = this.selectedTourney.playoffs;
         this.newPlayoff = false;
    
-        this.atLeastOneRound = this.selectedTourney.rounds.length > 0;
+        this.atLeastOnePlayoff = this.selectedTourney.rounds.length > 0;
+        for(let p of this.playoffs) {
+            p.playoffName = p.round.name;
+        }
     }
 
     showDialogToAdd() {
@@ -89,27 +94,14 @@ export class PlayoffListView extends AbstractListView {
     }
 
     onRowSelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-
-        const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
-        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
-
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-
-        this.gotoDetailView();
+        let playoff= event.data;
+        this.tourneyService.onPlayoffRowSelect(playoff, PlayoffListView.redirect);
     }
 
-    private onComplete(): void {
-        this.selectedPlayoff.round.meetings = [];
-        for(let mdb of this.mdbs) {
-            let m: Meeting = JSON.parse(mdb.json);
-            this.selectedPlayoff.round.meetings.push(m);
-        }
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+    doDelete(playoff: Playoff) {
+        this.tourneyService.doPlayoffDelete(playoff);
     }
- 
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

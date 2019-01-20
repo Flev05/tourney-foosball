@@ -4,6 +4,8 @@ import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { TeamDetailView } from './team-detailview';
 import { AddTeamListView } from './add-team-listview';
+import { RoundDetailView } from '../round/round-detailview';
+import { RuleListView } from '../playoff/rule-listview';
 
 @NgModule({
 	imports: [
@@ -12,6 +14,8 @@ import { AddTeamListView } from './add-team-listview';
 			{ path: 'dv',   		component: TourneyDetailView },
 			{ path: 'dv/team',		component: TeamDetailView },
 			{ path: 'dv/addteam',	component: AddTeamListView },	
+			{ path: 'dv/round',		component: RoundDetailView },	
+			{ path: 'dv/playoff',	component: RuleListView },	
 		])
 	],
 	exports: [

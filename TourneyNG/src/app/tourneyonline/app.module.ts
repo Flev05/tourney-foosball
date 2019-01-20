@@ -43,9 +43,9 @@ import { InMemoryDataService } from './in-memory-data-service/in-memory-data.ser
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
-    ,  HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
-    )
+    // ,  HttpClientInMemoryWebApiModule.forRoot(
+    //   InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
+    // )
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

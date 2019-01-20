@@ -46,16 +46,15 @@ export class ClientListView extends AbstractListView {
 
     create() {
         this.selectedClient={
-              firstname: "<Nome Cliente>"
-            , lastname: "<Cognome Cliente>"
-            , businessName: "<Ragione Sociale>"
-            , phoneNumber: "<Numero di cellulare>"
+              firstname: ""
+            , lastname: ""
+            , businessName: ""
+            , phoneNumber: ""
         };
         this.clientService.selectedClient = this.selectedClient;
         this.clientService.newClient = true;
         this.gotoDetailView();
     }
-
     
     doDelete(client: Client) {
         console.log(client);
@@ -76,17 +75,10 @@ export class ClientListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.clientService.selectedClient = this.cloneClient(event.data);
+        this.clientService.selectedClient = this.cloneObject(event.data);
         this.clientService.newClient = false;
 
         this.gotoDetailView();
     }
-  
-    cloneClient(c: Client): Client {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
-        }
-        return car;
-    }
+ 
 }

@@ -27,40 +27,42 @@
     <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
 </div>
         
-<form [formGroup]="clientformGroup" (ngSubmit)="onSubmit(clientformGroup.value)">
+<form [formGroup]="clientFormGroup" (ngSubmit)="onSubmit(clientFormGroup.value)">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Nome *:
             </div>
             <div class="ui-grid-col-6">
-                <input pInputText type="text" formControlName="firstname" placeholder="Obbligatoria"/>
+                <input pInputText type="text" formControlName="firstname" placeholder="Obbligatorio"/>
             </div>
             <div class="ui-grid-col-4">
                 <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!clientformGroup.controls['firstname'].valid && clientformGroup.controls['firstname'].dirty">
+                    *ngIf="!clientFormGroup.controls['firstname'].valid && clientFormGroup.controls['firstname'].dirty">
                     <i class="fa fa-close"></i>
                     Il nome è obbligatorio
                 </div>
             </div>
         </div>
 
-        <div class="ui-grid-col-2">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
                 Cognome *:
             </div>
             <div class="ui-grid-col-6">
-                <input pInputText type="text" formControlName="lastname" placeholder="Obbligatoria"/>
+                <input pInputText type="text" formControlName="lastname" placeholder="Obbligatorio"/>
             </div>
             <div class="ui-grid-col-4">
                 <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!clientformGroup.controls['lastname'].valid && clientformGroup.controls['lastname'].dirty">
+                    *ngIf="!clientFormGroup.controls['lastname'].valid && clientFormGroup.controls['lastname'].dirty">
                     <i class="fa fa-close"></i>
                     Il nome è obbligatorio
                 </div>
             </div>
         </div>
 
-        <div class="ui-grid-col-2">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
                 Ragione Sociale**:
             </div>
             <div class="ui-grid-col-6">
@@ -68,13 +70,26 @@
             </div>
             <div class="ui-grid-col-4">
                 <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!clientformGroup.controls['lastname'].valid && clientformGroup.controls['lastname'].dirty">
+                    *ngIf="!clientFormGroup.controls['lastname'].valid && clientFormGroup.controls['lastname'].dirty">
                     <i class="fa fa-close"></i>
                     La ragione sociale può essere alternativa al nome e cognome
                 </div>
             </div>
         </div>
-            
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" formControlName="country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="search($event)" field="city"
+                    placeholder="Comuni" [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+    
         <div class="ui-grid-row">
             <div class="ui-grid-col-3">
                 Indirizzo:
@@ -89,13 +104,13 @@
                 Telefono:
             </div>
             <div class="ui-grid-col-5">
-                <input pInputText type="text" formControlName="phoneNumber"/>
+                <input pInputText type="text" formControlName="phoneNumber" placeholder="Obbligatorio"/>
             </div>
             <div class="ui-grid-col-4">
                 <div class="ui-message ui-messages-error ui-corner-all"
-                    *ngIf="!clientformGroup.controls['phoneNumber'].valid && clientformGroup.controls['phoneNumber'].dirty">
+                    *ngIf="!clientFormGroup.controls['phoneNumber'].valid && clientFormGroup.controls['phoneNumber'].dirty">
                     <i class="fa fa-close"></i>
-                    <span *ngIf="clientformGroup.controls['phoneNumber'].errors['required']">
+                    <span *ngIf="clientFormGroup.controls['phoneNumber'].errors['required']">
                         Il numero di telefono del cliente è obbligatorio
                     </span>
                 </div>
@@ -107,13 +122,13 @@
                 E-mail:
             </div>
             <div class="ui-grid-col-5">
-                <input pInputText type="text" formControlName="email"/>
+                <input pInputText type="text" formControlName="email" placeholder="Obbligatoria"/>
             </div>
             <div class="ui-grid-col-4">
                 <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!clientformGroup.controls['email'].valid && clientformGroup.controls['email'].dirty">
+                    *ngIf="!clientFormGroup.controls['email'].valid && clientFormGroup.controls['email'].dirty">
                     <i class="fa fa-close"></i>
-                    <span *ngIf="clientformGroup.controls['email'].errors['required']">
+                    <span *ngIf="clientFormGroup.controls['email'].errors['required']">
                         L'indirizzo e-mail del cliente è obbligatorio
                     </span>
                 </div>
@@ -123,7 +138,7 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!clientformGroup.valid"></button>
+                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!clientFormGroup.valid"></button>
                 </div>
             </div>
         </div>

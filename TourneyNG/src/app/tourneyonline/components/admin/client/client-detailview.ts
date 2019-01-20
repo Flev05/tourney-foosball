@@ -26,6 +26,7 @@ export class ClientDetailView extends AbstractDetailView {
     filteredCountriesSingle: Country[];
     country: Country;
     clientFormGroup: FormGroup;
+    fullAddress: string;
 
     constructor(
         private fb: FormBuilder,
@@ -46,6 +47,23 @@ export class ClientDetailView extends AbstractDetailView {
             this.countries = data;
         });
 
+        if(this.clientService.newClient) {
+            this.selectedClient={
+                firstname: ""
+              , lastname: ""
+              , businessName: ""
+              , phoneNumber: ""
+              , email: ""
+              , country: this.countries[0]
+            };
+        }
+        
+        if(this.selectedClient.country!=undefined) {
+            this.fullAddress = this.selectedClient.address + " - " 
+                + this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
+                + " (" + this.selectedClient.country.provinceCode +")";
+        }
+
         this.clientFormGroup = this.fb.group({
             'firstname': new FormControl(this.selectedClient.firstname, Validators.compose([Validators.required])),
             'lastname': new FormControl(this.selectedClient.lastname, Validators.compose([Validators.required])),
@@ -65,13 +83,10 @@ export class ClientDetailView extends AbstractDetailView {
 
         this.selectedClient.phoneNumber = this.clientFormGroup.get('phoneNumber').value;
         this.selectedClient.email = this.clientFormGroup.get('email').value;
-
-        if(this.clientService.newClient) {
-            this.clientService.newClient = false;
-        }
-
+        
         this.selectedClient.country=this.country;
         if(this.clientService.newClient) {
+            this.clientService.newClient = false;
             this.clientService.addClient(this.selectedClient).subscribe(() => this.goBack());  
         } else  {
             this.clientService.updateClient(this.selectedClient).subscribe(() => this.goBack());

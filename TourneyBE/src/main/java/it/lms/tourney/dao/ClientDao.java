@@ -36,6 +36,7 @@ import it.lms.tourney.po.Client_;
 @Stateless
 public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Client getById(Integer id) {
 
         return super.findById(id);

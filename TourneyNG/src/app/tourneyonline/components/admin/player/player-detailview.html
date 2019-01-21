@@ -97,10 +97,13 @@
                 <label for="country-id">Comune:</label>
             </div>
             <div class="ui-grid-col-5">
-                <p-autoComplete id="country-id" formControlName="country" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="search($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
+                <p-autoComplete id="country-id" 
+                    formControlName="country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" 
+                    field="city"
+                    placeholder="Comuni" 
+                    [minLength]="1">
                 </p-autoComplete>
             </div>
         </div>           

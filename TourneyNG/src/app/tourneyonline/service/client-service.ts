@@ -3,7 +3,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
-import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Client } from '../domain/client';
@@ -40,71 +39,68 @@ export class ClientService {
         }
     }
 
-    loadAllClients (): Observable<Client[]> {
+    loadAllClients (selector: (err: any, caught: Observable<Client[]> ) => Observable<Client[]>): Observable<Client[]> {
         const url = `${clientUrl}/findAll`;
  
-        return this.http.get<Client[]>(url)
-        .pipe(
-            tap(_ => this.log(`fetched all tornei`)),
-            catchError(this.handleError('loadClientSmall', []))
+        return this.http.get<Client[]>(url).pipe(
+              tap(_ => this.log(`fetched all tornei`))
+            , catchError(selector)
           );
     }
 
     /** GET hero by id. Will 404 if id not found */
-    getClient(id: number): Observable<Client> {
+    getClient(id: number, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
         const url = `${clientUrl}/find/${id}`;
         return this.http.get<Client>(url).pipe(
             tap(_ => this.log(`fetched Client id=${id}`)),
-            catchError(this.handleError<Client>(`getClient id=${id}`))
+            catchError(selector)
         );
     }
 
     /** POST: add a new Client to the server */
-    addClient (client: Client): Observable<Client> {
+    createClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
+        console.log(client);
         let url = clientUrl + "/insert";
 
         return this.http.post<Client>(url, client, httpOptions).pipe(
-            tap((client: Client) => this.log(`added Client w/ id=${client.id}`)),
-            catchError(this.handleError<Client>('addClient'))
+              tap((client: Client) => this.log(`added Client w/ id=${client.id}`))
+            , catchError(selector)
         );
     }
 
     /** PUT: update the Client on the server */
-    updateClient (client: Client ): Observable<Client> {
+    updateClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
+        console.log(client);
         const url = clientUrl + "/update";
         
-        console.log(client);
-
         return this.http.put(url, client, httpOptions).pipe(
             tap(_ => this.log(`updated Client id=${client.id}`)),
-            catchError(this.handleError<Client>('updateClient'))
+            catchError(selector)
         );
     }
     
     /** DELETE: delete the Client from the server */
-    deleteClient (client: Client | number): Observable<Client> {
+    deleteClient (client: Client | number, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
+        console.log(client);
         const id = typeof client === 'number' ? client : client.id;
         const url = `${clientUrl}/delete/${id}`;
 
         return this.http.delete<Client>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Client id=${id}`)),
-            catchError(this.handleError<Client>('deleteClient'))
+            catchError(selector)
         );
     }
 
-    private handleError<T> (operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
-      
-          // TODO: send the error to remote logging infrastructure
-          console.error(error); // log to console instead
-      
-          // TODO: better job of transforming error for user consumption
-          this.log(`${operation} failed: ${error.message}`);
-      
-          // Let the app keep running by returning an empty result.
-          return of(result as T);
-        };
-      }
+    /** POST: to delete a Client from the server */
+    postDeleteClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
+        console.log(client);
+        let url = clientUrl + "/delete";
+
+        return this.http.post<Client>(url, client, httpOptions).pipe(
+              tap((client: Client) => this.log(`added Client w/ id=${client.id}`))
+            , catchError(selector)
+        );
+    }
       
     /** Log a ClientService message with the MessageService */
     private log(message: string) {

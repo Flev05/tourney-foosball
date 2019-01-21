@@ -368,11 +368,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 
-    search(event) {
-        let query = event.query;
-        this.filteredCountriesSingle =this.filterCountry(query, this.countries);
-    }
-
     onSpinnerChange(event) {
         let spin: number = this.tourneyFormGroup.get('maxMatchesPerMeeting').value;
         if(spin == 1) {

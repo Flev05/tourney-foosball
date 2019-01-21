@@ -104,11 +104,6 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         logger.debug(logId() + "delete successful");
     }
 
-    // private void makeTransient(PO entity) {
-    //
-    // em.remove(entity);
-    // }
-
     protected void refresh(PO entity) {
 
         em.refresh(entity);
@@ -177,9 +172,9 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         return po;
     }
 
-    protected PO findById(Object primaryKey) {
+    protected PO findById(ID id) {
 
-        return em.find(entityClass, primaryKey);
+        return em.find(entityClass, id);
     }
 
     private Query getAllQuery() {

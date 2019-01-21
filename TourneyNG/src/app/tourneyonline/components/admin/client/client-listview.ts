@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable} from 'rxjs';
+import { of } from 'rxjs/observable/of';
 import { Location } from '@angular/common';
 import { Client } from 'app/tourneyonline/domain/client';
 import { ClientService } from 'app/tourneyonline/service/client-service';
@@ -19,6 +21,8 @@ export class ClientListView extends AbstractListView {
     clients: Client[];
 
     cols:  TableCols[] ;
+    onLoadClientError: boolean;
+    onDeleteError: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -31,9 +35,6 @@ export class ClientListView extends AbstractListView {
 
     ngOnInit() {
         console.log("ClientListView.ngOnInit()");
-
-        this.clientService.loadAllClients().subscribe(cs => this.clients = cs);
-
         this.clientService.newClient = false;
 
         this.cols = [
@@ -42,6 +43,22 @@ export class ClientListView extends AbstractListView {
             { field: 'businessName', header: 'Ragione Sociale' },
             { field: 'phoneNumber',  header: 'Telefono' }
         ];
+
+        this.onLoadClientError = false;
+        this.clientService.loadAllClients(this.loadClientsErrorHandler('loadAllClients()')).subscribe(cs => this.clients = cs);
+    }
+
+    private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+      
+            this.onLoadClientError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
     }
 
     create() {
@@ -58,14 +75,50 @@ export class ClientListView extends AbstractListView {
     
     doDelete(client: Client) {
         console.log(client);
-
+        this.selectedClient= client;
         let name = client.firstname != "" ? client.firstname + " " + client.lastname: client.businessName;
         let popup = 'Sicuro di voler rimuovere il cliente: [' + name + "]?";
 
+        this.onDeleteError = false;
         if(confirm(popup)) {
-            this.clientService.deleteClient(client).subscribe(n => this.next(n));
-        
-            let index: number = this.clients.indexOf(client);
+
+            // const subscr = this.clientService.deleteClient(this.selectedClient, this.deleteErrorHandler('deleteClient()'));
+            const subscr = this.clientService.postDeleteClient(this.selectedClient, this.deleteErrorHandler('postDeleteClient()'));
+
+            subscr.subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+        }
+    }
+
+    private deleteErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+      
+            this.onDeleteError = true;
+
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+      
+            // TODO: better job of transforming error for user consumption
+            console.log(`${operation} failed: ${error.message}`);
+      
+            // Let the app keep running by returning an empty result.
+          return of(result as T);
+        };
+    }
+
+    next(n:any) {
+        console.log("next()");
+        console.log(n);
+    }
+
+    onError(e:any) {
+        console.log("onError()");
+        console.log(e);
+    }
+
+    onComplete(): void {
+        console.log("onComplete()");
+        if(!this.onDeleteError) {
+            let index: number = this.clients.indexOf(this.selectedClient);
             if(index > -1) {
                 this.clients.splice(index, 1);
             }
@@ -75,7 +128,7 @@ export class ClientListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.clientService.selectedClient = this.cloneObject(event.data);
+        this.clientService.selectedClient = this.selectedClient;
         this.clientService.newClient = false;
 
         this.gotoDetailView();

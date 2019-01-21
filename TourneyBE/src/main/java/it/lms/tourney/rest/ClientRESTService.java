@@ -66,7 +66,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClientVO> listAllClients() {
 
-        logger.debug("GET: listAllClients()");
+        logger.debug(logId() + "GET: listAllClients()");
 
         List<Client> clientList = clientDao.findAllOrderedByName();
 
@@ -113,7 +113,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Client lookupClientById(@PathParam("id") Integer id) {
 
-        logger.debug("GET: lookupClientById(" + id + ")");
+        logger.debug(logId() + "GET: lookupClientById(" + id + ")");
 
         Client client = clientDao.getById(id);
         if (client == null) {
@@ -132,12 +132,34 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createClient(Client client) {
 
-        logger.debug("POST: createClient(" + client + ")");
+        logger.debug(logId() + "POST: createClient(" + client + ")");
 
         // Validates client using bean validation
         validateClient(client);
 
         Response.ResponseBuilder builder = insert(client);
+
+        return builder.build();
+    }
+
+    @POST
+    @Path("/delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response postDeleteClient(Client client) {
+
+        logger.debug(logId() + "POST: postDeleteClient(" + client + ")");
+
+        Response.ResponseBuilder builder;
+        try {
+            clientDao.delete(client);
+
+            builder = Response.ok();
+        } catch (Exception e) {
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("error", e.getMessage());
+            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+        }
 
         return builder.build();
     }
@@ -152,7 +174,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateClient(Client client) {
 
-        logger.debug("PUT: updateClient(" + client.getId() + ")");
+        logger.debug(logId() + "PUT: updateClient(" + client + ")");
 
         Response.ResponseBuilder builder = update(client);
 
@@ -169,7 +191,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteClient(@PathParam("id") Integer id) {
 
-        logger.debug("DELETE: deleteClient(" + id + ")");
+        logger.debug(logId() + "DELETE: deleteClient(" + id + ")");
 
         Response.ResponseBuilder builder;
         try {
@@ -191,7 +213,7 @@ public class ClientRESTService extends AbstractRESTService {
 
     private Response.ResponseBuilder insert(Client client) {
 
-        logger.debug("Entering insert()");
+        logger.debug(logId() + "Entering insert()");
 
         Response.ResponseBuilder builder;
         try {
@@ -219,7 +241,7 @@ public class ClientRESTService extends AbstractRESTService {
 
     private Response.ResponseBuilder update(Client client) {
 
-        logger.debug("Entering update()");
+        logger.debug(logId() + "Entering update()");
 
         Response.ResponseBuilder builder;
         try {
@@ -284,7 +306,7 @@ public class ClientRESTService extends AbstractRESTService {
      */
     private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
 
-        logger.debug("Validation completed. violations found: " + violations.size());
+        logger.debug(logId() + "Validation completed. violations found: " + violations.size());
 
         Map<String, String> responseObj = new HashMap<String, String>();
 

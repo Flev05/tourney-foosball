@@ -36,6 +36,13 @@
     </p-accordion>    
 </div>
 
+<div *ngIf="onLoadClientError" style="margin-top:30px">
+    <p-message severity="error" text="Sistema momentaneamente non disponibile, riprovare più tardi"></p-message>
+</div>    
+<div *ngIf="onDeleteError" style="margin-top:30px">
+    <p-message severity="error" text="Cancellazione fallita, oggetto ancora in uso"></p-message>
+</div>    
+                        
 <p-table [columns]="cols" 
     [responsive]="true"
     [value]="clients" 

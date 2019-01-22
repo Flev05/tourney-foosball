@@ -49,6 +49,7 @@
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
                 <a *ngIf="roleService.isDeveloper()" [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
                 <a *ngIf="roleService.isOwner()"     [routerLink]="['/users']"   (click)="menuActive = false">&#9679; Utenti</a>
+                <a *ngIf="roleService.isAdmin()"     [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Reset Password</a>
             </div>
         </div>
     
@@ -63,13 +64,13 @@
                 <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
                 <a [routerLink]="['/adminplayer']" (click)="menuActive = false">&#9679; Giocatori</a>
                 <a [routerLink]="['/adminteam']" (click)="menuActive = false">&#9679; Squadre</a>
+                
+                <!--
                 <a [routerLink]="['/adminround']" (click)="menuActive = false">&#9679; Gironi</a>
                 <a [routerLink]="['/adminplayoff']" (click)="menuActive = false">&#9679; Playoff</a>
                 <a [routerLink]="['/admineliminatory']" (click)="menuActive = false">&#9679; Eliminatorie</a>
-                <!-- <a [routerLink]="['/adminobjective']" (click)="menuActive = false">&#9679; Obiettivi</a>      -->
-
-                <a [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Password</a>
-                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
+                <a [routerLink]="['/adminobjective']" (click)="menuActive = false">&#9679; Obiettivi</a>      
+                -->
             </div>
         </div>
    
@@ -85,8 +86,6 @@
                 <a [routerLink]="['/matrix']"   (click)="menuActive = false">&#9679; Matrice</a>
                 <a [routerLink]="['/result']"   (click)="menuActive = false">&#9679; Risultati</a>
                 <a [routerLink]="['/classification']" (click)="menuActive = false">&#9679; Classifica</a>
-                <!-- <a [routerLink]="['/realtime']" (click)="menuActive = false">&#9679; Tempo Reale</a> -->
-                <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
    
@@ -109,8 +108,8 @@
                 <span>Login</span>
             </a>
             <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
-                <a *ngIf="loginService.userLogged" (click)="logout($event)">&#9679; Logout</a>
-                <a *ngIf="loginService.userLogged" [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
+                <a (click)="logout($event)">&#9679; Logout</a>
+                <a [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
             </div>
         </div>
     </div>

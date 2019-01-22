@@ -22,16 +22,44 @@
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
 
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+    <p-pickList [source]="availableTeams" [target]="selectedTourney.teams" sourceHeader="Disponibili" targetHeader="Selezionati" 
+            [responsive]="true"
+            dragdrop="true" 
+            dragdropScope="teams" 
+            [sourceStyle]="{'height':'400px'}" 
+            [targetStyle]="{'height':'400px'}">
+        <ng-template let-t pTemplate="item">
+            <div class="ui-helper-clearfix">
+                <div>{{t.teamName}}</div>
+            </div>
+        </ng-template>
+    </p-pickList>     
+
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <button class="ui-button-success" pButton type="button" icon="pi pi-save" label="Nuova Squadra" 
+                (click)="newTeam()"></button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- <div class="content-section implementation">
 <p-table [columns]="teamCols" 
         [value]="availableTeams" 
-        [(selection)]="selectedTeams"
+        [(selection)]="selectedTourney.selectedTeams" 
+        dataKey="teamName"
         [responsive]="true"
         [scrollable]="true" 
-        scrollHeight="600px"
-        dataKey="teamName">
+        scrollHeight="500px">
 
     <ng-template pTemplate="header" let-columns>
         <tr>
+            <th>N°</th>
             <th>
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>                            
@@ -41,13 +69,13 @@
         </tr>
     </ng-template>
     
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr>
+            <td>{{rowIndex+1}}</td>
             <td>
                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>                            
             <td *ngFor="let col of columns">
-                <span class="ui-column-title">{{col.header}}</span>
                 {{rowData[col.field]}}
             </td>
         </tr>
@@ -55,8 +83,15 @@
 
     <ng-template pTemplate="summary" let-rowData>
         <div style="text-align:left">
-            <button pButton class="ui-button-success" type="button" icon="fa fa-save" (click)="save()" label="Salva" ></button>
-            <button pButton type="button" icon="fa fa-plus" (click)="newTeam()" label="Crea Squadra" ></button>
+            <button pButton type="button" icon="fa fa-plus" (click)="newTeam()" label="Nuova Squadra" ></button>
         </div>
+        <div style="text-align:left">
+            Disponibili: {{availableTeams.length - selectedTourney.selectedTeams.length}} Selezionati: {{selectedTourney.selectedTeams.length}}
+            <ul>
+                <li *ngFor="let t of selectedTourney.selectedTeams; index as i">
+                    {{i+1}} - {{t.teamName}}
+                </li>
+            </ul>
+        </div>  
     </ng-template>        
-</p-table>        
+</p-table>         -->

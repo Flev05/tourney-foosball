@@ -45,6 +45,7 @@ private static tourney =
       ,eliminatoryLevels: []
       ,selectedEliminatoryLevel:{isOneway:false, eliminatories:[]}
       ,objectives:[]  
+      ,selectedTeams: []
     };
 
     static tourneyDb = {

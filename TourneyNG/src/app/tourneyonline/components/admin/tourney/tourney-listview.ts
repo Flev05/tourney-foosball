@@ -70,6 +70,7 @@ export class TourneyListView extends AbstractTourneyListView {
         this.selectedRow = {t:this.selectedTourney, rowNumber: 1, tourneyName: "", datetime: dt};
 
         this.tourneyService.newTourney = true;
+
         this.gotoDetailView();
     }
 

@@ -27,7 +27,6 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     selectedEliminatory: Eliminatory;
 
-    eliminatoryMode: EliminatoryMode;
     eliminatories: Eliminatory[];  
 
     selectedEliminatoryLevel: EliminatoryLevel;

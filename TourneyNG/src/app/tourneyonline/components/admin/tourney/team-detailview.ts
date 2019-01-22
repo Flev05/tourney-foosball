@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { Message } from 'primeng/api';
-import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
@@ -9,7 +7,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Player } from 'app/tourneyonline/domain/player';
-import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -18,18 +15,13 @@ export class TeamDetailView extends AbstractDetailView {
 
     selectedTeam: Team;
 
-    msgs: Message[] = [];
-
-    teamFormGroup: FormGroup;
     toggleable: boolean = false;
 
     availablePlayers: Player[] = [];
-    targetPlayers: Player[] = [];
 
     fullAddress: string;
 
     constructor(
-        private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
@@ -48,9 +40,9 @@ export class TeamDetailView extends AbstractDetailView {
         if(this.teamService.newTeam) {
             this.selectedTeam.id = this.tourneyService.getSequenceNumber(); 
             this.selectedTeam.players = [];
+            this.teamService.newTeam = false;
         }
 
-        this.targetPlayers = this.selectedTeam.players;
         this.availablePlayers = [];
 
         let alreadyInTeam: Player[] = [];
@@ -84,40 +76,23 @@ export class TeamDetailView extends AbstractDetailView {
                 + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
                 + " (" + this.selectedTeam.country.provinceCode +")";
         }
-
-        this.teamFormGroup = this.fb.group({
-            'teamName': new FormControl(this.selectedTeam.teamName, Validators.compose([Validators.required])),
-            'address':  new FormControl(this.selectedTeam.address ),
-
-            'country':          new FormControl(this.selectedTeam.country),
-            'availablePlayers': new FormControl(this.availablePlayers),
-            'targetPlayers':    new FormControl(this.targetPlayers),
-        });
     }
 
-    onSubmit(value: string) {
+    // onSubmit(value: string) {
 
-        this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
-        this.selectedTeam.address = this.teamFormGroup.get('address').value;
-        this.selectedTeam.country = this.teamFormGroup.get('country').value;
-        this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
+    //     this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
+    //     this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
 
-        if(this.teamService.newTeam) {
-            this.selectedTourney.teams.push(this.selectedTeam);
-        }
+    //     if(this.teamService.newTeam) {
+    //         this.teamService.newTeam = false;
+    //         this.selectedTourney.teams.push(this.selectedTeam);
+    //     }
 
-        this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    }
+    //     this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+    // }
  
     onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        if(this.teamService.newTeam) {
-            msgerr = 'Creazione nuova squadra fallita';
-        } else {
-            msgerr = 'Modifica squadra fallita';
-        }
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        let msgerr: string = 'Creazione/Modifica nuova squadra fallita';
+        console.log(msgerr);
     }
 }

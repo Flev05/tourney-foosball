@@ -30,7 +30,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
    
     selectedEliminatoryLevel: EliminatoryLevel;
     eliminatoryLevels: Array<EliminatoryLevel>;
-    eliminatoryMode: EliminatoryMode;
     
     selectedEliminatory: Eliminatory;
     eliminatories: Eliminatory[];
@@ -90,17 +89,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
         }
 
-        this.eliminatoryMode = this.selectedTourney.eliminatoryMode;
-    
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
-        this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
         
         this.teamsCombobox = this.tourneyService.teamsCombobox;
         this.selectedTeamsNumCombobox = this.selectedTourney.selectedTeamsNumCombobox;
   
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
 
-        this.isManual = this.eliminatoryMode==EliminatoryMode.M ? true : false;
         this.isAutomatic = ! this.isManual;
                 
         if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 

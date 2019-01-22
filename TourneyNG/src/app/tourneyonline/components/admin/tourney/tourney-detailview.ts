@@ -367,6 +367,9 @@ export class TourneyDetailView extends AbstractDetailView {
             return -1;
         });
 
+        for(let r of this.selectedTourney.rounds) {
+            this.removeFromMeetings(r);
+        }
 
         this.selectedTourney.rounds = [];
         for(let i=0; i<R; i++) {
@@ -391,14 +394,54 @@ export class TourneyDetailView extends AbstractDetailView {
         }
         this.roundRows = this.selectedTourney.rounds;
     }
+    
+    private removeFromMeetings(round: Round): void {
+        for(let m of round.meetings) {
+            this.tourneyService.deleteMeeting(m);
+        }
+        round.meetings = [];    
+    }
+
     prepareRandomTeams(randomTeams: Team[], start: number, size: number): Team[] {
-        throw new Error("Method not implemented.");
+        let teams: Team[] = [];
+
+        for(let i=start; i<start+size; i++) {
+            teams.push(randomTeams[i]);
+        }
+
+        return teams;
     }
     prepareMeetings(randomTeams: Team[], start: number, size: number): Meeting[] {
-        throw new Error("Method not implemented.");
+        let meetings: Meeting[] = [];
+
+        for(let i=start; i<start+size; i++) {
+            let m = 
+            meetings.push(randomTeams[i]);
+        }
+
+        return meetings;
     }
+
+    private addTeamToMeetings(round: Round, team: Team) {
+        for (let t of this.selectedRound.teams) {
+            let m = this.createMeeting(team, t, null, null, Direction.OneWay);
+            
+            this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
+
+            this.selectedRound.meetings.push(m);
+            if (!this.selectedTourney.isOnewayRound) {
+                m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
+                this.selectedRound.meetings.push(m);
+
+                this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);                
+            }
+        }
+    }
+
     prepareClassification(randomTeams: Team[], start: number, size: number): Classification[] {
-        throw new Error("Method not implemented.");
+        let classifications: Classification[] = [];
+
+        return classifications;
     }
 
     onEliminatoryRowSelect(event) {

@@ -1,20 +1,18 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
+import { Message } from 'primeng/api';
 
-import {Message} from '../../../../components/common/api';
 
-import { Round } from '../../../domain/round';
-import { Team } from '../../../domain/team';
-
-import { CountryService } from '../../../service/country-service';
-import { TourneyService } from '../../../service/tourney-service';
-import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Router } from '@angular/router';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { AbstractDetailView } from '../../common/abstract-detailview';
+import { Round } from 'app/tourneyonline/domain/round';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './round-detailview.html',

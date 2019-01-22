@@ -412,31 +412,6 @@ export class LevelService extends AbstractEliminatoryListView {
         } 
         this.router.navigate([redirect]);
     }
-
-    onManualClick() {
-        console.log("Entering onManualClick()");
-        this.eliminatoryMode=EliminatoryMode.M;
-        this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
-        this.isManual = true;
-
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
-        this.tourneyService.regenerateStandaloneTopLevel = true;
-    }
-
-    onAutoClick() {
-        console.log("Entering onAutoClick()");
-        let popup = 'Sicuro di voler passare alla modalità automatica?';
-        popup += 'Se si, il sistema rimuoverà tutte le impostazioni che avete inserito nel modo manuale';
-
-        if(confirm(popup)) {
-            this.eliminatoryMode=EliminatoryMode.A;
-            this.selectedTourney.eliminatoryMode = this.eliminatoryMode;
-            this.isManual = false;
-
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
-            this.tourneyService.regenerateStandaloneTopLevel = true;
-        }
-    }
  
     onTeamNumChange(event) {
 

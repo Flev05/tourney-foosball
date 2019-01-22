@@ -29,7 +29,6 @@ export class LevelListView implements OnInit {
         this.selectedTourney = this.levelService.selectedTourney;
         this.teamsCombobox = this.levelService.teamsCombobox;
 
-        this.eliminatoryMode = this.levelService.eliminatoryMode;
         this.cols = this.levelService.cols;
         this.rows = this.levelService.rows;
     }
@@ -45,14 +44,7 @@ export class LevelListView implements OnInit {
         this.levelService.onTeamNumChange(event);
         this.rows = this.levelService.rows;
     }
-
-    onManualClick()  {
-        this.levelService.onManualClick();
-    }
-    onAutoClick(){
-        this.levelService.onAutoClick();
-    }
-
+ 
     onRowSelect(event) {
         this.levelService.selectedRow = this.selectedRow;
         this.levelService.onRowSelect(event);

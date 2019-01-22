@@ -708,10 +708,11 @@
                     [(selection)]="selectedTeam"
                     (onRowSelect)="onTeamRowSelect($event)"
                     [scrollable]="true" 
-                    scrollHeight="600px">
+                    scrollHeight="500px">
         
                 <ng-template pTemplate="header" let-columns>
                     <tr>
+                        <th>N°</th>
                         <th *ngFor="let col of columns">
                             {{col.header}}
                         </th>
@@ -721,8 +722,8 @@
         
                 <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                     <tr [pSelectableRow]="rowData">
+                        <td>{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
-                            <span class="ui-column-title">{{col.header}}</span>
                             {{rowData[col.field]}}
                         </td>
                         <td>
@@ -744,6 +745,58 @@
         </p-tabPanel>
 
         <p-tabPanel header="Gironi" *ngIf="containsRound()">    
+
+            <p-accordion>
+                <p-accordionTab header="Istruzioni">              
+                    <p>
+                        Vista elenco di tutti i gironi che compongono il torneo.
+                    </p>
+                    <p>
+                        Scegliere, dalla combo box Giocatori, il numero effettivo iniziale dei giocatori del torneo.
+                    </p>
+                    <p>
+                        Scegliere, dalla combo box Gironi, il numero di gironi all'italiana del torneo.
+                    </p>
+                    <p>
+                        In funzione di queste 2 scelte il sistema propone una compilazione d'ufficio di ciascun girone.
+                        Potete modificare il contenuto del girone spostando i giocatori presenti al suo interno
+                        dall'area dei Selezionati a quella dei Disponibile ed assegnarli ad altri gironi.
+                    </p>
+                </p-accordionTab>
+            </p-accordion>   
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Squadre:
+                </div>
+                <div class="ui-grid-col-4" tooltipPosition="right" 
+                        pTooltip="Scegliere il numero iniziale di squadre impiegate nel torneo">
+                    <p-dropdown id="teamsId" 
+                        [options]="team4roundsCombobox" 
+                        [(ngModel)]="selectedTeam4roundsNumCombobox"  
+                        optionLabel="label"
+                        (onChange)="onTeam4roundNumChange($event.value)" 
+                        placeholder="Seleziona">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Gironi:
+                </div>
+                <div class="ui-grid-col-4" tooltipPosition="right" 
+                        pTooltip="Scegliere il numero di gironi che compone il torneo">
+                    <p-dropdown id="roundId" 
+                        [options]="roundsCombobox" 
+                        [(ngModel)]="selectedRoundsNumCombobox"  
+                        optionLabel="label"
+                        (onChange)="onRoundNumChange($event.value)" 
+                        placeholder="Seleziona">
+                    </p-dropdown>
+                </div>
+            </div>
+    
             <p-table [columns]="roundCols"
                     [value]="roundRows"
                     [responsive]="true"
@@ -751,7 +804,7 @@
                     [(selection)]="selectedRound"
                     (onRowSelect)="onRoundRowSelect($event)"
                     [scrollable]="true" 
-                    scrollHeight="600px">
+                    scrollHeight="500px">
         
                 <ng-template pTemplate="header" let-columns>
                     <tr>
@@ -796,7 +849,7 @@
                 [(selection)]="selectedPlayoff"
                 (onRowSelect)="onPlayoffRowSelect($event)"
                 [scrollable]="true" 
-                scrollHeight="600px">
+                scrollHeight="500px">
     
                 <ng-template pTemplate="header" let-columns>
                     <tr>
@@ -812,7 +865,6 @@
                     <tr [pSelectableRow]="rowData">
                         <td>{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
-                            <span class="ui-column-title">{{col.header}}</span>
                             {{rowData[col.field]}}
                         </td>
                         <td>
@@ -842,15 +894,11 @@
                     per effettuare la fase finale da quello più ampio iniziale a quello della finalissima e finalina.
                 </p> 
                 <p>
-                    L'organizzatore, deve fornire fino a 2 tipi di informazioni: il numero di Squadre e, se il torneo prevede i gironi
-                    e le eliminazioni dirette senza playoff, il Modo di selezione delle squadre di partenza 
-                    delle eliminazioni dirette che può essere Automatico o Manuale. 
+                    L'utente che sta creando il torneo, deve scegliere il numero di Squadre dalla combo box Squadre.
+                    Il sistema predisponde la compilazione delle regole in modo autmatico in funzione delle fasi definite a livello di
+                    Specificità. 
                 </p> 
-                <ul>
-                    <li>Squadre</li>
-                    <li>Modo</li>
-                </ul>         
-            
+
                 <h4>Squadre</h4>
                 <p>
                     Scegliere il numero N iniziale di squadre con cui iniziano le eliminazioni dirette, sia se proveniente dai gironi e/o playoff
@@ -861,8 +909,8 @@
             
                 <h4>Modo</h4>
                 <p>
-                    A meno che il vostro torneo non contenga i gironi dei playoff, il sistema vi da la possibilità di scegliere 
-                    le regole di accopiamento iniziale nelle eliminazioni dirette in 2 modi: Manuale o Automatico.
+                    A meno che il vostro torneo non contenga i gironi dei playoff, il sistema genera  
+                    le regole di accopiamento iniziale nelle eliminazioni dirette in Automatico.
                 </p>                
                 <p>
                     Se il vostro torneo contiene anche i playoff, invece, non avete alcuna possibilità di far calcolare in Automatico
@@ -958,15 +1006,15 @@
                     di svolgimento delle partite.
                 </p>
             </p-accordionTab>
-        </p-accordion>
-                    
-        <div style="margin-top:30px">
-            <p-message *ngIf="incompleteConfiguration" 
-                severity="error" 
-                text="Attenzione! Non non è stato inserito ancora nessun risultato!">
-            </p-message>
-        </div>     
-        <div class="ui-grid-row">
+            </p-accordion>
+                        
+            <div style="margin-top:30px">
+                <p-message *ngIf="incompleteConfiguration" 
+                    severity="error" 
+                    text="Attenzione! Non non è stato inserito ancora nessun risultato!">
+                </p-message>
+            </div>     
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:
                 </div>
@@ -980,26 +1028,7 @@
                         placeholder="Seleziona">
                     </p-dropdown>
                 </div>
-            </div>             
-                
-            <div *ngIf="isModeEnabled" class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Modo:
-                </div>
-                <div class="ui-grid-col-4" tooltipPosition="right"
-                        pTooltip="Si veda le istruzioni per maggiori dettagli">
-                    <p-radioButton name="eliminatoryModeGroupname" 
-                        label="Manuale" 
-                        value="manual" 
-                        [(ngModel)]="eliminatoryMode" (onClick)="onManualClick()">
-                    </p-radioButton>
-                    <p-radioButton name="eliminatoryModeGroupname" 
-                        label="Automatico" 
-                        value="auto" 
-                        [(ngModel)]="eliminatoryMode" (onClick)="onAutoClick()">
-                    </p-radioButton>
-                </div>
-            </div>       
+            </div>
             
             <p-table *ngIf="!incompleteConfiguration" 
                 [columns]="eliminatoryCols"

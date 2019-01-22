@@ -156,6 +156,7 @@ public class ClientRESTService extends AbstractRESTService {
 
             builder = Response.ok();
         } catch (Exception e) {
+            logger.error("Remove Client failed" + e);
             Map<String, String> responseObj = new HashMap<String, String>();
             responseObj.put("error", e.getMessage());
             builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);

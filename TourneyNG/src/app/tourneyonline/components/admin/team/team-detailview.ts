@@ -38,9 +38,9 @@ export class TeamDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedTeam = this.teamService.selectedTeam;
-
+        
         if(this.teamService.newTeam) {
-            this.selectedTeam.id = this.tourneyService.getSequenceNumber(); 
+            this.selectedTeam={id:this.tourneyService.getSequenceNumber(), teamName:""};
             this.selectedTeam.players = [];
         }
 

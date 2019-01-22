@@ -16,7 +16,6 @@ export class TeamListView extends AbstractListView {
     public static redirect: string = "adminteam/dv";
 
     cols: TableCols[] = TeamService.cols;
-    selectedRow: Team;
     selectedTeam: Team;
 
     teams: Team[];
@@ -57,7 +56,6 @@ export class TeamListView extends AbstractListView {
 
     create() {
         this.selectedTeam={id:0, teamName:""};
-        this.selectedRow = this.selectedTeam;
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = true;
         this.gotoDetailView();
@@ -66,7 +64,7 @@ export class TeamListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.teamService.selectedTeam = this.selectedRow;
+        this.teamService.selectedTeam = this.selectedTeam;
 
         this.gotoDetailView();
     }

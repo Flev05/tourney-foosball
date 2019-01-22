@@ -71,12 +71,12 @@ export class ClientDetailView extends AbstractDetailView {
         }
 
         this.clientFormGroup = this.fb.group({
-            'firstname': new FormControl(this.selectedClient.firstname),
-            'lastname': new FormControl(this.selectedClient.lastname),
+            // 'firstname': new FormControl(this.selectedClient.firstname),
+            // 'lastname': new FormControl(this.selectedClient.lastname),
             'businessName': new FormControl(this.selectedClient.businessName),
             
             'phoneNumber': new FormControl(this.selectedClient.phoneNumber, Validators.compose([Validators.required])),
-            'email': new FormControl(this.selectedClient.email, Validators.compose([Validators.required])),
+            'email'  : new FormControl(this.selectedClient.email, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedClient.address),
             'country': new FormControl(this.selectedClient.country),
             'siteUrl': new FormControl(this.selectedClient.siteUrl),
@@ -85,8 +85,8 @@ export class ClientDetailView extends AbstractDetailView {
 
     onSubmit(value: string) {
 
-        this.selectedClient.firstname = this.clientFormGroup.get('firstname').value;
-        this.selectedClient.lastname = this.clientFormGroup.get('lastname').value;
+        // this.selectedClient.firstname = this.clientFormGroup.get('firstname').value;
+        // this.selectedClient.lastname = this.clientFormGroup.get('lastname').value;
         this.selectedClient.businessName = this.clientFormGroup.get('businessName').value;
 
         this.isNamingError = false;

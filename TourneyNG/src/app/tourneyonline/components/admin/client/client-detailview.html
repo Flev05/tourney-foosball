@@ -29,7 +29,8 @@
         
 <form [formGroup]="clientFormGroup" (ngSubmit)="onSubmit(clientFormGroup.value)">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
+
+        <!-- <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Nome *:
             </div>
@@ -59,20 +60,20 @@
                     Il cognome è obbligatorio senza ragione sociale
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
-                Ragione Sociale**:
+                Nominativo*:
             </div>
             <div class="ui-grid-col-6">
-                <input pInputText type="text" formControlName="businessName" placeholder="Obbligatoria senza nome e cognome"/>
+                <input pInputText type="text" formControlName="businessName" placeholder="Nome e cognome o ragione sociale"/>
             </div>
             <div class="ui-grid-col-4">
                 <div class="ui-message ui-messages-error ui-corner-all" 
                     *ngIf="isNamingError">
                     <i class="fa fa-close"></i>
-                    La ragione sociale è obbligatoria senza nome e cognome
+                    Il nominativo del cliente è obbligatorio
                 </div>
             </div>
         </div>

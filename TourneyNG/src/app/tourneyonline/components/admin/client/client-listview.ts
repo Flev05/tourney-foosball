@@ -38,9 +38,9 @@ export class ClientListView extends AbstractListView {
         this.clientService.newClient = false;
 
         this.cols = [
-            { field: 'firstname',    header: 'Nome' },
-            { field: 'lastname',     header: 'Cognome' },
-            { field: 'businessName', header: 'Ragione Sociale' },
+            // { field: 'firstname',    header: 'Nome' },
+            // { field: 'lastname',     header: 'Cognome' },
+            { field: 'businessName', header: 'Nominativo' },
             { field: 'phoneNumber',  header: 'Telefono' }
         ];
 
@@ -63,9 +63,9 @@ export class ClientListView extends AbstractListView {
 
     create() {
         this.selectedClient={
-              firstname: ""
-            , lastname: ""
-            , businessName: ""
+            //   firstname: ""
+            // , lastname: ""
+            businessName: ""
             , phoneNumber: ""
         };
         this.clientService.selectedClient = this.selectedClient;

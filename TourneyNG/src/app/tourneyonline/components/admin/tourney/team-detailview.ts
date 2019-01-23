@@ -77,19 +77,6 @@ export class TeamDetailView extends AbstractDetailView {
                 + " (" + this.selectedTeam.country.provinceCode +")";
         }
     }
-
-    // onSubmit(value: string) {
-
-    //     this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
-    //     this.selectedTeam.players = this.teamFormGroup.get('targetPlayers').value;
-
-    //     if(this.teamService.newTeam) {
-    //         this.teamService.newTeam = false;
-    //         this.selectedTourney.teams.push(this.selectedTeam);
-    //     }
-
-    //     this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-    // }
  
     onError(n:any) {
         let msgerr: string = 'Creazione/Modifica nuova squadra fallita';

@@ -6,6 +6,7 @@ import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abs
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -14,11 +15,12 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
     static redirect = '/classification/lv';
 
     constructor(protected tourneyService: TourneyService
+        , protected playerService : PlayerService
         , public router: Router
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(ClassificationTourneyListView.redirect, tourneyService, router, loc, dfp);
+        super(ClassificationTourneyListView.redirect, tourneyService, playerService, router, loc, dfp);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

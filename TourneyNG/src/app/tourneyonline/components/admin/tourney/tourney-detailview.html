@@ -127,7 +127,6 @@
         <ul>
             <li>Generalità</li>
             <li>Specificità</li>
-            <li>Giocatori</li>
             <li>Squadre</li>
             <li>Gironi</li>
             <li>Playoff</li>
@@ -279,13 +278,7 @@
             In un campionato CSI di calcio balilla si disputano tutte le 9 partite dell'incontro perchè si assegna un punto
             per ciascuna partita vinta.
         </p>
-        
-        <h3>Giocatori</h3>
-        <p>
-            Selezionare, con la spunta sulla check box, il sottoinsieme di giocatori che componono il torneo dal pool dei giocatori esistenti.
-            Solo i giocatori con il segno di spunta faranno parte del torneo.
-        </p>
-
+  
         <h3>Squadre</h3>
         <p>
             Selezionare i nomi delle squadre che parteciperanno al torneo apponendo il segno di spunta sulla sinistra della riga.
@@ -509,60 +502,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div *ngIf="containsPhase('round')" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Gironi all'italiana:
-                    </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
-                            pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
-                        <div class="ui-g radiobuttons">
-                            <div class="ui-g-12">
-                                <p-radioButton name="isOnewayRoundGroupname" 
-                                    label="Solo andata" 
-                                    value="true" 
-                                    formControlName="isOnewayRound"
-                                    (onClick)="onOnewayRoundClick()">
-                                </p-radioButton>
-                            </div>
-                            <div class="ui-g-12">
-                                <p-radioButton name="isOnewayRoundGroupname" 
-                                    label="Andata e ritorno" 
-                                    value="false" 
-                                    formControlName="isOnewayRound"
-                                    (onClick)="onRoundtripRoundClick()">
-                                </p-radioButton>
-                            </div>
-                        </div>
-                    </div>
-                </div>                          
-
-                <div *ngIf="containsPhase('playoff')" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        Playoff:
-                    </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
-                            pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
-                        <div class="ui-g radiobuttons">
-                            <div class="ui-g-12">
-                                <p-radioButton name="isOnewayGroupname" 
-                                    label="Solo andata" 
-                                    value="true" 
-                                    formControlName="isOnewayPlayoff"
-                                    (onClick)="onOnewayPlayoffClick()">
-                                </p-radioButton>
-                            </div>
-                            <div class="ui-g-12">
-                                <p-radioButton name="isOnewayGroupname" 
-                                    label="Andata e ritorno" 
-                                    value="false" 
-                                    formControlName="isOnewayPlayoff"
-                                    (onClick)="onRoundtripPlayoffClick()">
-                                </p-radioButton>
-                            </div>
-                        </div>
-                    </div>
-                </div>                          
             </p-fieldset>
                 
             <p-fieldset legend="Punteggi">
@@ -701,6 +640,7 @@
         </p-tabPanel>
 
         <p-tabPanel header="Squadre">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <p-table [columns]="teamCols"
                     [value]="tourneyTeams"
                     [responsive]="true"
@@ -742,6 +682,7 @@
                     </div>
                 </ng-template>        
             </p-table>
+            </div>
         </p-tabPanel>
 
         <p-tabPanel header="Gironi" *ngIf="containsRound()">    
@@ -752,52 +693,94 @@
                         Vista elenco di tutti i gironi che compongono il torneo.
                     </p>
                     <p>
-                        Scegliere, dalla combo box Giocatori, il numero effettivo iniziale dei giocatori del torneo.
+                        Scegliere, dalla combo box Squadre, il numero effettivo iniziale delle squadre del torneo.
                     </p>
                     <p>
                         Scegliere, dalla combo box Gironi, il numero di gironi all'italiana del torneo.
                     </p>
                     <p>
                         In funzione di queste 2 scelte il sistema propone una compilazione d'ufficio di ciascun girone.
-                        Potete modificare il contenuto del girone spostando i giocatori presenti al suo interno
+                        Potete modificare il contenuto del girone spostando le squadre presenti al suo interno
                         dall'area dei Selezionati a quella dei Disponibile ed assegnarli ad altri gironi.
+                    </p>
+                    <p>
+                        ATTENZIONE! A fronte di una modifica al numero di squadre o gironi, si perderanno irrimediabilmente 
+                        tutte le precedenti impostazioni.
                     </p>
                 </p-accordionTab>
             </p-accordion>   
 
-            <div class="ui-grid-row">
+            <div *ngIf="!atLeastTwoTeams" style="margin-top:30px">
+                <p-message 
+                    severity="error" 
+                    text="Attenzione! Devono essere configurate almento 2 squadre per il torneo!">
+                </p-message>
+            </div>     
+
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Gironi all'italiana:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
+                    <div class="ui-g radiobuttons">
+                        <div class="ui-g-12">
+                            <p-radioButton name="isOnewayRoundGroupname" 
+                                label="Solo andata" 
+                                value="true" 
+                                formControlName="isOnewayRound"
+                                (onClick)="onOnewayRoundClick()">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-g-12">
+                            <p-radioButton name="isOnewayRoundGroupname" 
+                                label="Andata e ritorno" 
+                                value="false" 
+                                formControlName="isOnewayRound"
+                                (onClick)="onRoundtripRoundClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                </div>
+            </div>                          
+
+            <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:
                 </div>
-                <div class="ui-grid-col-4" tooltipPosition="right" 
+                <div class="ui-grid-col-3" tooltipPosition="right" 
                         pTooltip="Scegliere il numero iniziale di squadre impiegate nel torneo">
                     <p-dropdown id="teamsId" 
                         [options]="team4roundsCombobox" 
-                        [(ngModel)]="selectedTeam4roundsNumCombobox"  
+                        formControlName="selectedTeam4roundsNumCombobox"  
                         optionLabel="label"
                         (onChange)="onTeam4roundNumChange($event.value)" 
-                        placeholder="Seleziona">
+                        placeholder="Seleziona"
+                        [autoWidth]="false">
                     </p-dropdown>
                 </div>
             </div>
 
-            <div class="ui-grid-row">
+            <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Gironi:
                 </div>
-                <div class="ui-grid-col-4" tooltipPosition="right" 
+                <div class="ui-grid-col-3" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di gironi che compone il torneo">
                     <p-dropdown id="roundId" 
                         [options]="roundsCombobox" 
-                        [(ngModel)]="selectedRoundsNumCombobox"  
+                        formControlName="selectedRoundsNumCombobox"  
                         optionLabel="label"
                         (onChange)="onRoundNumChange($event.value)" 
-                        placeholder="Seleziona">
+                        placeholder="Seleziona"
+                        [autoWidth]="false">
                     </p-dropdown>
                 </div>
             </div>
     
-            <p-table [columns]="roundCols"
+            <p-table *ngIf="atLeastTwoTeams" 
+                    [columns]="roundCols"
                     [value]="roundRows"
                     [responsive]="true"
                     selectionMode="single" 
@@ -828,21 +811,104 @@
                         </td>                
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="summary" let-rowData>
-                    <div style="text-align:left">
-                        <button label="Aggiungi Girone"
-                            [disabled]="!tourneyFormGroup.valid || notAllowedPhases()" 
-                            pButton icon="fa fa-plus" 
-                            type="button" 
-                            (click)="addRound()">
-                        </button>
-                    </div>
-                </ng-template>        
             </p-table>
+            </div>
         </p-tabPanel>
     
         <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
-            <p-table [columns]="playoffCols"
+            <p-accordion>
+                <p-accordionTab header="Istruzioni">              
+                    <p>
+                        Vista elenco dei gironi di playoff del torneo.
+                    </p>
+                    <p>
+                        Scegliere, dalla combo box Squadre, il numero totale di squadre che passerà il turno dai gironi ai playoff.
+                    </p>
+                    <p>
+                        Scegliere, dalla combo box Gironi, il numero di gironi di playoff che si intende impostare per il torneo.
+                    </p>
+                    <p>
+                        In funzione di queste 2 scelte il sistema propone una compilazione d'ufficio delle regole di 
+                        passaggio del turno dai gironi all'italiana ai playoff.
+                        Potete modificare il contenuto del girone modificando le regole presenti.
+                    </p>
+                    <p>
+                        ATTENZIONE! A fronte di una modifica al numero di squadre o gironi, si perderanno irrimediabilmente 
+                        tutte le impostazioni precedenti.
+                    </p>
+                </p-accordionTab>
+            </p-accordion>        
+
+            <div *ngIf="!atLeastTwoRounds" style="margin-top:30px">
+                <p-message 
+                    severity="error" 
+                    text="Attenzione! Devono essere configurati almento 2 gironi all'italiana per il torneo!">
+                </p-message>
+            </div>     
+
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div *ngIf="atLeastTwoRounds" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Playoff:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
+                    <div class="ui-g radiobuttons">
+                        <div class="ui-g-12">
+                            <p-radioButton name="isOnewayGroupname" 
+                                label="Solo andata" 
+                                value="true" 
+                                formControlName="isOnewayPlayoff"
+                                (onClick)="onOnewayPlayoffClick()">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-g-12">
+                            <p-radioButton name="isOnewayGroupname" 
+                                label="Andata e ritorno" 
+                                value="false" 
+                                formControlName="isOnewayPlayoff"
+                                (onClick)="onRoundtripPlayoffClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+
+            <div *ngIf="atLeastTwoRounds" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Squadre:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right" 
+                        pTooltip="Scegliere il numero totale di squadre che passerà il turno dai gironi ai playoff">
+                    <p-dropdown id="teamsRoundId" 
+                        [options]="team4playoffsCombobox" 
+                        formControlName="selectedTeam4playoffsNumCombobox"  
+                        optionLabel="label"
+                        (onChange)="onTeam4playoffNumChange($event.value)" 
+                        placeholder="Seleziona"
+                        [autoWidth]="false">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div *ngIf="atLeastTwoRounds" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Gironi:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right" 
+                        pTooltip="Scegliere il numero di gironi che andrà a comporre la fase dei playoff per il torneo">
+                    <p-dropdown id="playoffId" 
+                        [options]="playoffsCombobox" 
+                        formControlName="selectedPlayoffsNumCombobox"  
+                        optionLabel="label"
+                        (onChange)="onPlayoffNumChange($event.value)" 
+                        placeholder="Seleziona"
+                        [autoWidth]="false">
+                    </p-dropdown>
+                </div>
+            </div>
+            
+            <p-table *ngIf="atLeastTwoRounds" [columns]="playoffCols"
                 [value]="playoffRows"
                 [responsive]="true"
                 selectionMode="single" 
@@ -872,17 +938,8 @@
                         </td>                
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="summary" let-rowData>
-                    <div style="text-align:left">
-                        <button label="Aggiungi Playoff"
-                            [disabled]="!tourneyFormGroup.valid || notAllowedPhases()" 
-                            pButton icon="fa fa-plus" 
-                            type="button" 
-                            (click)="addPlayoff()">
-                        </button>
-                    </div>
-                </ng-template>        
             </p-table>
+            </div>
         </p-tabPanel>
 
         <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">  
@@ -1008,24 +1065,27 @@
             </p-accordionTab>
             </p-accordion>
                         
-            <div style="margin-top:30px">
-                <p-message *ngIf="incompleteConfiguration" 
+            <div *ngIf="incompleteConfiguration" style="margin-top:30px">
+                <p-message  
                     severity="error" 
-                    text="Attenzione! Non non è stato inserito ancora nessun risultato!">
+                    text="Attenzione! Devono essere prima completate le configurazioni delle fasi precedenti!">
                 </p-message>
             </div>     
+
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:
                 </div>
-                <div class="ui-grid-col-4" tooltipPosition="right" 
+                <div class="ui-grid-col-2" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di squadre iniziali delle eliminazioni dirette, anche tutte">
-                    <p-dropdown id="teamsId" 
+                    <p-dropdown id="teamsPlayoffId" 
                         [options]="teamsCombobox" 
-                        [(ngModel)]="selectedTeamsNumCombobox"  
+                        formControlName="selectedTeamsNumCombobox"  
                         optionLabel="label"
                         (onChange)="onTeamNumChange($event.value)" 
-                        placeholder="Seleziona">
+                        placeholder="Seleziona"
+                        [autoWidth]="false">
                     </p-dropdown>
                 </div>
             </div>
@@ -1055,7 +1115,7 @@
                     </tr>
                 </ng-template>
             </p-table>
-
+            </div>
         </p-tabPanel>            
     </p-tabView>
 

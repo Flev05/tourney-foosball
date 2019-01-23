@@ -65,12 +65,18 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
         this.selectedMeeting.datetime = new Date(dt);
 
+        if( !this.selectedTourney.isOnewayRound ) {
+            let rtDateTime = this.selectedPlayoff.round.meetings[1].datetime;
+            if(rtDateTime < this.selectedMeeting.datetime) {
+                this.selectedPlayoff.round.meetings[1].datetime = this.selectedMeeting.datetime;
+            }
+        }
+
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
 
-        this.tourneyService.updatePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
-
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        // this.tourneyService.updatePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  
     onError(n:any) {

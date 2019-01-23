@@ -6,6 +6,7 @@ import { AbstractTourneyListView } from '../../common/abstract-tourney-listview'
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 
 const redirect = '/adminteam/lv';
 
@@ -14,11 +15,12 @@ const redirect = '/adminteam/lv';
 })
 export class TeamTourneyListView extends AbstractTourneyListView {
     constructor(protected tourneyService: TourneyService
+        , protected playerService : PlayerService
         , public router: Router
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(redirect, tourneyService, router, loc, dfp);
+        super(redirect, tourneyService, playerService, router, loc, dfp);
     }
 
     ngOnInit() {

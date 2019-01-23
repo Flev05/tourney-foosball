@@ -8,6 +8,7 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 
@@ -21,9 +22,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
+        , protected playerService : PlayerService
         , public router: Router
         , protected location: Location
-        , private dateFormatPipe: DateFormatPipe) { 
+        , private dateFormatPipe: DateFormatPipe) 
+    { 
         super(redirect, tourneyService, router, location);
     }
 
@@ -66,6 +69,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             let dt = this.dateFormatPipe.transform(t.datetime);
             this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: dt});
         }
+        this.playerService.loadAllPlayers().subscribe(t => this.selectedTourney.players = t, e => this.onError(e));
     }
 
     protected abstract filter(tourneys: Tourney[]): Tourney[];

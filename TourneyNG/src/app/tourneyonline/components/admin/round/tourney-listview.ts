@@ -7,6 +7,7 @@ import { TourneyService } from '../../../service/tourney-service';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 
 const redirect = '/adminround/lv';
 
@@ -15,11 +16,12 @@ const redirect = '/adminround/lv';
 })
 export class RoundTourneyListView extends AbstractTourneyListView {
     constructor(protected tourneyService: TourneyService
+        , protected playerService : PlayerService
         , public router: Router
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(redirect, tourneyService, router, loc, dfp);
+        super(redirect, tourneyService, playerService, router, loc, dfp);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

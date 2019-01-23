@@ -10,6 +10,7 @@ import { TourneyService } from '../../../service/tourney-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './meeting-detailview.html',
@@ -69,9 +70,15 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
 
-        this.tourneyService.updateRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
+        if( !this.selectedTourney.isOnewayRound ) {
+            let rtDateTime = this.selectedRound.meetings[1].datetime;
+            if(rtDateTime < this.selectedMeeting.datetime) {
+                this.selectedRound.meetings[1].datetime = this.selectedMeeting.datetime;
+            }
+        }
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        // this.tourneyService.updateRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  
     onError(n:any) {

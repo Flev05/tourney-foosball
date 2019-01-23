@@ -46,7 +46,6 @@ export class MeetingListView extends AbstractListView {
         this.atLeast2teams = this.meetings.length > 0 ? true : false;
 
         this.cols = [
-            { field: 'rowNumber',   header: 'N°' },
             { field: 'dateAndTime', header: 'Data/Ora' },
             { field: 'direction',   header: 'A/R' },
             { field: 'name',        header: 'Incontro' }
@@ -55,9 +54,22 @@ export class MeetingListView extends AbstractListView {
         this.rows = [];
         for(let i=0;i<this.meetings.length; i++) {
             let m = this.meetings[i];
-            let dt = this.dateFormatPipe.transform(m.datetime);
-            this.rows.push({m:m, rowNumber: i+1, dateAndTime: dt, direction: m.direction, name: m.name});
+            if( m.direction == Direction.OneWay) {
+                let dt = this.dateFormatPipe.transform(m.datetime);
+                this.rows.push({m:m, dateAndTime: dt, direction: m.direction, name: m.name});
+            }
         }
+
+        if( !this.selectedTourney.isOnewayRound ) {
+            for(let i=0;i<this.meetings.length; i++) {
+                let m = this.meetings[i];
+                if( m.direction == Direction.RoundTrip) {
+                    let dt = this.dateFormatPipe.transform(m.datetime);
+                    this.rows.push({m:m, dateAndTime: dt, direction: m.direction, name: m.name});
+                }
+            }
+        }
+
         this.rows = this.sortMeetings(this.rows);
     }
 

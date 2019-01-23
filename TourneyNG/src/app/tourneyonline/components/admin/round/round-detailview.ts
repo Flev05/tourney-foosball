@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 
 
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
-import { Router } from '@angular/router';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Round } from 'app/tourneyonline/domain/round';

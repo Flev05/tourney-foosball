@@ -7,6 +7,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 
 @Component({
     templateUrl: './tourney-listview.html'       
@@ -15,11 +16,12 @@ export class PlayoffTourneyListView extends AbstractTourneyListView {
     static redirect = '/adminplayoff/lv';
 
     constructor(protected tourneyService: TourneyService
+        , protected playerService : PlayerService
         , public router: Router
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(PlayoffTourneyListView.redirect, tourneyService, router, loc, dfp);
+        super(PlayoffTourneyListView.redirect, tourneyService, playerService, router, loc, dfp);
     }
 
     ngOnInit() {

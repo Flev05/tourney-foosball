@@ -20,7 +20,6 @@ const teamUrl = 'api/teams';  // URL to web api
 export class TeamService {
 
     selectedTeam : Team;
-
     newTeam : boolean = false;
 
     static cols: TableCols[] = [

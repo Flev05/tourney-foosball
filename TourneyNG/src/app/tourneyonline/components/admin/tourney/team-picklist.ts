@@ -10,9 +10,9 @@ import { TeamListView } from '../team/team-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
-    templateUrl: './add-team-listview.html',
+    templateUrl: './team-picklist.html',
 })
-export class AddTeamListView extends AbstractListView {
+export class TeamPickList extends AbstractListView {
 
     teamPool: Team[];
     teamCols: TableCols[] = TeamService.cols;
@@ -27,7 +27,7 @@ export class AddTeamListView extends AbstractListView {
     }
 
     ngOnInit() {
-        console.log("AddTeamListView.ngOnInit() ");
+        console.log("TeamPickList.ngOnInit() ");
         super.ngOnInit();
         this.prepareAvailableTeams();
     }
@@ -47,19 +47,6 @@ export class AddTeamListView extends AbstractListView {
             }
         }
     }
-
-    // save(value: string) {
- 
-    //     if(this.teamService.newTeam) {
-    //         this.teamService.newTeam = false;
-    //     }
-
-    //     for(let t of this.selectedTourney.selectedTeams) {
-    //         this.selectedTourney.teams.push(t);
-    //     }
-
-    //     this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
-    // }
  
     newTeam() {
         this.teamService.newTeam = true;

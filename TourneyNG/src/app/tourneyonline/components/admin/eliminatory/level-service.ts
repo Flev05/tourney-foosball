@@ -40,7 +40,7 @@ export class LevelService extends AbstractEliminatoryListView {
         this.rows = [];
         for (let i = 0; i < this.eliminatoryLevels.length; i++) {
             let el = this.eliminatoryLevels[i];
-            this.rows.push({ el: el, rowNumber: i + 1, level: el.level == -1 ? 2 : this.pow2(el.level), name: el.name });
+            this.rows.push({ el: el, level: el.level == -1 ? 2 : this.pow2(el.level), name: el.name });
         }
     }
 

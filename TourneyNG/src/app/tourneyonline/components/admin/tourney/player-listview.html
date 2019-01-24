@@ -1,0 +1,99 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Squadra</span>
+        <span>Vista di dettaglio di una squadra del torneo</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>
+            La vista contiene l'elenco dei giocatori della squadra selezionata.
+            Potete effettuare le seguenti operazioni:
+        </p>
+        <ul>
+            <li>Aggiungi nuovo giocatore</li>
+            <li>Aggiornare lista giocatori</li>
+        </ul>        
+
+        <h4>Aggiungi nuovo giocatore</h4>
+        <p>
+            Con il bottone Aggiungi Giocatore, potete creare un nuovo giocatore non presente nella lista
+            dei giocatori esistenti, visibili alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
+        </p>
+        <p>
+            Il giocatore così creato farà parte della squadra selezionata e del pool di giocatori disponibili per tutti
+            i tornei.
+        </p>
+        <p>
+            Alla fine dell'operazione dovete salvare esplicatmente con il bottone Salva
+        </p>
+    
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<h3><span>Squadra: {{selectedTeam.teamName}}</span></h3>
+<h4><span>Torneo: {{selectedTeam.teamName}}</span></h4>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
+
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p-table 
+        [columns]="playerCols" 
+        [value]="selectedTeam.players" 
+        selectionMode="single" 
+        [(selection)]="selectedPlayerRow" 
+        (onRowSelect)="onPlayerRowSelect($event)"
+        [responsive]="true" 
+        [scrollable]="true" 
+        scrollHeight="500px">
+    
+        <ng-template pTemplate="caption">
+            <div style="text-align:left">
+                <button pButton icon="fa fa-plus" type="button" (click)="newPlayer()" label="Aggiungi Giocatore" ></button>
+            </div>
+        </ng-template>
+    
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th>N°</th>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+                <td>{{rowIndex+1}}</td>
+                <td *ngFor="let col of columns">
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>  
+    
+        <ng-template pTemplate="summary">
+            <div style="text-align:left">
+                <button pButton icon="fa fa-plus" type="button" (click)="newPlayer()" label="Aggiungi Giocatore" ></button>
+            </div>
+        </ng-template>
+    </p-table>
+    
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <button class="ui-button-success" pButton type="button" icon="pi pi-save" label="Aggiorna Lista" 
+                (click)="updateTeamList()"></button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+ 

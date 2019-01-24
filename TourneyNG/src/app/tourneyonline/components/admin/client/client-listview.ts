@@ -63,8 +63,6 @@ export class ClientListView extends AbstractListView {
 
     create() {
         this.selectedClient={
-            //   firstname: ""
-            // , lastname: ""
             businessName: ""
             , phoneNumber: ""
         };
@@ -76,7 +74,7 @@ export class ClientListView extends AbstractListView {
     doDelete(client: Client) {
         console.log(client);
         this.selectedClient= client;
-        let name = client.firstname != "" ? client.firstname + " " + client.lastname: client.businessName;
+        let name =  client.businessName;
         let popup = 'Sicuro di voler rimuovere il cliente: [' + name + "]?";
 
         this.onDeleteError = false;

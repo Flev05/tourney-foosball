@@ -40,8 +40,7 @@ export class PlayerDetailView extends AbstractDetailView {
         this.selectedPlayer = this.playerService.selectedPlayer;
 
         if(this.playerService.newPlayer) {
-            this.selectedPlayer.firstname = "";
-            this.selectedPlayer.lastname = "";
+            this.selectedPlayer.playerName = "";
             this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
         }
 
@@ -52,8 +51,7 @@ export class PlayerDetailView extends AbstractDetailView {
         }
 
         this.playerFormGroup = this.fb.group({
-            'firstname': new FormControl(this.selectedPlayer.firstname, Validators.compose([Validators.required])),
-            'lastname': new FormControl(this.selectedPlayer.lastname, Validators.compose([Validators.required])),
+            'playerName': new FormControl(this.selectedPlayer.playerName, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedPlayer.address),
             'country': new FormControl(this.selectedPlayer.country),
             'phoneNumber': new FormControl(this.selectedPlayer.phoneNumber),
@@ -63,8 +61,7 @@ export class PlayerDetailView extends AbstractDetailView {
 
     onSubmit(value: string) {
 
-        this.selectedPlayer.firstname = this.playerFormGroup.get('firstname').value;
-        this.selectedPlayer.lastname = this.playerFormGroup.get('lastname').value;
+        this.selectedPlayer.playerName = this.playerFormGroup.get('playerName').value;
         this.selectedPlayer.address = this.playerFormGroup.get('address').value;
         this.selectedPlayer.country = this.playerFormGroup.get('country').value;
 

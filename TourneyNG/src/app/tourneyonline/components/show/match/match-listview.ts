@@ -42,7 +42,7 @@ export class MatchListView implements OnInit {
             t2 = "";
             let m: Match = this.matches[j];
             for(let i=0; i<m.players1.length; i++) {
-                t1 += m.players1[i].firstname + " " + m.players1[i].lastname;
+                t1 += m.players1[i].playerName;
                 if(i < m.players1.length-1) {
                     t1 += ", ";
                 }
@@ -50,7 +50,7 @@ export class MatchListView implements OnInit {
             console.log(t1);
 
             for(let i=0; i<m.players2.length; i++) {
-                t2 += m.players2[i].firstname + " " + m.players2[i].lastname;
+                t2 += m.players2[i].playerName;
                 if(i < m.players2.length-1) {
                     t2 += ", ";
                 }

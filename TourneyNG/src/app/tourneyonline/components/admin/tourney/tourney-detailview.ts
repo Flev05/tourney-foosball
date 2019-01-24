@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Direction, RoundType, MeetingStatus } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Direction, RoundType } from '../../../domain/enumerations';
 import { Message } from 'app/components/common/api';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Discipline } from 'app/tourneyonline/domain/discipline';
@@ -20,8 +20,6 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { LevelService } from '../eliminatory/level-service';
-import { TeamsPool } from 'app/tourneyonline/in-memory-data-service/teams-pool';
-import { ClassificationTabListView } from '../../show/classification/tab-listview';
 import { Classification } from 'app/tourneyonline/domain/classification';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
@@ -591,7 +589,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.selectedTourney.playoffs = [];
         for(let i=0; i<R; i++) {
-            let p: Playoff = this.preparePlayoff(i, teamsPerPlayoff, randomTeams);
+            let p: Playoff = this.preparePlayoffRule(i, teamsPerPlayoff, randomTeams);
             this.selectedTourney.playoffs.push(p);
         }
         for(let r=0; r<teamsModPlayoff; r++) {
@@ -607,6 +605,11 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.roundRows = this.selectedTourney.rounds;
     }
+    
+    private preparePlayoffRule(i: number, teamsPerPlayoff: number, randomTeams: Team[]): Playoff {
+        throw new Error("Method not implemented.");
+    }
+
     onEliminatoryRowSelect(event) {
         this.levelService.selectedRow = this.eliminatorySelectedRow;
         this.levelService.onRowSelect(event);

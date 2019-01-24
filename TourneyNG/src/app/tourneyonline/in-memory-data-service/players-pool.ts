@@ -4,70 +4,70 @@ import { Team } from "app/tourneyonline/domain/team";
 export class PlayersPool {
 
 static players: Player[] = [
-          {id:1, firstname:"Salvatore", lastname:"Amoroso", address:""
+          {id:1, playerName:"Salvatore Amoroso", address:""
           ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
           }
-          ,{id:2, firstname:"Luciano",   lastname:"Martino", address:"Via Nilde Iotti, 8"
+          ,{id:2, playerName:"Luciano Martino", address:"Via Nilde Iotti, 8"
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-          ,{id:3, firstname:"Raimondo",  lastname:"Brancaccio", address:""
+          ,{id:3, playerName:"Raimondo Brancaccio", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-          ,{id:4, firstname:"Roberto",   lastname:"Bergamaschi", address:""
+          ,{id:4, playerName:"Roberto Bergamaschi", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-          ,{id:5, firstname:"Valter",    lastname:"Bergamaschi", address:""
+          ,{id:5, playerName:"Valter Bergamaschi", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-          ,{id:6, firstname:"Emilio",    lastname:"Cattaneo", address:""
+          ,{id:6, playerName:"Emilio Cattaneo", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:7, firstname:"Orlando",     lastname:"Zambrella", address:""
+            ,{id:7, playerName:"Orlando Zambrella", address:""
             ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:8, firstname:"Mirko",     lastname:"Cuschera", address:""
+            ,{id:8, playerName:"Mirko Cuschera", address:""
             ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:9, firstname:"Andrea",     lastname:"Mangione", address:""
+            ,{id:9, playerName:"Andrea Mangione", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:10, firstname:"Antonio",     lastname:"Pietroforte", address:""
+            ,{id:10, playerName:"Antonio Pietroforte", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:11, firstname:"Mirko",     lastname:"Boniotti", address:""
+            ,{id:11, playerName:"Mirko Boniotti", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:12, firstname:"Andrea",     lastname:"Procopio", address:""
+            ,{id:12, playerName:"Andrea Procopio", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:13, firstname:"Claudio",     lastname:"Boniotti", address:""
+            ,{id:13, playerName:"Claudio Boniotti", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:14, firstname:"Salvo",     lastname:"De Luca", address:""
+            ,{id:14, playerName:"Salvo De Luca", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:15, firstname:"Andrea",     lastname:"Di Maria", address:""
+            ,{id:15, playerName:"Andrea Di Maria", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:16, firstname:"Antonino",     lastname:"Scarpaci", address:""
+            ,{id:16, playerName:"Antonino Scarpaci", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:17, firstname:"Michele",     lastname:"Monteleone", address:""
+            ,{id:17, playerName:"Michele Monteleone", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:18, firstname:"Alessio",     lastname:"Lioy", address:""
+            ,{id:18, playerName:"Alessio Lioy", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:19, firstname:"Salvatore",     lastname:"Cavaliere", address:""
+            ,{id:19, playerName:"Salvatore Cavaliere", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:20, firstname:"Giuseppe",     lastname:"Lombardo", address:""
+            ,{id:20, playerName:"Giuseppe Lombardo", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-            ,{id:21, firstname:"Savino",     lastname:"Caporale", address:""
+            ,{id:21, playerName:"Savino Caporale", address:""
               ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
             }
-          ,{id:22, firstname:"Pino",     lastname:"Selini", address:""
+          ,{id:22, playerName:"Pino Selini", address:""
             ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
           }
     ];
@@ -93,7 +93,7 @@ static players: Player[] = [
     for(let i=0; i<N*2; i+=2 ) {
       let t : Team = {
         id: i
-        , teamName: PlayersPool.players[i].lastname + " - " + PlayersPool.players[i+1].lastname
+        , teamName: PlayersPool.players[i].playerName
         , address: PlayersPool.players[i].address
         , country: PlayersPool.players[i].country
         , players: [PlayersPool.players[i],PlayersPool.players[i+1]]

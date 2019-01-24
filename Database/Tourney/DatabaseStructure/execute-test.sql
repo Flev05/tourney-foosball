@@ -6,7 +6,7 @@
 
 set search_path to tourney;
 
-\cd ../../DatabaseCommons/DatabaseStructure/user/create
+\cd ./user/create
 
 SET default_tablespace = "TourneyTestData";
 
@@ -18,7 +18,7 @@ SET default_tablespace = "TourneyTestIndex";
 
 \i execute-alter.sql
 
-\cd ../../../DatabaseStructure/tourney/create
+\cd ../../tourney/create
 
 SET default_tablespace = "TourneyTestData";
 

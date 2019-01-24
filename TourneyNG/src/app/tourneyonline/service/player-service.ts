@@ -18,12 +18,12 @@ const playerUrl = 'api/players';  // URL to web api
 
 @Injectable()
 export class PlayerService {
+    playerPool: Player[];
     selectedPlayer : Player;
     newPlayer : boolean = false;
     
     static cols: TableCols[]  = [
-        { field: 'firstname',   header: 'Nome' },
-        { field: 'lastname',    header: 'Cognome' },
+        { field: 'playerName',   header: 'Nome' },
         { field: 'phoneNumber', header: 'Telefono' },
         { field: 'email',       header: 'Email' }
     ];
@@ -31,7 +31,6 @@ export class PlayerService {
     constructor(private http: HttpClient, private loginService: LoginService, private clientService: ClientService) { 
         console.log("Constructor of PlayerService");
     }
-
 
     loadAllPlayers (): Observable<Player[]> {
 

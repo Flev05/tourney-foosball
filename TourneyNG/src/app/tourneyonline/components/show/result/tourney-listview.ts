@@ -6,6 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 const redirect = '/result/lv';
 
@@ -15,11 +16,12 @@ const redirect = '/result/lv';
 export class ResultTourneyListView extends AbstractTourneyListView {
     constructor(protected tourneyService: TourneyService
         , protected playerService : PlayerService
+        , protected teamService : TeamService
         , public router: Router
         , public location: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(redirect, tourneyService, playerService, router, location,dfp);
+        super(redirect, tourneyService, playerService, teamService, router, location,dfp);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

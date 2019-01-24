@@ -4,8 +4,7 @@ export interface Player
 {
     id?             : number;
     clientId?       : number;
-    firstname?      : string;
-    lastname?       : string;
+    playerName?      : string;
     address?        : string;
     phoneNumber?    : string;
     email?          : string;

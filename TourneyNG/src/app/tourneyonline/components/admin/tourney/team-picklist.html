@@ -12,6 +12,8 @@
             Da questa vista potete aggiungere una o più squadra selezionandole da quelle disponibili.
             Se la squadra non esiste, la potete creare con il bottone Nuova Squadra
         </p>
+        <p>
+        </p>
     </p-accordionTab>
 </p-accordion>
 </div>
@@ -48,50 +50,3 @@
 
 </div>
 
-<!-- <div class="content-section implementation">
-<p-table [columns]="teamCols" 
-        [value]="availableTeams" 
-        [(selection)]="selectedTourney.selectedTeams" 
-        dataKey="teamName"
-        [responsive]="true"
-        [scrollable]="true" 
-        scrollHeight="500px">
-
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th>N°</th>
-            <th>
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>                            
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-        </tr>
-    </ng-template>
-    
-    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-        <tr>
-            <td>{{rowIndex+1}}</td>
-            <td>
-                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-            </td>                            
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
-            </td>
-        </tr>
-    </ng-template>
-
-    <ng-template pTemplate="summary" let-rowData>
-        <div style="text-align:left">
-            <button pButton type="button" icon="fa fa-plus" (click)="newTeam()" label="Nuova Squadra" ></button>
-        </div>
-        <div style="text-align:left">
-            Disponibili: {{availableTeams.length - selectedTourney.selectedTeams.length}} Selezionati: {{selectedTourney.selectedTeams.length}}
-            <ul>
-                <li *ngFor="let t of selectedTourney.selectedTeams; index as i">
-                    {{i+1}} - {{t.teamName}}
-                </li>
-            </ul>
-        </div>  
-    </ng-template>        
-</p-table>         -->

@@ -11,6 +11,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 const REDIRECT = 'admintourney/dv';
 @Component({
@@ -29,11 +30,12 @@ export class TourneyListView extends AbstractTourneyListView {
         , private clientService : ClientService
         , private loginService : LoginService
         , protected playerService : PlayerService
+        , protected teamService : TeamService
         , public router: Router
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(REDIRECT, tourneyService, playerService, router, loc, dfp);
+        super(REDIRECT, tourneyService, playerService, teamService, router, loc, dfp);
     }
 
     ngOnInit() {
@@ -69,7 +71,7 @@ export class TourneyListView extends AbstractTourneyListView {
         this.tourneyService.selectedTourney = this.selectedTourney;
 
         let dt = this.dfp.transform(new Date());
-        this.selectedRow = {t:this.selectedTourney, rowNumber: 1, tourneyName: "", datetime: dt};
+        this.selectedRow = {t:this.selectedTourney, tourneyName: "", datetime: dt};
 
         this.tourneyService.newTourney = true;
 

@@ -28,14 +28,16 @@ import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { CalendarModule } from 'app/components/calendar/calendar';
-import { TeamDetailView } from './team-detailview';
+import { PlayerListView } from './player-listview';
 import { PickListModule } from 'app/components/picklist/picklist';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
-import { AddTeamListView } from './add-team-listview';
+import { TeamPickList } from './team-picklist';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { RoundModule } from '../round/round.module';
 import { PlayoffModule } from '../playoff/playoff.module';
 import { LevelService } from '../eliminatory/level-service';
+import { PlayerModule } from '../player/player.module';
+import { PlayerPickList } from './player-picklist';
 
 @NgModule({
 	imports: [
@@ -67,13 +69,15 @@ import { LevelService } from '../eliminatory/level-service';
         ,MessageModule
 		,TourneyRoutingModule
 		,RoundModule
-		,PlayoffModule
+        ,PlayoffModule
+        ,PlayerModule
 	],
 	declarations: [
         TourneyListView
         ,TourneyDetailView
-        ,TeamDetailView
-        ,AddTeamListView
+        ,PlayerListView
+        ,TeamPickList
+        ,PlayerPickList
     ]
     ,providers: [DateFormatPipe, LevelService]
 })

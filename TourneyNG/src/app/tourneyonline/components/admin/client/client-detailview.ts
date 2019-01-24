@@ -56,9 +56,7 @@ export class ClientDetailView extends AbstractDetailView {
 
         if(this.clientService.newClient) {
             this.selectedClient={
-                firstname: ""
-              , lastname: ""
-              , businessName: ""
+                businessName: ""
               , phoneNumber: ""
               , email: ""
             };
@@ -71,10 +69,7 @@ export class ClientDetailView extends AbstractDetailView {
         }
 
         this.clientFormGroup = this.fb.group({
-            // 'firstname': new FormControl(this.selectedClient.firstname),
-            // 'lastname': new FormControl(this.selectedClient.lastname),
             'businessName': new FormControl(this.selectedClient.businessName),
-            
             'phoneNumber': new FormControl(this.selectedClient.phoneNumber, Validators.compose([Validators.required])),
             'email'  : new FormControl(this.selectedClient.email, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedClient.address),
@@ -84,20 +79,11 @@ export class ClientDetailView extends AbstractDetailView {
     }
 
     onSubmit(value: string) {
-
-        // this.selectedClient.firstname = this.clientFormGroup.get('firstname').value;
-        // this.selectedClient.lastname = this.clientFormGroup.get('lastname').value;
         this.selectedClient.businessName = this.clientFormGroup.get('businessName').value;
 
         this.isNamingError = false;
-        if((this.selectedClient.firstname.trim() != "" && this.selectedClient.lastname.trim()=="") 
-            || (this.selectedClient.firstname.trim() == "" && this.selectedClient.lastname.trim()!="")) 
+        if((this.selectedClient.businessName.trim() != "" ) ) 
         {
-            this.isNamingError = true;
-            return;
-        }
-
-        if(this.selectedClient.firstname.trim()=="" && this.selectedClient.lastname.trim()=="" && this.selectedClient.businessName.trim()=="") {
             this.isNamingError = true;
             return;
         }

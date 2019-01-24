@@ -13,7 +13,6 @@ import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
 import {RoundRoutingModule} from './round-routing.module';
-import {RoundTourneyListView} from './tourney-listview';
 import {RoundListView} from './round-listview';
 import {RoundDetailView} from './round-detailview';
 import { MeetingListView } from './meeting-listview';
@@ -34,7 +33,6 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @NgModule({
 	imports: [
-
 		CommonModule
         ,FormsModule
         ,ReactiveFormsModule
@@ -56,15 +54,14 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
-        ,RoundRoutingModule
         ,AccordionModule
         ,PickListModule
         ,MessagesModule
         ,MessageModule
+        ,RoundRoutingModule
     ]
 	,declarations: [
-        RoundTourneyListView
-        ,RoundListView
+         RoundListView
         ,RoundDetailView
         ,MeetingListView
         ,MeetingDetailView

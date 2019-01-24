@@ -14,20 +14,18 @@ import {PickListModule} from 'primeng/picklist';
 import { DialogModule } from 'primeng/dialog';
 import { GrowlModule } from 'app/components/growl/growl';
 
-import {ObjectiveRoutingModule} from './objective-routing.module';
-import {PanelModule} from '../../../../components/panel/panel';
-import {DropdownModule} from '../../../../components/dropdown/dropdown';
-import {InputTextModule} from '../../../../components/inputtext/inputtext';
-import {InputTextareaModule} from '../../../../components/inputtextarea/inputtextarea';
-import {ButtonModule} from '../../../../components/button/button';
-import {TabViewModule} from '../../../../components/tabview/tabview';
-import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
-import {SliderModule} from '../../../../components/slider/slider';
+import { PanelModule } from 'app/components/panel/panel';
+import { DropdownModule } from 'app/components/dropdown/dropdown';
+import { InputTextModule } from 'app/components/inputtext/inputtext';
+import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
+import { ButtonModule } from 'app/components/button/button';
+import { TabViewModule } from 'app/components/tabview/tabview';
+import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
+import { SliderModule } from 'app/components/slider/slider';
 
-import {CalendarModule} from '../../../../components/calendar/calendar';
-
-import {ObjectiveTourneyListView} from './tourney-listview';
 import {ObjectiveListView} from './objective-listview';
+import { CalendarModule } from 'app/components/calendar/calendar';
+import { ObjectiveRoutingModule } from './objective-routing.module';
 
 @NgModule({
 	imports: [
@@ -57,8 +55,7 @@ import {ObjectiveListView} from './objective-listview';
         ,DialogModule
     ],
 	declarations: [
-        ObjectiveTourneyListView
-        ,ObjectiveListView
+        ObjectiveListView
     ]
 })
 export class ObjectiveModule {}

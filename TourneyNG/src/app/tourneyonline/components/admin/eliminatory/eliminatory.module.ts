@@ -26,7 +26,6 @@ import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { SliderModule } from 'app/components/slider/slider';
 import { CalendarModule } from 'app/components/calendar/calendar';
-import {EliminatoryTourneyListView} from './tourney-listview';
 import {EliminatoryAutoListView} from './eliminatory-autolistview';
 import {EliminatoryManualListView} from './eliminatory-manuallistview';
 import {LevelListView} from './level-listview';
@@ -65,8 +64,7 @@ import { LevelService } from './level-service';
         ,MessageModule
     ],
 	declarations: [
-        EliminatoryTourneyListView
-        ,LevelListView
+         LevelListView
         ,EliminatoryAutoListView
         ,EliminatoryManualListView
         ,AutoEliminatoryDetailView        

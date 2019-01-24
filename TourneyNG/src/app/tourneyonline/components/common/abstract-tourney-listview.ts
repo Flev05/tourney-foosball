@@ -9,6 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
  
 export abstract class AbstractTourneyListView extends AbstractListView {
 
@@ -23,6 +24,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
         , protected playerService : PlayerService
+        , protected teamService : TeamService
         , public router: Router
         , protected location: Location
         , private dateFormatPipe: DateFormatPipe) 
@@ -35,7 +37,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         super.ngOnInit();
 
         this.cols = [
-            { field: 'rowNumber',   header: 'N°' },
             { field: 'tourneyName', header: 'Nome' },
             { field: 'datetime',    header: 'Data' }
         ];
@@ -67,9 +68,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
             let dt = this.dateFormatPipe.transform(t.datetime);
-            this.rows.push({t:t, rowNumber: i+1, tourneyName: t.tourneyName, datetime: dt});
+            this.rows.push({t:t, tourneyName: t.tourneyName, datetime: dt});
         }
-        this.playerService.loadAllPlayers().subscribe(t => this.selectedTourney.players = t, e => this.onError(e));
+        this.playerService.loadAllPlayers().subscribe(p => this.playerService.playerPool = p, e => this.onError(e));
+
+        this.teamService.loadAllTeams().subscribe(t => this.teamService.teamPool = t, e => this.onError(e));
     }
 
     protected abstract filter(tourneys: Tourney[]): Tourney[];

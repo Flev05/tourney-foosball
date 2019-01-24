@@ -12,23 +12,21 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
-import {TeamRoutingModule} from './team-routing.module';
-import {GrowlModule} from '../../../../components/growl/growl';
-import {PanelModule} from '../../../../components/panel/panel';
-import {DropdownModule} from '../../../../components/dropdown/dropdown';
-import {InputTextModule} from '../../../../components/inputtext/inputtext';
-import {InputTextareaModule} from '../../../../components/inputtextarea/inputtextarea';
-import {ButtonModule} from '../../../../components/button/button';
-import {TabViewModule} from '../../../../components/tabview/tabview';
-import {CodeHighlighterModule} from '../../../../components/codehighlighter/codehighlighter';
-import {SliderModule} from '../../../../components/slider/slider';
+import { GrowlModule } from 'app/components/growl/growl';
+import { PanelModule } from 'app/components/panel/panel';
+import { DropdownModule } from 'app/components/dropdown/dropdown';
+import { InputTextModule } from 'app/components/inputtext/inputtext';
+import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
+import { ButtonModule } from 'app/components/button/button';
+import { TabViewModule } from 'app/components/tabview/tabview';
+import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
+import { SliderModule } from 'app/components/slider/slider';
 
-import {CalendarModule} from '../../../../components/calendar/calendar';
-
-import {TeamTourneyListView} from './tourney-listview';
 import {TeamListView} from './team-listview';
 import {TeamDetailView} from './team-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { CalendarModule } from 'app/components/calendar/calendar';
+import { TeamRoutingModule } from './team-routing.module';
 
 @NgModule({
 	imports: [
@@ -59,7 +57,6 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,PickListModule
     ],
 	declarations: [
-		TeamTourneyListView,
         TeamListView,
         TeamDetailView
     ]

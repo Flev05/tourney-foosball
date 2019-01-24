@@ -9,21 +9,8 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>
-            Da questa vista potete creare, modificare o rimuovere una squadra.
-        </p>
-
-        <h4>Creare una nuova squadra</h4>
-        <p>
-            Compilare i campi obbligatori che identificano la squadra
-        </p>
-
-        <h4>Modificare squadra</h4>
-        <p>
-            Modificare i campi obbligatori della squadra già creata
-        </p>
-
-        <p>
-            Alla fine dell'operazione salvare con il bottone Salva
+            Vista di dettaglio di una sqaudra.
+            Compilare i campi con i valori richiesti e salvare con il bottone Salva
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -39,7 +26,7 @@
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-3">
-                Nome:
+                Nome*:
             </div>
             <div class="ui-grid-col-5">                                
                 <input pInputText type="text" formControlName="teamName"/>
@@ -105,4 +92,5 @@
         </div>
     </div>
 </form>   
- 
+
+<p>* Sono campi obbligatori</p>

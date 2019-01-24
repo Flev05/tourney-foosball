@@ -1,15 +1,16 @@
 import { OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { Direction, MeetingStatus, PhaseType } from 'app/tourneyonline/domain/enumerations';
+
+import { Team } from 'app/tourneyonline/domain/team';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Match } from 'app/tourneyonline/domain/match';
 
 import { Tourney } from '../../domain/tourney';
 import { TourneyService } from '../../service/tourney-service';
 import { Country } from '../../domain/country';
-import { Team } from 'app/tourneyonline/domain/team';
-import { Classification } from 'app/tourneyonline/domain/classification';
-import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
-import { Direction, MeetingStatus, PhaseType } from 'app/tourneyonline/domain/enumerations';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Match } from 'app/tourneyonline/domain/match';
 
 export abstract class AbstractView implements OnInit {
     it: any;

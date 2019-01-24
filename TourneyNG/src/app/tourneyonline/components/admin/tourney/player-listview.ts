@@ -1,31 +1,41 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
-import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Player } from 'app/tourneyonline/domain/player';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { AbstractDetailView } from '../../common/abstract-detailview';
+
+const REDIRECT_PLAYER_PL = "admintourney/dv/playerpl";
+const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
 
 @Component({
-    templateUrl: './team-detailview.html',
+    templateUrl: './player-listview.html',
 })
-export class TeamDetailView extends AbstractDetailView {
+export class PlayerListView extends AbstractDetailView {
 
     selectedTeam: Team;
 
     toggleable: boolean = false;
 
     availablePlayers: Player[] = [];
+    selectedPlayerRow: Player;
 
     fullAddress: string;
+    playerCols: TableCols[];
 
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
         private   teamService: TeamService,
+        private   playerService: PlayerService,
+        private   router: Router
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -36,7 +46,8 @@ export class TeamDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedTeam = this.teamService.selectedTeam;
-
+        this.playerCols = PlayerService.cols;
+        
         if(this.teamService.newTeam) {
             this.selectedTeam.id = this.tourneyService.getSequenceNumber(); 
             this.selectedTeam.players = [];
@@ -78,6 +89,27 @@ export class TeamDetailView extends AbstractDetailView {
         }
     }
  
+    updateTeamList() {
+
+        this.playerService.loadAllPlayers().subscribe(p => this.playerService.playerPool = p, e => this.onError(e));
+
+        this.router.navigate([REDIRECT_PLAYER_PL]);
+    }
+
+    newPlayer() {
+        this.selectedPlayerRow = {};
+        this.playerService.selectedPlayer = {};
+        this.playerService.newPlayer = true;
+        this.router.navigate([REDIRECT_PLAYER_DV]);
+    }
+
+    onPlayerRowSelect(event) {
+        console.log(event);
+        this.playerService.selectedPlayer = this.selectedPlayerRow;
+        this.playerService.newPlayer = false;
+        this.router.navigate([REDIRECT_PLAYER_DV]);
+    }
+
     onError(n:any) {
         let msgerr: string = 'Creazione/Modifica nuova squadra fallita';
         console.log(msgerr);

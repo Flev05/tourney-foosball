@@ -10,6 +10,7 @@ import { PlayoffRule } from '../../../domain/playoff-rule';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
     templateUrl: './rule-listview.html'
@@ -23,6 +24,10 @@ export class RuleListView extends AbstractListView {
     msgs: Message[] = [];
 
     playoffConfigs: PlayoffRule[];
+    playoffCols: TableCols[] = [
+        { field: 'position',   header: 'Classificata' },
+        { field: 'round',   header: 'Girone' },
+    ];
 
     selectedPlayoff: Playoff;
  
@@ -104,7 +109,7 @@ export class RuleListView extends AbstractListView {
                     this.removePlayoff(p);
                 }
     
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
             }
         }
     }

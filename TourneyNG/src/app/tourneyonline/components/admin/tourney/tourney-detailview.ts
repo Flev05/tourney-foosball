@@ -5,8 +5,6 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Direction, RoundType } from '../../../domain/enumerations';
-import { Message } from 'app/components/common/api';
-import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Discipline } from 'app/tourneyonline/domain/discipline';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
@@ -34,8 +32,6 @@ const REDIRECT_PLAYOFF_DV   = 'admintourney/dv/playoff';
 export class TourneyDetailView extends AbstractDetailView {
 
     tourneyDate: Date;
-
-    msgs: Message[] = [];
 
     tourneyFormGroup: FormGroup;
 
@@ -749,6 +745,13 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
+        for(let el of this.selectedTourney.eliminatoryLevels) {
+            for(let e of el.eliminatories) {
+                for(let m of e.round.meetings) {
+                    this.tourneyService.updateEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                }
+            }
+        }
 
         if(this.tourneyService.newTourney) {
             this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());  
@@ -805,15 +808,9 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     onError(n:any) {
-        this.msgs = [];
         let msgerr : string;
+        msgerr = 'Creazione/Modifica nuovo torneo fallita';
 
-        if(this.tourneyService.newTourney) {
-            msgerr = 'Creazione nuovo torneo fallita';
-        } else {
-            msgerr = 'Modifica torneo fallita';
-        }
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
-        this.tourneyService.newTourney = false;
+        console.error(msgerr);
     }
 }

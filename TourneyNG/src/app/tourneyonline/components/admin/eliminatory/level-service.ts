@@ -61,7 +61,7 @@ export class LevelService extends AbstractEliminatoryListView {
         if (this.isStandalone) {
             this.processStandalone();
         } else if (this.isAutomatic) {
-            this.processAutomaticEliminatories(this.selectedTeamsNumCombobox.value);
+            this.prepareAutomaticEliminatoryRules(this.selectedTeamsNumCombobox.value);
         }
 
         super.processEliminationTree();
@@ -265,7 +265,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * Next, iterates on the eliminatories list and updates the meetings with the first against the last 
      * team in the pad list
      */
-    private processAutomaticEliminatories(selectedTeamsNo: number) {
+    private prepareAutomaticEliminatoryRules(selectedTeamsNo: number) {
         
         let roundsNo = this.selectedTourney.rounds.length;
         if(roundsNo == 0) {
@@ -423,7 +423,7 @@ export class LevelService extends AbstractEliminatoryListView {
             this.processStandalone();
         }
         else if (this.isAutomatic) {
-            this.processAutomaticEliminatories(N);
+            this.prepareAutomaticEliminatoryRules(N);
         }
 
         this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;

@@ -846,7 +846,7 @@
                         pTooltip="Scegliere il numero iniziale di squadre impiegate nel torneo">
                     <p-dropdown id="teamsId" 
                         [options]="team4roundsCombobox" 
-                        formControlName="selectedTeam4roundsNumCombobox"  
+                        formControlName="selectedTeams4RoundsCB"  
                         optionLabel="label"
                         (onChange)="onTeam4roundNumChange($event.value)" 
                         placeholder="Seleziona"
@@ -975,12 +975,12 @@
                     Squadre:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero totale di squadre che passerà il turno dai gironi ai playoff">
+                        pTooltip="Scegliere il numero totale di squadre che passerà il turno dai gironi all'italiana ai playoff">
                     <p-dropdown id="teamsRoundId" 
                         [options]="team4playoffsCombobox" 
-                        formControlName="selectedTeam4playoffsNumCombobox"  
+                        formControlName="selectedTeams4PlayoffsCB"  
                         optionLabel="label"
-                        (onChange)="onTeam4playoffNumChange($event.value)" 
+                        (onChange)="onTeams4PlayoffsChange($event.value)" 
                         placeholder="Seleziona"
                         [autoWidth]="false">
                     </p-dropdown>
@@ -992,10 +992,10 @@
                     Gironi:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di gironi che andrà a comporre la fase dei playoff per il torneo">
+                        pTooltip="Scegliere il numero di gironi che andrà a comporre la fase dei playoff">
                     <p-dropdown id="playoffId" 
                         [options]="playoffsCombobox" 
-                        formControlName="selectedPlayoffsNumCombobox"  
+                        formControlName="selectedPlayoffsCB"  
                         optionLabel="label"
                         (onChange)="onPlayoffNumChange($event.value)" 
                         placeholder="Seleziona"

@@ -556,7 +556,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     protected processEliminationTree(): void {
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onOnewayClick() {

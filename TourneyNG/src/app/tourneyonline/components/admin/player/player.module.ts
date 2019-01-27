@@ -26,6 +26,8 @@ import {PlayerDetailView} from './player-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { CalendarModule } from 'app/components/calendar/calendar';
 import {PlayerRoutingModule} from './player-routing.module';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
 	imports: [
@@ -50,6 +52,8 @@ import {PlayerRoutingModule} from './player-routing.module';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
+        ,MessagesModule
+        ,MessageModule
         ,PlayerRoutingModule
         ,AccordionModule
     ],

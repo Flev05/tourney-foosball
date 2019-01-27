@@ -7,10 +7,10 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { Country } from 'app/tourneyonline/domain/country';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourney-service';
-import { Country } from '../../domain/country';
 
 export abstract class AbstractView implements OnInit {
     it: any;

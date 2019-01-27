@@ -8,6 +8,7 @@ import { RoundDetailView } from '../round/round-detailview';
 import { RuleListView } from '../playoff/rule-listview';
 import { PlayerDetailView } from '../player/player-detailview';
 import { PlayerPickList } from './player-picklist';
+import { TeamDetailView } from '../team/team-detailview';
 
 @NgModule({
 	imports: [
@@ -16,6 +17,7 @@ import { PlayerPickList } from './player-picklist';
 			{ path: 'dv',   		component: TourneyDetailView },
 			{ path: 'dv/team',		component: PlayerListView },
 			{ path: 'dv/addteam',	component: TeamPickList },	
+			{ path: 'dv/updateteam',component: TeamDetailView },
 			{ path: 'dv/round',		component: RoundDetailView },	
 			{ path: 'dv/playoff',	component: RuleListView },	
 			{ path: 'dv/playerdv',  component: PlayerDetailView },

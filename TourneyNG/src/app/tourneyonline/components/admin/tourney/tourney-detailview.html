@@ -13,7 +13,35 @@
             Prima di proseguire, per capire di che tipologia il vostro torneo sia,
             consultate la spiegazione riportata nella documentazione nella vista elenco.
         </p>
-
+        <p>
+            La vista contiene 2 bottoni:
+        </p>
+        <ul>
+            <li>Indietro</li>
+            <li>Salva</li>
+        </ul>
+        <p>e le seguenti schede da compilare:</p>
+        <ul>
+            <li>Generalità</li>
+            <li>Specificità</li>
+            <li>Squadre</li>
+            <li>Gironi</li>
+            <li>Playoff</li>
+            <li>Eliminazioni Dirette</li>
+            <li>Campi</li>
+        </ul>   
+        <h4>Indietro</h4>
+        <p>
+            Il bottone Indietro deve essere utilizzato per tornare alla vista precedente senza aver confermato nessun dato.
+            Anche se modificate dei dati nelle 2 schede e premete il bottone Indietro, i dati preesistenti resteranno inalterati.
+        </p>
+        <h4>Salva</h4>
+        <p>            
+            Il bottone Salva deve essere utilizzato per confermare le modifiche apportate alla schede.
+            Se effettuate delle modifiche e non premete il bottone Salva, i dati resteranno invariati e 
+            vi troverete con quelli preesistenti.
+        </p>
+    
         <p>
             In ogni caso, sia per gli utenti anonimi che autorizzati, la creazione di un nuovo torneo deve essere 
             organizzata per tappe consecutive da eseguire in un ordine ben preciso.
@@ -21,16 +49,15 @@
         <p>Le tappe devono essere completate nel seguente ordine:</p>
         <ul>
             <li>Definizione torneo</li>
-            <li>Caricamento anagrafica giocatori</li>
             <li>Configurazione squadre</li>
             <li>Configurazione gironi</li>
             <li>Configurazione playoff</li>
             <li>Configurazione eliminatorie</li>
             <li>Configurazione Obiettivo torneo</li>
-        </ul>            
+        </ul>
 
         <p>
-            Alcune di essere hanno dati facoltativi e possono essere completate anche successivamente.
+            Alcune di esse hanno dati facoltativi e possono essere completate anche successivamente.
         </p>
 
         <h3>Definizione torneo</h3>
@@ -115,91 +142,8 @@
     </p-accordionTab>
 
     <p-accordionTab header="Istruzioni">    
-        <p>
-            La vista contiene tre bottoni:
-        </p>
-        <ul>
-            <li>Indietro</li>
-            <li>Salva</li>
-            <li>Rimuovi</li>
-        </ul>
-        <p>e le seguenti schede da compilare:</p>
-        <ul>
-            <li>Generalità</li>
-            <li>Specificità</li>
-            <li>Squadre</li>
-            <li>Gironi</li>
-            <li>Playoff</li>
-            <li>Eliminazioni Dirette</li>
-            <li>Campi</li>
-        </ul>   
-        <h4>Indietro</h4>
-        <p>
-            Il bottone Indietro deve essere utilizzato per tornare alla vista precedente senza aver confermato nessun dato.
-            Anche se modificate dei dati nelle 2 schede e premete il bottone Indietro, i dati preesistenti resteranno inalterati.
-        </p>
-        <h4>Salva</h4>
-        <p>            
-            Il bottone Salva deve essere utilizzato per confermare le modifiche apportate alla schede.
-            Se effettuate delle modifiche e non premete il bottone Salva, i dati resteranno invariati e 
-            vi troverete con quelli preesistenti.
-        </p>
-        <h4>Rimuovi</h4>
-        <p>
-            Il bottone Rimuovi è indipendente dalle modifiche ai dati e rimuove completamente tutto il torneo con 
-            tutti i suoi dati annessi e connessi. A fronte di un click sul bottone Rimuovi sarete comunque invitati a 
-            confermare l'operazione in una box di pop up e, solo se risponderete affermativamente, il torneo sarà rimosso.
-        </p>
-
-        <p>
-            Sotto le istruzioni per la compiazione delle 2 schede. 
-        </p>        
-        <h3>Generalità</h3>
-        <p>            
-            In questa scheda dovete impostare i seguenti campi:
-        </p>
-        <ul>
-            <li>Nome torneo</li>
-            <li>Giornaliero</li>
-            <li>Accesso</li>
-            <li>Data e luogo</li>
-            <li>Disciplina</li>
-        </ul>   
-
-        <h4>Nome torneo</h4>
-        <p>
-            Il nome del torneo deve essere univoco all'interno dello spazio dei tornei, se tentate di inserire un nome già esistente 
-            riceverete un messaggio di errore.
-        </p>
-        <h4>Giornaliero</h4>
-        <p>
-            Dovete specificare se il torneo si svolge in uno o più giorni. Un torneo gioraliero, è un torneo che incomincia e finisce
-            nell'arco di massimo 24 0re, per esempio le coppe CSI del calcio balilla che durano circa 6 ore. 
-            Altrimenti si tratta di un torneo con durata temporale lunga tipica dei campionati.
-        </p>
-
-        <h4>Accesso</h4>
-        <p>
-            Per Accesso di intende se volete rendere pubblico o privato il vostro torneo. Se scegliete Pubblico, il sistema farà vedere
-            il vostro torneo a tutti gli utenti di Tourney Online, ovviamente nessuno di essi potrà modificare i dati del torneo
-            a meno che non sia un utente autorizzato dal proprietario del torneo, un utente creato dal proprietario con privilegio
-            di modifica. Se invece scegliete Privato, il torneo non sarà visibili agli utenti generici di Tourney Online ma solo
-            a quelli autorizzati ossia in possesso delle credenziali di login create dal proprietario del torneo.
-        </p>
-        <h4>Data e luogo</h4>
-        <p>
-            Per data, si intende la data di inizio del torneo anche se di tipo tipo non giornaliero. Per il luogo bisogna distinguere
-            se il torneo è giornaliero o no.
-            Se giornaliero, si intende l'indirizzo della località dove si svolgono tutte le partite, se non giornaliero,
-            si usa inserire l'indirizzo della sede dell'organizzazione o dove si svolge la prima partita, le location di tutti
-            gli incontri sono documentati uno per uno nelle corrispondenti viste di dettaglio. 
-        </p>
-        <h4>Disciplina</h4>
-        <p>
-            Per disciplina si intende la categoria di appartenenza del gioco, tipo Calcio, Basket, Volley, ecc.
-            Il programma non fa alcuna distinzione tra le varie discipline a livello di gestione, ma può usarle per 
-            dei link di rimando per regolamenti e normative.
-        </p>
+ 
+        
         
         <h3>Specificità</h3>
         <p>            
@@ -209,7 +153,7 @@
             <li>Gara</li>
             <li>Durata</li>
             <li>Fasi</li>
-            <li>Gironi all'italiana</li>
+            <li>Turni</li>
             <li>Playoff</li>
             <li>Goals</li>
             <li>Vittoria</li>
@@ -234,7 +178,7 @@
             la spiegazione del caso.
         </p>
 
-        <h4>Gironi all'italiana</h4>
+        <h4>Turni</h4>
         <p>
             In questo caso si deve specificare se ci sono i Turni di ritorno o solo andata per i gironi all'italiana.
         </p>
@@ -281,9 +225,7 @@
   
         <h3>Squadre</h3>
         <p>
-            Selezionare i nomi delle squadre che parteciperanno al torneo apponendo il segno di spunta sulla sinistra della riga.
-            La squadra all'inizio non contiene nessun giocatore, per popolarla selezionarla ed aprire al corrispondente vista di
-            dettaglio in cui caricare i giocatori della squadra.
+           Vedi descrizione riporta a livello della scheda Squadre.
         </p>
 
         <h3>Gironi</h3>
@@ -325,6 +267,60 @@
     
     <p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
         <p-tabPanel header="Generalità">
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">
+            <p>
+                Sotto le istruzioni per la compiazione delle 2 schede. 
+            </p>        
+            <h3>Generalità</h3>
+            <p>            
+                In questa scheda dovete impostare i seguenti campi:
+            </p>
+            <ul>
+                <li>Nome torneo</li>
+                <li>Giornaliero</li>
+                <li>Accesso</li>
+                <li>Data e luogo</li>
+                <li>Disciplina</li>
+            </ul>   
+    
+            <h4>Nome torneo</h4>
+            <p>
+                Il nome del torneo deve essere univoco all'interno dello spazio dei tornei, se tentate di inserire un nome già esistente 
+                riceverete un messaggio di errore.
+            </p>
+            <h4>Giornaliero</h4>
+            <p>
+                Dovete specificare se il torneo si svolge in uno o più giorni. Un torneo gioraliero, è un torneo che incomincia e finisce
+                nell'arco di massimo 24 0re, per esempio le coppe CSI del calcio balilla che durano circa 6 ore. 
+                Altrimenti si tratta di un torneo con durata temporale lunga tipica dei campionati.
+            </p>
+    
+            <h4>Accesso</h4>
+            <p>
+                Per Accesso di intende se volete rendere pubblico o privato il vostro torneo. Se scegliete Pubblico, il sistema farà vedere
+                il vostro torneo a tutti gli utenti di Tourney Online, ovviamente nessuno di essi potrà modificare i dati del torneo
+                a meno che non sia un utente autorizzato dal proprietario del torneo, un utente creato dal proprietario con privilegio
+                di modifica. Se invece scegliete Privato, il torneo non sarà visibili agli utenti generici di Tourney Online ma solo
+                a quelli autorizzati ossia in possesso delle credenziali di login create dal proprietario del torneo.
+            </p>
+            <h4>Data e luogo</h4>
+            <p>
+                Per data, si intende la data di inizio del torneo anche se di tipo tipo non giornaliero. Per il luogo bisogna distinguere
+                se il torneo è giornaliero o no.
+                Se giornaliero, si intende l'indirizzo della località dove si svolgono tutte le partite, se non giornaliero,
+                si usa inserire l'indirizzo della sede dell'organizzazione o dove si svolge la prima partita, le location di tutti
+                gli incontri sono documentati uno per uno nelle corrispondenti viste di dettaglio. 
+            </p>
+            <h4>Disciplina</h4>
+            <p>
+                Per disciplina si intende la categoria di appartenenza del gioco, tipo Calcio, Basket, Volley, ecc.
+                Il programma non fa alcuna distinzione tra le varie discipline a livello di gestione, ma può usarle per 
+                dei link di rimando per regolamenti e normative.
+            </p>
+            </p-accordionTab>
+        </p-accordion>
+        
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
@@ -434,6 +430,77 @@
         </p-tabPanel>
 
         <p-tabPanel header="Specificità">
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">   
+                <h3>Specificità</h3>
+                <p>            
+                    In questa scheda dovete impostare i seguenti campi:
+                </p>
+                <ul>
+                    <li>Gara</li>
+                    <li>Durata</li>
+                    <li>Fasi</li>
+                    <li>Goals</li>
+                    <li>Vittoria</li>
+                    <li>Sconfitta</li>
+                    <li>Pareggio</li>
+                    <li>Partite</li>
+                    <li>Giocatori</li>
+                </ul>   
+        
+                <h4>Gara</h4>
+                <p>
+                    Per Gara si intende se terminano a tempo o a punti. A tempo solo le gare che terminano entro un certo tempo, tipo
+                    i 90 minuti nel calcio. Mentre a punti sono le gare come il volley o il tennis in cui le gare vanno avanti fino a 
+                    quando una delle 2 squadre non raggiunge il punteggio prefissato.
+                </p>
+        
+                <h4>Fasi</h4>
+                <p>
+                    Per Fasi si intende le tre classiche: Gironi, Playoff, Eliminazioni Dirette. Non sono ammesse tutte le
+                    combinazioni, per esempio non si può scegliere Playoff ed Eliminazioni senza Gironi perchè
+                    non avrebbero senso. Se una combinazione non è ammessa, il sistema visualizzerà un messaggio di errore con
+                    la spiegazione del caso.
+                </p>
+        
+                <h4>Goals</h4>
+                <p>
+                    Nei tornei a punti, specificare i Goals necessari da segnare per aggiudicarsi la vittoria
+                </p>
+                <h4>Vittoria</h4>
+                <p>
+                    In entrambi i tornei a punti o a tempo, specificare i punti guadagnati in caso di vittoria
+                </p>
+                <h4>Pareggio</h4>
+                <p>
+                    Solo nei tornei a tempo, specificare i punti guadagnati in caso di pareggio, nei tornei a punti il pareggio non esiste.
+                </p>
+                <h4>Sconfitta</h4>
+                <p>
+                    Solo nei tornei a punti, specificare i punti guadagnati in caso di sconfitta al Golden Goal o Tie Break.
+                    Nei tornei a tempo, la sconfitta vale sempre zero punti.
+                </p>            
+        
+                <h4>Partite</h4>
+                <p>
+                    Solo nei tornei a punti, specificare il numero massimo di partite da disputare in ciascun incontro. 
+                    Per esempio in un incontro di tennis, dove le partite coincidono con i SET, si disputano massimo 5 partite.
+                    In un incontro di volley anche si disputano massimo 5 partite.
+                </p>            
+                <h4>Tutte/Al Meglio</h4>
+                <p>
+                    Solo nei tornei a punti, specificare se disputare Tutte le patite o il numero minimo per aggiudicarsi l'incontro. 
+                    Se scegliete Al Meglio, il sistema automaticamente calcola il numero minimo di partite da vincere per aggiudicarsi l'incontro.
+                </p>            
+                <p>
+                    Per esempio in un incontro di tennis, si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie, 
+                    in un incontro di volley si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie.
+                    In un campionato CSI di calcio balilla si disputano tutte le 9 partite dell'incontro perchè si assegna un punto
+                    per ciascuna partita vinta.
+                </p>                                        
+            </p-accordionTab>
+        </p-accordion>
+            
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
             <p-fieldset legend="Caratteristiche">
@@ -640,6 +707,31 @@
         </p-tabPanel>
 
         <p-tabPanel header="Squadre">
+            <p-accordion>
+                <p-accordionTab header="Istruzioni">     
+                    <h3>Istruzioni</h3>
+                    <p>
+                        Vista elenco delle squadre che compongono il torneo.
+                        Sono disponibili 2 operazioni:
+                    </p>
+                    <ul>
+                        <li>Gestisci lista di giocatori della squadra</li>
+                        <li>Gestisci squadre</li>
+                    </ul>   
+                    <h4>Gestisci lista di giocatori della squadra</h4>
+                    <p>
+                        Per gestire la lista dei giocatori che compone la squadra della squadra, basta un click sulla riga della squadra
+                        che aprirà la vista elenco dei giocatori della squadra da cui potete gestire la lista dei giocatori come 
+                        descritto nella vista corrispondente.
+                    </p>
+                    <h4>Gestisci squadre</h4>
+                    <p>
+                        Per gestire la lista delle squadre del torneo, dovete usare il bottone Gestisci Squadre che vi farà
+                        accedere alla vista di gestione delle squadre come descritto nella vista corrispondente.
+                    </p>                
+                </p-accordionTab>
+            </p-accordion>
+
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <p-table [columns]="teamCols"
                     [value]="tourneyTeams"
@@ -652,28 +744,24 @@
         
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th>N°</th>
+                        <th style="width: 15mm;">N°</th>
                         <th *ngFor="let col of columns">
                             {{col.header}}
                         </th>
-                        <th>X</th>
                     </tr>
                 </ng-template>
         
                 <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                     <tr [pSelectableRow]="rowData">
-                        <td>{{rowIndex+1}}</td>
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
                             {{rowData[col.field]}}
                         </td>
-                        <td>
-                            <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doTeamDelete(rowData)"></button>
-                        </td>                
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary" let-rowData>
                     <div style="text-align:left">
-                        <button label="Aggiungi Squadre"
+                        <button label="Gestisci Squadre"
                             [disabled]="!tourneyFormGroup.valid || notAllowedPhases()" 
                             pButton icon="fa fa-plus" 
                             type="button" 
@@ -686,12 +774,17 @@
         </p-tabPanel>
 
         <p-tabPanel header="Gironi" *ngIf="containsRound()">    
-
             <p-accordion>
                 <p-accordionTab header="Istruzioni">              
                     <p>
-                        Vista elenco di tutti i gironi che compongono il torneo.
+                        Vista elenco di tutti i gironi all'italiana che compongono il torneo.
                     </p>
+                    
+                    <h4>Turni</h4>
+                    <p>
+                        Scegliere se ci sono turni di solo andata o di andata e ritorno.
+                    </p>
+            
                     <p>
                         Scegliere, dalla combo box Squadre, il numero effettivo iniziale delle squadre del torneo.
                     </p>
@@ -720,7 +813,7 @@
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    Gironi all'italiana:
+                    Turni:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right"
                         pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
@@ -791,22 +884,22 @@
         
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th>N°</th>
+                        <th style="width: 15mm;">N°</th>
                         <th *ngFor="let col of columns">
                             {{col.header}}
                         </th>
-                        <th>X</th>
+                        <th style="width: 15mm;">X</th>
                     </tr>
                 </ng-template>
         
                 <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                     <tr [pSelectableRow]="rowData">
-                        <td>{{rowIndex+1}}</td>
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
                             <span class="ui-column-title">{{col.header}}</span>
                             {{rowData[col.field]}}
                         </td>
-                        <td>
+                        <td style="width: 15mm;">
                             <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doRoundDelete(rowData)"></button>
                         </td>                
                     </tr>
@@ -820,6 +913,9 @@
                 <p-accordionTab header="Istruzioni">              
                     <p>
                         Vista elenco dei gironi di playoff del torneo.
+                    </p>
+                    <p>
+                        Scegliere se ci sono i turni di solo andata o di andata e ritorno.
                     </p>
                     <p>
                         Scegliere, dalla combo box Squadre, il numero totale di squadre che passerà il turno dai gironi ai playoff.
@@ -919,21 +1015,21 @@
     
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th>N°</th>
+                        <th style="width: 15mm;">N°</th>
                         <th *ngFor="let col of columns">
                             {{col.header}}
                         </th>
-                        <th>X</th>
+                        <th style="width: 15mm;">X</th>
                     </tr>
                 </ng-template>
         
                 <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                     <tr [pSelectableRow]="rowData">
-                        <td>{{rowIndex+1}}</td>
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
                             {{rowData[col.field]}}
                         </td>
-                        <td>
+                        <td style="width: 15mm;">
                             <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doPlayoffDelete(rowData)"></button>
                         </td>                
                     </tr>

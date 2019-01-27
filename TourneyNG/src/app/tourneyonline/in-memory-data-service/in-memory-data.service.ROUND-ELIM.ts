@@ -57,7 +57,7 @@ static getTourneyDb() {
       ,pointsGoldenGoalTieBreakWin:2
       ,pointsGoldenGoalTieBreakDefeat:1
 
-      ,players: PlayersPool.players
+      // ,players: PlayersPool.players
 
       ,teams: InMemoryDataServiceRoundElim.teams
       

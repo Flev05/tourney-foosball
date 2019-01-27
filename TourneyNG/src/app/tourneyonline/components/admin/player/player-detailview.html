@@ -28,9 +28,12 @@
 </p-accordion>
 </div>
 
-<p-growl [value]="msgs" sticky="sticky"></p-growl>    
-
 <h4><span>Giocatore: {{selectedPlayer.playerName}}</span></h4>
+
+<div *ngIf="playerAlreadyExists" class="ui-grid-row" style="margin-top:30px">
+    <p-message severity="error" text="Attenzione! L'utente {{selectedPlayer.playerName}} esiste già."></p-message>
+    <p-message severity="error" text="In caso di omonimia, usare un nome numerato, altrimenti usare quello esistente."></p-message>
+</div>   
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -136,7 +139,7 @@
         </div>
     </div>
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="!playerAlreadyExists" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!playerFormGroup.valid"></button>

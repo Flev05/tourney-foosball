@@ -68,11 +68,6 @@ export class TourneyListView extends AbstractTourneyListView {
     }
 
     create() {
-        this.tourneyService.selectedTourney = this.selectedTourney;
-
-        let dt = this.dfp.transform(new Date());
-        this.selectedRow = {t:this.selectedTourney, tourneyName: "", datetime: dt};
-
         this.tourneyService.newTourney = true;
 
         this.gotoDetailView();

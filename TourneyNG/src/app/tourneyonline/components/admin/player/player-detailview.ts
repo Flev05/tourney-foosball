@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Player } from 'app/tourneyonline/domain/player';
-import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
@@ -16,11 +15,10 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 export class PlayerDetailView extends AbstractDetailView {
     selectedPlayer: Player;
 
-    msgs: Message[] = [];
-
     playerFormGroup: FormGroup;
     toggleable: boolean = false;
     fullAddress: string;
+    playerAlreadyExists: boolean;
     
     constructor(
         private fb: FormBuilder,
@@ -38,6 +36,7 @@ export class PlayerDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedPlayer = this.playerService.selectedPlayer;
+        this.playerAlreadyExists = false;
 
         if(this.playerService.newPlayer) {
             this.selectedPlayer.playerName = "";
@@ -70,20 +69,39 @@ export class PlayerDetailView extends AbstractDetailView {
 
         if(this.playerService.newPlayer) {
             this.playerService.newPlayer = false;
+            this.playerAlreadyExists = false;
+            
+            let pl = this.verifyPlayer(this.selectedPlayer.playerName);
+            if(pl != null) {
+                this.playerAlreadyExists = true;
+
+                this.playerFormGroup = this.fb.group({
+                    'playerName': new FormControl(pl.playerName, Validators.compose([Validators.required])),
+                    'address': new FormControl(pl.address),
+                    'country': new FormControl(pl.country),
+                    'phoneNumber': new FormControl(pl.phoneNumber),
+                    'email': new FormControl(pl.email),
+                });
+                return;
+            }
         }
 
         this.playerService.updatePlayer(this.selectedPlayer).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
+
+    private verifyPlayer(playerName: string): Player {
+        let p2 = playerName.trim().toUpperCase();
+        for(let p of this.playerService.playerPool) {
+            let p1 = p.playerName.trim().toUpperCase();
+            if( p1 == p2 ) {
+                return p;
+            }
+        }
+        return null;
+    }
  
     onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        if(this.playerService.newPlayer) {
-            msgerr = 'Creazione nuovo giocatore fallita';
-        } else {
-            msgerr = 'Modifica giocatore fallita';
-        }
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        let msgerr : string = 'Creazione/Modifica giocatore fallita';
+        console.error(msgerr);
     }
 }

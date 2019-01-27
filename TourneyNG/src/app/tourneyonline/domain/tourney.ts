@@ -56,5 +56,4 @@ export interface Tourney {
     selectedTeamsNumCombobox?: Combobox;
 
     teams?: Team[];
-    players?: Player[];
 }

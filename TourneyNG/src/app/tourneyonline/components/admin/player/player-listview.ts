@@ -32,11 +32,11 @@ export class PlayerListView extends AbstractListView {
         super.ngOnInit();
       
         this.cols = PlayerService.cols;
-        this.playerService.loadAllPlayers().subscribe(t => this.players = t, e => this.onError(e), () => this.onComplete());
+        this.playerService.loadAllPlayers().subscribe(t => this.playerService.playerPool = t, e => this.onError(e), () => this.onComplete());
     }
 
     onComplete(): void {
-        this.rows = this.players;
+        this.rows = this.players = this.playerService.playerPool;
     }
 
     create() {

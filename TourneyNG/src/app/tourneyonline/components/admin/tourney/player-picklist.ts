@@ -9,14 +9,17 @@ import { Router } from '@angular/router';
 import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 
+const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
+
 @Component({
     templateUrl: './player-picklist.html',
 })
 export class PlayerPickList extends AbstractListView {
 
-    availablePlayers: Player[] = [];
-    targetPlayers: Player[] = [];
     selectedTeam: Team;
+
+    avalilablePlayers: string[];
+    targetPlayers: string[];
 
     constructor( protected tourneyService: TourneyService
         , public router: Router
@@ -36,26 +39,41 @@ export class PlayerPickList extends AbstractListView {
     
     private prepareAvailablePlayers(): void {
         this.selectedTeam = this.teamService.selectedTeam;
-        this.targetPlayers = this.selectedTeam.players;
-        this.selectedTourney.players = this.playerService.playerPool;
+        
+        this.targetPlayers = [];
+        for(let p of this.selectedTeam.players) {
+            this.targetPlayers.push(p.playerName);
+        }
 
-        this.availablePlayers = [];
-
-        let usedPlayers: Player[] = [];
+        let usedPlayers: Array<Player> = new Array<Player>();
         for(let t of this.selectedTourney.teams) {
             usedPlayers = usedPlayers.concat(t.players);
         }
 
-        for(let t of this.selectedTourney.teams) {
-            for(let pt of t.players) {            
-                let index: number = usedPlayers.indexOf(pt);
-                if(index == -1) {
-                    this.availablePlayers.push(pt);
-                }
+        this.avalilablePlayers = [];
+        for(let p of this.playerService.playerPool) {
+            let pl = usedPlayers.find(x => x.playerName == p.playerName);
+            if(pl == undefined) {
+                this.avalilablePlayers.push(p.playerName);
             }
         }
     }
- 
+    
+    goBack(): void {
+        this.selectedTeam.players = [];
+        for(let pn of this.targetPlayers) {
+            let t: Team = this.playerService.playerPool.find(x => x.playerName == pn);
+            this.selectedTeam.players.push(t);
+        }
+        this.location.back();
+    }
+
+    newPlayer() {
+        this.playerService.selectedPlayer = {};
+        this.playerService.newPlayer = true;
+        this.router.navigate([REDIRECT_PLAYER_DV]);
+    }
+
     onError(n:any) {
         let msgerr : string;
 

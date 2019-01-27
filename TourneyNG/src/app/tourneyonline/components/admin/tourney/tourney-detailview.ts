@@ -33,8 +33,6 @@ const REDIRECT_PLAYOFF_DV   = 'admintourney/dv/playoff';
 })
 export class TourneyDetailView extends AbstractDetailView {
 
-    selectedTourney: Tourney;
-
     tourneyDate: Date;
 
     msgs: Message[] = [];
@@ -98,17 +96,18 @@ export class TourneyDetailView extends AbstractDetailView {
         protected playerService: PlayerService,
         protected teamService: TeamService,
         protected levelService: LevelService,
-        private router: Router
+        private router: Router 
     ) { 
         super(tourneyService, location, countryService);
     }
 
     ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
-        this.activeIndex = this.tourneyService.selectedTabIndex;
-
+        
         super.ngOnInit();
         this.levelService.ngOnInit();
+
+        this.activeIndex = this.tourneyService.selectedTabIndex;
 
         this.teamsCombobox = this.levelService.teamsCombobox;
 
@@ -121,19 +120,19 @@ export class TourneyDetailView extends AbstractDetailView {
             this.disciplines = t;
         });
 
-        this.selectedTourney = this.tourneyService.selectedTourney;
-
         if(this.tourneyService.newTourney) {
             this.initTourney(today);
         } else {
             this.tourneyDate = new Date(this.selectedTourney.datetime);
         }
 
+        this.selectedTourney = this.tourneyService.selectedTourney;
+
         this.atLeastTwoTeams = this.selectedTourney.teams.length >= 2 ? true : false;
         this.prepareRounds();
         this.atLeastTwoRounds = this.selectedTourney.rounds.length >= 2 ? true : false;
 
-        this.preparePlayoffd();
+        this.preparePlayoffs();
 
         this.tourneyTeams = this.selectedTourney.teams;
 
@@ -157,7 +156,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
-
         
         this.tourneyFormGroup = this.fb.group({
             'tourneyName': new FormControl(this.selectedTourney.tourneyName, Validators.compose([Validators.required])),
@@ -203,6 +201,7 @@ export class TourneyDetailView extends AbstractDetailView {
     
     private initTourney(today: Date) {
         this.selectedTourney = {};
+
         this.selectedTourney.id = this.tourneyService.getSequenceNumber();
         this.tourneyDate = today;
         this.selectedTourney.tourneyName = "";
@@ -217,7 +216,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.playoffs = [];
         this.selectedTourney.eliminatoryLevels = [];
         this.selectedTourney.teams = [];
-        this.selectedTourney.players = [];
         this.selectedTourney.playoffs = [];
         this.selectedTourney.pointsNeededToWin = 9;
         this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
@@ -231,6 +229,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.teamSortType = TeamSortType.O;
         this.selectedTourney.isOnewayRound = true;
         this.selectedTourney.isOnewayPlayoff = true;
+        this.activeIndex = 0;
+
+        this.tourneyService.selectedTourney = this.selectedTourney;
     }
 
     private prepareRounds(): void {
@@ -277,7 +278,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.roundRows = this.selectedTourney.rounds;
     }
 
-    private preparePlayoffd(): void {
+    private preparePlayoffs(): void {
         if( !this.atLeastTwoRounds) {
             return;
         }
@@ -704,6 +705,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.access = this.tourneyFormGroup.get('access').value;
 
         this.tourneyDate = this.tourneyFormGroup.get('tourneyDate').value;
+        
         this.selectedTourney.datetime = this.tourneyDate;
 
         this.selectedTourney.discipline = this.tourneyFormGroup.get('discipline').value;
@@ -734,8 +736,6 @@ export class TourneyDetailView extends AbstractDetailView {
             this.teamService.newTeam = false;
             this.selectedTourney.teams.push(this.selectedTeam);
         }
-
-        // this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e));
 
         for(let r of this.selectedTourney.rounds) {
             for(let m of r.meetings) {

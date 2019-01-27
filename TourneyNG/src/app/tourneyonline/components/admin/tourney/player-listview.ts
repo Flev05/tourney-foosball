@@ -13,6 +13,7 @@ import { AbstractDetailView } from '../../common/abstract-detailview';
 
 const REDIRECT_PLAYER_PL = "admintourney/dv/playerpl";
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
+const REDIRECT_TEAM_DV   = "admintourney/dv/updateteam";
 
 @Component({
     templateUrl: './player-listview.html',
@@ -20,13 +21,7 @@ const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
 export class PlayerListView extends AbstractDetailView {
 
     selectedTeam: Team;
-
-    toggleable: boolean = false;
-
-    availablePlayers: Player[] = [];
-    selectedPlayerRow: Player;
-
-    fullAddress: string;
+    selectedPlayer: Player;
     playerCols: TableCols[];
 
     constructor(
@@ -54,8 +49,6 @@ export class PlayerListView extends AbstractDetailView {
             this.teamService.newTeam = false;
         }
 
-        this.availablePlayers = [];
-
         let alreadyInTeam: Player[] = [];
         for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
             let t = this.selectedTourney.teams[i];
@@ -63,29 +56,6 @@ export class PlayerListView extends AbstractDetailView {
             for(let j=0; j<p.length; j++ ) {
                 alreadyInTeam.push(p[j]);
             }
-        }
-
-        for(let i=0; i<this.selectedTourney.players.length; i++ ) {
-            let ap = this.selectedTourney.players[i];
-
-            let found: boolean = false;
-            for(let j=0; j<alreadyInTeam.length; j++ ) {
-                let tp = alreadyInTeam[j];
-        
-                if(ap.id == tp.id) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                this.availablePlayers.push(ap);
-            }
-        }
-
-        if(this.selectedTeam.country!=undefined) {
-            this.fullAddress = this.selectedTeam.address + " - " 
-                + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
-                + " (" + this.selectedTeam.country.provinceCode +")";
         }
     }
  
@@ -95,17 +65,15 @@ export class PlayerListView extends AbstractDetailView {
 
         this.router.navigate([REDIRECT_PLAYER_PL]);
     }
-
-    newPlayer() {
-        this.selectedPlayerRow = {};
-        this.playerService.selectedPlayer = {};
-        this.playerService.newPlayer = true;
-        this.router.navigate([REDIRECT_PLAYER_DV]);
+    
+    updateTeamDetails() {
+        this.teamService.newTeam = false;
+        this.router.navigate([REDIRECT_TEAM_DV]);
     }
 
     onPlayerRowSelect(event) {
         console.log(event);
-        this.playerService.selectedPlayer = this.selectedPlayerRow;
+        this.playerService.selectedPlayer = this.selectedPlayer;
         this.playerService.newPlayer = false;
         this.router.navigate([REDIRECT_PLAYER_DV]);
     }

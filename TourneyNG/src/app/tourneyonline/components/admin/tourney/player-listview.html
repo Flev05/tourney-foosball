@@ -13,13 +13,13 @@
             Potete effettuare le seguenti operazioni:
         </p>
         <ul>
-            <li>Aggiungi nuovo giocatore</li>
-            <li>Aggiornare lista giocatori</li>
+            <li>Nuovo giocatore</li>
+            <li>Gestisci lista giocatori</li>
         </ul>        
 
-        <h4>Aggiungi nuovo giocatore</h4>
+        <h4>Nuovo giocatore</h4>
         <p>
-            Con il bottone Aggiungi Giocatore, potete creare un nuovo giocatore non presente nella lista
+            Con il bottone Nuovo Giocatore, potete creare un nuovo giocatore non presente nella lista
             dei giocatori esistenti, visibili alla voce di menù: 
             <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
         </p>
@@ -28,7 +28,13 @@
             i tornei.
         </p>
         <p>
-            Alla fine dell'operazione dovete salvare esplicatmente con il bottone Salva
+            Alla fine dell'operazione di creazione, dovete salvare esplicatmente con il bottone Salva
+        </p>
+
+        <h4>Gestisci lista giocatori</h4>
+        <p>
+            Con il bottone Gestisci Giocatori, si accede alla vista per aggiornare la lista dei giocatori 
+            che forma la squadra.
         </p>
     
     </p-accordionTab>
@@ -47,21 +53,15 @@
         [columns]="playerCols" 
         [value]="selectedTeam.players" 
         selectionMode="single" 
-        [(selection)]="selectedPlayerRow" 
+        [(selection)]="selectedPlayer" 
         (onRowSelect)="onPlayerRowSelect($event)"
         [responsive]="true" 
         [scrollable]="true" 
         scrollHeight="500px">
     
-        <ng-template pTemplate="caption">
-            <div style="text-align:left">
-                <button pButton icon="fa fa-plus" type="button" (click)="newPlayer()" label="Aggiungi Giocatore" ></button>
-            </div>
-        </ng-template>
-    
         <ng-template pTemplate="header" let-columns>
             <tr>
-                <th>N°</th>
+                <th style="width: 15mm;">N°</th>
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
@@ -70,27 +70,33 @@
     
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
-                <td>{{rowIndex+1}}</td>
+                <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                 <td *ngFor="let col of columns">
                     <span class="ui-column-title">{{col.header}}</span>
                     {{rowData[col.field]}}
                 </td>
             </tr>
         </ng-template>  
-    
-        <ng-template pTemplate="summary">
-            <div style="text-align:left">
-                <button pButton icon="fa fa-plus" type="button" (click)="newPlayer()" label="Aggiungi Giocatore" ></button>
-            </div>
-        </ng-template>
     </p-table>
-    
+
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                <button class="ui-button-success" pButton type="button" icon="pi pi-save" label="Aggiorna Lista" 
-                (click)="updateTeamList()"></button>
+            <div class="ui-grid-col-3">
+                <button pButton type="button" 
+                    icon="pi pi-check" 
+                    label="Gestisci Giocatori" 
+                    (click)="updateTeamList()">
+                </button>
             </div>
+
+            <div class="ui-grid-col-3">
+                <button pButton type="button" 
+                    icon="pi pi-check" 
+                    label="Dettaglio Squadra" 
+                    (click)="updateTeamDetails()">
+                </button>
+            </div>
+    
         </div>
     </div>
     

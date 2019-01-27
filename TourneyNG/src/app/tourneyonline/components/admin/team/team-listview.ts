@@ -8,7 +8,6 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
-
 @Component({
     templateUrl: './team-listview.html'
 })

@@ -212,6 +212,14 @@
         <p>
             Per la documentazione completa si rimanda a quella presente della vista di dettaglio del torneo.
         </p>
+
+        <h4>Rimuovere un torneo</h4>
+        <p>
+            Per rimuovere un torneo basta un click sul bottone con la X rossa sulla riga del torneo in fondo a destra.
+            L'azione, propone una popup con una domanda di conferma, e solo in caso di risposta affermativa, il torneo 
+            verrà rimosso dal sistema senza possibilità di recupero.
+        </p>
+
     </p-accordionTab>
 </p-accordion>
 </div>
@@ -272,22 +280,22 @@
  
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th>N°</th>
+            <th style="width: 15mm;">N°</th>
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
-            <th>X</th>
+            <th style="width: 15mm;">X</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
-            <td>{{rowIndex+1}}</td>
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td *ngFor="let col of columns">
                 <span class="ui-column-title">{{col.header}}</span>
                 {{rowData[col.field]}}
             </td>
-            <td>
+            <td style="width: 15mm;">
                 <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
             </td>
         </tr>

@@ -14,9 +14,10 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 })
 export class TeamPickList extends AbstractListView {
 
-    teamPool: Team[];
     teamCols: TableCols[] = TeamService.cols;
-    availableTeams: Team[] = [];
+
+    avalilableTeams: string[];
+    targetTeams: string[];
 
     constructor( protected tourneyService: TourneyService
         , public router: Router
@@ -33,17 +34,17 @@ export class TeamPickList extends AbstractListView {
     }
     
     private prepareAvailableTeams(): void {
-        this.teamPool = this.teamService.teamPool;
-        this.availableTeams = [...this.teamPool];
-
-        for(let pt of this.teamPool) {            
-            for(let t of this.selectedTourney.teams) {
-                if( pt.id == t.id ) {
-                    let index: number = this.availableTeams.indexOf(pt);
-                    if(index > -1) {
-                        this.availableTeams.splice(index, 1);
-                    }
-                }
+        
+        this.targetTeams = [];
+        for(let t of this.selectedTourney.teams) {
+            this.targetTeams.push(t.teamName);
+        }
+        
+        this.avalilableTeams = [];
+        for(let t of this.teamService.teamPool) {
+            let tn = this.targetTeams.find(x => x == t.teamName);
+            if( tn == undefined) {
+                this.avalilableTeams.push(t.teamName);
             }
         }
     }
@@ -51,6 +52,15 @@ export class TeamPickList extends AbstractListView {
     newTeam() {
         this.teamService.newTeam = true;
         this.router.navigate([TeamListView.redirect]);
+    }
+    
+    goBack(): void {
+        this.selectedTourney.teams = [];
+        for(let pn of this.targetTeams) {
+            let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
+            this.selectedTourney.teams.push(t);
+        }
+        this.location.back();
     }
 
     onError(n:any) {

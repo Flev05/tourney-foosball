@@ -9,10 +9,8 @@
 <p-accordion>
     <p-accordionTab header="Introduzione">            
         <p>
-            Da questa vista potete aggiungere una o più squadra selezionandole da quelle disponibili.
+            Da questa vista potete aggiungere una o più squadre selezionandole da quelle disponibili.
             Se la squadra non esiste, la potete creare con il bottone Nuova Squadra
-        </p>
-        <p>
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -26,7 +24,7 @@
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
-    <p-pickList [source]="availableTeams" [target]="selectedTourney.teams" sourceHeader="Disponibili" targetHeader="Selezionati" 
+    <p-pickList [source]="avalilableTeams" [target]="targetTeams" sourceHeader="Disponibili" targetHeader="Selezionati" 
             [responsive]="true"
             dragdrop="true" 
             dragdropScope="teams" 
@@ -34,14 +32,14 @@
             [targetStyle]="{'height':'400px'}">
         <ng-template let-t pTemplate="item">
             <div class="ui-helper-clearfix">
-                <div>{{t.teamName}}</div>
+                <div>{{t}}</div>
             </div>
         </ng-template>
     </p-pickList>     
 
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+            <div class="ui-grid-col-3">
                 <button class="ui-button-success" pButton type="button" icon="pi pi-save" label="Nuova Squadra" 
                 (click)="newTeam()"></button>
             </div>

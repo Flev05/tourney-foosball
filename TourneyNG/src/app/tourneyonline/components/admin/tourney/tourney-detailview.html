@@ -360,14 +360,16 @@
                             <p-radioButton name="isDailyGroupname" 
                                 label="Vero" 
                                 value="true" 
-                                formControlName="isDaily">
+                                formControlName="isDaily"
+                                (onClick)="onIsDailyClick()">
                             </p-radioButton>
                         </div>
                         <div class="ui-g-12">
                             <p-radioButton name="isDailyGroupname" 
                                 label="Falso" 
                                 value="false" 
-                                formControlName="isDaily">
+                                formControlName="isDaily"
+                                (onClick)="onIsNotDailyClick()">
                             </p-radioButton>
                         </div>
                     </div>
@@ -515,14 +517,16 @@
                                 <p-radioButton name="tourneyTypeGroupname" 
                                     label="A punti" 
                                     value="score" 
-                                    formControlName="tourneyType">
+                                    formControlName="tourneyType"
+                                    (onClick)="onScoreClick()">
                                 </p-radioButton>
                             </div>
                             <div class="ui-g-12">
                                 <p-radioButton name="tourneyTypeGroupname" 
                                     label="A tempo" 
                                     value="time" 
-                                    formControlName="tourneyType">
+                                    formControlName="tourneyType"
+                                    (onClick)="onTimeClick()">
                                 </p-radioButton>
                             </div>
                         </div>
@@ -539,19 +543,22 @@
                             <div class="ui-g-12">
                                 <p-checkbox name="phasesGroupname" label="Gironi"     
                                     value="round"     
-                                    [formControl]="tourneyFormGroup.controls['phases']">
+                                    [formControl]="tourneyFormGroup.controls['phases']"
+                                    (onChange)="onRoundPhaseChange($event)">
                                 </p-checkbox>
                             </div>
                             <div class="ui-g-12">
                                 <p-checkbox name="phasesGroupname" label="Play Off"     
                                     value="playoff"     
-                                    [formControl]="tourneyFormGroup.controls['phases']">
+                                    [formControl]="tourneyFormGroup.controls['phases']"
+                                    (onChange)="onPlayoffPhaseChange($event)">
                                 </p-checkbox>
                             </div>
                             <div class="ui-g-12">
                                 <p-checkbox name="phasesGroupname" label="Eliminatorie" 
                                     value="eliminatory" 
-                                    [formControl]="tourneyFormGroup.controls['phases']">
+                                    [formControl]="tourneyFormGroup.controls['phases']"
+                                    (onChange)="onEliminatoryPhaseChange($event)">
                                 </p-checkbox>        
                             </div>          
                         </div>          
@@ -688,14 +695,16 @@
                                 <p-radioButton name="allMatchesGroupname" 
                                     label="Tutte le partite" 
                                     value="true" 
-                                    formControlName="isAllMatches">
+                                    formControlName="isAllMatches"
+                                    (onClick)="onAllMatchesClick()">
                                 </p-radioButton>
                             </div>
                             <div class="ui-g-12">
                                 <p-radioButton name="allMatchesGroupname" 
                                     label="Al Meglio delle {{bestOffWinner}} partite" 
                                     value="false" 
-                                    formControlName="isAllMatches">
+                                    formControlName="isAllMatches"
+                                    (onClick)="onBestOfClick()">
                                 </p-radioButton>
                             </div>
                         </div>

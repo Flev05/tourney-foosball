@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 
 import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Message } from 'primeng/api';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';

@@ -393,9 +393,12 @@ export class TourneyDetailView extends AbstractDetailView {
         this.router.navigate([REDIRECT_ROUND_DV]);
     }
 
+    
     onPlayoffRowSelect(event) {
-        let playoff= event.data;
-        this.tourneyService.onPlayoffRowSelect(playoff, REDIRECT_PLAYOFF_DV);
+        this.tourneyService.selectedPlayoff = event.data;
+        this.router.navigate([REDIRECT_PLAYOFF_DV]);
+
+        // this.tourneyService.onPlayoffRowSelect(playoff, REDIRECT_PLAYOFF_DV);
     }
 
     doPlayoffDelete(playoff: Playoff) {

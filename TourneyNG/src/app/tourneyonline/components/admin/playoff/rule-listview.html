@@ -124,9 +124,7 @@
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="positions" 
                             [(ngModel)]="rowData.fromRound.position" 
-                            [style]="{'width':'100%'}"
-                            optionLabel="label"
-                            (onChange)="onPositionChange($event.value)" >
+                            optionLabel="label">
                         </p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">
@@ -140,9 +138,7 @@
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="rounds" 
                             [(ngModel)]="rowData.fromRound.round" 
-                            [style]="{'width':'100%'}"
-                            optionLabel="label"
-                            (onChange)="onRoundChange($event.value)">
+                            optionLabel="label">
                         </p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">

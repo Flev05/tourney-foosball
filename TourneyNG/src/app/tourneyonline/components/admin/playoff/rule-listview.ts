@@ -4,11 +4,8 @@ import { Location } from '@angular/common';
 
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Message } from 'app/components/common/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from '../../../domain/playoff-rule';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
@@ -37,7 +34,7 @@ export class RuleListView extends AbstractListView {
     rounds: Combobox[];
 
 
-    constructor(private fb: FormBuilder,
+    constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
@@ -61,21 +58,22 @@ export class RuleListView extends AbstractListView {
     }
 
     goMeeting() {
-
-        const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
-        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
-    }
-
-    private onComplete(): void {
-        this.selectedPlayoff.round.meetings = [];
-        for(let mdb of this.mdbs) {
-            let m: Meeting = JSON.parse(mdb.json);
-            this.selectedPlayoff.round.meetings.push(m);
-        }
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-
         this.router.navigate([RuleListView.redirectToMeeting]);
+
+        // const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        // subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
     }
+
+    // private onComplete(): void {
+    //     this.selectedPlayoff.round.meetings = [];
+    //     for(let mdb of this.mdbs) {
+    //         let m: Meeting = JSON.parse(mdb.json);
+    //         this.selectedPlayoff.round.meetings.push(m);
+    //     }
+    //     this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+
+    //     this.router.navigate([RuleListView.redirectToMeeting]);
+    // }
 
     doDelete() {
         console.log("doDelete(): " + this.selectedPlayoff.round.name);

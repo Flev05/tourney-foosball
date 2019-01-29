@@ -492,23 +492,23 @@ export class TourneyService {
         }
     }
 
-    onPlayoffRowSelect(playoff: Playoff, redirect: string): any {
+    // onPlayoffRowSelect(playoff: Playoff, redirect: string): any {
         
-        this.redirect = redirect;
+    //     this.redirect = redirect;
 
-        this.selectedPlayoff = playoff;
-        const subscr = this.loadPlayoffMeeting(playoff.id, playoff.id);
-        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
-    }
+    //     this.selectedPlayoff = playoff;
+    //     const subscr = this.loadPlayoffMeeting(playoff.id, playoff.id);
+    //     subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
+    // }
 
-    private onComplete(): void {
-        this.selectedPlayoff.round.meetings = [];
-        for(let mdb of this.mdbs) {
-            let m: Meeting = JSON.parse(mdb.json);
-            this.selectedPlayoff.round.meetings.push(m);
-        }
-        this.router.navigate([this.redirect]);
-    }
+    // private onComplete(): void {
+    //     this.selectedPlayoff.round.meetings = [];
+    //     for(let mdb of this.mdbs) {
+    //         let m: Meeting = JSON.parse(mdb.json);
+    //         this.selectedPlayoff.round.meetings.push(m);
+    //     }
+    //     this.router.navigate([this.redirect]);
+    // }
 
     private next(n:any) {
     }

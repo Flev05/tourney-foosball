@@ -15,7 +15,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 })
 export class MeetingListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
-    cols: TableCols[] ;
+    meetingsCols: TableCols[] ;
     rows: any[];
     selectedRow: any;
 
@@ -37,9 +37,15 @@ export class MeetingListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
+        this.meetingsCols = [
+            { field: 'dateAndTime', header: 'Data/Ora' },
+            { field: 'direction',   header: 'A/R' },
+            { field: 'name',        header: 'Incontro' }
+        ];
+
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
 
-        this.removeRoundTripPlayoff();
+        // this.removeRoundTripPlayoff();
         
         this.meetings = this.selectedPlayoff.round.meetings;
         for(let m of this.meetings) {
@@ -56,11 +62,6 @@ export class MeetingListView extends AbstractListView {
             m.ruleName = rn;
         }
 
-        this.cols = [
-            { field: 'dateAndTime', header: 'Data/Ora' },
-            { field: 'direction',   header: 'A/R' },
-            { field: 'name',        header: 'Incontro' }
-        ];
 
         this.rows = [];
         for(let i=0;i<this.meetings.length; i++) {
@@ -71,26 +72,26 @@ export class MeetingListView extends AbstractListView {
         this.rows = this.sortMeetings(this.rows);
     }
  
-    private removeRoundTripPlayoff() {
-        console.log("removeRoundTripPlayoff()");
+    // private removeRoundTripPlayoff() {
+    //     console.log("removeRoundTripPlayoff()");
 
-        if(!this.selectedTourney.isOnewayPlayoff)  {
-            return;
-        }
+    //     if(!this.selectedTourney.isOnewayPlayoff)  {
+    //         return;
+    //     }
         
-        let tmpMeetings: Array<Meeting> = new Array<Meeting>();
+    //     let tmpMeetings: Array<Meeting> = new Array<Meeting>();
 
-        for( let m of this.selectedPlayoff.round.meetings) {
-            if(m.direction == Direction.OneWay) {
-                tmpMeetings.push(m);
-            } else {
-                this.tourneyService.deleteMeeting(m);
-            }
-        }
-        this.selectedPlayoff.round.meetings = tmpMeetings;
+    //     for( let m of this.selectedPlayoff.round.meetings) {
+    //         if(m.direction == Direction.OneWay) {
+    //             tmpMeetings.push(m);
+    //         } else {
+    //             this.tourneyService.deleteMeeting(m);
+    //         }
+    //     }
+    //     this.selectedPlayoff.round.meetings = tmpMeetings;
         
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
-    }
+    //     this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+    // }
 
     onRowSelect(event) {
         console.log(event.data);

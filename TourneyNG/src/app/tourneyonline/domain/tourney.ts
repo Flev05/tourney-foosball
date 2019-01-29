@@ -12,6 +12,7 @@ import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from './tourney-combobox';
+import { Meeting } from './meeting';
 
 export interface Tourney {
     id?: number;
@@ -56,4 +57,5 @@ export interface Tourney {
     selectedTeamsNumCombobox?: Combobox;
 
     teams?: Team[];
+    meetingsForDelete?: Meeting[];
 }

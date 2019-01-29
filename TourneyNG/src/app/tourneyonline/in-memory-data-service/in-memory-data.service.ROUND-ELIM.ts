@@ -66,6 +66,7 @@ static getTourneyDb() {
       ,playoffs:[]
       ,eliminatoryLevels: []
       ,objectives:[]  
+      ,meetingsForDelete:[]
     };
 
   let t = { 

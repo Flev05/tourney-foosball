@@ -63,6 +63,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         this.tourneys = this.filter(this.tourneys);
         this.selectedTourney = this.tourneys[0];
+        this.selectedTourney.meetingsForDelete = [];
 
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {

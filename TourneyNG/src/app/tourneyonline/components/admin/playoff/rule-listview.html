@@ -100,44 +100,62 @@
     </button>
 </div>                  
 
-<form [formGroup]="playoffFormGroup" (ngSubmit)="onSubmit(playoffFormGroup.value)">
-    <p-table *ngIf="atLeast1Rule"
-            [columns]="playoffCols" 
-            [value]="playoffConfigs" 
-            responsive="true"
-            selectionMode="single" 
-            [(selection)]="selectedPlayoffConfig" 
-            (onRowSelect)="onRowSelect($event)">
+<p-table *ngIf="atLeast1Rule"
+        [columns]="playoffCols" 
+        [value]="playoffConfigs" 
+        responsive="true">
 
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <th style="width: 15mm;">N°</th>
-                <th *ngFor="let col of columns">
-                    {{col.header}}
-                </th>
-                <th style="width: 15mm;">X</th>
-            </tr>            
-        </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 15mm;">N°</th>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+            <th style="width: 15mm;">X</th>
+        </tr>            
+    </ng-template>
 
-        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-            <tr [pSelectableRow]="rowData">
-                <td style="width: 15mm; text-align: center;">{{rowIndex + 1}}</td>  
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+        <tr>
+            <td style="width: 15mm; text-align: center;">{{rowIndex + 1}}</td>  
 
-                <td>{{rowData.fromRound.position.label}}</td>
-                <td>{{rowData.fromRound.round.label}}</td>
+            <td pEditableColumn>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="positions" 
+                            [(ngModel)]="rowData.fromRound.position" 
+                            [style]="{'width':'100%'}"
+                            optionLabel="label"
+                            (onChange)="onPositionChange($event.value)" >
+                        </p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{rowData.fromRound.position.label}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
 
-                <td style="width: 15mm; text-align: center;">
-                    <button class="ui-button-danger" pButton icon="fa fa-close" (click)="doDelete(rowData)"></button>
-                </td>        
-            </tr>
-        </ng-template>
-    </p-table>
+            <td pEditableColumn>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown [options]="rounds" 
+                            [(ngModel)]="rowData.fromRound.round" 
+                            [style]="{'width':'100%'}"
+                            optionLabel="label"
+                            (onChange)="onRoundChange($event.value)">
+                        </p-dropdown>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{rowData.fromRound.round.label}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            <button pButton icon="fa fa-plus" type="button" (click)="add()" label="Aggiungi Regola" ></button>
-        </div>
-    </div>
-</form>
+            <td style="width: 15mm; text-align: center;">
+                <button class="ui-button-danger" pButton icon="fa fa-close" (click)="doDelete(rowData)"></button>
+            </td>        
+        </tr>
+    </ng-template>
+</p-table>
 </div>
     

@@ -102,20 +102,21 @@ export class RoundDetailView extends AbstractDetailView {
     }
     
     goMeeting() {
-        const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
-    }
-
-    private onComplete(): void {
-        this.selectedRound.meetings = [];
-        for(let mdb of this.mdbs) {
-            let m: Meeting = JSON.parse(mdb.json);
-            this.selectedRound.meetings.push(m);
-        }
-        this.tourneyService.selectedRound = this.selectedRound;
-
         this.router.navigate([RoundDetailView.meetingListviewRedirect]);
+        // const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        // subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
     }
+
+    // private onComplete(): void {
+    //     this.selectedRound.meetings = [];
+    //     for(let mdb of this.mdbs) {
+    //         let m: Meeting = JSON.parse(mdb.json);
+    //         this.selectedRound.meetings.push(m);
+    //     }
+    //     this.tourneyService.selectedRound = this.selectedRound;
+
+    //     this.router.navigate([RoundDetailView.meetingListviewRedirect]);
+    // }
 
     onSubmit(value: string) {
 

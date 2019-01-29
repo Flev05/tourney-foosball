@@ -11,22 +11,18 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
     templateUrl: './rule-listview.html'
 })
 export class RuleListView extends AbstractListView {
-    static redirect: string = "adminplayoff/lv/playoffRuleLv/dv";
     static redirectToMeeting: string = "adminplayoff/lv/meetingLv";
-
-    playoffFormGroup: FormGroup;
-
-    msgs: Message[] = [];
 
     playoffConfigs: PlayoffRule[];
     playoffCols: TableCols[] = [
-        { field: 'position',   header: 'Classificata' },
-        { field: 'round',   header: 'Girone' },
+        { field: 'position', header: 'Classificata' },
+        { field: 'round',    header: 'Girone' },
     ];
 
     selectedPlayoff: Playoff;
@@ -37,12 +33,16 @@ export class RuleListView extends AbstractListView {
     atLeast1Rule: boolean;
     mdbs: MeetingDb[];
 
+    positions: Combobox[];
+    rounds: Combobox[];
+
+
     constructor(private fb: FormBuilder,
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
     ) {
-        super(RuleListView.redirect, tourneyService, router, location);
+        super("", tourneyService, router, location);
     }
 
     ngOnInit() {
@@ -56,9 +56,8 @@ export class RuleListView extends AbstractListView {
         this.atLeast1Rule = this.playoffConfigs != null && this.playoffConfigs.length >= 0 ? true: false;
         this.atLeast2Rules = this.playoffConfigs != null && this.playoffConfigs.length >= 2 ? true: false;
 
-        this.playoffFormGroup = this.fb.group({
-            'roundName':  new FormControl(this.selectedPlayoff.round.name, Validators.compose([Validators.required])),     
-        });
+        this.positions = this.tourneyService.positionsCombobox;
+        this.rounds    = this.tourneyService.roundsCombobox;
     }
 
     goMeeting() {
@@ -76,23 +75,6 @@ export class RuleListView extends AbstractListView {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
 
         this.router.navigate([RuleListView.redirectToMeeting]);
-    }
-
-    add() {
-
-        this.tourneyService.newRule = true;
-        this.tourneyService.selectedIndex = 0;
-        this.router.navigate([RuleListView.redirect]);
-    }
-
-    onRowSelect(event) {
-
-        this.tourneyService.selectedPlayoffConfig = this.selectedPlayoffConfig;
-
-        let index = this.playoffConfigs.indexOf(this.selectedPlayoffConfig);
-        this.tourneyService.selectedIndex = index;
-
-        this.router.navigate([RuleListView.redirect]);
     }
 
     doDelete() {
@@ -113,6 +95,7 @@ export class RuleListView extends AbstractListView {
             }
         }
     }
+
     private removePlayoff(p: Playoff): any {
         for(let m of p.round.meetings) {
             this.tourneyService.deleteMeeting(m);
@@ -121,11 +104,10 @@ export class RuleListView extends AbstractListView {
     }
 
     onError(n:any) {
-        this.msgs = [];
         let msgerr : string;
 
         msgerr = 'Modifica configurazione playoff fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        console.error(msgerr);
     }
 }
 

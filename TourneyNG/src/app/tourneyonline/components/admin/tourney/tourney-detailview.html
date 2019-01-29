@@ -819,8 +819,8 @@
                 </p-message>
             </div>     
 
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
+            <div *ngIf="atLeastTwoTeams" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Turni:
                 </div>
@@ -847,7 +847,7 @@
                 </div>
             </div>                          
 
-            <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:
                 </div>
@@ -864,25 +864,23 @@
                 </div>
             </div>
 
-            <div *ngIf="atLeastTwoTeams" class="ui-grid-row">
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Gironi:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di gironi che compone il torneo">
+                        pTooltip="Scegliere il numero di gironi all'italiana che compone il torneo">
                     <p-dropdown id="roundId" 
                         [options]="roundsCombobox" 
                         formControlName="selectedRoundsNumCombobox"  
                         optionLabel="label"
                         (onChange)="onRoundNumChange($event.value)" 
-                        placeholder="Seleziona"
                         [autoWidth]="false">
                     </p-dropdown>
                 </div>
             </div>
     
-            <p-table *ngIf="atLeastTwoTeams" 
-                    [columns]="roundCols"
+            <p-table [columns]="roundCols"
                     [value]="roundRows"
                     [responsive]="true"
                     selectionMode="single" 
@@ -951,8 +949,8 @@
                 </p-message>
             </div>     
 
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div *ngIf="atLeastTwoRounds" class="ui-grid-row">
+            <div *ngIf="atLeastTwoRounds" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Playoff:
                 </div>
@@ -979,7 +977,7 @@
                 </div>
             </div>      
 
-            <div *ngIf="atLeastTwoRounds" class="ui-grid-row">
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:
                 </div>
@@ -996,24 +994,23 @@
                 </div>
             </div>
 
-            <div *ngIf="atLeastTwoRounds" class="ui-grid-row">
+            <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Gironi:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di gironi che andrà a comporre la fase dei playoff">
+                        pTooltip="Scegliere il numero di gironi di playoff della fase di playoff">
                     <p-dropdown id="playoffId" 
                         [options]="playoffsCombobox" 
                         formControlName="selectedPlayoffsCB"  
                         optionLabel="label"
                         (onChange)="onPlayoffNumChange($event.value)" 
-                        placeholder="Seleziona"
                         [autoWidth]="false">
                     </p-dropdown>
                 </div>
             </div>
             
-            <p-table *ngIf="atLeastTwoRounds" [columns]="playoffCols"
+            <p-table [columns]="playoffCols"
                 [value]="playoffRows"
                 [responsive]="true"
                 selectionMode="single" 
@@ -1177,7 +1174,7 @@
                 </p-message>
             </div>     
 
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div *ngIf="!incompleteConfiguration" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:

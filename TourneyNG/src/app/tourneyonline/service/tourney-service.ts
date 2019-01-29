@@ -67,7 +67,6 @@ export class TourneyService {
 
     originalTeams: Team[];
     meetings: Meeting[];
-    meetingsForDelete: Meeting[];
     mdbs: MeetingDb[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
@@ -207,13 +206,6 @@ export class TourneyService {
 
     getSequenceNumber() {
         return this.sequenceNumber++;
-    }
-
-    markMeetingsForDelete(round: Round): any {
-        if( this.meetingsForDelete == undefined ) {
-            this.meetingsForDelete = [];
-        }
-        this.meetingsForDelete = this.meetingsForDelete.concat(round.meetings);
     }
 
     /**

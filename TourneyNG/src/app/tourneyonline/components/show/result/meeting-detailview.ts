@@ -163,7 +163,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.updateNextLevel();
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
+        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
     }
 
     /**

@@ -101,7 +101,7 @@ export class ObjectiveListView extends AbstractListView {
         this.objectives[this.objectives.indexOf(this.selectedObjective)] = this.row;
 
         this.selectedTourney.objectives = this.objectives;
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack() );
 
         this.row = null;
         this.displayDialog = false;

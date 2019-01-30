@@ -531,6 +531,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
     
     private addToMeetingMap(mdbs: MeetingDb[]): void {
+        console.log("Entering addToMeetingMap(mdbs.length=" + mdbs.length + ")");
+        if(mdbs.length == 0 ) {
+            return;
+        }
         let elid = mdbs[0].eliminatoryId;
         this.meetingMap.set(elid, mdbs);
 
@@ -693,7 +697,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         ];
 
         if(this.isTopLevel) {
-            this.cols.push({ field: 'position1', header: 'C°'});
+            this.cols.push({ field: 'position1', header: 'Pos.'});
             this.cols.push({ field: 'fromRound1', header: 'Girone' });
             if(this.isPlayoff) {
                 this.cols.push({ field: 'fromPlayoff1', header: 'Playoff'});
@@ -701,7 +705,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             this.cols.push({ field: 'versus',    header: 'Vs' });
 
-            this.cols.push({ field: 'position2', header: 'C°'});
+            this.cols.push({ field: 'position2', header: 'Pos.'});
             this.cols.push({ field: 'fromRound2', header: 'Girone' });
             if(this.isPlayoff) {
                 this.cols.push({ field: 'fromPlayoff2', header: 'Playoff'});

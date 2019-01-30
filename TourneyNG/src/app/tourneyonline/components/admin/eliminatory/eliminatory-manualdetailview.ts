@@ -144,7 +144,12 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         });
     }
     
-    onSubmit(value: string) {
+    goBack(): void {
+        this.save();
+        super.goBack();
+    }
+
+    private save() {
 
         let m1 = this.selectedEliminatory.round.meetings[0];
 
@@ -217,7 +222,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             this.tourneyService.updateEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     doubleSelection() {

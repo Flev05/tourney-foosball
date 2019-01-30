@@ -57,7 +57,7 @@ export class TeamService {
     }
 
     /** POST: add a new Team to the server */
-    addTeam (team: Team): Observable<Team> {
+    private addTeam (team: Team): Observable<Team> {
         return this.http.post<Team>(teamUrl, team, httpOptions).pipe(
             tap((team: Team) => this.log(`added Team w/ id=${team.id}`)),
             catchError(this.handleError<Team>('addTeam'))
@@ -65,7 +65,7 @@ export class TeamService {
     }
 
     /** PUT: update the Team on the server */
-    updateTeam (team: Team ): Observable<Team> {
+    private updateTeam (team: Team ): Observable<Team> {
         const url = `${teamUrl}`;
         
         console.log(team);
@@ -74,6 +74,13 @@ export class TeamService {
             tap(_ => this.log(`updated Team id=${team.id}`)),
             catchError(this.handleError<Team>('updateTeam'))
         );
+    }
+
+    saveTeam (team: Team ): Observable<Team> {
+        if(team.id == null) {
+            return this.addTeam(team);
+        }
+        return this.updateTeam(team);
     }
     
     /** DELETE: delete the Team from the server */

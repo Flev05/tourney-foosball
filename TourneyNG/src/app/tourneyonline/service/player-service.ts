@@ -57,7 +57,7 @@ export class PlayerService {
     }
 
     /** POST: add a new Player to the server */
-    addPlayer (player: Player): Observable<Player> {
+    private addPlayer (player: Player): Observable<Player> {
         return this.http.post<Player>(playerUrl, player, httpOptions).pipe(
             tap((player: Player) => this.log(`added Player w/ id=${player.id}`)),
             catchError(this.handleError<Player>('addPlayer'))
@@ -65,7 +65,7 @@ export class PlayerService {
     }
 
     /** PUT: update the Player on the server */
-    updatePlayer (player: Player ): Observable<Player> {
+    private updatePlayer (player: Player ): Observable<Player> {
         const url = `${playerUrl}`;
         
         console.log(player);
@@ -74,6 +74,13 @@ export class PlayerService {
             tap(_ => this.log(`updated Player id=${player.id}`)),
             catchError(this.handleError<Player>('updatePlayer'))
         );
+    }
+
+    savePlayer(player: Player): Observable<Player> {
+        if(player.id == null) {
+            return this.addPlayer(player);
+        }
+        return this.updatePlayer(player);
     }
     
     /** DELETE: delete the Player from the server */

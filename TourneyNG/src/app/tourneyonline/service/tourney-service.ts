@@ -336,7 +336,7 @@ export class TourneyService {
     }
 
     /** POST: add a new tourney to the server */
-    addTourney (tourney: Tourney): Observable<Tourney> {
+    private addTourney (tourney: Tourney): Observable<Tourney> {
         let json: string = JSON.stringify(tourney);
         let tourneyDb: TourneyDb = {id: tourney.id, json: json};
 
@@ -347,11 +347,18 @@ export class TourneyService {
     }
 
     /** PUT: prepare the TourneyDb by stringify of received tourney to save on the server */
-    updateTourney (tourney: Tourney ): Observable<Tourney> {
+    private updateTourney (tourney: Tourney ): Observable<Tourney> {
         let json: string = JSON.stringify(tourney);
         let tourneyDb: TourneyDb = {id: tourney.id, json: json};
 
         return this.updateTourneyDb(tourneyDb);
+    }
+
+    saveTourney (tourney: Tourney ): Observable<Tourney> {
+        if(tourney.id == null) {
+            return this.addTourney(tourney);
+        }
+        return this.updateTourney(tourney);
     }
 
     /** PUT: update the tourney on the server */
@@ -369,16 +376,28 @@ export class TourneyService {
         );
     }
 
-    addRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
-        this.addMeetingDb(m, tourneyId, roundId, 0, 0)
+    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
+        if(m.id == null) {
+            this.addMeetingDb(m, tourneyId, roundId, 0, 0)
+        } else {
+            this.updateMeetingDb(m, tourneyId, roundId, 0, 0)
+        }
     }
 
-    addPlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
-        this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
+    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
+        if(m.id == null) {
+            this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
+        } else {
+            this.updateMeetingDb(m, tourneyId, 1, playoffId, 0)
+        }
     }
 
-    addEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
-        this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
+    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
+        if(m.id == null) {
+            this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
+        } else {
+            this.updateMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
+        }
     }
 
     private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
@@ -492,24 +511,6 @@ export class TourneyService {
         }
     }
 
-    // onPlayoffRowSelect(playoff: Playoff, redirect: string): any {
-        
-    //     this.redirect = redirect;
-
-    //     this.selectedPlayoff = playoff;
-    //     const subscr = this.loadPlayoffMeeting(playoff.id, playoff.id);
-    //     subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
-    // }
-
-    // private onComplete(): void {
-    //     this.selectedPlayoff.round.meetings = [];
-    //     for(let mdb of this.mdbs) {
-    //         let m: Meeting = JSON.parse(mdb.json);
-    //         this.selectedPlayoff.round.meetings.push(m);
-    //     }
-    //     this.router.navigate([this.redirect]);
-    // }
-
     private next(n:any) {
     }
 
@@ -526,8 +527,14 @@ export class TourneyService {
         r.meetings = [];
     }
 
+    deleteUnusedMeetings(meetings: Meeting[] ): void {
+        for(let m of meetings) {
+            this.deleteMeeting(m);
+        }
+    }
+
     /** DELETE: delete the Meeting from the server */
-    deleteMeeting (m: Meeting ): void {
+    private deleteMeeting (m: Meeting ): void {
         let id: number = m.id;
         const url = meetingUrl + "/" + id;
 

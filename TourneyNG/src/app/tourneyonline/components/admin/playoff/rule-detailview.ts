@@ -91,12 +91,12 @@ export class RuleDetailView extends AbstractDetailView {
                     let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
                     this.selectedPlayoff.round.meetings.push(m);
                     
-                    this.tourneyService.addPlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
+                    this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
     
                     if(!this.selectedTourney.isOnewayPlayoff) {
                         m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
                         this.selectedPlayoff.round.meetings.push(m);
-                        this.tourneyService.addPlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
+                        this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
                     }        
                 }
             }
@@ -124,7 +124,7 @@ export class RuleDetailView extends AbstractDetailView {
         this.selectedPlayoff.playoffRules = this.playoffConfigs;
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     onError(n:any) {

@@ -86,12 +86,10 @@ export class MeetingListView extends AbstractListView {
             if(m.direction == Direction.OneWay) {
                 tmpMeetings.push(m);
             } else {
-                this.tourneyService.deleteMeeting(m);
+                this.selectedTourney.meetingsForDelete.push(m);
             }
         }
         this.selectedRound.meetings = tmpMeetings;
-        
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onRowSelect(event) {
@@ -109,6 +107,5 @@ export class MeetingListView extends AbstractListView {
         msgerr = 'Aggiornamento configurazione gironi fallita';
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
     }
-
 }
 

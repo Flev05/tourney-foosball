@@ -89,7 +89,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         });
     }
 
-    onSubmit(value: string) {
+    private save() {
 
         let m1 = this.selectedEliminatory.round.meetings[0];
 
@@ -112,10 +112,13 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
-
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
-
+    
+    goBack(): void {
+        this.save();
+        super.goBack();
+    }
+    
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

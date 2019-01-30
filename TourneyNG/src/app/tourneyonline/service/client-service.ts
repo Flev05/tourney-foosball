@@ -7,6 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Client } from '../domain/client';
 import { Combobox } from '../domain/tourney-combobox';
+import { createLContainer } from '@angular/core/src/render3/instructions';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -58,7 +59,7 @@ export class ClientService {
     }
 
     /** POST: add a new Client to the server */
-    createClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
+    private createClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
         console.log(client);
         let url = clientUrl + "/insert";
 
@@ -69,7 +70,7 @@ export class ClientService {
     }
 
     /** PUT: update the Client on the server */
-    updateClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
+    private updateClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
         console.log(client);
         const url = clientUrl + "/update";
         
@@ -79,6 +80,13 @@ export class ClientService {
         );
     }
     
+    saveClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
+        if(client.id == null) {
+            return this.createClient(client, selector);
+        }
+        return this.updateClient(client, selector);
+    }
+
     /** DELETE: delete the Client from the server */
     deleteClient (client: Client | number, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
         console.log(client);

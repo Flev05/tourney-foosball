@@ -40,13 +40,11 @@ export class MeetingListView extends AbstractListView {
         this.meetingsCols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
             { field: 'direction',   header: 'A/R' },
-            { field: 'name',        header: 'Incontro' }
+            { field: 'ruleName',    header: 'Incontro' }
         ];
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
 
-        // this.removeRoundTripPlayoff();
-        
         this.meetings = this.selectedPlayoff.round.meetings;
         for(let m of this.meetings) {
             let p1 = m.rule1.fromRound.position.label;
@@ -62,36 +60,30 @@ export class MeetingListView extends AbstractListView {
             m.ruleName = rn;
         }
 
-
         this.rows = [];
         for(let i=0;i<this.meetings.length; i++) {
             let m = this.meetings[i];
             let dt = this.dateFormatPipe.transform(m.datetime);
-            this.rows.push({m:m, dateAndTime: dt, direction: m.direction, name: m.name});
+            this.rows.push({m:m, dateAndTime: dt, direction: m.direction, ruleName: m.ruleName});
         }
-        this.rows = this.sortMeetings(this.rows);
+        this.rows = this.sortMeetingRows(this.rows);
     }
  
-    // private removeRoundTripPlayoff() {
-    //     console.log("removeRoundTripPlayoff()");
-
-    //     if(!this.selectedTourney.isOnewayPlayoff)  {
-    //         return;
-    //     }
-        
-    //     let tmpMeetings: Array<Meeting> = new Array<Meeting>();
-
-    //     for( let m of this.selectedPlayoff.round.meetings) {
-    //         if(m.direction == Direction.OneWay) {
-    //             tmpMeetings.push(m);
-    //         } else {
-    //             this.tourneyService.deleteMeeting(m);
-    //         }
-    //     }
-    //     this.selectedPlayoff.round.meetings = tmpMeetings;
-        
-    //     this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
-    // }
+    private sortMeetingRows(meetings: any[]): any[] {
+        return meetings.sort((m1, m2) => {
+            if (m1.dateAndTime > m2.dateAndTime) {
+                return 1;
+            }
+            if (m1.dateAndTime < m2.dateAndTime) {
+                return -1;
+            }
+            if(m1.direction > m2.direction) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+    }
 
     onRowSelect(event) {
         console.log(event.data);

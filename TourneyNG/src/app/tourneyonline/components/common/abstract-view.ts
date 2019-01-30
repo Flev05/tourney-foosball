@@ -152,7 +152,7 @@ export abstract class AbstractView implements OnInit {
         }
 
         let m : Meeting = {
-            id: this.tourneyService.getSequenceNumber(),
+            id: null,
             name: name,
             datetime: this.selectedTourney.datetime,
             address: this.selectedTourney.address,

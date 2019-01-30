@@ -88,13 +88,10 @@ export class PlayoffListView extends AbstractListView {
         this.newPlayoff = false;
         
         this.selectedTourney.playoffs = this.playoffs;
-
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
     }
 
     onRowSelect(event) {
         let playoff= event.data;
-        this.tourneyService.onPlayoffRowSelect(playoff, PlayoffListView.redirect);
     }
 
     doDelete(playoff: Playoff) {

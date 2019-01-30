@@ -60,7 +60,7 @@ export class TeamPickList extends AbstractListView {
             let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
             this.selectedTourney.teams.push(t);
         }
-        this.location.back();
+        super.goBack();
     }
 
     onError(n:any) {

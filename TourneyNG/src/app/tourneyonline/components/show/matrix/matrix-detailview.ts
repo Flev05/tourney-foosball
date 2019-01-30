@@ -251,7 +251,7 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.classificationRows = this.prepareClassificationGui();
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n));
+        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n));
     }
 
     private prepareClassificationGui(): any[] {

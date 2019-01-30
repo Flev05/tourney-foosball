@@ -97,11 +97,10 @@ export class ClientDetailView extends AbstractDetailView {
         if(this.clientService.newClient) {
             this.clientService.newClient = false;
             this.onCreateClientError = false;
-            this.clientService.createClient(this.selectedClient, this.createErrorHandler('createClient()')).subscribe(() => this.goBack());  
         } else  {
             this.onUpdateClientError = false;
-            this.clientService.updateClient(this.selectedClient, this.updateErrorHandler('updateClient()')).subscribe(() => this.goBack());
         }
+        this.clientService.saveClient(this.selectedClient, this.updateErrorHandler('updateClient()')).subscribe(() => this.goBack());
     }
 
     private createErrorHandler<T> (operation = 'operation', result?: T) {

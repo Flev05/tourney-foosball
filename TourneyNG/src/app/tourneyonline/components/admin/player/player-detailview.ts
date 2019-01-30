@@ -40,7 +40,7 @@ export class PlayerDetailView extends AbstractDetailView {
 
         if(this.playerService.newPlayer) {
             this.selectedPlayer.playerName = "";
-            this.selectedPlayer.id = this.tourneyService.getSequenceNumber(); 
+            this.selectedPlayer.id = null; 
         }
 
         if(this.selectedPlayer.country != undefined ) {
@@ -86,7 +86,7 @@ export class PlayerDetailView extends AbstractDetailView {
             }
         }
 
-        this.playerService.updatePlayer(this.selectedPlayer).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.playerService.savePlayer(this.selectedPlayer).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     private verifyPlayer(playerName: string): Player {

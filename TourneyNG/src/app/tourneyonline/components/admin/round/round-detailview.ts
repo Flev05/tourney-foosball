@@ -162,7 +162,7 @@ export class RoundDetailView extends AbstractDetailView {
         }
         this.selectedRound.teams = tempTeams;
 
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     private removeFromClassification(t: Team): any {
@@ -176,14 +176,14 @@ export class RoundDetailView extends AbstractDetailView {
         for (let t of this.selectedRound.teams) {
             let m = this.createMeeting(team, t, null, null, Direction.OneWay);
             
-            this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
+            this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
 
             this.selectedRound.meetings.push(m);
             if (!this.selectedTourney.isOnewayRound) {
                 m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
 
-                this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);                
+                this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);                
             }
         }
     }
@@ -193,7 +193,8 @@ export class RoundDetailView extends AbstractDetailView {
         let temp : Meeting[] = [];
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == team.id || m.team2.id == team.id) {
-                this.tourneyService.deleteMeeting(m);
+                this.selectedTourney.meetingsForDelete.push(m);
+                // this.tourneyService.deleteMeeting(m);
             } else {
                 temp.push(m);
             }

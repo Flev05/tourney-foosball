@@ -44,7 +44,7 @@ export class CountryService {
     }
 
     /** POST: add a new Country to the server */
-    addCountry (country: Country): Observable<Country> {
+    private addCountry (country: Country): Observable<Country> {
         return this.http.post<Country>(countryUrl, country, httpOptions).pipe(
             tap((country: Country) => this.log(`added Country w/ id=${country.id}`)),
             catchError(this.handleError<Country>('addCountry'))
@@ -52,7 +52,7 @@ export class CountryService {
     }
 
     /** PUT: update the Country on the server */
-    updateCountry (country: Country ): Observable<Country> {
+    private updateCountry (country: Country ): Observable<Country> {
         const id =  country.id;
         // const url = `${countryUrl}/${country.id}`;
         const url = `${countryUrl}`;
@@ -63,6 +63,13 @@ export class CountryService {
             tap(_ => this.log(`updated Country id=${id}`)),
             catchError(this.handleError<Country>('updateCountry'))
         );
+    }
+
+    saveCountry (country: Country ): Observable<Country> {
+        if( country.city == null ) {
+            return this.addCountry(country);
+        }
+        return this.updateCountry(country);
     }
     
     /** DELETE: delete the Country from the server */

@@ -59,7 +59,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         });
     }
 
-    onSubmit(value: string) {
+    private save() {
 
         let dt = this.meetingFormGroup.get('dateAndTime').value;
 
@@ -74,11 +74,13 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
-
-        // this.tourneyService.updatePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
- 
+    
+    goBack(): void {
+        this.save();
+        super.goBack();
+    }
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

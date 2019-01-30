@@ -103,7 +103,6 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("TourneyDetailView.ngOnInit() ");
         
         super.ngOnInit();
-        this.levelService.ngOnInit();
 
         this.activeIndex = this.tourneyService.selectedTabIndex;
 
@@ -131,6 +130,8 @@ export class TourneyDetailView extends AbstractDetailView {
         this.atLeastTwoRounds = this.selectedTourney.rounds.length >= 2 ? true : false;
 
         this.preparePlayoffs();
+
+        this.levelService.ngOnInit();
 
         this.tourneyTeams = this.selectedTourney.teams;
 
@@ -200,7 +201,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private initTourney(today: Date) {
         this.selectedTourney = {};
 
-        this.selectedTourney.id = this.tourneyService.getSequenceNumber();
+        this.selectedTourney.id = null;
         this.tourneyDate = today;
         this.selectedTourney.tourneyName = "";
         this.selectedTourney.isDaily = true;
@@ -229,8 +230,11 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isOnewayPlayoff = true;
         this.activeIndex = 0;
         this.selectedTourney.meetingsForDelete = []
+        this.selectedTourney.selectedTeamsNumCombobox = {label: "", value: 0};
 
         this.tourneyService.selectedTourney = this.selectedTourney;
+    
+        this.tourneyService.newTourney = false;
     }
 
     private prepareRounds(): void {
@@ -370,7 +374,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let index: number = this.selectedTourney.teams.indexOf(team);
             if(index > -1) {
                 this.selectedTourney.teams.splice(index, 1);
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e) );
+                this.teamService.deleteTeam(team).subscribe(n => this.next(n), e => this.onError(e) );
             }
         }
     }
@@ -391,14 +395,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyService.newRound = true;
         this.tourneyService.selectedIndex = 0;
         this.router.navigate([REDIRECT_ROUND_DV]);
-    }
-
-    
-    onPlayoffRowSelect(event) {
-        this.tourneyService.selectedPlayoff = event.data;
-        this.router.navigate([REDIRECT_PLAYOFF_DV]);
-
-        // this.tourneyService.onPlayoffRowSelect(playoff, REDIRECT_PLAYOFF_DV);
     }
 
     doPlayoffDelete(playoff: Playoff) {
@@ -425,28 +421,25 @@ export class TourneyDetailView extends AbstractDetailView {
         let T: number = this.selectedTeams4RoundsCB.value;
 
         this.roundsCombobox = [];
-
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
         this.roundsCombobox.push(firstRow);
 
-        let R = Math.floor(T/2);
+        let R = Math.floor(T/2);       
         for (let r=1; r<=R; r++ ) {
             let ccb: Combobox = { label: "" + r, value: r };
             this.roundsCombobox.push(ccb);
         } 
-        
+
         this.selectedRoundsNumCombobox = firstRow;
+        this.resetRounds();
     }
 
     onRoundNumChange(cb: Combobox) {
         console.log(cb);
 
-        for(let r of this.selectedTourney.rounds) {
-            this.markMeetingsForDelete(r);
-            r.meetings = []; 
-        }
-
         this.selectedRoundsNumCombobox = cb;
+
+        this.resetRounds();
        
         let T = this.selectedTeams4RoundsCB.value;
         let R: number = this.selectedRoundsNumCombobox.value;
@@ -469,7 +462,6 @@ export class TourneyDetailView extends AbstractDetailView {
             return -1;
         });
 
-        this.selectedTourney.rounds = [];
         for(let i=0; i<R; i++) {
             let r: Round = this.prepareRound(i, teamsPerRound, randomTeams);
             this.selectedTourney.rounds.push(r);
@@ -488,6 +480,15 @@ export class TourneyDetailView extends AbstractDetailView {
         this.roundRows = this.selectedTourney.rounds;
     }
     
+    private resetRounds() {
+        for (let r of this.selectedTourney.rounds) {
+            this.markMeetingsForDelete(r);
+            r.meetings = [];
+        }
+        this.selectedTourney.rounds = [];
+        this.roundRows = this.selectedTourney.rounds;
+    }
+
     private prepareRound(i: number, teamsPerRound: number, randomTeams: Team[]): Round {
         let start = i * teamsPerRound;
         let teams: Team[] = this.prepareRandomTeams(randomTeams, start, teamsPerRound);
@@ -523,9 +524,9 @@ export class TourneyDetailView extends AbstractDetailView {
             let t1 = teamSlice[i];
             for(let j=i+1; j<teamSlice.length; j++) {
                 let t2 = teamSlice[j];
-                let m: Meeting = this.addTeamToMeetings(t1, t2, roundId, Direction.OneWay);
+                let m: Meeting = this.addTeamToMeetings(t1, t2, Direction.OneWay);
                 meetings.push(m);
-                m = this.addTeamToMeetings(t2, t1, roundId, Direction.RoundTrip);
+                m = this.addTeamToMeetings(t2, t1, Direction.RoundTrip);
                 meetings.push(m);
             }
         }
@@ -533,7 +534,7 @@ export class TourneyDetailView extends AbstractDetailView {
         return meetings;
     }
 
-    private addTeamToMeetings(t1: Team, t2: Team, roundId: number, d: Direction): Meeting {
+    private addTeamToMeetings(t1: Team, t2: Team, d: Direction): Meeting {
         let m = this.createMeeting(t1, t2, null, null, d);
         return m;
     }
@@ -558,30 +559,31 @@ export class TourneyDetailView extends AbstractDetailView {
         this.playoffsCombobox = [];
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
         this.playoffsCombobox.push(firstRow);
-        this.selectedPlayoffsCB = firstRow;
 
         let R = Math.floor( T / 2 );
         R = R < this.selectedTourney.rounds.length ? R : this.selectedTourney.rounds.length;
-        for (let r=1; r <= R; r++ ) {
-            let cb: Combobox = { label: "" + r, value: r };
-            this.playoffsCombobox.push(cb);
-        }         
+
+        if( R >= this.selectedPlayoffsCB.value) {
+            for (let r=1; r <= R; r++ ) {
+                let cb: Combobox = { label: "" + r, value: r };
+                this.playoffsCombobox.push(cb);
+            }         
+        }
+ 
+        this.resetPlayoff();
+        this.selectedPlayoffsCB = firstRow;
     }
 
     onPlayoffNumChange(cb: Combobox) {
         console.log(cb);
 
-        for(let p of this.selectedTourney.playoffs) {
-            this.markMeetingsForDelete(p.round);
-            p.round.meetings = []; 
-        }
-
         this.selectedPlayoffsCB = cb;
+
+        this.resetPlayoff();
        
         let N = this.selectedTeams4PlayoffsCB.value;
         let P: number = this.selectedPlayoffsCB.value;
 
-        this.selectedTourney.playoffs = [];
         for(let i=0; i < P; i++) {
             let p: Playoff = this.createPlayoff(i);
             this.selectedTourney.playoffs.push(p);
@@ -633,7 +635,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         for(let p of this.selectedTourney.playoffs) {
             for(let i=0; i<p.playoffRules.length; i++ ) {
-                for(let j=i; j<p.playoffRules.length; j++ ) {
+                for(let j=i+1; j<p.playoffRules.length; j++ ) {
                     let r1 = p.playoffRules[i];
                     let r2 = p.playoffRules[j];
 
@@ -652,8 +654,26 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
+    private resetPlayoff() {
+        for (let p of this.selectedTourney.playoffs) {
+            this.markMeetingsForDelete(p.round);
+            p.round.meetings = [];
+        }
+        this.selectedTourney.playoffs = [];
+        this.playoffRows = [];
+    }
+
+    onPlayoffRowSelect(event) {
+        this.tourneyService.selectedPlayoff = event.data;
+        this.router.navigate([REDIRECT_PLAYOFF_DV]);
+    }
+
     private markMeetingsForDelete(round: Round): any {
-        this.selectedTourney.meetingsForDelete = this.selectedTourney.meetingsForDelete.concat(round.meetings);
+        for(let m of round.meetings) {
+            if(m.id != null) {
+                this.selectedTourney.meetingsForDelete.push(m);
+            }
+        }
     }
 
     private createPlayoff(i: number): Playoff {
@@ -686,20 +706,20 @@ export class TourneyDetailView extends AbstractDetailView {
     onOnewayRoundClick() {
         console.log("Entering onOnewayRoundClick()");
         this.selectedTourney.isOnewayRound = true;
-        this.onClickRoundManageMeeting(this.selectedTourney.rounds, true, null);
+        // this.onClickRoundManageMeeting(this.selectedTourney.rounds, true, null);
     }
 
     onRoundtripRoundClick() {
         console.log("Entering onRoundtripRoundClick()");
         this.selectedTourney.isOnewayRound = false;
-        this.onClickRoundManageMeeting(this.selectedTourney.rounds, false, null);
+        // this.onClickRoundManageMeeting(this.selectedTourney.rounds, false, null);
     }
     
     onOnewayPlayoffClick() {
         console.log("Entering onOnewayPlayoffClick()");
         this.selectedTourney.isOnewayPlayoff = true;
         for(let po of this.selectedTourney.playoffs) {
-            this.onClickRoundManageMeeting([po.round], true, po.id);
+            // this.onClickRoundManageMeeting([po.round], true, po.id);
         }
     }
 
@@ -707,7 +727,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("Entering onRoundtripPlayoffClick()");
         this.selectedTourney.isOnewayPlayoff = false;
         for(let po of this.selectedTourney.playoffs) {
-            this.onClickRoundManageMeeting([po.round], false, po.id);
+            // this.onClickRoundManageMeeting([po.round], false, po.id);
         }
     }
 
@@ -760,44 +780,43 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
-    private onClickRoundManageMeeting(rounds: Array<Round>, isOneway: boolean, poid: number): void {
-        for(let r of rounds) {
-            if(isOneway) {
-                let newMeetings: Array<Meeting> = new Array<Meeting>();
-                for(let m of r.meetings) {
-                    if(m.direction == Direction.OneWay) {
-                        newMeetings.push(m);
-                    }
-                    if(m.direction == Direction.RoundTrip) {
-                        this.tourneyService.deleteMeeting(m);
-                    }
-                }
-                r.meetings = newMeetings;
-            } else {
-                let newMeetings: Array<Meeting> = new Array<Meeting>();
-                for(let m of r.meetings) {
-                    let newMeeting: Meeting = this.cloneObject(m);
+    // private onClickRoundManageMeeting(rounds: Array<Round>, isOneway: boolean, poid: number): void {
+    //     for(let r of rounds) {
+    //         if(isOneway) {
+    //             let newMeetings: Array<Meeting> = new Array<Meeting>();
+    //             for(let m of r.meetings) {
+    //                 if(m.direction == Direction.OneWay) {
+    //                     newMeetings.push(m);
+    //                 }
+    //                 if(m.direction == Direction.RoundTrip) {
+    //                     this.tourneyService.deleteMeeting(m);
+    //                 }
+    //             }
+    //             r.meetings = newMeetings;
+    //         } else {
+    //             let newMeetings: Array<Meeting> = new Array<Meeting>();
+    //             for(let m of r.meetings) {
+    //                 let newMeeting: Meeting = this.cloneObject(m);
                     
-                    newMeeting.id = this.tourneyService.getSequenceNumber();
-                    newMeeting.direction = Direction.RoundTrip;
-                    newMeeting.team2 = m.team1;
-                    newMeeting.team1 = m.team2;
+    //                 newMeeting.id = this.tourneyService.getSequenceNumber();
+    //                 newMeeting.direction = Direction.RoundTrip;
+    //                 newMeeting.team2 = m.team1;
+    //                 newMeeting.team1 = m.team2;
 
-                    newMeeting.name = newMeeting.team1.teamName + " - " + newMeeting.team2.teamName;
+    //                 newMeeting.name = newMeeting.team1.teamName + " - " + newMeeting.team2.teamName;
                     
-                    newMeetings.push(newMeeting);
-                    if(poid == null) {
-                        this.tourneyService.addRoundMeetingDb(newMeeting, this.selectedTourney.id, r.id);
-                    } else {
-                        this.tourneyService.addPlayoffMeetingDb(newMeeting, this.selectedTourney.id, poid);
-                    }
-                }
+    //                 newMeetings.push(newMeeting);
+    //                 if(poid == null) {
+    //                     this.tourneyService.saveRoundMeetingDb(newMeeting, this.selectedTourney.id, r.id);
+    //                 } else {
+    //                     this.tourneyService.savePlayoffMeetingDb(newMeeting, this.selectedTourney.id, poid);
+    //                 }
+    //             }
 
-                r.meetings = r.meetings.concat(newMeetings);
-            }
-        }
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
-    }
+    //             r.meetings = r.meetings.concat(newMeetings);
+    //         }
+    //     }
+    // }
 
     onSpinnerChange(event) {
         let spin: number = this.tourneyFormGroup.get('maxMatchesPerMeeting').value;
@@ -849,32 +868,29 @@ export class TourneyDetailView extends AbstractDetailView {
         
         this.selectedTourney.teams = this.tourneyTeams;
 
+        this.tourneyService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
+
         for(let r of this.selectedTourney.rounds) {
             for(let m of r.meetings) {
-                this.tourneyService.addRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
             }
         }
 
         for(let p of this.selectedTourney.playoffs) {
             for(let m of p.round.meetings) {
-                this.tourneyService.addPlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
             }
         }
 
         for(let el of this.selectedTourney.eliminatoryLevels) {
             for(let e of el.eliminatories) {
                 for(let m of e.round.meetings) {
-                    this.tourneyService.addEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                    this.tourneyService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
                 }
             }
         }
 
-        if(this.tourneyService.newTourney) {
-            this.tourneyService.addTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());  
-        } else  {
-            this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        }
-        this.tourneyService.newTourney = false;
+        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     containsPhase(value: string) : boolean{

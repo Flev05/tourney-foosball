@@ -38,8 +38,6 @@ export class ClientListView extends AbstractListView {
         this.clientService.newClient = false;
 
         this.cols = [
-            // { field: 'firstname',    header: 'Nome' },
-            // { field: 'lastname',     header: 'Cognome' },
             { field: 'businessName', header: 'Nominativo' },
             { field: 'phoneNumber',  header: 'Telefono' }
         ];
@@ -63,7 +61,8 @@ export class ClientListView extends AbstractListView {
 
     create() {
         this.selectedClient={
-            businessName: ""
+              id: null
+            , businessName: ""
             , phoneNumber: ""
         };
         this.clientService.selectedClient = this.selectedClient;
@@ -80,7 +79,6 @@ export class ClientListView extends AbstractListView {
         this.onDeleteError = false;
         if(confirm(popup)) {
 
-            // const subscr = this.clientService.deleteClient(this.selectedClient, this.deleteErrorHandler('deleteClient()'));
             const subscr = this.clientService.postDeleteClient(this.selectedClient, this.deleteErrorHandler('postDeleteClient()'));
 
             subscr.subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());

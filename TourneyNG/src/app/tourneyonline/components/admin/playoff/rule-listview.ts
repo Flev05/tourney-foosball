@@ -89,14 +89,15 @@ export class RuleListView extends AbstractListView {
                     this.removePlayoff(p);
                 }
     
-                this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+                // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
             }
         }
     }
 
     private removePlayoff(p: Playoff): any {
         for(let m of p.round.meetings) {
-            this.tourneyService.deleteMeeting(m);
+            this.selectedTourney.meetingsForDelete.push(m);
+            // this.tourneyService.deleteMeeting(m);
         }
         p.round.meetings = [];
     }

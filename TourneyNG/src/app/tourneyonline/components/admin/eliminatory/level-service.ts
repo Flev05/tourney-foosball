@@ -118,7 +118,8 @@ export class LevelService extends AbstractEliminatoryListView {
             for(let d of deleted) {
                 for(let e of d.eliminatories) {
                     for(let m of e.round.meetings) {
-                        this.tourneyService.deleteMeeting(m);
+                        this.selectedTourney.meetingsForDelete.push(m);
+                        // this.tourneyService.deleteMeeting(m);
                     }
                 }
             }
@@ -174,7 +175,8 @@ export class LevelService extends AbstractEliminatoryListView {
             if(!teamMap.has(t.id)) {
                 for(let m of round.meetings) {
                     if(m.team1.id == t.id || m.team2.id == t.id) {
-                        this.tourneyService.deleteMeeting(m);
+                        this.selectedTourney.meetingsForDelete.push(m);
+                        // this.tourneyService.deleteMeeting(m);
                     }
                 }
             }
@@ -392,8 +394,8 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         };
 
-        this.tourneyService.addEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
-        this.tourneyService.addEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
+        this.tourneyService.saveEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
+        this.tourneyService.saveEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
 
         return e;
     }
@@ -427,7 +429,7 @@ export class LevelService extends AbstractEliminatoryListView {
         }
 
         this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
-        this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
 
         this.prepareConfigELGui();
     }

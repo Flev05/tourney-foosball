@@ -40,7 +40,7 @@ export class TeamDetailView extends AbstractDetailView {
         this.selectedTeam = this.teamService.selectedTeam;
         
         if(this.teamService.newTeam) {
-            this.selectedTeam={id:this.tourneyService.getSequenceNumber(), teamName:""};
+            this.selectedTeam={id: null, teamName:""};
             this.selectedTeam.players = [];
         }
 
@@ -64,12 +64,8 @@ export class TeamDetailView extends AbstractDetailView {
         this.selectedTeam.address = this.teamFormGroup.get('address').value;
         this.selectedTeam.country = this.teamFormGroup.get('country').value;
         
-        if(this.teamService.newTeam) {
-            this.teamService.addTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        } else {
-            this.teamService.updateTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
-        }
         this.teamService.newTeam = false;
+        this.teamService.saveTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
  
     onError(n:any) {

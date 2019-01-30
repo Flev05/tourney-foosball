@@ -3,21 +3,18 @@ import { Location } from '@angular/common';
 
 import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import {Message} from '../../../../components/common/api';
 
 import { CountryService } from '../../../service/country-service';
 import { TourneyService } from '../../../service/tourney-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './meeting-detailview.html',
 })
 export class MeetingDetailView extends AbstractDetailView {
 
-    msgs: Message[] = [];
 
     meetingFormGroup: FormGroup;
     toggleable: boolean = false;
@@ -61,7 +58,7 @@ export class MeetingDetailView extends AbstractDetailView {
         });
     }
 
-    onSubmit(value: string) {
+    goBack() {
 
         let dt = this.meetingFormGroup.get('dateAndTime').value;
 
@@ -76,16 +73,11 @@ export class MeetingDetailView extends AbstractDetailView {
                 this.selectedRound.meetings[1].datetime = this.selectedMeeting.datetime;
             }
         }
-
-        // this.tourneyService.updateRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        super.goBack();
     }
  
     onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        msgerr = 'Modifica meeting fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        let msgerr : string = 'Modifica meeting fallita';
+        console.error(msgerr);
     }
 }

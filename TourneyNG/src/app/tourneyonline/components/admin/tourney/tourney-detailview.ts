@@ -95,9 +95,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.activeIndex = this.tourneyService.selectedTabIndex;
 
-        this.eliminatoryCols = this.levelService.cols;
-        this.eliminatoryRows = this.levelService.rows;
-
         this.tourneyService.loadDisciplines().subscribe(t => {
             this.disciplines = t;
         });
@@ -111,17 +108,13 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.datetime = new Date(this.selectedTourney.datetime);
 
         this.atLeastTwoTeams = this.selectedTourney.teams.length >= 2 ? true : false;
+        this.teamCols = TeamService.cols;
+
         this.prepareRounds();
-        this.atLeastTwoRounds = this.selectedTourney.rounds.length >= 2 ? true : false;
 
         this.preparePlayoffs();
 
-        this.levelService.ngOnInit();
-
-        this.teamsCombobox = this.levelService.teamsCombobox;
-        this.incompleteConfiguration = this.levelService.incompleteConfiguration;
-
-        this.teamCols = TeamService.cols;
+        this.prepareEliminatory();
 
         if(this.selectedTourney.country != undefined ) {
             this.fullAddress = this.selectedTourney.address + " - " 
@@ -222,6 +215,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.roundRows = this.selectedTourney.rounds;
+        this.atLeastTwoRounds = this.selectedTourney.rounds.length >= 2 ? true : false;
     }
 
     private preparePlayoffs(): void {
@@ -277,6 +271,14 @@ export class TourneyDetailView extends AbstractDetailView {
         for(let p of this.playoffRows) {
             p.playoffName = p.round.name;
         }
+    }
+
+    private prepareEliminatory() {
+        this.levelService.ngOnInit();
+        this.eliminatoryCols = this.levelService.cols;
+        this.eliminatoryRows = this.levelService.rows;
+        this.teamsCombobox = this.levelService.teamsCombobox;
+        this.incompleteConfiguration = this.levelService.incompleteConfiguration;
     }
 
     onChangeTab(e) {
@@ -345,11 +347,11 @@ export class TourneyDetailView extends AbstractDetailView {
         this.router.navigate([REDIRECT_PLAYOFF_DV]);
     }
     
-    onTeamNumChange(event) {
+    onTeamEliminatoryNumChange(event) {
         console.log(event);
 
         this.levelService.selectedTeamsNumCombobox = event;
-        this.levelService.onTeamNumChange(event);
+        this.levelService.onTeamEliminatoryNumChange(event);
         this.eliminatoryRows = this.levelService.rows;
     }
 

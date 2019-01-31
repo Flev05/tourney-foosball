@@ -416,7 +416,7 @@ export class LevelService extends AbstractEliminatoryListView {
         this.router.navigate([redirect]);
     }
  
-    onTeamNumChange(event) {
+    onTeamEliminatoryNumChange(event) {
 
         let N: number = this.selectedTeamsNumCombobox.value;
         this.prepareEliminationTree(N);

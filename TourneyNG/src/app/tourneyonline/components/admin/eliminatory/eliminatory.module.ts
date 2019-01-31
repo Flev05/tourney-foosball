@@ -28,7 +28,6 @@ import { SliderModule } from 'app/components/slider/slider';
 import { CalendarModule } from 'app/components/calendar/calendar';
 import {EliminatoryAutoListView} from './eliminatory-autolistview';
 import {EliminatoryManualListView} from './eliminatory-manuallistview';
-import {LevelListView} from './level-listview';
 import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
 import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
@@ -63,9 +62,7 @@ import { LevelService } from './level-service';
         ,MessagesModule
         ,MessageModule
     ],
-	declarations: [
-         LevelListView
-        ,EliminatoryAutoListView
+	declarations: [EliminatoryAutoListView
         ,EliminatoryManualListView
         ,AutoEliminatoryDetailView        
         ,ManualEliminatoryDetailView        

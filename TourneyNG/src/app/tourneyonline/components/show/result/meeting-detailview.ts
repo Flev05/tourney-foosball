@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
@@ -22,7 +21,7 @@ export class MeetingDetailView extends AbstractDetailView {
     msgs: Message[] = [];
 
     selectedMeetingDb: MeetingDb;
-    selectedMeeting: Meeting;
+    selectedMeeting: MeetingDb;
 
     matches: Match[];
 
@@ -40,8 +39,8 @@ export class MeetingDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedMeetingDb  = this.tourneyService.selectedMeetingDb;   
-        this.selectedMeeting = JSON.parse(this.selectedMeetingDb.json);
+        this.selectedMeetingDb  = this.tourneyService.selectedMeeting;   
+        this.selectedMeeting = this.selectedMeetingDb;
 
         this.alreadyPassed = false;
 
@@ -153,13 +152,13 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        let mdb: MeetingDb = this.tourneyService.prepareMdb(this.selectedMeeting
+        this.tourneyService.prepareMdb(this.selectedMeeting
             , this.selectedTourney.id
-            , this.tourneyService.selectedMeetingDb.roundId
-            , this.tourneyService.selectedMeetingDb.playoffId
-            , this.tourneyService.selectedMeetingDb.eliminatoryId
+            , this.tourneyService.selectedMeeting.roundId
+            , this.tourneyService.selectedMeeting.playoffId
+            , this.tourneyService.selectedMeeting.eliminatoryId
             );            
-        this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+        this.tourneyService.updateMeeting(this.selectedMeeting).subscribe(n => this.next(n), e => this.onError(e));
 
         this.updateNextLevel();
 
@@ -197,8 +196,8 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
 
-        const onewayLevelMeeting:    Meeting = l.round.meetings[0];
-        const roundtripLevelMeeting: Meeting = l.round.meetings[1];
+        const onewayLevelMeeting:    MeetingDb = l.round.meetings[0];
+        const roundtripLevelMeeting: MeetingDb = l.round.meetings[1];
 
         let points1 = onewayLevelMeeting.points1 + roundtripLevelMeeting.points2;
         let points2 = onewayLevelMeeting.points2 + roundtripLevelMeeting.points1;
@@ -225,7 +224,7 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
  
-        let nextMeeting: Meeting = nextEliminatory.round.meetings[0];
+        let nextMeeting: MeetingDb = nextEliminatory.round.meetings[0];
         if(points1 > points2) {
             if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
                 nextEliminatory.round.teams[0] = onewayLevelMeeting.team1;
@@ -245,13 +244,11 @@ export class MeetingDetailView extends AbstractDetailView {
                 nextMeeting.team2 = onewayLevelMeeting.team2;
             }
         }
-        let mdb: MeetingDb = this.tourneyService.prepareMdb(nextMeeting
+        this.tourneyService.completeEliminatoryMeetingDb(nextMeeting
             , this.selectedTourney.id
-            , 0
-            , 0
             , nextEliminatory.id
         );        
-        this.tourneyService.updateMeeting(mdb).subscribe(n => this.next(n), e => this.onError(e));
+        this.tourneyService.updateMeeting(nextMeeting).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onError(n:any) {

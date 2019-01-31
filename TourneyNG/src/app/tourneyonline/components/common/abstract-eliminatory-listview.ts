@@ -6,10 +6,9 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { EliminatoryMode, Direction, PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import {  Direction, PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Team } from 'app/tourneyonline/domain/team';
 import { DateFormatPipe } from './date-format-pipe';
@@ -35,7 +34,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     eliminatories: Eliminatory[];
 
     isPlayoff: boolean;
-    isManual: boolean;
 
     isTopLevel: boolean;
 
@@ -47,7 +45,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
-    isAutomatic: boolean;
     incompleteConfiguration: boolean;
     eliminatoryCols: { field: string; header: string; }[];
     eliminatoryLevelRows: any[];
@@ -96,8 +93,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
   
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
 
-        this.isAutomatic = ! this.isManual;
-                
         if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
             this.containsPhase(PhaseType.P, this.selectedTourney.phases) &&
             this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
@@ -151,8 +146,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 let mdbs = this.roundMeetingMap.get(key);
                 for(let mdb of mdbs) {
                     let r: Round = this.roundMap.get(mdb.roundId);           
-                    let m: Meeting = JSON.parse(mdb.json);
-                    r.meetings.push(m);
+                    r.meetings.push(mdb);
                     r.meetings  = this.sortMeetings(r.meetings)
                 }
                 
@@ -331,9 +325,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                     let po = this.playoffRoundMap.get(mdb.playoffId);
                     
                     let r = po.round;
-                    let m: Meeting = JSON.parse(mdb.json);
                     
-                    r.meetings.push(m);
+                    r.meetings.push(mdb);
                     r.meetings  = this.sortMeetings(r.meetings)
 
                     this.resolvePlayoffRules(po, this.selectedTourney.rounds);
@@ -366,7 +359,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
     }
     
-    private resolvePlayoffRule(meetings: Meeting[], pr: PlayoffRule, team: Team): any {
+    private resolvePlayoffRule(meetings: MeetingDb[], pr: PlayoffRule, team: Team): any {
         for(let m of meetings) {
             if( m.rule1.id == pr.id) {
                 m.team1 = team;
@@ -546,10 +539,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 let eid: number = +key;
                 let round = this.eliminatoryRoundMap.get(eid);
                 let meetingsDb: MeetingDb[] = this.meetingMap.get(eid);
-                let meetings: Array<Meeting> = new Array<Meeting>();
+                let meetings: Array<MeetingDb> = new Array<MeetingDb>();
                 for(let mdb of meetingsDb) {
-                    let m = JSON.parse(mdb.json);
-                    meetings.push(m);
+                    meetings.push(mdb);
                 }
                 round.meetings = meetings;
                 round.meetings = this.sortMeetings(round.meetings)

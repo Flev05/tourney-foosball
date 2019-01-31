@@ -59,21 +59,7 @@ export class RuleListView extends AbstractListView {
 
     goMeeting() {
         this.router.navigate([RuleListView.redirectToMeeting]);
-
-        // const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
-        // subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
     }
-
-    // private onComplete(): void {
-    //     this.selectedPlayoff.round.meetings = [];
-    //     for(let mdb of this.mdbs) {
-    //         let m: Meeting = JSON.parse(mdb.json);
-    //         this.selectedPlayoff.round.meetings.push(m);
-    //     }
-    //     this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-
-    //     this.router.navigate([RuleListView.redirectToMeeting]);
-    // }
 
     doDelete() {
         console.log("doDelete(): " + this.selectedPlayoff.round.name);
@@ -88,8 +74,6 @@ export class RuleListView extends AbstractListView {
                 for(let p of pls) {
                     this.removePlayoff(p);
                 }
-    
-                // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
             }
         }
     }
@@ -97,7 +81,6 @@ export class RuleListView extends AbstractListView {
     private removePlayoff(p: Playoff): any {
         for(let m of p.round.meetings) {
             this.selectedTourney.meetingsForDelete.push(m);
-            // this.tourneyService.deleteMeeting(m);
         }
         p.round.meetings = [];
     }

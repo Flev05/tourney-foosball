@@ -4,8 +4,6 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 
-
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { AbstractDetailView } from '../../common/abstract-detailview';
@@ -13,6 +11,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
     templateUrl: './round-detailview.html',
@@ -31,6 +30,9 @@ export class RoundDetailView extends AbstractDetailView {
     targetTeams: string[] = [];
     mdbs: MeetingDb[];
     nextDeleteMeeting: MeetingDb;
+    meetingEnabled: boolean;
+    selectedMeetingGroupNumCombobox: Combobox;
+    meetingGroupCombobox: any[];
 
     constructor(
         private fb: FormBuilder,
@@ -46,6 +48,7 @@ export class RoundDetailView extends AbstractDetailView {
         console.log("RoundDetailView.ngOnInit() ");
 
         super.ngOnInit();
+        this.meetingEnabled = false;
 
         if(this.tourneyService.newRound) {
             this.selectedRound = { id: this.tourneyService.getSequenceNumber(),
@@ -86,11 +89,30 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
 
+        for (let r=1; r<=this.targetTeams.length; r++ ) {
+            let ccb: Combobox = { label: "" + r, value: r };
+            this.meetingGroupCombobox.push(ccb);
+        } 
+
         this.roundFormGroup = this.fb.group({
             'name': new FormControl(this.selectedRound.name, Validators.compose([Validators.required])),
             'availableTeams': new FormControl(this.availableTeams),
             'targetTeams':    new FormControl(this.targetTeams),
         });
+    }
+
+    onMeetingGroupNumChange(cb: Combobox) {
+        console.log(cb);
+        this.selectedMeetingGroupNumCombobox = cb;
+
+        let T: number = this.selectedMeetingGroupNumCombobox.value;
+
+        this.meetingGroupCombobox = [];
+        let firstRow: Combobox =  { label: "Seleziona", value: 0 };
+        this.meetingGroupCombobox.push(firstRow);
+
+
+        this.meetingEnabled = true;
     }
 
     availables() : string {
@@ -103,20 +125,7 @@ export class RoundDetailView extends AbstractDetailView {
     
     goMeeting() {
         this.router.navigate([RoundDetailView.meetingListviewRedirect]);
-        // const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        // subscr.subscribe(t => this.mdbs = t, e => this.onError(e), () => this.onComplete());   
     }
-
-    // private onComplete(): void {
-    //     this.selectedRound.meetings = [];
-    //     for(let mdb of this.mdbs) {
-    //         let m: Meeting = JSON.parse(mdb.json);
-    //         this.selectedRound.meetings.push(m);
-    //     }
-    //     this.tourneyService.selectedRound = this.selectedRound;
-
-    //     this.router.navigate([RoundDetailView.meetingListviewRedirect]);
-    // }
 
     onSubmit(value: string) {
 
@@ -161,8 +170,6 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
         this.selectedRound.teams = tempTeams;
-
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     private removeFromClassification(t: Team): any {
@@ -190,11 +197,10 @@ export class RoundDetailView extends AbstractDetailView {
 
     private removeFromMeetings(team: Team): void {
 
-        let temp : Meeting[] = [];
+        let temp : MeetingDb[] = [];
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == team.id || m.team2.id == team.id) {
                 this.selectedTourney.meetingsForDelete.push(m);
-                // this.tourneyService.deleteMeeting(m);
             } else {
                 temp.push(m);
             }

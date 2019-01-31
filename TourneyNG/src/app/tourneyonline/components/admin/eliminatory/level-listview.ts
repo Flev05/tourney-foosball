@@ -46,7 +46,6 @@ export class LevelListView implements OnInit {
     }
  
     onRowSelect(event) {
-        this.levelService.selectedRow = this.selectedRow;
         this.levelService.onRowSelect(event);
     }
 }

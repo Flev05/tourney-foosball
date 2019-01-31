@@ -1,10 +1,10 @@
 import { Location } from '@angular/common';
 
-import { Round } from '../../domain/round';
-import { Meeting } from '../../domain/meeting';
-import { TourneyService } from '../../service/tourney-service';
 import { AbstractTourneyDetailView } from './tourney-detailview';
 import { CountryService } from 'app/tourneyonline/service/country-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 export abstract class RoundDetailView extends AbstractTourneyDetailView {
 
@@ -26,7 +26,7 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
 
         let row : number = 0;
 
-        var roundMap: Map<string, Meeting> = new Map<string, Meeting>();
+        var roundMap: Map<string, MeetingDb> = new Map<string, MeetingDb>();
 
         for (let i = 0; i < this.rounds.length; i++) {
             
@@ -34,7 +34,7 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
 
             for (let j = 0; j < round.meetings.length; j++) {
                 
-                let m : Meeting = round.meetings[j];
+                let m : MeetingDb = round.meetings[j];
 
                 let currentKey = this.makeKey(round, m);  
                 let len = round.meetings.length;
@@ -64,7 +64,7 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
         }
     }
     
-    makeKey( round : Round, cal : Meeting) : string {
+    makeKey( round : Round, cal : MeetingDb) : string {
         let key = round.name + " - " + cal.name;
         return key;
     }

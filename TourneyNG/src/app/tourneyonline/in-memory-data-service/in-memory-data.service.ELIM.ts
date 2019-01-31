@@ -7,8 +7,8 @@ export class InMemoryDataServiceELIM {
 private static tourney = 
   {id: 2
     , tourneyName: 'Solo Eliminazioni'
-      ,datetime: new Date(2018, 10, 22, 20, 30)
-      ,address: 'Via Roma, 110'
+    ,datetime: new Date(2018, 10, 22, 20, 30)
+    ,address: 'Via Roma, 110'
       ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
       ,discipline: {id:2, name:"Calcio Balilla", code:"cb"}
 
@@ -30,6 +30,7 @@ private static tourney =
       
       ,maxMatchesPerMeeting:1
       ,isAllMatches:true
+      ,isDaily: "true"
       ,playersPerTeam: 2
   
       ,pointsNeededToWin:9

@@ -7,7 +7,7 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { CountryService } from 'app/tourneyonline/service/country-service';
@@ -88,7 +88,7 @@ export class RuleDetailView extends AbstractDetailView {
 
             if(this.playoffConfigs.length >= 1) {
                 for(let pc of this.playoffConfigs) {
-                    let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
+                    let m: MeetingDb = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
                     this.selectedPlayoff.round.meetings.push(m);
                     
                     this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
@@ -118,13 +118,11 @@ export class RuleDetailView extends AbstractDetailView {
                     m.rule2 = this.selectedPlayoffConfig;
                 }
                 
-                this.tourneyService.updatePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
+                this.tourneyService.completePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
             }
         }
         this.selectedPlayoff.playoffRules = this.playoffConfigs;
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-        
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     onError(n:any) {

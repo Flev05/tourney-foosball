@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 import { AbstractListView } from '../../common/abstract-listview';
 
@@ -24,7 +24,7 @@ export class MeetingListView extends AbstractListView {
         console.log("MeetingListView.constructor()");
     }
 
-    selectedMeeting : Meeting;
+    selectedMeeting : MeetingDb;
 
     onRowSelect(event) {
         console.log("MeetingListView.onRowSelect()event: " + event);

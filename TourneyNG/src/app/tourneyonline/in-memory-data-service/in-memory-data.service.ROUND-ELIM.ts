@@ -1,9 +1,7 @@
 import { Round } from 'app/tourneyonline/domain/round';
 import { Team } from 'app/tourneyonline/domain/team';
 import { RoundType, TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TeamsPool } from './teams-pool';
-import { PlayersPool } from './players-pool';
 import { MeetingDb } from '../domain/meeting-db';
 import { Tourney } from '../domain/tourney';
 
@@ -41,8 +39,9 @@ static getTourneyDb() {
       ,eliminatoryMode:EliminatoryMode.A
       ,teamSortType: TeamSortType.O
 
-      ,isOnewayRound: false
-      ,isOnewayPlayoff: false
+      ,isOnewayRound: "false"
+      ,isOnewayPlayoff: "false"
+      ,isDaily: "true"
 
       ,raceDuration:90
 
@@ -50,14 +49,12 @@ static getTourneyDb() {
       ,matchBalanceScores:1
 
       ,maxMatchesPerMeeting:1
-      ,isAllMatches:true
+      ,isAllMatches: "true"
       ,playersPerTeam: 2
 
       ,pointsNeededToWin:9
       ,pointsGoldenGoalTieBreakWin:2
       ,pointsGoldenGoalTieBreakDefeat:1
-
-      // ,players: PlayersPool.players
 
       ,teams: InMemoryDataServiceRoundElim.teams
       
@@ -133,7 +130,13 @@ static prepareDefaultMeeting(r : Round  )  {
 
       for(let j=i+1; j < teams.length; j++) {
         let t2 = teams[j];
-        let m: Meeting = {id: InMemoryDataServiceRoundElim.counter++
+
+        let mdb : MeetingDb =  {
+            id: InMemoryDataServiceRoundElim.counter++
+          , tourneyId: tourneyId
+          , roundId: r.id
+          , playoffId: 0
+          , eliminatoryId: 0
           , name: t1.teamName + " - " + t2.teamName
           , datetime: new Date(2018, 11, 22, 21, 0)
           , address: t1.address
@@ -145,17 +148,6 @@ static prepareDefaultMeeting(r : Round  )  {
           , points2: 0
           , direction: Direction.OneWay
           , matches: []
-        };
-
-        r.meetings.push(m);
-        let json = JSON.stringify(m);
-        let mdb : MeetingDb =  {
-          id: m.id,
-          tourneyId: tourneyId,
-          roundId: r.id,
-          playoffId: 0,
-          eliminatoryId: 0,
-          json: json
         };
 
         InMemoryDataServiceRoundElim.meetingsDb.push(mdb);

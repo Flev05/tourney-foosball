@@ -30,11 +30,11 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         super.ngOnInit();
 
         if(super.containsRound()) {
-            super.loadRounds(this.selectedTourney.isOnewayRound);
+            super.loadRounds(this.selectedTourney.isOnewayRound=="true"?true:false);
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff);
+            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff=="true"?true:false);
         }
 
         if(super.containsEliminatory()) {

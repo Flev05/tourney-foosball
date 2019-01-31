@@ -4,10 +4,9 @@ import { Location } from '@angular/common';
 import {FormControl,FormGroup,FormBuilder, Validators} from '@angular/forms';
 
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Message } from 'app/components/common/api';
-import { EliminatoryMode } from 'app/tourneyonline/domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
@@ -34,8 +33,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     private isOneway: boolean;
 
     isStandalone: boolean;
-    m1: Meeting;
-    m2: Meeting;
+    m1: MeetingDb;
+    m2: MeetingDb;
 
     constructor(
         private fb: FormBuilder,
@@ -97,7 +96,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        this.tourneyService.updateEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
+        this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
@@ -108,7 +107,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            this.tourneyService.updateEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
+            this.tourneyService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;

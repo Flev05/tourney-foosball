@@ -5,7 +5,6 @@ import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
@@ -40,11 +39,11 @@ export class ResultListView extends AbstractEliminatoryListView {
         this.tourneyService.selectedEliminatoryIndex = -1;
 
         if(super.containsRound()) {
-            super.loadRounds(this.selectedTourney.isOnewayRound);
+            super.loadRounds(this.selectedTourney.isOnewayRound=="true"?true:false);
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff);
+            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff=="true"?true:false);
         }
 
         if(super.containsEliminatory()) {
@@ -157,15 +156,13 @@ export class ResultListView extends AbstractEliminatoryListView {
         console.log(event.data);
 
         let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
-        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
+        let m: MeetingDb = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
-        let mdb: MeetingDb = this.tourneyService.prepareMdb(m
+        this.tourneyService.completeRoundMeetingDb(m
             , this.selectedTourney.id
             , r.id
-            , 0
-            , 0
         );
-        this.tourneyService.selectedMeetingDb = mdb;
+        this.tourneyService.selectedMeeting = m;
 
         this.gotoMeetingDetailView();
     }
@@ -176,16 +173,14 @@ export class ResultListView extends AbstractEliminatoryListView {
         let playoffRounds: Round[] = this.makePlayoffRounds(this.selectedTourney.playoffs);
 
         let r = this.getRoundBy(this.selectedMeetingRow.roundId,  playoffRounds);
-        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
+        let m: MeetingDb = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
-        let mdb: MeetingDb = this.tourneyService.prepareMdb(m
+        this.tourneyService.completePlayoffMeetingDb(m
             , this.selectedTourney.id
-            , 1
             , this.selectedMeetingRow.playoffId
-            , 0
         );
 
-        this.tourneyService.selectedMeetingDb = mdb;
+        this.tourneyService.selectedMeeting = m;
 
         this.gotoMeetingDetailView();
     }
@@ -217,7 +212,7 @@ export class ResultListView extends AbstractEliminatoryListView {
         return null;
     }
 
-    private getMeetingBy(id: any, round: Round):  Meeting {
+    private getMeetingBy(id: any, round: Round):  MeetingDb {
         for(let m of round.meetings) {
             if(m.id == id) {
                 return m;

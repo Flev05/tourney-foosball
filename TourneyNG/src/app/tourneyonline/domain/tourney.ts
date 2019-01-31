@@ -3,7 +3,6 @@ import { Playoff } from './playoff';
 
 import { Country } from './country';
 import { Team } from './team';
-import { Player } from './player';
 
 import { Discipline } from './discipline';
 
@@ -12,20 +11,20 @@ import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from './tourney-combobox';
-import { Meeting } from './meeting';
+import { MeetingDb } from './meeting-db';
 
 export interface Tourney {
     id?: number;
     
     tourneyName? : string;
-    isDaily?: boolean;
+    isDaily?: string;
     datetime? : Date;
 
     address? : string;
     country? : Country;
 
-    isOnewayRound?: boolean;
-    isOnewayPlayoff?: boolean;
+    isOnewayRound?: string;
+    isOnewayPlayoff?: string;
 
     access?: string;
     discipline? : Discipline;
@@ -43,7 +42,7 @@ export interface Tourney {
     pointsGoldenGoalTieBreakDefeat? : number;
 
     maxMatchesPerMeeting?: number;
-    isAllMatches?: boolean;
+    isAllMatches?: string;
     playersPerTeam?: number;
     
     objectives?: Final[];
@@ -57,5 +56,5 @@ export interface Tourney {
     selectedTeamsNumCombobox?: Combobox;
 
     teams?: Team[];
-    meetingsForDelete?: Meeting[];
+    meetingsForDelete?: MeetingDb[];
 }

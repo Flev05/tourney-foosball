@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Match } from 'app/tourneyonline/domain/match';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
-import { TourneyService } from '../../../service/tourney-service';
-import { Tourney } from '../../../domain/tourney';
- 
-import { Meeting } from '../../../domain/meeting';
-import { Match } from '../../../domain/match';
 
 @Component({
     templateUrl: './match-listview.html',
@@ -19,12 +18,10 @@ import { Match } from '../../../domain/match';
 })
 export class MatchListView implements OnInit {
     selectedTourney: Tourney;
-    selectedMeeting: Meeting;
+    selectedMeeting: MeetingDb;
 
     matches: Match[];
     rows: any[] = [];
-
-
 
     constructor(
         protected tourneyService: TourneyService,

@@ -7,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Tourney } from '../domain/tourney';
-import { Meeting } from '../domain/meeting';
 import { Round } from '../domain/round';
 import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
@@ -49,8 +48,7 @@ export class TourneyService {
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
 
-    selectedMeetingDb: MeetingDb;
-    selectedMeeting: Meeting;
+    selectedMeeting: MeetingDb;
 
     selectedTeams:  Team[];
 
@@ -66,7 +64,7 @@ export class TourneyService {
     playoffsConfig: boolean;
 
     originalTeams: Team[];
-    meetings: Meeting[];
+    meetings: MeetingDb[];
     mdbs: MeetingDb[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
@@ -252,7 +250,7 @@ export class TourneyService {
             url = tourneyUrl + queryString;
         }
         
-        const obs :Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
+        const obs :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadRoundMeeting url=' + url))
         );
@@ -272,7 +270,7 @@ export class TourneyService {
             url = tourneyUrl + queryString;
         }
         
-        const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
+        const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadPlayoffMeeting url=' + url))
         );
@@ -292,7 +290,7 @@ export class TourneyService {
             url = tourneyUrl + queryString;
         }
         
-        const obs : Observable<Meeting[]> = this.http.get<MeetingDb[]>(url);
+        const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeeting url=' + url))
         );
@@ -376,7 +374,7 @@ export class TourneyService {
         );
     }
 
-    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
+    saveRoundMeetingDb(m: MeetingDb, tourneyId: number, roundId: number): void {
         if(m.id == null) {
             this.addMeetingDb(m, tourneyId, roundId, 0, 0)
         } else {
@@ -384,7 +382,7 @@ export class TourneyService {
         }
     }
 
-    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
+    savePlayoffMeetingDb(m: MeetingDb, tourneyId: number, playoffId: number): void {
         if(m.id == null) {
             this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
         } else {
@@ -392,7 +390,7 @@ export class TourneyService {
         }
     }
 
-    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
+    saveEliminatoryMeetingDb(m: MeetingDb, tourneyId: number, eliminatoryId: number): void {
         if(m.id == null) {
             this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
         } else {
@@ -400,60 +398,50 @@ export class TourneyService {
         }
     }
 
-    private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
-        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+    private addMeetingDb(m: MeetingDb, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+        this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
 
-        this.addMeeting(mdb);
+        this.addMeeting(m);
     }
 
-    prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
-        let json: string = JSON.stringify(m);
-        let mdb: MeetingDb = {
-            id: m.id,
-            tourneyId: tourneyId,
-            roundId: roundId,
-            playoffId: playoffId,
-            eliminatoryId: eliminatoryId,
-            json: json
-        };
-        return mdb;
+    prepareMdb(m: MeetingDb, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+
+        m.tourneyId = tourneyId;
+        m.roundId = roundId;
+        m.playoffId = playoffId;
+        m.eliminatoryId = eliminatoryId;
     }
 
-    /** POST: add a new Meeting to the db server */
+    /** POST: add a new MeetingDb to the db server */
     private addMeeting (mdb: MeetingDb): void {
-        const id =  mdb.id;
-        let url = meetingUrl + "/" + id;
-
-        if(this.loginService.userLogged) {
-            url = tourneyUrl +  "/" + id;
-        }
+        let url = meetingUrl;
 
         let obs = this.http.post<MeetingDb>(url, mdb, httpOptions).pipe(
-            tap((m: MeetingDb) => this.log('added Meeting, url=' + url)),
+            tap((m: MeetingDb) => this.log('added MeetingDb, url=' + url)),
             catchError(this.handleError<MeetingDb>('addMeeting, url=' + url))
         );
         obs.subscribe();
     }
 
-    updateRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number) {
-        this.updateMeetingDb(m, tourneyId, roundId, 0, 0);
+    completeRoundMeetingDb(m: MeetingDb, tourneyId: number, roundId: number) {
+        this.prepareMdb(m, tourneyId, roundId, 0, 0);
     }
 
-    updatePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number) {
-        this.updateMeetingDb(m, tourneyId, 1, playoffId, 0);
+    completePlayoffMeetingDb(m: MeetingDb, tourneyId: number, playoffId: number) {
+        this.prepareMdb(m, tourneyId, 1, playoffId, 0);
     }
 
-    updateEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number) {
-        this.updateMeetingDb(m, tourneyId, 0, 0, eliminatoryId);
+    completeEliminatoryMeetingDb(m: MeetingDb, tourneyId: number, eliminatoryId: number) {
+        this.prepareMdb(m, tourneyId, 0, 0, eliminatoryId);
     }
 
-    private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
-        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-        let obs = this.updateMeetingMdb(mdb);
+    private updateMeetingDb(m: MeetingDb, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
+        this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+        let obs = this.updateMeetingMdb(m);
         obs.subscribe();
     }
 
-    /** PsUT: update the Meeting on the server */
+    /** PsUT: update the MeetingDb on the server */
     updateMeeting (mdb: MeetingDb):  Observable<MeetingDb> {
 
         let obs = this.updateMeetingMdb(mdb);
@@ -515,7 +503,7 @@ export class TourneyService {
     }
 
     private onError(n:any) {
-        let msgerr : string = 'Meeting reload failed';
+        let msgerr : string = 'MeetingDb reload failed';
         console.log(msgerr);
     }
 
@@ -527,22 +515,22 @@ export class TourneyService {
         r.meetings = [];
     }
 
-    deleteUnusedMeetings(meetings: Meeting[] ): void {
+    deleteUnusedMeetings(meetings: MeetingDb[] ): void {
         for(let m of meetings) {
             this.deleteMeeting(m);
         }
     }
 
-    /** DELETE: delete the Meeting from the server */
-    private deleteMeeting (m: Meeting ): void {
+    /** DELETE: delete the MeetingDb from the server */
+    private deleteMeeting (m: MeetingDb ): void {
         let id: number = m.id;
         const url = meetingUrl + "/" + id;
 
         let json = url + ", " + m.name;
 
-        let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting Meeting:' + json)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + json))
+        let obs = this.http.delete<MeetingDb>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb:' + json)),
+            catchError(this.handleError<MeetingDb>('deletingMeeting: ' + json))
         );
 
         obs.subscribe();

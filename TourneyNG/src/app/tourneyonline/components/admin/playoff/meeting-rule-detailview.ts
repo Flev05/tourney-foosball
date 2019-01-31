@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 
 import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
@@ -21,7 +21,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
     toggleable: boolean = false;
 
     selectedPlayoff: Playoff;
-    selectedMeeting: Meeting;
+    selectedMeeting: MeetingDb;
     
     fullAddress: string;
     dateAndTime: Date;

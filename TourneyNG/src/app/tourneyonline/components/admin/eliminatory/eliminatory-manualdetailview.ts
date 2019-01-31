@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Message } from 'app/components/common/api';
@@ -71,7 +71,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.playoffs = this.tourneyService.playoffsCombobox;
         this.isStandalone = this.tourneyService.isStandalone;
 
-        let m1: Meeting = this.selectedEliminatory.round.meetings[0];
+        let m1: MeetingDb = this.selectedEliminatory.round.meetings[0];
         m1.datetime = new Date(m1.datetime);
         if(m1.country!=undefined) {
             this.fullAddress1 = m1.address + " - " 
@@ -79,7 +79,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
                 + " (" + m1.country.provinceCode +")";
         }
  
-        let m2: Meeting = m1;
+        let m2: MeetingDb = m1;
         if(!this.isOneway) {
             m2 = this.selectedEliminatory.round.meetings[1];
             m2.datetime = new Date(m2.datetime);
@@ -208,7 +208,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
         }
 
-        this.tourneyService.updateEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
+        this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.meetings[1];
@@ -219,10 +219,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            this.tourneyService.updateEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
+            this.tourneyService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
-
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
 
     doubleSelection() {

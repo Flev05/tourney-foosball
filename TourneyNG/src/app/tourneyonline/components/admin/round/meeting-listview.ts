@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'app/components/common/api';
 
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
@@ -22,8 +22,8 @@ export class MeetingListView extends AbstractListView {
 
     msgs: Message[] = [];
     selectedRound: Round;
-    selectedMeeting: Meeting;
-    meetings: Meeting [];
+    selectedMeeting: MeetingDb;
+    meetings: MeetingDb [];
     atLeast2teams: boolean;
 
     constructor(
@@ -80,7 +80,7 @@ export class MeetingListView extends AbstractListView {
             return;
         }
         
-        let tmpMeetings: Array<Meeting> = new Array<Meeting>();
+        let tmpMeetings: Array<MeetingDb> = new Array<MeetingDb>();
 
         for( let m of this.meetings) {
             if(m.direction == Direction.OneWay) {

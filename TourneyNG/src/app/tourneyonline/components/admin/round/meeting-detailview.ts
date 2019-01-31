@@ -3,12 +3,11 @@ import { Location } from '@angular/common';
 
 import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-
-import { CountryService } from '../../../service/country-service';
-import { TourneyService } from '../../../service/tourney-service';
-import { AbstractDetailView } from '../../common/abstract-detailview';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Round } from 'app/tourneyonline/domain/round';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { AbstractDetailView } from '../../common/abstract-detailview';
 
 @Component({
     templateUrl: './meeting-detailview.html',
@@ -20,7 +19,7 @@ export class MeetingDetailView extends AbstractDetailView {
     toggleable: boolean = false;
 
     selectedRound: Round;
-    selectedMeeting: Meeting;
+    selectedMeeting: MeetingDb;
     
     fullAddress: string;
     dateAndTime: Date;

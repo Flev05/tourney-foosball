@@ -6,12 +6,11 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { RoundType, EliminatoryMode, Direction } from 'app/tourneyonline/domain/enumerations';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
-import { EliminatoryManualListView } from './eliminatory-manuallistview';
 import { EliminatoryAutoListView } from './eliminatory-autolistview';
 
 @Injectable()
@@ -60,7 +59,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         if (this.isStandalone) {
             this.processStandalone();
-        } else if (this.isAutomatic) {
+        } else {
             this.prepareAutomaticEliminatoryRules(this.selectedTeamsNumCombobox.value);
         }
 
@@ -176,7 +175,6 @@ export class LevelService extends AbstractEliminatoryListView {
                 for(let m of round.meetings) {
                     if(m.team1.id == t.id || m.team2.id == t.id) {
                         this.selectedTourney.meetingsForDelete.push(m);
-                        // this.tourneyService.deleteMeeting(m);
                     }
                 }
             }
@@ -211,13 +209,13 @@ export class LevelService extends AbstractEliminatoryListView {
             let m = e.round.meetings[0];
             m.team1 = t1;
             m.team2 = t2;
-            this.tourneyService.updateEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+            this.tourneyService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
             
             m = e.round.meetings[1];
             m.team1 = t2;
             m.team2 = t1;
             
-            this.tourneyService.updateEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+            this.tourneyService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
         }
     } 
 
@@ -350,15 +348,15 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     private newEliminatory(index : number): Eliminatory {
-        let meetings : Array<Meeting> = new Array<Meeting>();
+        let meetings : Array<MeetingDb> = new Array<MeetingDb>();
 
         let t1: Team = this.newDummyTeam();
         let t2: Team = this.newDummyTeam();
 
-        let m1: Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
+        let m1: MeetingDb = this.createMeeting(t1, t2, null, null, Direction.OneWay);
         meetings.push(m1);
 
-        let m2: Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
+        let m2: MeetingDb = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
         meetings.push(m2);
 
         let e: Eliminatory = {
@@ -367,8 +365,8 @@ export class LevelService extends AbstractEliminatoryListView {
                 , name: "" + index
                 , type: RoundType.E
                 , teams:[t1, t2]
-                ,classification: []
-                ,meetings: meetings
+                , classification: []
+                , meetings: meetings
             },
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),
@@ -394,14 +392,15 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         };
 
-        this.tourneyService.saveEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
-        this.tourneyService.saveEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
+        this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
+        this.tourneyService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
 
         return e;
     }
 
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
+        this.selectedRow = event;
 
         this.tourneyService.teamsCombobox = this.teamsCombobox;
         
@@ -409,9 +408,11 @@ export class LevelService extends AbstractEliminatoryListView {
         this.tourneyService.selectedEliminatoryLevel = this.selectedRow.el;
 
         let redirect: string = EliminatoryAutoListView.autoRedirectLV;
-        if(this.isManual) {
-            redirect = EliminatoryManualListView.manualRedirectLV;
-        } 
+
+        // if(this.isManual) {
+        //     redirect = EliminatoryManualListView.manualRedirectLV;
+        // }
+        
         this.router.navigate([redirect]);
     }
  
@@ -423,13 +424,11 @@ export class LevelService extends AbstractEliminatoryListView {
         this.tourneyService.regenerateStandaloneTopLevel = true;
         if (this.isStandalone) {
             this.processStandalone();
-        }
-        else if (this.isAutomatic) {
+        } else {
             this.prepareAutomaticEliminatoryRules(N);
         }
 
         this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
 
         this.prepareConfigELGui();
     }

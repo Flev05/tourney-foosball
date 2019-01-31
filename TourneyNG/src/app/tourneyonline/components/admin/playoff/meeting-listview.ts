@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'app/components/common/api';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
@@ -22,8 +21,8 @@ export class MeetingListView extends AbstractListView {
     msgs: Message[] = [];
 
     selectedPlayoff: Playoff;
-    selectedMeeting: Meeting;
-    meetings: Meeting [];
+    selectedMeeting: MeetingDb;
+    meetings: MeetingDb [];
 
     constructor(
         protected tourneyService: TourneyService,

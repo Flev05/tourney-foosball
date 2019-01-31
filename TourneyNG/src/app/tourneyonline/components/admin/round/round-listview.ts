@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Round } from 'app/tourneyonline/domain/round';
@@ -54,8 +53,7 @@ export class RoundListView extends AbstractListView {
 
     onComplete(): void {
         this.selectedRound.meetings = [];
-        for(let mdb of this.mdbs) {
-            let m: Meeting = JSON.parse(mdb.json);
+        for(let m of this.mdbs) {
             this.selectedRound.meetings.push(m);
         }
         this.tourneyService.selectedRound = this.selectedRound;

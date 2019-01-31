@@ -1,6 +1,6 @@
 import { Classification } from './classification';
 import { Team } from './team';
-import { Meeting } from './meeting';
+import { MeetingDb } from './meeting-db';
 import { RoundType } from './enumerations';
 import { Matrix } from './matrix';
 
@@ -11,7 +11,9 @@ export interface Round {
 
     teams?:  Team[];
 
-    meetings?: Meeting[];
+    meetings?: MeetingDb[];
+    meetingGroup?: number[];
+
     classification?: Classification[];
     matrix?: Matrix;
 }

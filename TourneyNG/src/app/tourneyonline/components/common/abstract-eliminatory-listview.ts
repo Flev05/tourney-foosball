@@ -39,7 +39,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     isOneway: string;
     isStandalone: boolean;
-    isManual: boolean;
     
     isModeEnabled: boolean;
 
@@ -110,7 +109,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.isStandalone = false;
         }
         this.tourneyService.isStandalone = this.isStandalone;
-        this.isManual = !this.isStandalone;
     }
 
     protected prepareGui() {
@@ -549,7 +547,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     protected processEliminationTree(): void {
-        // this.tourneyService.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onOnewayClick() {
@@ -714,7 +711,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
 
-            let withPlayoff = {e:e
+            let fullList = {e:e
                 , onewayDatetime: onewayDatetime
                 , position1: position1
                 , fromRound1: fromRound1
@@ -725,7 +722,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 , fromPlayoff2: fromPlayoff2
                 , roundtripDatetime: roundtripDatetime
             };
-            this.rows.push(withPlayoff);
+            this.rows.push(fullList);
         }
     }
 

@@ -119,7 +119,6 @@ export class LevelService extends AbstractEliminatoryListView {
                 for(let e of d.eliminatories) {
                     for(let m of e.round.meetings) {
                         this.selectedTourney.meetingsForDelete.push(m);
-                        // this.tourneyService.deleteMeeting(m);
                     }
                 }
             }
@@ -414,7 +413,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let redirect: string = EliminatoryAutoListView.autoRedirectLV;
 
-        if(this.isManual) {
+        if(!this.isStandalone) {
             redirect = EliminatoryManualListView.manualRedirectLV;
         }
         

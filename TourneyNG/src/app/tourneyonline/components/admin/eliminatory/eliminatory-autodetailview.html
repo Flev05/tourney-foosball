@@ -116,7 +116,7 @@
                     <p-autoComplete id="country-id" formControlName="country1" 
                         [suggestions]="filteredCountriesSingle" 
                         (completeMethod)="search($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
+                        placeholder="Comune" [minLength]="1">
                     </p-autoComplete>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                     <p-autoComplete id="country-id" formControlName="country2" 
                         [suggestions]="filteredCountriesSingle" 
                         (completeMethod)="search($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
+                        placeholder="Comune" [minLength]="1">
                     </p-autoComplete>
                 </div>
             </div>
@@ -182,17 +182,6 @@
                 </div>
             </div>                  
         </div>
-
-        <!-- <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!eliminatoryFormGroup.valid">
-                        
-                    </button>
-                </div>
-            </div>
-        </div> -->
-
     </form>
 </div>
  

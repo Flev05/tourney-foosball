@@ -69,7 +69,7 @@ export class TourneyDetailView extends AbstractDetailView {
     roundsCombobox: Combobox[];
     selectedRoundsNumCombobox: Combobox;
 
-    atLeastTwoRounds: boolean;
+    atLeastOneRound: boolean;
     playoffsCombobox: Combobox[];
     selectedTeams4PlayoffsCB: Combobox;
     selectedPlayoffsCB: Combobox;
@@ -215,13 +215,13 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.roundRows = this.selectedTourney.rounds;
-        this.atLeastTwoRounds = this.selectedTourney.rounds.length >= 2 ? true : false;
+        this.atLeastOneRound = this.selectedTourney.rounds.length >= 2 ? true : false;
     }
 
     private preparePlayoffs(): void {
         console.log("Entering preparePlayoffs()");
 
-        if( !this.atLeastTwoRounds) {
+        if( !this.atLeastOneRound) {
             return;
         }
                 

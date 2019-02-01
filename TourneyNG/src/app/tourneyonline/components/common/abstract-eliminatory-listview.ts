@@ -39,6 +39,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     isOneway: string;
     isStandalone: boolean;
+    isManual: boolean;
     
     isModeEnabled: boolean;
 
@@ -109,6 +110,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.isStandalone = false;
         }
         this.tourneyService.isStandalone = this.isStandalone;
+        this.isManual = !this.isStandalone;
     }
 
     protected prepareGui() {
@@ -712,32 +714,18 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
 
-            if(!this.isPlayoff) {
-                let noPlayoff = {e:e
-                    , onewayDatetime: onewayDatetime
-                    , position1: position1
-                    , fromRound1: fromRound1
-                    , versus: "<==>"
-                    , position2: position2
-                    , fromRound2: fromRound2
-                    , roundtripDatetime: roundtripDatetime
-                };
-    
-                this.rows.push(noPlayoff);
-            } else {
-                let withPlayoff = {e:e
-                    , onewayDatetime: onewayDatetime
-                    , position1: position1
-                    , fromRound1: fromRound1
-                    , fromPlayoff1: fromPlayoff1
-                    , versus: "<==>"
-                    , position2: position2
-                    , fromRound2: fromRound2
-                    , fromPlayoff2: fromPlayoff2
-                    , roundtripDatetime: roundtripDatetime
-                };
-                this.rows.push(withPlayoff);
-            }
+            let withPlayoff = {e:e
+                , onewayDatetime: onewayDatetime
+                , position1: position1
+                , fromRound1: fromRound1
+                , fromPlayoff1: fromPlayoff1
+                , versus: "<==>"
+                , position2: position2
+                , fromRound2: fromRound2
+                , fromPlayoff2: fromPlayoff2
+                , roundtripDatetime: roundtripDatetime
+            };
+            this.rows.push(withPlayoff);
         }
     }
 

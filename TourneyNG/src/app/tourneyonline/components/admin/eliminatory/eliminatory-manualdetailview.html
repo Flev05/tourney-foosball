@@ -57,8 +57,7 @@
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-4">
                         <p-dropdown id="team1" [options]="availableTeams" formControlName="team1" 
-                            optionLabel="label" 
-                            placeholder="Selezionare">
+                            optionLabel="label">
                         </p-dropdown>
                     </div>
                 </div>
@@ -66,8 +65,7 @@
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-4">
                         <p-dropdown id="team2" [options]="availableTeams" formControlName="team2" 
-                        optionLabel="label"
-                        placeholder="Selezionare">
+                            optionLabel="label">
                     </p-dropdown>
                     </div>
                 </div>                      
@@ -91,8 +89,7 @@
                         </div>
                         <div class="ui-grid-col-3">
                             <p-dropdown id="roundId" [options]="rounds" formControlName="round1" 
-                                optionLabel="label" 
-                                placeholder="Selezionare">
+                                optionLabel="label">
                             </p-dropdown>
                         </div>
                     </div>
@@ -102,8 +99,7 @@
                         </div>
                         <div class="ui-grid-col-3">
                             <p-dropdown id="playoffId" [options]="playoffs" formControlName="playoff1" 
-                                optionLabel="label"
-                                placeholder="Selezionare">
+                                optionLabel="label">
                             </p-dropdown>
                         </div>
                     </div>
@@ -128,8 +124,7 @@
                         </div>
                         <div class="ui-grid-col-3">
                             <p-dropdown id="round" [options]="rounds" formControlName="round2" 
-                            optionLabel="label"
-                            placeholder="Selezionare">
+                                optionLabel="label">
                         </p-dropdown>
                         </div>
                     </div>
@@ -139,8 +134,7 @@
                         </div>
                         <div class="ui-grid-col-3">
                             <p-dropdown id="playoff" [options]="playoffs" formControlName="playoff2" 
-                                optionLabel="label"
-                                placeholder="Selezionare">
+                                optionLabel="label">
                             </p-dropdown>
                         </div>
                     </div>
@@ -185,7 +179,7 @@
                     <p-autoComplete id="country-id" formControlName="country1" 
                         [suggestions]="filteredCountriesSingle" 
                         (completeMethod)="search($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
+                        placeholder="Comune" [minLength]="1">
                     </p-autoComplete>
                 </div>
             </div>
@@ -237,7 +231,7 @@
                     <p-autoComplete id="country-id" formControlName="country2" 
                         [suggestions]="filteredCountriesSingle" 
                         (completeMethod)="search($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
+                        placeholder="Comune" [minLength]="1">
                     </p-autoComplete>
                 </div>
             </div>

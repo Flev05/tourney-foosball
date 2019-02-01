@@ -927,14 +927,14 @@
             </p-accordionTab>
         </p-accordion>        
 
-        <div *ngIf="!atLeastTwoRounds" style="margin-top:30px">
+        <div *ngIf="!atLeastOneRound" style="margin-top:30px">
             <p-message 
                 severity="error" 
-                text="Attenzione! Devono essere configurati almento 2 gironi all'italiana per il torneo!">
+                text="Attenzione! Deve essere configurato almento un girone all'italiana!">
             </p-message>
         </div>     
 
-        <div *ngIf="atLeastTwoRounds" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="atLeastOneRound" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Playoff:

@@ -12,6 +12,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { EliminatoryAutoListView } from './eliminatory-autolistview';
+import { EliminatoryManualListView } from './eliminatory-manuallistview';
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
@@ -302,18 +303,22 @@ export class LevelService extends AbstractEliminatoryListView {
             let up = padTeamList[i];
             e.rule1.fromRound.id = this.tourneyService.getSequenceNumber();
             let label = up.value == 0 ? "" : up.value  + "°";
+            
             e.rule1.fromRound.position = {label:"" + label, value: up.value};
-            e.rule1.fromPlayoff.position = {label:"" + label, value: 1};
-            e.rule1.fromRound.round = {label:up.label, value: up.value};
-            e.rule1.fromPlayoff.round = {label:"" + label, value: 1};
+            e.rule1.fromRound.round    = {label:up.label, value: up.value};
+
+            e.rule1.fromPlayoff.position = {label:"", value: 0};
+            e.rule1.fromPlayoff.round    = {label:"", value: 0};
 
             let down = padTeamList[--lastIndex];
             e.rule2.fromRound.id = this.tourneyService.getSequenceNumber();
             label = down.value == 0 ? "" : down.value  + "°";
-            e.rule2.fromRound.position = {label:"" + label, value: down.value};
-            e.rule2.fromPlayoff.position = {label:"" + label, value: 1};
-            e.rule2.fromRound.round = {label:down.label, value: down.value};
-            e.rule2.fromPlayoff.round = {label:"" + label, value: 1};
+            
+            e.rule2.fromRound.position = {label:"" + label, value: down.value};            
+            e.rule2.fromRound.round    = {label:down.label, value: down.value};
+
+            e.rule2.fromPlayoff.position = {label:"", value: 0};
+            e.rule2.fromPlayoff.round    = {label:"", value: 0};
         }
     }
     
@@ -409,9 +414,9 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let redirect: string = EliminatoryAutoListView.autoRedirectLV;
 
-        // if(this.isManual) {
-        //     redirect = EliminatoryManualListView.manualRedirectLV;
-        // }
+        if(this.isManual) {
+            redirect = EliminatoryManualListView.manualRedirectLV;
+        }
         
         this.router.navigate([redirect]);
     }

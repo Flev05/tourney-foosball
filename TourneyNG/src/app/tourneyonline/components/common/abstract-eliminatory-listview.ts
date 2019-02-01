@@ -371,8 +371,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     /**
-        <th>N°</th>
-        <th>Squadra</th>
+        <th>Team</th>
         <th>Pt.</th>
         <th>G</th>
         <th>V</th>
@@ -380,7 +379,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <th>N</th>
         <th>Gf:Gs</th>
         <th>D</th>
-
         <td>{{rowIndex + 1}}</td>
         <td>{{rowData.team.teamName}}</td>
         <td>{{rowData.points}}</td>
@@ -393,7 +391,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
      */
     protected prepareRoundsGui(rounds: Round[], isOneway: boolean): any[] {
         this.cols = [
-            { field: 'rowNumber',   header: 'N°'},
             { field: 'teamName',    header: 'Team'},
             { field: 'points',      header: 'Pt.'},
             { field: 'played',      header: 'G'},
@@ -474,10 +471,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     /**
-        <th>N°</th>
         <th>Squadre</th>
         <th>Nome</th>
-
         <td>{{rowIndex + 1}}</td>
         <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
         <td>{{rowData.name}}</td>
@@ -597,8 +592,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
 
         cols.push({ field: 'dateAndTime', header: 'Data' });
-        cols.push({ field: 'teamName1', header: 'Squadra 1' });
-        cols.push({ field: 'teamName2', header: 'Squadra 2' });
+        cols.push({ field: 'teamName1', header: 'Team 1' });
+        cols.push({ field: 'teamName2', header: 'Team 2' });
         if (this.selectedTourney.maxMatchesPerMeeting == 1) {
             cols.push({ field: 'goals1', header: 'Goal 1' });
             cols.push({ field: 'goals2', header: 'Goal 2' });
@@ -613,9 +608,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
      /**
         <th>N°</th>
-        <th *ngIf="isTopLevel">Squadra 1</th>
-        <th *ngIf="isTopLevel">Vs</th>
-        <th *ngIf="isTopLevel">Squadra 2</th>
+        <th *ngIf="isTopLevel">Team 1</th>
+        <th *ngIf="isTopLevel">Team 2</th>
         <th>Andata</th>
         <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>
 
@@ -628,13 +622,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
      */
     prepareStandaloneGui(): void {
         this.cols = [
-            { field: 'rowNumber',   header: 'N°' },
         ];
 
         if(this.isTopLevel) {
-            this.cols.push({ field: 'teamName1', header: 'Squadra 1'});
-            this.cols.push({ field: 'versus',    header: 'Vs' });
-            this.cols.push({ field: 'teamName2', header: 'Squadra 2'});
+            this.cols.push({ field: 'teamName1', header: 'Team 1'});
+            this.cols.push({ field: 'teamName2', header: 'Team 2'});
         }
 
         this.cols.push({ field: 'onewayDatetime', header: 'Andata' });
@@ -651,7 +643,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.rows.push({e:e
                 , rowNumber: i+1 
                 , teamName1: e.round.meetings[0].team1.teamName
-                , versus: " - "
                 , teamName2: e.round.meetings[0].team2.teamName
                 , onewayDatetime: onewayDatetime
                 , roundtripDatetime: roundtripDatetime
@@ -662,11 +653,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     /**
         <th>N°</th>
         <th>Andata</th>
-        <th *ngIf="isTopLevel">C°</th>
+        <th *ngIf="isTopLevel">Pos</th>
         <th *ngIf="isTopLevel">Girone</th>
         <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
-        <th *ngIf="isTopLevel">Vs</th>
-        <th *ngIf="isTopLevel">C°</th>
+        <th *ngIf="isTopLevel">Pos.</th>
         <th *ngIf="isTopLevel">Girone</th>
         <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
         <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>     
@@ -684,7 +674,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     */
    protected prepareNotStandaloneGui(): void {
         this.cols = [
-            { field: 'rowNumber',   header: 'N°'},
             { field: 'onewayDatetime', header: 'Andata'}
         ];
 
@@ -695,7 +684,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 this.cols.push({ field: 'fromPlayoff1', header: 'Playoff'});
             }
 
-            this.cols.push({ field: 'versus',    header: 'Vs' });
+            this.cols.push({ field: 'versus', header: 'Vs'});
 
             this.cols.push({ field: 'position2', header: 'Pos.'});
             this.cols.push({ field: 'fromRound2', header: 'Girone' });
@@ -723,18 +712,32 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
 
-            this.rows.push({e:e
-                , rowNumber: i+1
-                , onewayDatetime: onewayDatetime
-                , position1: position1
-                , fromRound1: fromRound1
-                , fromPlayoff1: fromPlayoff1
-                , versus: " - "
-                , position2: position2
-                , fromRound2: fromRound2
-                , fromPlayoff2: fromPlayoff2
-                , roundtripDatetime: roundtripDatetime
-            });
+            if(!this.isPlayoff) {
+                let noPlayoff = {e:e
+                    , onewayDatetime: onewayDatetime
+                    , position1: position1
+                    , fromRound1: fromRound1
+                    , versus: "<==>"
+                    , position2: position2
+                    , fromRound2: fromRound2
+                    , roundtripDatetime: roundtripDatetime
+                };
+    
+                this.rows.push(noPlayoff);
+            } else {
+                let withPlayoff = {e:e
+                    , onewayDatetime: onewayDatetime
+                    , position1: position1
+                    , fromRound1: fromRound1
+                    , fromPlayoff1: fromPlayoff1
+                    , versus: "<==>"
+                    , position2: position2
+                    , fromRound2: fromRound2
+                    , fromPlayoff2: fromPlayoff2
+                    , roundtripDatetime: roundtripDatetime
+                };
+                this.rows.push(withPlayoff);
+            }
         }
     }
 

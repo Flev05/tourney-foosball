@@ -38,7 +38,7 @@
 
         <ng-template pTemplate="header" let-columns>
             <tr>
-                <th>N°</th>
+                <th style="width: 15mm;">N°</th>
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
@@ -48,7 +48,7 @@
 
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData">
-                <td>{{rowIndex+1}}</td>
+                <td style="width: 15mm;">{{rowIndex+1}}</td>
                 <td *ngFor="let col of columns">
                     <span class="ui-column-title">{{col.header}}</span>
                     {{rowData[col.field]}}

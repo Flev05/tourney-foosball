@@ -32,7 +32,7 @@ export class RoundDetailView extends AbstractDetailView {
     nextDeleteMeeting: MeetingDb;
     meetingEnabled: boolean;
     selectedMeetingGroupNumCombobox: Combobox;
-    meetingGroupCombobox: any[];
+    meetingGroupCombobox: Combobox[];
 
     constructor(
         private fb: FormBuilder,
@@ -48,8 +48,7 @@ export class RoundDetailView extends AbstractDetailView {
         console.log("RoundDetailView.ngOnInit() ");
 
         super.ngOnInit();
-        this.meetingEnabled = false;
-
+        
         if(this.tourneyService.newRound) {
             this.selectedRound = { id: this.tourneyService.getSequenceNumber(),
                 name: "",
@@ -89,6 +88,8 @@ export class RoundDetailView extends AbstractDetailView {
             }
         }
 
+        this.meetingEnabled = true;
+        this.meetingGroupCombobox = [];
         for (let r=1; r<=this.targetTeams.length; r++ ) {
             let ccb: Combobox = { label: "" + r, value: r };
             this.meetingGroupCombobox.push(ccb);

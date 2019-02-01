@@ -384,13 +384,14 @@
                     [suggestions]="filteredCountriesSingle" 
                     (completeMethod)="searchCountry($event)" 
                     field="city"
-                    placeholder="Comuni" 
+                    placeholder="Comune" 
                     [minLength]="1">
                 </p-autoComplete>
             </div>
         </div>
 
-        <div class="ui-grid-row">
+        <div class="ui-grid-row" tooltipPosition="right"
+                pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
             <div class="ui-grid-col-3">
                 Indirizzo:
             </div>
@@ -403,11 +404,11 @@
             <div class="ui-grid-col-3">
                 Data e ora:
             </div>
-            <div class="ui-grid-col-3">
+            <div class="ui-grid-col-3" tooltipPosition="right"
+                    pTooltip="Indicare la data di inizio del torneo.">
                 <p-calendar [(ngModel)]="selectedTourney.datetime" 
                     [locale]="it" 
                     dateFormat="dd/mm/yy" 
-                    showTime="true" 
                     [showIcon]="true">
                 </p-calendar>
             </div>
@@ -1028,7 +1029,7 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel header="Eliminazioni Dirette" *ngIf="containsEliminatory()" >  
+    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette" >  
         <p-accordion>
             <p-accordionTab header="Istruzioni">                                
             <h3>Istruzioni</h3>
@@ -1208,7 +1209,7 @@
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
-            <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" 
+            <button class="ui-button-success" pButton (click)="onSubmit()" icon="pi pi-save" label="Salva" 
             [disabled]="notAllowedPhases()"></button>
         </div>
     </div>

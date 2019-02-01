@@ -14,8 +14,6 @@ export class EliminatoryAutoListView extends AbstractEliminatoryListView {
     static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
     static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
 
-    cols: any[];
-    rows: any[];
     selectedRow: any;
 
     constructor(

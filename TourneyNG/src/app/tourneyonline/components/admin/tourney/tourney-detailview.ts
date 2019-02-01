@@ -724,7 +724,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
     }
 
-    onSubmit(value: string) {
+    onSubmit() {
         this.submitted = true;
 
         this.tourneyService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
@@ -749,7 +749,7 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => super.goBack());
     }
 
     goBack() {

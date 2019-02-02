@@ -84,7 +84,6 @@ export class TourneyService {
     ];
     redirect: string;
 
-    selectedTeams4RoundsCB: Combobox;    
     selectedTeams4PlayoffsCB: Combobox;
     selectedPlayoffsCB: Combobox;
 

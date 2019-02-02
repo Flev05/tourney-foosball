@@ -65,6 +65,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     atLeastTwoTeams: boolean;
     team4roundsCombobox: Combobox[];
+    selectedTeams4RoundsCB: Combobox;    
     roundsCombobox: Combobox[];
     selectedRoundsNumCombobox: Combobox;
 
@@ -181,9 +182,9 @@ export class TourneyDetailView extends AbstractDetailView {
             this.team4roundsCombobox.push(cb);
         } 
 
-        if(this.tourneyService.selectedTeams4RoundsCB == undefined) {
+        if(this.selectedTeams4RoundsCB == undefined) {
             let cb: Combobox = { label: "0", value: 0 };
-            this.tourneyService.selectedTeams4RoundsCB = cb;
+            this.selectedTeams4RoundsCB = cb;
         }
 
         this.roundsCombobox = [];
@@ -336,9 +337,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onTeam4roundNumChange(cb: Combobox) {
         console.log(cb);
-        this.tourneyService.selectedTeams4RoundsCB = cb;
+        this.selectedTeams4RoundsCB = cb;
 
-        let T: number = this.tourneyService.selectedTeams4RoundsCB.value;
+        let T: number = this.selectedTeams4RoundsCB.value;
 
         this.roundsCombobox = [];
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
@@ -361,7 +362,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.resetRounds();
        
-        let T = this.tourneyService.selectedTeams4RoundsCB.value;
+        let T = this.selectedTeams4RoundsCB.value;
         let R: number = this.selectedRoundsNumCombobox.value;
 
         let teamsPerRound: number = Math.floor(T/R);

@@ -967,7 +967,7 @@
                 Squadre:
             </div>
             <div class="ui-grid-col-3" tooltipPosition="right" 
-                    pTooltip="Scegliere il numero totale di squadre che passerà il turno dai gironi all'italiana ai playoff">
+                    pTooltip="Scegliere il numero squadre per girone che passerà il turno dai gironi all'italiana ai playoff">
                 <p-dropdown id="teamsRoundId" 
                     [options]="team4playoffsCombobox" 
                     [(ngModel)]="selectedTeams4PlayoffsCB"  
@@ -1029,7 +1029,7 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette" >  
+    <p-tabPanel header="Eliminazioni Dirette" *ngIf="containsEliminatory()">  
         <p-accordion>
             <p-accordionTab header="Istruzioni">                                
             <h3>Istruzioni</h3>

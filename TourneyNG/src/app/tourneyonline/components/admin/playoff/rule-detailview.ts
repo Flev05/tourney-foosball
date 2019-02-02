@@ -93,7 +93,7 @@ export class RuleDetailView extends AbstractDetailView {
                     
                     this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
     
-                    if(!this.selectedTourney.isOnewayPlayoff) {
+                    if(this.selectedTourney.isOnewayPlayoff != "true") {
                         m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
                         this.selectedPlayoff.round.meetings.push(m);
                         this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);

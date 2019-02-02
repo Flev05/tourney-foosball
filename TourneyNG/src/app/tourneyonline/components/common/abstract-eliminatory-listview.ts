@@ -652,10 +652,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     /**
         <th>N°</th>
         <th>Andata</th>
-        <th *ngIf="isTopLevel">Pos</th>
+        <th *ngIf="isTopLevel">Classif.</th>
         <th *ngIf="isTopLevel">Girone</th>
         <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
-        <th *ngIf="isTopLevel">Pos.</th>
+        <th *ngIf="isTopLevel">Classif.</th>
         <th *ngIf="isTopLevel">Girone</th>
         <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
         <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>     
@@ -677,7 +677,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         ];
 
         if(this.isTopLevel) {
-            this.cols.push({ field: 'position1', header: 'Pos.'});
+            this.cols.push({ field: 'position1', header: 'Classif.'});
             this.cols.push({ field: 'fromRound1', header: 'Girone' });
             if(this.isPlayoff) {
                 this.cols.push({ field: 'fromPlayoff1', header: 'Playoff'});
@@ -685,7 +685,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             this.cols.push({ field: 'versus', header: 'Vs'});
 
-            this.cols.push({ field: 'position2', header: 'Pos.'});
+            this.cols.push({ field: 'position2', header: 'Classif.'});
             this.cols.push({ field: 'fromRound2', header: 'Girone' });
             if(this.isPlayoff) {
                 this.cols.push({ field: 'fromPlayoff2', header: 'Playoff'});

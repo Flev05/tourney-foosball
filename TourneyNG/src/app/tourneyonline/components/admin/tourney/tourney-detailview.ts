@@ -434,7 +434,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let start = i * teamsPerRound;
         let teams: Team[] = this.prepareRandomTeams(randomTeams, start, teamsPerRound);
         let roundId: number = this.tourneyService.getSequenceNumber();
-        let meetings: MeetingDb[] = this.prepareMeetings(teams, roundId);
+        let meetings: MeetingDb[] = this.prepareMeetings(teams);
         let classifications: Classification[] = this.prepareClassification(teams);
         let r: Round = {
             id: roundId,
@@ -458,7 +458,7 @@ export class TourneyDetailView extends AbstractDetailView {
         return teams;
     }
 
-    private prepareMeetings(teamSlice: Team[], roundId: number): MeetingDb[] {
+    private prepareMeetings(teamSlice: Team[]): MeetingDb[] {
         let meetings: MeetingDb[] = [];
 
         for(let i=0; i<teamSlice.length; i++) {
@@ -501,11 +501,11 @@ export class TourneyDetailView extends AbstractDetailView {
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
         this.playoffsCombobox.push(firstRow);
 
-        let R = Math.floor( T / 2 );
-        R = R < this.selectedTourney.rounds.length ? R : this.selectedTourney.rounds.length;
+        let P = Math.floor( T / 2 );
+        P = P < this.selectedTourney.rounds.length ? P : this.selectedTourney.rounds.length;
 
-        if( R >= this.selectedPlayoffsCB.value) {
-            for (let r=1; r <= R; r++ ) {
+        if( P >= this.selectedPlayoffsCB.value ) {
+            for (let r=1; r <= P; r++ ) {
                 let cb: Combobox = { label: "" + r, value: r };
                 this.playoffsCombobox.push(cb);
             }         

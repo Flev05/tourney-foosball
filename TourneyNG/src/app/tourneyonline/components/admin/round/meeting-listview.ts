@@ -25,6 +25,7 @@ export class MeetingListView extends AbstractListView {
     selectedMeeting: MeetingDb;
     meetings: MeetingDb [];
     atLeast2teams: boolean;
+    meetingsNoMsg: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -41,9 +42,15 @@ export class MeetingListView extends AbstractListView {
         this.selectedRound = this.tourneyService.selectedRound;
         this.meetings = this.selectedRound.meetings;
 
-        this.removeRoundTrip();
-
         this.atLeast2teams = this.meetings.length > 0 ? true : false;
+        
+        if(this.selectedTourney.isOnewayRound == "true") {
+            let meetingsNo = this.meetings.length / 2;  
+            this.meetingsNoMsg = "" +  meetingsNo + " (Solo Andata)";
+        } else {
+            let meetingsNo = this.meetings.length;  
+            this.meetingsNoMsg = "" + meetingsNo + " (Andata e Ritorno)";
+        }
 
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -60,7 +67,7 @@ export class MeetingListView extends AbstractListView {
             }
         }
 
-        if( !this.selectedTourney.isOnewayRound ) {
+        if( this.selectedTourney.isOnewayRound != "true" ) {
             for(let i=0;i<this.meetings.length; i++) {
                 let m = this.meetings[i];
                 if( m.direction == Direction.RoundTrip) {
@@ -71,25 +78,6 @@ export class MeetingListView extends AbstractListView {
         }
 
         this.rows = this.sortMeetings(this.rows);
-    }
-
-    private removeRoundTrip() {
-        console.log("removeRoundTrip()");
-
-        if(!this.selectedTourney.isOnewayRound)  {
-            return;
-        }
-        
-        let tmpMeetings: Array<MeetingDb> = new Array<MeetingDb>();
-
-        for( let m of this.meetings) {
-            if(m.direction == Direction.OneWay) {
-                tmpMeetings.push(m);
-            } else {
-                this.selectedTourney.meetingsForDelete.push(m);
-            }
-        }
-        this.selectedRound.meetings = tmpMeetings;
     }
 
     onRowSelect(event) {

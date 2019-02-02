@@ -303,21 +303,26 @@ export class LevelService extends AbstractEliminatoryListView {
             e.rule1.fromRound.id = this.tourneyService.getSequenceNumber();
             let label = up.value == 0 ? "" : up.value  + "°";
             
-            e.rule1.fromRound.position = {label:"" + label, value: up.value};
-            e.rule1.fromRound.round    = {label:up.label, value: up.value};
+            e.rule1.fromRound.position = {label: "" + label, value: up.value};
 
-            e.rule1.fromPlayoff.position = {label:"", value: 0};
-            e.rule1.fromPlayoff.round    = {label:"", value: 0};
+            let round1 = this.selectedTourney.rounds.find(r =>r.name == up.label);
+            e.rule1.fromRound.round    = {label: up.label,   value: round1==undefined ? 0 : round1.id};
+
+            e.rule1.fromPlayoff.position = {label: "", value: 0};
+
+            e.rule1.fromPlayoff.round    = {label: "", value: 0};
 
             let down = padTeamList[--lastIndex];
             e.rule2.fromRound.id = this.tourneyService.getSequenceNumber();
             label = down.value == 0 ? "" : down.value  + "°";
             
-            e.rule2.fromRound.position = {label:"" + label, value: down.value};            
-            e.rule2.fromRound.round    = {label:down.label, value: down.value};
+            e.rule2.fromRound.position = {label: "" + label, value: down.value};            
 
-            e.rule2.fromPlayoff.position = {label:"", value: 0};
-            e.rule2.fromPlayoff.round    = {label:"", value: 0};
+            let round2 = this.selectedTourney.rounds.find(r =>r.name == down.label);
+            e.rule2.fromRound.round    = {label: down.label, value: round2==undefined ? 0 : round2.id};
+
+            e.rule2.fromPlayoff.position = {label: "", value: 0};
+            e.rule2.fromPlayoff.round    = {label: "", value: 0};
         }
     }
     

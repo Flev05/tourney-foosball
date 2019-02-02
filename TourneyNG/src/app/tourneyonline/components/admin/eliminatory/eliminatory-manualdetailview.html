@@ -20,6 +20,18 @@
             Se avete selezionato il livello più alto, quello di partenza delle eliminazioni dirette,
             la vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai 
             gironi e/o playoff al primo livello di partenza per le eliminazioni dirette.
+        </p>
+        <p>
+            Il sistema compila per voi in automatico una soluzione sorteggiata dalla posizioni del 
+            girone all'italiana. Se ci sono i playoff o non vi piace la soluzione di sistema,
+            potete modificare le regole a vostro piacimento
+        </p>
+        <p>
+            Attenzione! Se il torneo contiene i playoff e volete creare delle regole di passaggio del turno
+            sia dai gironi all'italiana che dai playoff, non potete selezionare entrambi i gironi 
+            (all'italiana e plyoff) ma in modo esclusivo, altrimenti il sistema non ve li accetta.
+        </p>
+        <p>
             Se avete selezionato un livello più basso, la vista non contiene questa sezione di configurazione.
         </p>
 
@@ -28,10 +40,6 @@
             A prescindere dal livello di eliminazione che avete selezionato, la vista contiene le boxes per
             inserire la data e il luogo degli incontri differenziando il turno di andata da quello 
             di ritorno, se esiste.
-        </p>
-
-        <p>
-            Alla fine della configurazione salvare con il bottone Salva
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -155,8 +163,12 @@
                 <div class="ui-grid-col-3">
                     Data e ora:
                 </div>
-                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
-                    <p-calendar formControlName="meetingDate1" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                <div class="ui-grid-col-3" >
+                    <p-calendar formControlName="meetingDate1" 
+                        [locale]="it" 
+                        dateFormat="dd/mm/yy" 
+                        showTime="true"
+                        pTooltip="Data e ora di inizio dell'incontro di andata">
                     </p-calendar>
                 </div>
             </div>
@@ -207,8 +219,12 @@
                 <div class="ui-grid-col-3">
                     Data e ora:
                 </div>
-                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
-                    <p-calendar formControlName="meetingDate2" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                <div class="ui-grid-col-3" >
+                    <p-calendar formControlName="meetingDate2" 
+                        [locale]="it" 
+                        dateFormat="dd/mm/yy" 
+                        showTime="true"
+                        pTooltip="Data e ora di inizio dell'incontro di ritorno">
                     </p-calendar>
                 </div>
             </div>

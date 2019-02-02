@@ -187,7 +187,7 @@ export class RoundDetailView extends AbstractDetailView {
             this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
 
             this.selectedRound.meetings.push(m);
-            if (!this.selectedTourney.isOnewayRound) {
+            if (this.selectedTourney.isOnewayRound != "true") {
                 m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
                 this.selectedRound.meetings.push(m);
 

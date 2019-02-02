@@ -65,7 +65,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
         this.selectedMeeting.datetime = new Date(dt);
 
-        if( !this.selectedTourney.isOnewayRound ) {
+        if( this.selectedTourney.isOnewayRound != "true" ) {
             let rtDateTime = this.selectedPlayoff.round.meetings[1].datetime;
             if(rtDateTime < this.selectedMeeting.datetime) {
                 this.selectedPlayoff.round.meetings[1].datetime = this.selectedMeeting.datetime;

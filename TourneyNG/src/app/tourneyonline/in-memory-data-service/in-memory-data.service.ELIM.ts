@@ -20,8 +20,8 @@ private static tourney =
       ,eliminatoryMode:EliminatoryMode.A
       ,teamSortType: TeamSortType.O
 
-      ,isOnewayRound: false
-      ,isOnewayPlayoff: false
+      ,isOnewayRound: "false"
+      ,isOnewayPlayoff: "false"
   
       ,raceDuration:90
 

@@ -65,14 +65,11 @@ export class TourneyDetailView extends AbstractDetailView {
 
     atLeastTwoTeams: boolean;
     team4roundsCombobox: Combobox[];
-    selectedTeams4RoundsCB: Combobox;    
     roundsCombobox: Combobox[];
     selectedRoundsNumCombobox: Combobox;
 
     atLeastOneRound: boolean;
     playoffsCombobox: Combobox[];
-    selectedTeams4PlayoffsCB: Combobox;
-    selectedPlayoffsCB: Combobox;
     team4playoffsCombobox: Combobox[];
     incompleteConfiguration: boolean;
     
@@ -184,15 +181,9 @@ export class TourneyDetailView extends AbstractDetailView {
             this.team4roundsCombobox.push(cb);
         } 
 
-        if(this.selectedTeams4RoundsCB == undefined) {
-            if(this.selectedTourney.rounds.length > 0) {
-                N = 0;
-                for(let r of this.selectedTourney.rounds) {
-                    N += r.teams.length;
-                }
-            }
-            let cb: Combobox = { label: "" + N, value: N };
-            this.selectedTeams4RoundsCB = cb;
+        if(this.tourneyService.selectedTeams4RoundsCB == undefined) {
+            let cb: Combobox = { label: "0", value: 0 };
+            this.tourneyService.selectedTeams4RoundsCB = cb;
         }
 
         this.roundsCombobox = [];
@@ -206,11 +197,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
 
         if(this.selectedRoundsNumCombobox == undefined) {
-            if(this.selectedTourney.rounds.length > 0) {
-                R = this.selectedTourney.rounds.length;
-            }
-
-            let cb: Combobox = { label: "" + R, value: R };
+            let cb: Combobox = { label: "0", value: 0 };
             this.selectedRoundsNumCombobox = cb;
         }
 
@@ -224,13 +211,16 @@ export class TourneyDetailView extends AbstractDetailView {
         if( !this.atLeastOneRound) {
             return;
         }
-                
-        let N = 0;
-        for(let r of this.selectedTourney.rounds) {
-            N += r.teams.length;
-        }
         
         this.team4playoffsCombobox = [];
+
+        let N = this.selectedTourney.teams.length;
+        for(let r of this.selectedTourney.rounds) {
+            if( r.teams.length < N ) {
+                N = r.teams.length;
+            }
+        }
+
         for (let t=2; t<=N; t++) {
             let cb: Combobox = { label: "" + t, value: t };
             this.team4playoffsCombobox.push(cb);
@@ -240,31 +230,20 @@ export class TourneyDetailView extends AbstractDetailView {
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
         this.playoffsCombobox.push(firstRow);
 
-        let R: number = Math.floor(N/2);
+        let R: number = Math.floor(N * this.selectedTourney.rounds.length / 2);
         for (let r=1; r<=R; r++ ) {
             let cb: Combobox = { label: "" + r, value: r };
             this.playoffsCombobox.push(cb);
         } 
 
-        if(this.selectedTeams4PlayoffsCB == undefined) {
-            N = 0;
-            if(this.selectedTourney.playoffs.length > 0) {
-                for(let p of this.selectedTourney.playoffs) {
-                    N += p.playoffRules.length;
-                }
-            }
-            let cb: Combobox = { label: "" + N, value: N };
-            this.selectedTeams4PlayoffsCB = cb;
+        if(this.tourneyService.selectedTeams4PlayoffsCB == undefined) {
+            let cb: Combobox = { label: "0", value: 0 };
+            this.tourneyService.selectedTeams4PlayoffsCB = cb;
         }
 
-        if(this.selectedPlayoffsCB == undefined) {
-            R = 0;
-            if(this.selectedTourney.playoffs.length > 0) {
-                R = this.selectedTourney.playoffs.length;
-            }
-
-            let cb: Combobox = { label: "" + R, value: R };
-            this.selectedPlayoffsCB = cb;
+        if(this.tourneyService.selectedPlayoffsCB == undefined) {
+            let cb: Combobox = { label: "0", value: 0 };
+            this.tourneyService.selectedPlayoffsCB = cb;
         }
 
         this.playoffRows = this.selectedTourney.playoffs;
@@ -357,15 +336,15 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onTeam4roundNumChange(cb: Combobox) {
         console.log(cb);
-        this.selectedTeams4RoundsCB = cb;
+        this.tourneyService.selectedTeams4RoundsCB = cb;
 
-        let T: number = this.selectedTeams4RoundsCB.value;
+        let T: number = this.tourneyService.selectedTeams4RoundsCB.value;
 
         this.roundsCombobox = [];
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
         this.roundsCombobox.push(firstRow);
 
-        let R = Math.floor(T/2);       
+        let R = Math.floor(T / 2);       
         for (let r=1; r<=R; r++ ) {
             let ccb: Combobox = { label: "" + r, value: r };
             this.roundsCombobox.push(ccb);
@@ -382,7 +361,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.resetRounds();
        
-        let T = this.selectedTeams4RoundsCB.value;
+        let T = this.tourneyService.selectedTeams4RoundsCB.value;
         let R: number = this.selectedRoundsNumCombobox.value;
 
         let teamsPerRound: number = Math.floor(T/R);
@@ -493,18 +472,17 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onTeams4PlayoffsChange(cb: Combobox) {
         console.log(cb);
-        this.selectedTeams4PlayoffsCB = cb;
+        this.tourneyService.selectedTeams4PlayoffsCB = cb;
 
-        let T: number = this.selectedTeams4PlayoffsCB.value;
+        let T: number = this.tourneyService.selectedTeams4PlayoffsCB.value;
 
         this.playoffsCombobox = [];
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
         this.playoffsCombobox.push(firstRow);
 
-        let P = Math.floor( T / 2 );
-        P = P < this.selectedTourney.rounds.length ? P : this.selectedTourney.rounds.length;
+        let P = Math.floor( T * this.selectedTourney.rounds.length / 2 );
 
-        if( P >= this.selectedPlayoffsCB.value ) {
+        if( P >= this.tourneyService.selectedPlayoffsCB.value ) {
             for (let r=1; r <= P; r++ ) {
                 let cb: Combobox = { label: "" + r, value: r };
                 this.playoffsCombobox.push(cb);
@@ -512,18 +490,18 @@ export class TourneyDetailView extends AbstractDetailView {
         }
  
         this.resetPlayoff();
-        this.selectedPlayoffsCB = firstRow;
+        this.tourneyService.selectedPlayoffsCB = firstRow;
     }
 
     onPlayoffNumChange(cb: Combobox) {
         console.log(cb);
 
-        this.selectedPlayoffsCB = cb;
+        this.tourneyService.selectedPlayoffsCB = cb;
 
         this.resetPlayoff();
        
-        let N = this.selectedTeams4PlayoffsCB.value;
-        let P: number = this.selectedPlayoffsCB.value;
+        let N = this.selectedTourney.rounds.length * this.tourneyService.selectedTeams4PlayoffsCB.value;
+        let P: number = this.tourneyService.selectedPlayoffsCB.value;
 
         for(let i=0; i < P; i++) {
             let p: Playoff = this.createPlayoff(i);

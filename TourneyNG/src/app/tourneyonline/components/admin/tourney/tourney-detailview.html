@@ -970,7 +970,7 @@
                     pTooltip="Scegliere il numero squadre per girone che passerà il turno dai gironi all'italiana ai playoff">
                 <p-dropdown id="teamsRoundId" 
                     [options]="team4playoffsCombobox" 
-                    [(ngModel)]="selectedTeams4PlayoffsCB"  
+                    [(ngModel)]="tourneyService.selectedTeams4PlayoffsCB"  
                     optionLabel="label"
                     (onChange)="onTeams4PlayoffsChange($event.value)" 
                     placeholder="Seleziona"
@@ -987,7 +987,7 @@
                     pTooltip="Scegliere il numero di gironi di playoff della fase di playoff">
                 <p-dropdown id="playoffId" 
                     [options]="playoffsCombobox" 
-                    [(ngModel)]="selectedPlayoffsCB"  
+                    [(ngModel)]="tourneyService.selectedPlayoffsCB"  
                     optionLabel="label"
                     (onChange)="onPlayoffNumChange($event.value)" 
                     [autoWidth]="false">

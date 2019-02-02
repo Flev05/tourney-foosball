@@ -84,6 +84,10 @@ export class TourneyService {
     ];
     redirect: string;
 
+    selectedTeams4RoundsCB: Combobox;    
+    selectedTeams4PlayoffsCB: Combobox;
+    selectedPlayoffsCB: Combobox;
+
     constructor(private http: HttpClient
         , protected router: Router
         , private loginService: LoginService

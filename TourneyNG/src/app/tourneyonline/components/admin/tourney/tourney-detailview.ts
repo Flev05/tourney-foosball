@@ -65,9 +65,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     atLeastTwoTeams: boolean;
     team4roundsCombobox: Combobox[];
-    selectedTeams4RoundsCB: Combobox;    
     roundsCombobox: Combobox[];
-    selectedRoundsNumCombobox: Combobox;
 
     atLeastOneRound: boolean;
     playoffsCombobox: Combobox[];
@@ -182,9 +180,15 @@ export class TourneyDetailView extends AbstractDetailView {
             this.team4roundsCombobox.push(cb);
         } 
 
-        if(this.selectedTeams4RoundsCB == undefined) {
-            let cb: Combobox = { label: "0", value: 0 };
-            this.selectedTeams4RoundsCB = cb;
+        if(this.tourneyService.selectedTeams4RoundsCB == undefined) {
+            if(this.selectedTourney.rounds.length > 0) {
+                N = 0;
+                for(let r of this.selectedTourney.rounds) {
+                    N += r.teams.length;
+                }
+            }
+            let cb: Combobox = { label: "" + N, value: N };
+            this.tourneyService.selectedTeams4RoundsCB = cb;
         }
 
         this.roundsCombobox = [];
@@ -197,9 +201,12 @@ export class TourneyDetailView extends AbstractDetailView {
             this.roundsCombobox.push(cb);
         } 
 
-        if(this.selectedRoundsNumCombobox == undefined) {
-            let cb: Combobox = { label: "0", value: 0 };
-            this.selectedRoundsNumCombobox = cb;
+        if(this.tourneyService.selectedRoundsNumCB == undefined) {
+            if(this.selectedTourney.rounds.length > 0) {
+                R = this.selectedTourney.rounds.length;
+            }
+            let cb: Combobox = { label: "" + R, value: R };
+            this.tourneyService.selectedRoundsNumCB = cb;
         }
 
         this.roundRows = this.selectedTourney.rounds;
@@ -238,12 +245,22 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
 
         if(this.tourneyService.selectedTeams4PlayoffsCB == undefined) {
-            let cb: Combobox = { label: "0", value: 0 };
+            N = 0;
+            if(this.selectedTourney.playoffs.length > 0) {
+                for(let p of this.selectedTourney.playoffs) {
+                    N += p.playoffRules.length;
+                }
+            }
+            let cb: Combobox = { label: "" + N, value: N };
             this.tourneyService.selectedTeams4PlayoffsCB = cb;
         }
 
         if(this.tourneyService.selectedPlayoffsCB == undefined) {
-            let cb: Combobox = { label: "0", value: 0 };
+            R = 0;
+            if(this.selectedTourney.playoffs.length > 0) {
+                R = this.selectedTourney.playoffs.length;
+            }
+            let cb: Combobox = { label: "" + R, value: R };
             this.tourneyService.selectedPlayoffsCB = cb;
         }
 
@@ -337,9 +354,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onTeam4roundNumChange(cb: Combobox) {
         console.log(cb);
-        this.selectedTeams4RoundsCB = cb;
+        this.tourneyService.selectedTeams4RoundsCB = cb;
 
-        let T: number = this.selectedTeams4RoundsCB.value;
+        let T: number = this.tourneyService.selectedTeams4RoundsCB.value;
 
         this.roundsCombobox = [];
         let firstRow: Combobox =  { label: "Seleziona", value: 0 };
@@ -351,19 +368,19 @@ export class TourneyDetailView extends AbstractDetailView {
             this.roundsCombobox.push(ccb);
         } 
 
-        this.selectedRoundsNumCombobox = firstRow;
+        this.tourneyService.selectedRoundsNumCB = firstRow;
         this.resetRounds();
     }
 
     onRoundNumChange(cb: Combobox) {
         console.log(cb);
 
-        this.selectedRoundsNumCombobox = cb;
+        this.tourneyService.selectedRoundsNumCB = cb;
 
         this.resetRounds();
        
-        let T = this.selectedTeams4RoundsCB.value;
-        let R: number = this.selectedRoundsNumCombobox.value;
+        let T = this.tourneyService.selectedTeams4RoundsCB.value;
+        let R: number = this.tourneyService.selectedRoundsNumCB.value;
 
         let teamsPerRound: number = Math.floor(T/R);
         let teamsModRound: number = T % R;
@@ -539,19 +556,21 @@ export class TourneyDetailView extends AbstractDetailView {
                 let pr1: PlayoffRule = this.prepareFromRound(firstPosition, round);
                 this.selectedTourney.playoffs[poCounter].playoffRules.push(pr1);
 
-                poCounter = (poCounter + 1) % P;
+                if( (r+1) % 2 == 0 ) {
+                    poCounter = (poCounter + 1) % P;
+                }
             }
         }
 
-        let teamsModPlayoff: number = N % R;
-        lastPosition = Math.ceil(N / R); 
-        for(let r=0; r < teamsModPlayoff; r++) {
-            let round = this.selectedTourney.rounds[r];
-            let pr: PlayoffRule = this.prepareFromRound(lastPosition, round);
-            this.selectedTourney.playoffs[poCounter].playoffRules.push(pr);
+        // let teamsModPlayoff: number = N % R;
+        // lastPosition = Math.ceil(N / R); 
+        // for(let r=0; r < teamsModPlayoff; r++) {
+        //     let round = this.selectedTourney.rounds[r];
+        //     let pr: PlayoffRule = this.prepareFromRound(lastPosition, round);
+        //     this.selectedTourney.playoffs[poCounter].playoffRules.push(pr);
 
-            poCounter = (poCounter + 1) % P;
-        }
+        //     poCounter = (poCounter + 1) % P;
+        // }
 
         for(let p of this.selectedTourney.playoffs) {
             for(let i=0; i<p.playoffRules.length; i++ ) {

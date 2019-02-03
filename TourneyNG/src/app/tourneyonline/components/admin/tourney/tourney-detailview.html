@@ -840,7 +840,7 @@
                     pTooltip="Scegliere il numero iniziale di squadre impiegate nel torneo">
                 <p-dropdown id="teamsId" 
                     [options]="team4roundsCombobox" 
-                    [(ngModel)]="selectedTeams4RoundsCB"  
+                    [(ngModel)]="tourneyService.selectedTeams4RoundsCB"  
                     optionLabel="label"
                     (onChange)="onTeam4roundNumChange($event.value)" 
                     placeholder="Seleziona"
@@ -857,7 +857,7 @@
                     pTooltip="Scegliere il numero di gironi all'italiana che compone il torneo">
                 <p-dropdown id="roundId" 
                     [options]="roundsCombobox" 
-                    [(ngModel)]="selectedRoundsNumCombobox"  
+                    [(ngModel)]="tourneyService.selectedRoundsNumCB"  
                     optionLabel="label"
                     (onChange)="onRoundNumChange($event.value)" 
                     [autoWidth]="false">

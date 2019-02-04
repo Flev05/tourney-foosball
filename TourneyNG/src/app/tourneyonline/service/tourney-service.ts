@@ -86,6 +86,8 @@ export class TourneyService {
 
     selectedTeams4PlayoffsCB: Combobox;
     selectedPlayoffsCB: Combobox;
+    selectedTeams4RoundsCB: Combobox;
+    selectedRoundsNumCB: Combobox;
 
     constructor(private http: HttpClient
         , protected router: Router

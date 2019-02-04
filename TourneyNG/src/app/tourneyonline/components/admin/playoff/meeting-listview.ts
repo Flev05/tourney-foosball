@@ -23,6 +23,7 @@ export class MeetingListView extends AbstractListView {
     selectedPlayoff: Playoff;
     selectedMeeting: MeetingDb;
     meetings: MeetingDb [];
+    meetingsNoMsg: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -57,6 +58,14 @@ export class MeetingListView extends AbstractListView {
             let rn = rn1 + " - " + rn2;
 
             m.ruleName = rn;
+        }
+
+        if(this.selectedTourney.isOnewayPlayoff == "true") {
+            let meetingsNo = this.meetings.length / 2;  
+            this.meetingsNoMsg = "" +  meetingsNo + " (Solo Andata)";
+        } else {
+            let meetingsNo = this.meetings.length;  
+            this.meetingsNoMsg = "" + meetingsNo + " (Andata e Ritorno)";
         }
 
         this.rows = [];

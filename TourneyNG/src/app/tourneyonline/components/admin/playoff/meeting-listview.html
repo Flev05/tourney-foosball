@@ -27,7 +27,8 @@
 <div class="content-section implementation">    
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
     <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
-  
+    <h4><span>N° incontri: {{meetingsNoMsg}}</span></h4>
+
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     
     <p-table [columns]="meetingsCols"
@@ -35,7 +36,10 @@
         [responsive]="true"
         selectionMode="single" 
         [(selection)]="selectedRow"  
-        (onRowSelect)="onRowSelect($event)">
+        (onRowSelect)="onRowSelect($event)"    
+        [scrollable]="true" 
+        scrollHeight="600px">
+    
 
     <ng-template pTemplate="header" let-columns>
         <tr>

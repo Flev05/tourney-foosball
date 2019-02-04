@@ -347,7 +347,7 @@
                 <div class="ui-g radiobuttons">
                     <div class="ui-g-12">
                         <p-radioButton name="isDailyGroupname" 
-                            label="Vero" 
+                            label="Si" 
                             value="true" 
                             [(ngModel)]="selectedTourney.isDaily"
                             (onClick)="onIsDailyClick()">
@@ -355,7 +355,7 @@
                     </div>
                     <div class="ui-g-12">
                         <p-radioButton name="isDailyGroupname" 
-                            label="Falso" 
+                            label="No" 
                             value="false" 
                             [(ngModel)]="selectedTourney.isDaily"
                             (onClick)="onIsNotDailyClick()">
@@ -416,7 +416,7 @@
     </div>
     </p-tabPanel>
 
-    <p-tabPanel header="Specificità">
+    <p-tabPanel header="Modalità">
     <p-accordion>
         <p-accordionTab header="Istruzioni">   
             <h3>Specificità</h3>

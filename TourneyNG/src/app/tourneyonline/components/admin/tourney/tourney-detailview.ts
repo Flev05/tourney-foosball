@@ -70,7 +70,9 @@ export class TourneyDetailView extends AbstractDetailView {
     playoffsCombobox: Combobox[];
     team4playoffsCombobox: Combobox[];
     incompleteConfiguration: boolean;
-    
+
+    meetingDays: MeetingDb[];
+
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
@@ -635,6 +637,33 @@ export class TourneyDetailView extends AbstractDetailView {
         this.playoffRows = this.selectedTourney.playoffs;
         for (let p of this.playoffRows) {
             p.playoffName = p.round.name;
+        }
+    }
+
+
+    private preparePlayoffMeetingDays() {
+        for(let md=1; md<this.selectedPlayoff.playoffRules.length; md++) {
+
+            let teamSet: string[] = [];
+            for(let m of this.selectedPlayoff.round.meetings) {
+                
+                let toAdd = true;
+                let t1: string = teamSet.find(x => x == m.team1.teamName);
+                if( t1 == undefined) {
+                    teamSet.push(m.team1.teamName);
+                    toAdd = false;
+                }
+
+                let t2: string = teamSet.find(x => x == m.team2.teamName);
+                if( t2 == undefined) {
+                    teamSet.push(m.team2.teamName);
+                    toAdd = false;
+                }
+
+                let nm = this.createMeeting(m.team1, m.team2, null, null, Direction.OneWay);
+                this.meetingDays.push(nm);
+            }
+
         }
     }
 

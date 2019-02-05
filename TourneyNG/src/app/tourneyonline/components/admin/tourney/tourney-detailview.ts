@@ -6,7 +6,7 @@ import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Dire
 import { Discipline } from 'app/tourneyonline/domain/discipline';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
@@ -71,7 +71,7 @@ export class TourneyDetailView extends AbstractDetailView {
     team4playoffsCombobox: Combobox[];
     incompleteConfiguration: boolean;
 
-    meetingDays: MeetingDb[];
+    meetingDaysMap: Map<number, Meeting[]>;
 
     constructor(
         protected location: Location,
@@ -212,7 +212,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.roundRows = this.selectedTourney.rounds;
-        this.atLeastOneRound = this.selectedTourney.rounds.length >= 2 ? true : false;
+        this.atLeastOneRound = this.selectedTourney.rounds.length >= 1 ? true : false;
     }
 
     private preparePlayoffs(): void {
@@ -248,13 +248,12 @@ export class TourneyDetailView extends AbstractDetailView {
 
         if(this.tourneyService.selectedTeams4PlayoffsCB == undefined) {
             N = 0;
-            if(this.selectedTourney.playoffs.length > 0) {
-                for(let p of this.selectedTourney.playoffs) {
-                    N += p.playoffRules.length;
-                }
+            if(this.selectedTourney.rounds.length > 0) {
+                N = this.selectedTourney.rounds[0].teams.length;
             }
             let cb: Combobox = { label: "" + N, value: N };
-            this.tourneyService.selectedTeams4PlayoffsCB = cb;        }
+            this.tourneyService.selectedTeams4PlayoffsCB = cb;        
+        }
 
         if(this.tourneyService.selectedPlayoffsCB == undefined) {
             R = 0;
@@ -433,7 +432,10 @@ export class TourneyDetailView extends AbstractDetailView {
         let start = i * teamsPerRound;
         let teams: Team[] = this.prepareRandomTeams(randomTeams, start, teamsPerRound);
         let roundId: number = this.tourneyService.getSequenceNumber();
-        let meetings: MeetingDb[] = this.prepareMeetings(teams);
+        let meetings: Meeting[] = this.prepareRoundMeetings(teams);
+        
+        let meetingDaysMap = this.prepareMeetingDays(teams.length, meetings);
+
         let classifications: Classification[] = this.prepareClassification(teams);
         let r: Round = {
             id: roundId,
@@ -442,7 +444,8 @@ export class TourneyDetailView extends AbstractDetailView {
             teams: teams,
             meetings: meetings,
             classification: classifications,
-            matrix: null
+            matrix: null,
+            meetingDaysMap: meetingDaysMap
         };
         return r;
     }
@@ -457,14 +460,14 @@ export class TourneyDetailView extends AbstractDetailView {
         return teams;
     }
 
-    private prepareMeetings(teamSlice: Team[]): MeetingDb[] {
-        let meetings: MeetingDb[] = [];
+    private prepareRoundMeetings(teamSlice: Team[]): Meeting[] {
+        let meetings: Meeting[] = [];
 
         for(let i=0; i<teamSlice.length; i++) {
             let t1 = teamSlice[i];
             for(let j=i+1; j<teamSlice.length; j++) {
                 let t2 = teamSlice[j];
-                let m: MeetingDb = this.addTeamToMeetings(t1, t2, Direction.OneWay);
+                let m: Meeting = this.addTeamToMeetings(t1, t2, Direction.OneWay);
                 meetings.push(m);
                 m = this.addTeamToMeetings(t2, t1, Direction.RoundTrip);
                 meetings.push(m);
@@ -474,7 +477,7 @@ export class TourneyDetailView extends AbstractDetailView {
         return meetings;
     }
 
-    private addTeamToMeetings(t1: Team, t2: Team, d: Direction): MeetingDb {
+    private addTeamToMeetings(t1: Team, t2: Team, d: Direction): Meeting {
         let m = this.createMeeting(t1, t2, null, null, d);
         return m;
     }
@@ -627,7 +630,7 @@ export class TourneyDetailView extends AbstractDetailView {
                 for (let j = i + 1; j < p.playoffRules.length; j++) {
                     let r1 = p.playoffRules[i];
                     let r2 = p.playoffRules[j];
-                    let m: MeetingDb = this.createMeeting(null, null, r1, r2, Direction.OneWay);
+                    let m: Meeting = this.createMeeting(null, null, r1, r2, Direction.OneWay);
                     p.round.meetings.push(m);
                     m = this.createMeeting(null, null, r2, r1, Direction.RoundTrip);
                     p.round.meetings.push(m);
@@ -636,35 +639,52 @@ export class TourneyDetailView extends AbstractDetailView {
         }
         this.playoffRows = this.selectedTourney.playoffs;
         for (let p of this.playoffRows) {
-            p.playoffName = p.round.name;
+            let r: Round = p.round;
+            p.playoffName = r.name;
+
+            r.meetingDaysMap = this.prepareMeetingDays(p.playoffRules.length, r.meetings);
         }
     }
 
+    private prepareMeetingDays(teamsNo : number, meetings: Meeting[]): Map<number, Meeting[]> {
+        let meetingDaysMap = new  Map<number, Meeting[]>();
 
-    private preparePlayoffMeetingDays() {
-        for(let md=1; md<this.selectedPlayoff.playoffRules.length; md++) {
+        let meetingsToProcess: Meeting[] = [];
+        for(let m of meetings) {
+            if( m.direction == Direction.OneWay ) {
+                meetingsToProcess.push(m);
+            }
+        }
+
+        for(let md=1; md < teamsNo; md++) {
 
             let teamSet: string[] = [];
-            for(let m of this.selectedPlayoff.round.meetings) {
-                
-                let toAdd = true;
+            let meetingsToRemove: Meeting[] = [];
+
+            for(let m of meetingsToProcess) {
                 let t1: string = teamSet.find(x => x == m.team1.teamName);
-                if( t1 == undefined) {
-                    teamSet.push(m.team1.teamName);
-                    toAdd = false;
-                }
-
                 let t2: string = teamSet.find(x => x == m.team2.teamName);
-                if( t2 == undefined) {
-                    teamSet.push(m.team2.teamName);
-                    toAdd = false;
-                }
+                if( t1 == undefined && t2 == undefined ) {
+                    if( !meetingDaysMap.has(md) )  {
+                        let emptyArray: Meeting[] = [];
+                        meetingDaysMap.set(md, emptyArray);
+                    }
+                    let meetingsDays: Meeting[] = meetingDaysMap.get(md);
+                    meetingsDays.push(m);
+                    meetingsToRemove.push(m);
 
-                let nm = this.createMeeting(m.team1, m.team2, null, null, Direction.OneWay);
-                this.meetingDays.push(nm);
+                    teamSet.push(m.team1.teamName);
+                    teamSet.push(m.team2.teamName);
+                }
             }
 
+            for(let m of meetingsToRemove) {
+                let index = meetingsToProcess.indexOf(m);
+                meetingsToProcess.splice(index, 1);
+            }
         }
+
+        return meetingDaysMap;
     }
 
     private resetPlayoff() {
@@ -698,6 +718,7 @@ export class TourneyDetailView extends AbstractDetailView {
               , teams:[]
               , meetings: []
               , classification: []
+              , meetingDaysMap: null
             }
           , playoffRules: []
         };

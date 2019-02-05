@@ -7,7 +7,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
@@ -160,7 +160,8 @@ export class LevelService extends AbstractEliminatoryListView {
                 , type: RoundType.E
                 , teams: []
                 , meetings:[]
-                , classification:[]                
+                , classification:[]         
+                , meetingDaysMap: null       
             };
             topElimLevel.standaloneRound = round;
         }
@@ -309,7 +310,6 @@ export class LevelService extends AbstractEliminatoryListView {
             e.rule1.fromRound.round    = {label: up.label,   value: round1==undefined ? 0 : round1.id};
 
             e.rule1.fromPlayoff.position = {label: "", value: 0};
-
             e.rule1.fromPlayoff.round    = {label: "", value: 0};
 
             let down = padTeamList[--lastIndex];
@@ -357,15 +357,15 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     private newEliminatory(index : number): Eliminatory {
-        let meetings : Array<MeetingDb> = new Array<MeetingDb>();
+        let meetings : Array<Meeting> = new Array<Meeting>();
 
         let t1: Team = this.newDummyTeam();
         let t2: Team = this.newDummyTeam();
 
-        let m1: MeetingDb = this.createMeeting(t1, t2, null, null, Direction.OneWay);
+        let m1: Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
         meetings.push(m1);
 
-        let m2: MeetingDb = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
+        let m2: Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
         meetings.push(m2);
 
         let e: Eliminatory = {
@@ -376,6 +376,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 , teams:[t1, t2]
                 , classification: []
                 , meetings: meetings
+                , meetingDaysMap: null
             },
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),

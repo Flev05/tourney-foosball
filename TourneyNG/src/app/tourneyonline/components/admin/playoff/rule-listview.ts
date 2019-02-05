@@ -6,7 +6,7 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { PlayoffRule } from '../../../domain/playoff-rule';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
@@ -28,7 +28,7 @@ export class RuleListView extends AbstractListView {
 
     atLeast2Rules: boolean;
     atLeast1Rule: boolean;
-    mdbs: MeetingDb[];
+    mdbs: Meeting[];
 
     positions: Combobox[];
     rounds: Combobox[];

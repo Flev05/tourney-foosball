@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
@@ -18,7 +18,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 })
 export class MatchListView implements OnInit {
     selectedTourney: Tourney;
-    selectedMeeting: MeetingDb;
+    selectedMeeting: Meeting;
 
     matches: Match[];
     rows: any[] = [];
@@ -30,7 +30,7 @@ export class MatchListView implements OnInit {
 
     ngOnInit() {
         this.selectedTourney = this.tourneyService.selectedTourney;
-        this.selectedMeeting = this.tourneyService.selectedMeeting;
+        this.selectedMeeting = this.tourneyService.selectedMeetingDb;
         this.matches = this.selectedMeeting.matches;
 
         let t1, t2: string;

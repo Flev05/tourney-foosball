@@ -5,7 +5,7 @@ import { Direction, MeetingStatus, PhaseType } from 'app/tourneyonline/domain/en
 import { Team } from 'app/tourneyonline/domain/team';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Country } from 'app/tourneyonline/domain/country';
@@ -126,7 +126,7 @@ export abstract class AbstractView implements OnInit {
         };
     }
 
-    protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, d: Direction): MeetingDb {
+    protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, d: Direction): Meeting {
         let matches = new Array<Match>();
 
         for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
@@ -151,7 +151,7 @@ export abstract class AbstractView implements OnInit {
             }
         }
 
-        let m : MeetingDb = {
+        let m : Meeting = {
             id: null,
             name: name,
             datetime: this.selectedTourney.datetime,

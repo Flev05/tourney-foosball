@@ -2,6 +2,7 @@ import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, Roun
 import { Tourney } from "../domain/tourney";
 import { TourneyDb } from "../domain/tourney.db";
 import { MeetingDb } from "../domain/meeting-db";
+import { Meeting } from "../domain/meeting";
 
 export class InMemoryDataServiceCSI  {
   static json1: string = JSON.stringify({
@@ -174,12 +175,8 @@ export class InMemoryDataServiceCSI  {
 
   static getMeetings() : MeetingDb[] {
 
-    let mts : MeetingDb[] =  [{
+    let mList : Meeting[] =  [{
         id: 1,
-        tourneyId: 1,
-        roundId: 1,
-        playoffId: 0,
-        eliminatoryId: 0,
         status: MeetingStatus.ToPlay,
         name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
         datetime: new Date(2018, 11, 24, 10, 33),
@@ -194,10 +191,6 @@ export class InMemoryDataServiceCSI  {
       }
     ,{
         id: 2,
-        tourneyId: 1,
-        roundId: 1,
-        playoffId: 0,
-        eliminatoryId: 0,
         status: MeetingStatus.ToPlay,
         name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
         datetime: new Date(2018, 11, 30, 15, 0),
@@ -212,10 +205,6 @@ export class InMemoryDataServiceCSI  {
       }
     ,{
       id: 3,
-      tourneyId: 1,
-      roundId: 2,
-      playoffId: 0,
-      eliminatoryId: 0,
       name:  "SOLAROSPORT - AURORA PREGNANA BLU",
       status: MeetingStatus.ToPlay,
       datetime: new Date(2018, 11, 30, 15, 0),
@@ -230,10 +219,6 @@ export class InMemoryDataServiceCSI  {
       }
     ,{
         id: 4,
-        tourneyId: 1,
-        roundId: 2,
-        playoffId: 0,
-        eliminatoryId: 0,
         name:  "AURORA PREGNANA BLU - SOLAROSPORT",
         status: MeetingStatus.ToPlay,
         datetime: new Date(2018, 11, 30, 15, 0),
@@ -248,10 +233,6 @@ export class InMemoryDataServiceCSI  {
       }
     ,{
       id: 5,
-      tourneyId: 1,
-      roundId: 1,
-      playoffId: 1,
-      eliminatoryId: 0,
       name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
       status: MeetingStatus.ToPlay,
       datetime: new Date(2018, 11, 30, 15, 0),
@@ -267,11 +248,6 @@ export class InMemoryDataServiceCSI  {
       ,points2: 0
       }
     ,{
-        id: 6,
-        tourneyId: 1,
-        roundId: 1,
-        playoffId: 2,
-        eliminatoryId: 0,
         name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
         status: MeetingStatus.ToPlay,
         datetime: new Date(2018, 11, 30, 15, 0),
@@ -286,7 +262,56 @@ export class InMemoryDataServiceCSI  {
         ,points1: 0
         ,points2: 0
       }];
-   
+
+      let mts : MeetingDb[] =  [{
+        id: 1,
+        tourneyId: 1,
+        roundId: 1,
+        playoffId: 0,
+        eliminatoryId: 0,
+        json: JSON.stringify(mList[0])
+      }
+    ,{
+        id: 2,
+        tourneyId: 1,
+        roundId: 1,
+        playoffId: 0,
+        eliminatoryId: 0,
+        json: JSON.stringify(mList[1])
+      }
+    ,{
+      id: 3,
+      tourneyId: 1,
+      roundId: 2,
+      playoffId: 0,
+      eliminatoryId: 0,
+      json: JSON.stringify(mList[2])
+    }
+    ,{
+        id: 4,
+        tourneyId: 1,
+        roundId: 2,
+        playoffId: 0,
+        eliminatoryId: 0,
+        json: JSON.stringify(mList[3])
+      }
+    ,{
+      id: 5,
+      tourneyId: 1,
+      roundId: 1,
+      playoffId: 1,
+      eliminatoryId: 0,
+      json: JSON.stringify(mList[4])
+    }
+    ,{
+        id: 6,
+        tourneyId: 1,
+        roundId: 1,
+        playoffId: 2,
+        eliminatoryId: 0,
+        json: JSON.stringify(mList[5])
+      }];
+
     return mts;
   }
 }

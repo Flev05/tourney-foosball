@@ -6,7 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { MeetingDetailView } from './meeting-detailview';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
@@ -210,9 +210,9 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 nr.teams[1] = e.round.teams[0];
             }
             
-            this.tourneyService.prepareMdb(nm, this.selectedTourney.id, 0, 0, nextEliminatory.id);
+            let mdb = this.tourneyService.prepareMdb(nm, this.selectedTourney.id, 0, 0, nextEliminatory.id);
 
-            this.tourneyService.updateMeeting(nm).subscribe(n => this.next(n), e => this.onError(e));
+            this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
         }
     }
 
@@ -221,7 +221,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         this.cols = this.prepareResultColums();
 
         let round: Round = e.round;
-        let m: MeetingDb = round.meetings[meetingIndex];
+        let m: Meeting = round.meetings[meetingIndex];
 
         let row: any = {m};
 
@@ -268,13 +268,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         this.tourneyService.selectedRound = this.selectedMeetingRow.round;
 
-        let m: MeetingDb = this.selectedMeetingRow.round.meetings[this.selectedMeetingRow.meetingIndex];
+        let m: Meeting = this.selectedMeetingRow.round.meetings[this.selectedMeetingRow.meetingIndex];
 
-        this.tourneyService.completeEliminatoryMeetingDb(m
+        let mdb = this.tourneyService.completeEliminatoryMeetingDb(m
             , this.selectedTourney.id
             , this.selectedMeetingRow.eliminatoryId
         );
-        this.tourneyService.selectedMeeting = m;
+        this.tourneyService.selectedMeetingDb = mdb;
 
         for(let level=0; level<this.eliminatories.length; level++) {
             let e = this.eliminatories[level];

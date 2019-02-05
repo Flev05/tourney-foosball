@@ -2,7 +2,7 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 import { InMemoryDataServiceCSI } from './in-memory-data-service-CSI';
 import { InMemoryDataServiceELIM } from './in-memory-data.service.ELIM';
 import { InMemoryDataServiceRoundElim } from './in-memory-data.service.ROUND-ELIM';
-import { MeetingDb } from '../domain/meeting-db';
+import { Meeting } from '../domain/meeting';
 import { Observable } from 'rxjs';
 import { Player } from '../domain/player';
 import { Team } from '../domain/team';
@@ -11,7 +11,7 @@ import { PlayersPool } from './players-pool';
 
 export class InMemoryDataService implements InMemoryDbService {
 
-  meetings : MeetingDb[] = [];
+  meetings : Meeting[] = [];
   players  : Player[]    = PlayersPool.players;
   teams    : Team[]      = TeamsPool.teams;
 

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 
 import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
@@ -28,8 +28,8 @@ export class RoundDetailView extends AbstractDetailView {
 
     availableTeams: string[] = [];
     targetTeams: string[] = [];
-    mdbs: MeetingDb[];
-    nextDeleteMeeting: MeetingDb;
+    mdbs: Meeting[];
+    nextDeleteMeeting: Meeting;
     meetingEnabled: boolean;
     selectedMeetingGroupNumCombobox: Combobox;
     meetingGroupCombobox: Combobox[];
@@ -56,7 +56,8 @@ export class RoundDetailView extends AbstractDetailView {
                 meetings: [],
                 classification: [],
                 type: RoundType.R,
-                matrix: null
+                matrix: null,
+                meetingDaysMap: null
             };
             this.tourneyService.selectedRound = this.selectedRound;
         }
@@ -198,7 +199,7 @@ export class RoundDetailView extends AbstractDetailView {
 
     private removeFromMeetings(team: Team): void {
 
-        let temp : MeetingDb[] = [];
+        let temp : Meeting[] = [];
         for(let m of this.selectedRound.meetings) {
             if(m.team1.id == team.id || m.team2.id == team.id) {
                 this.selectedTourney.meetingsForDelete.push(m);

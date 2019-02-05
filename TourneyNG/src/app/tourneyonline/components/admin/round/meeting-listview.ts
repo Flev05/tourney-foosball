@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'app/components/common/api';
 
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
@@ -18,14 +18,17 @@ export class MeetingListView extends AbstractListView {
     static redirect: string = "adminround/lv/meetingLv/dv";
     cols: TableCols[] ;
     rows: any[];
+    onewayDays: any[];
+    roundtripDays: any[];
     selectedRow: any;
 
     msgs: Message[] = [];
     selectedRound: Round;
-    selectedMeeting: MeetingDb;
-    meetings: MeetingDb [];
+    selectedMeeting: Meeting;
+    meetings: Meeting [];
     atLeast2teams: boolean;
     meetingsNoMsg: string;
+    daysKey: number;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -78,6 +81,48 @@ export class MeetingListView extends AbstractListView {
         }
 
         this.rows = this.sortMeetings(this.rows);
+
+        this.daysKey = 1;
+
+        this.prepareDays();
+    }
+
+    private prepareDays() {
+        let days = this.selectedRound.meetingDaysMap.get(this.daysKey);
+        this.onewayDays = [];
+        this.roundtripDays = [];
+        for (let i = 0; i < days.length; i++) {
+            let m = days[i];
+            let dt = this.dateFormatPipe.transform(m.datetime);
+            if (m.direction == Direction.OneWay) {
+                this.onewayDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.name });
+            }
+            else {
+                this.roundtripDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.name });
+            }
+        }
+    }
+
+    goLeft() {
+        console.log("goLeft()");
+        this.daysKey--;
+        if(this.daysKey < 1) {
+            this.daysKey = 1;
+        }
+        console.log("daysKey=" + this.daysKey);
+        this.prepareDays();
+    }
+
+    goRight() {
+        console.log("goRight()");
+        let M = this.selectedRound.teams.length - 1;
+        this.daysKey++;
+        console.log("daysKey=" + this.daysKey);
+        if(this.daysKey > M) {
+            this.daysKey = M;
+            return;
+        }
+        this.prepareDays();
     }
 
     onRowSelect(event) {

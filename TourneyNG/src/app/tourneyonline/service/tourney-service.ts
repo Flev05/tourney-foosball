@@ -16,12 +16,13 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { PlayoffRule } from '../domain/playoff-rule';
-import { MeetingDb } from '../domain/meeting-db';
+import { Meeting } from '../domain/meeting';
 import { LoginService } from './login-service';
 import { TourneyDb } from '../domain/tourney.db';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
+import { MeetingDb } from '../domain/meeting-db';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -48,7 +49,8 @@ export class TourneyService {
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
 
-    selectedMeeting: MeetingDb;
+    selectedMeetingDb: MeetingDb;
+    selectedMeeting: Meeting;
 
     selectedTeams:  Team[];
 
@@ -64,8 +66,8 @@ export class TourneyService {
     playoffsConfig: boolean;
 
     originalTeams: Team[];
-    meetings: MeetingDb[];
-    mdbs: MeetingDb[];
+    meetings: Meeting[];
+    mdbs: Meeting[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
     selectedIndex: number;
@@ -257,7 +259,7 @@ export class TourneyService {
         
         const obs :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadRoundMeeting url=' + url))
+            catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
         );
 
         return obs;
@@ -277,7 +279,7 @@ export class TourneyService {
         
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadPlayoffMeeting url=' + url))
+            catchError(this.handleError<MeetingDb[]>('loadPlayoffMeetingDb url=' + url))
         );
 
         return obs;
@@ -297,7 +299,7 @@ export class TourneyService {
         
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeeting url=' + url))
+            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
         );
 
         return obs;
@@ -379,7 +381,7 @@ export class TourneyService {
         );
     }
 
-    saveRoundMeetingDb(m: MeetingDb, tourneyId: number, roundId: number): void {
+    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
         if(m.id == null) {
             this.addMeetingDb(m, tourneyId, roundId, 0, 0)
         } else {
@@ -387,7 +389,7 @@ export class TourneyService {
         }
     }
 
-    savePlayoffMeetingDb(m: MeetingDb, tourneyId: number, playoffId: number): void {
+    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
         if(m.id == null) {
             this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
         } else {
@@ -395,7 +397,7 @@ export class TourneyService {
         }
     }
 
-    saveEliminatoryMeetingDb(m: MeetingDb, tourneyId: number, eliminatoryId: number): void {
+    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
         if(m.id == null) {
             this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
         } else {
@@ -403,18 +405,23 @@ export class TourneyService {
         }
     }
 
-    private addMeetingDb(m: MeetingDb, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
-        this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+    private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
 
-        this.addMeeting(m);
+        this.addMeeting(mdb);
     }
 
-    prepareMdb(m: MeetingDb, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
+    prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
 
-        m.tourneyId = tourneyId;
-        m.roundId = roundId;
-        m.playoffId = playoffId;
-        m.eliminatoryId = eliminatoryId;
+        let mdb: MeetingDb = {
+            tourneyId: tourneyId
+            ,roundId: roundId
+            ,playoffId: playoffId
+            ,eliminatoryId: eliminatoryId
+            ,json: JSON.stringify(m)
+        }
+
+        return mdb;
     }
 
     /** POST: add a new MeetingDb to the db server */
@@ -423,39 +430,39 @@ export class TourneyService {
 
         let obs = this.http.post<MeetingDb>(url, mdb, httpOptions).pipe(
             tap((m: MeetingDb) => this.log('added MeetingDb, url=' + url)),
-            catchError(this.handleError<MeetingDb>('addMeeting, url=' + url))
+            catchError(this.handleError<MeetingDb>('addMeetingDb, url=' + url))
         );
         obs.subscribe();
     }
 
-    completeRoundMeetingDb(m: MeetingDb, tourneyId: number, roundId: number) {
+    completeRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number) {
         this.prepareMdb(m, tourneyId, roundId, 0, 0);
     }
 
-    completePlayoffMeetingDb(m: MeetingDb, tourneyId: number, playoffId: number) {
-        this.prepareMdb(m, tourneyId, 1, playoffId, 0);
+    completePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): MeetingDb {
+        return this.prepareMdb(m, tourneyId, 1, playoffId, 0);
     }
 
-    completeEliminatoryMeetingDb(m: MeetingDb, tourneyId: number, eliminatoryId: number) {
-        this.prepareMdb(m, tourneyId, 0, 0, eliminatoryId);
+    completeEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): MeetingDb {
+        return this.prepareMdb(m, tourneyId, 0, 0, eliminatoryId);
     }
 
-    private updateMeetingDb(m: MeetingDb, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
-        this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-        let obs = this.updateMeetingMdb(m);
+    private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
+        let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+        let obs = this.updateMeetingMdb(mdb);
         obs.subscribe();
     }
 
     /** PsUT: update the MeetingDb on the server */
-    updateMeeting (mdb: MeetingDb):  Observable<MeetingDb> {
+    // updateMeeting (m: Meeting):  Observable<Meeting> {
 
-        let obs = this.updateMeetingMdb(mdb);
+    //     let obs = this.updateMeetingMdb(mdb);
 
-        return obs;
-    }
+    //     return obs;
+    // }
 
     /** PUT: update the MeetingDb on the db server */
-    private updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
+    updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
         const id =  mdb.id;
         let url = meetingUrl + "/" + id;
 
@@ -520,22 +527,22 @@ export class TourneyService {
         r.meetings = [];
     }
 
-    deleteUnusedMeetings(meetings: MeetingDb[] ): void {
+    deleteUnusedMeetings(meetings: Meeting[] ): void {
         for(let m of meetings) {
             this.deleteMeeting(m);
         }
     }
 
     /** DELETE: delete the MeetingDb from the server */
-    private deleteMeeting (m: MeetingDb ): void {
+    private deleteMeeting (m: Meeting ): void {
         let id: number = m.id;
         const url = meetingUrl + "/" + id;
 
         let json = url + ", " + m.name;
 
-        let obs = this.http.delete<MeetingDb>(url).pipe(
+        let obs = this.http.delete<Meeting>(url).pipe(
             tap(_ => this.log('deleting MeetingDb:' + json)),
-            catchError(this.handleError<MeetingDb>('deletingMeeting: ' + json))
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + json))
         );
 
         obs.subscribe();

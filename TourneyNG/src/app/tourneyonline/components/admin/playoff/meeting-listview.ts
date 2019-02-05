@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'app/components/common/api';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
@@ -21,8 +21,8 @@ export class MeetingListView extends AbstractListView {
     msgs: Message[] = [];
 
     selectedPlayoff: Playoff;
-    selectedMeeting: MeetingDb;
-    meetings: MeetingDb [];
+    selectedMeeting: Meeting;
+    meetings: Meeting [];
     meetingsNoMsg: string;
 
     constructor(

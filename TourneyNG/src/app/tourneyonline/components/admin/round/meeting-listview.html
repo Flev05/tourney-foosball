@@ -34,13 +34,27 @@
 
 <p-table *ngIf="atLeast2teams"
     [columns]="cols"
-    [value]="rows" 
+    [value]="onewayDays" 
     [responsive]="true"
     selectionMode="single" 
     [(selection)]="selectedRow"  
     (onRowSelect)="onRowSelect($event)"        
     [scrollable]="true" 
     scrollHeight="600px">
+
+    <ng-template pTemplate="caption">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goLeft()"></button>
+            </div>
+            <div class="ui-grid-col-3">
+                Giornata {{daysKey}}
+            </div>
+            <div class="ui-grid-col-3">
+                <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goRight()"></button>
+            </div>
+        </div>
+    </ng-template>
 
     <ng-template pTemplate="header" let-columns>
         <tr>

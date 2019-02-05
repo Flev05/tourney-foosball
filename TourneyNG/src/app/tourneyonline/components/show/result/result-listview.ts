@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
@@ -156,13 +156,13 @@ export class ResultListView extends AbstractEliminatoryListView {
         console.log(event.data);
 
         let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
-        let m: MeetingDb = this.getMeetingBy(this.selectedMeetingRow.id, r);
+        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
         this.tourneyService.completeRoundMeetingDb(m
             , this.selectedTourney.id
             , r.id
         );
-        this.tourneyService.selectedMeeting = m;
+        this.tourneyService.selectedMeetingDb = m;
 
         this.gotoMeetingDetailView();
     }
@@ -173,14 +173,14 @@ export class ResultListView extends AbstractEliminatoryListView {
         let playoffRounds: Round[] = this.makePlayoffRounds(this.selectedTourney.playoffs);
 
         let r = this.getRoundBy(this.selectedMeetingRow.roundId,  playoffRounds);
-        let m: MeetingDb = this.getMeetingBy(this.selectedMeetingRow.id, r);
+        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
-        this.tourneyService.completePlayoffMeetingDb(m
+        let mdb = this.tourneyService.completePlayoffMeetingDb(m
             , this.selectedTourney.id
             , this.selectedMeetingRow.playoffId
         );
 
-        this.tourneyService.selectedMeeting = m;
+        this.tourneyService.selectedMeetingDb = mdb;
 
         this.gotoMeetingDetailView();
     }
@@ -212,7 +212,7 @@ export class ResultListView extends AbstractEliminatoryListView {
         return null;
     }
 
-    private getMeetingBy(id: any, round: Round):  MeetingDb {
+    private getMeetingBy(id: any, round: Round):  Meeting {
         for(let m of round.meetings) {
             if(m.id == id) {
                 return m;

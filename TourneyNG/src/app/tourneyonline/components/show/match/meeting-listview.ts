@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 import { AbstractListView } from '../../common/abstract-listview';
 
@@ -24,11 +24,11 @@ export class MeetingListView extends AbstractListView {
         console.log("MeetingListView.constructor()");
     }
 
-    selectedMeeting : MeetingDb;
+    selectedMeeting : Meeting;
 
     onRowSelect(event) {
         console.log("MeetingListView.onRowSelect()event: " + event);
-        this.tourneyService.selectedMeeting = this.cloneMeeting(event.data);
+        // this.tourneyService.selectedMeeting = this.cloneMeeting(event.data);
         this.gotoDetailView();
     }
   

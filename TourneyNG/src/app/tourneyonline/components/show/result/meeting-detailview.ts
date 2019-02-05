@@ -10,6 +10,7 @@ import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 @Component({
     templateUrl: './meeting-detailview.html'
@@ -21,7 +22,7 @@ export class MeetingDetailView extends AbstractDetailView {
     msgs: Message[] = [];
 
     selectedMeetingDb: MeetingDb;
-    selectedMeeting: MeetingDb;
+    selectedMeeting: Meeting;
 
     matches: Match[];
 
@@ -39,8 +40,7 @@ export class MeetingDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedMeetingDb  = this.tourneyService.selectedMeeting;   
-        this.selectedMeeting = this.selectedMeetingDb;
+        this.selectedMeetingDb  = this.tourneyService.selectedMeetingDb;   
 
         this.alreadyPassed = false;
 
@@ -152,13 +152,14 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        this.tourneyService.prepareMdb(this.selectedMeeting
+        let mdb = this.tourneyService.prepareMdb(this.selectedMeeting
             , this.selectedTourney.id
-            , this.tourneyService.selectedMeeting.roundId
-            , this.tourneyService.selectedMeeting.playoffId
-            , this.tourneyService.selectedMeeting.eliminatoryId
+            , this.tourneyService.selectedMeetingDb.roundId
+            , this.tourneyService.selectedMeetingDb.playoffId
+            , this.tourneyService.selectedMeetingDb.eliminatoryId
             );            
-        this.tourneyService.updateMeeting(this.selectedMeeting).subscribe(n => this.next(n), e => this.onError(e));
+
+        this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
 
         this.updateNextLevel();
 
@@ -196,8 +197,8 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
 
-        const onewayLevelMeeting:    MeetingDb = l.round.meetings[0];
-        const roundtripLevelMeeting: MeetingDb = l.round.meetings[1];
+        const onewayLevelMeeting:    Meeting = l.round.meetings[0];
+        const roundtripLevelMeeting: Meeting = l.round.meetings[1];
 
         let points1 = onewayLevelMeeting.points1 + roundtripLevelMeeting.points2;
         let points2 = onewayLevelMeeting.points2 + roundtripLevelMeeting.points1;
@@ -224,7 +225,7 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
  
-        let nextMeeting: MeetingDb = nextEliminatory.round.meetings[0];
+        let nextMeeting: Meeting = nextEliminatory.round.meetings[0];
         if(points1 > points2) {
             if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
                 nextEliminatory.round.teams[0] = onewayLevelMeeting.team1;
@@ -244,11 +245,11 @@ export class MeetingDetailView extends AbstractDetailView {
                 nextMeeting.team2 = onewayLevelMeeting.team2;
             }
         }
-        this.tourneyService.completeEliminatoryMeetingDb(nextMeeting
+        let mdb = this.tourneyService.completeEliminatoryMeetingDb(nextMeeting
             , this.selectedTourney.id
             , nextEliminatory.id
         );        
-        this.tourneyService.updateMeeting(nextMeeting).subscribe(n => this.next(n), e => this.onError(e));
+        this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onError(n:any) {

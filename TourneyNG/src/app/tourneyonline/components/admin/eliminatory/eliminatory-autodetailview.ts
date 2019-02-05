@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import {FormControl,FormGroup,FormBuilder, Validators} from '@angular/forms';
 
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Message } from 'app/components/common/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
@@ -33,8 +33,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     private isOneway: boolean;
 
     isStandalone: boolean;
-    m1: MeetingDb;
-    m2: MeetingDb;
+    m1: Meeting;
+    m2: Meeting;
 
     constructor(
         private fb: FormBuilder,

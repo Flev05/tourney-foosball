@@ -2,8 +2,9 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Team } from 'app/tourneyonline/domain/team';
 import { RoundType, TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { TeamsPool } from './teams-pool';
-import { MeetingDb } from '../domain/meeting-db';
+import { Meeting } from '../domain/meeting';
 import { Tourney } from '../domain/tourney';
+import { MeetingDb } from '../domain/meeting-db';
 
 const tourneyId = 3;
 const ROUND_NUM = 4;
@@ -12,10 +13,10 @@ const BASE_ROUND_ID = 400;
 export class InMemoryDataServiceRoundElim  {
 static teams = TeamsPool.prepareTeams(12);
 
-private static meetingsDb: MeetingDb[] = [];
+private static meetingsDb: Meeting[] = [];
 private static counter: number = 100;
 
-static getMeetings() : MeetingDb[] {
+static getMeetings() : Meeting[] {
   return InMemoryDataServiceRoundElim.meetingsDb;
 }
 
@@ -118,6 +119,7 @@ static newRound(roundNo : number): Round {
     , meetings: []
     , classification: []
     , matrix: null
+    , meetingDaysMap: null
   };
 }
 
@@ -131,12 +133,8 @@ static prepareDefaultMeeting(r : Round  )  {
       for(let j=i+1; j < teams.length; j++) {
         let t2 = teams[j];
 
-        let mdb : MeetingDb =  {
-            id: InMemoryDataServiceRoundElim.counter++
-          , tourneyId: tourneyId
-          , roundId: r.id
-          , playoffId: 0
-          , eliminatoryId: 0
+        let m : Meeting =  {
+            id: InMemoryDataServiceRoundElim.counter
           , name: t1.teamName + " - " + t2.teamName
           , datetime: new Date(2018, 11, 22, 21, 0)
           , address: t1.address
@@ -150,6 +148,15 @@ static prepareDefaultMeeting(r : Round  )  {
           , matches: []
         };
 
+        let mdb : MeetingDb =  {
+            id: InMemoryDataServiceRoundElim.counter++
+          , tourneyId: tourneyId
+          , roundId: r.id
+          , playoffId: 0
+          , eliminatoryId: 0
+          , json: JSON.stringify(m)
+        };
+        
         InMemoryDataServiceRoundElim.meetingsDb.push(mdb);
       }
     }

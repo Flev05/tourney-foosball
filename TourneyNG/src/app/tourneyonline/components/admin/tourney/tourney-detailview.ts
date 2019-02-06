@@ -464,6 +464,46 @@ export class TourneyDetailView extends AbstractDetailView {
         return r;
     }
 
+    private prepareMeetingDays(teamsNo : number, meetings: Meeting[]): Map<number, Meeting[]> {
+        let meetingDaysMap = new  Map<number, Meeting[]>();
+
+        let meetingsToProcess: Meeting[] = [];
+        for(let m of meetings) {
+            if( m.direction == Direction.OneWay ) {
+                meetingsToProcess.push(m);
+            }
+        }
+
+        for(let md=1; md < teamsNo; md++) {
+
+            let teamSet: string[] = [];
+            let meetingsToRemove: Meeting[] = [];
+
+            for(let m of meetingsToProcess) {
+                let t1: string = teamSet.find(x => x == m.team1.teamName);
+                let t2: string = teamSet.find(x => x == m.team2.teamName);
+                if( t1 == undefined && t2 == undefined ) {
+                    if( !meetingDaysMap.has(md) )  {
+                        let emptyArray: Meeting[] = [];
+                        meetingDaysMap.set(md, emptyArray);
+                    }
+                    let meetingsDays: Meeting[] = meetingDaysMap.get(md);
+                    meetingsDays.push(m);
+                    meetingsToRemove.push(m);
+
+                    teamSet.push(m.team1.teamName);
+                    teamSet.push(m.team2.teamName);
+                }
+            }
+
+            for(let m of meetingsToRemove) {
+                let index = meetingsToProcess.indexOf(m);
+                meetingsToProcess.splice(index, 1);
+            }
+        }
+
+        return meetingDaysMap;
+    }
 
     private prepareRoundMeetings(teamSlice: Team[]): Meeting[] {
         let meetings: Meeting[] = [];
@@ -653,7 +693,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let r: Round = p.round;
             p.playoffName = r.name;
 
-            let meetingDaysMap = this.prepareMeetingDays(p.playoffRules.length, r.meetings);
+            let meetingDaysMap = this.prepareRulesMeetingDays(p.playoffRules.length, r.meetings);
             r.meetings = [];
 
             for( let key of meetingDaysMap.keys() ) {
@@ -672,7 +712,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
-    private prepareMeetingDays(teamsNo : number, meetings: Meeting[]): Map<number, Meeting[]> {
+    private prepareRulesMeetingDays(rulesNo : number, meetings: Meeting[]): Map<number, Meeting[]> {
         let meetingDaysMap = new  Map<number, Meeting[]>();
 
         let meetingsToProcess: Meeting[] = [];
@@ -682,15 +722,18 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        for(let md=1; md < teamsNo; md++) {
+        for(let md=1; md < rulesNo; md++) {
 
-            let teamSet: string[] = [];
+            let ruleSet: string[] = [];
             let meetingsToRemove: Meeting[] = [];
 
             for(let m of meetingsToProcess) {
-                let t1: string = teamSet.find(x => x == m.team1.teamName);
-                let t2: string = teamSet.find(x => x == m.team2.teamName);
-                if( t1 == undefined && t2 == undefined ) {
+                let rule1: string = "" + m.rule1.fromRound.position.value + "." + m.rule1.fromRound.round.label;
+                let rule2: string = "" + m.rule2.fromRound.position.value + "." + m.rule2.fromRound.round.label;
+
+                let r1: string = ruleSet.find(x => x == rule1);
+                let r2: string = ruleSet.find(x => x == rule2);
+                if( r1 == undefined && r2 == undefined ) {
                     if( !meetingDaysMap.has(md) )  {
                         let emptyArray: Meeting[] = [];
                         meetingDaysMap.set(md, emptyArray);
@@ -699,8 +742,8 @@ export class TourneyDetailView extends AbstractDetailView {
                     meetingsDays.push(m);
                     meetingsToRemove.push(m);
 
-                    teamSet.push(m.team1.teamName);
-                    teamSet.push(m.team2.teamName);
+                    ruleSet.push(rule1);
+                    ruleSet.push(rule2);
                 }
             }
 

@@ -52,10 +52,12 @@ export class MeetingListView extends AbstractListView {
 
         this.atLeast2teams = this.meetings.length >= 1 ? true : false;
         
+        this.isRoundTrip = false;
         if(this.selectedTourney.isOnewayRound == "true") {
             let meetingsNo = this.meetings.length / 2;  
             this.meetingsNoMsg = "" +  meetingsNo + " (Solo Andata)";
         } else {
+            this.isRoundTrip = true;
             let meetingsNo = this.meetings.length;  
             this.meetingsNoMsg = "" + meetingsNo + " (Andata e Ritorno)";
         }

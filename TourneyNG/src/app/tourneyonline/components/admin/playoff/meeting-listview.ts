@@ -117,7 +117,7 @@ export class MeetingListView extends AbstractListView {
         for (let i = 0; i < days.length; i++) {
             let m = days[i];
             let dt = this.dateFormatPipe.transform(m.datetime);
-            this.onewayDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.ruleName });
+            this.onewayDays.push({ m: m, dateAndTime: dt, direction: m.direction, ruleName: m.ruleName });
         }
         this.onewayDays = this.sortMeetingRows(this.onewayDays);
     }
@@ -163,7 +163,7 @@ export class MeetingListView extends AbstractListView {
 
     goOnewayRight() {
         console.log("goOnewayLeft()");
-        let M = this.selectedPlayoff.round.teams.length - 1;
+        let M = this.selectedPlayoff.playoffRules.length - 1;
         this.onewayDaysNo++;
         console.log("daysKey=" + this.onewayDaysNo);
         if(this.onewayDaysNo > M) {
@@ -185,7 +185,7 @@ export class MeetingListView extends AbstractListView {
 
     goRoundtripRight() {
         console.log("goRoundtripLeft()");
-        let M = this.selectedPlayoff.round.teams.length - 1;
+        let M = this.selectedPlayoff.playoffRules.length - 1;
         this.roundtripDaysNo++;
         console.log("daysKey=" + this.roundtripDaysNo);
         if(this.roundtripDaysNo > M) {

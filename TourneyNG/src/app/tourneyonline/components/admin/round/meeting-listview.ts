@@ -10,6 +10,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { MeetingKey } from 'app/tourneyonline/domain/meeting.key';
 
 @Component({
     templateUrl: './meeting-listview.html'
@@ -17,7 +18,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 export class MeetingListView extends AbstractListView {
     static redirect: string = "adminround/lv/meetingLv/dv";
     cols: TableCols[] ;
-    rows: any[];
+    
     onewayDays: any[];
     roundtripDays: any[];
     selectedRow: any;
@@ -27,8 +28,12 @@ export class MeetingListView extends AbstractListView {
     selectedMeeting: Meeting;
     meetings: Meeting [];
     atLeast2teams: boolean;
+    
     meetingsNoMsg: string;
-    daysKey: number;
+    onewayDaysNo: number;
+    roundtripDaysNo: number;
+    meetingDaysMap: Map<string, Meeting[]>;
+    isRoundTrip: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -45,7 +50,7 @@ export class MeetingListView extends AbstractListView {
         this.selectedRound = this.tourneyService.selectedRound;
         this.meetings = this.selectedRound.meetings;
 
-        this.atLeast2teams = this.meetings.length > 0 ? true : false;
+        this.atLeast2teams = this.meetings.length >= 1 ? true : false;
         
         if(this.selectedTourney.isOnewayRound == "true") {
             let meetingsNo = this.meetings.length / 2;  
@@ -57,72 +62,100 @@ export class MeetingListView extends AbstractListView {
 
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
-            { field: 'direction',   header: 'A/R' },
             { field: 'name',        header: 'Incontro' }
         ];
 
-        this.rows = [];
-        for(let i=0;i<this.meetings.length; i++) {
-            let m = this.meetings[i];
-            if( m.direction == Direction.OneWay) {
-                let dt = this.dateFormatPipe.transform(m.datetime);
-                this.rows.push({m:m, dateAndTime: dt, direction: m.direction, name: m.name});
-            }
-        }
+        this.convertDayMap();
 
-        if( this.selectedTourney.isOnewayRound != "true" ) {
-            for(let i=0;i<this.meetings.length; i++) {
-                let m = this.meetings[i];
-                if( m.direction == Direction.RoundTrip) {
-                    let dt = this.dateFormatPipe.transform(m.datetime);
-                    this.rows.push({m:m, dateAndTime: dt, direction: m.direction, name: m.name});
-                }
-            }
-        }
+        this.onewayDaysNo = 1;
+        this.prepareOnewayDays();
 
-        this.rows = this.sortMeetings(this.rows);
-
-        this.daysKey = 1;
-
-        this.prepareDays();
+        this.roundtripDaysNo = 1;
+        this.prepareRoundtripDays();
     }
 
-    private prepareDays() {
-        let days = this.selectedRound.meetingDaysMap.get(this.daysKey);
+    private convertDayMap() {
+        this.meetingDaysMap = new Map<string, Meeting[]>();
+
+        for( let m of this.selectedRound.meetings ) {
+            let mk = m.direction + "." + m.day;
+            if( !this.meetingDaysMap.has(mk) ) {
+                let emptyArray: Meeting[] = [];
+                this.meetingDaysMap.set(mk, emptyArray);
+            }
+            let mList: Meeting[] = this.meetingDaysMap.get(mk);
+            mList.push(m);
+        }
+    }
+
+    private prepareOnewayDays() {
+        let mk: string = Direction.OneWay + "." + this.onewayDaysNo;
+        let days: Meeting[] = this.meetingDaysMap.get(mk);
+
         this.onewayDays = [];
+        for (let i = 0; i < days.length; i++) {
+            let m = days[i];
+            let dt = this.dateFormatPipe.transform(m.datetime);
+            this.onewayDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.name });
+        }
+        this.onewayDays = this.sortMeetings(this.onewayDays);
+    }
+
+    private prepareRoundtripDays( ) {
+        let mk: string = Direction.RoundTrip + "." + this.roundtripDaysNo;
+        let days = this.meetingDaysMap.get(mk);
+
         this.roundtripDays = [];
         for (let i = 0; i < days.length; i++) {
             let m = days[i];
             let dt = this.dateFormatPipe.transform(m.datetime);
-            if (m.direction == Direction.OneWay) {
-                this.onewayDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.name });
-            }
-            else {
-                this.roundtripDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.name });
-            }
+            this.roundtripDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.name });
         }
+        this.roundtripDays = this.sortMeetings(this.roundtripDays);
     }
 
-    goLeft() {
-        console.log("goLeft()");
-        this.daysKey--;
-        if(this.daysKey < 1) {
-            this.daysKey = 1;
+    goOnewayLeft() {
+        console.log("goOnewayLeft()");
+        this.onewayDaysNo--;
+        if(this.onewayDaysNo < 1) {
+            this.onewayDaysNo = 1;
         }
-        console.log("daysKey=" + this.daysKey);
-        this.prepareDays();
+        console.log("daysKey=" + this.onewayDaysNo);
+        this.prepareOnewayDays();
     }
 
-    goRight() {
-        console.log("goRight()");
+    goOnewayRight() {
+        console.log("goOnewayLeft()");
         let M = this.selectedRound.teams.length - 1;
-        this.daysKey++;
-        console.log("daysKey=" + this.daysKey);
-        if(this.daysKey > M) {
-            this.daysKey = M;
+        this.onewayDaysNo++;
+        console.log("daysKey=" + this.onewayDaysNo);
+        if(this.onewayDaysNo > M) {
+            this.onewayDaysNo = M;
             return;
         }
-        this.prepareDays();
+        this.prepareOnewayDays();
+    }
+
+    goRoundtripLeft() {
+        console.log("goRoundtripLeft()");
+        this.roundtripDaysNo--;
+        if(this.roundtripDaysNo < 1) {
+            this.roundtripDaysNo = 1;
+        }
+        console.log("daysKey=" + this.roundtripDaysNo);
+        this.prepareRoundtripDays();
+    }
+
+    goRoundtripRight() {
+        console.log("goRoundtripLeft()");
+        let M = this.selectedRound.teams.length - 1;
+        this.roundtripDaysNo++;
+        console.log("daysKey=" + this.roundtripDaysNo);
+        if(this.roundtripDaysNo > M) {
+            this.roundtripDaysNo = M;
+            return;
+        }
+        this.prepareRoundtripDays();
     }
 
     onRowSelect(event) {

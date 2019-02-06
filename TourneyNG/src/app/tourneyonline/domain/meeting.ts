@@ -14,6 +14,7 @@ export interface Meeting
     team1?          : Team;
     team2?          : Team;
     direction?      : Direction;
+    day?            : number;
     status?         : MeetingStatus;
     points1?        : number;
     points2?        : number;

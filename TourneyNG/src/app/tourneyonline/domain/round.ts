@@ -6,13 +6,12 @@ import { Matrix } from './matrix';
 
 export interface Round {
     id: number;
+    
     name: string;
     type: RoundType;
 
     teams?:  Team[];
-
     meetings?: Meeting[];
-    meetingDaysMap?: Map<number, Meeting[]>;
 
     classification?: Classification[];
     matrix?: Matrix;

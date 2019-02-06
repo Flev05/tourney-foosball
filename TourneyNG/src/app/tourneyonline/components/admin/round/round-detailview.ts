@@ -57,7 +57,7 @@ export class RoundDetailView extends AbstractDetailView {
                 classification: [],
                 type: RoundType.R,
                 matrix: null,
-                meetingDaysMap: null
+                // meetingDaysMap: null
             };
             this.tourneyService.selectedRound = this.selectedRound;
         }

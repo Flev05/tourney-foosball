@@ -436,29 +436,34 @@ export class TourneyDetailView extends AbstractDetailView {
         
         let meetingDaysMap = this.prepareMeetingDays(teams.length, meetings);
 
+        meetings = [];
+        for( let key of meetingDaysMap.keys() ) {
+            let ms: Meeting[] = meetingDaysMap.get(key);
+            for( let m of ms) {
+                m.day = key;
+                meetings.push(m);
+
+                let rtm = this.cloneObject(m);
+                rtm.team1 = m.team2;
+                rtm.team2 = m.team1;
+                rtm.direction = Direction.RoundTrip;
+                meetings.push(rtm);
+            }
+        }
+
         let classifications: Classification[] = this.prepareClassification(teams);
         let r: Round = {
             id: roundId,
-            name: "GIRONE." + (1 + i),
+            name: "Girone." + (1 + i),
             type: RoundType.R,
             teams: teams,
             meetings: meetings,
             classification: classifications,
             matrix: null,
-            meetingDaysMap: meetingDaysMap
         };
         return r;
     }
 
-    private prepareRandomTeams(teamSlice: Team[], start: number, size: number): Team[] {
-        let teams: Team[] = [];
-
-        for(let i=start; i<start+size; i++) {
-            teams.push(teamSlice[i]);
-        }
-
-        return teams;
-    }
 
     private prepareRoundMeetings(teamSlice: Team[]): Meeting[] {
         let meetings: Meeting[] = [];
@@ -469,12 +474,20 @@ export class TourneyDetailView extends AbstractDetailView {
                 let t2 = teamSlice[j];
                 let m: Meeting = this.addTeamToMeetings(t1, t2, Direction.OneWay);
                 meetings.push(m);
-                m = this.addTeamToMeetings(t2, t1, Direction.RoundTrip);
-                meetings.push(m);
             }
         }
 
         return meetings;
+    }
+
+    private prepareRandomTeams(teamSlice: Team[], start: number, size: number): Team[] {
+        let teams: Team[] = [];
+
+        for(let i=start; i<start+size; i++) {
+            teams.push(teamSlice[i]);
+        }
+
+        return teams;
     }
 
     private addTeamToMeetings(t1: Team, t2: Team, d: Direction): Meeting {
@@ -632,8 +645,6 @@ export class TourneyDetailView extends AbstractDetailView {
                     let r2 = p.playoffRules[j];
                     let m: Meeting = this.createMeeting(null, null, r1, r2, Direction.OneWay);
                     p.round.meetings.push(m);
-                    m = this.createMeeting(null, null, r2, r1, Direction.RoundTrip);
-                    p.round.meetings.push(m);
                 }
             }
         }
@@ -642,7 +653,22 @@ export class TourneyDetailView extends AbstractDetailView {
             let r: Round = p.round;
             p.playoffName = r.name;
 
-            r.meetingDaysMap = this.prepareMeetingDays(p.playoffRules.length, r.meetings);
+            let meetingDaysMap = this.prepareMeetingDays(p.playoffRules.length, r.meetings);
+            r.meetings = [];
+
+            for( let key of meetingDaysMap.keys() ) {
+                let ms: Meeting[] = meetingDaysMap.get(key);
+                for( let m of ms) {
+                    m.day = key;
+                    r.meetings.push(m);
+
+                    let rtm = this.cloneObject(m);
+                    rtm.rule1 = m.rule2;
+                    rtm.rule2 = m.rule1;
+                    rtm.direction = Direction.RoundTrip;
+                    r.meetings.push(rtm);
+                }
+            }
         }
     }
 
@@ -718,7 +744,6 @@ export class TourneyDetailView extends AbstractDetailView {
               , teams:[]
               , meetings: []
               , classification: []
-              , meetingDaysMap: null
             }
           , playoffRules: []
         };

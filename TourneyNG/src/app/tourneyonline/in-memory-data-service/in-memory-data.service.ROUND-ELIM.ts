@@ -119,7 +119,6 @@ static newRound(roundNo : number): Round {
     , meetings: []
     , classification: []
     , matrix: null
-    , meetingDaysMap: null
   };
 }
 

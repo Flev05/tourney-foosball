@@ -34,6 +34,9 @@ export class RoundDetailView extends AbstractDetailView {
     selectedMeetingGroupNumCombobox: Combobox;
     meetingGroupCombobox: Combobox[];
 
+    availTeams: number;
+    selectedTeams: number;
+
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -57,7 +60,6 @@ export class RoundDetailView extends AbstractDetailView {
                 classification: [],
                 type: RoundType.R,
                 matrix: null,
-                // meetingDaysMap: null
             };
             this.tourneyService.selectedRound = this.selectedRound;
         }
@@ -68,8 +70,9 @@ export class RoundDetailView extends AbstractDetailView {
         for(let t of this.selectedRound.teams) {
             this.targetTeams.push(t.teamName);
         }
-        this.availableTeams = [];
+        this.selectedTeams = this.targetTeams.length;
 
+        this.availableTeams = [];
         for(let k=0; k<this.selectedTourney.teams.length; k++ ) {
             let team = this.selectedTourney.teams[k];
         
@@ -88,6 +91,7 @@ export class RoundDetailView extends AbstractDetailView {
                 this.availableTeams.push(team.teamName);
             }
         }
+        this.availTeams = this.availableTeams.length;
 
         this.meetingEnabled = true;
         this.meetingGroupCombobox = [];

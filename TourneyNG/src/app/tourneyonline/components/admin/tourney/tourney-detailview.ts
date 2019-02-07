@@ -42,8 +42,6 @@ export class TourneyDetailView extends AbstractDetailView {
     allMatchesEnabled: boolean = true;
     bestOffWinner: number;
 
-    activeIndex: number;
-
     selectedTeam: Team;
 
     teamCols: TableCols[];
@@ -89,8 +87,6 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("TourneyDetailView.ngOnInit() ");
         
         super.ngOnInit();
-
-        this.activeIndex = this.tourneyService.selectedTabIndex;
 
         this.tourneyService.loadDisciplines().subscribe(t => {
             this.disciplines = t;
@@ -157,7 +153,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.teamSortType = TeamSortType.O;
         this.selectedTourney.isOnewayRound = "true";
         this.selectedTourney.isOnewayPlayoff = "true";
-        this.activeIndex = 0;
+        
+        this.tourneyService.selectedTabIndex = 0;
+        
         this.selectedTourney.meetingsForDelete = []
         this.selectedTourney.selectedTeamsNumCombobox = {label: "", value: 0};
 
@@ -282,9 +280,9 @@ export class TourneyDetailView extends AbstractDetailView {
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.activeIndex = index;
-        this.tourneyService.selectedTabIndex = this.activeIndex;
-        
+
+        this.tourneyService.selectedTabIndex = index;
+
         if(index==2) {
         }
     }
@@ -439,17 +437,46 @@ export class TourneyDetailView extends AbstractDetailView {
         meetings = [];
         for( let key of meetingDaysMap.keys() ) {
             let ms: Meeting[] = meetingDaysMap.get(key);
+            ms.sort((m1, m2) => {
+                if( m1.name < m2.name ) {
+                    return -1;
+                }
+                if( m1.name > m2.name ) {
+                    return 1;
+                }
+                return 0;
+            });
+
             for( let m of ms) {
                 m.day = key;
                 meetings.push(m);
+            }
+        }
 
+        let mtmp: Meeting[] = [];
+        for( let key of meetingDaysMap.keys() ) {
+            let ms: Meeting[] = meetingDaysMap.get(key);
+            
+            for( let m of ms) {
+                m.day = key;
                 let rtm = this.cloneObject(m);
                 rtm.team1 = m.team2;
                 rtm.team2 = m.team1;
+                rtm.name = rtm.team1.teamName + " - " + rtm.team2.teamName ; 
                 rtm.direction = Direction.RoundTrip;
-                meetings.push(rtm);
+                mtmp.push(rtm);
             }
         }
+        mtmp.sort((m1, m2) => {
+            if( m1.name < m2.name ) {
+                return -1;
+            }
+            if( m1.name > m2.name ) {
+                return 1;
+            }
+            return 0;
+        });
+        meetings = meetings.concat(mtmp);
 
         let classifications: Classification[] = this.prepareClassification(teams);
         let r: Round = {
@@ -467,12 +494,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareMeetingDays(teamsNo : number, meetings: Meeting[]): Map<number, Meeting[]> {
         let meetingDaysMap = new  Map<number, Meeting[]>();
 
-        let meetingsToProcess: Meeting[] = [];
-        for(let m of meetings) {
-            if( m.direction == Direction.OneWay ) {
-                meetingsToProcess.push(m);
-            }
-        }
+        let meetingsToProcess: Meeting[] = [...meetings];
 
         for(let md=1; md < teamsNo; md++) {
 
@@ -487,8 +509,8 @@ export class TourneyDetailView extends AbstractDetailView {
                         let emptyArray: Meeting[] = [];
                         meetingDaysMap.set(md, emptyArray);
                     }
-                    let meetingsDays: Meeting[] = meetingDaysMap.get(md);
-                    meetingsDays.push(m);
+                    let mds: Meeting[] = meetingDaysMap.get(md);
+                    mds.push(m);
                     meetingsToRemove.push(m);
 
                     teamSet.push(m.team1.teamName);
@@ -698,17 +720,33 @@ export class TourneyDetailView extends AbstractDetailView {
 
             for( let key of meetingDaysMap.keys() ) {
                 let ms: Meeting[] = meetingDaysMap.get(key);
-                for( let m of ms) {
+
+
+                for( let m of ms ) {
                     m.day = key;
                     r.meetings.push(m);
+                }
+            }
 
+            for( let key of meetingDaysMap.keys() ) {
+                let ms: Meeting[] = meetingDaysMap.get(key);
+
+                for( let m of ms ) {
+                    m.day = key;
                     let rtm = this.cloneObject(m);
                     rtm.rule1 = m.rule2;
                     rtm.rule2 = m.rule1;
                     rtm.direction = Direction.RoundTrip;
+
+                    let rule1: string = this.makeRule(rtm.rule1);
+                    let rule2: string = this.makeRule(rtm.rule2);
+
+                    rtm.name = rule1 + " - " + rule2; 
+    
                     r.meetings.push(rtm);
                 }
             }
+
         }
     }
 
@@ -728,8 +766,8 @@ export class TourneyDetailView extends AbstractDetailView {
             let meetingsToRemove: Meeting[] = [];
 
             for(let m of meetingsToProcess) {
-                let rule1: string = "" + m.rule1.fromRound.position.value + "." + m.rule1.fromRound.round.label;
-                let rule2: string = "" + m.rule2.fromRound.position.value + "." + m.rule2.fromRound.round.label;
+                let rule1: string = this.makeRule(m.rule1);
+                let rule2: string = this.makeRule(m.rule2);
 
                 let r1: string = ruleSet.find(x => x == rule1);
                 let r2: string = ruleSet.find(x => x == rule2);
@@ -754,6 +792,10 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         return meetingDaysMap;
+    }
+
+    private makeRule(rule: PlayoffRule): string {
+        return "" + rule.fromRound.position.value + "." + rule.fromRound.round.label;
     }
 
     private resetPlayoff() {
@@ -931,8 +973,6 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     atLeastOnePhase() : boolean{
-        let phases = this.selectedTourney.phases;
-
         if(this.containsPhase(PhaseType.R)) {
             return true;
         }
@@ -947,8 +987,6 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     notAllowedPhases(): boolean {
-        let phases = this.selectedTourney.phases;
-
         if(!this.containsPhase(PhaseType.R) 
             && this.containsPhase(PhaseType.P)
             && this.containsPhase(PhaseType.E)) 
@@ -963,6 +1001,12 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         return false;
+    }
+
+    enableSaveButton() : string {
+        let n : String = new String(this.selectedTourney.tourneyName);
+        let a : String = new String(this.selectedTourney.address);
+        return a.trim() == "" || n.trim() == "" ? "disabled" : "";
     }
 
     onError(n:any) {

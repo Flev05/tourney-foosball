@@ -19,6 +19,9 @@ export class TeamPickList extends AbstractListView {
     avalilableTeams: string[];
     targetTeams: string[];
 
+    availTeams: number;
+    selectedTeams: number;
+
     constructor( protected tourneyService: TourneyService
         , public router: Router
         , protected location: Location
@@ -39,6 +42,7 @@ export class TeamPickList extends AbstractListView {
         for(let t of this.selectedTourney.teams) {
             this.targetTeams.push(t.teamName);
         }
+        this.selectedTeams = this.targetTeams.length;
         
         this.avalilableTeams = [];
         for(let t of this.teamService.teamPool) {
@@ -47,6 +51,7 @@ export class TeamPickList extends AbstractListView {
                 this.avalilableTeams.push(t.teamName);
             }
         }
+        this.availTeams = this.avalilableTeams.length;
     }
  
     newTeam() {

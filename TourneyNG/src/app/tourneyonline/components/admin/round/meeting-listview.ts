@@ -34,6 +34,8 @@ export class MeetingListView extends AbstractListView {
     roundtripDaysNo: number;
     meetingDaysMap: Map<string, Meeting[]>;
     isRoundTrip: boolean;
+    allDaysNo: number;
+    daysNoMsg: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -51,16 +53,6 @@ export class MeetingListView extends AbstractListView {
         this.meetings = this.selectedRound.meetings;
 
         this.atLeast2teams = this.meetings.length >= 1 ? true : false;
-        
-        this.isRoundTrip = false;
-        if(this.selectedTourney.isOnewayRound == "true") {
-            let meetingsNo = this.meetings.length / 2;  
-            this.meetingsNoMsg = "" +  meetingsNo + " (Solo Andata)";
-        } else {
-            this.isRoundTrip = true;
-            let meetingsNo = this.meetings.length;  
-            this.meetingsNoMsg = "" + meetingsNo + " (Andata e Ritorno)";
-        }
 
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -74,6 +66,18 @@ export class MeetingListView extends AbstractListView {
 
         this.roundtripDaysNo = 1;
         this.prepareRoundtripDays();
+
+        this.allDaysNo = this.selectedRound.teams.length-1;
+
+        this.isRoundTrip = false;
+        if(this.selectedTourney.isOnewayRound == "true") {
+            let meetingsNo = this.meetings.length / 2;  
+            this.meetingsNoMsg = "" +  meetingsNo + " incontri in " + this.allDaysNo + " giornate (Solo Andata)";
+        } else {
+            this.isRoundTrip = true;
+            let meetingsNo = this.meetings.length;  
+            this.meetingsNoMsg = "" +  meetingsNo + " incontri in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
+        }
     }
 
     private convertDayMap() {

@@ -32,6 +32,7 @@ export class MeetingListView extends AbstractListView {
     roundtripDaysNo: number;
     onewayDays: any[];
     roundtripDays: any[];
+    allDaysNo: number;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -67,15 +68,17 @@ export class MeetingListView extends AbstractListView {
 
             m.ruleName = rn;
         }
-        
+
+        this.allDaysNo = this.selectedPlayoff.playoffRules.length-1;
+
         this.isRoundTrip = false;
         if(this.selectedTourney.isOnewayPlayoff == "true") {
             let meetingsNo = this.meetings.length / 2;  
-            this.meetingsNoMsg = "" +  meetingsNo + " (Solo Andata)";
+            this.meetingsNoMsg = "" +  meetingsNo + " incontri in " + this.allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
             let meetingsNo = this.meetings.length;  
-            this.meetingsNoMsg = "" + meetingsNo + " (Andata e Ritorno)";
+            this.meetingsNoMsg = "" +  meetingsNo + " incontri in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
         }
 
         this.convertDayMap();
@@ -85,14 +88,6 @@ export class MeetingListView extends AbstractListView {
 
         this.roundtripDaysNo = 1;
         this.prepareRoundtripDays();
-
-        // this.rows = [];
-        // for(let i=0;i<this.meetings.length; i++) {
-        //     let m = this.meetings[i];
-        //     let dt = this.dateFormatPipe.transform(m.datetime);
-        //     this.rows.push({m:m, dateAndTime: dt, direction: m.direction, ruleName: m.ruleName});
-        // }
-        // this.rows = this.sortMeetingRows(this.rows);
     }
  
     private convertDayMap() {
@@ -130,7 +125,7 @@ export class MeetingListView extends AbstractListView {
         for (let i = 0; i < days.length; i++) {
             let m = days[i];
             let dt = this.dateFormatPipe.transform(m.datetime);
-            this.roundtripDays.push({ m: m, dateAndTime: dt, direction: m.direction, name: m.ruleName });
+            this.roundtripDays.push({ m: m, dateAndTime: dt, direction: m.direction, ruleName: m.ruleName });
         }
         this.roundtripDays = this.sortMeetingRows(this.roundtripDays);
     }

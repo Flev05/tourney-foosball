@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Gestione girone</span>
-        <span>Creare o modificare un girone</span>
+        <span>Modificare un girone</span>
     </div>
 </div>
 
@@ -10,12 +10,12 @@
     <p-accordionTab header="Introduzione">                        
         <p>
             Vista di dettaglio girone.
-            Da questa vista potete creare, modificare o rimuovere un girone.
+            Da questa vista potete modificare le squadre del girone selezionato.
         </p>
         <p>                
             Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
-            relativamente agli incontri di andata e ritorno che devono essere documentati degli 
-            incontri con il bottone Incontri.
+            relativamente agli incontri di andata e ritorno che sono documentati nella vista degli incontri
+            accessibile con il bottone "Incontri".
         </p>
         
         <p>
@@ -24,12 +24,14 @@
         </p>
         <p>
             Attenzione! Se non ci sono squadre nell'area di sinistra, dovete prima creare le squadre del torneo
+            nella scheda delle squadre.
         </p>
 
         <p>
+            Tutti i dettagli relativi agli incontri tra le squadre del girone sono demandati alla vista degli incontri.
             Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
             Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente accessibile con
-            il bottone Incontri.
+            il bottone "Incontri".
         </p>
         <p>
             Attenzione! Se non entrate esplicitamente nella vista degli incontri, con il bottone Incontri, non saranno generati
@@ -79,7 +81,7 @@
         </button>
     </div>                  
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <!-- <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-3">
                 Nome:
@@ -96,7 +98,7 @@
                     </span>
                 </div>
             </div>
-        </div>                     
+        </div>                      -->
 
         <p-pickList [source]="availableTeams" 
                 [target]="targetTeams" 

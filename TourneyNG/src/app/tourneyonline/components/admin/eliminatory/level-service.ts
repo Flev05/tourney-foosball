@@ -117,7 +117,7 @@ export class LevelService extends AbstractEliminatoryListView {
             let deleted: EliminatoryLevel[] = this.eliminatoryLevels.splice(0, maxCurrentLevel - selectedLevel);
             for(let d of deleted) {
                 for(let e of d.eliminatories) {
-                    for(let m of e.round.meetings) {
+                    for(let m of e.round.onewayMeetings) {
                         this.selectedTourney.meetingsForDelete.push(m);
                     }
                 }
@@ -159,7 +159,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 , name:""
                 , type: RoundType.E
                 , teams: []
-                , meetings:[]
+                , onewayMeetings:[]
                 , classification:[]         
                 // , meetingDaysMap: null       
             };
@@ -173,7 +173,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         for(let t of round.teams) {
             if(!teamMap.has(t.id)) {
-                for(let m of round.meetings) {
+                for(let m of round.onewayMeetings) {
                     if(m.team1.id == t.id || m.team2.id == t.id) {
                         this.selectedTourney.meetingsForDelete.push(m);
                     }
@@ -207,12 +207,12 @@ export class LevelService extends AbstractEliminatoryListView {
             e.round.teams[0] = t1;
             e.round.teams[1] = t2;
             
-            let m = e.round.meetings[0];
+            let m = e.round.onewayMeetings[0];
             m.team1 = t1;
             m.team2 = t2;
             this.tourneyService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
             
-            m = e.round.meetings[1];
+            m = e.round.onewayMeetings[1];
             m.team1 = t2;
             m.team2 = t1;
             
@@ -375,7 +375,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 , type: RoundType.E
                 , teams:[t1, t2]
                 , classification: []
-                , meetings: meetings
+                , onewayMeetings: meetings
                 // , meetingDaysMap: null
             },
             rule1: {

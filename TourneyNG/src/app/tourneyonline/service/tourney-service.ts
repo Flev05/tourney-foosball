@@ -88,7 +88,7 @@ export class TourneyService {
 
     selectedTeams4PlayoffsCB: Combobox;
     selectedPlayoffsCB: Combobox;
-    selectedTeams4RoundsCB: Combobox;
+    // selectedTeams4RoundsCB: Combobox;
     selectedRoundsNumCB: Combobox;
 
     constructor(private http: HttpClient
@@ -498,7 +498,7 @@ export class TourneyService {
 
         if(confirm(popup)) {
 
-            for( let m of playoff.round.meetings) {
+            for( let m of playoff.round.onewayMeetings) {
                 this.deleteMeeting(m);
             }
 
@@ -520,11 +520,11 @@ export class TourneyService {
     }
 
     private removeRound(r: Round): any {
-        for(let m of r.meetings) {
+        for(let m of r.onewayMeetings) {
             this.deleteMeeting(m);
         }
 
-        r.meetings = [];
+        r.onewayMeetings = [];
     }
 
     deleteUnusedMeetings(meetings: Meeting[] ): void {

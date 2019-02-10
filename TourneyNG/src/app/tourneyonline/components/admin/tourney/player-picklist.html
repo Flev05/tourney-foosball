@@ -37,7 +37,10 @@
 </div>                  
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <p-pickList  [source]="avalilablePlayers" [target]="targetPlayers" sourceHeader="Disponibili" targetHeader="Selezionati" 
+    <p-pickList  [source]="avalilablePlayers" 
+        [target]="targetPlayers" 
+        sourceHeader="Disponibili {{avalilablePlayers.length}}" 
+        targetHeader="Selezionati {{targetPlayers.length}}" 
         [responsive]="true"
         dragdrop="true" 
         dragdropScope="players" 

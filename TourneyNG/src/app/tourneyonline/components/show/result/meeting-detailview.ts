@@ -190,15 +190,15 @@ export class MeetingDetailView extends AbstractDetailView {
         let nextEliminatoryIndex: number = Math.floor(this.tourneyService.selectedEliminatoryIndex / 2);
         let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
 
-        for(let i=0; i<l.round.meetings.length; i++) {
-            let m = l.round.meetings[i];
+        for(let i=0; i<l.round.onewayMeetings.length; i++) {
+            let m = l.round.onewayMeetings[i];
             if(m.id == this.selectedMeeting.id) {
-                l.round.meetings[i] = this.selectedMeeting;
+                l.round.onewayMeetings[i] = this.selectedMeeting;
             }
         }
 
-        const onewayLevelMeeting:    Meeting = l.round.meetings[0];
-        const roundtripLevelMeeting: Meeting = l.round.meetings[1];
+        const onewayLevelMeeting:    Meeting = l.round.onewayMeetings[0];
+        const roundtripLevelMeeting: Meeting = l.round.onewayMeetings[1];
 
         let points1 = onewayLevelMeeting.points1 + roundtripLevelMeeting.points2;
         let points2 = onewayLevelMeeting.points2 + roundtripLevelMeeting.points1;
@@ -225,7 +225,7 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
  
-        let nextMeeting: Meeting = nextEliminatory.round.meetings[0];
+        let nextMeeting: Meeting = nextEliminatory.round.onewayMeetings[0];
         if(points1 > points2) {
             if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
                 nextEliminatory.round.teams[0] = onewayLevelMeeting.team1;

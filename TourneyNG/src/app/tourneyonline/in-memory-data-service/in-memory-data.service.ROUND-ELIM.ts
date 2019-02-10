@@ -116,7 +116,7 @@ static newRound(roundNo : number): Round {
     , name: "GIRONE." + roundNo
     , type: RoundType.R
     , teams: []
-    , meetings: []
+    , onewayMeetings: []
     , classification: []
     , matrix: null
   };

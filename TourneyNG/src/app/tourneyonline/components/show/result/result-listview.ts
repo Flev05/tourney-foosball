@@ -112,7 +112,7 @@ export class ResultListView extends AbstractEliminatoryListView {
 
         let rowNumber : number=0;
 
-        for (let m of round.meetings) {
+        for (let m of round.onewayMeetings) {
             rows.push(m);
 
             rowNumber++;
@@ -141,7 +141,7 @@ export class ResultListView extends AbstractEliminatoryListView {
 
             let currentKey = round.name;
             if (!classificationMap.has(currentKey)) {
-                let len = round.meetings.length;
+                let len = round.onewayMeetings.length;
                 classificationMap.set(currentKey, m);
                 rows[row].rowspanSize = len;
             } else {
@@ -213,7 +213,7 @@ export class ResultListView extends AbstractEliminatoryListView {
     }
 
     private getMeetingBy(id: any, round: Round):  Meeting {
-        for(let m of round.meetings) {
+        for(let m of round.onewayMeetings) {
             if(m.id == id) {
                 return m;
             }

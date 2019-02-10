@@ -4,7 +4,7 @@ import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { PlayerListView } from './player-listview';
 import { TeamPickList } from './team-picklist';
-import { RoundDetailView } from '../round/round-detailview';
+import { RoundDetailView } from '../round/round-pickview';
 import { RuleListView } from '../playoff/rule-listview';
 import { PlayerDetailView } from '../player/player-detailview';
 import { PlayerPickList } from './player-picklist';

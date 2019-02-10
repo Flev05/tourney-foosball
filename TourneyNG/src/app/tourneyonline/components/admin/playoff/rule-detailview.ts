@@ -89,13 +89,13 @@ export class RuleDetailView extends AbstractDetailView {
             if(this.playoffConfigs.length >= 1) {
                 for(let pc of this.playoffConfigs) {
                     let m: Meeting = this.createMeeting(null, null, pc, this.selectedPlayoffConfig, Direction.OneWay);
-                    this.selectedPlayoff.round.meetings.push(m);
+                    this.selectedPlayoff.round.onewayMeetings.push(m);
                     
                     this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
     
                     if(this.selectedTourney.isOnewayPlayoff != "true") {
                         m = this.createMeeting(null, null, this.selectedPlayoffConfig, pc, Direction.RoundTrip);
-                        this.selectedPlayoff.round.meetings.push(m);
+                        this.selectedPlayoff.round.onewayMeetings.push(m);
                         this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, this.selectedPlayoff.id);
                     }        
                 }
@@ -103,7 +103,7 @@ export class RuleDetailView extends AbstractDetailView {
 
             this.playoffConfigs.push(this.selectedPlayoffConfig);
         } else {
-            for(let m of this.selectedPlayoff.round.meetings) {
+            for(let m of this.selectedPlayoff.round.onewayMeetings) {
                 if(m.rule1==undefined) {
                     m.rule1 = this.selectedPlayoffConfig;
                 }

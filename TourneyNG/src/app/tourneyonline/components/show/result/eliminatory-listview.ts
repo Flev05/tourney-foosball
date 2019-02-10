@@ -126,8 +126,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 return;
             }
 
-            let m1 = e.round.meetings[0];
-            let m2 = e.round.meetings[1];
+            let m1 = e.round.onewayMeetings[0];
+            let m2 = e.round.onewayMeetings[1];
 
             let classification: Array<Classification> = null;
 
@@ -200,7 +200,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
             
             let nr = nextEliminatory.round;
-            let nm = nr.meetings[0];
+            let nm = nr.onewayMeetings[0];
 
             if (level % 2 == 0) {
                 nm.team1 = e.round.teams[0];
@@ -221,7 +221,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         this.cols = this.prepareResultColums();
 
         let round: Round = e.round;
-        let m: Meeting = round.meetings[meetingIndex];
+        let m: Meeting = round.onewayMeetings[meetingIndex];
 
         let row: any = {m};
 
@@ -252,7 +252,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         let currentKey = round.name;
         if (!classificationMap.has(currentKey)) {
-            let len = round.meetings.length;
+            let len = round.onewayMeetings.length;
             classificationMap.set(currentKey, m);
             row.rowspanSize = len;
         }

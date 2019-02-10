@@ -93,7 +93,9 @@
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-    <button *ngIf="atLeast2Rules" type="button" icon="fa fa-user-plus"  
+    <button *ngIf="atLeast2Rules" 
+        type="button" 
+        icon="fa fa-user-plus"  
         label="Incontri" 
         pButton (click)="goMeeting()" 
         class="ui-button-success">

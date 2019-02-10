@@ -17,22 +17,23 @@
             relativamente agli incontri di andata e ritorno che devono essere documentati degli 
             incontri con il bottone Incontri.
         </p>
-
+        
         <p>
             L'utente deve semplicemente spostare, con i bottoni preposti, la squadra scelta da sinstra verso destra per aggiungerla
-            al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.
-            
-            Nel momento in cui si savla il girone con il bottone Salva, il sistema automaticamente genera gli incontri delle
-            squadre aggiunte con quelli già esistenti, allo stesso modo rimuove gli incontri relativi alle squadre rimosse
-            dal girone.
-        </p>
-        <p>
-            Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
-            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente accessibile con
-            il bottone Incontri
+            al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.            
         </p>
         <p>
             Attenzione! Se non ci sono squadre nell'area di sinistra, dovete prima creare le squadre del torneo
+        </p>
+
+        <p>
+            Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
+            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente accessibile con
+            il bottone Incontri.
+        </p>
+        <p>
+            Attenzione! Se non entrate esplicitamente nella vista degli incontri, con il bottone Incontri, non saranno generati
+            gli incontri tra le squadre del girone e il sistema non sarà in grado di organizzare il resto del torneo.
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -52,11 +53,11 @@
             Selezionati e viceversa.
         </p>
 
-        <h4>Rimuovere un girone</h4>
+        <h4>Attenzione!</h4>
         <p>
-            Si può rimuovere un girone esistente con il bottore Rimuovi.
-            Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, 
-            il girone sarà rimosso dal torneo.
+            Ricordarsi, una volta che avete sistemato le squadre, di accedere esplicitamente alla vista di dettaglio 
+            degli incontri con il bottone Incontri altrimenti il sistema non disporrà di alcun incontro e non potrà
+            gestire il resto del torneo.
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -73,7 +74,8 @@
             type="button" 
             icon="fa fa-user-plus" 
             pButton (click)="goMeeting()" 
-            label="Incontri" class="ui-button-success">
+            label="Incontri" 
+            class="ui-button-success">
         </button>
     </div>                  
 
@@ -96,10 +98,15 @@
             </div>
         </div>                     
 
-        <p-pickList [source]="availableTeams" [target]="targetTeams" sourceHeader="Disponibili {{availTeams}}" targetHeader="Selezionati {{selectedTeams}}" 
+        <p-pickList [source]="availableTeams" 
+                [target]="targetTeams" 
+                sourceHeader="Disponibili {{availableTeams.length}}" 
+                targetHeader="Selezionati {{targetTeams.length}}" 
                 [responsive]="true"
                 dragdrop="true" 
                 dragdropScope="rounds" 
+                (onMoveToTarget)="onMoveToTarget($event)"
+                (onMoveToSource)="onMoveToSource($event)"
                 [sourceStyle]="{'height':'300px'}" 
                 [targetStyle]="{'height':'300px'}">
             <ng-template let-team pTemplate="item">

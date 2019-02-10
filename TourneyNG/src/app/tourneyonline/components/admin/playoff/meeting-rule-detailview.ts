@@ -23,7 +23,6 @@ export class MeetingRuleDetailView extends AbstractDetailView {
     selectedPlayoff: Playoff;
     selectedMeeting: Meeting;
     
-    fullAddress: string;
     dateAndTime: Date;
 
     constructor(
@@ -44,10 +43,6 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         this.selectedMeeting = this.tourneyService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
-        
-        this.fullAddress = this.selectedMeeting.address + " - " 
-            + this.selectedMeeting.country.zipCode + " " + this.selectedMeeting.country.city
-            + " (" + this.selectedMeeting.country.provinceCode +")";
 
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),
@@ -66,9 +61,12 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         this.selectedMeeting.datetime = new Date(dt);
 
         if( this.selectedTourney.isOnewayRound != "true" ) {
-            let rtDateTime = this.selectedPlayoff.round.meetings[1].datetime;
-            if(rtDateTime < this.selectedMeeting.datetime) {
-                this.selectedPlayoff.round.meetings[1].datetime = this.selectedMeeting.datetime;
+            let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.tourneyService.selectedMeeting);
+            if( index > -1 ) {
+                let rtDateTime = this.selectedPlayoff.round.onewayMeetings[index].datetime;
+                if(rtDateTime < this.selectedMeeting.datetime) {
+                    this.selectedPlayoff.round.onewayMeetings[index].datetime = this.selectedMeeting.datetime;
+                }
             }
         }
 

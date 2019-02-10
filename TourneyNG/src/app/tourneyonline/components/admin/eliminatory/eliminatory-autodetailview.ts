@@ -56,7 +56,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.isOneway = this.selectedEliminatoryLevel.isOneway;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
-        this.m1 = this.selectedEliminatory.round.meetings[0];
+        this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
 
         this.isStandalone = this.tourneyService.isStandalone;
 
@@ -68,7 +68,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         this.m2 = this.m1;
         if(!this.isOneway) {
-            this.m2 = this.selectedEliminatory.round.meetings[1];
+            this.m2 = this.selectedEliminatory.round.onewayMeetings[1];
             if(this.m2.country!=undefined) {
                 this.fullAddress2 = this.m2.address + " - " 
                     + this.m2.country.zipCode + " " + this.m2.country.city
@@ -90,7 +90,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     private save() {
 
-        let m1 = this.selectedEliminatory.round.meetings[0];
+        let m1 = this.selectedEliminatory.round.onewayMeetings[0];
 
         m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
         m1.address = this.eliminatoryFormGroup.get('address1').value;
@@ -99,7 +99,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
-            let m2 = this.selectedEliminatory.round.meetings[1];
+            let m2 = this.selectedEliminatory.round.onewayMeetings[1];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             if(m2.datetime < m1.datetime) {
                 m2.datetime = m1.datetime;

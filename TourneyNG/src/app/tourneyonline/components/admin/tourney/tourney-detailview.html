@@ -781,10 +781,12 @@
                 </p>
         
                 <p>
-                    Scegliere, dalla combo box Squadre, il numero effettivo iniziale delle squadre del torneo.
+                    Scegliere, dalla combo box Squadre, il numero di squadre per ciascun girone.
                 </p>
                 <p>
                     Scegliere, dalla combo box Gironi, il numero di gironi all'italiana del torneo.
+                    Se il numero di squadre per girone non è un numero intero, ci saranno alcuni gironi
+                    con una squadra in più degli altri.
                 </p>
                 <p>
                     In funzione di queste 2 scelte il sistema propone una compilazione d'ufficio di ciascun girone.
@@ -833,12 +835,12 @@
             </div>
         </div>                          
 
-        <div class="ui-grid-row">
+        <!-- <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Squadre:
             </div>
             <div class="ui-grid-col-3" tooltipPosition="right" 
-                    pTooltip="Scegliere il numero iniziale di squadre impiegate nel torneo">
+                    pTooltip="Scegliere il numero di squadre per ciascun girone">
                 <p-dropdown id="teamsId" 
                     [options]="team4roundsCombobox" 
                     [(ngModel)]="tourneyService.selectedTeams4RoundsCB"  
@@ -848,7 +850,7 @@
                     [autoWidth]="false">
                 </p-dropdown>
             </div>
-        </div>
+        </div> -->
 
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">

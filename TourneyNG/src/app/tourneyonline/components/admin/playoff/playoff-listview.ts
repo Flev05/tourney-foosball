@@ -60,7 +60,7 @@ export class PlayoffListView extends AbstractListView {
                 , name: ""
                 , type: RoundType.P
                 , teams:[]
-                , meetings: []
+                , onewayMeetings: []
                 , classification: []
               }
             , playoffRules: null

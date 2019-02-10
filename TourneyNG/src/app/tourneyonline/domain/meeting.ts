@@ -9,6 +9,7 @@ export interface Meeting
     id?             : number;
     name?           : string;
     datetime?       : Date;
+    dateAndTime?    : any;
     address?        : string;
     country?        : Country;
     team1?          : Team;

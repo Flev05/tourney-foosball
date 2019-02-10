@@ -71,7 +71,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.playoffs = this.tourneyService.playoffsCombobox;
         this.isStandalone = this.tourneyService.isStandalone;
 
-        let m1: Meeting = this.selectedEliminatory.round.meetings[0];
+        let m1: Meeting = this.selectedEliminatory.round.onewayMeetings[0];
         m1.datetime = new Date(m1.datetime);
         if(m1.country!=undefined) {
             this.fullAddress1 = m1.address + " - " 
@@ -81,7 +81,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
  
         let m2: Meeting = m1;
         if(!this.isOneway) {
-            m2 = this.selectedEliminatory.round.meetings[1];
+            m2 = this.selectedEliminatory.round.onewayMeetings[1];
             m2.datetime = new Date(m2.datetime);
             if(m2.country!=undefined) {
                 this.fullAddress2 = m2.address + " - " 
@@ -151,7 +151,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
     private save() {
 
-        let m1 = this.selectedEliminatory.round.meetings[0];
+        let m1 = this.selectedEliminatory.round.onewayMeetings[0];
 
         m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
         m1.address = this.eliminatoryFormGroup.get('address1').value;
@@ -211,7 +211,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
-            let m2 = this.selectedEliminatory.round.meetings[1];
+            let m2 = this.selectedEliminatory.round.onewayMeetings[1];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             if(m2.datetime < m1.datetime) {
                 m2.datetime = m1.datetime;

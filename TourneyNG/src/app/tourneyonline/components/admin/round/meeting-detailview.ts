@@ -21,7 +21,6 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedRound: Round;
     selectedMeeting: Meeting;
     
-    fullAddress: string;
     dateAndTime: Date;
 
     constructor(
@@ -43,10 +42,6 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
         
-        this.fullAddress = this.selectedMeeting.address + " - " 
-            + this.selectedMeeting.country.zipCode + " " + this.selectedMeeting.country.city
-            + " (" + this.selectedMeeting.country.provinceCode +")";
-
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),
             
@@ -67,9 +62,12 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
 
         if( this.selectedTourney.isOnewayRound != "true" ) {
-            let rtDateTime = this.selectedRound.meetings[1].datetime;
-            if(rtDateTime < this.selectedMeeting.datetime) {
-                this.selectedRound.meetings[1].datetime = this.selectedMeeting.datetime;
+            let index = this.selectedRound.onewayMeetings.indexOf(this.selectedMeeting);
+            if( index > -1 ) {
+                let rtDateTime = this.selectedRound.onewayMeetings[index].datetime;
+                if(rtDateTime < this.selectedMeeting.datetime) {
+                    this.selectedRound.onewayMeetings[index].datetime = this.selectedMeeting.datetime;
+                }
             }
         }
         super.goBack();

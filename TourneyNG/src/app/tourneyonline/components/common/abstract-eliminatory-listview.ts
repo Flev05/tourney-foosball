@@ -128,7 +128,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.roundMeetingMap = new Map<number, Meeting[]>();
 
         for (let r of rounds) {
-            r.meetings = [];
+            r.onewayMeetings = [];
             this.roundHttpCounter++;
             this.roundMap.set(r.id, r);
             const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, r.id);
@@ -149,9 +149,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                     let r: Round = this.roundMap.get(mdb.roundId);           
 
                     let m = JSON.parse(mdb.json);
-                    r.meetings.push(m);
+                    r.onewayMeetings.push(m);
 
-                    r.meetings  = this.sortMeetings(r.meetings)
+                    r.onewayMeetings  = this.sortMeetings(r.onewayMeetings)
                 }
                 
                 for(let round of this.selectedTourney.rounds) {
@@ -184,7 +184,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     private createClassification(round: Round): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
-        for(let m of round.meetings) {
+        for(let m of round.onewayMeetings) {
 
             let t1 = m.team1;
             let t2 = m.team2;
@@ -303,7 +303,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
             this.playoffHttpCounter++;
             let r = po.round;
-            r.meetings = [];
+            r.onewayMeetings = [];
             this.playoffRoundMap.set(po.id, po);
             const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
             subscr.subscribe(ms => this.onLoadPlayoffMeeting(ms, isOneway), e => this.onError(e));       
@@ -331,9 +331,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                     let r = po.round;
                     
                     let m: Meeting = JSON.parse(mdb.json);
-                    r.meetings.push(m);
+                    r.onewayMeetings.push(m);
 
-                    r.meetings  = this.sortMeetings(r.meetings)
+                    r.onewayMeetings  = this.sortMeetings(r.onewayMeetings)
 
                     this.resolvePlayoffRules(po, this.selectedTourney.rounds);
                 }
@@ -360,7 +360,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 let c = round.classification[pi - 1];
                 let team = c.team;
                 po.round.teams.push(team);
-                this.resolvePlayoffRule(po.round.meetings, pr, team);
+                this.resolvePlayoffRule(po.round.onewayMeetings, pr, team);
             }
         }
     }
@@ -430,7 +430,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 rows[row].goalsConceded = c.goalsConceded;    
                 rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
 
-                let len = round.meetings.length;
+                let len = round.onewayMeetings.length;
 
                 let currentKey = round.name;  
                 if(!classificationMap.has(currentKey)) {
@@ -545,8 +545,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                     let m: Meeting = JSON.parse(mdb.json);
                     meetings.push(m);
                 }
-                round.meetings = meetings;
-                round.meetings = this.sortMeetings(round.meetings)
+                round.onewayMeetings = meetings;
+                round.onewayMeetings = this.sortMeetings(round.onewayMeetings)
             }
 
             this.processEliminationTree();
@@ -643,13 +643,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for(let i=0;i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
-            let onewayDatetime    = this.dateFormatPipe.transform(e.round.meetings[0].datetime);
-            let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
+            let onewayDatetime    = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.onewayMeetings[1].datetime);
 
             this.rows.push({e:e
                 , rowNumber: i+1 
-                , teamName1: e.round.meetings[0].team1.teamName
-                , teamName2: e.round.meetings[0].team2.teamName
+                , teamName1: e.round.onewayMeetings[0].team1.teamName
+                , teamName2: e.round.onewayMeetings[0].team2.teamName
                 , onewayDatetime: onewayDatetime
                 , roundtripDatetime: roundtripDatetime
             });
@@ -707,7 +707,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for(let i=0;i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
-            let onewayDatetime  = this.dateFormatPipe.transform(e.round.meetings[0].datetime);
+            let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
             let position1       = this.getPosition1(e);
             let fromRound1      = e.rule1.fromRound.round.label
             let fromPlayoff1    = e.rule1.fromPlayoff.round.label
@@ -716,7 +716,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             let fromRound2      = e.rule2.fromRound.round.label
             let fromPlayoff2    = e.rule2.fromPlayoff.round.label
 
-            let roundtripDatetime = this.dateFormatPipe.transform(e.round.meetings[1].datetime);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.onewayMeetings[1].datetime);
 
             let fullList = {e:e
                 , onewayDatetime: onewayDatetime
@@ -762,7 +762,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         for (let round of rounds) {
             let r = 0;
-            for (let m of round.meetings) {
+            for (let m of round.onewayMeetings) {
                 if(isOneway && m.direction == Direction.RoundTrip) {
                     continue;
                 }

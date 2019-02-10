@@ -24,7 +24,9 @@
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
-    <p-pickList [source]="avalilableTeams" [target]="targetTeams" sourceHeader="Disponibili {{availTeams}}" targetHeader="Selezionati {{selectedTeams}}" 
+    <p-pickList [source]="avalilableTeams" [target]="targetTeams" 
+            sourceHeader="Disponibili {{avalilableTeams.length}}" 
+            targetHeader="Selezionati {{targetTeams.length}}" 
             [responsive]="true"
             dragdrop="true" 
             dragdropScope="teams" 

@@ -11,7 +11,8 @@ export interface Round {
     type: RoundType;
 
     teams?:  Team[];
-    meetings?: Meeting[];
+    onewayMeetings?: Meeting[];
+    roundtripMeetings?: Meeting[];
 
     classification?: Classification[];
     matrix?: Matrix;

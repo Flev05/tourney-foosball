@@ -13,8 +13,7 @@ import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
 import {RoundRoutingModule} from './round-routing.module';
-import {RoundListView} from './round-listview';
-import {RoundDetailView} from './round-detailview';
+import {RoundDetailView} from './round-pickview';
 import { MeetingListView } from './meeting-listview';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
@@ -60,9 +59,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,MessageModule
         ,RoundRoutingModule
     ]
-	,declarations: [
-         RoundListView
-        ,RoundDetailView
+	,declarations: [RoundDetailView
         ,MeetingListView
         ,MeetingDetailView
 	]

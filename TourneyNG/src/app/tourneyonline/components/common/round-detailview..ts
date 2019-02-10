@@ -32,12 +32,12 @@ export abstract class RoundDetailView extends AbstractTourneyDetailView {
             
             let round : Round = this.rounds[i];
 
-            for (let j = 0; j < round.meetings.length; j++) {
+            for (let j = 0; j < round.onewayMeetings.length; j++) {
                 
-                let m : Meeting = round.meetings[j];
+                let m : Meeting = round.onewayMeetings[j];
 
                 let currentKey = this.makeKey(round, m);  
-                let len = round.meetings.length;
+                let len = round.onewayMeetings.length;
                 console.log(currentKey + " rowspan=" + len);       
 
                 this.rows.push(m);

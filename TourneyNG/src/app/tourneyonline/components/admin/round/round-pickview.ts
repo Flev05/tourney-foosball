@@ -14,7 +14,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
-    templateUrl: './round-detailview.html',
+    templateUrl: './round-pickview.html',
 })
 export class RoundDetailView extends AbstractDetailView {
     static meetingListviewRedirect: string = "adminround/lv/meetingLv";
@@ -33,9 +33,6 @@ export class RoundDetailView extends AbstractDetailView {
     meetingEnabled: boolean;
     selectedMeetingGroupNumCombobox: Combobox;
     meetingGroupCombobox: Combobox[];
-
-    availTeams: number;
-    selectedTeams: number;
 
     constructor(
         private fb: FormBuilder,
@@ -56,7 +53,7 @@ export class RoundDetailView extends AbstractDetailView {
             this.selectedRound = { id: this.tourneyService.getSequenceNumber(),
                 name: "",
                 teams: [],
-                meetings: [],
+                onewayMeetings: [],
                 classification: [],
                 type: RoundType.R,
                 matrix: null,
@@ -70,7 +67,6 @@ export class RoundDetailView extends AbstractDetailView {
         for(let t of this.selectedRound.teams) {
             this.targetTeams.push(t.teamName);
         }
-        this.selectedTeams = this.targetTeams.length;
 
         this.availableTeams = [];
         for(let k=0; k<this.selectedTourney.teams.length; k++ ) {
@@ -91,7 +87,6 @@ export class RoundDetailView extends AbstractDetailView {
                 this.availableTeams.push(team.teamName);
             }
         }
-        this.availTeams = this.availableTeams.length;
 
         this.meetingEnabled = true;
         this.meetingGroupCombobox = [];
@@ -134,48 +129,49 @@ export class RoundDetailView extends AbstractDetailView {
     }
 
     onSubmit(value: string) {
+        return;
 
-        this.selectedRound.name = this.roundFormGroup.get('name').value;
-        this.targetTeams = this.roundFormGroup.get('targetTeams').value;
+        // this.selectedRound.name = this.roundFormGroup.get('name').value;
+        // this.targetTeams = this.roundFormGroup.get('targetTeams').value;
 
-        let teamTourneyMap: Map<string,Team> = new Map<string,Team>();
-        for(let t of this.selectedTourney.teams) {
-            teamTourneyMap.set(t.teamName, t);
-        }
-        let teamMap: Map<string,Team> = new Map<string,Team>();
-        for(let t of this.selectedRound.teams) {
-            teamMap.set(t.teamName, t);
-        }
+        // let teamTourneyMap: Map<string,Team> = new Map<string,Team>();
+        // for(let t of this.selectedTourney.teams) {
+        //     teamTourneyMap.set(t.teamName, t);
+        // }
+        // let teamMap: Map<string,Team> = new Map<string,Team>();
+        // for(let t of this.selectedRound.teams) {
+        //     teamMap.set(t.teamName, t);
+        // }
 
-        if(this.tourneyService.newRound) {
-            this.selectedTourney.rounds.push(this.selectedRound);
-            this.tourneyService.newRound = false;
-        }
+        // if(this.tourneyService.newRound) {
+        //     this.selectedTourney.rounds.push(this.selectedRound);
+        //     this.tourneyService.newRound = false;
+        // }
 
-        for(let tn of this.targetTeams) {
-            if(!teamMap.has(tn)) {
-                let t = teamTourneyMap.get(tn);
-                teamMap.set(t.teamName, t);
-                this.addTeamToMeetings(t);
-                this.selectedRound.teams.push(t);
-                this.selectedRound.classification.push(t);
-            }
-        }
+        // for(let tn of this.targetTeams) {
+        //     if(!teamMap.has(tn)) {
+        //         let t = teamTourneyMap.get(tn);
+        //         teamMap.set(t.teamName, t);
+        //         this.addTeamToMeetings(t);
+        //         this.selectedRound.teams.push(t);
+        //         this.selectedRound.classification.push(t);
+        //     }
+        // }
 
-        let teamNameMap: Map<string,string> = new Map<string,string>();
-        for(let tn of this.targetTeams) {
-            teamNameMap.set(tn, tn);
-        }
-        let tempTeams: Team[] = [];
-        for(let t of this.selectedRound.teams) {
-            if(teamNameMap.has(t.teamName)) {
-                tempTeams.push(t);
-            } else {
-                this.removeFromMeetings(t);
-                this.removeFromClassification(t);
-            }
-        }
-        this.selectedRound.teams = tempTeams;
+        // let teamNameMap: Map<string,string> = new Map<string,string>();
+        // for(let tn of this.targetTeams) {
+        //     teamNameMap.set(tn, tn);
+        // }
+        // let tempTeams: Team[] = [];
+        // for(let t of this.selectedRound.teams) {
+        //     if(teamNameMap.has(t.teamName)) {
+        //         tempTeams.push(t);
+        //     } else {
+        //         this.removeFromMeetings(t);
+        //         this.removeFromClassification(t);
+        //     }
+        // }
+        // this.selectedRound.teams = tempTeams;
     }
 
     private removeFromClassification(t: Team): any {
@@ -191,10 +187,10 @@ export class RoundDetailView extends AbstractDetailView {
             
             this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
 
-            this.selectedRound.meetings.push(m);
+            this.selectedRound.onewayMeetings.push(m);
             if (this.selectedTourney.isOnewayRound != "true") {
                 m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
-                this.selectedRound.meetings.push(m);
+                this.selectedRound.onewayMeetings.push(m);
 
                 this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);                
             }
@@ -204,14 +200,44 @@ export class RoundDetailView extends AbstractDetailView {
     private removeFromMeetings(team: Team): void {
 
         let temp : Meeting[] = [];
-        for(let m of this.selectedRound.meetings) {
+        for(let m of this.selectedRound.onewayMeetings) {
             if(m.team1.id == team.id || m.team2.id == team.id) {
                 this.selectedTourney.meetingsForDelete.push(m);
             } else {
                 temp.push(m);
             }
         }
-        this.selectedRound.meetings = temp;    
+        this.selectedRound.onewayMeetings = temp;    
+    }
+
+    onMoveToTarget(event) {
+        console.log("Entering onMoveToTarget()");
+        let items: string[] = event.items;
+        console.log(items);
+        for( let i of items ) {
+            let teamToAdd: Team = this.selectedTourney.teams.find( t => t.teamName == i );
+            if( teamToAdd != undefined ) {   
+                this.selectedRound.teams.push(teamToAdd);
+            }
+        }
+        this.selectedRound.onewayMeetings = [];
+    }
+
+    onMoveToSource(event) {
+        console.log("Entering onMoveToSource()");
+        let items: string[] = event.items;
+        console.log(items);
+        for( let i of items ) {
+            let teamToRemove: Team = this.selectedRound.teams.find( t => t.teamName == i );
+            if( teamToRemove != undefined ) {   
+                this.removeFromMeetings(teamToRemove);
+                let index = this.selectedRound.teams.indexOf(teamToRemove);
+                if( index > -1 ) {
+                    this.selectedRound.teams.splice(index, 1);
+                }
+            }
+        }
+        this.selectedRound.onewayMeetings = [];
     }
  
     onError(n:any) {

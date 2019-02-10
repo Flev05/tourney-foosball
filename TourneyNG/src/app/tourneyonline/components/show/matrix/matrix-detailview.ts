@@ -302,7 +302,7 @@ export class MatrixDetailView extends AbstractDetailView {
     }
 
     private updateMeeting(c: Cell): any {
-        for(let m of this.selectedRound.meetings) {
+        for(let m of this.selectedRound.onewayMeetings) {
             if(m.team1.id == c.team1Id) {
                 m.points1 = c.points.value;
             }

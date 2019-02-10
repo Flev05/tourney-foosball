@@ -127,7 +127,7 @@ export class InMemoryDataServiceCSI  {
             {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
           ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
         ]
-        ,meetings:[]
+        ,onewayMeetings:[]
         ,classification:[]
       }
       ,{
@@ -136,7 +136,7 @@ export class InMemoryDataServiceCSI  {
           {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
           ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
         ]
-        ,meetings:[]
+        ,onewayMeetings:[]
         ,classification:[]
       }
     ]
@@ -144,7 +144,7 @@ export class InMemoryDataServiceCSI  {
       {id:1, round:{
           id:1, name: "Playoff Girone A", type: RoundType.P
           ,teams:[]
-          ,meetings:[]
+          ,onewayMeetings:[]
           ,classification:[]
         }
         ,playoffRules:[
@@ -155,7 +155,7 @@ export class InMemoryDataServiceCSI  {
       ,{id:2, round:{
         id:2, name: "Playoff Girone B", type: RoundType.P
         ,teams:[]
-        ,meetings:[]
+        ,onewayMeetings:[]
         ,classification:[]
       }
     ,playoffRules:[

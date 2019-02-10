@@ -72,16 +72,15 @@ export class MeetingListView extends AbstractListView {
         this.roundtripDaysNo = 1;
         this.shiftRoundtripDay(this.roundtripDaysNo);
 
-        this.allDaysNo = this.selectedRound.teams.length-1;
+        this.allDaysNo = this.onewayMeetingDaysMap.size;
+        let meetingsNo = this.selectedRound.onewayMeetings.length;  
 
         this.isRoundTrip = false;
         if(this.selectedTourney.isOnewayRound == "true") {
-            let meetingsNo = this.selectedRound.onewayMeetings.length;  
             this.meetingsNoMsg = "" +  meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            let meetingsNo = this.selectedRound.roundtripMeetings.length;  
-            this.meetingsNoMsg = "" +  meetingsNo + " in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = "" +  meetingsNo*2 + " in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
         }
     }
 
@@ -277,12 +276,11 @@ export class MeetingListView extends AbstractListView {
 
     goOnewayRight() {
         console.log("goOnewayLeft()");
-        let M = this.selectedRound.teams.length - 1;
+        let M = this.onewayMeetingDaysMap.size;
         this.onewayDaysNo++;
         console.log("daysKey=" + this.onewayDaysNo);
         if(this.onewayDaysNo > M) {
             this.onewayDaysNo = M;
-            return;
         }
         this.shiftOnewayDay(this.onewayDaysNo);
     }
@@ -299,12 +297,11 @@ export class MeetingListView extends AbstractListView {
 
     goRoundtripRight() {
         console.log("goRoundtripLeft()");
-        let M = this.selectedRound.teams.length - 1;
+        let M = this.roundtripMeetingDaysMap.size;
         this.roundtripDaysNo++;
         console.log("daysKey=" + this.roundtripDaysNo);
         if(this.roundtripDaysNo > M) {
             this.roundtripDaysNo = M;
-            return;
         }
         this.shiftRoundtripDay(this.roundtripDaysNo);
     }

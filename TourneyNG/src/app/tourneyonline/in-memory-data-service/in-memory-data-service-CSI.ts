@@ -128,6 +128,7 @@ export class InMemoryDataServiceCSI  {
           ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
         ]
         ,onewayMeetings:[]
+        ,roundtripMeetings:[]
         ,classification:[]
       }
       ,{
@@ -137,6 +138,7 @@ export class InMemoryDataServiceCSI  {
           ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
         ]
         ,onewayMeetings:[]
+        ,roundtripMeetings:[]
         ,classification:[]
       }
     ]
@@ -145,6 +147,7 @@ export class InMemoryDataServiceCSI  {
           id:1, name: "Playoff Girone A", type: RoundType.P
           ,teams:[]
           ,onewayMeetings:[]
+          ,roundtripMeetings:[]
           ,classification:[]
         }
         ,playoffRules:[
@@ -156,6 +159,7 @@ export class InMemoryDataServiceCSI  {
         id:2, name: "Playoff Girone B", type: RoundType.P
         ,teams:[]
         ,onewayMeetings:[]
+        ,roundtripMeetings:[]
         ,classification:[]
       }
     ,playoffRules:[

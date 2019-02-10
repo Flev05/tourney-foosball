@@ -423,15 +423,14 @@ export class TourneyDetailView extends AbstractDetailView {
         let teams: Team[] = this.cutoffTeams(randomTeams, start, teamsPerRound);
         let roundId: number = this.tourneyService.getSequenceNumber();
 
-        let meetings = [];
-
         let classifications: Classification[] = this.prepareClassification(teams);
         let r: Round = {
             id: roundId,
             name: "Girone." + (1 + i),
             type: RoundType.R,
             teams: teams,
-            onewayMeetings: meetings,
+            onewayMeetings: [],
+            roundtripMeetings: [],
             classification: classifications,
             matrix: null,
         };

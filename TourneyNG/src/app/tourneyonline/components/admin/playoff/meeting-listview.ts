@@ -10,6 +10,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './meeting-listview.html'
@@ -18,6 +19,7 @@ export class MeetingListView extends AbstractListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
     meetingsCols: TableCols[] ;
     rows: any[];
+    selectedRow: Meeting;
 
     msgs: Message[] = [];
 
@@ -26,15 +28,18 @@ export class MeetingListView extends AbstractListView {
     meetingsNoMsg: string;
 
     isRoundTrip: boolean;
-    meetingDaysMap: Map<number, Meeting[]>;
+
+    onewayMeetingDaysMap: Map<number, Meeting[]>;
+    onewayDays: Meeting[];
+
     onewayDaysNo: number;
     roundtripDaysNo: number;
 
-    onewayDays: Meeting[];
+    roundtripMeetingDaysMap: Map<number, Meeting[]>;
     roundtripDays: Meeting[];
-    selectedRow: Meeting;
 
     allDaysNo: number;
+    mdbList: MeetingDb[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -55,28 +60,43 @@ export class MeetingListView extends AbstractListView {
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
 
+        const subsbr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+    }
+ 
+    private onCompleteLoad() {
+        this.selectedPlayoff.round.onewayMeetings = [];
+        this.selectedPlayoff.round.roundtripMeetings = [];
+        for( let mdb of this.mdbList ) {
+            let m: Meeting = JSON.parse(mdb.json);
+            if( m.direction == Direction.OneWay ) {
+                this.selectedPlayoff.round.onewayMeetings.push(m);
+            } else {
+                this.selectedPlayoff.round.roundtripMeetings.push(m);
+            }
+        }
+
         this.preparePlayoffRules();
 
         this.onewayDaysNo = 1;
-        this.prepareOnewayDays();
-
+        this.shiftOnewayDays(this.onewayDaysNo);
+        
         this.roundtripDaysNo = 1;
-        this.prepareRoundtripDays();
-
+        this.shiftRoundtripDays(this.roundtripDaysNo);
+        
         this.makeRuleNames();
     }
- 
+
     private makeRuleNames() {
-        this.allDaysNo = this.selectedPlayoff.playoffRules.length-1;
+        this.allDaysNo = this.onewayMeetingDaysMap.size;
+        let meetingsNo = this.selectedPlayoff.round.onewayMeetings.length;  
 
         this.isRoundTrip = false;
         if(this.selectedTourney.isOnewayPlayoff == "true") {
-            let meetingsNo = this.selectedPlayoff.round.onewayMeetings.length / 2;  
             this.meetingsNoMsg = "" +  meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            let meetingsNo = this.selectedPlayoff.round.onewayMeetings.length;  
-            this.meetingsNoMsg = "" +  meetingsNo + " in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = "" +  meetingsNo*2 + " in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
         }
 
         for (let m of this.selectedPlayoff.round.onewayMeetings) {
@@ -106,6 +126,8 @@ export class MeetingListView extends AbstractListView {
         }
 
         this.applyBergerAlgorithm(rules);
+
+        this.completeMeetings();
     }
 
     /**
@@ -124,18 +146,18 @@ export class MeetingListView extends AbstractListView {
             away[i] = rules[rulesNo - 1 - i];
         }
 
-        this.meetingDaysMap = new Map<number, Meeting[]>();
+        this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
 
         for (let i = 0; i < giornate; i++) {
             /* stampa le partite di questa giornata */
             let key: number = i + 1;
             console.log( key + "° Giornata");
-            if(!this.meetingDaysMap.has(key)) {
+            if(!this.onewayMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
-                this.meetingDaysMap.set(key, emptyList);
+                this.onewayMeetingDaysMap.set(key, emptyList);
             }
 
-            let meetingList: Meeting[] = this.meetingDaysMap.get(key);
+            let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
 
             /* alterna le partite in casa e fuori */
             if (i % 2 == 0) {
@@ -145,8 +167,14 @@ export class MeetingListView extends AbstractListView {
                     let rule1: string = this.makeRule(pr1);
                     let rule2: string = this.makeRule(pr2);
                     console.log( (j + 1) + " " + rule2 + " - " + rule1);
-                    let m = this.newMeeting(pr2, pr1, Direction.OneWay);
-                    meetingList.push(m);
+
+                    let mfound = this.selectedPlayoff.round.onewayMeetings.find( m => this.isEquals(m, pr2, pr1));
+
+                    if( mfound == undefined ) {
+                        mfound = this.newMeeting(pr2, pr1, Direction.OneWay);
+                    }
+
+                    meetingList.push(mfound);
                 }
             } else {
                 for (let j = 0; j < rulesNo / 2; j++) {
@@ -155,10 +183,17 @@ export class MeetingListView extends AbstractListView {
                     let rule1: string = this.makeRule(pr1);
                     let rule2: string = this.makeRule(pr2);
                     console.log( (j + 1) + " " + rule1 + " - " + rule2);
-                    let m = this.newMeeting(pr1, pr2, Direction.OneWay);
-                    meetingList.push(m);
+
+                    let mfound = this.selectedPlayoff.round.onewayMeetings.find( m => this.isEquals(m, pr1, pr2));
+
+                    if( mfound == undefined ) {
+                        mfound = this.newMeeting(pr1, pr2, Direction.OneWay);
+                    }
+                    meetingList.push(mfound);
                 }
             }
+
+            meetingList = this.sortMeetings(meetingList);
 
             // Ruota gli elementi delle liste, tenendo fisso il primo elemento
             // Salva l'elemento fisso
@@ -168,19 +203,74 @@ export class MeetingListView extends AbstractListView {
              * sposta in avanti gli elementi di "trasferta" inserendo all'inizio l'elemento casa[1] e salva l'elemento
              * uscente in "riporto"
              */
-
             let riporto : PlayoffRule  = away[away.length - 1];
             away = this.shiftRight(away, home[1]);
 
-            /*
-             * sposta a sinistra gli elementi di "casa" inserendo all'ultimo posto l'elemento "riporto"
-             */
-
+            // sposta a sinistra gli elementi di "casa" inserendo all'ultimo posto l'elemento "riporto"
             home = this.shiftLeft(home, riporto);
 
             // ripristina l'elemento fisso
             home[0] = pivot;
         }
+    }
+
+    /**
+     * Converts the date and time and complete the round trip meetings copying from 
+     * its corresponding oneway meeting list
+     */
+    private completeMeetings(): void {
+        this.selectedPlayoff.round.onewayMeetings = [];
+        this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
+
+        for (let key of this.onewayMeetingDaysMap.keys()) {
+            let onewayMeetings: Meeting[] = this.onewayMeetingDaysMap.get(key);
+
+            for( let m of onewayMeetings ) {   
+                m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+
+                let pr1 = m.rule1;
+                let pr2 = m.rule2;
+    
+                let rtm = this.selectedPlayoff.round.roundtripMeetings.find( i => this.isEquals(i, pr2, pr1));
+
+                if( rtm == undefined ) {
+                    rtm = this.newMeeting(pr2, pr1, Direction.RoundTrip);
+
+                    rtm = this.cloneObject(m);
+                    rtm.team1 = m.team2;
+                    rtm.team2 = m.team1;
+                    rtm.name = rtm.team1.teamName + " - " + rtm.team2.teamName ; 
+                    rtm.direction = Direction.RoundTrip;
+        
+                    rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
+                }
+
+                if( !this.roundtripMeetingDaysMap.has(key) ) {
+                    let emptyList: Meeting[] = [];
+                    this.roundtripMeetingDaysMap.set(key, emptyList);
+                }
+                let dayList = this.roundtripMeetingDaysMap.get(key);
+                dayList.push(rtm);
+            }
+
+            this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(onewayMeetings);
+        }
+        
+        for (let key of this.roundtripMeetingDaysMap.keys()) {
+            let dayList = this.roundtripMeetingDaysMap.get(key);
+            dayList = this.sortMeetings(dayList);
+            this.selectedPlayoff.round.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings.concat(dayList);
+        }
+    }
+
+    private isEquals(m: Meeting, pr1: PlayoffRule, pr2: PlayoffRule): boolean {
+        let rule1: string = this.makeRule(pr1);
+        let rule2: string = this.makeRule(pr2);
+
+        let b: boolean = m.rule1.fromRound.position.label == rule2;
+        b = b && m.rule2.fromRound.position.label == rule1;
+
+        return b;
     }
 
     private newMeeting(pr1: PlayoffRule, pr2: PlayoffRule, d: Direction): Meeting {
@@ -210,65 +300,65 @@ export class MeetingListView extends AbstractListView {
         return temp;
     }
 
-    private prepareOnewayDays() {
-        let mk: number = this.onewayDaysNo;
-        this.onewayDays = this.meetingDaysMap.get(mk);
+    private shiftOnewayDays(currentDay : number) {
+        this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
+        
+        // let mk: number = this.onewayDaysNo;
+        // this.onewayDays = this.onewayMeetingDaysMap.get(mk);
 
-        this.selectedPlayoff.round.onewayMeetings = [];
+        // this.selectedPlayoff.round.onewayMeetings = [];
 
-        for (let i = 0; i < this.onewayDays.length; i++) {
-            let m = this.onewayDays[i];
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-        }
-        this.onewayDays = this.sortMeetingRows(this.onewayDays);
-        this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.onewayDays);
+        // for (let i = 0; i < this.onewayDays.length; i++) {
+        //     let m = this.onewayDays[i];
+        //     m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+        // }
+        // this.onewayDays = this.sortMeetingRows(this.onewayDays);
+        // this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.onewayDays);
     }
 
-    private prepareRoundtripDays( ) {
-        let mk: number = this.roundtripDaysNo;
-        let days = this.meetingDaysMap.get(mk);
+    private shiftRoundtripDays( currentDay : number) {
+        this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
 
-        this.roundtripDays = [];
-        for (let i = 0; i < days.length; i++) {
-            let m = days[i];
+        // let mk: number = this.roundtripDaysNo;
+        // let days = this.onewayMeetingDaysMap.get(mk);
+
+        // this.roundtripDays = [];
+        // for (let i = 0; i < days.length; i++) {
+        //     let m = days[i];
             
-            let rtm = this.cloneObject(m);
-            rtm.rule1 = m.rule2;
-            rtm.rule2 = m.rule1;
-            rtm.direction = Direction.RoundTrip;
+        //     let rtm = this.cloneObject(m);
+        //     rtm.rule1 = m.rule2;
+        //     rtm.rule2 = m.rule1;
+        //     rtm.direction = Direction.RoundTrip;
 
-            let rule1: string = this.makeRule(rtm.rule1);
-            let rule2: string = this.makeRule(rtm.rule2);
+        //     let rule1: string = this.makeRule(rtm.rule1);
+        //     let rule2: string = this.makeRule(rtm.rule2);
 
-            rtm.name = rule1 + " - " + rule2; 
+        //     rtm.name = rule1 + " - " + rule2; 
 
-            rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
-            this.roundtripDays.push(rtm);
-        }
+        //     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
+        //     this.roundtripDays.push(rtm);
+        // }
 
-        this.roundtripDays = this.sortMeetingRows(this.roundtripDays);
-        this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.roundtripDays);
+        // this.roundtripDays = this.sortMeetingRows(this.roundtripDays);
+        // this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.roundtripDays);
     }
 
-    private makeRule(rule: PlayoffRule): string {
-        return "" + rule.fromRound.position.value + "." + rule.fromRound.round.label;
-    }
-
-    private sortMeetingRows(meetings: any[]): any[] {
-        return meetings.sort((m1, m2) => {
-            if (m1.dateAndTime > m2.dateAndTime) {
-                return 1;
-            }
-            if (m1.dateAndTime < m2.dateAndTime) {
-                return -1;
-            }
-            if(m1.direction > m2.direction) {
-                return 1;
-            } else {
-                return -1;
-            }
-        });
-    }
+    // private sortMeetingRows(meetings: any[]): any[] {
+    //     return meetings.sort((m1, m2) => {
+    //         if (m1.dateAndTime > m2.dateAndTime) {
+    //             return 1;
+    //         }
+    //         if (m1.dateAndTime < m2.dateAndTime) {
+    //             return -1;
+    //         }
+    //         if(m1.direction > m2.direction) {
+    //             return 1;
+    //         } else {
+    //             return -1;
+    //         }
+    //     });
+    // }
 
     goOnewayLeft() {
         console.log("goOnewayLeft()");
@@ -277,19 +367,18 @@ export class MeetingListView extends AbstractListView {
             this.onewayDaysNo = 1;
         }
         console.log("daysKey=" + this.onewayDaysNo);
-        this.prepareOnewayDays();
+        this.shiftOnewayDays(this.onewayDaysNo);
     }
 
     goOnewayRight() {
         console.log("goOnewayLeft()");
-        let M = this.selectedPlayoff.playoffRules.length - 1;
+        let M = this.onewayMeetingDaysMap.size;
         this.onewayDaysNo++;
         console.log("daysKey=" + this.onewayDaysNo);
         if(this.onewayDaysNo > M) {
             this.onewayDaysNo = M;
-            return;
         }
-        this.prepareOnewayDays();
+        this.shiftOnewayDays(this.onewayDaysNo);
     }
 
     goRoundtripLeft() {
@@ -299,19 +388,18 @@ export class MeetingListView extends AbstractListView {
             this.roundtripDaysNo = 1;
         }
         console.log("daysKey=" + this.roundtripDaysNo);
-        this.prepareRoundtripDays();
+        this.shiftRoundtripDays(this.roundtripDaysNo);
     }
 
     goRoundtripRight() {
         console.log("goRoundtripLeft()");
-        let M = this.selectedPlayoff.playoffRules.length - 1;
+        let M = this.roundtripMeetingDaysMap.size;
         this.roundtripDaysNo++;
         console.log("daysKey=" + this.roundtripDaysNo);
         if(this.roundtripDaysNo > M) {
             this.roundtripDaysNo = M;
-            return;
         }
-        this.prepareRoundtripDays();
+        this.shiftRoundtripDays(this.roundtripDaysNo);
     }
 
     onRowSelect(event) {

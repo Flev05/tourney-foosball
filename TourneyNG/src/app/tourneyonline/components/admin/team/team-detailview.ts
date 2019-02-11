@@ -20,8 +20,6 @@ export class TeamDetailView extends AbstractDetailView {
     teamFormGroup: FormGroup;
     toggleable: boolean = false;
 
-    fullAddress: string;
-
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -42,12 +40,6 @@ export class TeamDetailView extends AbstractDetailView {
         if(this.teamService.newTeam) {
             this.selectedTeam={id: null, teamName:""};
             this.selectedTeam.players = [];
-        }
-
-        if(this.selectedTeam.country!=undefined) {
-            this.fullAddress = this.selectedTeam.address + " - " 
-                + this.selectedTeam.country.zipCode + " " + this.selectedTeam.country.city
-                + " (" + this.selectedTeam.country.provinceCode +")";
         }
 
         this.teamFormGroup = this.fb.group({

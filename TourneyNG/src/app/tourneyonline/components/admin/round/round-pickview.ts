@@ -4,7 +4,7 @@ import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 
-import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
+import { RoundType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Round } from 'app/tourneyonline/domain/round';
@@ -12,8 +12,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { forEach } from '@angular/router/src/utils/collection';
-import { Classification } from 'app/tourneyonline/domain/classification';
 
 @Component({
     templateUrl: './round-pickview.html',

@@ -159,7 +159,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareRounds(): void {
         console.log("Entering prepareRounds()");
 
-        if( !this.atLeastOnePhase) {
+        if( !this.containsPhase(PhaseType.R) ) {
             return;
         }
 
@@ -181,17 +181,6 @@ export class TourneyDetailView extends AbstractDetailView {
             this.roundsCombobox.push(cb);
         } 
 
-        // if(this.tourneyService.selectedTeams4RoundsCB == undefined) {
-        //     if(this.selectedTourney.rounds.length > 0) {
-        //         N = 0;
-        //         for(let r of this.selectedTourney.rounds) {
-        //             N += r.teams.length;
-        //         }
-        //     }
-        //     let cb: Combobox = { label: "" + N, value: N };
-        //     this.tourneyService.selectedTeams4RoundsCB = cb;
-        // }
-
         if(this.tourneyService.selectedRoundsNumCB == undefined) {
             if(this.selectedTourney.rounds.length > 0) {
                 R = this.selectedTourney.rounds.length;
@@ -208,7 +197,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private preparePlayoffs(): void {
         console.log("Entering preparePlayoffs()");
 
-        if( !this.atLeastOneRound) {
+        if( !this.containsPhase(PhaseType.P) ) {
             return;
         }
         
@@ -262,6 +251,10 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private prepareEliminatory() {
+        if( !this.containsPhase(PhaseType.E) ) {
+            return;
+        }
+
         this.levelService.ngOnInit();
         this.eliminatoryCols = this.levelService.cols;
         this.eliminatoryRows = this.levelService.rows;

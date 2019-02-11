@@ -98,7 +98,8 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{fullAddress}}
+                {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+                + " (" + selectedPlayer.country.provinceCode +")" : "" }}
             </div>
         </div>             
                     

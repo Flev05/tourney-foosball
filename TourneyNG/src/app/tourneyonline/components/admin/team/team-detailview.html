@@ -79,7 +79,9 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{fullAddress}}
+                {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
+                + " (" + selectedTeam.country.provinceCode +")" : "" }}
+
             </div>
         </div>                    
     </div>

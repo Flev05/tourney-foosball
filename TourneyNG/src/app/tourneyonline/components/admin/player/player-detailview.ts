@@ -17,7 +17,6 @@ export class PlayerDetailView extends AbstractDetailView {
 
     playerFormGroup: FormGroup;
     toggleable: boolean = false;
-    fullAddress: string;
     playerAlreadyExists: boolean;
     
     constructor(
@@ -41,12 +40,6 @@ export class PlayerDetailView extends AbstractDetailView {
         if(this.playerService.newPlayer) {
             this.selectedPlayer.playerName = "";
             this.selectedPlayer.id = null; 
-        }
-
-        if(this.selectedPlayer.country != undefined ) {
-            this.fullAddress = this.selectedPlayer.address + " - " 
-            + this.selectedPlayer.country.zipCode + " " + this.selectedPlayer.country.city
-            + " (" + this.selectedPlayer.country.provinceCode +")";
         }
 
         this.playerFormGroup = this.fb.group({

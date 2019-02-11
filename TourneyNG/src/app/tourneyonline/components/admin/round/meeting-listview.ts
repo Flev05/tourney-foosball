@@ -12,6 +12,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingKey } from 'app/tourneyonline/domain/meeting.key';
 import { Team } from 'app/tourneyonline/domain/team';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './meeting-listview.html'
@@ -39,6 +40,8 @@ export class MeetingListView extends AbstractListView {
     isRoundTrip: boolean;
     allDaysNo: number;
     daysNoMsg: string;
+    
+    mdbList: MeetingDb[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -53,15 +56,32 @@ export class MeetingListView extends AbstractListView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-
+        
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
             { field: 'name',        header: 'Incontro' }
         ];
-
+        
         this.atLeast2teams = this.selectedRound.teams.length >= 2 ? true : false;
         if(!this.atLeast2teams) {
             return;
+        }
+
+        const subsbr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+    }
+
+    private onCompleteLoad() {
+
+        this.selectedRound.onewayMeetings = [];
+        this.selectedRound.roundtripMeetings = [];
+        for( let mdb of this.mdbList ) {
+            let m: Meeting = JSON.parse(mdb.json);
+            if( m.direction == Direction.OneWay ) {
+                this.selectedRound.onewayMeetings.push(m);
+            } else {
+                this.selectedRound.roundtripMeetings.push(m);
+            }
         }
 
         this.prepareMeetings();
@@ -73,14 +93,14 @@ export class MeetingListView extends AbstractListView {
         this.shiftRoundtripDay(this.roundtripDaysNo);
 
         this.allDaysNo = this.onewayMeetingDaysMap.size;
-        let meetingsNo = this.selectedRound.onewayMeetings.length;  
-
+        let meetingsNo = this.selectedRound.onewayMeetings.length;
         this.isRoundTrip = false;
-        if(this.selectedTourney.isOnewayRound == "true") {
-            this.meetingsNoMsg = "" +  meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
+
+        if (this.selectedTourney.isOnewayRound == "true") {
+            this.meetingsNoMsg = "" + meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = "" +  meetingsNo*2 + " in " + this.allDaysNo*2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
     }
 
@@ -190,8 +210,6 @@ export class MeetingListView extends AbstractListView {
     private completeMeetings(): void {
         this.selectedRound.onewayMeetings = [];
         this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
-
-        let rtMeetings: Meeting[] = [];
 
         for (let key of this.onewayMeetingDaysMap.keys()) {
             let onewayMeetings: Meeting[] = this.onewayMeetingDaysMap.get(key);

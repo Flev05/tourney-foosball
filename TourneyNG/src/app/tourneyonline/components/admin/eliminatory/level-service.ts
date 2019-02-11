@@ -161,7 +161,6 @@ export class LevelService extends AbstractEliminatoryListView {
                 , teams: []
                 , onewayMeetings:[]
                 , classification:[]         
-                // , meetingDaysMap: null       
             };
             topElimLevel.standaloneRound = round;
         }
@@ -376,7 +375,6 @@ export class LevelService extends AbstractEliminatoryListView {
                 , teams:[t1, t2]
                 , classification: []
                 , onewayMeetings: meetings
-                // , meetingDaysMap: null
             },
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),

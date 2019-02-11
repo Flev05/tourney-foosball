@@ -151,6 +151,8 @@ export abstract class AbstractView implements OnInit {
             }
         }
 
+        let ruleName = this.makeRuleName(pr1, pr2);
+
         let m : Meeting = {
             id: null,
             name: name,
@@ -163,7 +165,7 @@ export abstract class AbstractView implements OnInit {
             points2: 0,
             rule1: pr1,
             rule2: pr2,
-            ruleName: "",
+            ruleName: ruleName,
             direction: d,
             status: MeetingStatus.ToPlay,
             matches: matches
@@ -171,4 +173,17 @@ export abstract class AbstractView implements OnInit {
 
         return m;
     }
+    
+    private makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
+        if( pr1 == null && pr1 == null) {
+            return "";
+        }
+    
+        return this.makeRule(pr1) + " " + this.makeRule(pr2);
+    }
+    
+    protected makeRule(rule: PlayoffRule): string {
+        return rule.fromRound.position.label + "." + rule.fromRound.round.label;
+    }
+
 }

@@ -1,19 +1,18 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
-import {MatrixDetailView} from './matrix-detailview';
-import { MatrixListView } from './matrix-listview';
-import { MatrixTourneyListView } from './tourney-listview';
+import { TourneyListView } from './tourney-listview';
+import { TourneyDetailView } from './tourney-detailview';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: '', component: MatrixTourneyListView },
-			{ path: 'lv',     component: MatrixListView },
-			{ path: 'lv/dv',  component: MatrixDetailView },
+			{ path: '', component: TourneyRoutingModule },
+			{ path: 'lv',     component: TourneyListView },
+			{ path: 'lv/dv',  component: TourneyDetailView },
 		])
 	],
 	exports: [
 		RouterModule
 	]
 })
-export class MatrixRoutingModule {}
+export class TourneyRoutingModule {}

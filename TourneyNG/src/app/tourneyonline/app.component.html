@@ -32,10 +32,6 @@
             <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
                 <a [routerLink]="['/demo']"  (click)="menuActive = false">&#9679; Demo</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
-<!-- 
-                <a [routerLink]="['/showcase']" (click)="menuActive = false">&#9679; Responsive</a> 
--->
-            
             </div>
         </div>
 
@@ -65,13 +61,6 @@
                 <a [routerLink]="['/adminplayer']" (click)="menuActive = false">&#9679; Giocatori</a>
                 <a [routerLink]="['/adminteam']" (click)="menuActive = false">&#9679; Squadre</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
-
-                <!--
-                <a [routerLink]="['/adminround']" (click)="menuActive = false">&#9679; Gironi</a>
-                <a [routerLink]="['/adminplayoff']" (click)="menuActive = false">&#9679; Playoff</a>
-                <a [routerLink]="['/admineliminatory']" (click)="menuActive = false">&#9679; Eliminatorie</a>
-                <a [routerLink]="['/adminobjective']" (click)="menuActive = false">&#9679; Obiettivi</a>      
-                -->
             </div>
         </div>
    
@@ -83,6 +72,7 @@
                 <span>Consultazione</span>
             </a>
             <div [ngClass]="{'submenushow': (tourneymenutitle.id == activeMenuId), 'submenuhide': (tourneymenutitle.id != activeMenuId)}">
+                <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
                 <a [routerLink]="['/calendar']" (click)="menuActive = false">&#9679; Calendario</a>
                 <a [routerLink]="['/matrix']"   (click)="menuActive = false">&#9679; Matrice</a>
                 <a [routerLink]="['/result']"   (click)="menuActive = false">&#9679; Risultati</a>

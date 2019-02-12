@@ -30,13 +30,13 @@ export class MeetingListView extends AbstractListView {
     isRoundTrip: boolean;
 
     onewayMeetingDaysMap: Map<number, Meeting[]>;
-    onewayDays: Meeting[];
+    onewayDays: any[];
 
     onewayDaysNo: number;
     roundtripDaysNo: number;
 
     roundtripMeetingDaysMap: Map<number, Meeting[]>;
-    roundtripDays: Meeting[];
+    roundtripDays: any[];
 
     allDaysNo: number;
     mdbList: MeetingDb[];
@@ -55,7 +55,8 @@ export class MeetingListView extends AbstractListView {
 
         this.meetingsCols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
-            { field: 'ruleName',    header: 'Incontro' }
+            { field: 'ruleName1',    header: 'In Casa' },
+            { field: 'ruleName2',    header: 'Trasferta' }
         ];
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
@@ -239,7 +240,7 @@ export class MeetingListView extends AbstractListView {
                     rtm = this.cloneObject(m);
                     rtm.team1 = m.team2;
                     rtm.team2 = m.team1;
-                    rtm.name = rtm.team1.teamName + " - " + rtm.team2.teamName ; 
+                    rtm.name = this.makeRule(pr2) + " - " + this.makeRule(pr1); 
                     rtm.direction = Direction.RoundTrip;
         
                     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
@@ -302,63 +303,19 @@ export class MeetingListView extends AbstractListView {
 
     private shiftOnewayDays(currentDay : number) {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
-        
-        // let mk: number = this.onewayDaysNo;
-        // this.onewayDays = this.onewayMeetingDaysMap.get(mk);
-
-        // this.selectedPlayoff.round.onewayMeetings = [];
-
-        // for (let i = 0; i < this.onewayDays.length; i++) {
-        //     let m = this.onewayDays[i];
-        //     m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-        // }
-        // this.onewayDays = this.sortMeetingRows(this.onewayDays);
-        // this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.onewayDays);
+        for( let d of this.onewayDays ) {
+            d.ruleName1 = d.rule1.fromRound.position.label + " " + d.rule1.fromRound.round.label;
+            d.ruleName2 = d.rule2.fromRound.position.label + " " + d.rule2.fromRound.round.label;;
+        }
     }
 
     private shiftRoundtripDays( currentDay : number) {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
-
-        // let mk: number = this.roundtripDaysNo;
-        // let days = this.onewayMeetingDaysMap.get(mk);
-
-        // this.roundtripDays = [];
-        // for (let i = 0; i < days.length; i++) {
-        //     let m = days[i];
-            
-        //     let rtm = this.cloneObject(m);
-        //     rtm.rule1 = m.rule2;
-        //     rtm.rule2 = m.rule1;
-        //     rtm.direction = Direction.RoundTrip;
-
-        //     let rule1: string = this.makeRule(rtm.rule1);
-        //     let rule2: string = this.makeRule(rtm.rule2);
-
-        //     rtm.name = rule1 + " - " + rule2; 
-
-        //     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
-        //     this.roundtripDays.push(rtm);
-        // }
-
-        // this.roundtripDays = this.sortMeetingRows(this.roundtripDays);
-        // this.selectedPlayoff.round.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.roundtripDays);
+        for( let d of this.roundtripDays ) {
+            d.ruleName1 = d.rule1.fromRound.position.label + " " + d.rule1.fromRound.round.label;
+            d.ruleName2 = d.rule2.fromRound.position.label + " " + d.rule2.fromRound.round.label;;
+        }
     }
-
-    // private sortMeetingRows(meetings: any[]): any[] {
-    //     return meetings.sort((m1, m2) => {
-    //         if (m1.dateAndTime > m2.dateAndTime) {
-    //             return 1;
-    //         }
-    //         if (m1.dateAndTime < m2.dateAndTime) {
-    //             return -1;
-    //         }
-    //         if(m1.direction > m2.direction) {
-    //             return 1;
-    //         } else {
-    //             return -1;
-    //         }
-    //     });
-    // }
 
     goOnewayLeft() {
         console.log("goOnewayLeft()");

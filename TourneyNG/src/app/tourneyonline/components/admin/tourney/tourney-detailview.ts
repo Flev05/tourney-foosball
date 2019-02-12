@@ -724,10 +724,16 @@ export class TourneyDetailView extends AbstractDetailView {
             for(let m of r.onewayMeetings) {
                 this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
             }
+            for(let m of r.roundtripMeetings) {
+                this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+            }
         }
 
         for(let p of this.selectedTourney.playoffs) {
             for(let m of p.round.onewayMeetings) {
+                this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+            }
+            for(let m of p.round.roundtripMeetings) {
                 this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
             }
         }

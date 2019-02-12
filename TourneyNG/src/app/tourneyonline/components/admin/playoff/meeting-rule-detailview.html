@@ -24,69 +24,66 @@
 </p-accordion>
 </div>
 
-<div class="content-section implementation">
+<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+<h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
+<h4><span>Regola: "{{selectedMeeting.ruleName}}"</span></h4>
 
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
-    <h4><span>Regola: "{{selectedMeeting.ruleName}}"</span></h4>
-    
-    <form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </div>                  
+<form [formGroup]="meetingFormGroup" (ngSubmit)="onSubmit(meetingFormGroup.value)">
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    </div>                  
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Via:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="address"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!meetingFormGroup.controls['address'].valid && meetingFormGroup.controls['address'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
-                            La via è obbligatoria
-                        </span>
-                    </div>
-                </div>
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Via:
             </div>
-                        
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    <label for="country-id">Comune:</label>
-                </div>
-                <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" formControlName="country" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="searchCountry($event)" field="city"
-                        placeholder="Comuni" [minLength]="1">
-                    </p-autoComplete>
-                </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="address"/>
             </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Indirizzo:
-                </div>
-                <div class="ui-grid-col-8">
-                    {{selectedTourney.address}} {{selectedTourney.country != undefined ? " - " + selectedTourney.country.zipCode + " " + selectedTourney.country.city
-                    + " (" + selectedTourney.country.provinceCode +")" : "" }}
-                </div>
-            </div>
-                            
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Data e ora:
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-calendar formControlName="dateAndTime" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
-                    </p-calendar>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" 
+                    *ngIf="!meetingFormGroup.controls['address'].valid && meetingFormGroup.controls['address'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="meetingFormGroup.controls['address'].errors['required']">
+                        La via è obbligatoria
+                    </span>
                 </div>
             </div>
         </div>
+                    
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" formControlName="country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" field="city"
+                    placeholder="Comuni" [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
 
-    </form>   
-</div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{selectedTourney.address}} {{selectedTourney.country != undefined ? " - " + selectedTourney.country.zipCode + " " + selectedTourney.country.city
+                + " (" + selectedTourney.country.provinceCode +")" : "" }}
+            </div>
+        </div>
+                        
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar formControlName="dateAndTime" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+                </p-calendar>
+            </div>
+        </div>
+    </div>
+
+</form>   

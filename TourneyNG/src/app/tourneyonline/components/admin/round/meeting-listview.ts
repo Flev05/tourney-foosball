@@ -32,10 +32,10 @@ export class MeetingListView extends AbstractListView {
     roundtripDaysNo: number;
     
     onewayMeetingDaysMap: Map<number, Meeting[]>;
-    onewayDays: Meeting[];
+    onewayDays: any[];
 
     roundtripMeetingDaysMap: Map<number, Meeting[]>;
-    roundtripDays: Meeting[];
+    roundtripDays: any[];
 
     isRoundTrip: boolean;
     allDaysNo: number;
@@ -59,7 +59,8 @@ export class MeetingListView extends AbstractListView {
         
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
-            { field: 'name',        header: 'Incontro' }
+            { field: 'teamName1',       header: 'In casa' },
+            { field: 'teamName2',       header: 'Trasferta' }
         ];
         
         this.atLeast2teams = this.selectedRound.teams.length >= 2 ? true : false;
@@ -276,10 +277,18 @@ export class MeetingListView extends AbstractListView {
 
     private shiftOnewayDay( currentDay : number) {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
+        for( let d of this.onewayDays ) {
+            d.teamName1 = d.team1.teamName;
+            d.teamName2 = d.team2.teamName;
+        }
     }
 
     private shiftRoundtripDay( currentDay : number ) {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
+        for( let d of this.roundtripDays ) {
+            d.teamName1 = d.team1.teamName;
+            d.teamName2 = d.team2.teamName;
+        }
     }
 
     goOnewayLeft() {

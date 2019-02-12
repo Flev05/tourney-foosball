@@ -31,94 +31,94 @@
 <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
 <p-tabView [activeIndex]="tourneyService.selectedTabIndex">
-        <p-tabPanel header="Andata">
-            <p-table [columns]="meetingsCols"
-                [value]="onewayDays" 
-                [responsive]="true"
-                selectionMode="single" 
-                [(selection)]="selectedRow"  
-                (onRowSelect)="onRowSelect($event)"        
-                [scrollable]="true" 
-                scrollHeight="600px">
-    
-                <ng-template pTemplate="caption">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goOnewayLeft()"></button>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            Giornata {{onewayDaysNo}} di {{allDaysNo}}
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goOnewayRight()"></button>
-                        </div>
+    <p-tabPanel header="Andata">
+        <p-table [columns]="meetingsCols"
+            [value]="onewayDays" 
+            [responsive]="true"
+            selectionMode="single" 
+            [(selection)]="selectedRow"  
+            (onRowSelect)="onRowSelect($event)"        
+            [scrollable]="true" 
+            scrollHeight="600px">
+
+            <ng-template pTemplate="caption">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goOnewayLeft()"></button>
                     </div>
-                </ng-template>
-    
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th style="width: 15mm;">N°</th>
-                        <th *ngFor="let col of columns">
-                            {{col.header}}
-                        </th>
-                    </tr>
-                </ng-template>
-    
-                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                    <tr [pSelectableRow]="rowData">
-                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                        <td *ngFor="let col of columns">
-                            <span class="ui-column-title">{{col.header}}</span>
-                            {{rowData[col.field]}}
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-tabPanel>
-    
-        <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
-            <p-table 
-                [columns]="meetingsCols"
-                [value]="roundtripDays" 
-                [responsive]="true"
-                selectionMode="single" 
-                [(selection)]="selectedRow"  
-                (onRowSelect)="onRowSelect($event)"        
-                [scrollable]="true" 
-                scrollHeight="600px">
-    
-                <ng-template pTemplate="caption">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goRoundtripLeft()"></button>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            Giornata {{roundtripDaysNo}} di {{allDaysNo}}
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goRoundtripRight()"></button>
-                        </div>
+                    <div class="ui-grid-col-3">
+                        Giornata {{onewayDaysNo}} di {{allDaysNo}}
                     </div>
-                </ng-template>
-    
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th style="width: 15mm;">N°</th>
-                        <th *ngFor="let col of columns">
-                            {{col.header}}
-                        </th>
-                    </tr>
-                </ng-template>
-    
-                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                    <tr [pSelectableRow]="rowData">
-                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                        <td *ngFor="let col of columns">
-                            <span class="ui-column-title">{{col.header}}</span>
-                            {{rowData[col.field]}}
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-tabPanel>    
-    </p-tabView>
+                    <div class="ui-grid-col-3">
+                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goOnewayRight()"></button>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 15mm;">N°</th>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="rowData">
+                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
+        <p-table 
+            [columns]="meetingsCols"
+            [value]="roundtripDays" 
+            [responsive]="true"
+            selectionMode="single" 
+            [(selection)]="selectedRow"  
+            (onRowSelect)="onRowSelect($event)"        
+            [scrollable]="true" 
+            scrollHeight="600px">
+
+            <ng-template pTemplate="caption">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goRoundtripLeft()"></button>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        Giornata {{roundtripDaysNo}} di {{allDaysNo}}
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goRoundtripRight()"></button>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 15mm;">N°</th>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="rowData">
+                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>    
+</p-tabView>

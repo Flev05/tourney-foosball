@@ -336,26 +336,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.eliminatoryRows = this.levelService.rows;
     }
 
-    // onTeam4roundNumChange(cb: Combobox) {
-    //     console.log(cb);
-    //     this.tourneyService.selectedTeams4RoundsCB = cb;
-
-    //     let T: number = this.tourneyService.selectedTeams4RoundsCB.value;
-
-    //     this.roundsCombobox = [];
-    //     let firstRow: Combobox =  { label: "Seleziona", value: 0 };
-    //     this.roundsCombobox.push(firstRow);
-
-    //     let R = Math.floor(T / 2);       
-    //     for (let r=1; r<=R; r++ ) {
-    //         let ccb: Combobox = { label: "" + r, value: r };
-    //         this.roundsCombobox.push(ccb);
-    //     } 
-
-    //     this.tourneyService.selectedRoundsNumCB = firstRow;
-    //     this.resetRounds();
-    // }
-
     onRoundNumChange(cb: Combobox) {
         console.log(cb);
 

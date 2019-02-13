@@ -6,9 +6,8 @@ import { TourneyDetailView } from './tourney-detailview';
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: '', component: TourneyRoutingModule },
-			{ path: 'lv',     component: TourneyListView },
-			{ path: 'lv/dv',  component: TourneyDetailView },
+			{ path: '', 	component: TourneyListView },
+			{ path: 'dv',  	component: TourneyDetailView },
 		])
 	],
 	exports: [

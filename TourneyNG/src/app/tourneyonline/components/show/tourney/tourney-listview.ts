@@ -9,7 +9,7 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 
-const redirect = '/matrix/lv';
+const redirect = '/showtourney/dv';
 
 @Component({
     templateUrl: './tourney-listview.html'

@@ -12,7 +12,6 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
-import { CalendarModule } from 'app/components/calendar/calendar';
 import { GrowlModule } from 'app/components/growl/growl';
 import { PanelModule } from 'app/components/panel/panel';
 import { DropdownModule } from 'app/components/dropdown/dropdown';
@@ -51,7 +50,6 @@ import { TourneyDetailView } from './tourney-detailview';
         ,SpinnerModule
         ,FieldsetModule
         ,TooltipModule
-        ,CalendarModule
         ,TourneyRoutingModule
         ,AccordionModule
         ,PickListModule

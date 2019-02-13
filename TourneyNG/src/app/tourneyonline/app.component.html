@@ -72,7 +72,7 @@
                 <span>Consultazione</span>
             </a>
             <div [ngClass]="{'submenushow': (tourneymenutitle.id == activeMenuId), 'submenuhide': (tourneymenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
+                <a [routerLink]="['/showtourney']" (click)="menuActive = false">&#9679; Tornei</a>
                 <a [routerLink]="['/calendar']" (click)="menuActive = false">&#9679; Calendario</a>
                 <a [routerLink]="['/matrix']"   (click)="menuActive = false">&#9679; Matrice</a>
                 <a [routerLink]="['/result']"   (click)="menuActive = false">&#9679; Risultati</a>

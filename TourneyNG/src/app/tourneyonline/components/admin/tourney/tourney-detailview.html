@@ -330,7 +330,7 @@
             <div class="ui-grid-col-3">
                 Nome Torneo*:
             </div>
-            <div class="ui-grid-col-5">                                
+            <div class="ui-grid-col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
                 <input pInputText type="text" [(ngModel)]="selectedTourney.tourneyName"/>
             </div>
         </div>
@@ -363,10 +363,10 @@
         </div>        
         
         <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+            <div class="ui-grid-col-3" >
                 Via*:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="ui-grid-col-5" pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
                 <input pInputText type="text" [(ngModel)]="selectedTourney.address"/>
             </div>
         </div>
@@ -387,8 +387,7 @@
             </div>
         </div>
 
-        <div class="ui-grid-row" tooltipPosition="right"
-                pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
+        <div class="ui-grid-row" tooltipPosition="right">
             <div class="ui-grid-col-3">
                 Indirizzo:
             </div>

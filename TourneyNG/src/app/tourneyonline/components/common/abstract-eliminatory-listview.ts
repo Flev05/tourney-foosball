@@ -136,9 +136,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
     }
 
-    private onLoadRoundMeetings(roundMeetings: MeetingDb[], isOneway: boolean): void {
-        let rid = roundMeetings[0].roundId;
-        this.roundMeetingMap.set(rid, roundMeetings);
+    private onLoadRoundMeetings(meetings: MeetingDb[], isOneway: boolean): void {
+        if( meetings == undefined || meetings.length == 0 ) {
+            return;
+        }
+
+        let rid = meetings[0].roundId;
+        this.roundMeetingMap.set(rid, meetings);
 
         this.roundHttpCounter--;
 
@@ -155,7 +159,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 }
                 
                 for(let round of this.selectedTourney.rounds) {
-                    round.classification = this.createClassification(round);
+                    round.classification = this.createClassification(round.onewayMeetings);
                 }
                 
                 this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds, isOneway);
@@ -166,7 +170,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     protected prepareEliminatoryRound(rounds: Round[], isOneway: boolean): any[] {
 
         for(let round of rounds) {
-            round.classification = this.createClassification(round);
+            round.classification = this.createClassification(round.onewayMeetings);
         }
 
         return this.prepareRoundsGui(rounds, isOneway);
@@ -181,10 +185,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         return null;
     }
     
-    private createClassification(round: Round): Classification[] {
+    private createClassification(meetings: Meeting[]): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
-        for(let m of round.onewayMeetings) {
+        for(let m of meetings) {
 
             let t1 = m.team1;
             let t2 = m.team2;
@@ -246,8 +250,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
 
         classificationList = this.sortDesc(classificationList);
-
-        round.classification = classificationList;
 
         return classificationList;
     }
@@ -451,7 +453,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         let playoffRounds: Round[] = this.makePlayoffRounds(playoffs);
 
         for(let round of playoffRounds) {
-            round.classification = this.createClassification(round);
+            round.classification = this.createClassification(round.onewayMeetings);
         }
 
         let rows: any[] = this.preparePlayoffGui(playoffs, isOneway);

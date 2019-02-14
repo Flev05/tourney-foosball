@@ -25,6 +25,13 @@ import { PlayerService } from './service/player-service';
 import { TeamService } from './service/team-service';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data-service/in-memory-data.service';
+import { environment } from 'environments/environment';
+
+const forDevelopEnvOnly: any[] = [];
+if (environment.inMemoryDataService) {
+  forDevelopEnvOnly.push(HttpClientInMemoryWebApiModule.forRoot(
+    InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }));
+}
 
 @NgModule({
   declarations: [
@@ -43,9 +50,7 @@ import { InMemoryDataService } from './in-memory-data-service/in-memory-data.ser
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
-    ,  HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false, apiBase: 'api/' }
-    )
+    , forDevelopEnvOnly
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

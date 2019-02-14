@@ -53,7 +53,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         console.log("Entering onError()" + e);
     }
 
-    onComplete(): any {
+    protected onComplete(): any {
         console.log("Entering onComplete()");
         this.tourneys = [];
         for(let tdb of this.tdbs) {

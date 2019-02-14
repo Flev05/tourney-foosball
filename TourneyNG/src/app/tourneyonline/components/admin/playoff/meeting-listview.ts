@@ -236,13 +236,6 @@ export class MeetingListView extends AbstractListView {
 
                 if( rtm == undefined ) {
                     rtm = this.newMeeting(pr2, pr1, Direction.RoundTrip);
-
-                    rtm = this.cloneObject(m);
-                    rtm.team1 = m.team2;
-                    rtm.team2 = m.team1;
-                    rtm.name = this.makeRule(pr2) + " - " + this.makeRule(pr1); 
-                    rtm.direction = Direction.RoundTrip;
-        
                     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
 

@@ -158,11 +158,10 @@ export class ResultListView extends AbstractEliminatoryListView {
         let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
         let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
-        this.tourneyService.completeRoundMeetingDb(m
+        this.tourneyService.selectedMeetingDb = this.tourneyService.completeRoundMeetingDb(m
             , this.selectedTourney.id
             , r.id
         );
-        this.tourneyService.selectedMeetingDb = m;
 
         this.gotoMeetingDetailView();
     }

@@ -41,6 +41,7 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedMeetingDb  = this.tourneyService.selectedMeetingDb;   
+        this.selectedMeeting  = JSON.parse(this.selectedMeetingDb.json);   
 
         this.alreadyPassed = false;
 

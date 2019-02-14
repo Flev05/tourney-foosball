@@ -39,115 +39,85 @@
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
 
-<form [formGroup]="playerFormGroup" (ngSubmit)="onSubmit(playerFormGroup.value)">
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                Nominativo:
-            </div>
-            <div class="ui-grid-col-5">                                
-                <input pInputText type="text" formControlName="playerName"/>
-            </div>
-            <div class="ui-grid-col-3">
-                <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!playerFormGroup.controls['playerName'].valid&&playerFormGroup.controls['playerName'].dirty">
-                    <i class="fa fa-close"></i>
-                    <span *ngIf="playerFormGroup.controls['playerName'].errors['required']">
-                        Il nome del giocatore è obbligatorio, può essere anche un nick name
-                    </span>
-                </div>
-            </div>
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Nominativo:
         </div>
-            
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                Via :
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" formControlName="address"/>
-            </div>
-            <div class="ui-grid-col-4">
-                <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!playerFormGroup.controls['address'].valid&&playerFormGroup.controls['address'].dirty">
-                    <i class="fa fa-close"></i>
-                    <span *ngIf="playerFormGroup.controls['address'].errors['required']">
-                            La via è obbligatoria
-                    </span>
-                </div>
-            </div>
+        <div class="ui-grid-col-5" pTooltip="Il nome del giocatore è obbligatorio, può essere anche un nick name.">                                
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.playerName"/>
         </div>
-                                        
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                <label for="country-id">Comune:</label>
-            </div>
-            <div class="ui-grid-col-5">
-                <p-autoComplete id="country-id" 
-                    formControlName="country" 
-                    [suggestions]="filteredCountriesSingle" 
-                    (completeMethod)="searchCountry($event)" 
-                    field="city"
-                    placeholder="Comuni" 
-                    [minLength]="1">
-                </p-autoComplete>
-            </div>
-        </div>           
+    </div>
+        
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3" pTooltip="La via del giocatore è obbligatoria.">
+            Via*:
+        </div>
+        <div class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.address"/>
+        </div>
+    </div>
+                                    
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <label for="country-id">Comune:</label>
+        </div>
+        <div class="ui-grid-col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedPlayer.country"
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>           
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                Indirizzo:
-            </div>
-            <div class="ui-grid-col-8">
-                {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
-                + " (" + selectedPlayer.country.provinceCode +")" : "" }}
-            </div>
-        </div>             
-                    
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                Telefono:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" formControlName="phoneNumber"/>
-            </div>
-            <div class="ui-grid-col-4">
-                <div class="ui-message ui-messages-error ui-corner-all"
-                    *ngIf="!playerFormGroup.controls['phoneNumber'].valid&&playerFormGroup.controls['phoneNumber'].dirty">
-                    <i class="fa fa-close"></i>
-                    <span *ngIf="playerFormGroup.controls['phoneNumber'].errors['required']">
-                        Il numero di telefono del giocatore è obbligatorio
-                    </span>
-                </div>
-            </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Indirizzo:
         </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                E-mail:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" formControlName="email"/>
-            </div>
-            <div class="ui-grid-col-4">
-                <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="!playerFormGroup.controls['email'].valid&&playerFormGroup.controls['email'].dirty">
-                    <i class="fa fa-close"></i>
-                    <span *ngIf="playerFormGroup.controls['email'].errors['required']">
-                        L'indirizzo e-mail del giocatore è obbligatorio
-                    </span>
-                </div>
-            </div>
+        <div class="ui-grid-col-8">
+            {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+            + " (" + selectedPlayer.country.provinceCode +")" : "" }}
+        </div>
+    </div>             
+                
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Telefono:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Il numero di telefono del giocatore è obbligatorio.">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.phoneNumber"/>
         </div>
     </div>
 
-    <div *ngIf="!playerAlreadyExists" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!playerFormGroup.valid"></button>
-            </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            E-mail:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="L'indirizzo e-mail del giocatore è obbligatorio.">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.email"/>
         </div>
     </div>
+</div>
 
-</form>   
+<div *ngIf="!playerAlreadyExists" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <button class="ui-button-success" 
+                pButton (click)="onSubmit()" 
+                icon="pi pi-save" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>            
+        </div>
+    </div>
+</div>
+<p>
+    I campi contrassegnati con * sono obbligatori!
+</p>
+    
 
  

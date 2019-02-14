@@ -23,6 +23,7 @@ import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
 import { MeetingDb } from '../domain/meeting-db';
+import { environment } from 'environments/environment';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -361,6 +362,9 @@ export class TourneyService {
 
     saveTourney (tourney: Tourney ): Observable<Tourney> {
         if(tourney.id == null) {
+            if(environment.inMemoryDataService) {
+                tourney.id = this.getSequenceNumber();
+            }
             return this.addTourney(tourney);
         }
         return this.updateTourney(tourney);
@@ -383,6 +387,10 @@ export class TourneyService {
 
     saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
         if(m.id == null) {
+            if(environment.inMemoryDataService) {
+                m.id = this.getSequenceNumber();
+            }
+
             this.addMeetingDb(m, tourneyId, roundId, 0, 0)
         } else {
             this.updateMeetingDb(m, tourneyId, roundId, 0, 0)
@@ -391,6 +399,9 @@ export class TourneyService {
 
     savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
         if(m.id == null) {
+            if(environment.inMemoryDataService) {
+                m.id = this.getSequenceNumber();
+            }
             this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
         } else {
             this.updateMeetingDb(m, tourneyId, 1, playoffId, 0)
@@ -399,6 +410,9 @@ export class TourneyService {
 
     saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
         if(m.id == null) {
+            if(environment.inMemoryDataService) {
+                m.id = this.getSequenceNumber();
+            }
             this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
         } else {
             this.updateMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
@@ -414,11 +428,12 @@ export class TourneyService {
     prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
 
         let mdb: MeetingDb = {
-            tourneyId: tourneyId
-            ,roundId: roundId
-            ,playoffId: playoffId
-            ,eliminatoryId: eliminatoryId
-            ,json: JSON.stringify(m)
+              id: m.id
+            , tourneyId: tourneyId
+            , roundId: roundId
+            , playoffId: playoffId
+            , eliminatoryId: eliminatoryId
+            , json: JSON.stringify(m)
         }
 
         return mdb;
@@ -435,8 +450,8 @@ export class TourneyService {
         obs.subscribe();
     }
 
-    completeRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number) {
-        this.prepareMdb(m, tourneyId, roundId, 0, 0);
+    completeRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): MeetingDb {
+        return this.prepareMdb(m, tourneyId, roundId, 0, 0);
     }
 
     completePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): MeetingDb {

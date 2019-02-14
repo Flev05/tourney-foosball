@@ -27,4 +27,12 @@ export class ResultTourneyListView extends AbstractTourneyListView {
     protected filter(tourneys: Tourney[]): Tourney[] {
         return tourneys;
     }
+
+    protected onComplete(): any {
+        super.onComplete();
+
+        if( this.tourneyService.selectedTourney != undefined ) {
+            this.router.navigate([this.redirect]);
+        }
+    }
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Message } from 'primeng/api';
-import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
@@ -17,11 +16,9 @@ export class TeamDetailView extends AbstractDetailView {
 
     msgs: Message[] = [];
 
-    teamFormGroup: FormGroup;
     toggleable: boolean = false;
 
     constructor(
-        private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
@@ -41,25 +38,20 @@ export class TeamDetailView extends AbstractDetailView {
             this.selectedTeam={id: null, teamName:""};
             this.selectedTeam.players = [];
         }
-
-        this.teamFormGroup = this.fb.group({
-            'teamName': new FormControl(this.selectedTeam.teamName, Validators.compose([Validators.required])),
-            'address':  new FormControl(this.selectedTeam.address ),
-
-            'country':          new FormControl(this.selectedTeam.country),
-        });
     }
 
-    onSubmit(value: string) {
-
-        this.selectedTeam.teamName = this.teamFormGroup.get('teamName').value;
-        this.selectedTeam.address = this.teamFormGroup.get('address').value;
-        this.selectedTeam.country = this.teamFormGroup.get('country').value;
-        
+    onSubmit(value: string) {        
         this.teamService.newTeam = false;
         this.teamService.saveTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
     }
- 
+
+    enableSaveButton() : string {
+        let n : String = this.selectedTeam.teamName;
+        let a : String = this.selectedTeam.address;
+
+        return  n.trim() == "" || a.trim() == "" ? "disabled" : "";
+    }
+
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

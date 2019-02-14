@@ -30,6 +30,6 @@ export class TourneyListView extends AbstractTourneyListView {
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {
-        return this.purgeEliminatory(tourneys);
+        return tourneys;
     }
 }

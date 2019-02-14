@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Player } from 'app/tourneyonline/domain/player';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
@@ -15,12 +14,10 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 export class PlayerDetailView extends AbstractDetailView {
     selectedPlayer: Player;
 
-    playerFormGroup: FormGroup;
     toggleable: boolean = false;
     playerAlreadyExists: boolean;
     
     constructor(
-        private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
@@ -41,24 +38,17 @@ export class PlayerDetailView extends AbstractDetailView {
             this.selectedPlayer.playerName = "";
             this.selectedPlayer.id = null; 
         }
+    }
 
-        this.playerFormGroup = this.fb.group({
-            'playerName': new FormControl(this.selectedPlayer.playerName, Validators.compose([Validators.required])),
-            'address': new FormControl(this.selectedPlayer.address),
-            'country': new FormControl(this.selectedPlayer.country),
-            'phoneNumber': new FormControl(this.selectedPlayer.phoneNumber),
-            'email': new FormControl(this.selectedPlayer.email),
-        });
+    enableSaveButton() : string {
+        let n : String = this.selectedPlayer.playerName;
+        let a : String = this.selectedPlayer.address;
+        let p : String = this.selectedPlayer.phoneNumber;
+        let m : String = this.selectedPlayer.email;
+        return a.trim() == "" || n.trim() == "" || p.trim() == "" || m.trim() == "" ? "disabled" : "";
     }
 
     onSubmit(value: string) {
-
-        this.selectedPlayer.playerName = this.playerFormGroup.get('playerName').value;
-        this.selectedPlayer.address = this.playerFormGroup.get('address').value;
-        this.selectedPlayer.country = this.playerFormGroup.get('country').value;
-
-        this.selectedPlayer.phoneNumber = this.playerFormGroup.get('phoneNumber').value;
-        this.selectedPlayer.email = this.playerFormGroup.get('email').value;
 
         if(this.playerService.newPlayer) {
             this.playerService.newPlayer = false;
@@ -67,14 +57,6 @@ export class PlayerDetailView extends AbstractDetailView {
             let pl = this.verifyPlayer(this.selectedPlayer.playerName);
             if(pl != null) {
                 this.playerAlreadyExists = true;
-
-                this.playerFormGroup = this.fb.group({
-                    'playerName': new FormControl(pl.playerName, Validators.compose([Validators.required])),
-                    'address': new FormControl(pl.address),
-                    'country': new FormControl(pl.country),
-                    'phoneNumber': new FormControl(pl.phoneNumber),
-                    'email': new FormControl(pl.email),
-                });
                 return;
             }
         }

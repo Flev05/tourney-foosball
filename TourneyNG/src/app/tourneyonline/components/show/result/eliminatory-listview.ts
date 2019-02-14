@@ -210,9 +210,10 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 nr.teams[1] = e.round.teams[0];
             }
             
-            let mdb = this.tourneyService.prepareMdb(nm, this.selectedTourney.id, 0, 0, nextEliminatory.id);
+            // let mdb = this.tourneyService.prepareMdb(nm, this.selectedTourney.id, 0, 0, nextEliminatory.id);
+            // this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
 
-            this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
+            this.tourneyService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
         }
     }
 

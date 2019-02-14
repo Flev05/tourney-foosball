@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
+  inMemoryDataService: true,
   serverUri: "http://localhost:8080"
 };

@@ -32,4 +32,12 @@ export class MatrixTourneyListView extends AbstractTourneyListView {
     protected filter(tourneys: Tourney[]): Tourney[] {
         return this.purgeEliminatory(tourneys);
     }
+
+    protected onComplete(): any {
+        super.onComplete();
+
+        if( this.tourneyService.selectedTourney != undefined ) {
+            this.router.navigate([this.redirect]);
+        }
+    }
 }

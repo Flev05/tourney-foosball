@@ -27,10 +27,11 @@ import { SliderModule } from 'app/components/slider/slider';
 import { CalendarModule } from 'app/components/calendar/calendar';
  
 import {ResultTourneyListView } from './tourney-listview';
-import { ResultListView } from './result-listview';
+import { RoundResultListView } from './round-result-listview';
 import { EliminatoryListView } from './eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { TabResultListView } from './tab-result-listview';
 
 @NgModule({
 	imports: [
@@ -63,9 +64,10 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
     ],
 	declarations: [
 		 ResultTourneyListView
-        ,ResultListView
+        ,RoundResultListView
         ,EliminatoryListView
         ,MeetingDetailView
+        ,TabResultListView
     ]
     ,providers: [DateFormatPipe]
 })

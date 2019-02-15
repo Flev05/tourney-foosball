@@ -22,8 +22,8 @@ export class InMemoryDataService implements InMemoryDbService {
       , InMemoryDataServiceRoundElim.getTourneyDb() 
     ];
     
-    this.meetings = this.meetings.concat(InMemoryDataServiceCSI.getMeetings());
-    this.meetings = this.meetings.concat(InMemoryDataServiceRoundElim.getMeetings());
+    // this.meetings = this.meetings.concat(InMemoryDataServiceCSI.getMeetings());
+    // this.meetings = this.meetings.concat(InMemoryDataServiceRoundElim.getMeetings());
   
     const login = [
       { id: 1

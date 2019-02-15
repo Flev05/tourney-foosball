@@ -7,19 +7,31 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+
+const REDIRECT_ROUND_DV     = 'result/lv/round';
+const REDIRECT_PLAYOFF_DV   = 'result/lv/playoff';
+const REDIRECT_ELIMINATORY  = 'result/lv/eliminatoryLv/dv';
 
 @Component({
-    templateUrl: './result-listview.html'
+    templateUrl: './tab-result-listview.html'
 })
-export class ResultListView extends AbstractEliminatoryListView {
-    static eliminatoryRedirect: string = 'result/lv/eliminatoryLv/dv';
+export class TabResultListView extends AbstractEliminatoryListView {
 
     selectedMeetingRow: any;
     activeIndex: number;
+
+    roundCols: TableCols[] = TourneyService.roundCols;
+    roundRows: Round[];
+    selectedRound: Round;
+
+    playoffCols: TableCols[] = TourneyService.playoffCols;
+    playoffRows: Playoff[];
+    selectedPlayoff: Playoff;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -39,11 +51,14 @@ export class ResultListView extends AbstractEliminatoryListView {
         this.tourneyService.selectedEliminatoryIndex = -1;
 
         if(super.containsRound()) {
-            super.loadRounds(this.selectedTourney.isOnewayRound=="true"?true:false);
+            this.roundRows = this.selectedTourney.rounds;
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff=="true"?true:false);
+            this.playoffRows = this.selectedTourney.playoffs;
+            for(let p of this.playoffRows) {
+                p.playoffName = p.round.name;
+            }
         }
 
         if(super.containsEliminatory()) {
@@ -152,37 +167,64 @@ export class ResultListView extends AbstractEliminatoryListView {
         return row;
     }
 
-    onRoundSelect(event) {
+    onRoundRowSelect(event) {
         console.log(event.data);
 
-        let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
-        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
+        this.tourneyService.selectedRound = this.selectedRound;
 
-        this.tourneyService.selectedMeetingDb = this.tourneyService.completeRoundMeetingDb(m
-            , this.selectedTourney.id
-            , r.id
-        );
-
-        this.gotoMeetingDetailView();
+        this.tourneyService.selectedMeetingDb = {id: null
+            , tourneyId: this.selectedTourney.id
+            , roundId: this.selectedRound.id
+            , playoffId: null
+            , eliminatoryId: null
+        };     
+        this.router.navigate([REDIRECT_ROUND_DV]);
     }
+
+    onPlayoffRowSelect(event) {
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.tourneyService.selectedMeetingDb = {id: null
+            , tourneyId: this.selectedTourney.id
+            , roundId: null
+            , playoffId: this.selectedPlayoff.id
+            , eliminatoryId: null
+        };     
+        this.router.navigate([REDIRECT_PLAYOFF_DV]);
+    }
+
+    // onRoundSelect(event) {
+    //     console.log(event.data);
+
+    //     let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
+    //     let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
+
+    //     let mdb = this.tourneyService.completeRoundMeetingDb(m
+    //         , this.selectedTourney.id
+    //         , r.id
+    //     );
+
+    //     this.tourneyService.selectedMeetingDb = mdb;
+
+    //     this.gotoMeetingDetailView();
+    // }
     
-    onPlayoffSelect(event) {
-        console.log(event.data);
+    // onPlayoffSelect(event) {
+    //     console.log(event.data);
 
-        let playoffRounds: Round[] = this.makePlayoffRounds(this.selectedTourney.playoffs);
+    //     let playoffRounds: Round[] = this.makePlayoffRounds(this.selectedTourney.playoffs);
 
-        let r = this.getRoundBy(this.selectedMeetingRow.roundId,  playoffRounds);
-        let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
+    //     let r = this.getRoundBy(this.selectedMeetingRow.roundId,  playoffRounds);
+    //     let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
 
-        let mdb = this.tourneyService.completePlayoffMeetingDb(m
-            , this.selectedTourney.id
-            , this.selectedMeetingRow.playoffId
-        );
+    //     let mdb = this.tourneyService.completePlayoffMeetingDb(m
+    //         , this.selectedTourney.id
+    //         , this.selectedMeetingRow.playoffId
+    //     );
 
-        this.tourneyService.selectedMeetingDb = mdb;
+    //     this.tourneyService.selectedMeetingDb = mdb;
 
-        this.gotoMeetingDetailView();
-    }
+    //     this.gotoMeetingDetailView();
+    // }
     
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
@@ -199,31 +241,41 @@ export class ResultListView extends AbstractEliminatoryListView {
             }
         }
 
-        this.router.navigate([ResultListView.eliminatoryRedirect]);
+        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.tourneyService.selectedMeetingDb = {id: null
+            , tourneyId: this.selectedTourney.id
+            , roundId: null
+            , playoffId: null
+            , eliminatoryId: this.selectedEliminatoryLevel.id
+        };     
+        this.router.navigate([REDIRECT_PLAYOFF_DV]);
+
+
+        this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 
-    private getRoundBy(roundId: number, rounds: Round[]): Round {
-        for(let r of rounds) {
-            if(r.id == roundId) {
-                return r;
-            }
-        }    
-        return null;
-    }
+    // private getRoundBy(roundId: number, rounds: Round[]): Round {
+    //     for(let r of rounds) {
+    //         if(r.id == roundId) {
+    //             return r;
+    //         }
+    //     }    
+    //     return null;
+    // }
 
-    private getMeetingBy(id: any, round: Round):  Meeting {
-        for(let m of round.onewayMeetings) {
-            if(m.id == id) {
-                return m;
-            }
-        }    
-        return null;
-    }
+    // private getMeetingBy(id: any, round: Round):  Meeting {
+    //     for(let m of round.onewayMeetings) {
+    //         if(m.id == id) {
+    //             return m;
+    //         }
+    //     }    
+    //     return null;
+    // }
     
-    private gotoMeetingDetailView() {
-        this.tourneyService.selectedTabIndex = this.activeIndex;
-        this.router.navigate([MeetingDetailView.meetingDvRedirect]);
-    }
+    // private gotoMeetingDetailView() {
+    //     this.tourneyService.selectedTabIndex = this.activeIndex;
+    //     this.router.navigate([MeetingDetailView.meetingDvRedirect]);
+    // }
 
     goBack(): void {
         this.location.back();

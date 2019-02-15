@@ -41,7 +41,7 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedMeetingDb  = this.tourneyService.selectedMeetingDb;   
-        this.selectedMeeting  = JSON.parse(this.selectedMeetingDb.json);   
+        this.selectedMeeting  = this.tourneyService.selectedMeeting;   
 
         this.alreadyPassed = false;
 
@@ -153,15 +153,16 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        let mdb = this.tourneyService.prepareMdb(this.selectedMeeting
-            , this.selectedTourney.id
-            , this.tourneyService.selectedMeetingDb.roundId
-            , this.tourneyService.selectedMeetingDb.playoffId
-            , this.tourneyService.selectedMeetingDb.eliminatoryId
-            );            
-
-        this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
-
+        if( this.selectedMeetingDb.roundId != null ) {
+            this.tourneyService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
+        }
+        if( this.selectedMeetingDb.playoffId != null ) {
+            this.tourneyService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
+        }
+        if( this.selectedMeetingDb.eliminatoryId != null ) {
+            this.tourneyService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
+        }
+ 
         this.updateNextLevel();
 
         this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());

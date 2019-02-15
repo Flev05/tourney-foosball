@@ -10,7 +10,6 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { MeetingKey } from 'app/tourneyonline/domain/meeting.key';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
@@ -159,12 +158,13 @@ export class MeetingListView extends AbstractListView {
                 for (let j = 0; j < teamsNo / 2; j++) {
                     let t1: Team = home[j];
                     let t2: Team = away[j];
-                    console.log( (j + 1) + " " + t2.teamName + " - " + t1.teamName);
+                    let day = j + 1;
+                    console.log( day + " " + t2.teamName + " - " + t1.teamName);
 
-                    let mfound = this.selectedRound.onewayMeetings.find( m => m.team2.teamName == t1.teamName && m.team1.teamName == t2.teamName);
+                    let mfound = this.selectedRound.onewayMeetings.find( m => this.whereCondition(m, t2, t1));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t2, t1, Direction.OneWay);
+                        mfound = this.newMeeting(t2, t1, day, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -172,12 +172,13 @@ export class MeetingListView extends AbstractListView {
                 for (let j = 0; j < teamsNo / 2; j++) {
                     let t1: Team = home[j];
                     let t2: Team = away[j];
-                    console.log( (j + 1) + " " + t1.teamName + " - " + t2.teamName);
+                    let day = j + 1;
+                    console.log( day + " " + t1.teamName + " - " + t2.teamName);
 
-                    let mfound = this.selectedRound.onewayMeetings.find( m => m.team1.teamName == t2.teamName && m.team2.teamName == t1.teamName);
+                    let mfound = this.selectedRound.onewayMeetings.find( m => this.whereCondition(m, t1, t2));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t1, t2, Direction.OneWay);
+                        mfound = this.newMeeting(t1, t2, day, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -202,6 +203,11 @@ export class MeetingListView extends AbstractListView {
             // ripristina l'elemento fisso
             home[0] = pivot;
         }
+    }
+
+    private whereCondition(m: Meeting, t1: Team, t2: Team) : boolean {
+
+        return m.team1.teamName == t1.teamName && m.team2.teamName == t2.teamName;
     }
 
     /**
@@ -241,6 +247,7 @@ export class MeetingListView extends AbstractListView {
             this.selectedRound.onewayMeetings = this.selectedRound.onewayMeetings.concat(onewayMeetings);
         }
         
+        this.selectedRound.roundtripMeetings = [];
         for (let key of this.roundtripMeetingDaysMap.keys()) {
             let dayList = this.roundtripMeetingDaysMap.get(key);
             dayList = this.sortMeetings(dayList);
@@ -248,8 +255,9 @@ export class MeetingListView extends AbstractListView {
         }
     }
 
-    private newMeeting(t1: Team, t2: Team, d: Direction): Meeting {
+    private newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
         let m = this.createMeeting(t1, t2, null, null, d);
+        m.day = day;
         return m;
     }
 

@@ -251,7 +251,7 @@ export class TourneyService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadRoundMeeting(tourneyId: number, roundId: number) :  Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId + "&" + "playoffId=0";
+        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId;
         let url = meetingUrl + queryString;
         
         if(this.loginService.userLogged) {
@@ -271,7 +271,7 @@ export class TourneyService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadPlayoffMeeting(tourneyId: number, playoffId: number) : Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "playoffId=" + playoffId + "&" + "roundId=1";
+        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "playoffId=" + playoffId;
         let url = meetingUrl + queryString;
 
         if(this.loginService.userLogged) {
@@ -391,9 +391,9 @@ export class TourneyService {
                 m.id = this.getSequenceNumber();
             }
 
-            this.addMeetingDb(m, tourneyId, roundId, 0, 0)
+            this.addMeetingDb(m, tourneyId, roundId, null, null)
         } else {
-            this.updateMeetingDb(m, tourneyId, roundId, 0, 0)
+            this.updateMeetingDb(m, tourneyId, roundId, null, null)
         }
     }
 
@@ -402,9 +402,9 @@ export class TourneyService {
             if(environment.inMemoryDataService) {
                 m.id = this.getSequenceNumber();
             }
-            this.addMeetingDb(m, tourneyId, 1, playoffId, 0)
+            this.addMeetingDb(m, tourneyId, null, playoffId, null)
         } else {
-            this.updateMeetingDb(m, tourneyId, 1, playoffId, 0)
+            this.updateMeetingDb(m, tourneyId, null, playoffId, null)
         }
     }
 
@@ -413,9 +413,9 @@ export class TourneyService {
             if(environment.inMemoryDataService) {
                 m.id = this.getSequenceNumber();
             }
-            this.addMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
+            this.addMeetingDb(m, tourneyId, null, null, eliminatoryId)
         } else {
-            this.updateMeetingDb(m, tourneyId, 0, 0, eliminatoryId)
+            this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId)
         }
     }
 
@@ -425,7 +425,7 @@ export class TourneyService {
         this.addMeeting(mdb);
     }
 
-    prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
+    private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
 
         let mdb: MeetingDb = {
               id: m.id

@@ -33,7 +33,6 @@ export class RuleListView extends AbstractListView {
     positions: Combobox[];
     rounds: Combobox[];
 
-
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -60,31 +59,7 @@ export class RuleListView extends AbstractListView {
     goMeeting() {
         this.router.navigate([RuleListView.redirectToMeeting]);
     }
-
-    doDelete() {
-        console.log("doDelete(): " + this.selectedPlayoff.round.name);
-        let popup = 'Sicuro di voler rimuovere il girone: ';
-
-        if(confirm(popup + this.selectedPlayoff.round.name + "?")) {
-
-            let index = this.selectedTourney.playoffs.indexOf(this.selectedPlayoff);
-            if(index > -1 ) {
-
-                let pls: Playoff[] = this.selectedTourney.playoffs.splice(index, 1);
-                for(let p of pls) {
-                    this.removePlayoff(p);
-                }
-            }
-        }
-    }
-
-    private removePlayoff(p: Playoff): any {
-        for(let m of p.round.onewayMeetings) {
-            this.selectedTourney.meetingsForDelete.push(m);
-        }
-        p.round.onewayMeetings = [];
-    }
-
+ 
     onError(n:any) {
         let msgerr : string;
 

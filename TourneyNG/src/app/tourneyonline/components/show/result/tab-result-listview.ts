@@ -191,40 +191,6 @@ export class TabResultListView extends AbstractEliminatoryListView {
         };     
         this.router.navigate([REDIRECT_PLAYOFF_DV]);
     }
-
-    // onRoundSelect(event) {
-    //     console.log(event.data);
-
-    //     let r = this.getRoundBy(this.selectedMeetingRow.roundId, this.selectedTourney.rounds);
-    //     let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
-
-    //     let mdb = this.tourneyService.completeRoundMeetingDb(m
-    //         , this.selectedTourney.id
-    //         , r.id
-    //     );
-
-    //     this.tourneyService.selectedMeetingDb = mdb;
-
-    //     this.gotoMeetingDetailView();
-    // }
-    
-    // onPlayoffSelect(event) {
-    //     console.log(event.data);
-
-    //     let playoffRounds: Round[] = this.makePlayoffRounds(this.selectedTourney.playoffs);
-
-    //     let r = this.getRoundBy(this.selectedMeetingRow.roundId,  playoffRounds);
-    //     let m: Meeting = this.getMeetingBy(this.selectedMeetingRow.id, r);
-
-    //     let mdb = this.tourneyService.completePlayoffMeetingDb(m
-    //         , this.selectedTourney.id
-    //         , this.selectedMeetingRow.playoffId
-    //     );
-
-    //     this.tourneyService.selectedMeetingDb = mdb;
-
-    //     this.gotoMeetingDetailView();
-    // }
     
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
@@ -253,29 +219,6 @@ export class TabResultListView extends AbstractEliminatoryListView {
 
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
-
-    // private getRoundBy(roundId: number, rounds: Round[]): Round {
-    //     for(let r of rounds) {
-    //         if(r.id == roundId) {
-    //             return r;
-    //         }
-    //     }    
-    //     return null;
-    // }
-
-    // private getMeetingBy(id: any, round: Round):  Meeting {
-    //     for(let m of round.onewayMeetings) {
-    //         if(m.id == id) {
-    //             return m;
-    //         }
-    //     }    
-    //     return null;
-    // }
-    
-    // private gotoMeetingDetailView() {
-    //     this.tourneyService.selectedTabIndex = this.activeIndex;
-    //     this.router.navigate([MeetingDetailView.meetingDvRedirect]);
-    // }
 
     goBack(): void {
         this.location.back();

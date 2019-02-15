@@ -164,7 +164,7 @@ export class MeetingListView extends AbstractListView {
                     let mfound = this.selectedRound.onewayMeetings.find( m => this.whereCondition(m, t2, t1));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t2, t1, day, Direction.OneWay);
+                        mfound = this.newMeeting(t2, t1, key, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -178,7 +178,7 @@ export class MeetingListView extends AbstractListView {
                     let mfound = this.selectedRound.onewayMeetings.find( m => this.whereCondition(m, t1, t2));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t1, t2, day, Direction.OneWay);
+                        mfound = this.newMeeting(t1, t2, key, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -224,15 +224,10 @@ export class MeetingListView extends AbstractListView {
             for( let m of onewayMeetings ) {   
                 m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
     
-                let rtm = this.selectedRound.roundtripMeetings.find( i => i.team1.teamName == m.team2.teamName && i.team2.teamName == m.team1.teamName);
+                let rtm = this.selectedRound.roundtripMeetings.find( i => this.whereCondition(m, m.team2, m.team1));
 
                 if( rtm == undefined ) {
-                    rtm = this.cloneObject(m);
-                    rtm.team1 = m.team2;
-                    rtm.team2 = m.team1;
-                    rtm.name = rtm.team1.teamName + " - " + rtm.team2.teamName ; 
-                    rtm.direction = Direction.RoundTrip;
-        
+                    rtm = this.newMeeting(m.team2, m.team1, m.day, Direction.RoundTrip);
                     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
 
@@ -256,8 +251,7 @@ export class MeetingListView extends AbstractListView {
     }
 
     private newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
-        let m = this.createMeeting(t1, t2, null, null, d);
-        m.day = day;
+        let m = this.createMeeting(t1, t2, null, null, day, d);
         return m;
     }
 

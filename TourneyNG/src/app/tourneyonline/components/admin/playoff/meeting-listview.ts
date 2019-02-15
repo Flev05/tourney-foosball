@@ -172,7 +172,7 @@ export class MeetingListView extends AbstractListView {
                     let mfound = this.selectedPlayoff.round.onewayMeetings.find( m => this.isEquals(m, pr2, pr1));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(pr2, pr1, Direction.OneWay);
+                        mfound = this.newMeeting(pr2, pr1, key, Direction.OneWay);
                     }
 
                     meetingList.push(mfound);
@@ -188,7 +188,7 @@ export class MeetingListView extends AbstractListView {
                     let mfound = this.selectedPlayoff.round.onewayMeetings.find( m => this.isEquals(m, pr1, pr2));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(pr1, pr2, Direction.OneWay);
+                        mfound = this.newMeeting(pr1, pr2, key, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -235,7 +235,7 @@ export class MeetingListView extends AbstractListView {
                 let rtm = this.selectedPlayoff.round.roundtripMeetings.find( i => this.isEquals(i, pr2, pr1));
 
                 if( rtm == undefined ) {
-                    rtm = this.newMeeting(pr2, pr1, Direction.RoundTrip);
+                    rtm = this.newMeeting(pr2, pr1, key, Direction.RoundTrip);
                     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
 
@@ -267,8 +267,8 @@ export class MeetingListView extends AbstractListView {
         return b;
     }
 
-    private newMeeting(pr1: PlayoffRule, pr2: PlayoffRule, d: Direction): Meeting {
-        let m: Meeting = this.createMeeting(null, null, pr1, pr2, d);
+    private newMeeting(pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
+        let m: Meeting = this.createMeeting(null, null, pr1, pr2, day, d);
         return m;
     }
 

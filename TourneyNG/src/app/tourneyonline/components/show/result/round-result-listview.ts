@@ -5,17 +5,17 @@ import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { AbstractListView } from '../../common/abstract-listview';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
     templateUrl: './round-result-listview.html'
 })
-export class RoundResultListView extends AbstractEliminatoryListView {
+export class RoundResultListView extends AbstractListView {
     static redirect: string = "result/lv/meetingLv/dv";
     cols: TableCols[] ;
     
@@ -45,7 +45,7 @@ export class RoundResultListView extends AbstractEliminatoryListView {
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location, dfp);
+        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
@@ -106,7 +106,7 @@ export class RoundResultListView extends AbstractEliminatoryListView {
 
         for( let m of this.selectedRound.onewayMeetings ) {
 
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            m.dateAndTime = this.dfp.transform(m.datetime);
 
             let key = m.day;
             console.log( key + "° Giornata di andata");
@@ -121,7 +121,7 @@ export class RoundResultListView extends AbstractEliminatoryListView {
 
         for( let m of this.selectedRound.roundtripMeetings ) {
 
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            m.dateAndTime = this.dfp.transform(m.datetime);
 
             let key = m.day;
             console.log( key + "° Giornata di ritorno");

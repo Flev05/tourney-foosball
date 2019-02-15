@@ -16,7 +16,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 export class RuleListView extends AbstractListView {
     static redirectToMeeting: string = "adminplayoff/lv/meetingLv";
 
-    playoffConfigs: PlayoffRule[];
+    playoffRules: PlayoffRule[];
     playoffCols: TableCols[] = [
         { field: 'position', header: 'Classificata' },
         { field: 'round',    header: 'Girone' },
@@ -47,10 +47,10 @@ export class RuleListView extends AbstractListView {
         this.tourneyService.prepareEliminatoriesComboBoxes();
         
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        this.playoffConfigs = this.selectedPlayoff.playoffRules;
+        this.playoffRules = this.selectedPlayoff.playoffRules;
 
-        this.atLeast1Rule = this.playoffConfigs != null && this.playoffConfigs.length >= 0 ? true: false;
-        this.atLeast2Rules = this.playoffConfigs != null && this.playoffConfigs.length >= 2 ? true: false;
+        this.atLeast1Rule = this.playoffRules != null && this.playoffRules.length >= 0 ? true: false;
+        this.atLeast2Rules = this.playoffRules != null && this.playoffRules.length >= 2 ? true: false;
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds    = this.tourneyService.roundsCombobox;

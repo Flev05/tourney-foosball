@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { DateFormatPipe } from '../../common/date-format-pipe';
-import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDetailView } from './meeting-detailview';
@@ -11,11 +10,13 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { AbstractRuleListView } from '../../common/abstract-rule-listview';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 @Component({
     templateUrl: './playoff-result-listview.html'
 })
-export class PlayoffResultListView extends AbstractListView {
+export class PlayoffResultListView extends AbstractRuleListView {
     static redirect: string = "result/lv/meetingLv/dv";
     cols: TableCols[] ;
     
@@ -104,6 +105,8 @@ export class PlayoffResultListView extends AbstractListView {
 
         for( let m of this.selectedPlayoff.round.onewayMeetings ) {
 
+            this.resolveRule(m);
+
             m.dateAndTime = this.dfp.transform(m.datetime);
 
             let key = m.day;
@@ -115,6 +118,7 @@ export class PlayoffResultListView extends AbstractListView {
 
             let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
             meetingList.push(m);
+
         }
 
         for( let m of this.selectedPlayoff.round.roundtripMeetings ) {
@@ -130,6 +134,25 @@ export class PlayoffResultListView extends AbstractListView {
 
             let meetingList: Meeting[] = this.roundtripMeetingDaysMap.get(key);
             meetingList.push(m);
+        }
+    }
+
+    private resolveRule(m: Meeting): void {
+        this.selectedPlayoff.round.teams = [];
+
+        for( let rule of this.selectedPlayoff.playoffRules ) {
+
+            let position: number = rule.fromRound.position.value;
+            let roundName: string = rule.fromRound.round.label;
+
+            let round = this.selectedTourney.rounds.find( r => r.name == roundName );
+            if( round != undefined ) {
+                let c: Classification = round.classification[position-1];
+
+                let team = c.team;
+                this.selectedPlayoff.round.teams.push(team);
+            }
+
         }
     }
 

@@ -22,7 +22,7 @@ export class RuleDetailView extends AbstractDetailView {
     positions: Combobox[];
     rounds: Combobox[];
 
-    playoffConfigs: PlayoffRule[];
+    playoffRules: PlayoffRule[];
 
     selectedPlayoff: Playoff;
     selectedPlayoffConfig: PlayoffRule; 
@@ -45,7 +45,7 @@ export class RuleDetailView extends AbstractDetailView {
         this.rounds = this.tourneyService.roundsCombobox;
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        this.playoffConfigs = this.selectedPlayoff.playoffRules;
+        this.playoffRules = this.selectedPlayoff.playoffRules;
 
         if(this.tourneyService.newRule) {
             this.tourneyService.selectedPlayoffConfig = this.newPlayoffConfig();

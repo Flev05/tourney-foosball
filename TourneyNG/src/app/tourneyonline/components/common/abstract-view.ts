@@ -175,16 +175,8 @@ export abstract class AbstractView implements OnInit {
         return m;
     }
     
-    private makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
-        if( pr1 == null && pr1 == null) {
-            return "";
-        }
-    
-        return this.makeRule(pr1) + " " + this.makeRule(pr2);
-    }
-    
-    protected makeRule(rule: PlayoffRule): string {
-        return rule.fromRound.position.label + "." + rule.fromRound.round.label;
+    protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
+        return "";
     }
 
 }

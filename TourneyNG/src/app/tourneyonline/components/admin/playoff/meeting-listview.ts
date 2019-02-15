@@ -5,17 +5,17 @@ import { Message } from 'app/components/common/api';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { AbstractRuleListView } from '../../common/abstract-rule-listview';
 
 @Component({
     templateUrl: './meeting-listview.html'
 })
-export class MeetingListView extends AbstractListView {
+export class MeetingListView extends AbstractRuleListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
     meetingsCols: TableCols[] ;
     rows: any[];
@@ -257,15 +257,6 @@ export class MeetingListView extends AbstractListView {
         }
     }
 
-    private isEquals(m: Meeting, pr1: PlayoffRule, pr2: PlayoffRule): boolean {
-        let rule1: string = this.makeRule(pr1);
-        let rule2: string = this.makeRule(pr2);
-
-        let b: boolean = m.rule1.fromRound.position.label == rule2;
-        b = b && m.rule2.fromRound.position.label == rule1;
-
-        return b;
-    }
 
     private newMeeting(pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
         let m: Meeting = this.createMeeting(null, null, pr1, pr2, day, d);

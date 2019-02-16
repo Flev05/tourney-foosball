@@ -78,7 +78,7 @@ export class MatrixDetailView extends AbstractDetailView {
 
         if(this.selectedRound.classification.length==0) {
             for(let t of this.selectedRound.teams) {
-                let cl: Classification = this.newClassification(t, 0);
+                let cl: Classification = this.tourneyService.newClassification(t, 0);
                 this.selectedRound.classification.push(cl);
             }        
         }

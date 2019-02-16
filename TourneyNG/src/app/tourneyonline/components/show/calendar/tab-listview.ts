@@ -14,6 +14,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 export class CalendarTabListView extends AbstractEliminatoryListView {
     static tabDvRedirect: string = "calendar/lv/eliminatories";
     activeIndex: any;
+    incompletePlayoffConfiguration: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -31,12 +32,18 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
         super.ngOnInit();
 
         if(super.containsRound()) {
-            super.loadRounds(this.selectedTourney.isOnewayRound=="true"?true:false);
+            this.roundRows = this.selectedTourney.rounds;
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff=="true"?true:false);
-        }
+            this.incompletePlayoffConfiguration = false;
+            this.playoffRows = this.selectedTourney.playoffs;
+            for(let p of this.playoffRows) {
+                p.playoffName = p.round.name;
+                if( p.playoffRules.length == 0 ) {
+                    this.incompletePlayoffConfiguration = true;
+                }
+            }        }
 
         if(super.containsEliminatory()) {
             super.loadEliminatoryLevels();
@@ -60,11 +67,11 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
                 allRounds.push(e.round);
             }
             
-            const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
-            for(let er of eRows) {
-                er.roundName = el.name + " - " + er.roundName;
-            }
-            this.eliminatoryRows = this.eliminatoryRows.concat(eRows);
+            // const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
+            // for(let er of eRows) {
+            //     er.roundName = el.name + " - " + er.roundName;
+            // }
+            // this.eliminatoryRows = this.eliminatoryRows.concat(eRows);
         }
     }
     
@@ -74,9 +81,9 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
      * 
      * @param rounds the list of round containg the meetings
      */
-    protected prepareRoundsGui(rounds: Round[], isOneway: boolean): any[] {
+    protected prepareRoundsGui(rounds: Round[]): any[] {
 
-        return super.prepareCalendarGui(rounds, isOneway);
+        return super.prepareCalendarGui(rounds);
     }
 
     onEliminatoryRowSelect(event) {

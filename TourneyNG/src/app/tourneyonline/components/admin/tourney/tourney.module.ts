@@ -39,6 +39,7 @@ import { LevelService } from '../eliminatory/level-service';
 import { PlayerModule } from '../player/player.module';
 import { PlayerPickList } from './player-picklist';
 import { TeamModule } from '../team/team.module';
+import { NewTourneyDetailView } from './new-tourney-detailview';
 
 @NgModule({
 	imports: [
@@ -76,6 +77,7 @@ import { TeamModule } from '../team/team.module';
 	],
 	declarations: [
         TourneyListView
+        ,NewTourneyDetailView
         ,TourneyDetailView
         ,PlayerListView
         ,TeamPickList

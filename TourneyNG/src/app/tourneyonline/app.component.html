@@ -69,14 +69,12 @@
                     (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
                 <img src="assets/showcase/images/icons/file-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/file.svg" class="layout-menu-icon-inactive"/>
-                <span>Consultazione</span>
+                <span>Calendario</span>
             </a>
             <div [ngClass]="{'submenushow': (tourneymenutitle.id == activeMenuId), 'submenuhide': (tourneymenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/showtourney']" (click)="menuActive = false">&#9679; Tornei</a>
-                <a [routerLink]="['/calendar']" (click)="menuActive = false">&#9679; Calendario</a>
                 <a [routerLink]="['/matrix']"   (click)="menuActive = false">&#9679; Matrice</a>
                 <a [routerLink]="['/result']"   (click)="menuActive = false">&#9679; Risultati</a>
-                <a [routerLink]="['/classification']" (click)="menuActive = false">&#9679; Classifica</a>
                 <a [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
@@ -111,14 +109,17 @@
             <router-outlet></router-outlet>
         </div>
         <div class="content-section layout-footer clearfix">
-            <span>Tournaments 1.0</span>
-            <span>Copyright © 2019. All Rights Reserved</span>
-            <span>Powered by Luciano Martino</span>
+            <div class="ui-grid-row" style="text-align: center;">
+                <div class="ui-grid-col-12" style="text-align: center;">
+                    <p><span>Tournaments 1.0</span></p>
+                    <p><span>Copyright © 2019. All Rights Reserved</span></p>
+                    <p><span>Powered by Luciano Martino</span></p>
+                    <a class="home-button" [routerLink]="['/lease']">
+                        Noleggio
+                    </a>
+                </div>
+            </div>
             
-            <a class="home-button" [routerLink]="['/lease']">
-                Noleggio
-            </a>
-
             <div class="footer-links">
                 <a href="https://www.facebook.com/CalcioBalillaPregnana/"><i class="fa fa-facebook"></i></a>
             </div>

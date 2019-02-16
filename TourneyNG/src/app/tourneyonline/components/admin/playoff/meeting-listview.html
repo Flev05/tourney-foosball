@@ -30,7 +30,7 @@
 
 <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-<p-tabView [activeIndex]="tourneyService.selectedTabIndex">
+<p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Andata">
         <p-table [columns]="meetingsCols"
             [value]="onewayDays" 

@@ -1,12 +1,3 @@
-<div class="content-section introduction">
-    <div>
-        <span class="feature-title">Incontri</span>
-        <span>Vista di dettaglio per i risultati di un incontro</span>
-    </div>
-</div>    
-
-<div class="content-section documentation">
-    
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
     <h4>Istruzioni</h4>
@@ -20,23 +11,21 @@
     </p>
 </p-accordionTab>
 </p-accordion>
-</div>
 
-<div class="content-section implementation">      
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <h4><span>Data: {{selectedMeeting.datetime | date: 'dd/MM/y HH:mm'}}</span></h4>
+<h4><span>Risultati Torneo: {{selectedTourney.tourneyName}}</span></h4>
+<h4><span>Data: {{selectedMeeting.datetime | date: 'dd/MM/y HH:mm'}}</span></h4>
 
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-    </div>       
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button class="ui-button-success" type="button" pButton icon="pi pi-save" (click)="save()" label="Salva"></button>
+</div>       
 
-    <div style="margin-top:30px">
-        <p-message *ngIf="alreadyPassed" 
-            severity="success" 
-            text="{{teamPassedMessage}}">
-        </p-message>
-    </div>     
-</div>
+<div *ngIf="alreadyPassed" style="margin-top:30px">
+    <p-message  
+        severity="success" 
+        text="{{teamPassedMessage}}">
+    </p-message>
+</div>     
 
 <p-table *ngIf="!alreadyPassed" [value]="matches">
     <ng-template pTemplate="colgroup">

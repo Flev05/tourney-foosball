@@ -8,6 +8,7 @@ export abstract class AbstractListView extends AbstractView {
 
     levelMap: Map<number, Eliminatory[]>;
     totLevelLen: number;
+    activeIndex: number;
 
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
@@ -19,8 +20,16 @@ export abstract class AbstractListView extends AbstractView {
 
     ngOnInit() {
         super.ngOnInit();
+        // this.activeIndex = this.tourneyService.selectedTabIndex;
     }
-  
+    
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.activeIndex = index;
+        // this.tourneyService.selectedTabIndex = this.activeIndex;
+    }
+    
     protected gotoDetailView() {
         this.router.navigate([this.redirect]);
     }

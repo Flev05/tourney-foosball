@@ -6,15 +6,13 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import {  Direction, PhaseType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import {  PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Team } from 'app/tourneyonline/domain/team';
 import { DateFormatPipe } from './date-format-pipe';
-import { Classification } from 'app/tourneyonline/domain/classification';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
@@ -78,6 +76,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
+        this.incompleteConfiguration = true;
+
         this.tourneyService.prepareEliminatoriesComboBoxes();
  
         if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
@@ -120,364 +120,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
     }
 
-    protected loadRounds(isOneway: boolean) {
-        let rounds = this.selectedTourney.rounds;
-
-        this.roundMap = new Map<number, Round>();
-        this.roundHttpCounter = 0;
-        this.roundMeetingMap = new Map<number, Meeting[]>();
-
-        for (let r of rounds) {
-            r.onewayMeetings = [];
-            this.roundHttpCounter++;
-            this.roundMap.set(r.id, r);
-            const subscr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, r.id);
-            subscr.subscribe(ms => this.onLoadRoundMeetings(ms, isOneway), e => this.onError(e));
-        }
-    }
-
-    private onLoadRoundMeetings(meetings: MeetingDb[], isOneway: boolean): void {
-        if( meetings == undefined || meetings.length == 0 ) {
-            return;
-        }
-
-        let rid = meetings[0].roundId;
-        this.roundMeetingMap.set(rid, meetings);
-
-        this.roundHttpCounter--;
-
-        if(this.roundHttpCounter == 0) {
-            for(let key of this.roundMeetingMap.keys()) {
-                let mdbs = this.roundMeetingMap.get(key);
-                for(let mdb of mdbs) {
-                    let r: Round = this.roundMap.get(mdb.roundId);           
-
-                    let m = JSON.parse(mdb.json);
-                    r.onewayMeetings.push(m);
-
-                    r.onewayMeetings  = this.sortMeetings(r.onewayMeetings)
-                }
-                
-                for(let round of this.selectedTourney.rounds) {
-                    round.classification = this.createClassification(round.onewayMeetings);
-                }
-                
-                this.roundRows = this.prepareRoundsGui(this.selectedTourney.rounds, isOneway);
-            }
-        }
-    }
-    
-    protected prepareEliminatoryRound(rounds: Round[], isOneway: boolean): any[] {
-
-        for(let round of rounds) {
-            round.classification = this.createClassification(round.onewayMeetings);
-        }
-
-        return this.prepareRoundsGui(rounds, isOneway);
-    }
-
-    private findByName(rn: string, rounds: Round[]): Round {
-        for(let r of rounds) {
-            if(r.name == rn) {
-                return r;
-            }
-        }    
-        return null;
-    }
-    
-    private createClassification(meetings: Meeting[]): Classification[] {
-        let classificationMap : Map<string, Classification> = new Map<string, Classification>();
-
-        for(let m of meetings) {
-
-            let t1 = m.team1;
-            let t2 = m.team2;
-            let key1 = t1.teamName;
-            let key2 = t2.teamName;
-
-            if(!classificationMap.has(key1)) {
-                let c = this.newClassification(t1, 0);
-                classificationMap.set(key1, c);
-            }
-            let c1 = classificationMap.get(key1);            
- 
-            if(!classificationMap.has(key2)) {
-                let c2 = this.newClassification(t2, 0);
-                classificationMap.set(key2, c2);
-            }
-            
-            if(m.status == MeetingStatus.ToPlay) {
-                continue;
-            }
-            
-            let c2 = classificationMap.get(key2);
-
-            c1.played++;
-            c2.played++;
-
-            c1.points += m.points1;
-            c2.points += m.points2;
-
-            if (m.points1 > m.points2) {
-                c1.won++;
-                c2.lost++;
-            }
-            if (m.points2 > m.points1) {
-                c2.won++;
-                c1.lost++;
-            }
-            if (m.points1 == m.points2) {
-                c1.balanced++;
-                c2.balanced++;
-            }
-            for (let ma of m.matches) {
-                c1.goalsDone += ma.score1;
-                c1.goalsConceded += ma.score2;
-
-                c2.goalsDone += ma.score2;
-                c2.goalsConceded += ma.score1;
-            }
-            c1.goalsDiff = c1.goalsDone - c1.goalsConceded;        
-            c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        
-        }
-
-        let classificationList: Classification[] = [];
-        for( let c of classificationMap.values()) {
-            if(c.team.teamName == "") {
-                continue;
-            }
-            classificationList.push(c);            
-        }
-
-        classificationList = this.sortDesc(classificationList);
-
-        return classificationList;
-    }
-
-    private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
-
-            if (c1.points > c2.points) {
-                return -1;
-            }
-            if (c1.points < c2.points) {
-                return 1;
-            }
-        
-            if( c1.goalsDiff > c2.goalsDiff ) {
-                return -1;
-            }
-            if( c1.goalsDiff < c2.goalsDiff ) {
-                return 1;
-            }
-
-            if( c1.goalsDone > c2.goalsDone ) {
-                return -1;
-            }
-            if( c1.goalsDone < c2.goalsDone ) {
-                return 1;
-            }
-
-            if( c1.goalsConceded < c2.goalsConceded ) {
-                return -1;
-            }
-            if( c1.goalsConceded > c2.goalsConceded ) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        return sortedClassification;
-    } 
-
-    protected loadPlayoffs(isOneway: boolean): any {
-        
-        let playoffs = this.selectedTourney.playoffs;
-
-        this.playoffHttpCounter = 0;
-
-        this.playoffRoundMap = new Map<number, Playoff>();
-        this.playoffMeetingMap = new Map<number, Meeting[]>();
-        for(let po of playoffs) {
-            if(po.playoffRules == null || po.playoffRules.length==0) {
-                continue;
-            }
-            this.playoffHttpCounter++;
-            let r = po.round;
-            r.onewayMeetings = [];
-            this.playoffRoundMap.set(po.id, po);
-            const subscr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, po.id);
-            subscr.subscribe(ms => this.onLoadPlayoffMeeting(ms, isOneway), e => this.onError(e));       
-        }
-    } 
-
-    /**
-     * Call back method to process the Playoff meetings selected from the database
-     */
-    private onLoadPlayoffMeeting(playoffMeetings: MeetingDb[], isOneway: boolean): void {
-        if(playoffMeetings.length==0) {
-            return;
-        }
-        let poid = playoffMeetings[0].playoffId;
-        this.playoffMeetingMap.set(poid, playoffMeetings);
-
-        this.playoffHttpCounter--;
-
-        if(this.playoffHttpCounter == 0) {
-            for(let key of this.playoffMeetingMap.keys()) {
-                let mdbs = this.playoffMeetingMap.get(key);
-                for(let mdb of mdbs) {
-                    let po = this.playoffRoundMap.get(mdb.playoffId);
-                    
-                    let r = po.round;
-                    
-                    let m: Meeting = JSON.parse(mdb.json);
-                    r.onewayMeetings.push(m);
-
-                    r.onewayMeetings  = this.sortMeetings(r.onewayMeetings)
-
-                    this.resolvePlayoffRules(po, this.selectedTourney.rounds);
-                }
-            }
-            
-            this.playoffRows = this.preparePlayoffClassification(this.selectedTourney.playoffs, isOneway);
-        }
-    }
-
-    /**
-     * Updates the teams of the received playoff in function of their configured rules
-     * and their position in the classification from the received rounds
-     * 
-     * @param po the playoff to complete
-     * @param rounds the rounds containing the classifications
-     */
-    private resolvePlayoffRules(po: Playoff, rounds: Round[]) {
-        po.round.teams = [];
-        for (let pr of po.playoffRules) {
-            let pi: number = pr.fromRound.position.value;
-            let rn = pr.fromRound.round.label;
-            let round = this.findByName(rn, rounds);
-            if (pi <= round.classification.length) {
-                let c = round.classification[pi - 1];
-                let team = c.team;
-                po.round.teams.push(team);
-                this.resolvePlayoffRule(po.round.onewayMeetings, pr, team);
-            }
-        }
-    }
-    
-    private resolvePlayoffRule(meetings: Meeting[], pr: PlayoffRule, team: Team): any {
-        for(let m of meetings) {
-            if( m.rule1.id == pr.id) {
-                m.team1 = team;
-            }
-            if( m.rule2.id == pr.id) {
-                m.team2 = team;
-            }
-        }
-    }
-
-    /**
-        <th>Team</th>
-        <th>Pt.</th>
-        <th>G</th>
-        <th>V</th>
-        <th>P</th>
-        <th>N</th>
-        <th>Gf:Gs</th>
-        <th>D</th>
-        <td>{{rowIndex + 1}}</td>
-        <td>{{rowData.team.teamName}}</td>
-        <td>{{rowData.points}}</td>
-        <td>{{rowData.played}}</td>
-        <td>{{rowData.won}}</td>
-        <td>{{rowData.lost}}</td>
-        <td>{{rowData.balanced}}</td>
-        <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
-        <td>{{rowData.goalsDiff}}</td>       
-     */
-    protected prepareRoundsGui(rounds: Round[], isOneway: boolean): any[] {
-        this.cols = [
-            { field: 'teamName',    header: 'Team'},
-            { field: 'points',      header: 'Pt.'},
-            { field: 'played',      header: 'G'},
-            { field: 'won',         header: 'V'},
-            { field: 'lost',        header: 'P'},
-            { field: 'balanced',    header: 'N'},
-            { field: 'goalsDone',   header: 'Gf:Gs'},
-            { field: 'goalsDiff',   header: 'D'},
-        ];
-
-        let row : number = 0;
-        let rows: any[] = [];
-
-        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
-
-        for (let round of rounds) {
-            let r = 0;
-            for (let c of round.classification) {
-
-                rows.push(c);
-
-                rows[row].rowNumber = ++r;    
-                rows[row].roundName = round.name;    
-                rows[row].teamName = c.team.teamName;    
-                rows[row].points = c.points;    
-                rows[row].played = c.played;    
-                rows[row].won = c.won;    
-                rows[row].lost = c.lost;    
-                rows[row].balanced = c.balanced;    
-                rows[row].goalsDone = c.goalsDone;    
-                rows[row].goalsConceded = c.goalsConceded;    
-                rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
-
-                let len = round.onewayMeetings.length;
-
-                let currentKey = round.name;  
-                if(!classificationMap.has(currentKey)) {
-                    classificationMap.set(currentKey, c);
-                    rows[row].rowspanSize = len;
-                } else {
-                    rows[row].rowspanSize = undefined;
-                }
-                row++;                
-            }
-        }
-
-        return rows;
-    }
-
-    private preparePlayoffClassification(playoffs: Playoff[], isOneway: boolean): any[] {
-
-        let playoffRounds: Round[] = this.makePlayoffRounds(playoffs);
-
-        for(let round of playoffRounds) {
-            round.classification = this.createClassification(round.onewayMeetings);
-        }
-
-        let rows: any[] = this.preparePlayoffGui(playoffs, isOneway);
-
-        return rows;
-    }
-
-    protected makePlayoffRounds(playoffs: Playoff[]) {
-        let playoffRounds: Round[] = [];
-        for (let p of playoffs) {
-            playoffRounds.push(p.round);
-        }
-        return playoffRounds;
-    }
-
-    protected preparePlayoffGui(playoffs: Playoff[], isOneway: boolean): any[] {
-        let rounds: Array<Round> = new Array<Round>();
-
-        for(let p of playoffs) {
-            rounds.push(p.round);
-        }
-        return this.prepareRoundsGui(rounds, isOneway);
-    }
-
     /**
         <th>Squadre</th>
         <th>Nome</th>
@@ -494,7 +136,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {
             return;
         }
-        this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
+        this.incompleteConfiguration = this.selectedTourney.teams.length >= 2 && this.eliminatoryLevels.length > 0 ? false : true;
 
         this.elHttpCounter = 0;
         this.eliminatoryLevelRows = [];
@@ -748,7 +390,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
      * 
      * @param rounds the list of round containg the meetings
      */
-    protected prepareCalendarGui(rounds: Round[], isOneway: boolean): any[] {
+    protected prepareCalendarGui(rounds: Round[] ): any[] {
         this.cols = [
             { field: 'rowNumber', header: 'N°'},
             { field: 'teamName1', header: 'Team 1'},
@@ -765,9 +407,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for (let round of rounds) {
             let r = 0;
             for (let m of round.onewayMeetings) {
-                if(isOneway && m.direction == Direction.RoundTrip) {
-                    continue;
-                }
 
                 rows.push(m);
 

@@ -12,6 +12,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractRuleListView } from '../../common/abstract-rule-listview';
 import { Classification } from 'app/tourneyonline/domain/classification';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
 @Component({
     templateUrl: './playoff-result-listview.html'
@@ -40,6 +41,10 @@ export class PlayoffResultListView extends AbstractRuleListView {
     
     mdbList: MeetingDb[];
    
+    atLeastOneMatch: boolean;
+    classificationCols: any[];
+    playoffClassification: any[];
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -50,9 +55,12 @@ export class PlayoffResultListView extends AbstractRuleListView {
     }
 
     ngOnInit() {
+
         super.ngOnInit();
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        
+     
+        this.classificationCols = this.tourneyService.classificationCols;
+
         this.cols = [
             { field: 'teamName1',   header: 'In casa' },
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -75,7 +83,14 @@ export class PlayoffResultListView extends AbstractRuleListView {
             }
         }
 
+        this.refreshTeams();
+        if(!this.atLeastOneMatch) {
+            return;
+        }
+
         this.prepareMeetingMaps();
+
+        this.preparePlayoffClassification();
 
         this.onewayDaysNo = 1;
         this.shiftOnewayDay(this.onewayDaysNo);
@@ -96,21 +111,48 @@ export class PlayoffResultListView extends AbstractRuleListView {
     }
 
     /**
+     * Called only one time at meeting reload, it resolves the playoff rules to their corresponding 
+     * qualified teams from the tourney rounds
+     */
+    private refreshTeams(): void {
+        this.selectedPlayoff.round.teams = [];
+
+        this.atLeastOneMatch = false;
+        for( let rule of this.selectedPlayoff.playoffRules ) {
+            let position: number = rule.fromRound.position.value;
+            let roundName: string = rule.fromRound.round.label;
+
+            let round = this.selectedTourney.rounds.find( r => r.name == roundName );
+            if( round != undefined ) {
+                if( round.classification.length > 0 ) {
+                    this.atLeastOneMatch = true;
+                    let c: Classification = round.classification[position-1];
+    
+                    let team = c.team;
+                    this.selectedPlayoff.round.teams.push(team);
+                }
+            }
+        }
+    }
+
+    /**
      * Converts the date and time and complete the round trip meetings copying from 
      * its corresponding oneway meeting list
      */
     private prepareMeetingMaps(): void {
         this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
-        this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
 
         for( let m of this.selectedPlayoff.round.onewayMeetings ) {
 
-            this.resolveRule(m);
+            this.resolveRules(m);
 
             m.dateAndTime = this.dfp.transform(m.datetime);
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
 
             let key = m.day;
-            console.log( key + "° Giornata di andata");
+            // console.log( key + "° Giornata di andata");
             if(!this.onewayMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
                 this.onewayMeetingDaysMap.set(key, emptyList);
@@ -118,12 +160,17 @@ export class PlayoffResultListView extends AbstractRuleListView {
 
             let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
             meetingList.push(m);
-
         }
 
+        this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
         for( let m of this.selectedPlayoff.round.roundtripMeetings ) {
 
             m.dateAndTime = this.dfp.transform(m.datetime);
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
+
+            this.resolveRules(m);
 
             let key = m.day;
             console.log( key + "° Giornata di ritorno");
@@ -137,23 +184,52 @@ export class PlayoffResultListView extends AbstractRuleListView {
         }
     }
 
-    private resolveRule(m: Meeting): void {
-        this.selectedPlayoff.round.teams = [];
+    /**
+     * Prepares the classification relatid to the selected playoff
+     */
+    private preparePlayoffClassification(): void {
 
-        for( let rule of this.selectedPlayoff.playoffRules ) {
+        let allMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.selectedPlayoff.round.roundtripMeetings);
+        this.selectedPlayoff.round.classification = this.tourneyService.createClassification(allMeetings);
 
-            let position: number = rule.fromRound.position.value;
-            let roundName: string = rule.fromRound.round.label;
+        this.playoffClassification = this.tourneyService.prepareRoundsGui([this.selectedPlayoff.round]);
+    }
+    
+    /**
+     * Called for each meeting, it resolves the playoff rule of the meeting to its corresponding 
+     * qualified team came from the rounds of the tourney
+     * 
+     * @param m the method containg the rules to resolve with
+     */
+    private resolveRules(m: Meeting): void {
 
-            let round = this.selectedTourney.rounds.find( r => r.name == roundName );
-            if( round != undefined ) {
+        this.atLeastOneMatch = false;
+
+        m.team1 = this.findTeam(m.rule1);
+        m.team2 = this.findTeam(m.rule2);
+    }
+
+    /**
+     * Finds the team corresponding to the received rule
+     * 
+     * @param rule the playoff rule to associate to the qualified team
+     */
+    private findTeam( rule: PlayoffRule): Meeting {
+
+        let position: number = rule.fromRound.position.value;
+        let roundName: string = rule.fromRound.round.label;
+
+        let round = this.selectedTourney.rounds.find( r => r.name == roundName );
+        if( round != undefined ) {
+            if( round.classification.length > 0 ) {
+                this.atLeastOneMatch = true;
+
                 let c: Classification = round.classification[position-1];
-
                 let team = c.team;
-                this.selectedPlayoff.round.teams.push(team);
+                return team;
             }
-
-        }
+        }        
+        return null;
     }
 
     private shiftOnewayDay( currentDay : number) {

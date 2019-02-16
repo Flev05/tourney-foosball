@@ -13,6 +13,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 export class ClassificationTabListView extends AbstractEliminatoryListView {
     static tabDvRedirect: string = "classification/lv/eliminatories";
     activeIndex: any;
+    incompletePlayoffConfiguration: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -30,11 +31,20 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         super.ngOnInit();
 
         if(super.containsRound()) {
-            super.loadRounds(this.selectedTourney.isOnewayRound=="true"?true:false);
+            // super.loadRounds();
         }
 
         if(super.containsPlayoff()) {
-            super.loadPlayoffs(this.selectedTourney.isOnewayPlayoff=="true"?true:false);
+            // super.loadPlayoffs();
+
+            this.incompletePlayoffConfiguration = false;
+            this.playoffRows = this.selectedTourney.playoffs;
+            for(let p of this.playoffRows) {
+                p.playoffName = p.round.name;
+                if( p.playoffRules.length == 0 ) {
+                    this.incompletePlayoffConfiguration = true;
+                }
+            }
         }
 
         if(super.containsEliminatory()) {
@@ -59,11 +69,11 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
                 allRounds.push(e.round);
             }
             
-            const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
-            for(let er of eRows) {
-                er.roundName = el.name + " - " + er.roundName;
-            }
-            this.eliminatoryRows = this.eliminatoryRows.concat(eRows);
+            // const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
+            // for(let er of eRows) {
+            //     er.roundName = el.name + " - " + er.roundName;
+            // }
+            // this.eliminatoryRows = this.eliminatoryRows.concat(eRows);
         }
     }
 

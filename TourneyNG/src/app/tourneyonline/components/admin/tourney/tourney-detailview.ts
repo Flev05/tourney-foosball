@@ -26,10 +26,13 @@ const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
 const REDIRECT_ROUND_DV     = 'admintourney/dv/round';
 const REDIRECT_PLAYOFF_DV   = 'admintourney/dv/playoff';
 
+const REDIRECT_TOURNEY_LV   = 'admintourney/';
+
 @Component({
     templateUrl: './tourney-detailview.html',
 })
 export class TourneyDetailView extends AbstractDetailView {
+    static redirect = 'admintourney/dv';
 
     submitted: boolean;
 
@@ -85,7 +88,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("TourneyDetailView.ngOnInit() ");
         
         super.ngOnInit();
-
+        
         this.tourneyService.loadDisciplines().subscribe(t => {
             this.disciplines = t;
         });
@@ -114,7 +117,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
     }
-    
+
     private initTourney() {
         this.selectedTourney = {};
 
@@ -151,9 +154,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.meetingsForDelete = []
         this.selectedTourney.selectedTeamsNumCombobox = {label: "", value: 0};
 
-        this.tourneyService.selectedTourney = this.selectedTourney;
-    
-        this.tourneyService.newTourney = false;
+        this.tourneyService.selectedTourney = this.selectedTourney;    
     }
 
     private prepareRounds(): void {
@@ -374,7 +375,7 @@ export class TourneyDetailView extends AbstractDetailView {
             for(let t of teams) {
                 let round: Round = this.selectedTourney.rounds[r];
                 round.teams.push(t);
-                let c: Classification = super.newClassification(t, 0);
+                let c: Classification = this.tourneyService.newClassification(t, 0);
                 round.classification.push(c);
             }
         }
@@ -424,7 +425,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let classifications: Classification[] = [];
 
         for(let t of randomTeams) {
-            let c: Classification = super.newClassification(t, 0);
+            let c: Classification = this.tourneyService.newClassification(t, 0);
             c.team = t;
             classifications.push(c);
         }
@@ -700,40 +701,53 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.tourneyService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
 
-        for(let r of this.selectedTourney.rounds) {
-            for(let m of r.onewayMeetings) {
-                this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-            }
-            for(let m of r.roundtripMeetings) {
-                this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-            }
-        }
-
-        for(let p of this.selectedTourney.playoffs) {
-            for(let m of p.round.onewayMeetings) {
-                this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-            }
-            for(let m of p.round.roundtripMeetings) {
-                this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-            }
-        }
-
-        for(let el of this.selectedTourney.eliminatoryLevels) {
-            for(let e of el.eliminatories) {
-                for(let m of e.round.onewayMeetings) {
-                    this.tourneyService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+        if( this.containsPhase(PhaseType.R) ) {
+            for(let r of this.selectedTourney.rounds) {
+                for(let m of r.onewayMeetings) {
+                    this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                }
+                for(let m of r.roundtripMeetings) {
+                    this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
                 }
             }
         }
 
-        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => super.goBack());
+        if( this.containsPhase(PhaseType.P) ) {
+            for(let p of this.selectedTourney.playoffs) {
+                for(let m of p.round.onewayMeetings) {
+                    this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                }
+                for(let m of p.round.roundtripMeetings) {
+                    this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                }
+            }
+        }
+
+        if( this.containsPhase(PhaseType.E) ) {
+            for(let el of this.selectedTourney.eliminatoryLevels) {
+                for(let e of el.eliminatories) {
+                    for(let m of e.round.onewayMeetings) {
+                        this.tourneyService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                    }
+                }
+            }
+        }
+
+        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.gotoListView());
+    }
+
+    private gotoListView() {
+        this.tourneyService.newTourney = false;
+        this.router.navigate([REDIRECT_TOURNEY_LV]);
     }
 
     goBack() {
+        this.tourneyService.newTourney = false;
+
         let popup = 'Sicuro di NON dover salvare niente?';
 
         if(confirm(popup)) {
-            super.goBack();
+            this.gotoListView();
         }    
     }
 

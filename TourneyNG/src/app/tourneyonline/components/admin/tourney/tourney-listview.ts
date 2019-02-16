@@ -12,8 +12,9 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { NewTourneyDetailView } from './new-tourney-detailview';
+import { TourneyDetailView } from './tourney-detailview';
 
-const REDIRECT = 'admintourney/dv';
 @Component({
     templateUrl: './tourney-listview.html'
 })
@@ -35,7 +36,7 @@ export class TourneyListView extends AbstractTourneyListView {
         , public loc: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(REDIRECT, tourneyService, playerService, teamService, router, loc, dfp);
+        super(TourneyDetailView.redirect, tourneyService, playerService, teamService, router, loc, dfp);
     }
 
     ngOnInit() {
@@ -68,9 +69,7 @@ export class TourneyListView extends AbstractTourneyListView {
     }
 
     create() {
-        this.tourneyService.newTourney = true;
-
-        this.gotoDetailView();
+        this.router.navigate([NewTourneyDetailView.redirect]);
     }
 
     doDelete(tourney: any) {

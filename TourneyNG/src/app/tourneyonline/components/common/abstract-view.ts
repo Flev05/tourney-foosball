@@ -11,7 +11,6 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Country } from 'app/tourneyonline/domain/country';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
-
 export abstract class AbstractView implements OnInit {
     it: any;
     selectedTourney: Tourney;
@@ -108,22 +107,6 @@ export abstract class AbstractView implements OnInit {
             }
         }
         return filtered;
-    }
-
-    protected newClassification(t: Team, initialPoints: number): Classification {
-        return {
-            id: this.tourneyService.getSequenceNumber(),
-            team: t,
-            points: initialPoints,
-            played: 0,
-            won: 0,
-            lost: 0,
-            balanced: 0,
-            penalty: 0,
-            goalsDone: 0,
-            goalsConceded: 0,
-            goalsDiff: 0
-        };
     }
 
     protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {

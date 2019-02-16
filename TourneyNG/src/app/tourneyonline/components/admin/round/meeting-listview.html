@@ -32,7 +32,9 @@
     <p-message *ngIf="!atLeast2teams" severity="error" text="Attenzione! Il girone è vuoto, inserire almeno 2 squadre"></p-message>
 </div>     
 
-<p-tabView *ngIf="atLeast2teams" [activeIndex]="tourneyService.selectedTabIndex">
+<p-tabView *ngIf="atLeast2teams" 
+        [activeIndex]="activeIndex"
+        (onChange)="onChangeTab($event)">
     <p-tabPanel header="Andata">
         <p-table [columns]="cols"
             [value]="onewayDays" 

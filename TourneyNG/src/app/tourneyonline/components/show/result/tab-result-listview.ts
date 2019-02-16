@@ -33,6 +33,8 @@ export class TabResultListView extends AbstractEliminatoryListView {
     playoffRows: Playoff[];
     selectedPlayoff: Playoff;
 
+    incompletePlayoffConfiguration: boolean;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -55,9 +57,13 @@ export class TabResultListView extends AbstractEliminatoryListView {
         }
 
         if(super.containsPlayoff()) {
+            this.incompletePlayoffConfiguration = false;
             this.playoffRows = this.selectedTourney.playoffs;
             for(let p of this.playoffRows) {
                 p.playoffName = p.round.name;
+                if( p.playoffRules.length == 0 ) {
+                    this.incompletePlayoffConfiguration = true;
+                }
             }
         }
 
@@ -215,7 +221,6 @@ export class TabResultListView extends AbstractEliminatoryListView {
             , eliminatoryId: this.selectedEliminatoryLevel.id
         };     
         this.router.navigate([REDIRECT_PLAYOFF_DV]);
-
 
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }

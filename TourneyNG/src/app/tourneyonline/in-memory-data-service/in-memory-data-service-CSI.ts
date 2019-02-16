@@ -156,17 +156,17 @@ export class InMemoryDataServiceCSI  {
           ]
       }
       ,{id:2, round:{
-        id:2, name: "Playoff Girone B", type: RoundType.P
-        ,teams:[]
-        ,onewayMeetings:[]
-        ,roundtripMeetings:[]
-        ,classification:[]
+          id:2, name: "Playoff Girone B", type: RoundType.P
+          ,teams:[]
+          ,onewayMeetings:[]
+          ,roundtripMeetings:[]
+          ,classification:[]
       }
-    ,playoffRules:[
-         {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2} }}
-        ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1} }}
-      ]
-    }
+      ,playoffRules:[
+          {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2} }}
+          ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1} }}
+        ]
+      }
     ]
     ,eliminatoryLevels: []
     ,objectives:[]

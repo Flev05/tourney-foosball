@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Risultati</span>
-        <span>Risultati del torneo</span>
+        <span class="feature-title">Calendario, risultati e classifiche </span>
+        <span>Vista dei calendari, risultati e classifiche del torneo</span>
     </div>
 </div>
 
@@ -9,12 +9,12 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">  
     <p>
-        Vista schede risultati di gironi, playoff e eliminatorie dalla quale accedere ai corrispondenti incontri.
+        Vista schede dei calendari, risultati e classifiche di gironi, playoff e eliminatorie.
     </p>
     
     <p>
-        Selezionare la scheda (click sul nome della scheda) per visualizzare i gironi in essa contenute.
-        Quindi selezionare l'incontro da compilare.
+        Selezionare la scheda (click sul nome della scheda) per visualizzare calendari, risultati e classifiche 
+        dei gironi in essa contenute.
     </p>
     </p-accordionTab>
 </p-accordion>        
@@ -59,7 +59,14 @@
     </p-tabPanel>
 
     <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
-            <p-table [columns]="playoffCols"
+        <div *ngIf="incompletePlayoffConfiguration" style="margin-top:30px">
+            <p-message 
+                severity="error" 
+                text="Attenzione! Le regole del passaggio di turno ai playoff non sono complete!">
+            </p-message>
+        </div>     
+
+        <p-table *ngIf="!incompletePlayoffConfiguration" [columns]="playoffCols"
             [value]="playoffRows"
             [responsive]="true"
             selectionMode="single" 
@@ -89,8 +96,8 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">    
-        <div style="margin-top:30px">
-            <p-message *ngIf="incompleteConfiguration" 
+        <div *ngIf="incompleteConfiguration"  style="margin-top:30px">
+            <p-message 
                 severity="error" 
                 text="Attenzione! Le regole del passaggio di turno alle eliminazioni dirette non sono complete!">
             </p-message>

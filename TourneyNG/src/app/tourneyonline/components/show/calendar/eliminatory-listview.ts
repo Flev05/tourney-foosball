@@ -28,25 +28,25 @@ export class CalendarEliminatoryListView extends AbstractEliminatoryListView {
 
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.prepareClassificationGui();
+        // this.prepareClassificationGui();
     }
     
-    private prepareClassificationGui(): void {
+    // private prepareClassificationGui(): void {
         
-        let allRounds: Array<Round> = new Array<Round>();
+    //     let allRounds: Array<Round> = new Array<Round>();
 
-        let el = this.selectedEliminatoryLevel;
+    //     let el = this.selectedEliminatoryLevel;
 
-        for(let e of el.eliminatories) {
-            allRounds.push(e.round);
-        }
+    //     for(let e of el.eliminatories) {
+    //         allRounds.push(e.round);
+    //     }
         
-        this.eliminatoryRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
+    //     this.eliminatoryRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
 
-        for(let er of this.eliminatoryRows) {
-            er.roundName += "° Eliminatoria"; 
-        }
-    }
+    //     for(let er of this.eliminatoryRows) {
+    //         er.roundName += "° Eliminatoria"; 
+    //     }
+    // }
 
     /**
      * Specializes the corresponing base method to prepare the meeting list GUI found in the 
@@ -55,7 +55,7 @@ export class CalendarEliminatoryListView extends AbstractEliminatoryListView {
      * @param rounds the list of round containg the meetings
      */
     protected prepareRoundsGui(rounds: Round[]): any[] {
-        return super.prepareCalendarGui(rounds, this.selectedEliminatoryLevel.isOneway);
+        return super.prepareCalendarGui(rounds);
     }
 }
 

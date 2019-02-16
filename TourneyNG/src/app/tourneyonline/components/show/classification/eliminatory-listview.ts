@@ -40,7 +40,7 @@ export class ClassificationEliminatoryListView extends AbstractEliminatoryListVi
             allRounds.push(e.round);
         }
         
-        this.eliminatoryRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
+        // this.eliminatoryRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
 
         for(let er of this.eliminatoryRows) {
             er.roundName += "° Eliminatoria"; 

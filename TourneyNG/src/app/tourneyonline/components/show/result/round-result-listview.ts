@@ -38,7 +38,11 @@ export class RoundResultListView extends AbstractListView {
     daysNoMsg: string;
     
     mdbList: MeetingDb[];
-   
+    incompleteRoundConfiguration: boolean;
+    
+    classificationCols: any[];
+    classificationRows: any[];
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -49,9 +53,12 @@ export class RoundResultListView extends AbstractListView {
     }
 
     ngOnInit() {
+
         super.ngOnInit();
         this.selectedRound = this.tourneyService.selectedRound;
         
+        this.classificationCols = this.tourneyService.classificationCols;
+
         this.cols = [
             { field: 'teamName1',   header: 'In casa' },
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -75,7 +82,14 @@ export class RoundResultListView extends AbstractListView {
             }
         }
 
+        this.incompleteRoundConfiguration = false;
         this.prepareMeetingMaps();
+        if(this.selectedRound.onewayMeetings.length == 0) {
+            this.incompleteRoundConfiguration = true;
+            return;
+        }
+
+        this.prepareRoundGuiClassification();
 
         this.onewayDaysNo = 1;
         this.shiftOnewayDay(this.onewayDaysNo);
@@ -108,8 +122,12 @@ export class RoundResultListView extends AbstractListView {
 
             m.dateAndTime = this.dfp.transform(m.datetime);
 
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
+
             let key = m.day;
-            console.log( key + "° Giornata di andata");
+            // console.log( key + "° Giornata di andata");
             if(!this.onewayMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
                 this.onewayMeetingDaysMap.set(key, emptyList);
@@ -122,6 +140,9 @@ export class RoundResultListView extends AbstractListView {
         for( let m of this.selectedRound.roundtripMeetings ) {
 
             m.dateAndTime = this.dfp.transform(m.datetime);
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
 
             let key = m.day;
             console.log( key + "° Giornata di ritorno");
@@ -133,6 +154,16 @@ export class RoundResultListView extends AbstractListView {
             let meetingList: Meeting[] = this.roundtripMeetingDaysMap.get(key);
             meetingList.push(m);
         }
+    }
+
+    /**
+     * Prepares the classification relatid to the selected round
+     */
+    private prepareRoundGuiClassification(): void {
+        let allMeetings = this.selectedRound.onewayMeetings.concat(this.selectedRound.roundtripMeetings);
+        this.selectedRound.classification = this.tourneyService.createClassification(allMeetings);
+
+        this.classificationRows = this.tourneyService.prepareRoundsGui([this.selectedRound]);
     }
 
     private shiftOnewayDay( currentDay : number) {

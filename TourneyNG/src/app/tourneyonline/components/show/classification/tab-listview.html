@@ -5,7 +5,6 @@
     </div>
 </div>
 
-<div class="content-section documentation">
 <p-accordion>
     <p-accordionTab header="Introduzione">      
     <p>
@@ -37,7 +36,6 @@
     </p>
     </p-accordionTab>
 </p-accordion>    
-</div>
     
 <h3>
     Torneo: {{selectedTourney.tourneyName}}
@@ -83,7 +81,13 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsPlayoff()" header="Playoff">    
-        <p-table [columns]="cols"
+        <div *ngIf="incompletePlayoffConfiguration" style="margin-top:30px">
+            <p-message severity="error" 
+                text="Attenzione! Le regole del passaggio di turno ai playoff non sono complete!">
+            </p-message>
+        </div>     
+
+        <p-table *ngIf="!incompletePlayoffConfiguration" [columns]="cols"
             [value]="playoffRows"
             [responsive]="true"> 
             

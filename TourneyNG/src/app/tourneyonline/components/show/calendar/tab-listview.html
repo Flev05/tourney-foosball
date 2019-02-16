@@ -83,6 +83,13 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsPlayoff()" header="Playoff">    
+        <div style="margin-top:30px">
+            <p-message *ngIf="incompletePlayoffConfiguration" 
+                severity="error" 
+                text="Attenzione! Le regole del passaggio di turno ai playoff non sono complete!">
+            </p-message>
+        </div>     
+        
         <p-table [columns]="cols"
             [value]="playoffRows"
             [responsive]="true"> 

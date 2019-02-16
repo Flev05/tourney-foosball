@@ -9,9 +9,13 @@
 <p-accordion>
     <p-accordionTab header="Introduzione">
         <p>
-            La vista contiene l'elenco di tutti i tornei visibbili all'utente connesso.
+            La vista contiene l'elenco di tutti i tornei visibili all'utente connesso.
             Quando l'utente si connette al sito Tourney Online, può vedere tutti i tornei
-            in funzione di che tipo di utente egli sia.
+            in funzione di che tipo di utente egli sia. 
+        </p>
+        <p>
+            Allo scopo consultare la documentazione al link:
+            <a [routerLink]="['/demo']">Demo</a>
         </p>
         
         <p>Esistono tre tipi di utenti:</p>
@@ -24,26 +28,26 @@
         <h4>Utenti anonimi</h4>
         <p>
             Un utente anonimo è un utente qualsiasi che si connette al sistema Tourney Online senza effettuare alcuna forma 
-            di login, egli può disporre o non disporre affatto di un account di sistema.
-            Possono creare nuovi tornei sui quali hanno tutti i privilegi e li possono modificare 
+            di login, egli può disporre o non disporre affatto di un account di sistema,
+            possono creare nuovi tornei sui quali hanno tutti i privilegi e li possono modificare 
             o rimuovere per tutto il tempo di durata della sessione applicativa.
         </p>
     
         <p>
-            Un torneo di sessione, nasce e muore all'interno di una sessione utente. La sessione utente può durare anche 
-            indefinitamente se il browser non viene mai spento. 
-            Mettendo il PC, portatile o altro device in standby, 
-            la sessione utente continuerebbe a restare accessa e quando riaccendete il PC, se non avete chiuso il browser, 
-            potete continuare da dove avete lasciato senza perdita dei dati.
+            Una sessione applicativa, nasce e muore all'interno di una sessione utente. 
+            La sessione utente può durare anche indefinitamente se il browser non viene mai spento. 
+            Infatti, mettendo il PC, portatile o altro device in standby, 
+            la sessione utente continuerebbe a restare viva e quando riaccendete il PC, se non avete chiuso il browser, 
+            potete proseguire da dove avete lasciato senza perdita dei dati.
         </p>
         
         <p>
             Questa modalità potrebbe andar avanti per giorni, ma nel momento in cui spegnerete fisicamente il PC o chiuderete il 
-            browser, perderete irrimediabilmente tutti i dati dei vostri tornei.
+            browser, perderete irrimediabilmente tutti i vostri dati.
             Durante la sessione, infatti, l'utente anonimo dispone di tutte le funzionalità del sistema, 
-            ma i dati sono di fatto volatili, memorizzati nella memoria del vostro browser, e mai salvati sul database di Tourney Online, 
-            pertanto sono visibili ed utilizzabili finquando non viene spento il browser dopo di che non sono 
-            più recuperabili.
+            ma i dati sono di fatto volatili, memorizzati nella memoria del vostro browser, e mai salvati 
+            fisicamente sul database di Tourney Online, pertanto sono visibili ed utilizzabili finquando 
+            non viene spento il browser dopo di che non sono più recuperabili.
         </p>
         <p>
             Per maggior informazioni si rimanda alla pagina di introduzione relativa alla:
@@ -59,7 +63,7 @@
         </p>
         <p>
             Inoltre, si possono avere più utenti per aggiornre i risultati degli incontri e avere il realtime 
-            per i partecipati o altri clienti.
+            per i partecipanti o altri clienti.
         </p>
         <p>
             Per procurarsi un account si rimanda alla pagina di introduzione relativa alla:
@@ -68,8 +72,8 @@
 
         <h4>Utenti foollower</h4>
         <p>
-            Sono utenti che possono accedere solo a quei tornei per i quali hanno avuto il codice di accesso e
-            sono autorizzati a vedere lo svolgimento del torneo.
+            Sono utenti che possono accedere a tutti i tornei per i quali hanno avuto il codice di accesso,
+            un account follower senza password, e sono autorizzati a vedere lo svolgimento del torneo.
             Tipicamente sono i partecipanti al torneo o tifosi che seguono l'andamento del torneo e vogliono
             vedere l'evoluzione in tempo reale.
             Per maggiori dettagli si veda la pagina:
@@ -79,16 +83,16 @@
         <h3>Definizione torneo</h3>
         <p>
             A prescindere dalla modalità di accesso in vostro possesso, per creare un torneo per
-            la prima volta, dovete leggere attentamente i paragrafi seguenti per capire a fondo la tipologia
+            la prima volta, dovete leggere attentamente i paragrafi seguenti e capire a fondo la tipologia
             del torneo che andrete a costruire.
         </p>
         <p>            
-            La prima domanda da porsi è: il vostro torneo si conclude in una sola giornata o su più giornate?
+            La prima domanda da porsi è: il vostro torneo si conclude in una sola giornata o in più giornate?
         </p>
         <p>
             In funzione della risposta a questa domanda, capirete di che tipo di utenza avete bisogno.
             Se si svolge in un solo giorno, diciamo in 12 ore consecutive, allora potrete anche 
-            non aveve bisogno di una utenza a autorizzato e ve la potete cavare come utente anonimo.        
+            non aveve bisogno di un account autorizzato e ve la potete cavare come utente anonimo.        
         </p>
         <p>
             Se inveve il vostro torneo richiede più giorni, sia per l'organizzazione che per lo svolgimento,
@@ -116,13 +120,13 @@
         </p>
 
         <p>
-            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Specificità".
+            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Modalità".
         </p>
         <p>
             Nelle "Generalità" dovete inserire il nome, la data di inizio, la tipologia del torneo, ecc
         </p>
         <p>
-            Nelle "Specificità" dovete definire i dati specifici del torneo come la durata, il numero di
+            Nelle "Modalità" dovete definire i dati specifici del torneo come la durata, il numero di
             fasi, le eliminazioni dirette, i turni, ecc.
         </p>
         <p>

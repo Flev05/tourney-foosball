@@ -9,12 +9,14 @@ import { RuleListView } from '../playoff/rule-listview';
 import { PlayerDetailView } from '../player/player-detailview';
 import { PlayerPickList } from './player-picklist';
 import { TeamDetailView } from '../team/team-detailview';
+import { NewTourneyDetailView } from './new-tourney-detailview';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
 			{ path: '',   			component: TourneyListView },
 			{ path: 'dv',   		component: TourneyDetailView },
+			{ path: 'newdv',   		component: NewTourneyDetailView },
 			{ path: 'dv/team',		component: PlayerListView },
 			{ path: 'dv/addteam',	component: TeamPickList },	
 			{ path: 'dv/updateteam',component: TeamDetailView },

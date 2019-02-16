@@ -10,8 +10,11 @@
     <p-accordionTab header="Introduzione">            
         <p>
             Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno già esistente.
-            Prima di proseguire, per capire di che tipologia il vostro torneo sia,
-            consultate la spiegazione riportata nella documentazione nella vista elenco.
+            Prima di proseguire, per capire di che tipologia il vostro torneo sia.
+        </p>
+        <p>
+            Allo scopo consultare la documentazione al link:
+            <a [routerLink]="['/demo']">Demo</a>
         </p>
         <p>
             La vista contiene 2 bottoni:
@@ -23,7 +26,7 @@
         <p>e le seguenti schede da compilare:</p>
         <ul>
             <li>Generalità</li>
-            <li>Specificità</li>
+            <li>Modalità</li>
             <li>Squadre</li>
             <li>Gironi</li>
             <li>Playoff</li>
@@ -62,13 +65,13 @@
 
         <h3>Definizione torneo</h3>
         <p>
-            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Specificità" del torneo.
+            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Modalità" del torneo.
         </p>
         <p>
             Nelle "Generalità" dovete inserire il nome, la data di inizio, la tipologia del torneo, ecc
         </p>
         <p>
-            Nelle "Specificità" dovete specificate i dati specifici del torneo come la durata, il numero di
+            Nelle "Modalità" dovete specificate i dati specifici del torneo come la durata, il numero di
             fasi, le eliminazioni dirette, i turni, ecc.
         </p>
         <p>
@@ -142,7 +145,7 @@
     </p-accordionTab>
 
     <p-accordionTab header="Istruzioni">    
-        <h3>Specificità</h3>
+        <h3>Modalità</h3>
         <p>            
                 In questa scheda dovete impostare i seguenti campi:
         </p>
@@ -242,7 +245,7 @@
         <h3>Eliminazioni Dirette</h3>
         <p>
             Specificare, se previsti, i livelli di eliminazioni dirette del torneo. Allo scopo il sistema automaticamente
-            propone le diverse possibilità in funzione delle scelte effettuate nella scheda Specificità.
+            propone le diverse possibilità in funzione delle scelte effettuate nella scheda Modalità.
         </p>
 
         <h3>Campi</h3>
@@ -258,6 +261,12 @@
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button class="ui-button-success" 
+        pButton (click)="onSubmit()" 
+        icon="pi pi-save" 
+        label="Salva" 
+        [disabled]="enableSaveButton()">
+    </button>
 </div>                  
   
 <p-tabView [activeIndex]="tourneyService.selectedTabIndex" (onChange)="onChangeTab($event)">
@@ -317,12 +326,19 @@
     </p-accordion>
     
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <p>
+            <span style="font-weight: bold">
+                Attenzione! I campi contrassegnati con * sono obbligatori!
+            </span>
+        </p>
+                
         <div class="ui-grid-row">
             <div class="ui-grid-col-3">
                 Disciplina:
             </div>
             <div class="ui-grid-col-3">
-                <p-dropdown [options]="disciplines" [(ngModel)]="selectedTourney.discipline" optionLabel="name" [autoWidth]="false"></p-dropdown>
+                <p-dropdown [options]="disciplines" [(ngModel)]="selectedTourney.discipline" optionLabel="name" [autoWidth]="false">
+                </p-dropdown>
             </div>
         </div>
 
@@ -416,7 +432,7 @@
     <p-tabPanel header="Modalità">
     <p-accordion>
         <p-accordionTab header="Istruzioni">   
-            <h3>Specificità</h3>
+            <h3>Modalità</h3>
             <p>            
                 In questa scheda dovete impostare i seguenti campi:
             </p>
@@ -1022,7 +1038,7 @@
             <p>
                 L'utente che sta creando il torneo, deve scegliere il numero di Squadre dalla combo box Squadre.
                 Il sistema predisponde la compilazione delle regole in modo autmatico in funzione delle fasi definite a livello di
-                Specificità. 
+                Modalità. 
             </p> 
 
             <h4>Squadre</h4>
@@ -1200,7 +1216,4 @@
         </div>
     </div>
 </div>
-<p>
-    I campi contrassegnati con * sono obbligatori!
-</p>
 

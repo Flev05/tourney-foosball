@@ -24,6 +24,8 @@ import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
 import { MeetingDb } from '../domain/meeting-db';
 import { environment } from 'environments/environment';
+import { Classification } from '../domain/classification';
+import { MeetingStatus } from '../domain/enumerations';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -89,8 +91,17 @@ export class TourneyService {
 
     selectedTeams4PlayoffsCB: Combobox;
     selectedPlayoffsCB: Combobox;
-    // selectedTeams4RoundsCB: Combobox;
     selectedRoundsNumCB: Combobox;
+    classificationCols: TableCols[] = [
+        { field: 'teamName',    header: 'Team'},
+        { field: 'points',      header: 'Pt.'},
+        { field: 'played',      header: 'G'},
+        { field: 'won',         header: 'V'},
+        { field: 'lost',        header: 'P'},
+        { field: 'balanced',    header: 'N'},
+        { field: 'goalsDone',   header: 'Gf:Gs'},
+        { field: 'goalsDiff',   header: 'D'},
+    ];
 
     constructor(private http: HttpClient
         , protected router: Router
@@ -591,5 +602,188 @@ export class TourneyService {
     /** Log a HeroService message with the MessageService */
     private log(message: string) {
         console.log('TourneyService: ' + message);
+    }
+
+    
+    newClassification(t: Team, initialPoints: number): Classification {
+        return {
+            id: this.getSequenceNumber(),
+            team: t,
+            points: initialPoints,
+            played: 0,
+            won: 0,
+            lost: 0,
+            balanced: 0,
+            penalty: 0,
+            goalsDone: 0,
+            goalsConceded: 0,
+            goalsDiff: 0
+        };
+    }
+
+    createClassification(meetings: Meeting[]): Classification[] {
+        let classificationMap : Map<string, Classification> = new Map<string, Classification>();
+
+        for(let m of meetings) {
+
+            let t1 = m.team1;
+            let t2 = m.team2;
+            let key1 = t1.teamName;
+            let key2 = t2.teamName;
+
+            if(!classificationMap.has(key1)) {
+                let c = this.newClassification(t1, 0);
+                classificationMap.set(key1, c);
+            }
+            let c1 = classificationMap.get(key1);            
+ 
+            if(!classificationMap.has(key2)) {
+                let c2 = this.newClassification(t2, 0);
+                classificationMap.set(key2, c2);
+            }
+            
+            if(m.status == MeetingStatus.ToPlay) {
+                continue;
+            }
+            
+            let c2 = classificationMap.get(key2);
+
+            c1.played++;
+            c2.played++;
+
+            c1.points += m.points1;
+            c2.points += m.points2;
+
+            if (m.points1 > m.points2) {
+                c1.won++;
+                c2.lost++;
+            }
+            if (m.points2 > m.points1) {
+                c2.won++;
+                c1.lost++;
+            }
+            if (m.points1 == m.points2) {
+                c1.balanced++;
+                c2.balanced++;
+            }
+            for (let ma of m.matches) {
+                c1.goalsDone += ma.score1;
+                c1.goalsConceded += ma.score2;
+
+                c2.goalsDone += ma.score2;
+                c2.goalsConceded += ma.score1;
+            }
+            c1.goalsDiff = c1.goalsDone - c1.goalsConceded;        
+            c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        
+        }
+
+        let classificationList: Classification[] = [];
+        for( let c of classificationMap.values()) {
+            if(c.team.teamName == "") {
+                continue;
+            }
+            classificationList.push(c);            
+        }
+
+        classificationList = this.sortDesc(classificationList);
+
+        return classificationList;
+    }
+
+    private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+
+            if (c1.points > c2.points) {
+                return -1;
+            }
+            if (c1.points < c2.points) {
+                return 1;
+            }
+        
+            if( c1.goalsDiff > c2.goalsDiff ) {
+                return -1;
+            }
+            if( c1.goalsDiff < c2.goalsDiff ) {
+                return 1;
+            }
+
+            if( c1.goalsDone > c2.goalsDone ) {
+                return -1;
+            }
+            if( c1.goalsDone < c2.goalsDone ) {
+                return 1;
+            }
+
+            if( c1.goalsConceded < c2.goalsConceded ) {
+                return -1;
+            }
+            if( c1.goalsConceded > c2.goalsConceded ) {
+                return 1;
+            }
+
+            return c1.team.teamName > c2.team.teamName ? 1 : -1;
+        });
+
+        return sortedClassification;
+    } 
+
+    /**
+        <th>Team</th>
+        <th>Pt.</th>
+        <th>G</th>
+        <th>V</th>
+        <th>P</th>
+        <th>N</th>
+        <th>Gf:Gs</th>
+        <th>D</th>
+        <td>{{rowIndex + 1}}</td>
+        <td>{{rowData.team.teamName}}</td>
+        <td>{{rowData.points}}</td>
+        <td>{{rowData.played}}</td>
+        <td>{{rowData.won}}</td>
+        <td>{{rowData.lost}}</td>
+        <td>{{rowData.balanced}}</td>
+        <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
+        <td>{{rowData.goalsDiff}}</td>       
+     */
+     prepareRoundsGui(rounds: Round[]): any[] {
+
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            let r = 0;
+            for (let c of round.classification) {
+
+                rows.push(c);
+
+                rows[row].rowNumber = ++r;    
+                rows[row].roundName = round.name;    
+                rows[row].teamName = c.team.teamName;    
+                rows[row].points = c.points;    
+                rows[row].played = c.played;    
+                rows[row].won = c.won;    
+                rows[row].lost = c.lost;    
+                rows[row].balanced = c.balanced;    
+                rows[row].goalsDone = c.goalsDone;    
+                rows[row].goalsConceded = c.goalsConceded;    
+                rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
+
+                let len = round.onewayMeetings.length;
+
+                let currentKey = round.name;  
+                if(!classificationMap.has(currentKey)) {
+                    classificationMap.set(currentKey, c);
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+
+        return rows;
     }
 }

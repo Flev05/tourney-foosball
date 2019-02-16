@@ -28,70 +28,63 @@
 
 <p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
-
-        <p-table [columns]="cols"
+        <p-table [columns]="roundCols"
             [value]="roundRows"
             [responsive]="true"
-            selectionMode="single"
-            [(selection)]="selectedMeetingRow" 
-            (onRowSelect)="onRoundSelect($event)" >
+            selectionMode="single" 
+            [(selection)]="selectedRound"
+            (onRowSelect)="onRoundRowSelect($event)"
+            [scrollable]="true" 
+            scrollHeight="500px">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
+                    <th style="width: 15mm;">N°</th>
                     <th *ngFor="let col of columns">
                         {{col.header}}
                     </th>
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                
-                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="6">
-                        <span class="roundNames">{{rowData.roundName}}</span>
-                    </td>
-                </tr>      
-        
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                 <tr [pSelectableRow]="rowData">
+                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                     <td *ngFor="let col of columns">
                         <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}
                     </td>
                 </tr>
-            </ng-template>        
+            </ng-template>
         </p-table>
     </p-tabPanel>
 
     <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
-        <p-table [columns]="cols"
-                [value]="playoffRows" 
-                [responsive]="true"
-                selectionMode="single"
-                [(selection)]="selectedMeetingRow" 
-                (onRowSelect)="onPlayoffSelect($event)" >
-           
-             <ng-template pTemplate="header" let-columns>
+            <p-table [columns]="playoffCols"
+            [value]="playoffRows"
+            [responsive]="true"
+            selectionMode="single" 
+            [(selection)]="selectedPlayoff"
+            (onRowSelect)="onPlayoffRowSelect($event)"
+            [scrollable]="true" 
+            scrollHeight="500px">
+
+            <ng-template pTemplate="header" let-columns>
                 <tr>
+                    <th style="width: 15mm;">N°</th>
                     <th *ngFor="let col of columns">
                         {{col.header}}
                     </th>
                 </tr>
             </ng-template>
-            
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr class="ui-widget-header" *ngIf="rowData.rowspanSize">
-                    <td colspan="6">
-                        <span class="roundNames">{{rowData.roundName}}</span>
-                    </td>
-                </tr>      
-
+    
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                 <tr [pSelectableRow]="rowData">
+                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}
                     </td>
                 </tr>
-            </ng-template>        
+            </ng-template>
         </p-table>
     </p-tabPanel>
 

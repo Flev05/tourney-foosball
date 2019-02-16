@@ -177,145 +177,145 @@ export class InMemoryDataServiceCSI  {
     , json: JSON.stringify(InMemoryDataServiceCSI.tourney)
   };
 
-  static getMeetings() : MeetingDb[] {
+  // static getMeetings() : MeetingDb[] {
 
-    let mList : Meeting[] =  [{
-        id: 1,
-        status: MeetingStatus.ToPlay,
-        name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-        datetime: new Date(2018, 11, 24, 10, 33),
-        address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-        country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-        team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
-        team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
-        ,points1: 0
-        ,points2: 0
-        ,direction: Direction.OneWay
-        ,matches: []
-      }
-    ,{
-        id: 2,
-        status: MeetingStatus.ToPlay,
-        name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-        datetime: new Date(2018, 11, 30, 15, 0),
-        address: "VIA ZANZOTTERA 32 20153 MILANO MI",
-        country: {id:1, city: "ORIGGIO"},
-        team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
-        team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
-        ,points1: 0
-        ,points2: 0
-        ,direction: Direction.RoundTrip
-        ,matches: []
-      }
-    ,{
-      id: 3,
-      name:  "SOLAROSPORT - AURORA PREGNANA BLU",
-      status: MeetingStatus.ToPlay,
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "VIA S.PAOLO, 6 20020 SOLARO MI",
-      country: {id:1, city: "SOLARO"},
-      team1: {id:4, teamName: "SOLAROSPORT"},
-      team2: {id:1, teamName: "AURORA PREGNANA BLU"}
-      ,points1: 0
-      ,points2: 0
-      ,direction: Direction.OneWay
-      ,matches: []
-      }
-    ,{
-        id: 4,
-        name:  "AURORA PREGNANA BLU - SOLAROSPORT",
-        status: MeetingStatus.ToPlay,
-        datetime: new Date(2018, 11, 30, 15, 0),
-        address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
-        country: {id:1, city: "PREGNANA MILANESE"},
-        team1: {id:1, teamName: "AURORA PREGNANA BLU"},
-        team2: {id:4, teamName: "SOLAROSPORT"}
-        ,points1: 0
-        ,points2: 0
-        ,direction: Direction.RoundTrip
-        ,matches: []
-      }
-    ,{
-      id: 5,
-      name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
-      status: MeetingStatus.ToPlay,
-      datetime: new Date(2018, 11, 30, 15, 0),
-      address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
-      country: {id:1, city: "ZIBIDO SAN GIACOMO"},
-      team1: null,
-      team2: null,
-      direction: Direction.OneWay
-      ,matches: []
-      ,rule1: {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1} }}
-      ,rule2: {id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2} }}
-      ,points1: 0
-      ,points2: 0
-      }
-    ,{
-        name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
-        status: MeetingStatus.ToPlay,
-        datetime: new Date(2018, 11, 30, 15, 0),
-        address: "VIA ZANZOTTERA 32 20153 MILANO MI",
-        country: {id:1, city: "ORIGGIO"},
-        team1: null,
-        team2: null,
-        direction: Direction.RoundTrip
-        ,matches: []
-        ,rule2: {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:1} }}
-        ,rule1: {id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:2} }}
-        ,points1: 0
-        ,points2: 0
-      }];
+  //   let mList : Meeting[] =  [{
+  //       id: 1,
+  //       status: MeetingStatus.ToPlay,
+  //       name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
+  //       datetime: new Date(2018, 11, 24, 10, 33),
+  //       address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
+  //       country: {id:1, city: "ZIBIDO SAN GIACOMO"},
+  //       team1: {id:6, teamName: "ORATORIO ZIBIDO B"},
+  //       team2: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"}
+  //       ,points1: 0
+  //       ,points2: 0
+  //       ,direction: Direction.OneWay
+  //       ,matches: []
+  //     }
+  //   ,{
+  //       id: 2,
+  //       status: MeetingStatus.ToPlay,
+  //       name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
+  //       datetime: new Date(2018, 11, 30, 15, 0),
+  //       address: "VIA ZANZOTTERA 32 20153 MILANO MI",
+  //       country: {id:1, city: "ORIGGIO"},
+  //       team1: {id:3, teamName: "AIROLDI ORIGGIO BIANCA"},
+  //       team2: {id:6, teamName: "ORATORIO ZIBIDO B"}
+  //       ,points1: 0
+  //       ,points2: 0
+  //       ,direction: Direction.RoundTrip
+  //       ,matches: []
+  //     }
+  //   ,{
+  //     id: 3,
+  //     name:  "SOLAROSPORT - AURORA PREGNANA BLU",
+  //     status: MeetingStatus.ToPlay,
+  //     datetime: new Date(2018, 11, 30, 15, 0),
+  //     address: "VIA S.PAOLO, 6 20020 SOLARO MI",
+  //     country: {id:1, city: "SOLARO"},
+  //     team1: {id:4, teamName: "SOLAROSPORT"},
+  //     team2: {id:1, teamName: "AURORA PREGNANA BLU"}
+  //     ,points1: 0
+  //     ,points2: 0
+  //     ,direction: Direction.OneWay
+  //     ,matches: []
+  //     }
+  //   ,{
+  //       id: 4,
+  //       name:  "AURORA PREGNANA BLU - SOLAROSPORT",
+  //       status: MeetingStatus.ToPlay,
+  //       datetime: new Date(2018, 11, 30, 15, 0),
+  //       address: "Via Roma, 110 - 20010 Pregnana Milanese (MI)",
+  //       country: {id:1, city: "PREGNANA MILANESE"},
+  //       team1: {id:1, teamName: "AURORA PREGNANA BLU"},
+  //       team2: {id:4, teamName: "SOLAROSPORT"}
+  //       ,points1: 0
+  //       ,points2: 0
+  //       ,direction: Direction.RoundTrip
+  //       ,matches: []
+  //     }
+  //   ,{
+  //     id: 5,
+  //     name:  "ORATORIO ZIBIDO B - AIROLDI ORIGGIO BIANCA",
+  //     status: MeetingStatus.ToPlay,
+  //     datetime: new Date(2018, 11, 30, 15, 0),
+  //     address: "VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI",
+  //     country: {id:1, city: "ZIBIDO SAN GIACOMO"},
+  //     team1: {id:1, teamName: "ORATORIO ZIBIDO B"},
+  //     team2: {id:4, teamName: "AIROLDI ORIGGIO BIANCA"}
+  //     ,direction: Direction.OneWay
+  //     ,matches: []
+  //     ,rule1: {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1} }}
+  //     ,rule2: {id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2} }}
+  //     ,points1: 0
+  //     ,points2: 0
+  //     }
+  //   ,{
+  //       name:  "AIROLDI ORIGGIO BIANCA - ORATORIO ZIBIDO B",
+  //       status: MeetingStatus.ToPlay,
+  //       datetime: new Date(2018, 11, 30, 15, 0),
+  //       address: "VIA ZANZOTTERA 32 20153 MILANO MI",
+  //       country: {id:1, city: "ORIGGIO"},
+  //       team1: {id:1, teamName: "AIROLDI ORIGGIO BIANCA"},
+  //       team2: {id:4, teamName: "ORATORIO ZIBIDO B"}
+  //       ,direction: Direction.RoundTrip
+  //       ,matches: []
+  //       ,rule2: {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:1} }}
+  //       ,rule1: {id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:2} }}
+  //       ,points1: 0
+  //       ,points2: 0
+  //     }];
 
-      let mts : MeetingDb[] =  [{
-        id: 1,
-        tourneyId: 1,
-        roundId: 1,
-        playoffId: 0,
-        eliminatoryId: 0,
-        json: JSON.stringify(mList[0])
-      }
-    ,{
-        id: 2,
-        tourneyId: 1,
-        roundId: 1,
-        playoffId: 0,
-        eliminatoryId: 0,
-        json: JSON.stringify(mList[1])
-      }
-    ,{
-      id: 3,
-      tourneyId: 1,
-      roundId: 2,
-      playoffId: 0,
-      eliminatoryId: 0,
-      json: JSON.stringify(mList[2])
-    }
-    ,{
-        id: 4,
-        tourneyId: 1,
-        roundId: 2,
-        playoffId: 0,
-        eliminatoryId: 0,
-        json: JSON.stringify(mList[3])
-      }
-    ,{
-      id: 5,
-      tourneyId: 1,
-      roundId: 1,
-      playoffId: 1,
-      eliminatoryId: 0,
-      json: JSON.stringify(mList[4])
-    }
-    ,{
-        id: 6,
-        tourneyId: 1,
-        roundId: 1,
-        playoffId: 2,
-        eliminatoryId: 0,
-        json: JSON.stringify(mList[5])
-      }];
+  //     let mts : MeetingDb[] =  [{
+  //       id: 1,
+  //       tourneyId: 1,
+  //       roundId: 1,
+  //       playoffId: 0,
+  //       eliminatoryId: 0,
+  //       json: JSON.stringify(mList[0])
+  //     }
+  //   ,{
+  //       id: 2,
+  //       tourneyId: 1,
+  //       roundId: 1,
+  //       playoffId: 0,
+  //       eliminatoryId: 0,
+  //       json: JSON.stringify(mList[1])
+  //     }
+  //   ,{
+  //     id: 3,
+  //     tourneyId: 1,
+  //     roundId: 2,
+  //     playoffId: 0,
+  //     eliminatoryId: 0,
+  //     json: JSON.stringify(mList[2])
+  //   }
+  //   ,{
+  //       id: 4,
+  //       tourneyId: 1,
+  //       roundId: 2,
+  //       playoffId: 0,
+  //       eliminatoryId: 0,
+  //       json: JSON.stringify(mList[3])
+  //     }
+  //   ,{
+  //     id: 5,
+  //     tourneyId: 1,
+  //     roundId: 1,
+  //     playoffId: 1,
+  //     eliminatoryId: 0,
+  //     json: JSON.stringify(mList[4])
+  //   }
+  //   ,{
+  //       id: 6,
+  //       tourneyId: 1,
+  //       roundId: 1,
+  //       playoffId: 2,
+  //       eliminatoryId: 0,
+  //       json: JSON.stringify(mList[5])
+  //     }];
 
-    return mts;
-  }
+  //   return mts;
+  // }
 }

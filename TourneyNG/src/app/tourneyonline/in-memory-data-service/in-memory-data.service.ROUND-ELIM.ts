@@ -16,9 +16,9 @@ static teams = TeamsPool.prepareTeams(12);
 private static meetingsDb: Meeting[] = [];
 private static counter: number = 100;
 
-static getMeetings() : Meeting[] {
-  return InMemoryDataServiceRoundElim.meetingsDb;
-}
+// static getMeetings() : Meeting[] {
+//   return InMemoryDataServiceRoundElim.meetingsDb;
+// }
 
 static getTourneyDb() {
 

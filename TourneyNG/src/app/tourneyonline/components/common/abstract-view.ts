@@ -126,7 +126,7 @@ export abstract class AbstractView implements OnInit {
         };
     }
 
-    protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, d: Direction): Meeting {
+    protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
         let matches = new Array<Match>();
 
         for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
@@ -152,13 +152,14 @@ export abstract class AbstractView implements OnInit {
         }
 
         let ruleName = this.makeRuleName(pr1, pr2);
-
+        
         let m : Meeting = {
             id: null,
             name: name,
             datetime: this.selectedTourney.datetime,
             address: this.selectedTourney.address,
             country: this.selectedTourney.country,
+            day: day,
             team1: t1,
             team2: t2,
             points1: 0,
@@ -174,16 +175,8 @@ export abstract class AbstractView implements OnInit {
         return m;
     }
     
-    private makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
-        if( pr1 == null && pr1 == null) {
-            return "";
-        }
-    
-        return this.makeRule(pr1) + " " + this.makeRule(pr2);
-    }
-    
-    protected makeRule(rule: PlayoffRule): string {
-        return rule.fromRound.position.label + "." + rule.fromRound.round.label;
+    protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
+        return "";
     }
 
 }

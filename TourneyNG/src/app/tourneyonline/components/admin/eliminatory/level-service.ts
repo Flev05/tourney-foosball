@@ -361,10 +361,10 @@ export class LevelService extends AbstractEliminatoryListView {
         let t1: Team = this.newDummyTeam();
         let t2: Team = this.newDummyTeam();
 
-        let m1: Meeting = this.createMeeting(t1, t2, null, null, Direction.OneWay);
+        let m1: Meeting = this.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
         meetings.push(m1);
 
-        let m2: Meeting = this.createMeeting(t2, t1, null, null, Direction.RoundTrip);
+        let m2: Meeting = this.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
         meetings.push(m2);
 
         let e: Eliminatory = {

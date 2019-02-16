@@ -10,7 +10,6 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { MeetingKey } from 'app/tourneyonline/domain/meeting.key';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
@@ -159,12 +158,13 @@ export class MeetingListView extends AbstractListView {
                 for (let j = 0; j < teamsNo / 2; j++) {
                     let t1: Team = home[j];
                     let t2: Team = away[j];
-                    console.log( (j + 1) + " " + t2.teamName + " - " + t1.teamName);
+                    let day = j + 1;
+                    console.log( day + " " + t2.teamName + " - " + t1.teamName);
 
-                    let mfound = this.selectedRound.onewayMeetings.find( m => m.team2.teamName == t1.teamName && m.team1.teamName == t2.teamName);
+                    let mfound = this.selectedRound.onewayMeetings.find( m => this.whereCondition(m, t2, t1));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t2, t1, Direction.OneWay);
+                        mfound = this.newMeeting(t2, t1, key, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -172,12 +172,13 @@ export class MeetingListView extends AbstractListView {
                 for (let j = 0; j < teamsNo / 2; j++) {
                     let t1: Team = home[j];
                     let t2: Team = away[j];
-                    console.log( (j + 1) + " " + t1.teamName + " - " + t2.teamName);
+                    let day = j + 1;
+                    console.log( day + " " + t1.teamName + " - " + t2.teamName);
 
-                    let mfound = this.selectedRound.onewayMeetings.find( m => m.team1.teamName == t2.teamName && m.team2.teamName == t1.teamName);
+                    let mfound = this.selectedRound.onewayMeetings.find( m => this.whereCondition(m, t1, t2));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t1, t2, Direction.OneWay);
+                        mfound = this.newMeeting(t1, t2, key, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
@@ -204,6 +205,11 @@ export class MeetingListView extends AbstractListView {
         }
     }
 
+    private whereCondition(m: Meeting, t1: Team, t2: Team) : boolean {
+
+        return m.team1.teamName == t1.teamName && m.team2.teamName == t2.teamName;
+    }
+
     /**
      * Converts the date and time and complete the round trip meetings copying from 
      * its corresponding oneway meeting list
@@ -218,15 +224,10 @@ export class MeetingListView extends AbstractListView {
             for( let m of onewayMeetings ) {   
                 m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
     
-                let rtm = this.selectedRound.roundtripMeetings.find( i => i.team1.teamName == m.team2.teamName && i.team2.teamName == m.team1.teamName);
+                let rtm = this.selectedRound.roundtripMeetings.find( i => this.whereCondition(m, m.team2, m.team1));
 
                 if( rtm == undefined ) {
-                    rtm = this.cloneObject(m);
-                    rtm.team1 = m.team2;
-                    rtm.team2 = m.team1;
-                    rtm.name = rtm.team1.teamName + " - " + rtm.team2.teamName ; 
-                    rtm.direction = Direction.RoundTrip;
-        
+                    rtm = this.newMeeting(m.team2, m.team1, m.day, Direction.RoundTrip);
                     rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
 
@@ -241,6 +242,7 @@ export class MeetingListView extends AbstractListView {
             this.selectedRound.onewayMeetings = this.selectedRound.onewayMeetings.concat(onewayMeetings);
         }
         
+        this.selectedRound.roundtripMeetings = [];
         for (let key of this.roundtripMeetingDaysMap.keys()) {
             let dayList = this.roundtripMeetingDaysMap.get(key);
             dayList = this.sortMeetings(dayList);
@@ -248,8 +250,8 @@ export class MeetingListView extends AbstractListView {
         }
     }
 
-    private newMeeting(t1: Team, t2: Team, d: Direction): Meeting {
-        let m = this.createMeeting(t1, t2, null, null, d);
+    private newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
+        let m = this.createMeeting(t1, t2, null, null, day, d);
         return m;
     }
 

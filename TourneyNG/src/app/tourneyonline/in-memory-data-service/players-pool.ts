@@ -6,7 +6,7 @@ static players: Player[] = [
   {id:1, playerName:"Salvatore Amoroso", address:""
     ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
   }
-  ,{id:2, playerName:"Luciano Martino", address:"Via Nilde Iotti, 8"
+  ,{id:2, playerName:"Luciano Martino", address:"Via Nilde Iotti, 8", phoneNumber:"+39 339 78 58 194", email:"luciano.martino@gmail.com"
       ,country: {id:1, city:"Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
     }
   ,{id:3, playerName:"Raimondo Brancaccio", address:""

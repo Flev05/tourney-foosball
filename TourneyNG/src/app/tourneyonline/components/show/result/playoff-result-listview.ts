@@ -13,6 +13,8 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { AbstractRuleListView } from '../../common/abstract-rule-listview';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './playoff-result-listview.html'
@@ -45,6 +47,9 @@ export class PlayoffResultListView extends AbstractRuleListView {
     classificationCols: any[];
     playoffClassification: any[];
 
+    teamsCols = TeamService.cols;
+    playoffTeams: Team[];
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -61,6 +66,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
      
         this.classificationCols = this.tourneyService.classificationCols;
 
+        
         this.cols = [
             { field: 'teamName1',   header: 'In casa' },
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -133,6 +139,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
                 }
             }
         }
+        this.playoffTeams = this.selectedPlayoff.round.teams;
     }
 
     /**

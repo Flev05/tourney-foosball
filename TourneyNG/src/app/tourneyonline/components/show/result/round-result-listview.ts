@@ -11,6 +11,8 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { AbstractListView } from '../../common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './round-result-listview.html'
@@ -42,6 +44,9 @@ export class RoundResultListView extends AbstractListView {
     
     classificationCols: any[];
     classificationRows: any[];
+    
+    teamsCols = TeamService.cols;
+    roundTeams: Team[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -58,6 +63,8 @@ export class RoundResultListView extends AbstractListView {
         this.selectedRound = this.tourneyService.selectedRound;
         
         this.classificationCols = this.tourneyService.classificationCols;
+
+        this.roundTeams = this.selectedRound.teams;
 
         this.cols = [
             { field: 'teamName1',   header: 'In casa' },
@@ -108,7 +115,6 @@ export class RoundResultListView extends AbstractListView {
             this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
     }
-
 
     /**
      * Converts the date and time and complete the round trip meetings copying from 

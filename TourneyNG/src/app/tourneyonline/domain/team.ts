@@ -6,6 +6,7 @@ export interface Team {
     id?:       number;
     clientId?: number;
     teamName?: string;
+    ruleName?: string;
     address?:  string;
     country?:  Country;
     players?:  Player[];

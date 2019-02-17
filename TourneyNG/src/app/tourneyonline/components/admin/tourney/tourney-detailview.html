@@ -1150,14 +1150,14 @@
         </p-accordionTab>
         </p-accordion>
                     
-        <div *ngIf="incompleteConfiguration" style="margin-top:30px">
+        <div *ngIf="incompleteEliminatoryConfiguration" style="margin-top:30px">
             <p-message  
                 severity="error" 
                 text="Attenzione! Devono essere prima completate le configurazioni delle fasi precedenti!">
             </p-message>
         </div>     
 
-        <div *ngIf="!incompleteConfiguration" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="!incompleteEliminatoryConfiguration" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Squadre:
@@ -1175,7 +1175,7 @@
             </div>
         </div>
         
-        <p-table *ngIf="!incompleteConfiguration" 
+        <p-table *ngIf="!incompleteEliminatoryConfiguration" 
             [columns]="eliminatoryCols"
             [value]="eliminatoryRows" 
             [responsive]="true"

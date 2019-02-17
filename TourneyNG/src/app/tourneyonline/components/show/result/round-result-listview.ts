@@ -13,6 +13,7 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
+import { TeamDetailView } from '../../admin/team/team-detailview';
 
 @Component({
     templateUrl: './round-result-listview.html'
@@ -48,17 +49,17 @@ export class RoundResultListView extends AbstractListView {
     teamsCols = TeamService.cols;
     roundTeams: Team[];
 
-    constructor(
-        protected tourneyService: TourneyService,
-        protected router: Router,
-        protected location: Location,
-        protected dfp: DateFormatPipe
+    constructor( protected tourneyService: TourneyService
+        , protected router: Router
+        , protected location: Location
+        , protected dfp: DateFormatPipe
+        , private teamService: TeamService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
-
+        
         super.ngOnInit();
         this.selectedRound = this.tourneyService.selectedRound;
         
@@ -74,6 +75,12 @@ export class RoundResultListView extends AbstractListView {
 
         const subsbr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+    }
+
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.tourneyService.selectedRoundTabIndex = index;
     }
 
     private onCompleteLoad() {
@@ -236,6 +243,15 @@ export class RoundResultListView extends AbstractListView {
         this.tourneyService.selectedMeeting = this.selectedRow;
 
         this.gotoDetailView();
+    }
+
+    onTeamRowSelect(event) {
+        console.log("Entering onTeamRowSelect()");
+        console.log(event.data);
+
+        this.teamService.selectedTeam = event.data;
+
+        this.router.navigate([TeamDetailView.redirect]);
     }
 }
 

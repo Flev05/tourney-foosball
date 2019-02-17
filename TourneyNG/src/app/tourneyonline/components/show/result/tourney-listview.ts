@@ -8,12 +8,12 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 
-const redirect = '/result/lv';
-
 @Component({
       templateUrl: './tourney-listview.html'   
 })
 export class ResultTourneyListView extends AbstractTourneyListView {
+    static redirect: string = '/result/lv';
+
     constructor(protected tourneyService: TourneyService
         , protected playerService : PlayerService
         , protected teamService : TeamService
@@ -21,7 +21,7 @@ export class ResultTourneyListView extends AbstractTourneyListView {
         , public location: Location
         , protected dfp: DateFormatPipe) 
     { 
-        super(redirect, tourneyService, playerService, teamService, router, location,dfp);
+        super(ResultTourneyListView.redirect, tourneyService, playerService, teamService, router, location,dfp);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

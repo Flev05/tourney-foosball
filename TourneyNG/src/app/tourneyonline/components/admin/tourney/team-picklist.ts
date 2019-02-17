@@ -8,6 +8,7 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { Router } from '@angular/router';
 import { TeamListView } from '../team/team-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { TeamDetailView } from '../team/team-detailview';
 
 @Component({
     templateUrl: './team-picklist.html',
@@ -51,7 +52,7 @@ export class TeamPickList extends AbstractListView {
  
     newTeam() {
         this.teamService.newTeam = true;
-        this.router.navigate([TeamListView.redirect]);
+        this.router.navigate([TeamDetailView.redirect]);
     }
     
     goBack(): void {

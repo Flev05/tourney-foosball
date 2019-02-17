@@ -82,6 +82,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         console.log(event.data);
 
         this.tourneyService.selectedTourney = this.selectedRow.t;
+        this.tourneyService.newTourney = false;
 
         this.gotoDetailView();
     }

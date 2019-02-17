@@ -68,7 +68,7 @@ export class TourneyDetailView extends AbstractDetailView {
     atLeastOneRound: boolean;
     playoffsCombobox: Combobox[];
     team4playoffsCombobox: Combobox[];
-    incompleteConfiguration: boolean;
+    incompleteEliminatoryConfiguration: boolean;
 
     meetingDaysMap: Map<number, Meeting[]>;
 
@@ -160,7 +160,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareRounds(): void {
         console.log("Entering prepareRounds()");
 
-        if( !this.containsPhase(PhaseType.R) ) {
+        if( !this.tourneyService.containsPhase(PhaseType.R) ) {
             return;
         }
 
@@ -198,7 +198,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private preparePlayoffs(): void {
         console.log("Entering preparePlayoffs()");
 
-        if( !this.containsPhase(PhaseType.P) ) {
+        if( !this.tourneyService.containsPhase(PhaseType.P) ) {
             return;
         }
         
@@ -252,7 +252,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private prepareEliminatory() {
-        if( !this.containsPhase(PhaseType.E) ) {
+        if( !this.tourneyService.containsPhase(PhaseType.E) ) {
             return;
         }
 
@@ -260,7 +260,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.eliminatoryCols = this.levelService.cols;
         this.eliminatoryRows = this.levelService.rows;
         this.teamsCombobox = this.levelService.teamsCombobox;
-        this.incompleteConfiguration = this.levelService.incompleteConfiguration;
+        this.incompleteEliminatoryConfiguration = this.levelService.incompleteEliminatoryConfiguration;
     }
 
     onChangeTab(e) {
@@ -316,7 +316,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     addRound() {
         this.tourneyService.newRound = true;
-        this.tourneyService.selectedIndex = 0;
+        this.tourneyService.selectedTabIndex = 0;
         this.router.navigate([REDIRECT_ROUND_DV]);
     }
 
@@ -325,7 +325,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     addPlayoff() {
-        this.tourneyService.selectedIndex = 0;
+        this.tourneyService.selectedTabIndex = 0;
         this.router.navigate([REDIRECT_PLAYOFF_DV]);
     }
     
@@ -701,7 +701,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.tourneyService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
 
-        if( this.containsPhase(PhaseType.R) ) {
+        if( this.tourneyService.containsPhase(PhaseType.R) ) {
             for(let r of this.selectedTourney.rounds) {
                 for(let m of r.onewayMeetings) {
                     this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
@@ -712,7 +712,7 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        if( this.containsPhase(PhaseType.P) ) {
+        if( this.tourneyService.containsPhase(PhaseType.P) ) {
             for(let p of this.selectedTourney.playoffs) {
                 for(let m of p.round.onewayMeetings) {
                     this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
@@ -723,7 +723,7 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        if( this.containsPhase(PhaseType.E) ) {
+        if( this.tourneyService.containsPhase(PhaseType.E) ) {
             for(let el of this.selectedTourney.eliminatoryLevels) {
                 for(let e of el.eliminatories) {
                     for(let m of e.round.onewayMeetings) {
@@ -751,23 +751,14 @@ export class TourneyDetailView extends AbstractDetailView {
         }    
     }
 
-    containsPhase(value: string) : boolean{
-        for(let i=0; i<this.selectedTourney.phases.length; i++ ) {
-            if(this.selectedTourney.phases[i].toLowerCase().indexOf(value) == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     atLeastOnePhase() : boolean{
-        if(this.containsPhase(PhaseType.R)) {
+        if(this.tourneyService.containsPhase(PhaseType.R)) {
             return true;
         }
-        if(this.containsPhase(PhaseType.P)) {
+        if(this.tourneyService.containsPhase(PhaseType.P)) {
             return true;
         }
-        if(this.containsPhase(PhaseType.E)) {
+        if(this.tourneyService.containsPhase(PhaseType.E)) {
             return true;
         }
 
@@ -775,15 +766,15 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     notAllowedPhases(): boolean {
-        if(!this.containsPhase(PhaseType.R) 
-            && this.containsPhase(PhaseType.P)
-            && this.containsPhase(PhaseType.E)) 
+        if(!this.tourneyService.containsPhase(PhaseType.R) 
+            && this.tourneyService.containsPhase(PhaseType.P)
+            && this.tourneyService.containsPhase(PhaseType.E)) 
         {
             return true;
         }
-        if(!this.containsPhase(PhaseType.R) 
-            && this.containsPhase(PhaseType.P)
-            && !this.containsPhase(PhaseType.E)) 
+        if(!this.tourneyService.containsPhase(PhaseType.R) 
+            && this.tourneyService.containsPhase(PhaseType.P)
+            && !this.tourneyService.containsPhase(PhaseType.E)) 
         {
             return true;
         }

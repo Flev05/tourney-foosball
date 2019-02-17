@@ -25,15 +25,19 @@
 </p-accordion>
 </div>
 
-<div *ngIf="incompleteConfiguration" style="margin-top:3px">
-    <p-message severity="success"  text="{{incompleteMessage}}">
-    </p-message>
-</div>                                 
-
 <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
 <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
 
-<p-table [columns]="cols"
+<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+<button *ngIf="!incompleteConfiguration" type="button" icon="fa fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
+
+<div *ngIf="incompleteConfiguration" style="margin-top:3px">
+    <p-message severity="error" text="{{incompleteMessage}}">
+    </p-message>
+</div>
+
+<p-table *ngIf="!incompleteConfiguration" 
+        [columns]="cols"
         [responsive]="true" 
         [value]="eliminatoryRows" 
         selectionMode="single" 
@@ -41,8 +45,6 @@
         (onRowSelect)="onEliminatoryRowSelect($event)">
 
     <ng-template pTemplate="caption">
-        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        <button type="button" icon="fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
     </ng-template>
         
     <ng-template pTemplate="header" let-columns>

@@ -73,9 +73,10 @@ export class TourneyService {
     mdbs: Meeting[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
-    selectedIndex: number;
     newRule: boolean;
     selectedTabIndex: number = 0;
+    selectedRoundTabIndex: number = 0;
+    selectedPlayoffTabIndex: number = 0;
     isStandalone: boolean;
     selectedEliminatoryLevelIndex: number;
     selectedEliminatoryIndex: number;
@@ -604,7 +605,15 @@ export class TourneyService {
         console.log('TourneyService: ' + message);
     }
 
-    
+    containsPhase(value: string) : boolean{
+        for(let i=0; i<this.selectedTourney.phases.length; i++ ) {
+            if(this.selectedTourney.phases[i].toLowerCase().indexOf(value) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     newClassification(t: Team, initialPoints: number): Classification {
         return {
             id: this.getSequenceNumber(),

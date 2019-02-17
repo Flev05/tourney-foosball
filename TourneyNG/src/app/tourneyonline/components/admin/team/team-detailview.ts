@@ -12,6 +12,8 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
     templateUrl: './team-detailview.html',
 })
 export class TeamDetailView extends AbstractDetailView {
+    public static redirect: string = "adminteam/dv";
+
     selectedTeam: Team;
 
     msgs: Message[] = [];

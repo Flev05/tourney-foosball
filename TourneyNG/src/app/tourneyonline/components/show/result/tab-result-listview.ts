@@ -5,7 +5,6 @@ import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { MeetingDetailView } from './meeting-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
@@ -13,6 +12,7 @@ import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-l
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
+const REDIRECT_TOURNEY_LV   = 'showtourney/';
 const REDIRECT_ROUND_DV     = 'result/lv/round';
 const REDIRECT_PLAYOFF_DV   = 'result/lv/playoff';
 const REDIRECT_ELIMINATORY  = 'result/lv/eliminatoryLv/dv';
@@ -82,7 +82,7 @@ export class TabResultListView extends AbstractEliminatoryListView {
         }
 
         if(index==2 && super.containsEliminatory()) {
-            this.incompleteConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
+            this.incompleteEliminatoryConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
         }
     }
 
@@ -225,8 +225,8 @@ export class TabResultListView extends AbstractEliminatoryListView {
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 
-    goBack(): void {
-        this.location.back();
+    goBack(): void {        
+        this.router.navigate([REDIRECT_TOURNEY_LV]);
     }
 }
 

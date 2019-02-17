@@ -15,6 +15,7 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
+import { TeamDetailView } from '../../admin/team/team-detailview';
 
 @Component({
     templateUrl: './playoff-result-listview.html'
@@ -43,30 +44,33 @@ export class PlayoffResultListView extends AbstractRuleListView {
     
     mdbList: MeetingDb[];
    
-    atLeastOneMatch: boolean;
+    atLeastOneMatchForEachRound: boolean;
     classificationCols: any[];
     playoffClassification: any[];
 
-    teamsCols = TeamService.cols;
+    teamsCols : TableCols[] = [
+        { field: 'ruleName',   header: 'Regola' },
+        { field: 'teamName',   header: 'Squadra' },
+    ];
+
     playoffTeams: Team[];
 
     constructor(
-        protected tourneyService: TourneyService,
-        protected router: Router,
-        protected location: Location,
-        protected dfp: DateFormatPipe
+          protected tourneyService: TourneyService
+        , protected router: Router
+        , protected location: Location
+        , protected dfp: DateFormatPipe
+        , private teamService: TeamService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
-
         super.ngOnInit();
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
      
         this.classificationCols = this.tourneyService.classificationCols;
 
-        
         this.cols = [
             { field: 'teamName1',   header: 'In casa' },
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -75,6 +79,12 @@ export class PlayoffResultListView extends AbstractRuleListView {
 
         const subsbr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+    }
+
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.tourneyService.selectedPlayoffTabIndex = index;
     }
 
     private onCompleteLoad() {
@@ -90,7 +100,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
         }
 
         this.refreshTeams();
-        if(!this.atLeastOneMatch) {
+        if(!this.atLeastOneMatchForEachRound) {
             return;
         }
 
@@ -123,7 +133,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
     private refreshTeams(): void {
         this.selectedPlayoff.round.teams = [];
 
-        this.atLeastOneMatch = false;
+        this.atLeastOneMatchForEachRound = true;
         for( let rule of this.selectedPlayoff.playoffRules ) {
             let position: number = rule.fromRound.position.value;
             let roundName: string = rule.fromRound.round.label;
@@ -131,12 +141,16 @@ export class PlayoffResultListView extends AbstractRuleListView {
             let round = this.selectedTourney.rounds.find( r => r.name == roundName );
             if( round != undefined ) {
                 if( round.classification.length > 0 ) {
-                    this.atLeastOneMatch = true;
                     let c: Classification = round.classification[position-1];
     
                     let team = c.team;
+                    team.ruleName = rule.fromRound.position.label + " " + roundName;
                     this.selectedPlayoff.round.teams.push(team);
+                } else {
+                    this.atLeastOneMatchForEachRound = false;
                 }
+            } else {
+                this.atLeastOneMatchForEachRound = false;
             }
         }
         this.playoffTeams = this.selectedPlayoff.round.teams;
@@ -209,9 +223,6 @@ export class PlayoffResultListView extends AbstractRuleListView {
      * @param m the method containg the rules to resolve with
      */
     private resolveRules(m: Meeting): void {
-
-        this.atLeastOneMatch = false;
-
         m.team1 = this.findTeam(m.rule1);
         m.team2 = this.findTeam(m.rule2);
     }
@@ -221,7 +232,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
      * 
      * @param rule the playoff rule to associate to the qualified team
      */
-    private findTeam( rule: PlayoffRule): Meeting {
+    private findTeam( rule: PlayoffRule): Team {
 
         let position: number = rule.fromRound.position.value;
         let roundName: string = rule.fromRound.round.label;
@@ -229,8 +240,6 @@ export class PlayoffResultListView extends AbstractRuleListView {
         let round = this.selectedTourney.rounds.find( r => r.name == roundName );
         if( round != undefined ) {
             if( round.classification.length > 0 ) {
-                this.atLeastOneMatch = true;
-
                 let c: Classification = round.classification[position-1];
                 let team = c.team;
                 return team;
@@ -303,6 +312,15 @@ export class PlayoffResultListView extends AbstractRuleListView {
         this.tourneyService.selectedMeeting = this.selectedRow;
 
         this.gotoDetailView();
+    }
+
+    onTeamRowSelect(event) {
+        console.log("Entering onTeamRowSelect()");
+        console.log(event.data);
+
+        this.teamService.selectedTeam = event.data;
+
+        this.router.navigate([TeamDetailView.redirect]);
     }
 }
 

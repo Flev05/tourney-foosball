@@ -44,7 +44,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     selectedLevelCombobox: Combobox;
     selectedTeamsNumCombobox: Combobox;
     teamsCombobox: Combobox[];
-    incompleteConfiguration: boolean;
+    incompleteEliminatoryConfiguration: boolean;
     eliminatoryCols: { field: string; header: string; }[];
     eliminatoryLevelRows: any[];
     
@@ -76,8 +76,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.incompleteConfiguration = true;
-
         this.tourneyService.prepareEliminatoriesComboBoxes();
  
         if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
@@ -103,8 +101,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
              this.isModeEnabled = true;
         }
 
+        this.incompleteEliminatoryConfiguration = true;
         if (this.selectedTourney.phases.length == 1 &&
-            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) {
+            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
+        {
+            this.incompleteEliminatoryConfiguration = false;
             this.isStandalone = true;
         } else {
             this.isStandalone = false;
@@ -132,11 +133,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryRoundMap = new Map<number, Round>();
 
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.incompleteConfiguration = true;
+        this.incompleteEliminatoryConfiguration = true;
         if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {
             return;
         }
-        this.incompleteConfiguration = this.selectedTourney.teams.length >= 2 && this.eliminatoryLevels.length > 0 ? false : true;
+        if( this.tourneyService.containsPhase(PhaseType.R) ) {
+            this.incompleteEliminatoryConfiguration = this.selectedTourney.teams.length >= 2 && this.eliminatoryLevels.length > 0 ? false : true;
+        } else {
+            this.incompleteEliminatoryConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
+        }
 
         this.elHttpCounter = 0;
         this.eliminatoryLevelRows = [];

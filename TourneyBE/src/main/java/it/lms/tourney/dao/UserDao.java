@@ -15,7 +15,6 @@ import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
-import it.lms.cb.dao.NoDataFoundException;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.User_;
@@ -28,7 +27,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         super(User.class);
     }
 
-    public User getPoBy(String username) throws DaoException {
+    public User getPoBy(String username) {
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
@@ -47,7 +46,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         logger.info(logId() + info);
 
         if (poList.isEmpty()) {
-            throw new NoDataFoundException(info);
+            return null;
         }
 
         User po = poList.get(0);
@@ -72,7 +71,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public User getUserById(Integer userId) throws DaoException {
+    public User getUserById(Integer userId) {
 
         logger.debug(logId() + "Entering getUserById(" + userId + ")");
 
@@ -136,7 +135,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      * @return the selected list
      * @throws DaoException if any error
      */
-    public List<User> findAllUsers() throws DaoException {
+    public List<User> findAllUsers() {
 
         logger.debug(logId() + "Entering findAllUsers()");
 
@@ -164,6 +163,32 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         Predicate p = getCb().equal(root.get(User_.username), username);
         Predicate q = getCb().equal(root.get(User_.password), md5Password);
         Predicate pAndQ = getCb().and(p, q);
+        cq.select(root).where(pAndQ);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        logger.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        User po = poList.get(0);
+        return po;
+    }
+
+    public User findByEmail(String email) {
+
+        logger.debug(logId() + "Entering findByEmail(" + email + ")");
+
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<User> root = cq.from(User.class);
+
+        Predicate p = getCb().equal(root.get(User_.email), email);
+        Predicate pAndQ = getCb().and(p);
         cq.select(root).where(pAndQ);
 
         TypedQuery<User> nq = getEm().createQuery(cq);

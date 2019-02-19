@@ -67,6 +67,31 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
         return resultList.get(0);
     }
 
+    public Client getByBusinssName(String businessName) {
+
+        logger.debug(logId() + "Entering getByBusinssName(" + businessName + ")");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+        Root<Client> root = criteria.from(Client.class);
+
+        Predicate p = cb.equal(root.get(Client_.businessName), businessName);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Client> tq = getEm().createQuery(criteria);
+
+        List<Client> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        if (resultList.isEmpty()) {
+            return null;
+        }
+
+        return resultList.get(0);
+    }
+
     public List<Client> findAllOrderedByName() {
 
         logger.debug(logId() + "Entering findAllOrderedByName()");
@@ -76,7 +101,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
         Root<Client> root = cq.from(Client.class);
 
         cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(root.get(Client_.firstname)), cb.asc(root.get(Client_.lastname)));
+        cq = cq.orderBy(cb.asc(root.get(Client_.businessName)));
 
         TypedQuery<Client> tq = getEm().createQuery(cq);
 
@@ -111,4 +136,5 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         super.deletePo(client);
     }
+
 }

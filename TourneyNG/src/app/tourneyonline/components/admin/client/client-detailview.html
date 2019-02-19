@@ -34,17 +34,29 @@
                 Nominativo*:
             </div>
             <div class="ui-grid-col-6">
-                <input pInputText type="text" formControlName="businessName" placeholder="Nome e cognome o ragione sociale"/>
+                <input pInputText type="text" formControlName="businessName" placeholder="Nome e cognome o ragione sociale del cliente"/>
             </div>
             <div class="ui-grid-col-4">
-                <div class="ui-message ui-messages-error ui-corner-all" 
-                    *ngIf="isNamingError">
+                <div class="ui-message ui-messages-error ui-corner-all" >
                     <i class="fa fa-close"></i>
                     Il nominativo del cliente è obbligatorio
                 </div>
             </div>
         </div>
     
+        <div class="ui-grid-col-2">
+            Username*:
+        </div>
+        <div class="ui-grid-col-6">
+            <input pInputText type="text" formControlName="username" placeholder="Usernane del cliente per accedere al sistema"/>
+        </div>
+        <div class="ui-grid-col-4">
+            <div class="ui-message ui-messages-error ui-corner-all">
+                <i class="fa fa-close"></i>
+                La username del cliente è obbligatoria
+            </div>
+        </div>
+
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Via:
@@ -152,5 +164,5 @@
 
 <p>* Sono campi obbligatori</p>
 <p>** Se si sta creando un nuovo cliente di tipo persona fisica, 
-        deve essere inserito Nome e Cognome altrimenti la Ragione sociale.
+        deve essere inserito Nome e Cognome o la Ragione sociale.
 </p>

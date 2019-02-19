@@ -6,13 +6,16 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,9 +26,8 @@ public class Client extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String            firstname;
-    private String            lastname;
     private String            businessName;
+    private String            username;
 
     private String            address;
     private String            phoneNumber;
@@ -45,9 +47,9 @@ public class Client extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return "Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName=" + businessName
-                + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl
-                + ", country=" + country + "]";
+        return "Client [businessName=" + businessName + ", username=" + username + ", address=" + address
+                + ", phoneNumber=" + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl + ", country=" + country
+                + "]";
     }
 
     @Override
@@ -68,28 +70,6 @@ public class Client extends AbstractPO implements Serializable {
         super.setId(id);
     }
 
-    @Column(name = "firstname")
-    public String getFirstname() {
-
-        return firstname;
-    }
-
-    public void setFirstname(String name) {
-
-        this.firstname = name;
-    }
-
-    @Column(name = "lastname")
-    public String getLastname() {
-
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-
-        this.lastname = lastname;
-    }
-
     @Column(name = "business_name")
     public String getBusinessName() {
 
@@ -99,6 +79,17 @@ public class Client extends AbstractPO implements Serializable {
     public void setBusinessName(String businessName) {
 
         this.businessName = businessName;
+    }
+
+    @Transient
+    public String getUsername() {
+
+        return username;
+    }
+
+    public void setUsername(String username) {
+
+        this.username = username;
     }
 
     @Column(name = "address")
@@ -159,7 +150,8 @@ public class Client extends AbstractPO implements Serializable {
     }
 
     // bi-directional many-to-many association to User
-    @ManyToMany(mappedBy = "clients")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_client", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "client_id", referencedColumnName = "ID"))
     public Set<User> getUsers() {
 
         return users;

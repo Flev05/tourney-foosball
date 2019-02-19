@@ -156,8 +156,7 @@ public class User extends AbstractPO implements Serializable {
     }
 
     // bi-directional many-to-many association to Client
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_client", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "client_id", referencedColumnName = "ID"))
+    @ManyToMany(mappedBy = "users")
     public Set<Client> getClients() {
 
         return this.clients;

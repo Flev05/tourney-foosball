@@ -50,7 +50,7 @@ if (environment.inMemoryDataService) {
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
-    , forDevelopEnvOnly
+    // , forDevelopEnvOnly
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

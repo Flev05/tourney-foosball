@@ -33,6 +33,7 @@ import { MeetingDetailView } from './meeting-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TabResultListView } from './tab-result-listview';
 import { PlayoffResultListView } from './playoff-result-listview';
+import { LevelService } from '../../admin/eliminatory/level-service';
 
 @NgModule({
 	imports: [
@@ -71,6 +72,6 @@ import { PlayoffResultListView } from './playoff-result-listview';
         ,TabResultListView
         ,PlayoffResultListView
     ]
-    ,providers: [DateFormatPipe]
+    ,providers: [DateFormatPipe, LevelService]
 })
 export class ResultModule {}

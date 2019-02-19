@@ -28,7 +28,6 @@ export class ClientDetailView extends AbstractDetailView {
     filteredCountriesSingle: Country[];
     clientFormGroup: FormGroup;
     fullAddress: string;
-    isNamingError: boolean;
     onCreateClientError: boolean;
     onUpdateClientError: boolean;
 
@@ -44,7 +43,6 @@ export class ClientDetailView extends AbstractDetailView {
 
     ngOnInit() {
         console.log("ClientDetailView.ngOnInit() ");
-        this.isNamingError = false;
 
         super.ngOnInit();
 
@@ -69,7 +67,8 @@ export class ClientDetailView extends AbstractDetailView {
         }
 
         this.clientFormGroup = this.fb.group({
-            'businessName': new FormControl(this.selectedClient.businessName),
+            'businessName': new FormControl(this.selectedClient.businessName, Validators.compose([Validators.required])),
+            'username': new FormControl(this.selectedClient.username, Validators.compose([Validators.required])),
             'phoneNumber': new FormControl(this.selectedClient.phoneNumber, Validators.compose([Validators.required])),
             'email'  : new FormControl(this.selectedClient.email, Validators.compose([Validators.required])),
             'address': new FormControl(this.selectedClient.address),
@@ -81,12 +80,7 @@ export class ClientDetailView extends AbstractDetailView {
     onSubmit(value: string) {
         this.selectedClient.businessName = this.clientFormGroup.get('businessName').value;
 
-        this.isNamingError = false;
-        if((this.selectedClient.businessName.trim() != "" ) ) 
-        {
-            this.isNamingError = true;
-            return;
-        }
+        this.selectedClient.username = this.clientFormGroup.get('username').value;
 
         this.selectedClient.address = this.clientFormGroup.get('address').value;
         this.selectedClient.phoneNumber = this.clientFormGroup.get('phoneNumber').value;

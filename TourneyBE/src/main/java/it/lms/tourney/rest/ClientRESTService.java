@@ -44,7 +44,9 @@ import javax.ws.rs.core.Response;
 
 import it.lms.cb.gui.vo.ClientVO;
 import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.User;
 
 /**
  * JAX-RS Example
@@ -60,6 +62,9 @@ public class ClientRESTService extends AbstractRESTService {
 
     @Inject
     private ClientDao clientDao;
+
+    @Inject
+    private UserDao   userDao;
 
     @GET
     @Path("/findAll")
@@ -99,8 +104,6 @@ public class ClientRESTService extends AbstractRESTService {
             cvo.setBusinessName(c.getBusinessName());
             cvo.setCountry(c.getCountry());
             cvo.setEmail(c.getEmail());
-            cvo.setFirstname(c.getFirstname());
-            cvo.setLastname(c.getLastname());
             cvo.setPhoneNumber(c.getPhoneNumber());
             cvo.setSiteUrl(c.getSiteUrl());
         }
@@ -134,8 +137,28 @@ public class ClientRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "POST: createClient(" + client + ")");
 
-        // Validates client using bean validation
-        validateClient(client);
+        Client foundClient = clientDao.getByBusinssName(client.getBusinessName());
+        if (foundClient != null) {
+
+            logger.error("Client found");
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("errorCode", "ClientAlreadyExists");
+            responseObj.put("message", "Client " + client.getBusinessName() + " already exists");
+            responseObj.put("email", foundClient.getEmail());
+            responseObj.put("phoneNumber", foundClient.getPhoneNumber());
+            responseObj.put("address", foundClient.getAddress());
+
+            User user = userDao.getPoBy(client.getUsername());
+            if (user != null) {
+                responseObj.put("message",
+                        "Client " + client.getBusinessName() + " and " + user.getUsername() + " already exist");
+                responseObj.put("userEmail", user.getEmail());
+                responseObj.put("userAddress", user.getAddress());
+            }
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
 
         Response.ResponseBuilder builder = insert(client);
 
@@ -307,7 +330,7 @@ public class ClientRESTService extends AbstractRESTService {
      */
     private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
 
-        logger.debug(logId() + "Validation completed. violations found: " + violations.size());
+        logger.debug(logId() + "Validation completed. Found: " + violations.size());
 
         Map<String, String> responseObj = new HashMap<String, String>();
 

@@ -4,6 +4,7 @@ export interface Client
 {
     id?             : number;
     businessName?   : string;
+    username?       : string;
     address?        : string;
     phoneNumber?    : string;
     email?          : string;

@@ -7,7 +7,6 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Client } from '../domain/client';
 import { Combobox } from '../domain/tourney-combobox';
-import { createLContainer } from '@angular/core/src/render3/instructions';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

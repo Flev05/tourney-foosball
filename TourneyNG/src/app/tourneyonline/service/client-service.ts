@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
-import { Client } from '../domain/client';
+import { ClientVO } from '../domain/client-vo';
 import { Combobox } from '../domain/tourney-combobox';
 
 const httpOptions = {
@@ -18,8 +18,8 @@ export class ClientService {
 
     selectedClientOption : Combobox;
     clientOptions : Combobox[];
-    selectedClients : Client[];
-    selectedClient : Client;
+    selectedClients : ClientVO[];
+    selectedClient : ClientVO;
 
     newClient : boolean = false;
 
@@ -27,7 +27,7 @@ export class ClientService {
         console.log("Constructor of ClientService");
     }
 
-    setSelectClients(clients: Client[]): any {
+    setSelectClients(clients: ClientVO[]): any {
         this.selectedClients = clients;
 
         this.selectedClient = clients[0];
@@ -39,39 +39,41 @@ export class ClientService {
         }
     }
 
-    loadAllClients (selector: (err: any, caught: Observable<Client[]> ) => Observable<Client[]>): Observable<Client[]> {
-        const url = `${clientUrl}/findAll`;
+    loadAllClients (userId: number, selector: (err: any, caught: Observable<ClientVO[]> ) => Observable<ClientVO[]>): Observable<ClientVO[]> {
+        const url = clientUrl + "/findByUserId/" + userId;
+        console.log(url);
  
-        return this.http.get<Client[]>(url).pipe(
-              tap(_ => this.log(`fetched all tornei`))
+        return this.http.get<ClientVO[]>(url).pipe(
+              tap(_ => this.log("fetched all clients by user id: " + userId))
             , catchError(selector)
           );
     }
 
     /** GET hero by id. Will 404 if id not found */
-    getClient(id: number, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
+    getClient(id: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
         const url = `${clientUrl}/find/${id}`;
-        return this.http.get<Client>(url).pipe(
+        console.log(url);
+        return this.http.get<ClientVO>(url).pipe(
             tap(_ => this.log(`fetched Client id=${id}`)),
             catchError(selector)
         );
     }
 
     /** POST: add a new Client to the server */
-    private createClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
-        console.log(client);
+    private createClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
         let url = clientUrl + "/insert";
+        console.log(url);
 
-        return this.http.post<Client>(url, client, httpOptions).pipe(
-              tap((client: Client) => this.log(`added Client w/ id=${client.id}`))
+        return this.http.post<ClientVO>(url, client, httpOptions).pipe(
+              tap((client: ClientVO) => this.log(`added Client w/ id=${client.id}`))
             , catchError(selector)
         );
     }
 
     /** PUT: update the Client on the server */
-    private updateClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
-        console.log(client);
+    private updateClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         const url = clientUrl + "/update";
+        console.log(url);
         
         return this.http.put(url, client, httpOptions).pipe(
             tap(_ => this.log(`updated Client id=${client.id}`)),
@@ -79,7 +81,7 @@ export class ClientService {
         );
     }
     
-    saveClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
+    saveClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         if(client.id == null) {
             return this.createClient(client, selector);
         }
@@ -87,24 +89,24 @@ export class ClientService {
     }
 
     /** DELETE: delete the Client from the server */
-    deleteClient (client: Client | number, selector: (err: any, caught: Observable<Client> ) => Observable<Client> ): Observable<Client> {
-        console.log(client);
+    deleteClient (client: ClientVO | number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         const id = typeof client === 'number' ? client : client.id;
         const url = `${clientUrl}/delete/${id}`;
+        console.log(url);
 
-        return this.http.delete<Client>(url, httpOptions).pipe(
+        return this.http.delete<ClientVO>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Client id=${id}`)),
             catchError(selector)
         );
     }
 
     /** POST: to delete a Client from the server */
-    postDeleteClient (client: Client, selector: (err: any, caught: Observable<Client> ) => Observable<Client>): Observable<Client> {
-        console.log(client);
+    postDeleteClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
         let url = clientUrl + "/delete";
+        console.log(url);
 
-        return this.http.post<Client>(url, client, httpOptions).pipe(
-              tap((client: Client) => this.log(`added Client w/ id=${client.id}`))
+        return this.http.post<ClientVO>(url, client, httpOptions).pipe(
+              tap((client: ClientVO) => this.log(`added Client w/ id=${client.id}`))
             , catchError(selector)
         );
     }

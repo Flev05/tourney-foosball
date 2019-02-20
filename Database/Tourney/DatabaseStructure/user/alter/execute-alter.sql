@@ -7,8 +7,7 @@
 
 \i alter-role.sql
 \i alter-user_table.sql
-\i alter-user_role.sql
+\i alter-user_role_client.sql
 
 -- \i alter-permission.sql
 \i alter-session.sql
-\i alter-user_client.sql

@@ -2,7 +2,6 @@
 package it.lms.tourney.dao;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -152,7 +151,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return poList;
     }
 
-    public User findUserBy(String username, String md5Password) throws DaoException {
+    public User findUserBy(String username, String md5Password) {
 
         logger.debug(logId() + "Entering findUserBy(" + username + "," + md5Password + ")");
 
@@ -221,12 +220,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     public void delete(User po) throws DaoException {
 
         logger.debug(logId() + "Entering deletePo(" + po + ")");
-
-        Iterator<Role> it = po.getRoles().iterator();
-        while (it.hasNext()) {
-            it.next();
-            it.remove();
-        }
 
         deletePo(po);
     }

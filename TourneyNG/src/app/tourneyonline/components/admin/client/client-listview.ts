@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { Observable} from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { Location } from '@angular/common';
-import { Client } from 'app/tourneyonline/domain/client';
+import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { LoginService } from 'app/tourneyonline/service/login-service';
+import { UserService } from 'app/tourneyonline/service/user-service';
 
 const redirect = '/clients/dv';
 
@@ -16,9 +18,9 @@ const redirect = '/clients/dv';
 })
 export class ClientListView extends AbstractListView {
 
-    selectedClient: Client;
+    selectedClient: ClientVO;
 
-    clients: Client[];
+    clients: ClientVO[];
 
     cols:  TableCols[] ;
     onLoadClientError: boolean;
@@ -26,9 +28,10 @@ export class ClientListView extends AbstractListView {
 
     constructor(
         protected tourneyService: TourneyService,
-        protected clientService:   ClientService,
-        protected router:    Router,
-        protected location: Location
+        protected userService   : UserService,
+        protected clientService : ClientService,
+        protected router        : Router,
+        protected location      : Location
     ) {
         super(redirect, tourneyService, router, location);
     }
@@ -43,8 +46,32 @@ export class ClientListView extends AbstractListView {
         ];
 
         this.onLoadClientError = false;
-        this.clientService.loadAllClients(this.loadClientsErrorHandler('loadAllClients()')).subscribe(cs => this.clients = cs);
+        let userId = this.userService.selectedUser.id;
+
+        const subsrciber = this.clientService.loadAllClients(userId, this.loadClientsErrorHandler('loadAllClients()'));
+
+        subsrciber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onComplete());
     }
+
+    private onComplete(): void {
+        console.log("onComplete()");
+
+        for(let cvo of  this.clients ) {
+            cvo.cuvo = 
+                {id : this.userService.selectedUser.id,
+                username : this.userService.selectedUser.username,
+                password : this.userService.selectedUser.password,
+                firstname: this.userService.selectedUser.firstname,
+                lastname: this.userService.selectedUser.lastname,
+                address: this.userService.selectedUser.address,
+                email: this.userService.selectedUser.email,
+                phoneNumber: this.userService.selectedUser.phoneNumber,
+                description: this.userService.selectedUser.description,
+                country: this.userService.selectedUser.country
+            }
+        }
+    }
+
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
@@ -70,7 +97,7 @@ export class ClientListView extends AbstractListView {
         this.gotoDetailView();
     }
     
-    doDelete(client: Client) {
+    doDelete(client: ClientVO) {
         console.log(client);
         this.selectedClient= client;
         let name =  client.businessName;
@@ -111,15 +138,6 @@ export class ClientListView extends AbstractListView {
         console.log(e);
     }
 
-    onComplete(): void {
-        console.log("onComplete()");
-        if(!this.onDeleteError) {
-            let index: number = this.clients.indexOf(this.selectedClient);
-            if(index > -1) {
-                this.clients.splice(index, 1);
-            }
-        }
-    }
 
     onRowSelect(event) {
         console.log(event.data);

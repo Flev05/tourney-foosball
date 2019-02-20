@@ -18,7 +18,6 @@
 package it.lms.tourney.rest;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
@@ -34,7 +33,6 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.lms.cb.gui.vo.ClientVO;
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.dao.SessionDao;
@@ -43,6 +41,7 @@ import it.lms.tourney.po.Login;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
 
 /**
  * JAX-RS Example
@@ -143,7 +142,7 @@ public class LoginRESTService extends AbstractRESTService {
         ObjectMapper om = new ObjectMapper();
 
         UserVO uvo = new UserVO();
-        for (Role r : u.getRoles()) {
+        for (UserRoleClient urc : u.getUrcSet()) {
 
             uvo.setId(u.getId());
             uvo.setAddress(u.getAddress());
@@ -158,13 +157,10 @@ public class LoginRESTService extends AbstractRESTService {
             RoleVO rvo = new RoleVO();
             uvo.getRoles().add(rvo);
 
+            Role r = urc.getRole();
             rvo.setDescription(r.getDescription());
             rvo.setName(r.getName());
-            uvo.getRoles().add(rvo);
         }
-
-        List<ClientVO> clientVoList = ClientRESTService.prepareClientVoList(u.getClients());
-        uvo.getClients().addAll(clientVoList);
 
         String jsonString = om.writeValueAsString(uvo);
         logger.debug(logId() + jsonString);

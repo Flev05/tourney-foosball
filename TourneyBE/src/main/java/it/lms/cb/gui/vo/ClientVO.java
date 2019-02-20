@@ -7,8 +7,6 @@ public class ClientVO extends AbstractVO {
 
     private static final long serialVersionUID = 1L;
 
-    private String            firstname;
-    private String            lastname;
     private String            businessName;
 
     private String            address;
@@ -19,32 +17,16 @@ public class ClientVO extends AbstractVO {
 
     private Country           country;
 
+    private CommonUserVO      cuvo;
+
+    private boolean           isUserRegistered;
+
     @Override
     public String toString() {
 
-        return super.toString() + " ClientVO [firstname=" + firstname + ", lastname=" + lastname + ", businessName="
-                + businessName + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email
-                + ", siteUrl=" + siteUrl + ", country=" + country + "]";
-    }
-
-    public String getFirstname() {
-
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-
-        this.lastname = lastname;
+        return super.toString() + " ClientVO [businessName=" + businessName + ", address=" + address + ", phoneNumber="
+                + phoneNumber + ", email=" + email + ", isUserRegistered=" + isUserRegistered + ", siteUrl=" + siteUrl
+                + ", country=" + country + ", CommonUserVO=" + cuvo + "]";
     }
 
     public String getBusinessName() {
@@ -87,6 +69,16 @@ public class ClientVO extends AbstractVO {
         this.email = email;
     }
 
+    public boolean isUserRegistered() {
+
+        return isUserRegistered;
+    }
+
+    public void setUserRegistered(boolean isUserRegistered) {
+
+        this.isUserRegistered = isUserRegistered;
+    }
+
     public String getSiteUrl() {
 
         return siteUrl;
@@ -105,6 +97,16 @@ public class ClientVO extends AbstractVO {
     public void setCountry(Country country) {
 
         this.country = country;
+    }
+
+    public CommonUserVO getCuvo() {
+
+        return cuvo;
+    }
+
+    public void setCuvo(CommonUserVO cuvo) {
+
+        this.cuvo = cuvo;
     }
 
 }

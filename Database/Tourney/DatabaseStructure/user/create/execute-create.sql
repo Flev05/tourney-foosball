@@ -4,12 +4,12 @@
 
 \i create-client.sql
 
--- \i create-permission.sql
--- \i create-resource.sql
-
 \i create-role.sql
-\i create-user_role.sql
 \i create-user_table.sql
 
+\i create-user_role_client.sql
 \i create-session.sql
-\i create-user_client.sql
+
+
+-- \i create-permission.sql
+-- \i create-resource.sql

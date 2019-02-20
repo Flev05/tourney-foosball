@@ -7,14 +7,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -24,25 +22,26 @@ import javax.persistence.Table;
 @Table(name = "user_table")
 public class User extends AbstractPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private String            username;
-    private String            password;
+    private static final long   serialVersionUID = 1L;
+    private String              username;
+    private String              password;
 
-    private String            firstname;
-    private String            lastname;
+    private String              firstname;
+    private String              lastname;
 
-    private String            address;
-    private String            email;
-    private String            phoneNumber;
+    private String              address;
+    private String              email;
+    private String              phoneNumber;
 
-    private Country           country;
+    private String              description;
 
-    private Set<Role>         roles;
-    private Set<Client>       clients;
+    private Country             country;
+
+    private Set<UserRoleClient> urcSet;
 
     public User() {
 
-        roles = new HashSet<Role>();
+        urcSet = new HashSet<UserRoleClient>();
     }
 
     @Override
@@ -50,7 +49,7 @@ public class User extends AbstractPO implements Serializable {
 
         return super.toString() + " User [username=" + username + ", password=" + password + ", firstname=" + firstname
                 + ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
-                + phoneNumber + ", clients=" + clients + ", country=" + country + "roles=" + roles + "]";
+                + phoneNumber + ", description=" + description + "]";
     }
 
     @Id
@@ -142,29 +141,14 @@ public class User extends AbstractPO implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    // bi-directional many-to-many association to Role
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "ID"))
-    public Set<Role> getRoles() {
+    public String getDescription() {
 
-        return this.roles;
+        return description;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setDescription(String description) {
 
-        this.roles = roles;
-    }
-
-    // bi-directional many-to-many association to Client
-    @ManyToMany(mappedBy = "users")
-    public Set<Client> getClients() {
-
-        return this.clients;
-    }
-
-    public void setClients(Set<Client> clients) {
-
-        this.clients = clients;
+        this.description = description;
     }
 
     // bi-directional many-to-one association to Country
@@ -179,4 +163,17 @@ public class User extends AbstractPO implements Serializable {
 
         this.country = country;
     }
+
+    // bi-directional one-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "user")
+    public Set<UserRoleClient> getUrcSet() {
+
+        return this.urcSet;
+    }
+
+    public void setUrcSet(Set<UserRoleClient> urcSet) {
+
+        this.urcSet = urcSet;
+    }
+
 }

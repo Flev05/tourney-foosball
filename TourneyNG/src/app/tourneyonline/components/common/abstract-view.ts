@@ -3,7 +3,6 @@ import { Location } from '@angular/common';
 import { Direction, MeetingStatus, PhaseType } from 'app/tourneyonline/domain/enumerations';
 
 import { Team } from 'app/tourneyonline/domain/team';
-import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';

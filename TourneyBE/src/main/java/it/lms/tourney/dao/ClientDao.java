@@ -92,26 +92,6 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
         return resultList.get(0);
     }
 
-    public List<Client> findAllOrderedByName() {
-
-        logger.debug(logId() + "Entering findAllOrderedByName()");
-
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Client> cq = cb.createQuery(Client.class);
-        Root<Client> root = cq.from(Client.class);
-
-        cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(root.get(Client_.businessName)));
-
-        TypedQuery<Client> tq = getEm().createQuery(cq);
-
-        List<Client> resultList = tq.getResultList();
-
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
-
-        return resultList;
-    }
-
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Client client) throws Exception {
 

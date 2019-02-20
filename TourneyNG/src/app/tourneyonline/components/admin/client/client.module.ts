@@ -21,6 +21,8 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {ClientRoutingModule} from './client-routing.module';
 import {ClientListView} from './client-listview';
 import {ClientDetailView} from './client-detailview';
+import { FieldsetModule } from 'primeng/fieldset';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
 	imports: [
@@ -37,8 +39,10 @@ import {ClientDetailView} from './client-detailview';
         CodeHighlighterModule,
         TableModule,
         DialogModule,
-        SliderModule,
-        AutoCompleteModule
+        SliderModule
+        ,AutoCompleteModule
+        ,RadioButtonModule
+        ,FieldsetModule
         ,AccordionModule
         ,MessagesModule
         ,MessageModule

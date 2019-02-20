@@ -26,9 +26,7 @@ export class UserService {
 
     newUser : boolean = false;
 
-    constructor(private http: HttpClient
-        , private clientService : ClientService
-        , private roleService : RoleService) 
+    constructor(private http: HttpClient, private roleService : RoleService) 
     { 
         console.log("Constructor of UserService");
     }
@@ -44,7 +42,7 @@ export class UserService {
 
     setSelectedUser(uvo: UserVO): void {
         this.selectedUser = uvo;
-        this.clientService.setSelectClients(uvo.clients);
+        // this.clientService.setSelectClients(uvo.clients);
         this.roleService.setSelectRoles(uvo.roles);
     }
 

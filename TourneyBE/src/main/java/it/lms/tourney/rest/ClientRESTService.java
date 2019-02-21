@@ -192,6 +192,12 @@ public class ClientRESTService extends AbstractRESTService {
 
             newUrc(client, user, role);
 
+            Role devRole = roleDao.getDeveloperRole();
+            List<User> devUsers = userDao.findDevUsers();
+            for (User devUser : devUsers) {
+                newUrc(client, devUser, devRole);
+            }
+
             Response.ResponseBuilder builder = Response.ok();
 
             return builder.build();

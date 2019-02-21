@@ -9,13 +9,17 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
+import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
 
 @Stateless
@@ -24,6 +28,30 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     public UserDao() throws DaoException {
 
         super(User.class);
+    }
+
+    public List<User> findDevUsers() {
+
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<User> root = cq.from(User.class);
+
+        Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+
+        Predicate p = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.DEVELOPER.name());
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        logger.info(logId() + info);
+
+        return poList;
     }
 
     public User getPoBy(String username) {
@@ -69,7 +97,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return po;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public User getUserById(Integer userId) {
 
         logger.debug(logId() + "Entering getUserById(" + userId + ")");

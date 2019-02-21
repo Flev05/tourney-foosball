@@ -783,9 +783,13 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     enableSaveButton() : string {
-        let n : String = new String(this.selectedTourney.tourneyName);
-        let a : String = new String(this.selectedTourney.address);
-        return a.trim() == "" || n.trim() == "" ? "disabled" : "";
+        let n : String = this.selectedTourney.tourneyName;
+        let a : String = this.selectedTourney.address;
+
+        let fase1 = this.notAllowedPhases();
+        let fase2 = !this.atLeastOnePhase();
+
+        return a.trim() == "" || n.trim() == "" || fase1 || fase2 ? "disabled" : "";
     }
 
     onError(n:any) {

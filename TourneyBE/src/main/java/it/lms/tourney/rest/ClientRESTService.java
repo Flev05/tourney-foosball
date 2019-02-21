@@ -226,14 +226,14 @@ public class ClientRESTService extends AbstractRESTService {
 
         User user = new User();
 
-        user.setUsername(clientVo.getCuvo().getUsername());
-        user.setPassword(clientVo.getCuvo().getPassword());
-        user.setAddress(clientVo.getCuvo().getAddress());
-        user.setEmail(clientVo.getCuvo().getEmail());
+        user.setUsername(clientVo.getCuvo().getUsername().trim());
+        user.setPassword(clientVo.getCuvo().getPassword().trim().toUpperCase());
+        user.setAddress(clientVo.getCuvo().getAddress().trim());
+        user.setEmail(clientVo.getCuvo().getEmail().trim());
         user.setPhoneNumber(clientVo.getCuvo().getPhoneNumber());
         user.setCountry(clientVo.getCuvo().getCountry());
-        user.setFirstname(clientVo.getCuvo().getFirstname());
-        user.setLastname(clientVo.getCuvo().getLastname());
+        user.setFirstname(clientVo.getCuvo().getFirstname().trim());
+        user.setLastname(clientVo.getCuvo().getLastname().trim());
 
         userDao.insert(user);
         return user;
@@ -242,12 +242,12 @@ public class ClientRESTService extends AbstractRESTService {
     private Client newClient(ClientVO clientVo) throws Exception {
 
         Client client = new Client();
-        client.setAddress(clientVo.getAddress());
-        client.setBusinessName(clientVo.getBusinessName());
+        client.setAddress(clientVo.getAddress().trim());
+        client.setBusinessName(clientVo.getBusinessName().trim());
         client.setCountry(clientVo.getCountry());
-        client.setEmail(clientVo.getEmail());
-        client.setPhoneNumber(clientVo.getPhoneNumber());
-        client.setSiteUrl(clientVo.getSiteUrl());
+        client.setEmail(clientVo.getEmail().trim());
+        client.setPhoneNumber(clientVo.getPhoneNumber().trim());
+        client.setSiteUrl(clientVo.getSiteUrl().trim());
         clientDao.insert(client);
         return client;
     }
@@ -267,12 +267,12 @@ public class ClientRESTService extends AbstractRESTService {
         Client cpo = new Client();
 
         cpo.setId(cvo.getId());
-        cpo.setAddress(cvo.getAddress());
-        cpo.setBusinessName(cvo.getBusinessName());
+        cpo.setAddress(cvo.getAddress().trim());
+        cpo.setBusinessName(cvo.getBusinessName().trim());
         cpo.setCountry(cvo.getCountry());
-        cpo.setEmail(cvo.getEmail());
-        cpo.setPhoneNumber(cvo.getPhoneNumber());
-        cpo.setSiteUrl(cvo.getSiteUrl());
+        cpo.setEmail(cvo.getEmail().trim());
+        cpo.setPhoneNumber(cvo.getPhoneNumber().trim());
+        cpo.setSiteUrl(cvo.getSiteUrl().trim());
 
         Response.ResponseBuilder builder = update(cpo);
 

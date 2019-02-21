@@ -27,7 +27,6 @@ export class ClientDetailView extends AbstractDetailView {
   
     countries: Country[];
     filteredCountriesSingle: Country[];
-    clientFormGroup: FormGroup;
     fullAddress: string;
     userFullAddress: string;
     onCreateClientError: boolean;
@@ -37,9 +36,11 @@ export class ClientDetailView extends AbstractDetailView {
     isRetypePasswordFailed: boolean;
     
     returnedClientVo: ClientVO;
+    currentPassword: string;
+    retypedPassword: string;
+    userRegisteredRadio: string;
 
     constructor(
-        private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
@@ -64,6 +65,7 @@ export class ClientDetailView extends AbstractDetailView {
                 businessName: ""
               , phoneNumber: ""
               , email: ""
+              , isUserRegistered: false
               , country: {}
               , cuvo : {}
             };
@@ -81,64 +83,29 @@ export class ClientDetailView extends AbstractDetailView {
                 + " (" + this.selectedClient.cuvo.country.provinceCode +")";
         }
 
-        let password =  new FormControl(this.selectedClient.cuvo.password, Validators.compose([Validators.required]));
-
-        this.clientFormGroup = this.fb.group({
-
-            'businessName': new FormControl(this.selectedClient.businessName, Validators.compose([Validators.required])),
-            'phoneNumber': new FormControl(this.selectedClient.phoneNumber, Validators.compose([Validators.required])),
-            'email'  : new FormControl(this.selectedClient.email, Validators.compose([Validators.required])),           
-            'address': new FormControl(this.selectedClient.address, Validators.compose([Validators.required])),
-            'country': new FormControl(this.selectedClient.country),
-            'siteUrl': new FormControl(this.selectedClient.siteUrl),
-
-            'isUserRegistered' : new FormControl("no"),
-            'username': new FormControl(this.selectedClient.cuvo.username, Validators.compose([Validators.required])),
-            'password': password,
-            'retypePassword': password,
-            'userPhoneNumber': new FormControl(this.selectedClient.cuvo.phoneNumber, Validators.compose([Validators.required])),
-            'userEmail'  : new FormControl(this.selectedClient.cuvo.email, Validators.compose([Validators.required])),
-            'userAddress': new FormControl(this.selectedClient.cuvo.address, Validators.compose([Validators.required])),
-            'userCountry': new FormControl(this.selectedClient.cuvo.country),
-        });
+        this.currentPassword = new String(this.selectedClient.cuvo.password).toString();
+        this.retypedPassword = new String(this.selectedClient.cuvo.password).toString();
+        
+        this.userRegisteredRadio = this.selectedClient.isUserRegistered ? "yes" : "no";
     }
 
     onSubmit(value: string) {
-        this.selectedClient.address = this.clientFormGroup.get('address').value;
-        this.selectedClient.phoneNumber = this.clientFormGroup.get('phoneNumber').value;
-        this.selectedClient.email = this.clientFormGroup.get('email').value;        
-        this.selectedClient.country = this.clientFormGroup.get('country').value;
-        this.selectedClient.siteUrl = this.clientFormGroup.get('siteUrl').value;
-        this.selectedClient.businessName = this.clientFormGroup.get('businessName').value;
-
-        this.selectedClient.cuvo.username = this.clientFormGroup.get('username').value;
-
-        let newPassword = this.clientFormGroup.get('password').value;
-        console.log("New password    =" + newPassword);
+        console.log("New currentPassword    =" + this.currentPassword);
 
         if( !this.selectedClient.isUserRegistered ) {
-            if( newPassword != this.selectedClient.cuvo.password ) {
-                this.selectedClient.cuvo.password = Md5.init(newPassword);
-
-                let isUserRegistered = this.clientFormGroup.get('isUserRegistered').value;        
-                isUserRegistered == "yes" ? this.selectedClient.isUserRegistered = true : false;
+            if( this.currentPassword != this.selectedClient.cuvo.password ) {
+                this.selectedClient.cuvo.password = Md5.init(this.currentPassword);
 
                 this.isRetypePasswordFailed = false;
-                let retypePassword = this.clientFormGroup.get('retypePassword').value;
-                console.log("Retyped password=" + retypePassword);
-                if( newPassword != retypePassword ) {
+                console.log("Retyped password=" + this.retypedPassword);
+                if( this.currentPassword != this.retypedPassword ) {
                     this.isRetypePasswordFailed = true;
                     return;
                 }
             }
         } else {
-            this.selectedClient.cuvo.password = Md5.init(newPassword);
+            this.selectedClient.cuvo.password = Md5.init(this.currentPassword);
         }
-
-        this.selectedClient.cuvo.address = this.clientFormGroup.get('userAddress').value;
-        this.selectedClient.cuvo.country = this.clientFormGroup.get('userCountry').value;
-        this.selectedClient.cuvo.email = this.clientFormGroup.get('userEmail').value;
-        this.selectedClient.cuvo.phoneNumber = this.clientFormGroup.get('userPhoneNumber').value;
 
         if(this.clientService.newClient) {
             this.clientService.newClient = false;
@@ -151,6 +118,15 @@ export class ClientDetailView extends AbstractDetailView {
             subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.updateErrorHandler(e), () => this.onUpdateComplete());
         }
         this.newClientFailed = false;
+    }
+
+    enableSaveButton() : string {
+        let bn : String = this.selectedClient.businessName;
+        let un : String = this.selectedClient.cuvo.username;
+        let fn : String = this.selectedClient.cuvo.firstname;
+        let ln : String = this.selectedClient.cuvo.lastname;
+
+        return bn.trim() == "" || un.trim() == "" || fn.trim() == "" || ln.trim() == "" ? "disabled" : "";
     }
 
     onRegisteredYes() {

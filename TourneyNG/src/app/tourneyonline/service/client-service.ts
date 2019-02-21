@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { ClientVO } from '../domain/client-vo';
 import { Combobox } from '../domain/tourney-combobox';
@@ -87,7 +88,7 @@ export class ClientService {
         }
         return this.updateClient(client, selector);
     }
-
+      
     /** DELETE: delete the Client from the server */
     deleteClient (client: ClientVO | number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         const id = typeof client === 'number' ? client : client.id;
@@ -112,7 +113,7 @@ export class ClientService {
     }
       
     /** Log a ClientService message with the MessageService */
-    private log(message: string) {
+    private log(message: any) {
         console.log('ClientService: ' + message);
     }
 }

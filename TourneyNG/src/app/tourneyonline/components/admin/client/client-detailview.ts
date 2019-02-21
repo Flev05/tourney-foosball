@@ -9,6 +9,7 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Md5 } from 'md5-typescript';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -31,9 +32,11 @@ export class ClientDetailView extends AbstractDetailView {
     userFullAddress: string;
     onCreateClientError: boolean;
     onUpdateClientError: boolean;
-    isLoginFailed: boolean;
+    newClientFailed: boolean;
     isUserRegisteredRadio: boolean;
     isRetypePasswordFailed: boolean;
+    
+    returnedClientVo: ClientVO;
 
     constructor(
         private fb: FormBuilder,
@@ -109,18 +112,27 @@ export class ClientDetailView extends AbstractDetailView {
         this.selectedClient.businessName = this.clientFormGroup.get('businessName').value;
 
         this.selectedClient.cuvo.username = this.clientFormGroup.get('username').value;
-        this.selectedClient.cuvo.password = this.clientFormGroup.get('password').value;
 
-        let isUserRegistered = this.clientFormGroup.get('isUserRegistered').value;        
-        isUserRegistered == "yes" ? this.selectedClient.isUserRegistered = true : false;
+        let newPassword = this.clientFormGroup.get('password').value;
+        console.log("New password    =" + newPassword);
 
-        if( !this.selectedClient.isUserRegistered) {
-            this.isRetypePasswordFailed = true;
-            let retypePassword = this.clientFormGroup.get('retypePassword').value;
-            if( this.selectedClient.cuvo.password != retypePassword ) {
-                this.isRetypePasswordFailed = true;
-                return;
+        if( !this.selectedClient.isUserRegistered ) {
+            if( newPassword != this.selectedClient.cuvo.password ) {
+                this.selectedClient.cuvo.password = Md5.init(newPassword);
+
+                let isUserRegistered = this.clientFormGroup.get('isUserRegistered').value;        
+                isUserRegistered == "yes" ? this.selectedClient.isUserRegistered = true : false;
+
+                this.isRetypePasswordFailed = false;
+                let retypePassword = this.clientFormGroup.get('retypePassword').value;
+                console.log("Retyped password=" + retypePassword);
+                if( newPassword != retypePassword ) {
+                    this.isRetypePasswordFailed = true;
+                    return;
+                }
             }
+        } else {
+            this.selectedClient.cuvo.password = Md5.init(newPassword);
         }
 
         this.selectedClient.cuvo.address = this.clientFormGroup.get('userAddress').value;
@@ -131,13 +143,16 @@ export class ClientDetailView extends AbstractDetailView {
         if(this.clientService.newClient) {
             this.clientService.newClient = false;
             this.onCreateClientError = false;
+            const subscriber = this.clientService.saveClient(this.selectedClient, this.createErrorHandler('Create client operation'));
+            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.createErrorHandler(e), () => this.onInsertComplete());
         } else  {
             this.onUpdateClientError = false;
+            const subscriber = this.clientService.saveClient(this.selectedClient, this.updateErrorHandler('Update client operation'));
+            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.updateErrorHandler(e), () => this.onUpdateComplete());
         }
-        this.isLoginFailed = false;
-        this.clientService.saveClient(this.selectedClient, this.updateErrorHandler('updateClient()')).subscribe(() => this.goBack());
+        this.newClientFailed = false;
     }
-    
+
     onRegisteredYes() {
         console.log("Entering onRegisteredYes()");
         this.isUserRegisteredRadio = true;
@@ -148,10 +163,24 @@ export class ClientDetailView extends AbstractDetailView {
         this.isUserRegisteredRadio = false;
     }
 
+    private onInsertComplete() {
+        if( !this.onCreateClientError ) {
+            super.goBack();
+        }
+    }
+
+    private onUpdateComplete() {
+        if( !this.onUpdateClientError ) {
+            super.goBack();
+        }
+    }
+
     private createErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
+            console.log("Entering createErrorHandler()");
       
             this.onCreateClientError = true;
+            this.newClientFailed = true;
 
             console.error(error); // log to console instead
       
@@ -163,9 +192,9 @@ export class ClientDetailView extends AbstractDetailView {
 
     private updateErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
+            console.log("Entering updateErrorHandler()");
       
             this.onUpdateClientError = true;
-            this.isLoginFailed = true;
 
             console.error(error); // log to console instead
       

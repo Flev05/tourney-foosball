@@ -203,7 +203,7 @@
                 </div>
             </div>
 
-            <div *ngIf="isLoginFailed" style="margin-top:30px">
+            <div *ngIf="newClientFailed" style="margin-top:30px">
                 <p-message severity="error" text="Controllo Username e password fallito"></p-message>
             </div>
         </div>
@@ -253,14 +253,14 @@
                     <div class="ui-message ui-messages-error ui-corner-all" 
                         *ngIf="!clientFormGroup.controls['retypePassword'].valid && clientFormGroup.controls['retypePassword'].dirty">
                         <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['retypePassword'].errors['required']">Ripeter la Password è obbligatoria</span>
+                        <span *ngIf="clientFormGroup.controls['retypePassword'].errors['required']">Ripeted la Password è obbligatoria</span>
                         <span *ngIf="clientFormGroup.controls['retypePassword'].errors['minlength']">Almeno 8 caratteri</span>
                     </div>
                 </div>
                 <div *ngIf="isRetypePasswordFailed" style="margin-top:30px">
                     <p-message severity="error" text="La password ripetuta non coincide con la precedente"></p-message>
                 </div>
-                <div *ngIf="isLoginFailed" style="margin-top:30px">
+                <div *ngIf="newClientFailed" style="margin-top:30px">
                     <p-message severity="error" text="L'utente con username {{username}} esiste già. Scegliere un'altra username"></p-message>
                 </div>
             </div>
@@ -343,17 +343,22 @@
                     </div>
                 </div>
             </div>            
-
         </div>
     </p-fieldset>
             
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
-                <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!clientFormGroup.valid"></button>
+                <button class="ui-button-success" 
+                    pButton type="submit" 
+                    icon="pi pi-save" 
+                    label="Salva" 
+                    [disabled]="!clientFormGroup.valid">
+                </button>
             </div>
         </div>
     </div>
+
 </form> 
 
 <div *ngIf="onCreateClientError" style="margin-top:30px">

@@ -37,6 +37,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.dao.DaoException;
 import it.lms.cb.gui.vo.ClientVO;
 import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.RoleDao;
@@ -141,54 +142,87 @@ public class ClientRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "POST: createClient(" + clientVo + ")");
 
-        Map<String, String> responseObj = new HashMap<String, String>();
-        Client foundClient = clientDao.getByBusinssName(clientVo.getBusinessName());
-        if (foundClient != null) {
+        try {
+            Map<String, String> responseObj = new HashMap<String, String>();
+            Client foundClient = clientDao.getByBusinssName(clientVo.getBusinessName());
+            if (foundClient != null) {
 
-            logger.error("Client found");
-            responseObj.put("errorCode", "ClientAlreadyExists");
-            responseObj.put("message", "Client " + clientVo.getBusinessName() + " already exists");
-            responseObj.put("email", foundClient.getEmail());
-            responseObj.put("phoneNumber", foundClient.getPhoneNumber());
-            responseObj.put("address", foundClient.getAddress());
+                logger.error("Client found");
+                responseObj.put("errorCode", "ClientAlreadyExists");
+                responseObj.put("message", "Client " + clientVo.getBusinessName() + " already exists");
+                responseObj.put("email", foundClient.getEmail());
+                responseObj.put("phoneNumber", foundClient.getPhoneNumber());
+                responseObj.put("address", foundClient.getAddress());
 
-            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+                Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+                return builder.build();
+            }
+
+            if (clientVo.isUserRegistered()) {
+                String username = clientVo.getCuvo().getUsername();
+                String md5Pssword = clientVo.getCuvo().getPassword().toUpperCase();
+
+                User u = userDao.findUserBy(username, md5Pssword);
+
+                if (u == null) {
+                    String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
+                    logger.error(message);
+                    responseObj = new HashMap<String, String>();
+                    responseObj.put("errorCode", "LoginFailed");
+
+                    Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+                    return builder.build();
+                }
+            } else {
+
+                User user = userDao.getPoBy(clientVo.getCuvo().getUsername());
+                if (user != null) {
+                    responseObj.put("errorCode", "UserAlreadyExists");
+                    responseObj.put("message", "User " + clientVo.getCuvo().getUsername() + " already exist");
+                    Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+                    return builder.build();
+                }
+            }
+
+            Client client = newClient(clientVo);
+
+            User user = newUser(clientVo);
+
+            Role role = roleDao.getOwnerRole();
+
+            newUrc(client, user, role);
+
+            Response.ResponseBuilder builder = Response.ok();
+
+            return builder.build();
+        } catch (Exception e) {
+            logger.error(logId() + "createClient operation failed", e);
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("errorCode", "CreateFailed");
+            responseObj.put("message", e.getMessage());
+            Response.ResponseBuilder builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(responseObj);
             return builder.build();
         }
+    }
 
-        if (clientVo.isUserRegistered()) {
-            String username = clientVo.getCuvo().getUsername();
-            String md5Pssword = clientVo.getCuvo().getPassword().toUpperCase();
+    private void newUrc(Client client, User user, Role role) {
 
-            User u = userDao.findUserBy(username, md5Pssword);
+        UserRoleClient urc = new UserRoleClient();
 
-            if (u == null) {
-                String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
-                logger.error(message);
-                responseObj = new HashMap<String, String>();
-                responseObj.put("errorCode", "LoginFailed");
+        urc.setUser(user);
+        user.getUrcSet().add(urc);
 
-                Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-                return builder.build();
-            }
-        } else {
+        urc.setClient(client);
+        client.getUrcSet().add(urc);
 
-            User user = userDao.getPoBy(clientVo.getCuvo().getUsername());
-            if (user != null) {
-                responseObj.put("errorCode", "UserAlreadyExists");
-                responseObj.put("message", "User " + clientVo.getCuvo().getUsername() + " already exist");
-                Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-                return builder.build();
-            }
-        }
+        urc.setRole(role);
+        // role.getUrcSet().add(urc);
 
-        Client client = new Client();
-        client.setAddress(clientVo.getAddress());
-        client.setBusinessName(clientVo.getBusinessName());
-        client.setCountry(clientVo.getCountry());
-        client.setEmail(clientVo.getEmail());
-        client.setPhoneNumber(clientVo.getPhoneNumber());
-        client.setSiteUrl(clientVo.getSiteUrl());
+        urcDao.insert(urc);
+    }
+
+    private User newUser(ClientVO clientVo) throws DaoException {
 
         User user = new User();
 
@@ -201,24 +235,21 @@ public class ClientRESTService extends AbstractRESTService {
         user.setFirstname(clientVo.getCuvo().getFirstname());
         user.setLastname(clientVo.getCuvo().getLastname());
 
-        Role role = roleDao.getOwnerRole();
+        userDao.insert(user);
+        return user;
+    }
 
-        UserRoleClient urc = new UserRoleClient();
+    private Client newClient(ClientVO clientVo) throws Exception {
 
-        urc.setUser(user);
-        user.getUrcSet().add(urc);
-
-        urc.setClient(client);
-        client.getUrcSet().add(urc);
-
-        urc.setRole(role);
-        role.getUrcSet().add(urc);
-
-        Response.ResponseBuilder builder = insert(client);
-
-        builder = Response.ok();
-
-        return builder.build();
+        Client client = new Client();
+        client.setAddress(clientVo.getAddress());
+        client.setBusinessName(clientVo.getBusinessName());
+        client.setCountry(clientVo.getCountry());
+        client.setEmail(clientVo.getEmail());
+        client.setPhoneNumber(clientVo.getPhoneNumber());
+        client.setSiteUrl(clientVo.getSiteUrl());
+        clientDao.insert(client);
+        return client;
     }
 
     /**
@@ -246,6 +277,43 @@ public class ClientRESTService extends AbstractRESTService {
         Response.ResponseBuilder builder = update(cpo);
 
         return builder.build();
+    }
+
+    // private Response.ResponseBuilder insert(Client client) {
+    //
+    // logger.debug(logId() + "Entering insert()");
+    //
+    // Response.ResponseBuilder builder;
+    // try {
+    //
+    // clientDao.insert(client);
+    // builder = Response.ok();
+    // } catch (Exception e) {
+    // Map<String, String> responseObj = new HashMap<String, String>();
+    // responseObj.put("errorCode", "InsertFailed");
+    // responseObj.put("message", e.getMessage());
+    // builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
+    // }
+    // return builder;
+    // }
+
+    private Response.ResponseBuilder update(Client client) {
+
+        logger.debug(logId() + "Entering update()");
+
+        Response.ResponseBuilder builder;
+        try {
+
+            clientDao.update(client);
+
+            builder = Response.ok();
+        } catch (Exception e) {
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("errorCode", "UpdateFailed");
+            responseObj.put("message", e.getMessage());
+            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
+        }
+        return builder;
     }
 
     /**
@@ -277,42 +345,5 @@ public class ClientRESTService extends AbstractRESTService {
             builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
         }
         return builder.build();
-    }
-
-    private Response.ResponseBuilder insert(Client client) {
-
-        logger.debug(logId() + "Entering insert()");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            clientDao.insert(client);
-            builder = Response.ok();
-        } catch (Exception e) {
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("errorCode", "InsertFailed");
-            responseObj.put("message", e.getMessage());
-            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
-        }
-        return builder;
-    }
-
-    private Response.ResponseBuilder update(Client client) {
-
-        logger.debug(logId() + "Entering update()");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            clientDao.update(client);
-
-            builder = Response.ok();
-        } catch (Exception e) {
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("errorCode", "UpdateFailed");
-            responseObj.put("message", e.getMessage());
-            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
-        }
-        return builder;
     }
 }

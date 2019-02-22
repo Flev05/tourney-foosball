@@ -29,13 +29,6 @@
     </span>
 </p>
 
-<div *ngIf="onCreateClientError" style="margin-top:30px">
-        <p-message severity="error" text="Creazione nuovo cliente fallita, dati non consistenti"></p-message>
-</div>    
-<div *ngIf="onUpdateClientError" style="margin-top:30px">
-    <p-message severity="error" text="Aggioranmento cliente fallito, dati non consistenti"></p-message>
-</div>    
-
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
 </div>
@@ -116,7 +109,7 @@
 </p-fieldset>
 
 <p-fieldset legend="Utente">
-    <div class="ui-grid-row">
+    <div *ngIf="userRegisteredRadioEnabled" class="ui-grid-row">
         <div class="ui-grid-col-3">
             Già registrato?
         </div>
@@ -159,14 +152,7 @@
             <div class="ui-grid-col-6">
                 <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
             </div>
-
-            <div *ngIf="newClientFailed" class="ui-grid-col-4">
-                <div class="ui-message ui-messages-error ui-corner-all">
-                    <p-message severity="error" text="Controllo Username e password fallito"></p-message>
-                </div>
-            </div>
         </div>
-
     </div>
 
     <div *ngIf="!isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -213,17 +199,6 @@
             </div>
             <div class="ui-grid-col-6">
                 <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
-
-                <div *ngIf="isRetypePasswordFailed" class="ui-grid-col-6">
-                    <div class="ui-message ui-messages-error ui-corner-all">
-                        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
-                    </div>
-                </div>
-                <div *ngIf="newClientFailed" class="ui-grid-col-6">
-                    <div class="ui-message ui-messages-error ui-corner-all">
-                        <p-message severity="error" text="L'utente con username {{selectedClient.cuvo.username}} esiste già. Scegliere un'altra username"></p-message>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -295,3 +270,30 @@
         </div>
     </div>
 </div>
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="clientAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già un cliente con nome {{selectedClient.businessName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+
+<div *ngIf="isRetypePasswordFailed">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
+    </div>
+</div>
+
+<div *ngIf="userAlreadyExists">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="Esiste già un utente con username {{selectedClient.cuvo.username}}. Scegliere un'altra username e riprovare"></p-message>
+    </div>
+</div>
+
+<div *ngIf="loginFailed">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="L'utente non risulta registrato."></p-message>
+    </div>
+</div>
+    

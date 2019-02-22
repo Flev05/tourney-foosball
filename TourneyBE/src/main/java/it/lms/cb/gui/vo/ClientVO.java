@@ -19,14 +19,14 @@ public class ClientVO extends AbstractVO {
 
     private CommonUserVO      cuvo;
 
-    private boolean           isUserRegistered;
+    private boolean           userAlreadyRegistered;
 
     @Override
     public String toString() {
 
         return super.toString() + " ClientVO [businessName=" + businessName + ", address=" + address + ", phoneNumber="
-                + phoneNumber + ", email=" + email + ", isUserRegistered=" + isUserRegistered + ", siteUrl=" + siteUrl
-                + ", country=" + country + ", CommonUserVO=" + cuvo + "]";
+                + phoneNumber + ", email=" + email + ", userAlreadyRegistered=" + userAlreadyRegistered + ", siteUrl="
+                + siteUrl + ", country=" + country + ", CommonUserVO=" + cuvo + "]";
     }
 
     public String getBusinessName() {
@@ -69,14 +69,14 @@ public class ClientVO extends AbstractVO {
         this.email = email;
     }
 
-    public boolean isUserRegistered() {
+    public boolean isUserAlreadyRegistered() {
 
-        return isUserRegistered;
+        return userAlreadyRegistered;
     }
 
-    public void setUserRegistered(boolean isUserRegistered) {
+    public void setUserAlreadyRegistered(boolean userAlreadyRegistered) {
 
-        this.isUserRegistered = isUserRegistered;
+        this.userAlreadyRegistered = userAlreadyRegistered;
     }
 
     public String getSiteUrl() {

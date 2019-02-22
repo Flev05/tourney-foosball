@@ -42,7 +42,7 @@ public class User extends AbstractPO implements Serializable {
 
     public User() {
 
-        urcSet = new HashSet<UserRoleClient>();
+        urcSet = new HashSet<>();
     }
 
     @Override

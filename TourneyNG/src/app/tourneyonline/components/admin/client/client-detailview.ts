@@ -35,8 +35,7 @@ export class ClientDetailView extends AbstractDetailView {
     retypedPassword: string;
     userRegisteredRadio: string;
     
-    onCreateClientError: boolean;
-    onUpdateClientError: boolean;
+    onSaveClientError: boolean;
     clientAlreadyExists: boolean;
     badRequest: boolean;
     userNotRegistered: boolean;
@@ -117,16 +116,15 @@ export class ClientDetailView extends AbstractDetailView {
         if(this.clientService.newClient) {
             this.clientService.newClient = false;
             const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Create client operation'));
-            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onInsertComplete());
+            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         } else  {
             const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Update client operation'));
-            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onUpdateComplete());
+            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         }
     }
 
     private clearErrors() {
-        this.onCreateClientError = false;
-        this.onUpdateClientError = false;
+        this.onSaveClientError = false;
         this.clientAlreadyExists = false;
         this.badRequest          = false;
         this.userNotRegistered   = false;
@@ -163,16 +161,9 @@ export class ClientDetailView extends AbstractDetailView {
         this.isUserRegisteredRadio = false;
     }
 
-    private onInsertComplete() {
-        console.log("Entering onInsertComplete()");
-        if( !this.onCreateClientError ) {
-            super.goBack();
-        }
-    }
-
-    private onUpdateComplete() {
-        console.log("Entering onUpdateComplete()");
-        if( !this.onUpdateClientError ) {
+    private onSaveComplete() {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSaveClientError ) {
             super.goBack();
         }
     }
@@ -182,9 +173,8 @@ export class ClientDetailView extends AbstractDetailView {
             console.log("Entering saveClientErrorHandler()");
             console.log(`${operation} failed!`);
             console.error(res); // log to console instead
-
       
-            this.onCreateClientError = true;
+            this.onSaveClientError = true;
 
             if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
                 this.badRequest = true;
@@ -210,8 +200,8 @@ export class ClientDetailView extends AbstractDetailView {
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
-      
-            this.onUpdateClientError = true;
+
+            this.onSaveClientError = true;
 
             console.error(error); // log to console instead
       

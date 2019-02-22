@@ -8,7 +8,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Client.class)
-public abstract class Client_ {
+public class Client_ {
 
     public static volatile SingularAttribute<Client, Country>   country;
     public static volatile SingularAttribute<Client, String>    address;

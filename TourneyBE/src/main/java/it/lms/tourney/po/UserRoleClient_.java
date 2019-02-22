@@ -7,7 +7,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(UserRoleClient.class)
-public abstract class UserRoleClient_ {
+public class UserRoleClient_ {
 
     public static volatile SingularAttribute<UserRoleClient, Integer> id;
 

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -39,6 +41,7 @@ import javax.ws.rs.core.Response;
 
 import it.lms.cb.dao.DaoException;
 import it.lms.cb.gui.vo.ClientVO;
+import it.lms.cb.gui.vo.CommonUserVO;
 import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.dao.UserDao;
@@ -78,22 +81,16 @@ public class ClientRESTService extends AbstractRESTService {
 
         List<Client> clientList = urcDao.findClientByUserId(userId);
 
-        List<ClientVO> clientVoList = prepareClientVoList(clientList);
+        User ownerUser = userDao.getUserById(userId);
+
+        List<ClientVO> clientVoList = prepareClientVoList(clientList, ownerUser);
 
         return clientVoList;
     }
 
-    public List<ClientVO> prepareClientVoList(Set<Client> clientSet) {
+    private List<ClientVO> prepareClientVoList(List<Client> clientList, User ownerUser) {
 
-        List<Client> clientList = new ArrayList<>();
-        clientList.addAll(clientSet);
-
-        List<ClientVO> clientVoList = prepareClientVoList(clientList);
-
-        return clientVoList;
-    }
-
-    private List<ClientVO> prepareClientVoList(List<Client> clientList) {
+        CommonUserVO uvo = prepareCommonUserVo(ownerUser);
 
         List<ClientVO> clientVoList = new ArrayList<>();
 
@@ -110,10 +107,31 @@ public class ClientRESTService extends AbstractRESTService {
             cvo.setPhoneNumber(c.getPhoneNumber());
             cvo.setSiteUrl(c.getSiteUrl());
 
+            cvo.setCuvo(uvo);
+
             logger.debug(logId() + c);
         }
 
         return clientVoList;
+    }
+
+    private CommonUserVO prepareCommonUserVo(User upo) {
+
+        CommonUserVO uvo = new CommonUserVO();
+
+        uvo.setId(upo.getId());
+        uvo.setUsername(upo.getUsername());
+        uvo.setPassword(upo.getPassword());
+
+        uvo.setAddress(upo.getAddress());
+        uvo.setCountry(upo.getCountry());
+        uvo.setDescription(upo.getDescription());
+        uvo.setEmail(upo.getEmail());
+        uvo.setFirstname(upo.getFirstname());
+        uvo.setLastname(upo.getLastname());
+        uvo.setPhoneNumber(upo.getPhoneNumber());
+
+        return uvo;
     }
 
     @GET
@@ -138,6 +156,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Path("/insert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response createClient(ClientVO clientVo) {
 
         logger.debug(logId() + "POST: createClient(" + clientVo + ")");
@@ -217,13 +236,17 @@ public class ClientRESTService extends AbstractRESTService {
         UserRoleClient urc = new UserRoleClient();
 
         urc.setUser(user);
-        user.getUrcSet().add(urc);
-
         urc.setClient(client);
-        client.getUrcSet().add(urc);
-
         urc.setRole(role);
-        role.getUrcSet().add(urc);
+
+        Set<UserRoleClient> urcSet = role.getUrcSet();
+        user.setUrcSet(urcSet);
+
+        urcSet = client.getUrcSet();
+        client.setUrcSet(urcSet);
+
+        urcSet = role.getUrcSet();
+        role.setUrcSet(urcSet);
 
         urcDao.insert(urc);
     }

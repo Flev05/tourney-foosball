@@ -32,6 +32,20 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public List<User> findDevUsers() {
 
+        logger.debug(logId() + "Entering findDevUsers()");
+        return findUsersByRole(Role.ROLES.DEVELOPER);
+    }
+
+    public List<User> findOwnerUsers() {
+
+        logger.debug(logId() + "Entering findOwnerUsers()");
+        return findUsersByRole(Role.ROLES.OWNER);
+    }
+
+    private List<User> findUsersByRole(Role.ROLES role) {
+
+        logger.debug(logId() + "Entering findUsersByRole()");
+
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
@@ -40,7 +54,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
 
-        Predicate p = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.DEVELOPER.name());
+        Predicate p = getCb().equal(roleJoin.get(Role_.name), role.name());
 
         cq = cq.select(root);
         cq = cq.where(p);

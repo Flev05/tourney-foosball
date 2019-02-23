@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { Observable} from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { Location } from '@angular/common';
-import { Client } from 'app/tourneyonline/domain/client';
+import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 import { Country } from 'app/tourneyonline/domain/country';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Md5 } from 'md5-typescript';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -22,18 +22,27 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 })
 export class ClientDetailView extends AbstractDetailView {
 
-    selectedClient: Client;
+    selectedClient: ClientVO;
   
     countries: Country[];
     filteredCountriesSingle: Country[];
-    clientFormGroup: FormGroup;
-    fullAddress: string;
-    isNamingError: boolean;
-    onCreateClientError: boolean;
-    onUpdateClientError: boolean;
+
+    isUserRegisteredRadio: boolean;
+    isRetypePasswordFailed: boolean;
+    
+    returnedClientVo: ClientVO;
+    currentPassword: string;
+    retypedPassword: string;
+    userRegisteredRadio: string;
+    
+    onSaveClientError: boolean;
+    clientAlreadyExists: boolean;
+    badRequest: boolean;
+    userNotRegistered: boolean;
+    userAlreadyExists: boolean;
+    userRegisteredRadioEnabled: boolean;
 
     constructor(
-        private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
@@ -44,7 +53,6 @@ export class ClientDetailView extends AbstractDetailView {
 
     ngOnInit() {
         console.log("ClientDetailView.ngOnInit() ");
-        this.isNamingError = false;
 
         super.ngOnInit();
 
@@ -54,72 +62,146 @@ export class ClientDetailView extends AbstractDetailView {
             this.countries = data;
         });
 
+        this.userRegisteredRadio = "no";
+
         if(this.clientService.newClient) {
+            this.userRegisteredRadioEnabled = true;
             this.selectedClient={
                 businessName: ""
               , phoneNumber: ""
               , email: ""
+              , siteUrl: ""
+              , userAlreadyRegistered: false
+              , country: {}
+              , cuvo : {
+                    username   : "",
+                    password    : "",
+                    firstname   : "",
+                    lastname    : "",
+                    address     : "",
+                    email       : "",
+                    phoneNumber : "",
+                }
             };
+        } else {
+            this.userRegisteredRadioEnabled = false;
         }
         
-        if(this.selectedClient.country!=undefined) {
-            this.fullAddress = this.selectedClient.address + " - " 
-                + this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
-                + " (" + this.selectedClient.country.provinceCode +")";
-        }
-
-        this.clientFormGroup = this.fb.group({
-            'businessName': new FormControl(this.selectedClient.businessName),
-            'phoneNumber': new FormControl(this.selectedClient.phoneNumber, Validators.compose([Validators.required])),
-            'email'  : new FormControl(this.selectedClient.email, Validators.compose([Validators.required])),
-            'address': new FormControl(this.selectedClient.address),
-            'country': new FormControl(this.selectedClient.country),
-            'siteUrl': new FormControl(this.selectedClient.siteUrl),
-        });
+        this.currentPassword = new String(this.selectedClient.cuvo.password).toString();
+        this.retypedPassword = new String(this.selectedClient.cuvo.password).toString();
     }
 
     onSubmit(value: string) {
-        this.selectedClient.businessName = this.clientFormGroup.get('businessName').value;
+        console.log("New currentPassword    =" + this.currentPassword);
 
-        this.isNamingError = false;
-        if((this.selectedClient.businessName.trim() != "" ) ) 
-        {
-            this.isNamingError = true;
-            return;
+        this.selectedClient.userAlreadyRegistered = this.userRegisteredRadio == "yes" ? true : false;
+
+        if( !this.selectedClient.userAlreadyRegistered ) {
+            if( this.currentPassword != this.selectedClient.cuvo.password ) {
+                this.selectedClient.cuvo.password = Md5.init(this.currentPassword);
+
+                this.isRetypePasswordFailed = false;
+                console.log("Retyped password=" + this.retypedPassword);
+                if( this.currentPassword != this.retypedPassword ) {
+                    this.isRetypePasswordFailed = true;
+                    return;
+                }
+            }
+        } else {
+            this.selectedClient.cuvo.password = Md5.init(this.currentPassword);
         }
 
-        this.selectedClient.address = this.clientFormGroup.get('address').value;
-        this.selectedClient.phoneNumber = this.clientFormGroup.get('phoneNumber').value;
-        this.selectedClient.email = this.clientFormGroup.get('email').value;        
-        this.selectedClient.country = this.clientFormGroup.get('country').value;
-        this.selectedClient.siteUrl = this.clientFormGroup.get('siteUrl').value;
+        this.clearErrors();
 
         if(this.clientService.newClient) {
             this.clientService.newClient = false;
-            this.onCreateClientError = false;
+            const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Create client operation'));
+            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         } else  {
-            this.onUpdateClientError = false;
+            const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Update client operation'));
+            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         }
-        this.clientService.saveClient(this.selectedClient, this.updateErrorHandler('updateClient()')).subscribe(() => this.goBack());
     }
 
-    private createErrorHandler<T> (operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
-      
-            this.onCreateClientError = true;
+    private clearErrors() {
+        this.onSaveClientError = false;
+        this.clientAlreadyExists = false;
+        this.badRequest          = false;
+        this.userNotRegistered   = false;
+        this.userAlreadyExists   = false;
+    }
 
-            console.error(error); // log to console instead
+    enableSaveButton() : string {
+        let bn = this.selectedClient.businessName;
+        let pn = this.selectedClient.phoneNumber;
+        let ad = this.selectedClient.address;
+        let em = this.selectedClient.email;
+
+        let un = this.selectedClient.cuvo.username;
+        let fn = this.selectedClient.cuvo.firstname;
+        let ln = this.selectedClient.cuvo.lastname;
+
+        let upn = this.selectedClient.cuvo.phoneNumber;
+        let uem = this.selectedClient.cuvo.email;
+        let uad = this.selectedClient.cuvo.address;
+
+        let clientEnable: boolean = bn.trim() == "" || pn.trim() == "" || ad.trim() == "" || em.trim() == "" ;
+        let userEnable:   boolean = un.trim() == "" || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
+
+        return clientEnable || userEnable ? "disabled" : "";
+    }
+
+    onRegisteredYes() {
+        console.log("Entering onRegisteredYes()");
+        this.isUserRegisteredRadio = true;
+    }
+
+    onRegisteredNo() {
+        console.log("Entering onRegisteredNo()");
+        this.isUserRegisteredRadio = false;
+    }
+
+    private onSaveComplete() {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSaveClientError ) {
+            super.goBack();
+        }
+    }
+
+    private saveClientErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveClientErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
       
-            console.log(`${operation} failed: ${error.message}`);
+            this.onSaveClientError = true;
+
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "ClientAlreadyExists" ) {
+                this.clientAlreadyExists = true;
+                return of(result as T);
+            }
+            if( res.error.errorCode == "UserAlreadyExists" ) {
+                this.userAlreadyExists = true;
+                return of(result as T);
+            }
+            if( res.error.errorCode == "UserNotRegistered" ) {
+                this.userNotRegistered = true;
+                return of(result as T);
+            }
       
             return of(result as T);
         };
     }
 
-    private updateErrorHandler<T> (operation = 'operation', result?: T) {
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
-            this.onUpdateClientError = true;
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSaveClientError = true;
 
             console.error(error); // log to console instead
       

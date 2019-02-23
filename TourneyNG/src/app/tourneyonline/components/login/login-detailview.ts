@@ -70,7 +70,6 @@ export class LoginDetailView implements OnInit {
     }
 
     private handleLoginError<Login> (operation: string, result?: Login) {
-        console.error("Entering handleLoginError()"); // log to console instead
   
         return (error: any): Observable<Login> => {                      
             console.error("Entering Observable<Login>"); // log to console instead
@@ -106,7 +105,8 @@ export class LoginDetailView implements OnInit {
         if(this.loginService.userLogged)  {
             this.isLoginFailed = false;
             this.userService.setSelectedUser(this.userService.selectedUser);
-            let redirect = '/admintourney';
+            let redirect = '/clients';
+            console.log("navigate to=" + redirect);
             this.router.navigate([redirect]);
         } else {
             this.isLoginFailed = true;

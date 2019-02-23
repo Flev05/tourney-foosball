@@ -19,17 +19,14 @@ package it.lms.tourney.rest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
-import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -42,9 +39,17 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.dao.DaoException;
 import it.lms.cb.gui.vo.ClientVO;
+import it.lms.cb.gui.vo.CommonUserVO;
 import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.RoleDao;
+import it.lms.tourney.dao.UserDao;
+import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
 
 /**
  * JAX-RS Example
@@ -56,36 +61,36 @@ import it.lms.tourney.po.Client;
 public class ClientRESTService extends AbstractRESTService {
 
     @Inject
-    private Validator validator;
+    private ClientDao         clientDao;
 
     @Inject
-    private ClientDao clientDao;
+    private UserDao           userDao;
+
+    @Inject
+    private RoleDao           roleDao;
+
+    @Inject
+    private UserRoleClientDao urcDao;
 
     @GET
-    @Path("/findAll")
+    @Path("/findByUserId/{userId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ClientVO> listAllClients() {
+    public List<ClientVO> findByUserId(@PathParam("userId") Integer userId) {
 
-        logger.debug(logId() + "GET: listAllClients()");
+        logger.debug(logId() + "GET: findByUserId()");
 
-        List<Client> clientList = clientDao.findAllOrderedByName();
+        List<Client> clientList = urcDao.findClientByUserId(userId);
 
-        List<ClientVO> clientVoList = prepareClientVoList(clientList);
+        User ownerUser = userDao.getUserById(userId);
 
-        return clientVoList;
-    }
-
-    public static List<ClientVO> prepareClientVoList(Set<Client> clientSet) {
-
-        List<Client> clientList = new ArrayList<>();
-        clientList.addAll(clientSet);
-
-        List<ClientVO> clientVoList = prepareClientVoList(clientList);
+        List<ClientVO> clientVoList = prepareClientVoList(clientList, ownerUser);
 
         return clientVoList;
     }
 
-    private static List<ClientVO> prepareClientVoList(List<Client> clientList) {
+    private List<ClientVO> prepareClientVoList(List<Client> clientList, User ownerUser) {
+
+        CommonUserVO uvo = prepareCommonUserVo(ownerUser);
 
         List<ClientVO> clientVoList = new ArrayList<>();
 
@@ -99,13 +104,34 @@ public class ClientRESTService extends AbstractRESTService {
             cvo.setBusinessName(c.getBusinessName());
             cvo.setCountry(c.getCountry());
             cvo.setEmail(c.getEmail());
-            cvo.setFirstname(c.getFirstname());
-            cvo.setLastname(c.getLastname());
             cvo.setPhoneNumber(c.getPhoneNumber());
             cvo.setSiteUrl(c.getSiteUrl());
+
+            cvo.setCuvo(uvo);
+
+            logger.debug(logId() + c);
         }
 
         return clientVoList;
+    }
+
+    private CommonUserVO prepareCommonUserVo(User upo) {
+
+        CommonUserVO uvo = new CommonUserVO();
+
+        uvo.setId(upo.getId());
+        uvo.setUsername(upo.getUsername());
+        uvo.setPassword(upo.getPassword());
+
+        uvo.setAddress(upo.getAddress());
+        uvo.setCountry(upo.getCountry());
+        uvo.setDescription(upo.getDescription());
+        uvo.setEmail(upo.getEmail());
+        uvo.setFirstname(upo.getFirstname());
+        uvo.setLastname(upo.getLastname());
+        uvo.setPhoneNumber(upo.getPhoneNumber());
+
+        return uvo;
     }
 
     @GET
@@ -130,39 +156,115 @@ public class ClientRESTService extends AbstractRESTService {
     @Path("/insert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createClient(Client client) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Response createClient(ClientVO clientVo) {
 
-        logger.debug(logId() + "POST: createClient(" + client + ")");
+        logger.debug(logId() + "POST: createClient(" + clientVo + ")");
 
-        // Validates client using bean validation
-        validateClient(client);
+        try {
+            Map<String, String> responseObj = new HashMap<String, String>();
+            Client foundClient = clientDao.getByBusinssName(clientVo.getBusinessName());
+            if (foundClient != null) {
 
-        Response.ResponseBuilder builder = insert(client);
+                logger.error("Client found");
+                responseObj.put("errorCode", "ClientAlreadyExists");
+                responseObj.put("message", "Client " + clientVo.getBusinessName() + " already exists");
+                responseObj.put("email", foundClient.getEmail());
+                responseObj.put("phoneNumber", foundClient.getPhoneNumber());
+                responseObj.put("address", foundClient.getAddress());
 
-        return builder.build();
+                Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+                return builder.build();
+            }
+
+            if (clientVo.isUserAlreadyRegistered()) {
+                String username = clientVo.getCuvo().getUsername();
+                String md5Pssword = clientVo.getCuvo().getPassword().toUpperCase();
+
+                User u = userDao.findUserBy(username, md5Pssword);
+
+                if (u == null) {
+                    String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
+                    logger.error(message);
+                    responseObj = new HashMap<String, String>();
+                    responseObj.put("errorCode", "UserNotRegistered");
+
+                    Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+                    return builder.build();
+                }
+            } else {
+
+                User user = userDao.getPoBy(clientVo.getCuvo().getUsername());
+                if (user != null) {
+                    responseObj.put("errorCode", "UserAlreadyExists");
+                    responseObj.put("message", "User " + clientVo.getCuvo().getUsername() + " already exist");
+                    Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+                    return builder.build();
+                }
+            }
+
+            Client client = newClient(clientVo);
+
+            User user = newUser(clientVo);
+
+            Role role = roleDao.getOwnerRole();
+
+            newUrc(client, user, role);
+
+            Role devRole = roleDao.getDeveloperRole();
+            List<User> devUsers = userDao.findDevUsers();
+            for (User devUser : devUsers) {
+                newUrc(client, devUser, devRole);
+            }
+
+            Response.ResponseBuilder builder = Response.ok();
+
+            return builder.build();
+        } catch (Exception e) {
+            logger.error(logId() + "createClient operation failed", e);
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("errorCode", "InternalServerError");
+            responseObj.put("message", e.getMessage());
+            Response.ResponseBuilder builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(responseObj);
+            return builder.build();
+        }
     }
 
-    @POST
-    @Path("/delete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postDeleteClient(Client client) {
+    private void newUrc(Client client, User user, Role role) {
 
-        logger.debug(logId() + "POST: postDeleteClient(" + client + ")");
+        UserRoleClient urc = new UserRoleClient();
 
-        Response.ResponseBuilder builder;
-        try {
-            clientDao.delete(client);
+        urc.setUser(user);
+        urc.setClient(client);
+        urc.setRole(role);
 
-            builder = Response.ok();
-        } catch (Exception e) {
-            logger.error("Remove Client failed" + e);
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
+        Set<UserRoleClient> urcSet = role.getUrcSet();
+        user.setUrcSet(urcSet);
 
-        return builder.build();
+        urcSet = client.getUrcSet();
+        client.setUrcSet(urcSet);
+
+        urcSet = role.getUrcSet();
+        role.setUrcSet(urcSet);
+
+        urcDao.insert(urc);
+    }
+
+    private User newUser(ClientVO clientVo) throws DaoException {
+
+        User user = prepareUserPo(clientVo);
+
+        userDao.insert(user);
+        return user;
+    }
+
+    private Client newClient(ClientVO cvo) throws Exception {
+
+        Client cpo = prepareClientPo(cvo);
+
+        clientDao.insert(cpo);
+        return cpo;
     }
 
     /**
@@ -173,13 +275,59 @@ public class ClientRESTService extends AbstractRESTService {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateClient(Client client) {
+    public Response updateClient(ClientVO cvo) {
 
-        logger.debug(logId() + "PUT: updateClient(" + client + ")");
+        logger.debug(logId() + "PUT: updateClient(" + cvo + ")");
 
-        Response.ResponseBuilder builder = update(client);
+        Response.ResponseBuilder builder;
+        try {
 
+            Client cpo = prepareClientPo(cvo);
+
+            User user = prepareUserPo(cvo);
+
+            userDao.update(user);
+
+            clientDao.update(cpo);
+
+            builder = Response.ok();
+        } catch (Exception e) {
+            Map<String, String> responseObj = new HashMap<String, String>();
+            responseObj.put("errorCode", "InternalServerError");
+            responseObj.put("message", e.getMessage());
+            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
+        }
         return builder.build();
+    }
+
+    private User prepareUserPo(ClientVO cvo) {
+
+        User user = new User();
+
+        user.setId(cvo.getCuvo().getId());
+        user.setUsername(cvo.getCuvo().getUsername().trim());
+        user.setPassword(cvo.getCuvo().getPassword().trim().toUpperCase());
+        user.setAddress(cvo.getCuvo().getAddress().trim());
+        user.setEmail(cvo.getCuvo().getEmail().trim());
+        user.setPhoneNumber(cvo.getCuvo().getPhoneNumber());
+        user.setCountry(cvo.getCuvo().getCountry());
+        user.setFirstname(cvo.getCuvo().getFirstname().trim());
+        user.setLastname(cvo.getCuvo().getLastname().trim());
+        return user;
+    }
+
+    private Client prepareClientPo(ClientVO cvo) {
+
+        Client cpo = new Client();
+
+        cpo.setId(cvo.getId());
+        cpo.setAddress(cvo.getAddress().trim());
+        cpo.setBusinessName(cvo.getBusinessName().trim());
+        cpo.setCountry(cvo.getCountry());
+        cpo.setEmail(cvo.getEmail().trim());
+        cpo.setPhoneNumber(cvo.getPhoneNumber().trim());
+        cpo.setSiteUrl(cvo.getSiteUrl().trim());
+        return cpo;
     }
 
     /**
@@ -206,128 +354,10 @@ public class ClientRESTService extends AbstractRESTService {
         } catch (Exception e) {
             // Handle generic exceptions
             Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+            responseObj.put("errorCode", "InternalServerError");
+            responseObj.put("message", e.getMessage());
+            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseObj);
         }
         return builder.build();
-    }
-
-    private Response.ResponseBuilder insert(Client client) {
-
-        logger.debug(logId() + "Entering insert()");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            clientDao.insert(client);
-
-            // Create an "ok" response
-            builder = Response.ok();
-        } catch (ConstraintViolationException ce) {
-            // Handle bean validation issues
-            builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
-        return builder;
-    }
-
-    private Response.ResponseBuilder update(Client client) {
-
-        logger.debug(logId() + "Entering update()");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            clientDao.update(client);
-
-            // Create an "ok" response
-            builder = Response.ok();
-        } catch (ConstraintViolationException ce) {
-            // Handle bean validation issues
-            builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
-        return builder;
-    }
-
-    /**
-     * <p>
-     * Validates the given Client variable and throws validation exceptions based on the type of error. If the error is
-     * standard bean validation errors then it will throw a ConstraintValidationException with the set of the
-     * constraints violated.
-     * </p>
-     * <p>
-     * If the error is caused because an existing client with the same email is registered it throws a regular
-     * validation exception so that it can be interpreted separately.
-     * </p>
-     *
-     * @param client Client to be validated
-     * @throws ConstraintViolationException If Bean Validation errors exist
-     * @throws ValidationException If client with the same email already exists
-     */
-    private void validateClient(Client client) throws ConstraintViolationException, ValidationException {
-
-        // Create a bean validator and check for issues.
-        Set<ConstraintViolation<Client>> violations = validator.validate(client);
-
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(new HashSet<ConstraintViolation<?>>(violations));
-        }
-
-        // Check the uniqueness of the email address
-        if (emailAlreadyExists(client.getEmail())) {
-            throw new ValidationException("Unique Email Violation");
-        }
-    }
-
-    /**
-     * Creates a JAX-RS "Bad Request" response including a map of all violation fields, and their message. This can then
-     * be used by clients to show violations.
-     *
-     * @param violations A set of violations that needs to be reported
-     * @return JAX-RS response containing all violations
-     */
-    private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
-
-        logger.debug(logId() + "Validation completed. violations found: " + violations.size());
-
-        Map<String, String> responseObj = new HashMap<String, String>();
-
-        for (ConstraintViolation<?> violation : violations) {
-            responseObj.put(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-
-        return Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-    }
-
-    /**
-     * Checks if a client with the same email address is already registered. This is the only way to easily capture the
-     * "@UniqueConstraint(columnNames = "email")" constraint from the Client class.
-     *
-     * @param email The email to check
-     * @return True if the email already exists, and false otherwise
-     */
-    private boolean emailAlreadyExists(String email) {
-
-        Client client = clientDao.findByEmail(email);
-        return client != null;
     }
 }

@@ -7,10 +7,11 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { MeetingDetailView } from './meeting-detailview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
-import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { AbstractListView } from '../../common/abstract-listview';
+import { DateFormatPipe } from '../../common/date-format-pipe';
+import { LevelService } from '../../admin/eliminatory/level-service';
 
 const REDIRECT_TOURNEY_LV   = 'showtourney/';
 const REDIRECT_ROUND_DV     = 'result/lv/round';
@@ -20,10 +21,8 @@ const REDIRECT_ELIMINATORY  = 'result/lv/eliminatoryLv/dv';
 @Component({
     templateUrl: './tab-result-listview.html'
 })
-export class TabResultListView extends AbstractEliminatoryListView {
-
-    selectedMeetingRow: any;
-    activeIndex: number;
+export class TabResultListView extends AbstractListView {
+    cols: TableCols[] ;
 
     roundCols: TableCols[] = TourneyService.roundCols;
     roundRows: Round[];
@@ -39,15 +38,16 @@ export class TabResultListView extends AbstractEliminatoryListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
-        protected dfp: DateFormatPipe
+        protected dfp: DateFormatPipe,
+        private levelService: LevelService
     ) {
-        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location, dfp);
+        super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
 
     ngOnInit() {
-        this.activeIndex = this.tourneyService.selectedTabIndex;
-
         super.ngOnInit();
+
+        this.levelService.ngOnInitLight();
 
         this.tourneyService.selectedEliminatoryLevelIndex = -1;
         this.tourneyService.selectedEliminatoryIndex = -1;
@@ -68,22 +68,15 @@ export class TabResultListView extends AbstractEliminatoryListView {
         }
 
         if(super.containsEliminatory()) {
-            super.loadEliminatoryLevels();
+            this.levelService.loadEliminatoryLevels();
         }
     }
 
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.activeIndex = index;
-        this.tourneyService.selectedTabIndex = this.activeIndex;
 
-        if(index==1 && super.containsPlayoff()) {
-        }
-
-        if(index==2 && super.containsEliminatory()) {
-            this.incompleteEliminatoryConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
-        }
+        this.tourneyService.selectedTabIndex = index;
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {
@@ -129,7 +122,7 @@ export class TabResultListView extends AbstractEliminatoryListView {
      */
     private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
         
-        this.cols = this.prepareResultRoundPlayoffColums();
+        this.cols = this.levelService.prepareResultRoundPlayoffColums();
 
         let rowNumber : number=0;
 
@@ -189,7 +182,8 @@ export class TabResultListView extends AbstractEliminatoryListView {
 
     onPlayoffRowSelect(event) {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-        this.tourneyService.selectedMeetingDb = {id: null
+        this.tourneyService.selectedMeetingDb = {
+              id: null
             , tourneyId: this.selectedTourney.id
             , roundId: null
             , playoffId: this.selectedPlayoff.id
@@ -200,26 +194,11 @@ export class TabResultListView extends AbstractEliminatoryListView {
     
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
-      
-        this.selectedEliminatoryLevel = this.selectedRow.e;
-        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
-        
-        for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {
-            let el = this.selectedTourney.eliminatoryLevels[l];
-            if(el.id == this.selectedEliminatoryLevel.id) {
-                this.tourneyService.selectedEliminatoryLevelIndex = l;
-                this.tourneyService.selectedEliminatoryIndex = -1;
-                break;
-            }
-        }
 
+        this.levelService.onEliminatoryRowSelect();
+        
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-        this.tourneyService.selectedMeetingDb = {id: null
-            , tourneyId: this.selectedTourney.id
-            , roundId: null
-            , playoffId: null
-            , eliminatoryId: this.selectedEliminatoryLevel.id
-        };     
+
         this.router.navigate([REDIRECT_PLAYOFF_DV]);
 
         this.router.navigate([REDIRECT_ELIMINATORY]);

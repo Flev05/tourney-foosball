@@ -1,7 +1,7 @@
 
 package it.lms.cb.gui.vo;
 
-public class ColorVO extends AbstractVO {
+public class ColorVO extends CommonUserVO {
 
     private static final long serialVersionUID = 1L;
 

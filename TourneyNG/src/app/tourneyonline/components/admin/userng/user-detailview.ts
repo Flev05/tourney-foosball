@@ -27,7 +27,6 @@ export class UserDetailView implements OnInit {
     selectedRoles: Role[];
 
     constructor(
-        private route: ActivatedRoute,
         private userngService: UserService,
         private roleService: RoleService,
         private location: Location

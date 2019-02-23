@@ -27,11 +27,15 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     ngOnInit() {
-        super.ngOnInit();
+        this.ngOnInitLight();
 
         this.loadMeetings();
 
         this.prepareConfigELGui();
+    }
+
+    ngOnInitLight() {
+        super.ngOnInit();
     }
 
     private prepareConfigELGui() {
@@ -439,6 +443,30 @@ export class LevelService extends AbstractEliminatoryListView {
         this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
 
         this.prepareConfigELGui();
+    }
+
+        
+    onEliminatoryRowSelect() {
+        console.log("Entering onEliminatoryRowSelect()");
+      
+        this.selectedEliminatoryLevel = this.selectedRow.e;
+        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
+        
+        for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {
+            let el = this.selectedTourney.eliminatoryLevels[l];
+            if(el.id == this.selectedEliminatoryLevel.id) {
+                this.tourneyService.selectedEliminatoryLevelIndex = l;
+                this.tourneyService.selectedEliminatoryIndex = -1;
+                break;
+            }
+        }
+
+        this.tourneyService.selectedMeetingDb = {id: null
+            , tourneyId: this.selectedTourney.id
+            , roundId: null
+            , playoffId: null
+            , eliminatoryId: this.selectedEliminatoryLevel.id
+        };     
     }
 }
 

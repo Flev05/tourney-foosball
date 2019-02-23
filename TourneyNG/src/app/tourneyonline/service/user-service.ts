@@ -11,13 +11,14 @@ import { Password } from '../domain/password';
 import { ClientService } from './client-service';
 import { RoleService } from './role-service';
 
+const apiUrl = 'api/users';                         // URL to Back End api
+
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
 @Injectable()
 export class UserService {
-    private apiUrl = 'api/users';                         // URL to Back End api
     private changePasswordUrl = 'api/changePassword';    // URL to Back End api
     private resetPasswordUrl = 'api/resetPassword';      // URL to Back End api
 
@@ -25,16 +26,14 @@ export class UserService {
 
     newUser : boolean = false;
 
-    constructor(private http: HttpClient
-        , private clientService : ClientService
-        , private roleService : RoleService) 
+    constructor(private http: HttpClient, private roleService : RoleService) 
     { 
         console.log("Constructor of UserService");
     }
 
     loadUserSmall (): Observable<UserVO[]> {
  
-        return this.http.get<UserVO[]>(this.apiUrl)
+        return this.http.get<UserVO[]>(apiUrl)
         .pipe(
             tap(_ => this.log(`fetched all User`)),
             catchError(this.handleError('loadUserSmall', []))
@@ -43,13 +42,13 @@ export class UserService {
 
     setSelectedUser(uvo: UserVO): void {
         this.selectedUser = uvo;
-        this.clientService.setSelectClients(uvo.clients);
+        // this.clientService.setSelectClients(uvo.clients);
         this.roleService.setSelectRoles(uvo.roles);
     }
 
     /** GET hero by id. Will 404 if id not found */
     getUser(id: number): Observable<UserVO> {
-        const url = `${this.apiUrl}/${id}`;
+        const url = `${apiUrl}/${id}`;
         return this.http.get<UserVO>(url).pipe(
             tap(_ => this.log(`fetched User id=${id}`)),
             catchError(this.handleError<UserVO>(`getUser id=${id}`))
@@ -58,7 +57,7 @@ export class UserService {
 
     /** POST: add a new User to the server */
     addUser (userng: UserVO): Observable<UserVO> {
-        return this.http.post<UserVO>(this.apiUrl, userng, httpOptions).pipe(
+        return this.http.post<UserVO>(apiUrl, userng, httpOptions).pipe(
             tap((userng: UserVO) => this.log(`added User w/ id=${userng.id}`)),
             catchError(this.handleError<UserVO>('addUser'))
         );
@@ -67,7 +66,7 @@ export class UserService {
     /** PUT: update the User on the server */
     updateUser (userng: UserVO ): Observable<UserVO> {
         const id =  userng.id;
-        const url = `${this.apiUrl}/${userng.id}`;
+        const url = `${apiUrl}/${userng.id}`;
 
         return this.http.put(url, userng, httpOptions).pipe(
             tap(_ => this.log(`updated User id=${id}`)),
@@ -78,7 +77,7 @@ export class UserService {
     /** DELETE: delete the User from the server */
     deleteUser (userng: UserVO | number): Observable<UserVO> {
         const id = typeof userng === 'number' ? userng : userng.id;
-        const url = `${this.apiUrl}/${id}`;
+        const url = `${apiUrl}/${id}`;
 
         return this.http.delete<UserVO>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted User id=${id}`)),

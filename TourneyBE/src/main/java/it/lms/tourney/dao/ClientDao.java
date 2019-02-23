@@ -67,30 +67,35 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
         return resultList.get(0);
     }
 
-    public List<Client> findAllOrderedByName() {
+    public Client getByBusinssName(String businessName) {
 
-        logger.debug(logId() + "Entering findAllOrderedByName()");
+        logger.debug(logId() + "Entering getByBusinssName(" + businessName + ")");
 
         CriteriaBuilder cb = getCb();
-        CriteriaQuery<Client> cq = cb.createQuery(Client.class);
-        Root<Client> root = cq.from(Client.class);
+        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+        Root<Client> root = criteria.from(Client.class);
 
-        cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(root.get(Client_.firstname)), cb.asc(root.get(Client_.lastname)));
+        Predicate p = cb.equal(root.get(Client_.businessName), businessName);
 
-        TypedQuery<Client> tq = getEm().createQuery(cq);
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Client> tq = getEm().createQuery(criteria);
 
         List<Client> resultList = tq.getResultList();
 
         logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        if (resultList.isEmpty()) {
+            return null;
+        }
 
-        return resultList;
+        return resultList.get(0);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Client client) throws Exception {
 
-        logger.debug(logId() + "Entering delete(" + client + ")");
+        logger.debug(logId() + "Entering insert(" + client + ")");
 
         super.insertPo(client);
 
@@ -111,4 +116,5 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         super.deletePo(client);
     }
+
 }

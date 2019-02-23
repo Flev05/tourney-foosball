@@ -22,8 +22,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     rows: any[];
     selectedRow: any;
 
-    eliminatoryRows: any[] = [];
-
     msgs: Message[] = [];
    
     selectedEliminatoryLevel: EliminatoryLevel;
@@ -128,7 +126,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
         <td>{{rowData.name}}</td>
      */
-    protected loadEliminatoryLevels() {
+    loadEliminatoryLevels() {
         this.meetingMap = new Map<number, MeetingDb[]>();
         this.eliminatoryRoundMap = new Map<number, Round>();
 
@@ -233,7 +231,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         return this.prepareColums(true);
     }
 
-    protected prepareResultRoundPlayoffColums(): any[] {
+    prepareResultRoundPlayoffColums(): any[] {
         return this.prepareColums(false);
     }
 

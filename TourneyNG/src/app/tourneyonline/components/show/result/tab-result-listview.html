@@ -26,7 +26,7 @@
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
-<p-tabView [activeIndex]="activeIndex" (onChange)="onChangeTab($event)">
+<p-tabView [activeIndex]="tourneyService.selectedTabIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
         <p-table [columns]="roundCols"
             [value]="roundRows"
@@ -96,16 +96,16 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">    
-        <div *ngIf="incompleteConfiguration"  style="margin-top:30px">
+        <div *ngIf="incompleteEliminatoryConfiguration"  style="margin-top:30px">
             <p-message 
                 severity="error" 
                 text="Attenzione! Le regole del passaggio di turno alle eliminazioni dirette non sono complete!">
             </p-message>
         </div>     
                     
-        <p-table *ngIf="!incompleteConfiguration" 
-                [columns]="eliminatoryCols"
-                [value]="eliminatoryLevelRows" 
+        <p-table *ngIf="!incompleteEliminatoryConfiguration" 
+                [columns]="levelService.eliminatoryCols"
+                [value]="levelService.eliminatoryLevelRows" 
                 [responsive]="true"
                 selectionMode="single" 
                 [(selection)]="selectedRow" 

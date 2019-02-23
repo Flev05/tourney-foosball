@@ -7,10 +7,11 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -21,20 +22,20 @@ import javax.persistence.Table;
 @Table(name = "role")
 public class Role extends AbstractPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long   serialVersionUID = 1L;
 
-    private String            name;
-    private String            description;
+    private String              name;
+    private String              description;
 
-    private Set<User>         users;
+    private Set<UserRoleClient> urcSet;
 
     public enum ROLES {
-        DEVELOPER, DEMO, OWNER, ADMIN;
+        DEVELOPER, OWNER, ADMIN, OPERATOR, FOLLOWER;
     }
 
     public Role() {
 
-        users = new HashSet<>();
+        urcSet = new HashSet<>();
     }
 
     @Override
@@ -76,15 +77,15 @@ public class Role extends AbstractPO implements Serializable {
         this.description = description;
     }
 
-    // bi-directional many-to-many association to User
-    @ManyToMany(mappedBy = "roles")
-    public Set<User> getUsers() {
+    // bi-directional one-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    public Set<UserRoleClient> getUrcSet() {
 
-        return users;
+        return this.urcSet;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUrcSet(Set<UserRoleClient> urcSet) {
 
-        this.users = users;
+        this.urcSet = urcSet;
     }
 }

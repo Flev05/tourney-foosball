@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
@@ -57,6 +58,52 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
         logger.info(logId() + info);
 
         return poList;
+    }
+
+    public Role getDeveloperRole() {
+
+        return getPoByName(Role.ROLES.DEVELOPER);
+    }
+
+    public Role getOwnerRole() {
+
+        return getPoByName(Role.ROLES.OWNER);
+    }
+
+    public Role getAdminRole() {
+
+        return getPoByName(Role.ROLES.ADMIN);
+    }
+
+    public Role getOperatorRole() {
+
+        return getPoByName(Role.ROLES.OPERATOR);
+    }
+
+    private Role getPoByName(Role.ROLES role) {
+
+        CriteriaQuery<Role> cq = getCb().createQuery(Role.class);
+
+        Root<Role> root = cq.from(Role.class);
+
+        Predicate p = getCb().equal(root.get(Role_.name), role.name());
+        Predicate pAndQ = getCb().and(p);
+
+        cq = cq.select(root);
+        cq = cq.where(pAndQ);
+
+        TypedQuery<Role> nq = getEm().createQuery(cq);
+
+        List<Role> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " Role(s)] ";
+        logger.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        Role po = poList.get(0);
+        return po;
     }
 
     /**

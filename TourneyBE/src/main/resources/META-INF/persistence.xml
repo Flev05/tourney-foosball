@@ -15,6 +15,7 @@
 		<class>it.lms.tourney.po.User</class>
 		<class>it.lms.tourney.po.Role</class>
 		<class>it.lms.tourney.po.Client</class>
+		<class>it.lms.tourney.po.UserRoleClient</class>
 		<class>it.lms.tourney.po.Session</class>
 
 		<class>it.lms.tourney.po.Tourney</class>

@@ -22,6 +22,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     selectedMeetingRow: any;
     incompleteConfiguration: boolean;
     incompleteMessage: string;
+    eliminatoryRows: any[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -49,9 +50,11 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         super.ngOnInit();
 
         this.incompleteMessage = "Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!";
-        this.incompleteConfiguration = true;
+        this.incompleteConfiguration = this.incompleteEliminatoryConfiguration;
 
-        super.loadEliminatoryLevels();
+        if( !this.incompleteConfiguration ) {
+            super.loadEliminatoryLevels();
+        }
     }
     
     protected processEliminationTree(): void {

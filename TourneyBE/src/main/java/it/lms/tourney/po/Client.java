@@ -2,16 +2,18 @@
 package it.lms.tourney.po;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,33 +23,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "client", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Client extends AbstractPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long   serialVersionUID = 1L;
 
-    private String            firstname;
-    private String            lastname;
-    private String            businessName;
+    private String              businessName;
 
-    private String            address;
-    private String            phoneNumber;
-    private String            email;
+    private String              address;
+    private String              phoneNumber;
+    private String              email;
 
-    private String            siteUrl;
+    private String              siteUrl;
 
-    private Country           country;
+    private Country             country;
 
-    private Set<User>         users;
+    private Set<UserRoleClient> urcSet;
 
     public Client() {
 
         super();
+        urcSet = new HashSet<>();
+
     }
 
     @Override
     public String toString() {
 
-        return "Client [firstname=" + firstname + ", lastname=" + lastname + ", businessName=" + businessName
-                + ", address=" + address + ", phoneNumber=" + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl
-                + ", country=" + country + "]";
+        return "Client [businessName=" + businessName + ", address=" + address + ", phoneNumber=" + phoneNumber
+                + ", email=" + email + ", siteUrl=" + siteUrl + ", country=" + country + "]";
     }
 
     @Override
@@ -66,28 +67,6 @@ public class Client extends AbstractPO implements Serializable {
     public void setId(Integer id) {
 
         super.setId(id);
-    }
-
-    @Column(name = "firstname")
-    public String getFirstname() {
-
-        return firstname;
-    }
-
-    public void setFirstname(String name) {
-
-        this.firstname = name;
-    }
-
-    @Column(name = "lastname")
-    public String getLastname() {
-
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-
-        this.lastname = lastname;
     }
 
     @Column(name = "business_name")
@@ -158,15 +137,15 @@ public class Client extends AbstractPO implements Serializable {
         this.country = country;
     }
 
-    // bi-directional many-to-many association to User
-    @ManyToMany(mappedBy = "clients")
-    public Set<User> getUsers() {
+    // bi-directional one-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    public Set<UserRoleClient> getUrcSet() {
 
-        return users;
+        return this.urcSet;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUrcSet(Set<UserRoleClient> urcSet) {
 
-        this.users = users;
+        this.urcSet = urcSet;
     }
 }

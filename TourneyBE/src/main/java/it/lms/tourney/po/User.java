@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,7 +42,7 @@ public class User extends AbstractPO implements Serializable {
 
     public User() {
 
-        urcSet = new HashSet<UserRoleClient>();
+        urcSet = new HashSet<>();
     }
 
     @Override
@@ -165,7 +166,7 @@ public class User extends AbstractPO implements Serializable {
     }
 
     // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     public Set<UserRoleClient> getUrcSet() {
 
         return this.urcSet;

@@ -58,15 +58,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         return resultList;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void save(UserRoleClient po) {
-
-        if (po.isNull()) {
-            logger.debug(logId() + "Inserting Role: " + po);
-
-            insert(po);
-            return;
-        }
+    public void update(UserRoleClient po) {
 
         logger.debug(logId() + "Updating Role: " + po);
 

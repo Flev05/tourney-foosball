@@ -55,21 +55,6 @@ export class ClientListView extends AbstractListView {
 
     private onComplete(): void {
         console.log("onComplete()");
-
-        for(let cvo of  this.clients ) {
-            cvo.cuvo = 
-                {id : this.userService.selectedUser.id,
-                username : this.userService.selectedUser.username,
-                password : this.userService.selectedUser.password,
-                firstname: this.userService.selectedUser.firstname,
-                lastname: this.userService.selectedUser.lastname,
-                address: this.userService.selectedUser.address,
-                email: this.userService.selectedUser.email,
-                phoneNumber: this.userService.selectedUser.phoneNumber,
-                description: this.userService.selectedUser.description,
-                country: this.userService.selectedUser.country
-            }
-        }
     }
 
 

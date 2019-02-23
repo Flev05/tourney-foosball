@@ -22,343 +22,278 @@
         </p>
     </p-accordionTab>
 </p-accordion>
+        
+<p>
+    <span style="font-weight: bold">
+        Attenzione! I campi contrassegnati con * sono obbligatori!
+    </span>
+</p>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
 </div>
-        
-<form [formGroup]="clientFormGroup" (ngSubmit)="onSubmit(clientFormGroup.value)">
-    <p>
-        <span style="font-weight: bold">
-            Attenzione! I campi contrassegnati con * sono obbligatori!
-        </span>
-    </p>
-
-    <p-fieldset legend="Cliente">
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Nominativo*:
-                </div>
-                <div class="ui-grid-col-6">
-                    <input pInputText type="text" formControlName="businessName" placeholder="Nome e cognome o ragione sociale del cliente"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['businessName'].valid && clientFormGroup.controls['businessName'].dirty">
-                        <i class="fa fa-close"></i>
-                        Il nominativo del cliente è obbligatorio
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Via*:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="address"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['address'].valid && clientFormGroup.controls['address'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['address'].errors['required']">
-                            La via è obbligatoria
-                        </span>
-                    </div>
-                </div>
-            </div>
-                
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Indirizzo:
-                </div>
-                <div class="ui-grid-col-8">
-                    {{fullAddress}}
-                </div>
-            </div>             
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    <label for="country-id">Comune*:</label>
-                </div>
-                <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" 
-                        formControlName="country" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="searchCountry($event)" 
-                        field="city"
-                        placeholder="Comune" 
-                        [minLength]="1">
-                    </p-autoComplete>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Telefono*:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="phoneNumber" placeholder="Obbligatorio"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all"
-                        *ngIf="!clientFormGroup.controls['phoneNumber'].valid && clientFormGroup.controls['phoneNumber'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['phoneNumber'].errors['required']">
-                            Il numero di telefono del cliente è obbligatorio
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    E-mail*:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="email" placeholder="Obbligatoria"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['email'].valid && clientFormGroup.controls['email'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['email'].errors['required']">
-                            L'indirizzo e-mail del cliente è obbligatorio
-                        </span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Sito Internet:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="siteUrl" placeholder="Sito del cliente se c'è"/>
-                </div>
-            </div>
-        </div>
-    </p-fieldset>
-
-    <p-fieldset legend="Utente">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                Già registrato?
-            </div>
-            <div class="ui-grid-col-3" tooltipPosition="right"
-                    pTooltip="Indicare se l'utente è già registrato o un nuovo utente per il nuovo cliente">
-                <div class="ui-g radiobuttons">
-                    <div class="ui-g-12">
-                        <p-radioButton name="isUserRegisteredGroupname" 
-                            label="Si" 
-                            value="yes" 
-                            formControlName="isUserRegistered"
-                            (onClick)="onRegisteredYes()">
-                        </p-radioButton>
-                    </div>
-                    <div class="ui-g-12">
-                        <p-radioButton name="isUserRegisteredGroupname" 
-                            label="No" 
-                            value="no" 
-                            formControlName="isUserRegistered"
-                            (onClick)="onRegisteredNo()">
-                        </p-radioButton>
-                    </div>
-                </div>
-            </div>
-        </div>
     
-        <div *ngIf="isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Username*:
-                </div>
-                <div class="ui-grid-col-6">
-                    <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['username'].valid && clientFormGroup.controls['username'].dirty">
-                        <i class="fa fa-close"></i>
-                        La Username è obbligatoria
-                    </div>
-                </div>
-            </div>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Password*:
-                </div>
-                <div class="ui-grid-col-6">
-                    <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(8)"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['password'].valid && clientFormGroup.controls['password'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['password'].errors['required']">La Password è obbligatoria</span>
-                        <span *ngIf="clientFormGroup.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="isLoginFailed" style="margin-top:30px">
-                <p-message severity="error" text="Controllo Username e password fallito"></p-message>
-            </div>
-        </div>
-
-        <div *ngIf="!isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Username*:
-                </div>
-                <div class="ui-grid-col-6">
-                    <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['username'].valid && clientFormGroup.controls['username'].dirty">
-                        <i class="fa fa-close"></i>
-                        La Username è obbligatoria
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Password*:
-                </div>
-                <div class="ui-grid-col-6">
-                    <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(8)"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['password'].valid && clientFormGroup.controls['password'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['password'].errors['required']">La Password è obbligatoria</span>
-                        <span *ngIf="clientFormGroup.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
-                    </div>
-                </div>
-            </div>
-    
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Ripetere Password*:
-                </div>
-                <div class="ui-grid-col-6">
-                    <input pInputText type="password" formControlName="retypePassword" placeholder="Obbligatoria - Min(8)"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['retypePassword'].valid && clientFormGroup.controls['retypePassword'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['retypePassword'].errors['required']">Ripeter la Password è obbligatoria</span>
-                        <span *ngIf="clientFormGroup.controls['retypePassword'].errors['minlength']">Almeno 8 caratteri</span>
-                    </div>
-                </div>
-                <div *ngIf="isRetypePasswordFailed" style="margin-top:30px">
-                    <p-message severity="error" text="La password ripetuta non coincide con la precedente"></p-message>
-                </div>
-                <div *ngIf="isLoginFailed" style="margin-top:30px">
-                    <p-message severity="error" text="L'utente con username {{username}} esiste già. Scegliere un'altra username"></p-message>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Via*:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="userAddress"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['userAddress'].valid && clientFormGroup.controls['userAddress'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['userAddress'].errors['required']">
-                            La via dell'utente è obbligatoria
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Indirizzo*:
-                </div>
-                <div class="ui-grid-col-8">
-                    {{userFullAddress}}
-                </div>
-            </div>             
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    <label for="country-id">Comune*:</label>
-                </div>
-                <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" 
-                        formControlName="userCountry" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="searchCountry($event)" 
-                        field="city"
-                        placeholder="Comune" 
-                        [minLength]="1">
-                    </p-autoComplete>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Telefono*:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="userPhoneNumber" placeholder="Obbligatorio"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all"
-                        *ngIf="!clientFormGroup.controls['userPhoneNumber'].valid && clientFormGroup.controls['userPhoneNumber'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['userPhoneNumber'].errors['required']">
-                            Il numero di telefono del utente è obbligatorio
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    E-mail*:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="userEmail" placeholder="Obbligatoria"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" 
-                        *ngIf="!clientFormGroup.controls['userEmail'].valid && clientFormGroup.controls['userEmail'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="clientFormGroup.controls['userEmail'].errors['required']">
-                            L'indirizzo e-mail dell'utente è obbligatorio
-                        </span>
-                    </div>
-                </div>
-            </div>            
-
-        </div>
-    </p-fieldset>
-            
+<p-fieldset legend="Cliente">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
-                <button class="ui-button-success" pButton type="submit" icon="pi pi-save" label="Salva" [disabled]="!clientFormGroup.valid"></button>
+                Nominativo*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedClient.businessName" placeholder="Nome e cognome o ragione sociale del cliente"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Via*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.address"/>
+            </div>
+        </div>
+            
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{selectedClient.address}} {{selectedClient.country != undefined ? " - " + selectedClient.country.zipCode + " " + selectedClient.country.city
+                + " (" + selectedClient.country.provinceCode +")" : "" }}
+            </div>
+        </div>             
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label for="country-id">Comune*:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" 
+                    [(ngModel)]="selectedClient.country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" 
+                    field="city"
+                    placeholder="Comune" 
+                    [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Telefono*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.phoneNumber" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                E-mail*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.email" placeholder="Obbligatoria"/>
+            </div>
+        </div>
+        
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Sito Internet:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.siteUrl" placeholder="Sito del cliente se c'è"/>
             </div>
         </div>
     </div>
-</form> 
+</p-fieldset>
 
-<div *ngIf="onCreateClientError" style="margin-top:30px">
-    <p-message severity="error" text="Creazione nuovo cliente fallita, dati non consistenti"></p-message>
+<p-fieldset legend="Utente">
+    <div *ngIf="userRegisteredRadioEnabled" class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Già registrato?
+        </div>
+        <div class="ui-grid-col-3" tooltipPosition="right"
+                pTooltip="Indicare se l'utente è già registrato o un nuovo utente per il nuovo cliente">
+            <div class="ui-g radiobuttons">
+                <div class="ui-g-12">
+                    <p-radioButton name="isUserRegisteredGroupname" 
+                        label="Si" 
+                        value="yes" 
+                        [(ngModel)]="userRegisteredRadio"
+                        (onClick)="onRegisteredYes()">
+                    </p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton name="isUserRegisteredGroupname" 
+                        label="No" 
+                        value="no" 
+                        [(ngModel)]="userRegisteredRadio"
+                        (onClick)="onRegisteredNo()">
+                    </p-radioButton>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Username*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.username" placeholder="Obbligatoria"/>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Password*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Nome*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.firstname" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Cognome*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.lastname" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Username*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.username" placeholder="Obbligatoria"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Password*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Ripetere Password*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Via*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.address"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{selectedClient.cuvo.address}} {{selectedClient.cuvo.country != undefined ? " - " + selectedClient.cuvo.country.zipCode + " " + selectedClient.cuvo.country.city
+                + " (" + selectedClient.cuvo.country.provinceCode +")" : "" }}
+            </div>
+        </div>             
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label for="country-id">Comune*:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" 
+                    [(ngModel)]="selectedClient.cuvo.country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" 
+                    field="city"
+                    placeholder="Comune" 
+                    [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Telefono*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.phoneNumber" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                E-mail*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.email" placeholder="Obbligatoria"/>
+            </div>
+        </div>            
+    </div>
+</p-fieldset>
+        
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <button class="ui-button-success" 
+                pButton (click)="onSubmit()" 
+                icon="pi pi-save" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="clientAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già un cliente con nome {{selectedClient.businessName}}. Cambiare nome e riprovare!"></p-message>
 </div>    
-<div *ngIf="onUpdateClientError" style="margin-top:30px">
-    <p-message severity="error" text="Aggioranmento cliente fallito, dati non consistenti"></p-message>
-</div>    
+
+<div *ngIf="isRetypePasswordFailed">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
+    </div>
+</div>
+
+<div *ngIf="userAlreadyExists">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="Esiste già un utente con username {{selectedClient.cuvo.username}}. Scegliere un'altra username e riprovare"></p-message>
+    </div>
+</div>
+
+<div *ngIf="loginFailed">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="L'utente non risulta registrato."></p-message>
+    </div>
+</div>
+    

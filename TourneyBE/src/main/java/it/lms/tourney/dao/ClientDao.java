@@ -95,7 +95,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Client client) throws Exception {
 
-        logger.debug(logId() + "Entering delete(" + client + ")");
+        logger.debug(logId() + "Entering insert(" + client + ")");
 
         super.insertPo(client);
 

@@ -10,6 +10,6 @@ export interface ClientVO
     email?              : string;
     siteUrl?            : string;
     country?            : Country;
-    isUserRegistered?   : boolean;
+    userAlreadyRegistered?   : boolean;
     cuvo?               : CommonUserVO;
 }

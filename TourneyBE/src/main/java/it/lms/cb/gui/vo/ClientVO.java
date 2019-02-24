@@ -8,25 +8,22 @@ public class ClientVO extends AbstractVO {
     private static final long serialVersionUID = 1L;
 
     private String            businessName;
-
     private String            address;
     private String            phoneNumber;
     private String            email;
-
     private String            siteUrl;
+    private boolean           userAlreadyRegistered;
 
     private Country           country;
-
-    private CommonUserVO      cuvo;
-
-    private boolean           userAlreadyRegistered;
+    // private CommonUserVO cuvo;
+    // private RoleVO roleVO;
 
     @Override
     public String toString() {
 
         return super.toString() + " ClientVO [businessName=" + businessName + ", address=" + address + ", phoneNumber="
                 + phoneNumber + ", email=" + email + ", userAlreadyRegistered=" + userAlreadyRegistered + ", siteUrl="
-                + siteUrl + ", country=" + country + ", CommonUserVO=" + cuvo + "]";
+                + siteUrl + ", country=" + country + "]";
     }
 
     public String getBusinessName() {
@@ -97,16 +94,6 @@ public class ClientVO extends AbstractVO {
     public void setCountry(Country country) {
 
         this.country = country;
-    }
-
-    public CommonUserVO getCuvo() {
-
-        return cuvo;
-    }
-
-    public void setCuvo(CommonUserVO cuvo) {
-
-        this.cuvo = cuvo;
     }
 
 }

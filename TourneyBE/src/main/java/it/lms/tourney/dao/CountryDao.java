@@ -36,6 +36,11 @@ import it.lms.tourney.po.Country_;
 @Stateless
 public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
+    public CountryDao() {
+
+        super(Country.class);
+    }
+
     public Country getById(Integer id) {
 
         return super.findById(id);

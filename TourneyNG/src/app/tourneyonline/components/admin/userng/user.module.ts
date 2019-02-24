@@ -7,11 +7,6 @@ import {AccordionModule} from 'primeng/accordion';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
-import {UserListView} from './user-listview';
-import {UserDetailView} from './user-detailview';
-import {UserChangePassword} from './user-changepassword';
-import {UserResetPasswordLv} from './user-reset-password-lv';
-import {UserResetPasswordDv} from './user-reset-password-dv';
 import { SliderModule } from 'app/components/slider/slider';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { TabViewModule } from 'app/components/tabview/tabview';
@@ -22,34 +17,44 @@ import { DropdownModule } from 'app/components/dropdown/dropdown';
 import { GrowlModule } from 'app/components/growl/growl';
 import { PanelModule } from 'app/components/panel/panel';
 import { UserRoutingModule } from './user-routing.module';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { FieldsetModule } from 'primeng/fieldset';
 
+import {UserListView} from './user-listview';
+import {UserDetailView} from './user-detailview';
+import {UserChangePassword} from './user-changepassword';
+import {UserResetPasswordLv} from './user-reset-password-lv';
+import {UserResetPasswordDv} from './user-reset-password-dv';
 @NgModule({
 	imports: [
-		CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        GrowlModule,
-        PanelModule,
-        DropdownModule,
-        InputTextModule,
-        InputTextareaModule,
-        ButtonModule,
-        TabViewModule,
-        CodeHighlighterModule,
-        TableModule,
-        DialogModule,
-        SliderModule,
-        UserRoutingModule,
+        CommonModule
+        ,FormsModule
+        ,ReactiveFormsModule
+        ,GrowlModule
+        ,PanelModule
+        ,DropdownModule
+        ,InputTextModule
+        ,InputTextareaModule
+        ,ButtonModule
+        ,TabViewModule
+        ,CodeHighlighterModule
+        ,TableModule
+        ,DialogModule
+        ,SliderModule
+        ,AutoCompleteModule
+        ,RadioButtonModule
+        ,FieldsetModule
         ,AccordionModule
         ,MessagesModule
-        ,MessageModule        
+        ,MessageModule
+		,UserRoutingModule
 	],
-	declarations: [
-		UserListView,
+	declarations: [UserListView,
 		UserDetailView,
         UserChangePassword,
         UserResetPasswordLv,
-        UserResetPasswordDv,
+        UserResetPasswordDv
 	]
 })
 export class UserModule {}

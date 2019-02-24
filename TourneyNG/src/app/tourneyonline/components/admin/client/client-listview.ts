@@ -8,8 +8,8 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { LoginService } from 'app/tourneyonline/service/login-service';
 import { UserService } from 'app/tourneyonline/service/user-service';
+import { RoleService } from 'app/tourneyonline/service/role-service';
 
 const redirect = '/clients/dv';
 
@@ -25,10 +25,12 @@ export class ClientListView extends AbstractListView {
     cols:  TableCols[] ;
     onLoadClientError: boolean;
     onDeleteError: boolean;
+    isUserDeveloper: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
         protected userService   : UserService,
+        protected roleService   : RoleService,
         protected clientService : ClientService,
         protected router        : Router,
         protected location      : Location
@@ -39,6 +41,7 @@ export class ClientListView extends AbstractListView {
     ngOnInit() {
         console.log("ClientListView.ngOnInit()");
         this.clientService.newClient = false;
+        this.isUserDeveloper = this.roleService.isDeveloper();
 
         this.cols = [
             { field: 'businessName', header: 'Nominativo' },
@@ -49,35 +52,28 @@ export class ClientListView extends AbstractListView {
         let userId = this.userService.selectedUser.id;
 
         const subsrciber = this.clientService.loadAllClients(userId, this.loadClientsErrorHandler('loadAllClients()'));
-
         subsrciber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onComplete());
     }
 
     private onComplete(): void {
         console.log("onComplete()");
+        this.isUserDeveloper = this.roleService.isDeveloper();
     }
-
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
       
             this.onLoadClientError = true;
 
-            console.error(error); // log to console instead
-      
-            console.log(`${operation} failed: ${error.message}`);
+            console.log(`${operation} failed!`);
+
+            console.error(error); // log to console instead     
       
             return of(result as T);
         };
     }
 
     create() {
-        this.selectedClient={
-              id: null
-            , businessName: ""
-            , phoneNumber: ""
-        };
-        this.clientService.selectedClient = this.selectedClient;
         this.clientService.newClient = true;
         this.gotoDetailView();
     }
@@ -91,9 +87,18 @@ export class ClientListView extends AbstractListView {
         this.onDeleteError = false;
         if(confirm(popup)) {
 
-            const subscr = this.clientService.postDeleteClient(this.selectedClient, this.deleteErrorHandler('postDeleteClient()'));
+            const subscr = this.clientService.deleteClient(this.selectedClient.id, this.deleteErrorHandler('postDeleteClient()'));
 
-            subscr.subscribe(n => this.next(n), e => this.onError(e), () => this.onComplete());
+            subscr.subscribe(n => this.next(n), e => this.onError(e), () => this.onDeleteComplete());
+        }
+    }
+    
+    private onDeleteComplete(): void {
+        console.log("onDeleteComplete()");
+
+        let index: number = this.clients.indexOf(this.selectedClient);
+        if(index > -1 ) {
+            this.clients.splice(index, 1);
         }
     }
 

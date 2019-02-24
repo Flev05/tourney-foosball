@@ -90,25 +90,14 @@ export class ClientService {
     }
       
     /** DELETE: delete the Client from the server */
-    deleteClient (client: ClientVO | number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
-        const id = typeof client === 'number' ? client : client.id;
+    deleteClient (clientId: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
+        const id = clientId;
         const url = `${clientUrl}/delete/${id}`;
         console.log(url);
 
         return this.http.delete<ClientVO>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Client id=${id}`)),
             catchError(selector)
-        );
-    }
-
-    /** POST: to delete a Client from the server */
-    postDeleteClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
-        let url = clientUrl + "/delete";
-        console.log(url);
-
-        return this.http.post<ClientVO>(url, client, httpOptions).pipe(
-              tap((client: ClientVO) => this.log(`added Client w/ id=${client.id}`))
-            , catchError(selector)
         );
     }
       

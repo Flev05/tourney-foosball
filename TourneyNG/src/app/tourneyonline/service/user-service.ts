@@ -8,10 +8,9 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { UserVO } from '../domain/user-vo';
 import { Password } from '../domain/password';
-import { ClientService } from './client-service';
 import { RoleService } from './role-service';
 
-const apiUrl = 'api/users';                         // URL to Back End api
+const userUrl = 'api/users';                         // URL to Back End api
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -31,24 +30,24 @@ export class UserService {
         console.log("Constructor of UserService");
     }
 
-    loadUserSmall (): Observable<UserVO[]> {
- 
-        return this.http.get<UserVO[]>(apiUrl)
-        .pipe(
-            tap(_ => this.log(`fetched all User`)),
-            catchError(this.handleError('loadUserSmall', []))
-          );
+    loadAllUsers (userId: number, selector: (err: any, caught: Observable<UserVO[]> ) => Observable<UserVO[]>): Observable<UserVO[]> {
+        const url = userUrl + "/findByUserId/" + userId;
+        console.log(url);
+        
+        return this.http.get<UserVO[]>(url).pipe(
+            tap(_ => this.log("fetched all clients by user id: " + userId))
+          , catchError(selector)
+        );
     }
 
     setSelectedUser(uvo: UserVO): void {
         this.selectedUser = uvo;
-        // this.clientService.setSelectClients(uvo.clients);
         this.roleService.setSelectRoles(uvo.roles);
     }
 
     /** GET hero by id. Will 404 if id not found */
     getUser(id: number): Observable<UserVO> {
-        const url = `${apiUrl}/${id}`;
+        const url = `${userUrl}/${id}`;
         return this.http.get<UserVO>(url).pipe(
             tap(_ => this.log(`fetched User id=${id}`)),
             catchError(this.handleError<UserVO>(`getUser id=${id}`))
@@ -57,31 +56,50 @@ export class UserService {
 
     /** POST: add a new User to the server */
     addUser (userng: UserVO): Observable<UserVO> {
-        return this.http.post<UserVO>(apiUrl, userng, httpOptions).pipe(
+        return this.http.post<UserVO>(userUrl, userng, httpOptions).pipe(
             tap((userng: UserVO) => this.log(`added User w/ id=${userng.id}`)),
             catchError(this.handleError<UserVO>('addUser'))
         );
     }
 
-    /** PUT: update the User on the server */
-    updateUser (userng: UserVO ): Observable<UserVO> {
-        const id =  userng.id;
-        const url = `${apiUrl}/${userng.id}`;
+    /** POST: add a new User to the server */
+    private createUser (user: UserVO, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO>): Observable<UserVO> {
+        let url = userUrl + "/insert";
+        console.log(url);
 
-        return this.http.put(url, userng, httpOptions).pipe(
-            tap(_ => this.log(`updated User id=${id}`)),
-            catchError(this.handleError<UserVO>('updateUser'))
+        return this.http.post<UserVO>(url, user, httpOptions).pipe(
+              tap((user: UserVO) => this.log(`added User w/ id=${user.id}`))
+            , catchError(selector)
+        );
+    }
+
+    /** PUT: update the User on the server */
+    private updateUser (user: UserVO, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+        const url = userUrl + "/update";
+        console.log(url);
+        
+        return this.http.put(url, user, httpOptions).pipe(
+            tap(_ => this.log(`updated User id=${user.id}`)),
+            catchError(selector)
         );
     }
     
+    saveUser (user: UserVO, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+        if(user.id == null) {
+            return this.createUser(user, selector);
+        }
+        return this.updateUser(user, selector);
+    }
+
     /** DELETE: delete the User from the server */
-    deleteUser (userng: UserVO | number): Observable<UserVO> {
-        const id = typeof userng === 'number' ? userng : userng.id;
-        const url = `${apiUrl}/${id}`;
+    deleteUser (userId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+        const id = userId;
+        const url = `${userUrl}/delete/${id}`;
+        console.log(url);
 
         return this.http.delete<UserVO>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted User id=${id}`)),
-            catchError(this.handleError<UserVO>('deleteUser'))
+            catchError(selector)
         );
     }
 
@@ -122,6 +140,6 @@ export class UserService {
       
     /** Log a HeroService message with the MessageService */
     private log(message: string) {
-        console.log('ClientService: ' + message);
+        console.log('UserService: ' + message);
     }
 }

@@ -2,11 +2,12 @@
 package it.lms.tourney.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -15,6 +16,7 @@ import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
+import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
@@ -24,6 +26,9 @@ import it.lms.tourney.po.User_;
 
 @Stateless
 public class UserDao extends BaseJPACrudDao<User, Integer> {
+
+    @Inject
+    ClientDao clientDao;
 
     public UserDao() throws DaoException {
 
@@ -40,6 +45,12 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug(logId() + "Entering findOwnerUsers()");
         return findUsersByRole(Role.ROLES.OWNER);
+    }
+
+    public List<User> findAdminUsers() {
+
+        logger.debug(logId() + "Entering findAdminUsers()");
+        return findUsersByRole(Role.ROLES.ADMIN);
     }
 
     private List<User> findUsersByRole(Role.ROLES role) {
@@ -66,6 +77,75 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         logger.info(logId() + info);
 
         return poList;
+    }
+
+    /**
+     * First finds all clients belonging to the received loggedUserId, so finds all remaining users, if any, of the
+     * found clients
+     * 
+     * @param loggedUserId the logged user identifier
+     * @return the list of
+     */
+    public List<User> findOwnerUsers(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findOwnerUsers()");
+
+        List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.OWNER, Role.ROLES.ADMIN, Role.ROLES.OPERATOR,
+                Role.ROLES.FOLLOWER);
+
+        List<UserRoleClient> urcList = clientDao.findClientsByRole(loggedUserId, roleList);
+
+        List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
+
+        return userList;
+    }
+
+    /**
+     * First finds all clients belonging to the received loggedUserId, so finds all remaining users, if any, of the
+     * found clients
+     * 
+     * @param loggedUserId the logged user identifier
+     * @return the list of users
+     */
+    public List<User> findAdminUsers(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findAdminUsers()");
+
+        List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.ADMIN, Role.ROLES.OPERATOR, Role.ROLES.FOLLOWER);
+
+        List<Client> clientList = clientDao.findClientsByUser(loggedUserId);
+
+        List<User> userList = findUsersBy(clientList, roleList);
+
+        return userList;
+    }
+
+    private List<User> findUsersBy(List<Client> clientList, List<Role.ROLES> roleList) {
+
+        logger.debug(logId() + "Entering findUsersBy()");
+
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
+
+        List<String> roles = roleList.stream().map(r -> r.name()).collect(Collectors.toList());
+        Predicate p = urcRoleJoin.get(Role_.name).in(roles);
+        Predicate q = root.get(UserRoleClient_.client).in(clientList);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
+
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+
+        List<UserRoleClient> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " Entity(ies)] ";
+        logger.info(logId() + info);
+
+        List<User> userList = poList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
+
+        return userList;
     }
 
     public User getPoBy(String username) {
@@ -102,7 +182,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      * @return the BO found
      * @throws DaoException id the select fails
      */
-    public User findUserBy(String username) throws DaoException {
+    public User findUserBy(String username) {
 
         logger.debug(logId() + "Entering findUserBy(" + username + ")");
 
@@ -120,14 +200,38 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return po;
     }
 
-    public boolean isDeveloperUser(String username) throws DaoException {
+    public boolean isDeveloperUser(String username) {
 
         List<String> rtList = new ArrayList<>();
         rtList.add(Role.ROLES.DEVELOPER.name());
         return isUserBelongingTo(username, rtList);
     }
 
-    private boolean isUserBelongingTo(String username, List<String> roles) throws DaoException {
+    public boolean isDeveloperUser(Integer userId) {
+
+        User user = findById(userId);
+        List<String> rtList = new ArrayList<>();
+        rtList.add(Role.ROLES.DEVELOPER.name());
+        return isUserBelongingTo(user.getUsername(), rtList);
+    }
+
+    public boolean isOwnerUser(Integer userId) {
+
+        User user = findById(userId);
+        List<String> rtList = new ArrayList<>();
+        rtList.add(Role.ROLES.OWNER.name());
+        return isUserBelongingTo(user.getUsername(), rtList);
+    }
+
+    public boolean isAdminUser(Integer userId) {
+
+        User user = findById(userId);
+        List<String> rtList = new ArrayList<>();
+        rtList.add(Role.ROLES.ADMIN.name());
+        return isUserBelongingTo(user.getUsername(), rtList);
+    }
+
+    private boolean isUserBelongingTo(String username, List<String> roles) {
 
         logger.debug(logId() + "Entering isUserBelongingTo()");
 
@@ -137,29 +241,30 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return isUserBelongingTo(username, sa);
     }
 
-    private boolean isUserBelongingTo(String username, String[] roles) throws DaoException {
+    private boolean isUserBelongingTo(String username, String[] roles) {
 
         logger.debug(logId() + "Entering isUserBelongingTo()");
 
-        List<String> roleList = new ArrayList<>();
-        for (String s : roles) {
-            roleList.add(s);
-        }
+        List<String> roleList = Arrays.asList(roles);
 
-        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
 
-        Root<User> root = cq.from(User.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Predicate p = getCb().equal(root.get(User_.username), username);
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
 
-        Predicate pAndQ = getCb().and(p);
+        Predicate p = getCb().equal(urcUserJoin.get(User_.username), username);
+        Predicate q = urcRoleJoin.get(Role_.name).in(roleList);
+
+        Predicate pAndQ = getCb().and(p, q);
         cq = cq.select(root);
         cq = cq.where(pAndQ);
 
-        TypedQuery<User> nq = getEm().createQuery(cq);
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
-        List<User> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " User(s)] ";
+        List<UserRoleClient> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " Entitys] ";
         logger.info(logId() + info);
 
         if (poList.isEmpty()) {
@@ -245,19 +350,20 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return po;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(User po) throws DaoException {
+
+        logger.debug(logId() + "Entering insert(" + po + ")");
 
         insertPo(po);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(User po) throws DaoException {
+
+        logger.debug(logId() + "Entering update(" + po + ")");
 
         updatePo(po);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(User po) throws DaoException {
 
         logger.debug(logId() + "Entering deletePo(" + po + ")");

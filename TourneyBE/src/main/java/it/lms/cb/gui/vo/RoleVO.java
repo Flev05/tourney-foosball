@@ -7,13 +7,24 @@ public class RoleVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Integer           id;
     private String            name;
     private String            description;
 
     @Override
     public String toString() {
 
-        return "RoleVO [name=" + name + ", description=" + description + "]";
+        return "RoleVO [id=" + id + ", name=" + name + ", description=" + description + "]";
+    }
+
+    public Integer getId() {
+
+        return id;
+    }
+
+    public void setId(Integer id) {
+
+        this.id = id;
     }
 
     public String getName() {

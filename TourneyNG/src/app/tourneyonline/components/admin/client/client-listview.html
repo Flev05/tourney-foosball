@@ -72,7 +72,7 @@
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="summary" let-rowData>
+    <ng-template *ngIf="isUserDeveloper" pTemplate="summary" let-rowData>
         <div style="text-align:left">
             <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Cliente"></button>
         </div>

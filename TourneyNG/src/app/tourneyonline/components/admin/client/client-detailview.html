@@ -23,240 +23,110 @@
     </p-accordionTab>
 </p-accordion>
         
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
+</div>
+    
 <p>
     <span style="font-weight: bold">
         Attenzione! I campi contrassegnati con * sono obbligatori!
     </span>
 </p>
 
-<div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
-</div>
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Nominativo*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedClient.businessName}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-6">
+            <input pInputText type="text" [(ngModel)]="selectedClient.businessName" 
+                placeholder="Nome e cognome o ragione sociale del cliente"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Via*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedClient.address}}
+        </div>                        
+        <div class="ui-grid-col-5">
+            <input *ngIf="userEnabled" pInputText type="text" [(ngModel)]="selectedClient.address"/>
+        </div>
+    </div>
+        
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8">
+            {{clientAddress}}
+        </div>
+    </div>             
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <label for="country-id">Comune*:</label>
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedClient.country.city}}
+        </div>
+
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedClient.country" 
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Telefono*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedClient.phoneNumber}}
+        </div>                        
+        <div class="ui-grid-col-5">
+            <input *ngIf="userEnabled" pInputText type="text" [(ngModel)]="selectedClient.phoneNumber" placeholder="Obbligatorio"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            E-mail*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedClient.email}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedClient.email" placeholder="Obbligatoria"/>
+        </div>
+    </div>
     
-<p-fieldset legend="Cliente">
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Nominativo*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="text" [(ngModel)]="selectedClient.businessName" placeholder="Nome e cognome o ragione sociale del cliente"/>
-            </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Sito Internet:
         </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Via*:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.address"/>
-            </div>
-        </div>
-            
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Indirizzo:
-            </div>
-            <div class="ui-grid-col-8">
-                {{selectedClient.address}} {{selectedClient.country != undefined ? " - " + selectedClient.country.zipCode + " " + selectedClient.country.city
-                + " (" + selectedClient.country.provinceCode +")" : "" }}
-            </div>
-        </div>             
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                <label for="country-id">Comune*:</label>
-            </div>
-            <div class="ui-grid-col-5">
-                <p-autoComplete id="country-id" 
-                    [(ngModel)]="selectedClient.country" 
-                    [suggestions]="filteredCountriesSingle" 
-                    (completeMethod)="searchCountry($event)" 
-                    field="city"
-                    placeholder="Comune" 
-                    [minLength]="1">
-                </p-autoComplete>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Telefono*:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.phoneNumber" placeholder="Obbligatorio"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                E-mail*:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.email" placeholder="Obbligatoria"/>
-            </div>
-        </div>
-        
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Sito Internet:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.siteUrl" placeholder="Sito del cliente se c'è"/>
-            </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedClient.siteUrl}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedClient.siteUrl" placeholder="Sito del cliente se c'è"/>
         </div>
     </div>
-</p-fieldset>
+</div>
 
-<p-fieldset legend="Utente">
-    <div *ngIf="userRegisteredRadioEnabled" class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            Già registrato?
-        </div>
-        <div class="ui-grid-col-3" tooltipPosition="right"
-                pTooltip="Indicare se l'utente è già registrato o un nuovo utente per il nuovo cliente">
-            <div class="ui-g radiobuttons">
-                <div class="ui-g-12">
-                    <p-radioButton name="isUserRegisteredGroupname" 
-                        label="Si" 
-                        value="yes" 
-                        [(ngModel)]="userRegisteredRadio"
-                        (onClick)="onRegisteredYes()">
-                    </p-radioButton>
-                </div>
-                <div class="ui-g-12">
-                    <p-radioButton name="isUserRegisteredGroupname" 
-                        label="No" 
-                        value="no" 
-                        [(ngModel)]="userRegisteredRadio"
-                        (onClick)="onRegisteredNo()">
-                    </p-radioButton>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div *ngIf="isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Username*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.username" placeholder="Obbligatoria"/>
-            </div>
-        </div>
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Password*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
-            </div>
-        </div>
-    </div>
 
-    <div *ngIf="!isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Nome*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.firstname" placeholder="Obbligatorio"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Cognome*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.lastname" placeholder="Obbligatorio"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Username*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.username" placeholder="Obbligatoria"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Password*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Ripetere Password*:
-            </div>
-            <div class="ui-grid-col-6">
-                <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Via*:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.address"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Indirizzo:
-            </div>
-            <div class="ui-grid-col-8">
-                {{selectedClient.cuvo.address}} {{selectedClient.cuvo.country != undefined ? " - " + selectedClient.cuvo.country.zipCode + " " + selectedClient.cuvo.country.city
-                + " (" + selectedClient.cuvo.country.provinceCode +")" : "" }}
-            </div>
-        </div>             
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                <label for="country-id">Comune*:</label>
-            </div>
-            <div class="ui-grid-col-5">
-                <p-autoComplete id="country-id" 
-                    [(ngModel)]="selectedClient.cuvo.country" 
-                    [suggestions]="filteredCountriesSingle" 
-                    (completeMethod)="searchCountry($event)" 
-                    field="city"
-                    placeholder="Comune" 
-                    [minLength]="1">
-                </p-autoComplete>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                Telefono*:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.phoneNumber" placeholder="Obbligatorio"/>
-            </div>
-        </div>
-
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
-                E-mail*:
-            </div>
-            <div class="ui-grid-col-5">
-                <input pInputText type="text" [(ngModel)]="selectedClient.cuvo.email" placeholder="Obbligatoria"/>
-            </div>
-        </div>            
-    </div>
-</p-fieldset>
-        
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
@@ -266,7 +136,6 @@
                 label="Salva" 
                 [disabled]="enableSaveButton()">
             </button>
-
         </div>
     </div>
 </div>
@@ -278,22 +147,5 @@
 <div *ngIf="clientAlreadyExists" style="margin-top:30px">
     <p-message severity="error" text="Esiste già un cliente con nome {{selectedClient.businessName}}. Cambiare nome e riprovare!"></p-message>
 </div>    
-
-<div *ngIf="isRetypePasswordFailed">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
-    </div>
-</div>
-
-<div *ngIf="userAlreadyExists">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="Esiste già un utente con username {{selectedClient.cuvo.username}}. Scegliere un'altra username e riprovare"></p-message>
-    </div>
-</div>
-
-<div *ngIf="loginFailed">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="L'utente non risulta registrato."></p-message>
-    </div>
-</div>
+ 
     

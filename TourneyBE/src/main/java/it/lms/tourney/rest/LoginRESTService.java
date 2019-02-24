@@ -31,10 +31,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
+import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.po.Login;
@@ -58,6 +58,9 @@ public class LoginRESTService extends AbstractRESTService {
 
     @Inject
     private UserDao    userDao;
+
+    @Inject
+    private Converter  converter;
 
     public LoginRESTService() {
 
@@ -123,9 +126,9 @@ public class LoginRESTService extends AbstractRESTService {
             String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") successful";
             logger.debug(message);
 
-            String jsonString = prepareResponse(u);
+            UserVO uvo = prepareResponse(u);
 
-            builder = Response.status(Response.Status.OK).entity(jsonString);
+            builder = Response.status(Response.Status.OK).entity(uvo);
         } catch (Exception e) {
 
             logger.error(logId() + "Login failed", e);
@@ -137,34 +140,21 @@ public class LoginRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    private String prepareResponse(User u) throws JsonProcessingException {
+    private UserVO prepareResponse(User u) throws JsonProcessingException {
 
-        ObjectMapper om = new ObjectMapper();
+        UserVO uvo = converter.convertUserPoVo(u);
 
-        UserVO uvo = new UserVO();
         for (UserRoleClient urc : u.getUrcSet()) {
 
-            uvo.setId(u.getId());
-            uvo.setAddress(u.getAddress());
-            uvo.setCountry(u.getCountry());
-            uvo.setEmail(u.getEmail());
-            uvo.setFirstname(u.getFirstname());
-            uvo.setLastname(u.getLastname());
-            uvo.setPassword(u.getPassword());
-            uvo.setPhoneNumber(u.getPhoneNumber());
-            uvo.setUsername(u.getUsername());
-
-            RoleVO rvo = new RoleVO();
-            uvo.getRoles().add(rvo);
-
             Role r = urc.getRole();
-            rvo.setDescription(r.getDescription());
-            rvo.setName(r.getName());
+
+            RoleVO rvo = converter.convertRolePoVo(r);
+            uvo.getRoles().add(rvo);
         }
 
-        String jsonString = om.writeValueAsString(uvo);
-        logger.debug(logId() + jsonString);
-        return jsonString;
+        logger.debug(logId() + uvo);
+
+        return uvo;
     }
 
     /**

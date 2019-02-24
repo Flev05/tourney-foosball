@@ -37,6 +37,11 @@ import it.lms.tourney.po.User;
 @Stateless
 public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
+    public SessionDao() {
+
+        super(Session.class);
+    }
+
     public Session findSessionBy(User u) {
 
         logger.debug(logId() + "Entering findSessionBy(" + u + ")");

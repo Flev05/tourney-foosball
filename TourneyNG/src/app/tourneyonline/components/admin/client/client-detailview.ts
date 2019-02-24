@@ -8,7 +8,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Md5 } from 'md5-typescript';
+import { RoleService } from 'app/tourneyonline/service/role-service';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -38,34 +38,34 @@ export class ClientDetailView extends AbstractDetailView {
     onSaveClientError: boolean;
     clientAlreadyExists: boolean;
     badRequest: boolean;
-    userNotRegistered: boolean;
-    userAlreadyExists: boolean;
-    userRegisteredRadioEnabled: boolean;
+    userEnabled: boolean;
+
+    clientAddress: string;
+    userAddress: string;
 
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
-        private   clientService: ClientService
+        private   clientService: ClientService,
     ) { 
         super(tourneyService, location, countryService);
     }
 
     ngOnInit() {
         console.log("ClientDetailView.ngOnInit() ");
-
         super.ngOnInit();
-
-        this.selectedClient = this.clientService.selectedClient;
-
+        
         this.countryService.loadCountries().subscribe(data => {
             this.countries = data;
         });
 
         this.userRegisteredRadio = "no";
 
+        this.clientAddress = "";
+        this.userAddress = "";
+
         if(this.clientService.newClient) {
-            this.userRegisteredRadioEnabled = true;
             this.selectedClient={
                 businessName: ""
               , phoneNumber: ""
@@ -73,82 +73,109 @@ export class ClientDetailView extends AbstractDetailView {
               , siteUrl: ""
               , userAlreadyRegistered: false
               , country: {}
-              , cuvo : {
-                    username   : "",
-                    password    : "",
-                    firstname   : "",
-                    lastname    : "",
-                    address     : "",
-                    email       : "",
-                    phoneNumber : "",
-                }
+            //   , userVo : [{
+            //          username    : ""
+            //         ,password    : ""
+            //         ,firstname   : ""
+            //         ,lastname    : ""
+            //         ,address     : ""
+            //         ,email       : ""
+            //         ,phoneNumber : ""
+            //         ,country: {}
+            //         ,roles: [{
+            //             id: null,
+            //             name: "",
+            //             description: ""
+            //         }]
+            //     }]
             };
         } else {
-            this.userRegisteredRadioEnabled = false;
+            this.selectedClient = this.clientService.selectedClient;
+            if( this.selectedClient != undefined ) {
+                if( this.selectedClient.country != undefined ) {
+                    this.clientAddress = this.selectedClient.address  + " " +
+                    this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
+                        + " (" + this.selectedClient.country.provinceCode +")";
+                }
+        
+                // if( this.selectedClient.userVo != undefined && this.selectedClient.userVo.country != undefined ) {
+                //     this.userAddress = this.selectedClient.userVo.address  + " " +
+                //     this.selectedClient.userVo.country.zipCode + " " + this.selectedClient.userVo.country.city
+                //         + " (" + this.selectedClient.userVo.country.provinceCode +")";
+                // }
+            }
         }
         
-        this.currentPassword = new String(this.selectedClient.cuvo.password).toString();
-        this.retypedPassword = new String(this.selectedClient.cuvo.password).toString();
+        // this.currentPassword = new String(this.selectedClient.userVo.password).toString();
+        // this.retypedPassword = new String(this.selectedClient.userVo.password).toString();
+
+        this.userEnabled = true;
     }
+
+    // private isUserEnabled(): boolean {
+    //     return this.roleService.isOwner();
+    // }
 
     onSubmit(value: string) {
         console.log("New currentPassword    =" + this.currentPassword);
 
         this.selectedClient.userAlreadyRegistered = this.userRegisteredRadio == "yes" ? true : false;
 
-        if( !this.selectedClient.userAlreadyRegistered ) {
-            if( this.currentPassword != this.selectedClient.cuvo.password ) {
-                this.selectedClient.cuvo.password = Md5.init(this.currentPassword);
+        // if( !this.selectedClient.userAlreadyRegistered ) {
+        //     if( this.currentPassword != this.selectedClient.userVo.password ) {
+        //         this.selectedClient.userVo.password = Md5.init(this.currentPassword);
 
-                this.isRetypePasswordFailed = false;
-                console.log("Retyped password=" + this.retypedPassword);
-                if( this.currentPassword != this.retypedPassword ) {
-                    this.isRetypePasswordFailed = true;
-                    return;
-                }
-            }
-        } else {
-            this.selectedClient.cuvo.password = Md5.init(this.currentPassword);
-        }
+        //         this.isRetypePasswordFailed = false;
+        //         console.log("Retyped password=" + this.retypedPassword);
+        //         if( this.currentPassword != this.retypedPassword ) {
+        //             this.isRetypePasswordFailed = true;
+        //             return;
+        //         }
+        //     }
+        // } else {
+        //     this.selectedClient.userVo.password = Md5.init(this.currentPassword);
+        // }
 
         this.clearErrors();
 
-        if(this.clientService.newClient) {
-            this.clientService.newClient = false;
-            const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Create client operation'));
-            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
-        } else  {
-            const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Update client operation'));
-            subscriber.subscribe(cs => this.returnedClientVo = cs, e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
-        }
+        const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Create client operation'));
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+
+        this.clientService.newClient = false;
     }
 
     private clearErrors() {
+
         this.onSaveClientError = false;
         this.clientAlreadyExists = false;
         this.badRequest          = false;
-        this.userNotRegistered   = false;
-        this.userAlreadyExists   = false;
     }
 
     enableSaveButton() : string {
+        // if( !this.isUserEnabled() ) {
+        //     return "disabled";
+        // }
+
         let bn = this.selectedClient.businessName;
         let pn = this.selectedClient.phoneNumber;
         let ad = this.selectedClient.address;
         let em = this.selectedClient.email;
-
-        let un = this.selectedClient.cuvo.username;
-        let fn = this.selectedClient.cuvo.firstname;
-        let ln = this.selectedClient.cuvo.lastname;
-
-        let upn = this.selectedClient.cuvo.phoneNumber;
-        let uem = this.selectedClient.cuvo.email;
-        let uad = this.selectedClient.cuvo.address;
-
         let clientEnable: boolean = bn.trim() == "" || pn.trim() == "" || ad.trim() == "" || em.trim() == "" ;
-        let userEnable:   boolean = un.trim() == "" || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
 
-        return clientEnable || userEnable ? "disabled" : "";
+        // let un = this.selectedClient.userVo.username;
+        // let userEnable:   boolean = un.trim() == "";
+
+        // if( !this.selectedClient.userAlreadyRegistered ) {
+        //     let fn = this.selectedClient.userVo.firstname;
+        //     let ln = this.selectedClient.userVo.lastname;
+
+        //     let upn = this.selectedClient.userVo.phoneNumber;
+        //     let uem = this.selectedClient.userVo.email;
+        //     let uad = this.selectedClient.userVo.address;
+        //     userEnable = userEnable || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
+        // }
+
+        return clientEnable ? "disabled" : "";
     }
 
     onRegisteredYes() {
@@ -184,14 +211,6 @@ export class ClientDetailView extends AbstractDetailView {
                 this.clientAlreadyExists = true;
                 return of(result as T);
             }
-            if( res.error.errorCode == "UserAlreadyExists" ) {
-                this.userAlreadyExists = true;
-                return of(result as T);
-            }
-            if( res.error.errorCode == "UserNotRegistered" ) {
-                this.userNotRegistered = true;
-                return of(result as T);
-            }
       
             return of(result as T);
         };
@@ -210,5 +229,4 @@ export class ClientDetailView extends AbstractDetailView {
             return of(result as T);
         };
     }
-
 }

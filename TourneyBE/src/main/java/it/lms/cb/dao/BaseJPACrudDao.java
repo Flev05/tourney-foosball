@@ -37,10 +37,6 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
     private Class<PO>       entityClass;
     private CriteriaBuilder cb = null;
 
-    public BaseJPACrudDao() {
-
-    }
-
     protected BaseJPACrudDao(Class<PO> entityClass) {
 
         this.entityClass = entityClass;
@@ -100,7 +96,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
         PO mpo = this.merge(entity);
 
-        makePersistent(mpo);
+        em.remove(mpo);
         logger.debug(logId() + "delete successful");
     }
 

@@ -25,12 +25,6 @@
 		<appender-ref ref="stdout" />
 	</logger>
 
-	<logger name="it.lms.tourney.dao" additivity="false">
-		<level value="debug" />
-		<appender-ref ref="OUTPUT" />
-		<appender-ref ref="stdout" />
-	</logger>
-
 	<root>
 		<priority value="error" />
 		<appender-ref ref="OUTPUT" />

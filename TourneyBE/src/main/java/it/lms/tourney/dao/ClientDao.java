@@ -17,29 +17,140 @@
 
 package it.lms.tourney.dao;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Client_;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
+import it.lms.tourney.po.UserRoleClient_;
+import it.lms.tourney.po.User_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
 public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public ClientDao() {
+
+        super(Client.class);
+    }
+
     public Client getById(Integer id) {
 
         return super.findById(id);
+    }
+
+    /**
+     * Finds all clients belonging to the same user loggedUserId and having OWNER role
+     * 
+     * @param loggedUserId the logged user identifier
+     * @return the list of urc
+     */
+    public List<Client> findOwnerClients(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findOwnerClients()");
+
+        List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.OWNER);
+
+        List<UserRoleClient> urcList = findClientsByRole(loggedUserId, roleList);
+
+        List<Client> clientList = urcList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
+
+        return clientList;
+    }
+
+    public List<UserRoleClient> findClientsByRole(Integer loggedUserId, List<Role.ROLES> roleList) {
+
+        logger.debug(logId() + "Entering findClientsByRole()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+
+        Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
+
+        List<String> roles = roleList.stream().map(r -> r.name()).collect(Collectors.toList());
+        Predicate q = urcRoleJoin.get(Role_.name).in(roles);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    /**
+     * Finds all clients associated to the received logged user id
+     * 
+     * @param loggedUserId the user identifier
+     * @return the list of clients related to the logged user id
+     */
+    public List<Client> findClientsByUser(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findClientsByUser()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+
+        Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
+
+        return clientList;
+    }
+
+    public List<Client> findAllClients() {
+
+        logger.debug(logId() + "Entering findByEmail()");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+        Root<Client> root = criteria.from(Client.class);
+
+        criteria = criteria.select(root);
+
+        TypedQuery<Client> tq = getEm().createQuery(criteria);
+
+        List<Client> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
     }
 
     public Client findByEmail(String email) {
@@ -92,25 +203,21 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
         return resultList.get(0);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insert(Client client) throws Exception {
+    public void insert(Client client) {
 
         logger.debug(logId() + "Entering insert(" + client + ")");
 
         super.insertPo(client);
-
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(Client client) throws Exception {
+    public void update(Client client) {
 
         logger.debug(logId() + "Entering update(" + client + ")");
 
         super.updatePo(client);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void delete(Client client) throws Exception {
+    public void delete(Client client) {
 
         logger.debug(logId() + "Entering delete(" + client + ")");
 

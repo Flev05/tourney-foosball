@@ -9,6 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { Role } from '../domain/role';
 import { Combobox } from '../domain/tourney-combobox';
 import { LoginService } from './login-service';
+import { Roles } from '../domain/enumerations';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -33,7 +34,7 @@ export class RoleService {
             return true;
         }
         for(let r of this.selectedRoles) {
-            if(r.name=='DEVELOPER' || r.name == 'OWNER' || r.name == 'ADMIN') {
+            if(r.name==Roles.Developer || r.name == Roles.Owner || r.name == Roles.Admin) {
                 return true;
             }
         }
@@ -42,7 +43,7 @@ export class RoleService {
 
     isOwner(): boolean {
         for(let r of this.selectedRoles) {
-            if(r.name=='DEVELOPER' || r.name == 'OWNER') {
+            if(r.name==Roles.Developer || r.name == Roles.Owner) {
                 return true;
             }
         }
@@ -51,7 +52,16 @@ export class RoleService {
 
     isDeveloper(): boolean {
         for(let r of this.selectedRoles) {
-            if(r.name=='DEVELOPER') {
+            if(r.name==Roles.Developer) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isOperator(): boolean {
+        for(let r of this.selectedRoles) {
+            if(r.name==Roles.Operator) {
                 return true;
             }
         }

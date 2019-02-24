@@ -1,30 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { Location } from '@angular/common';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { Observable} from 'rxjs';
+import { of } from 'rxjs/observable/of';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { AbstractListView } from '../../common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+
+const redirect = '/users/userdv';
 
 @Component({
     templateUrl: './user-listview.html'
 })
-export class UserListView implements OnInit {
+export class UserListView extends AbstractListView {
 
     selectedUser: UserVO;
 
     users: UserVO[];
 
     cols: TableCols[] ;
+    onLoadUserError: boolean;
+    onDeleteError: boolean;
 
-    constructor(private userngService: UserService, public router: Router) { 
+    constructor(        
+          protected tourneyService: TourneyService
+        , private userService: UserService
+        , public router: Router
+        , protected location: Location) 
+    {        
+        super(redirect, tourneyService, router, location);
         console.log("UserListView.constructor()");
     }
 
     ngOnInit() {
         console.log("UserListView.ngOnInit()");
 
-        this.userngService.loadUserSmall().subscribe(cs => this.users = cs);
-
-        this.userngService.newUser = false;
+        this.userService.newUser = false;
 
         this.cols = [
             { field: 'firstname',   header: 'Nome' },
@@ -32,39 +45,87 @@ export class UserListView implements OnInit {
             { field: 'username',    header: 'username' },
             { field: 'phoneNumber', header: 'Telefono' }
         ];
+
+        this.onLoadUserError = false;
+
+        const subscriber = this.userService.loadAllUsers(this.selectedUser.id, this.loadUsersErrorHandler('loadAllUsers()'));
+        subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
+    }
+
+    private onComplete(): void {
+        console.log("onComplete()");
+    }
+
+    private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+      
+            this.onLoadUserError = true;
+            console.log(`${operation} failed`);
+
+            console.error(error); // log to console instead     
+      
+            return of(result as T);
+        };
     }
 
     create() {
-        this.selectedUser={
-              firstname: "<Nome User>"
-            , lastname: "<Cognome User>"
-            , username: "<Username"
-            , phoneNumber: "<Numero di cellulare>"
-        };
-        this.userngService.selectedUser = this.selectedUser;
-        this.userngService.newUser = true;
+        this.userService.newUser = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        this.userngService.selectedUser = this.cloneUser(event.data);
-        this.userngService.newUser = false;
+        this.userService.selectedUser = this.selectedUser;
+        this.userService.newUser = false;
 
         this.gotoDetailView();
     }
-  
-    private gotoDetailView() {
-        let redirect = '/users/userdv';
-        this.router.navigate([redirect]);
+
+    doDelete(user: UserVO) {
+        console.log(user);
+        this.selectedUser= user;
+        let name =  user.username;
+        let popup = 'Sicuro di voler rimuovere lo utente: [' + name + "]?";
+
+        this.onDeleteError = false;
+        if(confirm(popup)) {
+
+            const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('postDeleteClient()'));
+
+            subscr.subscribe(n => super.next(n), e => this.onError(e), () => this.onDeleteComplete());
+        }
+    }
+    
+    private onDeleteComplete(): void {
+        console.log("onDeleteComplete()");
+
+        let index: number = this.users.indexOf(this.selectedUser);
+        if(index > -1 ) {
+            this.users.splice(index, 1);
+        }
     }
 
-    cloneUser(c: UserVO): UserVO {
-        let car = {};
-        for (let prop in c) {
-            car[prop] = c[prop];
-        }
-        return car;
+    private deleteErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+      
+            this.onDeleteError = true;
+
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+      
+            // TODO: better job of transforming error for user consumption
+            console.log(`${operation} failed: ${error.message}`);
+      
+            // Let the app keep running by returning an empty result.
+          return of(result as T);
+        };
     }
-}
+    
+    onError(e:any) {
+        console.log("onError()");
+        console.log(e);
+
+        this.onLoadUserError = true;
+    }
+ }

@@ -6,104 +6,285 @@
 </div>
 
 <div class="content-section documentation">
-    <h3 style="margin-top:0px">Introduzione</h3>
+    <h3 style="margin-top:0px">Istruzioni</h3>
 
-    <p>Vista di dettaglio di un Utente.
-            Per il solo utente amministratore. Da questa vista potete creare un altro utente di qualsiasi tipo
-            anche amministratore (di backup). Si può modificare o rimuovere uno esistente
+    <p>
+        Esistono i seguenti tipi di utenti ordinati per privilegi, il primo ha il massimo,
+        l'ultimo il minimo. 
+    </p>
+    <ul>
+        <li>Sviluppatore</li>
+        <li>Proprietario</li>
+        <li>Amministratore</li>
+        <li>Operatore</li>
+        <li>Follower</li>
+    </ul>
+    <p>
+        Un utente può fare tutto cio che può fare un altro utente con
+        privilegio minore o uguale al proprio. Per esempio l'utente proprietario, può fare 
+        tutto ciò che fa un utente Amministatore, Operatore e Follower ma un operatore non 
+        può fare quello che fa un utente Proprietaro o Amministratore.
+    </p>
+    <p>
+        Tutte le modifiche sono registare dal sistema con la username dell'utente che ha apportato la modifica.
+    </p>
+
+    <h4>Sviluppatore</h4>
+    <p>
+        L'utente Sviluppatore è l'utente con il massimo dei privilegi, è quello che può fare qualsiasi cosa senza alcuna restrizione.
+        Può creare altri utenti sviluppatori e nuovi clienti.
+    </p>
+    <h4>Proprietario</h4>
+    <p>
+        L'utente Proprietario viene subito dopo lo sviluppatore, può creare qualsiasi tipo di utente tranne quello sviluppatore
+        e non può creare un nuovo cliente ma solo modificare quelli in suo possesso.
+    </p>
+    <h4>Amministratore</h4>
+    <p>
+        L'utente Amministratore viene creato dall'utente proprietarrio.
+        Può creare altri utenti amministratori ma non proprietari ne sviluppatori.
+        Viene normalmente creato per gestire i tornei, può modificare i tornei di altri utenti amministratori.
+    </p>
+    <h4>Operatore</h4>
+    <p>
+        Viene creato dall'utente amministratore per seguire seguire un torneo o un girone del torneo.
+        Non può apportare alcuna modifica alla struttura del torneo ma solo inserire i risultati
+        man mano che maturano in modo da essere propagati agli altri utenti in tempo reale.
+    </p>
+    <h4>Follower</h4>
+    <p>
+        Si tratta di un utente con il minimo dei privilegi, può solo consultare il calendario, i risultati e la classifica
+        ma non può apportare alcuna modifica ne al sistema ne all'evoluzione del tormeo.
     </p>
 </div>
+<p>I campi contrassegnati con * sono obbligatori</p>
 
-<div class="content-section implementation">
-
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
-    </div>
-
-    <div class="ui-g ui-fluid">
-            
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="name">Nome*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="name" [(ngModel)]="selectedUser.firstname" />
-            </div>
-        </div>
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="name">Cognome*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="name" [(ngModel)]="selectedUser.lastname" />
-            </div>
-        </div>
-        
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="username">Username*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="username" [(ngModel)]="selectedUser.username" />
-            </div>
-        </div>
-
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="address">Indirizzo*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="address" [(ngModel)]="selectedUser.address" />
-            </div>
-        </div>
-        
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="email">E-mail*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="email" [(ngModel)]="selectedUser.email" />
-            </div>
-        </div>        
-
-        <div class="ui-g-12">
-            <div class="ui-g-4">
-                <label for="phoneNumber">Telefono*</label>
-            </div>
-            <div class="ui-g-8">
-                <input pInputText id="phoneNumber" [(ngModel)]="selectedUser.phoneNumber" />
-            </div>
-        </div>        
-
-        <h3>Ruoli</h3>
-        <p-table [columns]="cols" [value]="roles" [(selection)]="selectedRoles" dataKey="id">
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th style="width: 2.25em">
-                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                    </th>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr [pSelectableRow]="rowData">
-                    <td>
-                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                    </td>
-                    <td *ngFor="let col of columns">
-                        {{rowData[col.field]}}
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
-
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" pButton icon="fa fa-check" (click)="save()"   label="Salva"></button>
-        <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Rimuovi"></button>
-    </div>
-    <p>I campi contrassegnati con * sono obbligatori</p>
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" pButton icon="fa fa-back"  (click)="goBack()" label="Indietro"></button>
 </div>
- 
+
+<!-- <div *ngIf="userRegisteredRadioEnabled" class="ui-grid-row">
+    <div class="ui-grid-col-3">
+        Già registrato?
+    </div>
+    <div class="ui-grid-col-3" tooltipPosition="right"
+            pTooltip="Indicare se l'utente è già registrato o un nuovo utente per il nuovo cliente">
+        <div class="ui-g radiobuttons">
+            <div class="ui-g-12">
+                <p-radioButton name="isUserRegisteredGroupname" 
+                    label="Si" 
+                    value="yes" 
+                    [(ngModel)]="userRegisteredRadio"
+                    (onClick)="onRegisteredYes()">
+                </p-radioButton>
+            </div>
+            <div class="ui-g-12">
+                <p-radioButton name="isUserRegisteredGroupname" 
+                    label="No" 
+                    value="no" 
+                    [(ngModel)]="userRegisteredRadio"
+                    (onClick)="onRegisteredNo()">
+                </p-radioButton>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div *ngIf="isUserRegisteredRadio" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Username*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.username}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-6">
+            <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
+        </div>
+    </div>
+    <div *ngIf="userEnabled" class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Password*:
+        </div>
+        <div class="ui-grid-col-6">
+            <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+        </div>
+    </div>
+</div> -->
+
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Nome*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.firstname}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-6">
+            <input pInputText type="text" [(ngModel)]="selectedUser.firstname" placeholder="Obbligatorio"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Cognome*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.lastname}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-6">
+            <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Username*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.username}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-6">
+            <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
+        </div>
+    </div>
+
+    <div *ngIf="userEnabled" class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Password*:
+        </div>
+        <div class="ui-grid-col-6">
+            <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+        </div>
+    </div>
+
+    <div *ngIf="userEnabled" class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Ripetere Password*:
+        </div>
+        <div class="ui-grid-col-6">
+            <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Via*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.address}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedUser.address"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8">
+            {{userAddress}}
+        </div>
+    </div>             
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <label for="country-id">Comune*:</label>
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.country.city}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedUser.country" 
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Telefono*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.phoneNumber}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedUser.phoneNumber" placeholder="Obbligatorio"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            E-mail*:
+        </div>
+        <div *ngIf="!userEnabled" class="ui-grid-col-8">
+            {{selectedUser.email}}
+        </div>                        
+        <div *ngIf="userEnabled" class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
+        </div>
+    </div>            
+</div>
+
+<div class="ui-g ui-fluid">
+    <h3>Ruoli</h3>
+    <p-table [columns]="cols" [value]="roles" [(selection)]="selectedRoles" dataKey="id">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 2.25em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" 
+        pButton (click)="onSubmit()" 
+        icon="pi pi-save" 
+        label="Salva" 
+        [disabled]="enableSaveButton()">
+    </button>
+</div>
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+<div *ngIf="isRetypePasswordFailed">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
+    </div>
+</div>
+
+<div *ngIf="userAlreadyExists">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="Esiste già un utente con username {{selectedUser.username}}. Scegliere un'altra username e riprovare"></p-message>
+    </div>
+</div>
+
+<div *ngIf="loginFailed">
+    <div class="ui-message ui-messages-error ui-corner-all">
+        <p-message severity="error" text="L'utente non risulta registrato."></p-message>
+    </div>
+</div>

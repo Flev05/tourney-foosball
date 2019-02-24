@@ -1,15 +1,15 @@
 import { Country } from './country';
-import { CommonUserVO } from './common-user-vo';
+import { UserVO } from './user-vo';
 
 export interface ClientVO
 {
-    id?                 : number;
-    businessName?       : string;
-    address?            : string;
-    phoneNumber?        : string;
-    email?              : string;
-    siteUrl?            : string;
-    country?            : Country;
-    userAlreadyRegistered?   : boolean;
-    cuvo?               : CommonUserVO;
+    id?                     : number;
+    businessName?           : string;
+    address?                : string;
+    phoneNumber?            : string;
+    email?                  : string;
+    siteUrl?                : string;
+    userAlreadyRegistered?  : boolean;
+    country?                : Country;
+    userVo?                 : UserVO[];
 }

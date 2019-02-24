@@ -18,10 +18,9 @@
 package it.lms.tourney.rest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -37,9 +36,16 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
+import it.lms.tourney.cdi.Converter;
+import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.UserDao;
+import it.lms.tourney.dao.UserRoleClientDao;
+import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Role;
 import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
 
 /**
  * JAX-RS Example
@@ -51,14 +57,23 @@ import it.lms.tourney.po.User;
 public class UserRESTService extends AbstractRESTService {
 
     @Inject
-    private UserDao userDao;
+    private UserDao           userDao;
+
+    @Inject
+    private ClientDao         clientDao;
+
+    @Inject
+    private UserRoleClientDao urcDao;
+
+    @Inject
+    private Converter         converter;
 
     @GET
     @Path("/findByUserId/{loggedUserId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserVO> findByUserId(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        logger.debug(logId() + "GET: findByUserId()");
+        logger.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
 
         List<User> userList = new ArrayList<>();
         if (userDao.isDeveloperUser(loggedUserId)) {
@@ -73,36 +88,19 @@ public class UserRESTService extends AbstractRESTService {
             userList = userDao.findAdminUsers(loggedUserId);
         }
 
-        List<UserVO> userVoList = prepareUserVoList(userList);
+        List<UserVO> userVoList = userList.stream().map(upo -> converter.convertUserPoVo(upo))
+                .collect(Collectors.toList());
 
         return userVoList;
     }
 
-    public static List<UserVO> prepareUserVoList(Set<User> userSet) {
+    public List<UserVO> prepareUserVoList(Set<User> userSet) {
 
         List<User> userList = new ArrayList<>();
         userList.addAll(userSet);
 
-        List<UserVO> userVoList = prepareUserVoList(userList);
-
-        return userVoList;
-    }
-
-    private static List<UserVO> prepareUserVoList(List<User> userList) {
-
-        List<UserVO> userVoList = new ArrayList<>();
-
-        for (User c : userList) {
-            UserVO cvo = new UserVO();
-            userVoList.add(cvo);
-
-            cvo.setId(c.getId());
-
-            cvo.setAddress(c.getAddress());
-            cvo.setCountry(c.getCountry());
-            cvo.setEmail(c.getEmail());
-            cvo.setPhoneNumber(c.getPhoneNumber());
-        }
+        List<UserVO> userVoList = userList.stream().map(upo -> converter.convertUserPoVo(upo))
+                .collect(Collectors.toList());
 
         return userVoList;
     }
@@ -129,36 +127,34 @@ public class UserRESTService extends AbstractRESTService {
     @Path("/insert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(User user) {
+    public Response createUser(UserVO uvo) {
 
-        logger.debug(logId() + "POST: createUser(" + user + ")");
+        logger.debug(logId() + "POST: createUser(" + uvo + ")");
 
-        Response.ResponseBuilder builder = insert(user);
+        User upo = converter.convertUserVoPo(uvo);
+        userDao.insert(upo);
+
+        saveUrc(uvo);
+
+        Response.ResponseBuilder builder = Response.ok();
 
         return builder.build();
     }
 
-    @POST
-    @Path("/delete")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postDeleteUser(User user) {
+    private void saveUrc(UserVO uvo) {
 
-        logger.debug(logId() + "POST: postDeleteUser(" + user + ")");
+        for (int i = 0; i < uvo.getClientIdList().size(); i++) {
+            int clientId = uvo.getClientIdList().get(i);
 
-        Response.ResponseBuilder builder;
-        try {
-            userDao.delete(user);
+            Client cpo = clientDao.findById(clientId);
 
-            builder = Response.ok();
-        } catch (Exception e) {
-            logger.error("Remove User failed" + e);
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+            UserRoleClient urc = new UserRoleClient();
+            urc.setClient(cpo);
+
+            RoleVO rvo = uvo.getRoles().get(i);
+            Role rpo = converter.convertRoleVoPo(rvo);
+            urc.setRole(rpo);
         }
-
-        return builder.build();
     }
 
     /**
@@ -169,11 +165,21 @@ public class UserRESTService extends AbstractRESTService {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(User user) {
+    public Response updateUser(UserVO uvo) {
 
-        logger.debug(logId() + "PUT: updateUser(" + user + ")");
+        logger.debug(logId() + "PUT: updateUser(" + uvo + ")");
 
-        Response.ResponseBuilder builder = update(user);
+        List<UserRoleClient> urcList = urcDao.findByUserId(uvo.getId());
+        for (UserRoleClient urc : urcList) {
+            urcDao.delete(urc);
+        }
+
+        User upo = converter.convertUserVoPo(uvo);
+        userDao.update(upo);
+
+        saveUrc(uvo);
+
+        Response.ResponseBuilder builder = Response.ok();
 
         return builder.build();
     }
@@ -184,69 +190,21 @@ public class UserRESTService extends AbstractRESTService {
      */
     @DELETE
     @Path("/delete/{id:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Integer id) {
+    public Response deleteUser(@PathParam("id") Integer userId) {
 
-        logger.debug(logId() + "DELETE: deleteUser(" + id + ")");
+        logger.debug(logId() + "DELETE: deleteUser(" + userId + ")");
 
-        Response.ResponseBuilder builder;
-        try {
-
-            User user = userDao.getUserById(id);
-            userDao.delete(user);
-
-            // Create an "ok" response
-            builder = Response.ok();
-
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+        List<UserRoleClient> urcList = urcDao.findByUserId(userId);
+        for (UserRoleClient urc : urcList) {
+            urcDao.delete(urc);
         }
+
+        User user = userDao.getUserById(userId);
+        userDao.delete(user);
+
+        Response.ResponseBuilder builder = Response.ok();
+
         return builder.build();
-    }
-
-    private Response.ResponseBuilder insert(User user) {
-
-        logger.debug(logId() + "Entering insert()");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            userDao.insert(user);
-
-            // Create an "ok" response
-            builder = Response.ok();
-
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
-        return builder;
-    }
-
-    private Response.ResponseBuilder update(User user) {
-
-        logger.debug(logId() + "Entering update()");
-
-        Response.ResponseBuilder builder;
-        try {
-
-            userDao.update(user);
-
-            // Create an "ok" response
-            builder = Response.ok();
-
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
-        return builder;
     }
 }

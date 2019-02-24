@@ -1,4 +1,4 @@
-export interface Role
+export interface RoleVO
 {
     id?          : number;
     name?        : string;

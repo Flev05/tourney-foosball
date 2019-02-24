@@ -24,6 +24,11 @@ export class ClientService {
 
     newClient : boolean = false;
 
+    static clientCols = [
+        { field: 'businessName', header: 'Nominativo' },
+        { field: 'phoneNumber',  header: 'Telefono' }
+    ];
+
     constructor(private http: HttpClient) { 
         console.log("Constructor of ClientService");
     }

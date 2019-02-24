@@ -26,6 +26,7 @@ import {UserDetailView} from './user-detailview';
 import {UserChangePassword} from './user-changepassword';
 import {UserResetPasswordLv} from './user-reset-password-lv';
 import {UserResetPasswordDv} from './user-reset-password-dv';
+
 @NgModule({
 	imports: [
         CommonModule
@@ -54,7 +55,7 @@ import {UserResetPasswordDv} from './user-reset-password-dv';
 		UserDetailView,
         UserChangePassword,
         UserResetPasswordLv,
-        UserResetPasswordDv
+        UserResetPasswordDv,
 	]
 })
 export class UserModule {}

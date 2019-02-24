@@ -350,21 +350,21 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return po;
     }
 
-    public void insert(User po) throws DaoException {
+    public void insert(User po) {
 
         logger.debug(logId() + "Entering insert(" + po + ")");
 
         insertPo(po);
     }
 
-    public void update(User po) throws DaoException {
+    public void update(User po) {
 
         logger.debug(logId() + "Entering update(" + po + ")");
 
         updatePo(po);
     }
 
-    public void delete(User po) throws DaoException {
+    public void delete(User po) {
 
         logger.debug(logId() + "Entering deletePo(" + po + ")");
 

@@ -26,6 +26,7 @@ import { TeamService } from './service/team-service';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data-service/in-memory-data.service';
 import { environment } from 'environments/environment';
+import { UrcService } from './service/urc-service';
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {
@@ -62,6 +63,7 @@ if (environment.inMemoryDataService) {
       , LoginService
       , PlayerService
       , TeamService
+      , UrcService
   ],
   bootstrap: [AppComponent]
 })

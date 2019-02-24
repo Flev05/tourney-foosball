@@ -15,8 +15,6 @@ public class ClientVO extends AbstractVO {
     private boolean           userAlreadyRegistered;
 
     private Country           country;
-    // private CommonUserVO cuvo;
-    // private RoleVO roleVO;
 
     @Override
     public String toString() {
@@ -95,5 +93,4 @@ public class ClientVO extends AbstractVO {
 
         this.country = country;
     }
-
 }

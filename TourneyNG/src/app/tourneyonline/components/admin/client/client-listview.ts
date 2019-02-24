@@ -22,7 +22,8 @@ export class ClientListView extends AbstractListView {
 
     clients: ClientVO[];
 
-    cols:  TableCols[] ;
+    cols:  TableCols[] = ClientService.clientCols;
+    
     onLoadClientError: boolean;
     onDeleteError: boolean;
     isUserDeveloper: boolean;
@@ -43,15 +44,10 @@ export class ClientListView extends AbstractListView {
         this.clientService.newClient = false;
         this.isUserDeveloper = this.roleService.isDeveloper();
 
-        this.cols = [
-            { field: 'businessName', header: 'Nominativo' },
-            { field: 'phoneNumber',  header: 'Telefono' }
-        ];
-
         this.onLoadClientError = false;
-        let userId = this.userService.selectedUser.id;
+        let loggedUserId = this.userService.selectedUser.id;
 
-        const subsrciber = this.clientService.loadAllClients(userId, this.loadClientsErrorHandler('loadAllClients()'));
+        const subsrciber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subsrciber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onComplete());
     }
 

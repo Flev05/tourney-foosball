@@ -2,10 +2,9 @@
 package it.lms.tourney.dao;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -15,6 +14,9 @@ import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
+import it.lms.tourney.po.UserRoleClient_;
 
 @Stateless
 public class RoleDao extends BaseJPACrudDao<Role, Integer> {
@@ -34,13 +36,41 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     }
 
     /**
+     * Finds all the roles associated to the received User
+     * 
+     * @param u the received User
+     * @return the list of the roles associated to the User
+     */
+    public List<Role> findRoleByUser(User u) {
+
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Predicate p = getCb().equal(root.get(UserRoleClient_.user), u);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+
+        List<UserRoleClient> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " Entity(ies)] ";
+        logger.info(logId() + info);
+
+        List<Role> roleList = poList.stream().map(urc -> urc.getRole()).collect(Collectors.toList());
+
+        return roleList;
+    }
+
+    /**
      * Selects all the records in the Role table, converts the got Role in their corresponding BO and returns a list of
      * that BO
      * 
      * @return the list of Role BO
-     * @throws DaoException if a problem occurs during the find operation
+     * @throws DaoException if a   problem occurs during the find operation
      */
-    public List<Role> findAllRoles() throws DaoException {
+    public List<Role> findAllRoles() {
 
         logger.debug(logId() + "Entering findAllRoles()");
 
@@ -128,7 +158,6 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
         return po;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void save(Role po) throws DaoException {
 
         if (po.isNull()) {
@@ -148,9 +177,8 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * Inserts the received new user
      * 
      * @param bo the BO to save
-     * @throws DaoException if a problem occurs during the insert operation
+     * @throws DaoException if a   problem occurs during the insert operation
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Role po) throws DaoException {
 
         logger.debug(logId() + "Entering insertPo()");
@@ -162,13 +190,13 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * Deleted the user received as parameter
      * 
      * @param bo the BO to save
-     * @throws DaoException if a problem occurs during the delete operation
+     * @throws DaoException if a   problem occurs during the delete operation
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(Role po) throws DaoException {
 
         logger.debug(logId() + "Entering deletePo()");
 
         super.deletePo(po);
     }
+
 }

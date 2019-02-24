@@ -1,16 +1,28 @@
 
 package it.lms.tourney.cdi;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 
 import it.lms.cb.gui.vo.ClientVO;
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
+import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.User;
 
 public class Converter extends AbstractLogger {
+
+    @Inject
+    RoleDao   roleDao;
+
+    @Inject
+    ClientDao clientDao;
 
     @Produces
     public RoleVO convertRolePoVo(Role rpo) {
@@ -22,6 +34,18 @@ public class Converter extends AbstractLogger {
         rvo.setName(rpo.getName());
 
         return rvo;
+    }
+
+    @Produces
+    public Role convertRoleVoPo(RoleVO rvo) {
+
+        Role rpo = new Role();
+
+        rpo.setDescription(rvo.getDescription());
+        rpo.setId(rvo.getId());
+        rpo.setName(rvo.getName());
+
+        return rpo;
     }
 
     @Produces
@@ -41,25 +65,7 @@ public class Converter extends AbstractLogger {
         return cvo;
     }
 
-    // private CommonUserVO prepareCommonUserVo(User upo) {
-    //
-    // CommonUserVO uvo = new CommonUserVO();
-    //
-    // uvo.setId(upo.getId());
-    // uvo.setUsername(upo.getUsername());
-    // uvo.setPassword(upo.getPassword());
-    //
-    // uvo.setAddress(upo.getAddress());
-    // uvo.setCountry(upo.getCountry());
-    // uvo.setDescription(upo.getDescription());
-    // uvo.setEmail(upo.getEmail());
-    // uvo.setFirstname(upo.getFirstname());
-    // uvo.setLastname(upo.getLastname());
-    // uvo.setPhoneNumber(upo.getPhoneNumber());
-    //
-    // return uvo;
-    // }
-
+    @Produces
     public UserVO convertUserPoVo(User u) {
 
         UserVO uvo = new UserVO();
@@ -73,6 +79,38 @@ public class Converter extends AbstractLogger {
         uvo.setPhoneNumber(u.getPhoneNumber());
         uvo.setUsername(u.getUsername());
 
+        List<Role> roleList = roleDao.findRoleByUser(u);
+
+        List<RoleVO> roleVoList = roleList.stream().map(r -> convertRolePoVo(r)).collect(Collectors.toList());
+
+        uvo.setRoles(roleVoList);
+
+        List<Client> clientList = clientDao.findClientsByUser(u.getId());
+        List<Integer> clientIdList = clientList.stream().map(cpo -> cpo.getId()).collect(Collectors.toList());
+
+        uvo.setClientIdList(clientIdList);
+
         return uvo;
     }
+
+    @Produces
+    public User convertUserVoPo(UserVO uvo) {
+
+        User upo = new User();
+
+        upo.setAddress(uvo.getAddress());
+        upo.setCountry(uvo.getCountry());
+        upo.setDescription(uvo.getDescription());
+        upo.setEmail(uvo.getEmail());
+        upo.setId(uvo.getId());
+        upo.setLastname(uvo.getLastname());
+        upo.setFirstname(uvo.getFirstname());
+        upo.setPhoneNumber(uvo.getPhoneNumber());
+        upo.setPassword(uvo.getPassword());
+
+        upo.setUsername(uvo.getUsername());
+
+        return upo;
+    }
+
 }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
-import { Role } from '../domain/role';
+import { RoleVO } from '../domain/role-vo';
 import { Combobox } from '../domain/tourney-combobox';
 import { LoginService } from './login-service';
 import { Roles } from '../domain/enumerations';
@@ -21,8 +21,13 @@ export class RoleService {
 
     selectedRoleOption: Combobox;
     roleOptions: Combobox[];
-    selectedRoles: Role[];
+    selectedRoles: RoleVO[];
 
+    static roleCols = [
+        { field: 'rolename',    header: 'Nome ruolo' },
+        { field: 'description', header: 'Descrizione' },
+    ];
+    
     constructor(private http: HttpClient
         , private loginService: LoginService) 
     { 
@@ -68,7 +73,7 @@ export class RoleService {
         return false;
     }
 
-    setSelectRoles(roles: Role[]): any {
+    setSelectRoles(roles: RoleVO[]): any {
         this.selectedRoles = roles;
         let rvo = roles[0];
         this.selectedRoleOption = {label: rvo.name, value: rvo.id};
@@ -79,12 +84,14 @@ export class RoleService {
         }
     }
 
-    loadRolesSmall (): Observable<Role[]> {
+    loadAllRoles (): Observable<RoleVO[]> {
  
-        return this.http.get<Role[]>(this.apiUrl, httpOptions)
+        let url = this.apiUrl + "/" + "findAllRoles";
+
+        return this.http.get<RoleVO[]>(url, httpOptions)
         .pipe(
             tap(_ => this.log(`fetched all Roles`)),
-            catchError(this.handleError('loadRolesSmall', []))
+            catchError(this.handleError('loadAllRoles', []))
           );
     }
 

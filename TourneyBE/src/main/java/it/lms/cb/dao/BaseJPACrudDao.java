@@ -168,7 +168,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         return po;
     }
 
-    protected PO findById(ID id) {
+    public PO findById(ID id) {
 
         return em.find(entityClass, id);
     }

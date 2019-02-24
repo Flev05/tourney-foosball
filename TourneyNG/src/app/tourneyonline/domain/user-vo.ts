@@ -1,4 +1,4 @@
-import { Role } from './role';
+import { RoleVO } from './role-vo';
 import { Login } from './login';
 import { Country } from './country';
 
@@ -14,5 +14,6 @@ export interface UserVO extends Login
     description?    : string;
 
     country?        : Country;
-    roles?          : Role[];
+    roles?          : RoleVO[];
+    clientIdList?   : number[];
 }

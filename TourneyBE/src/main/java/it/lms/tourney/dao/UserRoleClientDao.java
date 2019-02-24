@@ -7,11 +7,13 @@ import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.UserRoleClient;
+import it.lms.tourney.po.UserRoleClient_;
 
 @Stateless
 public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
@@ -37,6 +39,29 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         cq = cq.distinct(true);
         cq = cq.select(root);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    public List<UserRoleClient> findByUserId(Integer userId) {
+
+        logger.debug(logId() + "Entering findByUserId()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Predicate p = getCb().equal(root.get(UserRoleClient_.id), userId);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
 
         TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
 
@@ -79,4 +104,5 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         super.deletePo(po);
     }
+
 }

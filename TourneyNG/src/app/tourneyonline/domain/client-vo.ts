@@ -1,5 +1,4 @@
 import { Country } from './country';
-import { UserVO } from './user-vo';
 
 export interface ClientVO
 {
@@ -11,5 +10,4 @@ export interface ClientVO
     siteUrl?                : string;
     userAlreadyRegistered?  : boolean;
     country?                : Country;
-    userVo?                 : UserVO[];
 }

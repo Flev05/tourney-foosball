@@ -40,15 +40,16 @@ export class UserListView extends AbstractListView {
         this.userService.newUser = false;
 
         this.cols = [
+            { field: 'username',    header: 'username' },
             { field: 'firstname',   header: 'Nome' },
             { field: 'lastname',    header: 'Cognome' },
-            { field: 'username',    header: 'username' },
             { field: 'phoneNumber', header: 'Telefono' }
         ];
 
         this.onLoadUserError = false;
 
-        const subscriber = this.userService.loadAllUsers(this.selectedUser.id, this.loadUsersErrorHandler('loadAllUsers()'));
+        let loggedUserId = this.userService.selectedUser.id;
+        const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
         subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
     }
 
@@ -84,14 +85,14 @@ export class UserListView extends AbstractListView {
 
     doDelete(user: UserVO) {
         console.log(user);
-        this.selectedUser= user;
+        this.selectedUser = user;
         let name =  user.username;
         let popup = 'Sicuro di voler rimuovere lo utente: [' + name + "]?";
 
         this.onDeleteError = false;
         if(confirm(popup)) {
 
-            const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('postDeleteClient()'));
+            const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('deleteUser()'));
 
             subscr.subscribe(n => super.next(n), e => this.onError(e), () => this.onDeleteComplete());
         }
@@ -110,15 +111,13 @@ export class UserListView extends AbstractListView {
         return (error: any): Observable<T> => {
       
             this.onDeleteError = true;
+            
+            console.log(`${operation} failed!`);
 
-            // TODO: send the error to remote logging infrastructure
             console.error(error); // log to console instead
       
-            // TODO: better job of transforming error for user consumption
-            console.log(`${operation} failed: ${error.message}`);
-      
             // Let the app keep running by returning an empty result.
-          return of(result as T);
+            return of(result as T);
         };
     }
     

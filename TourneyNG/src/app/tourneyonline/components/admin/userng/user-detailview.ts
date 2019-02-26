@@ -28,13 +28,6 @@ export class UserDetailView extends AbstractDetailView {
         { field: 'role',   header: 'Ruolo' }
     ];
 
-    roleOptions: Combobox[];
-
-    clientRoleRows :     {id: number, businessName: string, selectedRole: Combobox}[];
-    selectedClientRole : {id: number, businessName: string, selectedRole: Combobox}[];
-
-    roles : RoleVO[];
-    
     onSaveUserError: any;
     badRequest: boolean;
     userAlreadyExists: boolean;
@@ -75,16 +68,9 @@ export class UserDetailView extends AbstractDetailView {
             }
         }  else {
             this.selectedUser = this.userService.selectedUser;
-
-            // this.userAddress = this.selectedUser != undefined && this.selectedUser.country != undefined ? this.selectedUser.address  + " " +
-            // this.selectedUser.country.zipCode + " " + this.selectedUser.country.city
-            //     + " (" + this.selectedUser.country.provinceCode +")" : "";
         }
 
-        this.selectedUser = this.userService.selectedUser;
-
         let loggedUserId = this.userService.selectedUser.id;
-        this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.roles = rs);
 
         const subscriber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subscriber.subscribe(cs => this.clients = cs, e => this.onError(e));
@@ -96,16 +82,7 @@ export class UserDetailView extends AbstractDetailView {
     private onComplete(): void {
         console.log("onComplete()");
 
-        this.roleOptions = [];
-        for(let i=0; i<this.roles.length; i++) {
-            let r = this.roles[i];
-            let cb = {label: r.name, value: i};
-            this.roleOptions.push(cb);
-        }
-
-        this.clientRoleRows = [];
-
-        for( let i=0; i< this.urcList.length;i++ ) {
+         for( let i=0; i< this.urcList.length;i++ ) {
             let urc = this.urcList[i];
             let rvo = urc.roleVo;
             let roleCB = {label: rvo.name, value: rvo.id};
@@ -113,9 +90,7 @@ export class UserDetailView extends AbstractDetailView {
             let cvo = urc.clientVo;
 
             let row = {id: urc.id, businessName: cvo.businessName, selectedRole: roleCB};
-
-            this.clientRoleRows.push(row);
-        }
+       }
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
@@ -149,21 +124,6 @@ export class UserDetailView extends AbstractDetailView {
     onSubmit(): void {
  
         let urcList : UserRoleClientVO[] = [];
-
-        for( let row of this.selectedClientRole ) {
-
-            let cvo = this.clients.find( c => c.businessName == row.businessName );
-            let rvo = this.roles.find( r => r.id == row.selectedRole.value);
-
-            let urc : UserRoleClientVO = {
-                id        : row.id,
-                userVo    : this.selectedUser,
-                roleVo    : rvo,
-                clientVo  : cvo
-            };
-
-            urcList.push(urc);
-        }
 
         const subscriber = this.urcService.saveUrc(urcList, this.saveUserErrorHandler('Create User operation'));
         subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());

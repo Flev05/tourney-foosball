@@ -23,7 +23,6 @@ export class ClientDetailView extends AbstractDetailView {
 
     selectedClient: ClientVO;
   
-    countries: Country[];
     filteredCountriesSingle: Country[];
 
     isUserRegisteredRadio: boolean;

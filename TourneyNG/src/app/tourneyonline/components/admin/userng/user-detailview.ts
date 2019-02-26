@@ -42,6 +42,7 @@ export class UserDetailView extends AbstractDetailView {
 
     clients: ClientVO[];
     urcList: UserRoleClientVO[];
+    userAddress: string;
 
     constructor(
         private userService: UserService,
@@ -57,6 +58,10 @@ export class UserDetailView extends AbstractDetailView {
 
     ngOnInit() {
 
+        this.countryService.loadCountries().subscribe(data => {
+            this.countries = data;
+        });
+
         if(this.userService.newUser) {
             this.userService.selectedUser = {
                 id: null,
@@ -68,7 +73,14 @@ export class UserDetailView extends AbstractDetailView {
                 description: '',
                 country    : {},
             }
+        }  else {
+            this.selectedUser = this.userService.selectedUser;
+
+            // this.userAddress = this.selectedUser != undefined && this.selectedUser.country != undefined ? this.selectedUser.address  + " " +
+            // this.selectedUser.country.zipCode + " " + this.selectedUser.country.city
+            //     + " (" + this.selectedUser.country.provinceCode +")" : "";
         }
+
         this.selectedUser = this.userService.selectedUser;
 
         let loggedUserId = this.userService.selectedUser.id;

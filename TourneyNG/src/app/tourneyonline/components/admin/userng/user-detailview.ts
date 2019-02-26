@@ -12,6 +12,8 @@ import { AbstractDetailView } from '../../common/abstract-detailview';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 
 @Component({
     templateUrl: './user-detailview.html' 
@@ -26,18 +28,20 @@ export class UserDetailView extends AbstractDetailView {
         { field: 'role',   header: 'Ruolo' }
     ];
 
-    clientRoleRows: any[];
     roleOptions: Combobox[];
+
+    clientRoleRows :     {id: number, businessName: string, selectedRole: Combobox}[];
+    selectedClientRole : {id: number, businessName: string, selectedRole: Combobox}[];
 
     roles : RoleVO[];
     
-    selectedClients: ClientVO[];
-
     onSaveUserError: any;
     badRequest: boolean;
     userAlreadyExists: boolean;
-    clients: ClientVO[];
     onLoadClientError: boolean;
+
+    clients: ClientVO[];
+    urcList: UserRoleClientVO[];
 
     constructor(
         private userService: UserService,
@@ -46,6 +50,7 @@ export class UserDetailView extends AbstractDetailView {
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
         protected clientService: ClientService,
+        protected urcService: UrcService,
     ) {
         super(tourneyService, location, countryService);
     }
@@ -54,28 +59,25 @@ export class UserDetailView extends AbstractDetailView {
 
         if(this.userService.newUser) {
             this.userService.selectedUser = {
+                id: null,
                 firstname: '',
                 lastname: '',
                 address: '',
                 email: '',
                 phoneNumber: '',
                 description: '',
-                country      : {},
-                roles        : [],
-                clientIdList : []
+                country    : {},
             }
         }
         this.selectedUser = this.userService.selectedUser;
 
-        this.selectedClients = this.clients.filter( c => c.id in this.selectedUser.clientIdList );
-
-        this.roleService.loadAllRoles().subscribe(rs => this.roles = rs);
-
         let loggedUserId = this.userService.selectedUser.id;
+        this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.roles = rs);
+
         const subscriber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subscriber.subscribe(cs => this.clients = cs, e => this.onError(e));
 
-        let ucrsub = this.urcService.loadUrc(selectedUser, this.loadClientsErrorHandler('loadAllClients()'));
+        let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadClientsErrorHandler('loadUrc()'));
         ucrsub.subscribe(cs => this.urcList = cs, e => this.onError(e), () => this.onComplete());
     }
     
@@ -91,10 +93,15 @@ export class UserDetailView extends AbstractDetailView {
 
         this.clientRoleRows = [];
 
-        for( let i=0; i< this.clients.length;i++ ) {
-            let cvo = this.clients[i];
-            let roleCB = {label: cvo.role.name, value: i};
-            let row = {businessName: cvo.businessName, selectedRole: roleCB};
+        for( let i=0; i< this.urcList.length;i++ ) {
+            let urc = this.urcList[i];
+            let rvo = urc.roleVo;
+            let roleCB = {label: rvo.name, value: rvo.id};
+
+            let cvo = urc.clientVo;
+
+            let row = {id: urc.id, businessName: cvo.businessName, selectedRole: roleCB};
+
             this.clientRoleRows.push(row);
         }
     }
@@ -129,14 +136,24 @@ export class UserDetailView extends AbstractDetailView {
 
     onSubmit(): void {
  
-        let clientIds : number[] = [];
-        for( let cvo of this.selectedClients ) {
-            clientIds.push(cvo.id);
+        let urcList : UserRoleClientVO[] = [];
+
+        for( let row of this.selectedClientRole ) {
+
+            let cvo = this.clients.find( c => c.businessName == row.businessName );
+            let rvo = this.roles.find( r => r.id == row.selectedRole.value);
+
+            let urc : UserRoleClientVO = {
+                id        : row.id,
+                userVo    : this.selectedUser,
+                roleVo    : rvo,
+                clientVo  : cvo
+            };
+
+            urcList.push(urc);
         }
 
-        this.selectedUser.clientIdList = clientIds;
-
-        const subscriber = this.userService.saveUser(this.selectedUser, this.saveUserErrorHandler('Create User operation'));
+        const subscriber = this.urcService.saveUrc(urcList, this.saveUserErrorHandler('Create User operation'));
         subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }
     
@@ -156,6 +173,7 @@ export class UserDetailView extends AbstractDetailView {
 
     private onSaveComplete() {
         console.log("Entering onSaveComplete()");
+        this.userService.newUser = false;
         if( !this.onSaveUserError ) {
             this.goBack();
         }

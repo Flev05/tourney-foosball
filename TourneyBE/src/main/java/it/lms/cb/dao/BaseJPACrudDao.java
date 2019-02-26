@@ -76,6 +76,8 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         PO mpo = this.merge(entity);
 
         makePersistent(mpo);
+
+        entity = mpo;
         logger.debug(logId() + "update successful");
     }
 

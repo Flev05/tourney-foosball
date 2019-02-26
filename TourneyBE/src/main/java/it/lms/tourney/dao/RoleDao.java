@@ -6,17 +6,21 @@ import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role.ROLES;
 import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
+import it.lms.tourney.po.User_;
 
 @Stateless
 public class RoleDao extends BaseJPACrudDao<Role, Integer> {
@@ -68,7 +72,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * that BO
      * 
      * @return the list of Role BO
-     * @throws DaoException if a   problem occurs during the find operation
+     * @throws DaoException if a problem occurs during the find operation
      */
     public List<Role> findAllRoles() {
 
@@ -177,7 +181,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * Inserts the received new user
      * 
      * @param bo the BO to save
-     * @throws DaoException if a   problem occurs during the insert operation
+     * @throws DaoException if a problem occurs during the insert operation
      */
     public void insert(Role po) throws DaoException {
 
@@ -190,13 +194,57 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * Deleted the user received as parameter
      * 
      * @param bo the BO to save
-     * @throws DaoException if a   problem occurs during the delete operation
+     * @throws DaoException if a problem occurs during the delete operation
      */
     public void delete(Role po) throws DaoException {
 
         logger.debug(logId() + "Entering deletePo()");
 
         super.deletePo(po);
+    }
+
+    /**
+     * Finds the max role among the role of each client belonging the received logged user id
+     * 
+     * @param loggedUserId the logged user id
+     * @return the max role of the received user id
+     */
+    public ROLES findMaxRole(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findMaxRole()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+
+        Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        ROLES maxRole = ROLES.FOLLOWER;
+        List<Role> roleList = resultList.stream().map(urc -> urc.getRole()).collect(Collectors.toList());
+
+        for (Role r : roleList) {
+            for (ROLES enumRole : ROLES.values()) {
+                if (r.getName().equals(enumRole.name())) {
+                    if (enumRole.getValue() > maxRole.getValue()) {
+                        maxRole = enumRole;
+                    }
+                }
+            }
+        }
+
+        return maxRole;
     }
 
 }

@@ -1,7 +1,7 @@
 
 package it.lms.cb.gui.vo;
 
-public class UserRoleClientVO extends CommonUserVO {
+public class UserRoleClientVO extends AbstractVO {
 
     private static final long serialVersionUID = 1L;
 

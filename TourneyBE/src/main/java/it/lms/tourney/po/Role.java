@@ -30,7 +30,19 @@ public class Role extends AbstractPO implements Serializable {
     private Set<UserRoleClient> urcSet;
 
     public enum ROLES {
-        DEVELOPER, OWNER, ADMIN, OPERATOR, FOLLOWER;
+        DEVELOPER(5), OWNER(4), ADMIN(3), OPERATOR(2), FOLLOWER(1);
+
+        private ROLES(int value) {
+
+            this.value = value;
+        }
+
+        private int value;
+
+        public int getValue() {
+
+            return value;
+        }
     }
 
     public Role() {

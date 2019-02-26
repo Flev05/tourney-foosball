@@ -142,45 +142,7 @@ public class ClientRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        // if (clientVo.isUserAlreadyRegistered()) {
-        // String username = clientVo.getCuvo().getUsername();
-        // String md5Pssword = clientVo.getCuvo().getPassword().toUpperCase();
-        //
-        // User u = userDao.findUserBy(username, md5Pssword);
-        //
-        // if (u == null) {
-        // String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
-        // logger.error(message);
-        // responseObj = new HashMap<String, String>();
-        // responseObj.put("errorCode", "UserNotRegistered");
-        //
-        // Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        // return builder.build();
-        // }
-        // } else {
-        //
-        // User user = userDao.getPoBy(clientVo.getCuvo().getUsername());
-        // if (user != null) {
-        // responseObj.put("errorCode", "UserAlreadyExists");
-        // responseObj.put("message", "User " + clientVo.getCuvo().getUsername() + " already exist");
-        // Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        // return builder.build();
-        // }
-        // }
-
         Client client = newClient(clientVo);
-
-        // User user = newUser(clientVo);
-        //
-        // Role role = roleDao.getOwnerRole();
-
-        // UserRoleClient urc = newUrc(client, user, role);
-
-        // Role devRole = roleDao.getDeveloperRole();
-        // List<User> devUsers = userDao.findDevUsers();
-        // for (User devUser : devUsers) {
-        // newUrc(client, devUser, devRole);
-        // }
 
         ClientVO cvo = converter.convertClientPoVo(client);
 
@@ -190,36 +152,6 @@ public class ClientRESTService extends AbstractRESTService {
 
         return builder.build();
     }
-
-    // private UserRoleClient newUrc(Client client, User user, Role role) {
-    //
-    // UserRoleClient urc = new UserRoleClient();
-    //
-    // urc.setUser(user);
-    // urc.setClient(client);
-    // urc.setRole(role);
-    //
-    // Set<UserRoleClient> urcSet = role.getUrcSet();
-    // user.setUrcSet(urcSet);
-    //
-    // urcSet = client.getUrcSet();
-    // client.setUrcSet(urcSet);
-    //
-    // urcSet = role.getUrcSet();
-    // role.setUrcSet(urcSet);
-    //
-    // urcDao.insert(urc);
-    //
-    // return urc;
-    // }
-
-    // private User newUser(ClientVO clientVo) throws DaoException {
-    //
-    // User user = prepareUserPo(clientVo);
-    //
-    // userDao.insert(user);
-    // return user;
-    // }
 
     private Client newClient(ClientVO cvo) {
 
@@ -268,24 +200,6 @@ public class ClientRESTService extends AbstractRESTService {
         cpo.setSiteUrl(cvo.getSiteUrl().trim());
         return cpo;
     }
-
-    // private User prepareUserPo(ClientVO cvo) {
-    //
-    // logger.debug(logId() + "Entering prepareUserPo()");
-    //
-    // User user = new User();
-    //
-    // user.setId(cvo.getCuvo().getId());
-    // user.setUsername(cvo.getCuvo().getUsername().trim());
-    // user.setPassword(cvo.getCuvo().getPassword().trim().toUpperCase());
-    // user.setAddress(cvo.getCuvo().getAddress().trim());
-    // user.setEmail(cvo.getCuvo().getEmail().trim());
-    // user.setPhoneNumber(cvo.getCuvo().getPhoneNumber());
-    // user.setCountry(cvo.getCuvo().getCountry());
-    // user.setFirstname(cvo.getCuvo().getFirstname().trim());
-    // user.setLastname(cvo.getCuvo().getLastname().trim());
-    // return user;
-    // }
 
     /**
      * Removes a the received client from the persistent store. Return a JAX-RS response with either 200 ok, or with a

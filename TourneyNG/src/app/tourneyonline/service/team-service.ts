@@ -36,7 +36,7 @@ export class TeamService {
  
         let url = teamUrl;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = teamUrl + "?" + "clientId=" + this.clientService.selectedClient.id;
         }
 

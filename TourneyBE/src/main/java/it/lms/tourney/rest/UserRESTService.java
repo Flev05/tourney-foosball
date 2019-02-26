@@ -19,7 +19,11 @@ package it.lms.tourney.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
@@ -36,14 +40,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
-import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
-import it.lms.tourney.po.Client;
-import it.lms.tourney.po.Role;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 
@@ -60,9 +60,6 @@ public class UserRESTService extends AbstractRESTService {
     private UserDao           userDao;
 
     @Inject
-    private ClientDao         clientDao;
-
-    @Inject
     private UserRoleClientDao urcDao;
 
     @Inject
@@ -75,23 +72,29 @@ public class UserRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
 
-        List<User> userList = new ArrayList<>();
+        List<UserRoleClient> urcList = new ArrayList<>();
+
         if (userDao.isDeveloperUser(loggedUserId)) {
-            userList = userDao.findAllUsers();
+            urcList = urcDao.findAllUrc();
         }
 
-        if (userDao.isOwnerUser(loggedUserId)) {
-            userList = userDao.findOwnerUsers(loggedUserId);
-        }
+        urcList = urcDao.findUrcByUser(loggedUserId);
 
-        if (userDao.isAdminUser(loggedUserId)) {
-            userList = userDao.findAdminUsers(loggedUserId);
-        }
+        List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
 
-        List<UserVO> userVoList = userList.stream().map(upo -> converter.convertUserPoVo(upo))
+        List<User> distinctElements = userList.stream().filter(distinctByKey(upo -> upo.getId()))
+                .collect(Collectors.toList());
+
+        List<UserVO> userVoList = distinctElements.stream().map(upo -> converter.convertUserPoVo(upo))
                 .collect(Collectors.toList());
 
         return userVoList;
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     public List<UserVO> prepareUserVoList(Set<User> userSet) {
@@ -129,32 +132,15 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UserVO uvo) {
 
-        logger.debug(logId() + "POST: createUser(" + uvo + ")");
+        logger.debug(logId() + "POST: createUser()");
 
         User upo = converter.convertUserVoPo(uvo);
+
         userDao.insert(upo);
 
-        saveUrc(uvo);
-
-        Response.ResponseBuilder builder = Response.ok();
+        Response.ResponseBuilder builder = Response.ok().entity(uvo);
 
         return builder.build();
-    }
-
-    private void saveUrc(UserVO uvo) {
-
-        for (int i = 0; i < uvo.getClientIdList().size(); i++) {
-            int clientId = uvo.getClientIdList().get(i);
-
-            Client cpo = clientDao.findById(clientId);
-
-            UserRoleClient urc = new UserRoleClient();
-            urc.setClient(cpo);
-
-            RoleVO rvo = uvo.getRoles().get(i);
-            Role rpo = converter.convertRoleVoPo(rvo);
-            urc.setRole(rpo);
-        }
     }
 
     /**
@@ -167,41 +153,34 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(UserVO uvo) {
 
-        logger.debug(logId() + "PUT: updateUser(" + uvo + ")");
-
-        List<UserRoleClient> urcList = urcDao.findByUserId(uvo.getId());
-        for (UserRoleClient urc : urcList) {
-            urcDao.delete(urc);
-        }
+        logger.debug(logId() + "PUT: updateUser()");
 
         User upo = converter.convertUserVoPo(uvo);
         userDao.update(upo);
 
-        saveUrc(uvo);
-
-        Response.ResponseBuilder builder = Response.ok();
+        Response.ResponseBuilder builder = Response.ok().entity(uvo);
 
         return builder.build();
     }
 
     /**
-     * Removes a the received user from the persistent store. Return a JAX-RS response with either 200 ok, or with a map
-     * of fields, and related errors.
+     * Removes a the received client from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
      */
     @DELETE
     @Path("/delete/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Integer userId) {
+    public Response deleteUser(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deleteUser(" + userId + ")");
+        logger.debug(logId() + "DELETE: deleteUser(" + id + ")");
 
-        List<UserRoleClient> urcList = urcDao.findByUserId(userId);
-        for (UserRoleClient urc : urcList) {
-            urcDao.delete(urc);
-        }
+        User upo = userDao.getUserById(id);
+        List<UserRoleClient> urcList = upo.getUrcSet().stream().collect(Collectors.toList());
 
-        User user = userDao.getUserById(userId);
-        userDao.delete(user);
+        urcList.stream().forEach(urc -> urcDao.delete(urc));
+
+        userDao.delete(upo);
 
         Response.ResponseBuilder builder = Response.ok();
 

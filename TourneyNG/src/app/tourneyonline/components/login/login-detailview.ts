@@ -5,8 +5,6 @@ import { Login } from 'app/tourneyonline/domain/login';
 import { Message } from 'app/components/common/api';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import {Md5} from "md5-typescript";
-import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { UserService } from 'app/tourneyonline/service/user-service';
 import { Observable, of } from 'rxjs';
 
 @Component({
@@ -37,14 +35,13 @@ export class LoginDetailView implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private loginService: LoginService,
-        private userService: UserService,
     ) {}
 
     ngOnInit() {
         this.isLoginFailed = false;
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
-        const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
+        const username = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;
 
         this.loginformGroup = this.fb.group({
             'username': new FormControl(username, Validators.required),
@@ -62,7 +59,7 @@ export class LoginDetailView implements OnInit {
         console.log("MD5(password)=" + md5);
 
         this.isLoginFailed = false;
-        this.loginService.userLogged=true;
+        this.loginService.isUserLogged=true;
 
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         
@@ -74,7 +71,7 @@ export class LoginDetailView implements OnInit {
         return (error: any): Observable<Login> => {                      
             console.error("Entering Observable<Login>"); // log to console instead
 
-            this.loginService.userLogged=false;
+            this.loginService.isUserLogged=false;
   
             // TODO: send the error to remote logging infrastructure
             console.error(error); // log to console instead
@@ -87,11 +84,11 @@ export class LoginDetailView implements OnInit {
         };
     }
     
-    next(uvo: UserVO) {
+    next(uvo: Login) {
         console.log("Entering next()"); // log to console instead
         console.log(uvo);
         
-        this.userService.selectedUser = uvo;
+        this.loginService.setUserLogged(uvo);
     }
 
     onError(e:any) {
@@ -102,9 +99,8 @@ export class LoginDetailView implements OnInit {
     onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
 
-        if(this.loginService.userLogged)  {
+        if(this.loginService.isUserLogged)  {
             this.isLoginFailed = false;
-            this.userService.setSelectedUser(this.userService.selectedUser);
             let redirect = '/clients';
             console.log("navigate to=" + redirect);
             this.router.navigate([redirect]);

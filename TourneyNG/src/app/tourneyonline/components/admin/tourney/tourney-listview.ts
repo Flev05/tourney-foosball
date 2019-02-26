@@ -24,7 +24,7 @@ export class TourneyListView extends AbstractTourneyListView {
     toDate  : Date;
 
     clientOptions: Combobox[];
-    userLogged: boolean;
+    isUserLogged: boolean;
 
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
@@ -48,7 +48,7 @@ export class TourneyListView extends AbstractTourneyListView {
         this.toDate = new Date();
         this.clientOptions = this.clientService.clientOptions;
 
-        this.userLogged = this.loginService.userLogged;
+        this.isUserLogged = this.loginService.isUserLogged;
 
         this.tourneyFormGroup = this.fb.group({
             'selectedClientOption': new FormControl(this.clientService.selectedClientOption),

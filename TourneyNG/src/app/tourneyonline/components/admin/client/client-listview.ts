@@ -9,7 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { UserService } from 'app/tourneyonline/service/user-service';
-import { RoleService } from 'app/tourneyonline/service/role-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect = '/clients/dv';
 
@@ -31,7 +31,7 @@ export class ClientListView extends AbstractListView {
     constructor(
         protected tourneyService: TourneyService,
         protected userService   : UserService,
-        protected roleService   : RoleService,
+        private   loginService  : LoginService,
         protected clientService : ClientService,
         protected router        : Router,
         protected location      : Location
@@ -42,10 +42,9 @@ export class ClientListView extends AbstractListView {
     ngOnInit() {
         console.log("ClientListView.ngOnInit()");
         this.clientService.newClient = false;
-        this.isUserDeveloper = this.roleService.isDeveloper();
 
         this.onLoadClientError = false;
-        let loggedUserId = this.userService.selectedUser.id;
+        let loggedUserId = this.loginService.userLogged.id;
 
         const subsrciber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subsrciber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onComplete());
@@ -53,7 +52,7 @@ export class ClientListView extends AbstractListView {
 
     private onComplete(): void {
         console.log("onComplete()");
-        this.isUserDeveloper = this.roleService.isDeveloper();
+        this.isUserDeveloper = this.loginService.isDeveloper();
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {

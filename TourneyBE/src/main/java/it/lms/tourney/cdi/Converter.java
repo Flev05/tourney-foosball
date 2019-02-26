@@ -9,20 +9,26 @@ import javax.inject.Inject;
 
 import it.lms.cb.gui.vo.ClientVO;
 import it.lms.cb.gui.vo.RoleVO;
+import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.RoleDao;
+import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
 
 public class Converter extends AbstractLogger {
 
     @Inject
-    RoleDao   roleDao;
+    RoleDao           roleDao;
 
     @Inject
-    ClientDao clientDao;
+    ClientDao         clientDao;
+
+    @Inject
+    UserRoleClientDao urcDao;
 
     @Produces
     public RoleVO convertRolePoVo(Role rpo) {
@@ -34,18 +40,6 @@ public class Converter extends AbstractLogger {
         rvo.setName(rpo.getName());
 
         return rvo;
-    }
-
-    @Produces
-    public Role convertRoleVoPo(RoleVO rvo) {
-
-        Role rpo = new Role();
-
-        rpo.setDescription(rvo.getDescription());
-        rpo.setId(rvo.getId());
-        rpo.setName(rvo.getName());
-
-        return rpo;
     }
 
     @Produces
@@ -66,7 +60,25 @@ public class Converter extends AbstractLogger {
     }
 
     @Produces
-    public UserVO convertUserPoVo(User u) {
+    public UserRoleClientVO convertUrcPoVo(UserRoleClient urc) {
+
+        UserRoleClientVO urcvo = new UserRoleClientVO();
+        urcvo.setId(urc.getId());
+
+        UserVO userVo = convertUserPoVo(urc.getUser());
+        urcvo.setUserVo(userVo);
+
+        RoleVO roleVo = convertRolePoVo(urc.getRole());
+        urcvo.setRoleVo(roleVo);
+
+        ClientVO clientVo = convertClientPoVo(urc.getClient());
+        urcvo.setClientVo(clientVo);
+
+        return urcvo;
+    }
+
+    @Produces
+    public UserVO convertUserPoVo(@PersistentObject User u) {
 
         UserVO uvo = new UserVO();
         uvo.setId(u.getId());
@@ -85,16 +97,11 @@ public class Converter extends AbstractLogger {
 
         uvo.setRoles(roleVoList);
 
-        List<Client> clientList = clientDao.findClientsByUser(u.getId());
-        List<Integer> clientIdList = clientList.stream().map(cpo -> cpo.getId()).collect(Collectors.toList());
-
-        uvo.setClientIdList(clientIdList);
-
         return uvo;
     }
 
     @Produces
-    public User convertUserVoPo(UserVO uvo) {
+    public User convertUserVoPo(@ViewObject UserVO uvo) {
 
         User upo = new User();
 

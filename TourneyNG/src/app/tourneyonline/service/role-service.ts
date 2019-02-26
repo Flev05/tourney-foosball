@@ -8,8 +8,9 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { RoleVO } from '../domain/role-vo';
 import { Combobox } from '../domain/tourney-combobox';
-import { LoginService } from './login-service';
 import { Roles } from '../domain/enumerations';
+
+const roleUrl = 'api/roles';  // URL to web api
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,7 +18,6 @@ const httpOptions = {
 
 @Injectable()
 export class RoleService {
-    private apiUrl = 'api/roles';  // URL to web api
 
     selectedRoleOption: Combobox;
     roleOptions: Combobox[];
@@ -28,33 +28,11 @@ export class RoleService {
         { field: 'description', header: 'Descrizione' },
     ];
     
-    constructor(private http: HttpClient
-        , private loginService: LoginService) 
+    constructor(private http: HttpClient) 
     { 
         console.log("Constructor of RoleService");
     }
-
-    isAdmin(): boolean {
-        if(!this.loginService.userLogged) {
-            return true;
-        }
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Developer || r.name == Roles.Owner || r.name == Roles.Admin) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    isOwner(): boolean {
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Developer || r.name == Roles.Owner) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    
     isDeveloper(): boolean {
         for(let r of this.selectedRoles) {
             if(r.name==Roles.Developer) {
@@ -64,9 +42,27 @@ export class RoleService {
         return false;
     }
 
+    isOwner(): boolean {
+        for(let r of this.selectedRoles) {
+            if(r.name==Roles.Owner || this.isDeveloper() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isAdmin(): boolean {
+        for(let r of this.selectedRoles) {
+            if(r.name==Roles.Admin || this.isOwner() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     isOperator(): boolean {
         for(let r of this.selectedRoles) {
-            if(r.name==Roles.Operator) {
+            if(r.name==Roles.Operator && this.isAdmin() ) {
                 return true;
             }
         }
@@ -84,9 +80,9 @@ export class RoleService {
         }
     }
 
-    loadAllRoles (): Observable<RoleVO[]> {
+    loadLowerRoles (loggedUserId : number): Observable<RoleVO[]> {
  
-        let url = this.apiUrl + "/" + "findAllRoles";
+        let url = roleUrl + "/findAllRoles/" + loggedUserId;
 
         return this.http.get<RoleVO[]>(url, httpOptions)
         .pipe(

@@ -8,7 +8,6 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { UserVO } from '../domain/user-vo';
 import { Password } from '../domain/password';
-import { RoleService } from './role-service';
 
 const userUrl = 'api/users';                         // URL to Back End api
 
@@ -21,29 +20,24 @@ export class UserService {
     private changePasswordUrl = 'api/changePassword';    // URL to Back End api
     private resetPasswordUrl = 'api/resetPassword';      // URL to Back End api
 
-    selectedUser : UserVO;
-
     newUser : boolean = false;
-
-    constructor(private http: HttpClient, private roleService : RoleService) 
+    selectedUser: UserVO;
+    
+    constructor(private http: HttpClient) 
     { 
         console.log("Constructor of UserService");
     }
 
-    loadAllUsers (userId: number, selector: (err: any, caught: Observable<UserVO[]> ) => Observable<UserVO[]>): Observable<UserVO[]> {
-        const url = userUrl + "/findByUserId/" + userId;
+    loadAllUsers (loggedUserId: number, selector: (err: any, caught: Observable<UserVO[]> ) => Observable<UserVO[]>): Observable<UserVO[]> {
+        const url = userUrl + "/findByUserId/" + loggedUserId;
         console.log(url);
         
         return this.http.get<UserVO[]>(url).pipe(
-            tap(_ => this.log("fetched all clients by user id: " + userId))
+            tap(_ => this.log("fetched all clients by user id: " + loggedUserId))
           , catchError(selector)
         );
     }
 
-    setSelectedUser(uvo: UserVO): void {
-        this.selectedUser = uvo;
-        this.roleService.setSelectRoles(uvo.roles);
-    }
 
     /** GET hero by id. Will 404 if id not found */
     getUser(id: number): Observable<UserVO> {

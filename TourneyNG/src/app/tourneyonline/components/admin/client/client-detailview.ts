@@ -8,7 +8,6 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { RoleService } from 'app/tourneyonline/service/role-service';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -73,21 +72,6 @@ export class ClientDetailView extends AbstractDetailView {
               , siteUrl: ""
               , userAlreadyRegistered: false
               , country: {}
-            //   , userVo : [{
-            //          username    : ""
-            //         ,password    : ""
-            //         ,firstname   : ""
-            //         ,lastname    : ""
-            //         ,address     : ""
-            //         ,email       : ""
-            //         ,phoneNumber : ""
-            //         ,country: {}
-            //         ,roles: [{
-            //             id: null,
-            //             name: "",
-            //             description: ""
-            //         }]
-            //     }]
             };
         } else {
             this.selectedClient = this.clientService.selectedClient;
@@ -97,44 +81,15 @@ export class ClientDetailView extends AbstractDetailView {
                     this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
                         + " (" + this.selectedClient.country.provinceCode +")";
                 }
-        
-                // if( this.selectedClient.userVo != undefined && this.selectedClient.userVo.country != undefined ) {
-                //     this.userAddress = this.selectedClient.userVo.address  + " " +
-                //     this.selectedClient.userVo.country.zipCode + " " + this.selectedClient.userVo.country.city
-                //         + " (" + this.selectedClient.userVo.country.provinceCode +")";
-                // }
             }
         }
-        
-        // this.currentPassword = new String(this.selectedClient.userVo.password).toString();
-        // this.retypedPassword = new String(this.selectedClient.userVo.password).toString();
-
         this.userEnabled = true;
     }
-
-    // private isUserEnabled(): boolean {
-    //     return this.roleService.isOwner();
-    // }
 
     onSubmit(value: string) {
         console.log("New currentPassword    =" + this.currentPassword);
 
         this.selectedClient.userAlreadyRegistered = this.userRegisteredRadio == "yes" ? true : false;
-
-        // if( !this.selectedClient.userAlreadyRegistered ) {
-        //     if( this.currentPassword != this.selectedClient.userVo.password ) {
-        //         this.selectedClient.userVo.password = Md5.init(this.currentPassword);
-
-        //         this.isRetypePasswordFailed = false;
-        //         console.log("Retyped password=" + this.retypedPassword);
-        //         if( this.currentPassword != this.retypedPassword ) {
-        //             this.isRetypePasswordFailed = true;
-        //             return;
-        //         }
-        //     }
-        // } else {
-        //     this.selectedClient.userVo.password = Md5.init(this.currentPassword);
-        // }
 
         this.clearErrors();
 
@@ -152,28 +107,11 @@ export class ClientDetailView extends AbstractDetailView {
     }
 
     enableSaveButton() : string {
-        // if( !this.isUserEnabled() ) {
-        //     return "disabled";
-        // }
-
         let bn = this.selectedClient.businessName;
         let pn = this.selectedClient.phoneNumber;
         let ad = this.selectedClient.address;
         let em = this.selectedClient.email;
         let clientEnable: boolean = bn.trim() == "" || pn.trim() == "" || ad.trim() == "" || em.trim() == "" ;
-
-        // let un = this.selectedClient.userVo.username;
-        // let userEnable:   boolean = un.trim() == "";
-
-        // if( !this.selectedClient.userAlreadyRegistered ) {
-        //     let fn = this.selectedClient.userVo.firstname;
-        //     let ln = this.selectedClient.userVo.lastname;
-
-        //     let upn = this.selectedClient.userVo.phoneNumber;
-        //     let uem = this.selectedClient.userVo.email;
-        //     let uad = this.selectedClient.userVo.address;
-        //     userEnable = userEnable || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
-        // }
 
         return clientEnable ? "disabled" : "";
     }

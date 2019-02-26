@@ -36,7 +36,7 @@ export class PlayerService {
 
         let url = playerUrl;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = playerUrl + "?" + "clientId=" + this.clientService.selectedClient.id;
         }
 

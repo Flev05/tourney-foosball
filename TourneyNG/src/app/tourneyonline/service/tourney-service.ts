@@ -232,7 +232,7 @@ export class TourneyService {
     loadAllTourneys (): Observable<TourneyDb[]> {
         let url = tourneyUrl;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl + "?" + "clientId=" + this.clientService.selectedClientOption.value;
         }
         
@@ -245,7 +245,7 @@ export class TourneyService {
     loadTourneys(fromDate: Date, toDate: Date): any {
         let url = tourneyUrl;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl 
             + "?" + "clientId=" + this.clientService.selectedClientOption.value
             + "&" + "fromDate=" + fromDate 
@@ -266,7 +266,7 @@ export class TourneyService {
         const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId;
         let url = meetingUrl + queryString;
         
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl + queryString;
         }
         
@@ -286,7 +286,7 @@ export class TourneyService {
         const queryString = "?" + "tourneyId=" + tourneyId + "&" + "playoffId=" + playoffId;
         let url = meetingUrl + queryString;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl + queryString;
         }
         
@@ -306,7 +306,7 @@ export class TourneyService {
         const queryString = "?" + "tourneyId=" + tourneyId + "&" + "eliminatoryId=" + eliminatoryId;
         let url = meetingUrl + queryString;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl + queryString;
         }
         
@@ -387,7 +387,7 @@ export class TourneyService {
         const id =  tourney.id;
         let url = tourneyUrl + "/" + id;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl +  "/" + id;
         }
 
@@ -493,7 +493,7 @@ export class TourneyService {
         const id =  mdb.id;
         let url = meetingUrl + "/" + id;
 
-        if(this.loginService.userLogged) {
+        if(this.loginService.isUserLogged) {
             url = tourneyUrl +  "/" + id;
         }
 

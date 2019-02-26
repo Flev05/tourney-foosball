@@ -8,6 +8,8 @@ import { of } from 'rxjs/observable/of';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect = '/users/userdv';
 
@@ -26,8 +28,9 @@ export class UserListView extends AbstractListView {
 
     constructor(        
           protected tourneyService: TourneyService
-        , private userService: UserService
-        , public router: Router
+          , private userService: UserService
+          , private loginService: LoginService
+          , public router: Router
         , protected location: Location) 
     {        
         super(redirect, tourneyService, router, location);
@@ -40,15 +43,14 @@ export class UserListView extends AbstractListView {
         this.userService.newUser = false;
 
         this.cols = [
-            { field: 'username',    header: 'username' },
             { field: 'firstname',   header: 'Nome' },
             { field: 'lastname',    header: 'Cognome' },
-            { field: 'phoneNumber', header: 'Telefono' }
+            { field: 'email',       header: 'Email' },
         ];
 
         this.onLoadUserError = false;
 
-        let loggedUserId = this.userService.selectedUser.id;
+        let loggedUserId = this.loginService.userLogged.id;
         const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
         subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
     }
@@ -80,6 +82,8 @@ export class UserListView extends AbstractListView {
         this.userService.selectedUser = this.selectedUser;
         this.userService.newUser = false;
 
+
+
         this.gotoDetailView();
     }
 
@@ -101,7 +105,17 @@ export class UserListView extends AbstractListView {
     private onDeleteComplete(): void {
         console.log("onDeleteComplete()");
 
-        let index: number = this.users.indexOf(this.selectedUser);
+        let index: number = -1;
+
+        for( let i=0; i<this.users.length; i++ ) {
+            let uvo = this.users[i];
+
+            if( uvo.id == this.selectedUser.id ) {
+                index = i;
+                break;
+            }
+        }
+
         if(index > -1 ) {
             this.users.splice(index, 1);
         }

@@ -4,10 +4,8 @@ package it.lms.tourney.dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -16,7 +14,6 @@ import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
-import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
@@ -26,9 +23,6 @@ import it.lms.tourney.po.User_;
 
 @Stateless
 public class UserDao extends BaseJPACrudDao<User, Integer> {
-
-    @Inject
-    ClientDao clientDao;
 
     public UserDao() throws DaoException {
 
@@ -77,75 +71,6 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         logger.info(logId() + info);
 
         return poList;
-    }
-
-    /**
-     * First finds all clients belonging to the received loggedUserId, so finds all remaining users, if any, of the
-     * found clients
-     * 
-     * @param loggedUserId the logged user identifier
-     * @return the list of
-     */
-    public List<User> findOwnerUsers(Integer loggedUserId) {
-
-        logger.debug(logId() + "Entering findOwnerUsers()");
-
-        List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.OWNER, Role.ROLES.ADMIN, Role.ROLES.OPERATOR,
-                Role.ROLES.FOLLOWER);
-
-        List<UserRoleClient> urcList = clientDao.findClientsByRole(loggedUserId, roleList);
-
-        List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
-
-        return userList;
-    }
-
-    /**
-     * First finds all clients belonging to the received loggedUserId, so finds all remaining users, if any, of the
-     * found clients
-     * 
-     * @param loggedUserId the logged user identifier
-     * @return the list of users
-     */
-    public List<User> findAdminUsers(Integer loggedUserId) {
-
-        logger.debug(logId() + "Entering findAdminUsers()");
-
-        List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.ADMIN, Role.ROLES.OPERATOR, Role.ROLES.FOLLOWER);
-
-        List<Client> clientList = clientDao.findClientsByUser(loggedUserId);
-
-        List<User> userList = findUsersBy(clientList, roleList);
-
-        return userList;
-    }
-
-    private List<User> findUsersBy(List<Client> clientList, List<Role.ROLES> roleList) {
-
-        logger.debug(logId() + "Entering findUsersBy()");
-
-        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
-
-        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
-
-        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
-
-        List<String> roles = roleList.stream().map(r -> r.name()).collect(Collectors.toList());
-        Predicate p = urcRoleJoin.get(Role_.name).in(roles);
-        Predicate q = root.get(UserRoleClient_.client).in(clientList);
-
-        cq = cq.select(root);
-        cq = cq.where(p, q);
-
-        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
-
-        List<UserRoleClient> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " Entity(ies)] ";
-        logger.info(logId() + info);
-
-        List<User> userList = poList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
-
-        return userList;
     }
 
     public User getPoBy(String username) {

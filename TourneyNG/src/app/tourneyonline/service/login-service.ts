@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 import { Login } from '../domain/login';
+import { RoleService } from './role-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -16,12 +17,29 @@ const logoutUrl = 'api/logon/logout';  // URL to web server api
 @Injectable()
 export class LoginService {
 
-    selectedLogin : Login;
-    userLogged: boolean = true;
+    userLogged   : Login;
+    isUserLogged : boolean = true;
 
-    constructor(private http: HttpClient) { 
+    constructor(private http: HttpClient, private roleService : RoleService) { 
         console.log("Constructor of LoginService");
-        this.userLogged=undefined;
+        this.isUserLogged=undefined;
+    }
+
+    isDeveloper(): boolean {
+        return this.userLogged && this.roleService.isDeveloper();
+    }
+
+    isOwner(): boolean {
+        return this.userLogged && this.roleService.isOwner();
+    }
+
+    isAdmin(): boolean {
+        return this.userLogged && this.roleService.isAdmin();
+    }
+
+    setUserLogged(uvo: Login): void {
+        this.userLogged = uvo;
+        this.roleService.setSelectRoles(uvo.roles);
     }
 
     /** PUT: send the request login to the server */
@@ -39,7 +57,7 @@ export class LoginService {
     sendLogout (): Observable<Login> {
         const url = logoutUrl;
 
-        return this.http.put(url, this.selectedLogin, httpOptions).pipe(
+        return this.http.put(url, this.userLogged, httpOptions).pipe(
             tap(_ => this.log(`sendLogout url=${url} successful`) ),
             catchError(this.handleLogoutError<Login>('sendLogout'))
         );

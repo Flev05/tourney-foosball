@@ -26,12 +26,8 @@ export class ClientDetailView extends AbstractDetailView {
     filteredCountriesSingle: Country[];
 
     isUserRegisteredRadio: boolean;
-    isRetypePasswordFailed: boolean;
     
     returnedClientVo: ClientVO;
-    currentPassword: string;
-    retypedPassword: string;
-    userRegisteredRadio: string;
     
     onSaveClientError: boolean;
     clientAlreadyExists: boolean;
@@ -39,7 +35,6 @@ export class ClientDetailView extends AbstractDetailView {
     userEnabled: boolean;
 
     clientAddress: string;
-    userAddress: string;
 
     constructor(
         protected location: Location,
@@ -58,10 +53,7 @@ export class ClientDetailView extends AbstractDetailView {
             this.countries = data;
         });
 
-        this.userRegisteredRadio = "no";
-
         this.clientAddress = "";
-        this.userAddress = "";
 
         if(this.clientService.newClient) {
             this.selectedClient={
@@ -69,7 +61,6 @@ export class ClientDetailView extends AbstractDetailView {
               , phoneNumber: ""
               , email: ""
               , siteUrl: ""
-              , userAlreadyRegistered: false
               , country: {}
             };
         } else {
@@ -86,9 +77,6 @@ export class ClientDetailView extends AbstractDetailView {
     }
 
     onSubmit(value: string) {
-        console.log("New currentPassword    =" + this.currentPassword);
-
-        this.selectedClient.userAlreadyRegistered = this.userRegisteredRadio == "yes" ? true : false;
 
         this.clearErrors();
 

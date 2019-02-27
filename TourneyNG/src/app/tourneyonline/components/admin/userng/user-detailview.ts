@@ -1,19 +1,12 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { RoleVO } from 'app/tourneyonline/domain/role-vo';
 import { UserService } from 'app/tourneyonline/service/user-service';
-import { RoleService } from 'app/tourneyonline/service/role-service';
-import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Observable, of } from 'rxjs';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { ClientService } from 'app/tourneyonline/service/client-service';
-import { ClientVO } from 'app/tourneyonline/domain/client-vo';
-import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
-import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 
 @Component({
     templateUrl: './user-detailview.html' 
@@ -21,29 +14,18 @@ import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 export class UserDetailView extends AbstractDetailView {
 
     selectedUser: UserVO;
-    roleCols: TableCols[] = RoleService.roleCols;
-
-    clientRoleCols:  TableCols[] = [
-        { field: 'clientName', header: 'Cliente' },
-        { field: 'role',   header: 'Ruolo' }
-    ];
 
     onSaveUserError: any;
     badRequest: boolean;
     userAlreadyExists: boolean;
-    onLoadClientError: boolean;
 
-    clients: ClientVO[];
-    urcList: UserRoleClientVO[];
     userAddress: string;
 
     constructor(
         private userService: UserService,
-        private roleService: RoleService,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
-        protected clientService: ClientService,
         protected urcService: UrcService,
     ) {
         super(tourneyService, location, countryService);
@@ -66,46 +48,10 @@ export class UserDetailView extends AbstractDetailView {
                 description: '',
                 country    : {},
             }
-        }  else {
-            this.selectedUser = this.userService.selectedUser;
         }
-
-        let loggedUserId = this.userService.selectedUser.id;
-
-        const subscriber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
-        subscriber.subscribe(cs => this.clients = cs, e => this.onError(e));
-
-        let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadClientsErrorHandler('loadUrc()'));
-        ucrsub.subscribe(cs => this.urcList = cs, e => this.onError(e), () => this.onComplete());
+        this.selectedUser = this.userService.selectedUser;
     }
-    
-    private onComplete(): void {
-        console.log("onComplete()");
-
-         for( let i=0; i< this.urcList.length;i++ ) {
-            let urc = this.urcList[i];
-            let rvo = urc.roleVo;
-            let roleCB = {label: rvo.name, value: rvo.id};
-
-            let cvo = urc.clientVo;
-
-            let row = {id: urc.id, businessName: cvo.businessName, selectedRole: roleCB};
-       }
-    }
-
-    private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
-      
-            this.onLoadClientError = true;
-
-            console.log(`${operation} failed!`);
-
-            console.error(error); // log to console instead     
-      
-            return of(result as T);
-        };
-    }
-    
+     
     enableSaveButton() : string {
         let un = this.selectedUser.username;
         let userEnable:   boolean = un.trim() == "";
@@ -123,9 +69,7 @@ export class UserDetailView extends AbstractDetailView {
 
     onSubmit(): void {
  
-        let urcList : UserRoleClientVO[] = [];
-
-        const subscriber = this.urcService.saveUrc(urcList, this.saveUserErrorHandler('Create User operation'));
+        const subscriber = this.userService.saveUser(this.selectedUser, this.saveUserErrorHandler('Create User operation'));
         subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }
     

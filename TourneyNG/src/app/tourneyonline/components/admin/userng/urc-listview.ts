@@ -1,69 +1,83 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { UserService } from 'app/tourneyonline/service/user-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Observable} from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 
-const redirect = '/users/userdv';
+const redirect = '/users/urcdv';
 
 @Component({
     templateUrl: './urc-listview.html'
 })
 export class UrcListView extends AbstractListView {
 
-    selectedUser: UserVO;
-
-    users: UserVO[];
-
     cols: TableCols[] ;
-    onLoadUserError: boolean;
+    rows: any[];
+
+    urcList: UserRoleClientVO[];
+
+    onLoadUrcError: boolean;
     onDeleteError: boolean;
 
     constructor(        
-          protected tourneyService: TourneyService
-          , private userService: UserService
+            protected tourneyService: TourneyService
+          , protected urcService: UrcService
           , private loginService: LoginService
           , public router: Router
           , protected location: Location) 
     {        
         super(redirect, tourneyService, router, location);
-        console.log("UserListView.constructor()");
+        console.log("UrcListView.constructor()");
     }
 
     ngOnInit() {
-        console.log("UserListView.ngOnInit()");
+        console.log("UrcListView.ngOnInit()");
 
-        this.userService.newUser = false;
+        this.urcService.newUser = false;
 
         this.cols = [
             { field: 'firstname',   header: 'Nome' },
             { field: 'lastname',    header: 'Cognome' },
-            { field: 'email',       header: 'Email' },
             { field: 'phoneNumber', header: 'Telefono' },
+            { field: 'client',    header: 'Cliente' },
         ];
 
-        this.onLoadUserError = false;
+        this.onLoadUrcError = false;
 
         let loggedUserId = this.loginService.userLogged.id;
-        const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
-        subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
+
+        let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadClientsErrorHandler('loadUrc()'));
+        ucrsub.subscribe(cs => this.urcList = cs, e => this.onError(e), () => this.onComplete());
     }
 
     private onComplete(): void {
         console.log("onComplete()");
+
+        this.rows = [];
+        for( let urcvo of this.urcList ) {
+            let row = {id: urcvo.id
+                , firstname: urcvo.userVo.firstname
+                , lastname: urcvo.userVo.lastname
+                , phoneNumber: urcvo.userVo.phoneNumber
+                , client: urcvo.clientVo.businessName
+            }
+
+            this.rows.push(row);
+        }
     }
 
-    private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
+    private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
       
-            this.onLoadUserError = true;
-            console.log(`${operation} failed`);
+            this.onLoadUrcError = true;
+
+            console.log(`${operation} failed!`);
 
             console.error(error); // log to console instead     
       
@@ -72,31 +86,33 @@ export class UrcListView extends AbstractListView {
     }
 
     create() {
-        this.userService.newUser = true;
+        this.urcService.newUser = true;
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
-        this.userService.selectedUser = this.selectedUser;
-        this.userService.newUser = false;
+        let urcId = event.data.id;
 
-
+        this.urcService.selectedUrc = this.urcList.find( urc => urc.id == urcId );
+        this.urcService.newUser = false;
 
         this.gotoDetailView();
     }
 
-    doDelete(user: UserVO) {
-        console.log(user);
-        this.selectedUser = user;
-        let name =  user.username;
-        let popup = 'Sicuro di voler rimuovere lo utente: [' + name + "]?";
+    doDelete(urcvo: UserRoleClientVO) {
+        console.log(urcvo);
+        let urcId = urcvo.id;
+        this.urcService.selectedUrc = this.urcList.find( urc => urc.id == urcId );
+       
+        let name =  urcvo.userVo.username + "/" + urcvo.clientVo.businessName;
+        let popup = 'Sicuro di voler rimuovere la relazione Utente/Cliente: [' + name + "]?";
 
         this.onDeleteError = false;
         if(confirm(popup)) {
 
-            const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('deleteUser()'));
+            const subscr = this.urcService.deleteUrc(this.urcService.selectedUrc.id, this.deleteErrorHandler('deleteUser()'));
 
             subscr.subscribe(n => super.next(n), e => this.onError(e), () => this.onDeleteComplete());
         }
@@ -107,17 +123,17 @@ export class UrcListView extends AbstractListView {
 
         let index: number = -1;
 
-        for( let i=0; i<this.users.length; i++ ) {
-            let uvo = this.users[i];
+        for( let i=0; i<this.urcList.length; i++ ) {
+            let uvo = this.urcList[i];
 
-            if( uvo.id == this.selectedUser.id ) {
+            if( uvo.id == this.urcService.selectedUrc.id ) {
                 index = i;
                 break;
             }
         }
 
         if(index > -1 ) {
-            this.users.splice(index, 1);
+            this.urcList.splice(index, 1);
         }
     }
 
@@ -139,6 +155,6 @@ export class UrcListView extends AbstractListView {
         console.log("onError()");
         console.log(e);
 
-        this.onLoadUserError = true;
+        this.onLoadUrcError = true;
     }
  }

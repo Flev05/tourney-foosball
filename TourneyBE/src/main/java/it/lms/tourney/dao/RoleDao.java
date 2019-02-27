@@ -204,7 +204,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     }
 
     /**
-     * Finds the max role among the role of each client belonging the received logged user id
+     * Finds the max role among the roles of each client belonging to the received logged user id
      * 
      * @param loggedUserId the logged user id
      * @return the max role of the received user id
@@ -247,4 +247,36 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
         return maxRole;
     }
 
+    /**
+     * Finds all the roles where its role is lesser or equals of the role of the received user
+     * 
+     * @param loggedUserId
+     * @return
+     */
+    public List<Role> findRolesLesserThan(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findRolesLesserThan()");
+
+        ROLES maxRole = findMaxRole(loggedUserId);
+
+        List<Role> fullRoleList = findAllRoles();
+
+        List<Role> realRoleList = fullRoleList.stream().filter(r -> lesserThan(r, maxRole))
+                .collect(Collectors.toList());
+
+        return realRoleList;
+    }
+
+    private boolean lesserThan(Role r, ROLES maxRole) {
+
+        Role.ROLES rv = Role.ROLES.resolve(r.getName());
+        if (rv != null) {
+            if (rv.getValue() <= maxRole.getValue()) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
 }

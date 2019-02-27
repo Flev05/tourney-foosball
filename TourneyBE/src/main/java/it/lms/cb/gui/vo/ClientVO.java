@@ -12,7 +12,6 @@ public class ClientVO extends AbstractVO {
     private String            phoneNumber;
     private String            email;
     private String            siteUrl;
-    private boolean           userAlreadyRegistered;
 
     private Country           country;
 
@@ -20,8 +19,7 @@ public class ClientVO extends AbstractVO {
     public String toString() {
 
         return super.toString() + " ClientVO [businessName=" + businessName + ", address=" + address + ", phoneNumber="
-                + phoneNumber + ", email=" + email + ", userAlreadyRegistered=" + userAlreadyRegistered + ", siteUrl="
-                + siteUrl + ", country=" + country + "]";
+                + phoneNumber + ", email=" + email + ", siteUrl=" + siteUrl + ", country=" + country + "]";
     }
 
     public String getBusinessName() {
@@ -62,16 +60,6 @@ public class ClientVO extends AbstractVO {
     public void setEmail(String email) {
 
         this.email = email;
-    }
-
-    public boolean isUserAlreadyRegistered() {
-
-        return userAlreadyRegistered;
-    }
-
-    public void setUserAlreadyRegistered(boolean userAlreadyRegistered) {
-
-        this.userAlreadyRegistered = userAlreadyRegistered;
     }
 
     public String getSiteUrl() {

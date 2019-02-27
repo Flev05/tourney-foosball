@@ -45,10 +45,10 @@
 </div>
 
 <p-table [columns]="cols" 
-    [value]="users" 
+    [value]="rows" 
     [responsive]="true"
     selectionMode="single" 
-    [(selection)]="selectedUser" 
+    [(selection)]="selectedUrc" 
     (onRowSelect)="onRowSelect($event)">
 
     <ng-template pTemplate="header" let-columns>
@@ -56,7 +56,7 @@
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
-            <th>X</th>
+            <th class="deleteColSize">X</th>
         </tr>
     </ng-template>
 
@@ -65,7 +65,7 @@
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>
-            <td class="deleteColSize">
+            <td>
                 <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
             </td>
         </tr>

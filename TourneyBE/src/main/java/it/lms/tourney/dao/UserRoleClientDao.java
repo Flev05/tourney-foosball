@@ -103,19 +103,6 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      * @param loggedUserId the logged user identifier
      * @return the list of users
      */
-    // public List<UserRoleClient> findAdminUsers(Integer loggedUserId) {
-    //
-    // logger.debug(logId() + "Entering findAdminUsers()");
-    //
-    // List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.ADMIN, Role.ROLES.OPERATOR, Role.ROLES.FOLLOWER);
-    //
-    // List<Client> clientList = clientDao.findClientsByUser(loggedUserId);
-    //
-    // List<UserRoleClient> urcList = findUsersBy(clientList, roleList);
-    //
-    // return urcList;
-    // }
-
     private List<UserRoleClient> findUsersBy(List<Client> clientList, List<Role.ROLES> roleList) {
 
         logger.debug(logId() + "Entering findUsersBy()");

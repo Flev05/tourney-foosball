@@ -72,4 +72,15 @@ export class UrcService {
         );
     }
 
+    /** DELETE: delete the UserRoleClient from the server */
+    deleteUrc (urcId: number, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
+        const id = urcId;
+        const url = `${userUrl}/delete/${id}`;
+        console.log(url);
+
+        return this.http.delete<UserRoleClientVO>(url, httpOptions).pipe(
+            tap(_ => this.log("deleted UserRoleClient url=" + url)),
+            catchError(selector)
+        );
+    }
 }

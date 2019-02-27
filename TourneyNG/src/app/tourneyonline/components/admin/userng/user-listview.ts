@@ -8,7 +8,6 @@ import { of } from 'rxjs/observable/of';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect = '/users/userdv';

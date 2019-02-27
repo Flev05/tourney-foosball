@@ -21,7 +21,7 @@
             <li>Follower</li>
         </ul>
         <p>
-            Un utente può fare tutto cio che può fare un altro utente con
+            Un utente può fare tutto ciò che può fare un altro utente con
             privilegio minore o uguale al proprio. Per esempio l'utente proprietario, può fare 
             tutto ciò che fa un utente Amministatore, Operatore e Follower ma un operatore non 
             può fare quello che fa un utente Proprietaro o Amministratore.
@@ -67,102 +67,104 @@
 </div>
 
 <p-fieldset legend="Utente">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Nome*:
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Nome*:
+            </div>
+            <div  class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedUser.firstname" placeholder="Obbligatorio"/>
+            </div>
         </div>
-        <div  class="ui-grid-col-6">
-            <input pInputText type="text" [(ngModel)]="selectedUser.firstname" placeholder="Obbligatorio"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Cognome*:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Cognome*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
+            </div>
         </div>
-        <div class="ui-grid-col-6">
-            <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Username*:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Username*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
+            </div>
         </div>
-        <div class="ui-grid-col-6">
-            <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Password*:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Password*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+            </div>
         </div>
-        <div class="ui-grid-col-6">
-            <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Ripetere Password*:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Ripetere Password*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
+            </div>
         </div>
-        <div class="ui-grid-col-6">
-            <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Via*:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Via*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.address"/>
+            </div>
         </div>
-        <div class="ui-grid-col-5">
-            <input pInputText type="text" [(ngModel)]="selectedUser.address"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Indirizzo:
-        </div>
-        <div class="ui-grid-col-8">
-            {{userAddress}}
-        </div>
-    </div>             
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{userAddress}}
+            </div>
+        </div>             
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            <label for="country-id">Comune*:</label>
-        </div>                     
-        <div class="ui-grid-col-5">
-            <p-autoComplete id="country-id" 
-                [(ngModel)]="selectedUser.country" 
-                [suggestions]="filteredCountriesSingle" 
-                (completeMethod)="searchCountry($event)" 
-                field="city"
-                placeholder="Comune" 
-                [minLength]="1">
-            </p-autoComplete>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label for="country-id">Comune*:</label>
+            </div>                     
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" 
+                    [(ngModel)]="selectedUser.country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" 
+                    field="city"
+                    placeholder="Comune" 
+                    [minLength]="1">
+                </p-autoComplete>
+            </div>
         </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Telefono*:
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Telefono*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.phoneNumber" placeholder="Obbligatorio"/>
+            </div>
         </div>
-        <div class="ui-grid-col-5">
-            <input pInputText type="text" [(ngModel)]="selectedUser.phoneNumber" placeholder="Obbligatorio"/>
-        </div>
-    </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            E-mail*:
-        </div>
-        <div class="ui-grid-col-5">
-            <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
-        </div>
-    </div>            
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                E-mail*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
+            </div>
+        </div>   
+    </div>         
 </p-fieldset>
 
 <p-fieldset legend="Clienti">
@@ -223,9 +225,4 @@
         <p-message severity="error" text="Esiste già un utente con username {{selectedUser.username}}. Scegliere un'altra username e riprovare"></p-message>
     </div>
 </div>
-
-<div *ngIf="loginFailed">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="L'utente non risulta registrato."></p-message>
-    </div>
-</div>
+ 

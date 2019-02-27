@@ -13,6 +13,13 @@ public class UserRoleClientVO extends AbstractVO {
 
     }
 
+    @Override
+    public String toString() {
+
+        return super.toString() + " UserRoleClientVO [userVo=" + userVo + ", roleVo=" + roleVo + ", clientVo="
+                + clientVo + "]";
+    }
+
     public UserVO getUserVo() {
 
         return userVo;

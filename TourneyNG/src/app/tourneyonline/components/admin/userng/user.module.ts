@@ -21,11 +21,11 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FieldsetModule } from 'primeng/fieldset';
 
-import {UserListView} from './user-listview';
-import {UserDetailView} from './user-detailview';
 import {UserChangePassword} from './user-changepassword';
 import {UserResetPasswordLv} from './user-reset-password-lv';
 import {UserResetPasswordDv} from './user-reset-password-dv';
+import { UrcListView } from './urc-listview';
+import { UrcDetailView } from './urc-detailview';
 
 @NgModule({
 	imports: [
@@ -51,8 +51,8 @@ import {UserResetPasswordDv} from './user-reset-password-dv';
         ,MessageModule
 		,UserRoutingModule
 	],
-	declarations: [UserListView,
-		UserDetailView,
+	declarations: [UrcListView,
+		UrcDetailView,
         UserChangePassword,
         UserResetPasswordLv,
         UserResetPasswordDv,

@@ -24,6 +24,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -48,13 +49,13 @@ public class RoleRESTService extends AbstractRESTService {
     private Converter converter;
 
     @GET
-    @Path("/findAllRoles")
+    @Path("/findAllRoles/{loggedUserId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<RoleVO> findAllRoles() {
+    public List<RoleVO> findAllRoles(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        logger.debug(logId() + "GET: findByUserId()");
+        logger.debug(logId() + "GET: findAllRoles()");
 
-        List<Role> roleList = roleDao.findAllRoles();
+        List<Role> roleList = roleDao.findRolesLesserThan(loggedUserId);
 
         List<RoleVO> roleVoList = roleList.stream().map(rpo -> converter.convertRolePoVo(rpo))
                 .collect(Collectors.toList());

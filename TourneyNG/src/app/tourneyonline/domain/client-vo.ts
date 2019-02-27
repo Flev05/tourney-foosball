@@ -8,6 +8,5 @@ export interface ClientVO
     phoneNumber?            : string;
     email?                  : string;
     siteUrl?                : string;
-    userAlreadyRegistered?  : boolean;
     country?                : Country;
 }

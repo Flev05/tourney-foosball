@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -80,9 +81,9 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         if (userDao.isDeveloperUser(loggedUserId)) {
             urcList = urcDao.findAllUrc();
+        } else {
+            urcList = urcDao.findUrcByUser(loggedUserId);
         }
-
-        urcList = urcDao.findUrcByUser(loggedUserId);
 
         List<UserRoleClientVO> userVoList = urcList.stream().map(upo -> converter.convertUrcPoVo(upo))
                 .collect(Collectors.toList());
@@ -171,4 +172,30 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         urcList.stream().forEach(urc -> urcDao.delete(urc));
         return uvo;
     }
+
+    /**
+     * Removes a the received client from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/delete/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUrc(@PathParam("id") Integer id) {
+
+        logger.debug(logId() + "DELETE: deleteClient(" + id + ")");
+
+        UserRoleClient urc = urcDao.findById(id);
+        urcDao.delete(urc);
+
+        List<UserRoleClient> lastUrc = urcDao.findByUserId(urc.getUser().getId());
+        if (lastUrc.isEmpty()) {
+            userDao.delete(urc.getUser());
+        }
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
 }

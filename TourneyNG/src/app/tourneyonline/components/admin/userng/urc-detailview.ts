@@ -14,14 +14,16 @@ import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './urc-detailview.html' 
 })
 export class UrcDetailView extends AbstractDetailView {
 
-    selectedUser: UserVO;
     roleCols: TableCols[] = RoleService.roleCols;
+    selectedUrc: UserRoleClientVO;
+    selectedUser: UserVO;
 
     clientRoleCols:  TableCols[] = [
         { field: 'clientName', header: 'Cliente' },
@@ -41,9 +43,13 @@ export class UrcDetailView extends AbstractDetailView {
     onLoadClientError: boolean;
 
     clients: ClientVO[];
-    urcList: UserRoleClientVO[];
+
+    currentPassword: string;
+    retypedPassword: string;
+    isRetypePasswordFailed: boolean;
 
     constructor(
+        private logginService: LoginService,
         private userService: UserService,
         private roleService: RoleService,
         protected location: Location,
@@ -57,51 +63,61 @@ export class UrcDetailView extends AbstractDetailView {
 
     ngOnInit() {
 
-        if(this.userService.newUser) {
-            this.userService.selectedUser = {
+        let loggedUserId = this.logginService.userLogged.id;
+        this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.roles = rs, e => this.onError(e), () => this.onCompleteLoadRoles());
+
+        const subscriber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
+        subscriber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onCompleteLoadClient());
+
+        if(this.urcService.newUser) {
+            
+            let uvo: UserVO = {
                 id: null,
                 firstname: '',
                 lastname: '',
+                password: '',
                 address: '',
                 email: '',
                 phoneNumber: '',
                 description: '',
                 country    : {},
             }
+            let cvo = this.clientService.selectedClient;
+
+            let rvo : RoleVO = this.roles[0];
+
+            this.urcService.selectedUrc = {userVo: uvo, roleVo: rvo, clientVo: cvo};
         }
-        this.selectedUser = this.userService.selectedUser;
 
-        let loggedUserId = this.userService.selectedUser.id;
-        this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.roles = rs);
+        this.selectedUrc = this.urcService.selectedUrc;
+        this.selectedUser = this.selectedUrc.userVo;
 
-        const subscriber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
-        subscriber.subscribe(cs => this.clients = cs, e => this.onError(e));
+        this.currentPassword = new String(this.selectedUser.password).toString();
+        this.retypedPassword = new String(this.selectedUser.password).toString();
 
-        let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadClientsErrorHandler('loadUrc()'));
-        ucrsub.subscribe(cs => this.urcList = cs, e => this.onError(e), () => this.onComplete());
+        this.isRetypePasswordFailed = false;
+        this.badRequest = false;
     }
-    
-    private onComplete(): void {
-        console.log("onComplete()");
+
+    private onCompleteLoadRoles(): void {
 
         this.roleOptions = [];
-        for(let i=0; i<this.roles.length; i++) {
-            let r = this.roles[i];
-            let cb = {label: r.name, value: i};
-            this.roleOptions.push(cb);
+
+        for( let rvo of this.roles ) {
+            let row = {label: rvo.name, value: rvo.id};
+            this.roleOptions.push(row);
         }
+    }
+
+    private onCompleteLoadClient(): void {
+
+        this.selectedClientRole = [];
 
         this.clientRoleRows = [];
+        let sr: Combobox = {label: "", value: 0};
 
-        for( let i=0; i< this.urcList.length;i++ ) {
-            let urc = this.urcList[i];
-            let rvo = urc.roleVo;
-            let roleCB = {label: rvo.name, value: rvo.id};
-
-            let cvo = urc.clientVo;
-
-            let row = {id: urc.id, businessName: cvo.businessName, selectedRole: roleCB};
-
+        for( let cvo of this.clients ) {
+            let row = {id: cvo.id, businessName: cvo.businessName, selectedRole: sr};
             this.clientRoleRows.push(row);
         }
     }
@@ -120,15 +136,15 @@ export class UrcDetailView extends AbstractDetailView {
     }
     
     enableSaveButton() : string {
-        let un = this.selectedUser.username;
+        let un = this.selectedUrc.userVo.username;
         let userEnable:   boolean = un.trim() == "";
 
-        let fn = this.selectedUser.firstname;
-        let ln = this.selectedUser.lastname;
+        let fn = this.selectedUrc.userVo.firstname;
+        let ln = this.selectedUrc.userVo.lastname;
 
-        let upn = this.selectedUser.phoneNumber;
-        let uem = this.selectedUser.email;
-        let uad = this.selectedUser.address;
+        let upn = this.selectedUrc.userVo.phoneNumber;
+        let uem = this.selectedUrc.userVo.email;
+        let uad = this.selectedUrc.userVo.address;
         userEnable = userEnable || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
 
         return userEnable ? "disabled" : "";
@@ -136,6 +152,13 @@ export class UrcDetailView extends AbstractDetailView {
 
     onSubmit(): void {
  
+        if( this.currentPassword != this.selectedUser.password ) {
+            if(this.currentPassword != this.retypedPassword ) {
+                this.isRetypePasswordFailed = true;
+                return;
+            }
+        }
+
         let urcList : UserRoleClientVO[] = [];
 
         for( let row of this.selectedClientRole ) {
@@ -145,7 +168,7 @@ export class UrcDetailView extends AbstractDetailView {
 
             let urc : UserRoleClientVO = {
                 id        : row.id,
-                userVo    : this.selectedUser,
+                userVo    : this.selectedUrc.userVo,
                 roleVo    : rvo,
                 clientVo  : cvo
             };

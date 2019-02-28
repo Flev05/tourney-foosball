@@ -27,6 +27,8 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data-service/in-memory-data.service';
 import { environment } from 'environments/environment';
 import { UrcService } from './service/urc-service';
+import {SlideMenuModule} from 'primeng/slidemenu';
+
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {
@@ -51,6 +53,7 @@ if (environment.inMemoryDataService) {
     ,DialogModule
     ,ButtonModule
     ,BrowserAnimationsModule
+    ,SlideMenuModule
     // , forDevelopEnvOnly
   ],
   providers: [

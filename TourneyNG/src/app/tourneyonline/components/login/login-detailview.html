@@ -57,7 +57,6 @@
                             *ngIf="!loginformGroup.controls['password'].valid && loginformGroup.controls['password'].dirty">
                             <i class="fa fa-close"></i>
                             <span *ngIf="loginformGroup.controls['password'].errors['required']">La Password è obbligatoria</span>
-                            <span *ngIf="loginformGroup.controls['password'].errors['minlength']">Almeno 8 caratteri</span>
                         </div>
                     </div>
                 </div>
@@ -69,7 +68,7 @@
                     </div>
                     <div class="ui-grid-col-4"></div>
                 </div>
-                <div *ngIf="isLoginFailed" style="margin-top:30px">
+                <div *ngIf="loginFailed" style="margin-top:30px">
                     <p-message severity="error" text="Login fallito"></p-message>
                 </div>
             </div>

@@ -28,8 +28,7 @@ export class LoginDetailView implements OnInit {
 
     loginformGroup: FormGroup;
 
-    submitted: boolean;
-    isLoginFailed: any;
+    loginFailed: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -38,7 +37,6 @@ export class LoginDetailView implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.isLoginFailed = false;
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
         const username = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;
@@ -50,19 +48,17 @@ export class LoginDetailView implements OnInit {
     }
 
     onSubmit(value: string) {
-        this.submitted = true;
 
         this.formLogin.username = this.loginformGroup.get('username').value;
 
-        let md5 = Md5.init(this.loginformGroup.get('password').value)
-        this.formLogin.password = md5;
-        console.log("MD5(password)=" + md5);
-
-        this.isLoginFailed = false;
-        this.loginService.isUserLogged=true;
+        let md5 = Md5.init(this.loginformGroup.get('password').value);
+        this.formLogin.password = md5.toUpperCase();
+        console.log("MD5(password)=" + this.formLogin.password);
 
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         
+        this.loginService.isUserLogged = true;
+        this.loginFailed = false;
         subscr.subscribe(uvo=> this.next(uvo), e => this.onError(e), () => this.onComplete());  
     }
 
@@ -72,7 +68,8 @@ export class LoginDetailView implements OnInit {
             console.error("Entering Observable<Login>"); // log to console instead
 
             this.loginService.isUserLogged=false;
-  
+            this.loginFailed = true;
+
             // TODO: send the error to remote logging infrastructure
             console.error(error); // log to console instead
       
@@ -87,27 +84,32 @@ export class LoginDetailView implements OnInit {
     next(uvo: Login) {
         console.log("Entering next()"); // log to console instead
         console.log(uvo);
-        
-        this.loginService.setUserLogged(uvo);
+
+        if( uvo != undefined ) {
+            this.loginService.setUserLogged(uvo);
+        } else {
+            this.loginService.isUserLogged = false;
+            this.loginFailed = true;
+        }
     }
 
     onError(e:any) {
         console.error("Entering LoginDetailView.onError()");
         console.error(e);
+        this.loginService.isUserLogged = false;
+        this.loginFailed = true;
     }
 
     onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
-
+        
         if(this.loginService.isUserLogged)  {
-            this.isLoginFailed = false;
             let redirect = '/clients';
             console.log("navigate to=" + redirect);
             this.router.navigate([redirect]);
         } else {
-            this.isLoginFailed = true;
+            this.loginFailed = true;
         }
-        console.log("isLoginFailed=" + this.isLoginFailed);
     }
 
     get diagnostic() { return JSON.stringify(this.loginformGroup.value); }

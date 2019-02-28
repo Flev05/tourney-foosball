@@ -19,6 +19,7 @@
                 <a href="#" [routerLink]="['/login']">Login</a>
             </li>
         </ul>
+        <p *ngIf="loginService.isUserLogged">loginService.userLogged.firstname</p>
     </div>
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">

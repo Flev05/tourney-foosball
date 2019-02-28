@@ -45,7 +45,7 @@ export class UrcListView extends AbstractListView {
             { field: 'firstname',   header: 'Nome' },
             { field: 'lastname',    header: 'Cognome' },
             { field: 'phoneNumber', header: 'Telefono' },
-            { field: 'client',    header: 'Cliente' },
+            { field: 'client',      header: 'Cliente' },
         ];
 
         this.onLoadUrcError = false;
@@ -70,6 +70,7 @@ export class UrcListView extends AbstractListView {
 
             this.rows.push(row);
         }
+        this.urcService.urcList = this.urcList; 
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {

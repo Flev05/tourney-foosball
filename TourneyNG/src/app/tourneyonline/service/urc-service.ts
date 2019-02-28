@@ -18,6 +18,7 @@ export class UrcService {
     selectedUrc : UserRoleClientVO;
 
     newUser : boolean = false;
+    urcList: UserRoleClientVO[];
 
     constructor(private http: HttpClient, private roleService : RoleService) 
     { 
@@ -34,13 +35,12 @@ export class UrcService {
         );
     }
       
-    saveUrc (urc: UserRoleClientVO[], selector: (err: any, caught: Observable<UserRoleClientVO[]> ) => Observable<UserRoleClientVO[]> ): Observable<UserRoleClientVO[]> {
-        let user = urc[0];
-        let userId = user.id;
+    saveUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
+        let userId = urc.id;
         if(userId == null) {
-            return this.createUser(urc, selector);
+            return this.createUrc(urc, selector);
         }
-        return this.updateUser(urc, selector);
+        return this.updateUrc(urc, selector);
     }
 
     /** Log a HeroService message with the MessageService */
@@ -49,25 +49,23 @@ export class UrcService {
     }
 
     /** POST: add a new User to the server */
-    private createUser (urc: UserRoleClientVO[], selector: (err: any, caught: Observable<UserRoleClientVO[]> ) => Observable<UserRoleClientVO[]> ): Observable<UserRoleClientVO[]> {
-        let user = urc[0];
+    private createUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
         let url = userUrl + "/insert";
         console.log(url);
 
-        return this.http.post<UserRoleClientVO[]>(url, user, httpOptions).pipe(
-                tap((urc: UserRoleClientVO[]) => this.log(`added User w/ url=` + url))
+        return this.http.post<UserRoleClientVO>(url, urc, httpOptions).pipe(
+                tap((urc: UserRoleClientVO) => this.log(`added User w/ url=` + url))
             , catchError(selector)
         );
     }
 
     /** PUT: update the User on the server */
-    private updateUser (urc: UserRoleClientVO[], selector: (err: any, caught: Observable<UserRoleClientVO[]> ) => Observable<UserRoleClientVO[]> ): Observable<UserRoleClientVO[]>{
-        let user = urc[0];
+    private updateUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO>{
         const url = userUrl + "/update";
         console.log(url);
         
-        return this.http.put(url, user, httpOptions).pipe(
-            tap(urc => this.log(`updated User id=${user.id}`)),
+        return this.http.put(url, urc, httpOptions).pipe(
+            tap(urc => this.log(`updated User id=` + url)),
             catchError(selector)
         );
     }

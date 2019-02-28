@@ -15,6 +15,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { Md5 } from 'md5-typescript';
 
 @Component({
     templateUrl: './urc-detailview.html' 
@@ -70,23 +71,21 @@ export class UrcDetailView extends AbstractDetailView {
         subscriber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onCompleteLoadClient());
 
         if(this.urcService.newUser) {
+            this.selectedClientRole = [];
             
             let uvo: UserVO = {
                 id: null,
-                firstname: '',
-                lastname: '',
-                password: '',
-                address: '',
-                email: '',
-                phoneNumber: '',
-                description: '',
-                country    : {},
+                firstname   : "",
+                lastname    : "",
+                password    : "",
+                address     : "",
+                email       : "",
+                phoneNumber : "",
+                description : "",
+                country     : {},
             }
-            let cvo = this.clientService.selectedClient;
 
-            let rvo : RoleVO = this.roles[0];
-
-            this.urcService.selectedUrc = {userVo: uvo, roleVo: rvo, clientVo: cvo};
+            this.urcService.selectedUrc = {userVo: uvo, roleVo: null, clientVo: null};
         }
 
         this.selectedUrc = this.urcService.selectedUrc;
@@ -102,7 +101,7 @@ export class UrcDetailView extends AbstractDetailView {
     private onCompleteLoadRoles(): void {
 
         this.roleOptions = [];
-
+        
         for( let rvo of this.roles ) {
             let row = {label: rvo.name, value: rvo.id};
             this.roleOptions.push(row);
@@ -110,15 +109,22 @@ export class UrcDetailView extends AbstractDetailView {
     }
 
     private onCompleteLoadClient(): void {
-
-        this.selectedClientRole = [];
-
         this.clientRoleRows = [];
         let sr: Combobox = {label: "", value: 0};
 
+        this.selectedClientRole = [];
         for( let cvo of this.clients ) {
-            let row = {id: cvo.id, businessName: cvo.businessName, selectedRole: sr};
-            this.clientRoleRows.push(row);
+            let selectedRow = {id: cvo.id, businessName: cvo.businessName, selectedRole: sr};
+
+            if( !this.urcService.newUser ) {
+                let foundUrc = this.urcService.urcList.find( urc => urc.clientVo.id == cvo.id);
+                if( foundUrc != undefined ) {
+                    let cb : Combobox = {label: foundUrc.roleVo.name, value: foundUrc.roleVo.id};
+                    selectedRow = {id: foundUrc.id, businessName: cvo.businessName, selectedRole: cb};
+                    this.selectedClientRole.push(selectedRow);
+                }
+            }
+            this.clientRoleRows.push(selectedRow);
         }
     }
 
@@ -136,6 +142,10 @@ export class UrcDetailView extends AbstractDetailView {
     }
     
     enableSaveButton() : string {
+        if(this.selectedUrc.userVo == undefined ) {
+            return;
+        }
+
         let un = this.selectedUrc.userVo.username;
         let userEnable:   boolean = un.trim() == "";
 
@@ -159,6 +169,10 @@ export class UrcDetailView extends AbstractDetailView {
             }
         }
 
+        let md5 = Md5.init(this.currentPassword)
+        console.log("MD5(password)=" + md5);
+        this.selectedUrc.userVo.password = md5;
+
         let urcList : UserRoleClientVO[] = [];
 
         for( let row of this.selectedClientRole ) {
@@ -176,8 +190,10 @@ export class UrcDetailView extends AbstractDetailView {
             urcList.push(urc);
         }
 
-        const subscriber = this.urcService.saveUrc(urcList, this.saveUserErrorHandler('Create User operation'));
-        subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        for(let urc of urcList) {
+            const subscriber = this.urcService.saveUrc(urc, this.saveUserErrorHandler('Create User operation'));
+            subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        }
     }
     
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

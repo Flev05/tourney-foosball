@@ -3,6 +3,7 @@ import {trigger,state,style,transition,animate} from '@angular/animations';
 import { Router } from '@angular/router';
 import { LoginService } from './service/login-service';
 import { RoleService } from './service/role-service';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-root',

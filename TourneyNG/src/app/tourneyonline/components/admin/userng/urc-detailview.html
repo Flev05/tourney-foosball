@@ -127,7 +127,9 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{userAddress}}
+                {{selectedUser != undefined && selectedUser.country != undefined ? selectedUser.address  + " - " +
+                    selectedUser.country.zipCode + " " + selectedUser.country.city
+                    + " (" + selectedUser.country.provinceCode +")" : ""}}
             </div>
         </div>             
 
@@ -168,7 +170,7 @@
 </p-fieldset>
 
 <p-fieldset legend="Clienti">
-    <p-table [columns]="clientRoleCols" [value]="clientRoleRows" [(selection)]="selectedClientRole">
+    <p-table [columns]="clientRoleCols" [value]="clientRoleRows" [(selection)]="selectedClientRole" dataKey="id">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th style="width: 2.25em">
@@ -181,9 +183,9 @@
         </ng-template>                                     
     
         <ng-template pTemplate="body" let-rowData let-columns="columns">
-            <tr [pSelectableRow]="rowData.clientId">
+            <tr>
                 <td>
-                    <p-tableCheckbox [value]="rowData.clientId"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                 </td>
              
                 <td>

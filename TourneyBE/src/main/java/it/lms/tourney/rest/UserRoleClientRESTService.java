@@ -75,7 +75,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserRoleClientVO> findByUserId(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        logger.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
+        logger.debug(logId() + "GET: UserRoleClientRESTService.findByUserId(" + loggedUserId + ")");
 
         List<UserRoleClient> urcList = new ArrayList<>();
 
@@ -88,6 +88,8 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         List<UserRoleClientVO> userVoList = urcList.stream().map(upo -> converter.convertUrcPoVo(upo))
                 .collect(Collectors.toList());
 
+        logger.debug(logId() + "URC(s): " + userVoList);
+
         return userVoList;
     }
 
@@ -99,11 +101,9 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Path("/insert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(List<UserRoleClientVO> urcVoList) {
+    public Response createUser(UserRoleClientVO urcvo) {
 
         logger.debug(logId() + "POST: createUser()");
-
-        UserRoleClientVO urcvo = urcVoList.get(0);
 
         UserVO uvo = urcvo.getUserVo();
 
@@ -111,10 +111,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         userDao.insert(upo);
 
-        for (UserRoleClientVO urc : urcVoList) {
-
-            createUrc(urc, upo);
-        }
+        createUrc(urcvo, upo);
 
         Response.ResponseBuilder builder = Response.ok();
 
@@ -129,19 +126,16 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(List<UserRoleClientVO> urcVoList) {
+    public Response updateUser(UserRoleClientVO urcvo) {
 
         logger.debug(logId() + "PUT: updateUser()");
 
-        UserVO uvo = deleteOldUrc(urcVoList);
+        UserVO uvo = deleteOldUrc(urcvo);
 
         User upo = converter.convertUserVoPo(uvo);
         userDao.update(upo);
 
-        for (UserRoleClientVO urcvo : urcVoList) {
-
-            createUrc(urcvo, upo);
-        }
+        createUrc(urcvo, upo);
 
         Response.ResponseBuilder builder = Response.ok();
 
@@ -162,9 +156,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         urcDao.save(urc);
     }
 
-    private UserVO deleteOldUrc(List<UserRoleClientVO> urcVoList) {
-
-        UserRoleClientVO urcvo = urcVoList.get(0);
+    private UserVO deleteOldUrc(UserRoleClientVO urcvo) {
 
         UserVO uvo = urcvo.getUserVo();
         List<UserRoleClient> urcList = urcDao.findByUserId(uvo.getId());

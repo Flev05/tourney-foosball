@@ -30,8 +30,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
@@ -140,7 +138,7 @@ public class LoginRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    private UserVO prepareResponse(User u) throws JsonProcessingException {
+    private UserVO prepareResponse(User u) {
 
         UserVO uvo = converter.convertUserPoVo(u);
 

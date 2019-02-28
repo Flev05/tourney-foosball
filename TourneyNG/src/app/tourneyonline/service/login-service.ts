@@ -18,11 +18,11 @@ const logoutUrl = 'api/logon/logout';  // URL to web server api
 export class LoginService {
 
     userLogged   : Login;
-    isUserLogged : boolean = true;
+    isUserLogged : boolean ;
 
     constructor(private http: HttpClient, private roleService : RoleService) { 
         console.log("Constructor of LoginService");
-        this.isUserLogged=undefined;
+        this.isUserLogged = false;
     }
 
     isDeveloper(): boolean {

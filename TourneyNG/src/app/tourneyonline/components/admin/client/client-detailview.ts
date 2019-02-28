@@ -65,13 +65,11 @@ export class ClientDetailView extends AbstractDetailView {
             };
         } else {
             this.selectedClient = this.clientService.selectedClient;
-            if( this.selectedClient != undefined ) {
-                if( this.selectedClient.country != undefined ) {
-                    this.clientAddress = this.selectedClient.address  + " " +
-                    this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
-                        + " (" + this.selectedClient.country.provinceCode +")";
-                }
-            }
+            
+            this.clientAddress = this.selectedClient != undefined && this.selectedClient.country != undefined ?
+                this.selectedClient.address  + " - " +
+                this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
+                + " (" + this.selectedClient.country.provinceCode +")" : "";
         }
         this.userEnabled = true;
     }

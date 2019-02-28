@@ -19,8 +19,10 @@ import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
+import it.lms.tourney.po.User_;
 
 @Stateless
 public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
@@ -138,7 +140,9 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
         Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Predicate p = getCb().equal(root.get(UserRoleClient_.id), userId);
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+
+        Predicate p = getCb().equal(urcUserJoin.get(User_.id), userId);
 
         cq = cq.select(root);
         cq = cq.where(p);

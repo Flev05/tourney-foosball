@@ -55,9 +55,11 @@ export class LoginService {
   
     /** PUT: send the request logout to the server */
     sendLogout (): Observable<Login> {
-        const url = logoutUrl;
+        const url = logoutUrl + "/" + this.userLogged.id;
 
-        return this.http.put(url, this.userLogged, httpOptions).pipe(
+        console.log("Entering sendLogout(" + url + ")"); 
+
+        return this.http.put(url, httpOptions).pipe(
             tap(_ => this.log(`sendLogout url=${url} successful`) ),
             catchError(this.handleLogoutError<Login>('sendLogout'))
         );

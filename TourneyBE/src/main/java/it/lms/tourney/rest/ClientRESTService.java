@@ -175,9 +175,6 @@ public class ClientRESTService extends AbstractRESTService {
 
         Client cpo = prepareClientPo(cvo);
 
-        // User user = prepareUserPo(cvo);
-        // userDao.update(user);
-
         clientDao.update(cpo);
 
         Response.ResponseBuilder builder = Response.ok().entity(cvo);

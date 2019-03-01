@@ -26,6 +26,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -63,6 +64,26 @@ public class LoginRESTService extends AbstractRESTService {
     public LoginRESTService() {
 
         super();
+    }
+
+    /**
+     * Called to perform the system logout
+     */
+    @PUT
+    @Path("/logout/{loggedUserId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response doLogout(@PathParam("loggedUserId") Integer loggedUserId) {
+
+        logger.debug(logId() + "PUT: doLogout(" + loggedUserId + ")");
+
+        try {
+            super.invalidateSession();
+        } catch (Exception e) {
+            logger.error(logId() + "Ignore logout Exception:" + e);
+        }
+
+        Response.ResponseBuilder builder = Response.ok();
+        return builder.build();
     }
 
     /**
@@ -141,7 +162,6 @@ public class LoginRESTService extends AbstractRESTService {
     private UserVO prepareResponse(User u) {
 
         UserVO uvo = converter.convertUserPoVo(u);
-
         for (UserRoleClient urc : u.getUrcSet()) {
 
             Role r = urc.getRole();
@@ -153,25 +173,5 @@ public class LoginRESTService extends AbstractRESTService {
         logger.debug(logId() + uvo);
 
         return uvo;
-    }
-
-    /**
-     * Called to perform the system logout
-     */
-    @PUT
-    @Path("/logout")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response doLogout(Login login) {
-
-        // Create an "ok" response
-        Response.ResponseBuilder builder = Response.ok();
-        try {
-            super.invalidateSession();
-        } catch (Exception e) {
-            logger.error(logId() + "Ignore logout Exception:" + e);
-        }
-
-        return builder.build();
     }
 }

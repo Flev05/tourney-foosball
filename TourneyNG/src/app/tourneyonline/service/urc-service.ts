@@ -36,7 +36,7 @@ export class UrcService {
     }
       
     saveUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
-        let userId = urc.id;
+        let userId = urc.userVo.id;
         if(userId == null) {
             return this.createUrc(urc, selector);
         }

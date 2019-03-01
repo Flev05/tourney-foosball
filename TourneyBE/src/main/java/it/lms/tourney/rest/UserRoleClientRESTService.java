@@ -18,7 +18,9 @@
 package it.lms.tourney.rest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
@@ -80,7 +82,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         List<UserRoleClient> urcList = new ArrayList<>();
 
         if (userDao.isDeveloperUser(loggedUserId)) {
-            urcList = urcDao.findAllUrc();
+            urcList = urcDao.findAllUrcNotDev();
         } else {
             urcList = urcDao.findUrcByUser(loggedUserId);
         }
@@ -106,6 +108,19 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createUser()");
 
         UserVO uvo = urcvo.getUserVo();
+        String username = uvo.getUsername();
+        logger.debug(logId() + "POST: createUser(" + username + ")");
+
+        User user = userDao.findUserBy(username);
+        if (user != null) {
+            Map<String, String> responseObj = new HashMap<String, String>();
+
+            responseObj.put("errorCode", "UserAlreadyExists");
+            responseObj.put("message", "User " + uvo.getUsername() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
 
         User upo = converter.convertUserVoPo(uvo);
 

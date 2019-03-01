@@ -43,7 +43,7 @@ export class LoginDetailView implements OnInit {
 
         this.loginformGroup = this.fb.group({
             'username': new FormControl(username, Validators.required),
-            'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
+            'password': new FormControl("", Validators.required),
         });
     }
 

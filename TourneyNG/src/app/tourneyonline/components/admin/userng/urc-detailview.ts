@@ -34,7 +34,7 @@ export class UrcDetailView extends AbstractDetailView {
     roleOptions: Combobox[];
 
     clientRoleRows :     {id: number, businessName: string, selectedRole: Combobox}[];
-    selectedClientRole : {id: number, businessName: string, selectedRole: Combobox}[];
+    selectedClientRoleRows : {id: number, businessName: string, selectedRole: Combobox}[];
 
     roles : RoleVO[];
     
@@ -63,6 +63,7 @@ export class UrcDetailView extends AbstractDetailView {
     }
 
     ngOnInit() {
+        super.ngOnInit();
 
         let loggedUserId = this.logginService.userLogged.id;
         this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.roles = rs, e => this.onError(e), () => this.onCompleteLoadRoles());
@@ -71,10 +72,11 @@ export class UrcDetailView extends AbstractDetailView {
         subscriber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onCompleteLoadClient());
 
         if(this.urcService.newUser) {
-            this.selectedClientRole = [];
+            this.selectedClientRoleRows = [];
             
             let uvo: UserVO = {
                 id: null,
+                username    : "",
                 firstname   : "",
                 lastname    : "",
                 password    : "",
@@ -82,7 +84,13 @@ export class UrcDetailView extends AbstractDetailView {
                 email       : "",
                 phoneNumber : "",
                 description : "",
-                country     : {},
+                country     : {
+                    city: "",
+                    cityCode:"",
+                    provinceCode:"",
+                    zipCode:"",
+                    countryCode:""
+                },
             }
 
             this.urcService.selectedUrc = {userVo: uvo, roleVo: null, clientVo: null};
@@ -112,7 +120,7 @@ export class UrcDetailView extends AbstractDetailView {
         this.clientRoleRows = [];
         let sr: Combobox = {label: "", value: 0};
 
-        this.selectedClientRole = [];
+        this.selectedClientRoleRows = [];
         for( let cvo of this.clients ) {
             let selectedRow = {id: cvo.id, businessName: cvo.businessName, selectedRole: sr};
 
@@ -121,7 +129,7 @@ export class UrcDetailView extends AbstractDetailView {
                 if( foundUrc != undefined ) {
                     let cb : Combobox = {label: foundUrc.roleVo.name, value: foundUrc.roleVo.id};
                     selectedRow = {id: foundUrc.id, businessName: cvo.businessName, selectedRole: cb};
-                    this.selectedClientRole.push(selectedRow);
+                    this.selectedClientRoleRows.push(selectedRow);
                 }
             }
             this.clientRoleRows.push(selectedRow);
@@ -157,6 +165,8 @@ export class UrcDetailView extends AbstractDetailView {
         let uad = this.selectedUrc.userVo.address;
         userEnable = userEnable || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
 
+        userEnable = userEnable && this.selectedClientRoleRows.length > 0;
+
         return userEnable ? "disabled" : "";
     }
 
@@ -175,13 +185,13 @@ export class UrcDetailView extends AbstractDetailView {
 
         let urcList : UserRoleClientVO[] = [];
 
-        for( let row of this.selectedClientRole ) {
+        for( let row of this.selectedClientRoleRows ) {
 
             let cvo = this.clients.find( c => c.businessName == row.businessName );
             let rvo = this.roles.find( r => r.id == row.selectedRole.value);
 
             let urc : UserRoleClientVO = {
-                id        : row.id,
+                id        : null,
                 userVo    : this.selectedUrc.userVo,
                 roleVo    : rvo,
                 clientVo  : cvo
@@ -191,6 +201,7 @@ export class UrcDetailView extends AbstractDetailView {
         }
 
         for(let urc of urcList) {
+            this.onSaveUserError = false;
             const subscriber = this.urcService.saveUrc(urc, this.saveUserErrorHandler('Create User operation'));
             subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         }

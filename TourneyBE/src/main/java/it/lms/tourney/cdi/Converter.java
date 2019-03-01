@@ -90,6 +90,7 @@ public class Converter extends AbstractLogger {
         uvo.setPassword(u.getPassword());
         uvo.setPhoneNumber(u.getPhoneNumber());
         uvo.setUsername(u.getUsername());
+        uvo.setDescription(u.getDescription());
 
         List<Role> roleList = roleDao.findRoleByUser(u);
 
@@ -113,11 +114,13 @@ public class Converter extends AbstractLogger {
         upo.setLastname(uvo.getLastname());
         upo.setFirstname(uvo.getFirstname());
         upo.setPhoneNumber(uvo.getPhoneNumber());
-        upo.setPassword(uvo.getPassword());
+        upo.setDescription(upo.getDescription());
+
+        String password = uvo.getPassword() != null ? uvo.getPassword().trim().toUpperCase() : "";
+        upo.setPassword(password);
 
         upo.setUsername(uvo.getUsername());
 
         return upo;
     }
-
 }

@@ -19,12 +19,15 @@
                 <a href="#" [routerLink]="['/login']">Login</a>
             </li>
         </ul>
-        <p *ngIf="loginService.isUserLogged">loginService.userLogged.firstname</p>
     </div>
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
+        
+        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.firstname}} {{loginService.userLogged.lastname}}</p>
+        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}}</p>
+
         <div class="layout-menu">
-            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
+           <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
                     (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
                 <img src="assets/showcase/images/icons/menu-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/menu.svg" class="layout-menu-icon-inactive"/>
@@ -41,7 +44,7 @@
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
-                <span>Admin</span>
+                <span>Utenti/Clienti</span>
             </a>
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
                 <a *ngIf="loginService.isDeveloper()" [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>

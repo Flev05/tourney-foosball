@@ -100,7 +100,7 @@
                 Password*:
             </div>
             <div class="ui-grid-col-6">
-                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+                <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria"/>
             </div>
         </div>
 
@@ -109,7 +109,7 @@
                 Ripetere Password*:
             </div>
             <div class="ui-grid-col-6">
-                <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
+                <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria"/>
             </div>
         </div>
 
@@ -166,11 +166,21 @@
                 <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
             </div>
         </div>   
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Descrizione:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.description"/>
+            </div>
+        </div>   
+    
     </div>         
 </p-fieldset>
 
 <p-fieldset legend="Clienti">
-    <p-table [columns]="clientRoleCols" [value]="clientRoleRows" [(selection)]="selectedClientRole" dataKey="id">
+    <p-table [columns]="clientRoleCols" [value]="clientRoleRows" [(selection)]="selectedClientRoleRows" dataKey="id">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th style="width: 2.25em">
@@ -196,7 +206,8 @@
                     <p-dropdown [options]="roleOptions" 
                         [(ngModel)]="rowData.selectedRole" 
                         optionLabel="label"
-                        placeholder="Ruolo">
+                        placeholder="Ruolo"
+                        [autoWidth]="false">
                     </p-dropdown>
                 </td>            
             </tr>

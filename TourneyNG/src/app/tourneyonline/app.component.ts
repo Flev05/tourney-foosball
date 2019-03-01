@@ -3,7 +3,6 @@ import {trigger,state,style,transition,animate} from '@angular/animations';
 import { Router } from '@angular/router';
 import { LoginService } from './service/login-service';
 import { RoleService } from './service/role-service';
-import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -71,13 +70,11 @@ export class AppComponent implements OnInit{
 
     logout(event) {
         this.menuActive = false;
-
-        this.loginService.isUserLogged=false;
-
         this.loginService.sendLogout().subscribe(() => this.goHome());  
     }
 
     goHome(): void {
+        this.loginService.isUserLogged=false;
         let redirect = '/login';
         this.router.navigate([redirect]);
     }

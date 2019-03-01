@@ -63,6 +63,33 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         return resultList;
     }
 
+    public List<UserRoleClient> findAllUrcNotDev() {
+
+        logger.debug(logId() + "Entering findAllUrcNotDev()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
+
+        Predicate p = urcRoleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name());
+
+        Predicate q = cb.not(p);
+
+        cq = cq.select(root);
+        cq = cq.where(q);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
     /**
      * First of all finds:
      * 

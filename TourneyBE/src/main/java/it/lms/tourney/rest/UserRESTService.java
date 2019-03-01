@@ -18,6 +18,7 @@
 package it.lms.tourney.rest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -111,14 +111,11 @@ public class UserRESTService extends AbstractRESTService {
     @GET
     @Path("/find/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User lookupUserById(@PathParam("id") Integer id) {
+    public User findUserById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: lookupUserById(" + id + ")");
+        logger.debug(logId() + "GET: findUserById(" + id + ")");
 
         User user = userDao.getUserById(id);
-        if (user == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
         return user;
     }
 
@@ -132,7 +129,19 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(UserVO uvo) {
 
-        logger.debug(logId() + "POST: createUser()");
+        String username = uvo.getUsername();
+        logger.debug(logId() + "POST: createUser(" + username + ")");
+
+        User user = userDao.findUserBy(username);
+        if (user != null) {
+            Map<String, String> responseObj = new HashMap<String, String>();
+
+            responseObj.put("errorCode", "UserAlreadyExists");
+            responseObj.put("message", "User " + uvo.getUsername() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
 
         User upo = converter.convertUserVoPo(uvo);
 

@@ -82,7 +82,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         List<UserRoleClient> urcList = new ArrayList<>();
 
         if (userDao.isDeveloperUser(loggedUserId)) {
-            urcList = urcDao.findAllUrcNotDev();
+            urcList = urcDao.findAllUrc();
         } else {
             urcList = urcDao.findUrcByUser(loggedUserId);
         }

@@ -57,6 +57,9 @@ public class ClientRESTService extends AbstractRESTService {
     @Inject
     private UserDao   userDao;
 
+    // @Inject
+    // private UserRoleClientDao urcDao;
+
     @Inject
     private Converter converter;
 
@@ -70,6 +73,10 @@ public class ClientRESTService extends AbstractRESTService {
         List<ClientVO> clientVoList = new ArrayList<>();
 
         if (userDao.isDeveloperUser(userId)) {
+
+            // List<UserRoleClient> urcList = urcDao.findAllUrcNotDev();
+            // List<Client> clientList = urcList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
+
             List<Client> clientList = clientDao.findAllClients();
             for (Client cpo : clientList) {
                 clientVoList.add(converter.convertClientPoVo(cpo));
@@ -77,7 +84,6 @@ public class ClientRESTService extends AbstractRESTService {
         }
 
         if (userDao.isOwnerUser(userId)) {
-
             List<Client> urcList = clientDao.findOwnerClients(userId);
             clientVoList.addAll(prepareClientVoList(urcList));
         }

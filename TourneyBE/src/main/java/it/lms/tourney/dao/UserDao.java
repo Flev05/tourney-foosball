@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -226,14 +227,16 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug(logId() + "Entering findUserBy(" + username + "," + md5Password + ")");
 
-        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
 
-        Predicate p = getCb().equal(root.get(User_.username), username);
-        Predicate q = getCb().equal(root.get(User_.password), md5Password);
-        Predicate pAndQ = getCb().and(p, q);
-        cq.select(root).where(pAndQ);
+        Predicate p = cb.equal(root.get(User_.username), username);
+        Predicate q = cb.equal(root.get(User_.password), md5Password);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
 
         TypedQuery<User> nq = getEm().createQuery(cq);
 

@@ -48,6 +48,7 @@ export class UrcDetailView extends AbstractDetailView {
     currentPassword: string;
     retypedPassword: string;
     isRetypePasswordFailed: boolean;
+    defaultRole: { label: string; value: number; };
 
     constructor(
         private logginService: LoginService,
@@ -110,22 +111,27 @@ export class UrcDetailView extends AbstractDetailView {
 
         this.roleOptions = [];
         
+        this.defaultRole = {label: "OWNER", value: 0};
+
         for( let rvo of this.roles ) {
             let row = {label: rvo.name, value: rvo.id};
             this.roleOptions.push(row);
+
+            if(rvo.name == 'OWNER') {
+                this.defaultRole = {label: rvo.name, value: rvo.id};
+            }
         }
     }
 
     private onCompleteLoadClient(): void {
         this.clientRoleRows = [];
-        let sr: Combobox = {label: "", value: 0};
 
         this.selectedClientRoleRows = [];
         for( let cvo of this.clients ) {
-            let selectedRow = {id: cvo.id, businessName: cvo.businessName, selectedRole: sr};
+            let selectedRow = {id: cvo.id, businessName: cvo.businessName, selectedRole: this.defaultRole};
 
             if( !this.urcService.newUser ) {
-                let foundUrc = this.urcService.urcList.find( urc => urc.clientVo.id == cvo.id);
+                let foundUrc = this.urcService.urcList.find( urc => urc.clientVo.id == cvo.id && urc.userVo.id == this.selectedUser.id);
                 if( foundUrc != undefined ) {
                     let cb : Combobox = {label: foundUrc.roleVo.name, value: foundUrc.roleVo.id};
                     selectedRow = {id: foundUrc.id, businessName: cvo.businessName, selectedRole: cb};
@@ -165,7 +171,7 @@ export class UrcDetailView extends AbstractDetailView {
         let uad = this.selectedUrc.userVo.address;
         userEnable = userEnable || fn.trim() == "" || ln.trim() == "" || upn.trim() == "" || uem.trim() == "" || uad.trim() == "";
 
-        userEnable = userEnable && this.selectedClientRoleRows.length > 0;
+        userEnable = userEnable || this.selectedClientRoleRows.length == 0;
 
         return userEnable ? "disabled" : "";
     }
@@ -177,11 +183,12 @@ export class UrcDetailView extends AbstractDetailView {
                 this.isRetypePasswordFailed = true;
                 return;
             }
+            let md5 = Md5.init(this.currentPassword)
+            console.log("MD5(password)=" + md5);
+            this.selectedUrc.userVo.password = md5;
         }
 
-        let md5 = Md5.init(this.currentPassword)
-        console.log("MD5(password)=" + md5);
-        this.selectedUrc.userVo.password = md5;
+        console.log("MD5(password)=" + this.selectedUrc.userVo.password);
 
         let urcList : UserRoleClientVO[] = [];
 

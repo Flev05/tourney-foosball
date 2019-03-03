@@ -12,6 +12,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractListView } from '../../common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { LevelService } from '../../admin/eliminatory/level-service';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 const REDIRECT_TOURNEY_LV   = 'showtourney/';
 const REDIRECT_ROUND_DV     = 'result/lv/round';
@@ -36,6 +37,7 @@ export class TabResultListView extends AbstractListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe,
@@ -171,7 +173,7 @@ export class TabResultListView extends AbstractListView {
 
         this.tourneyService.selectedRound = this.selectedRound;
 
-        this.tourneyService.selectedMeetingDb = {id: null
+        this.meetingService.selectedMeetingDb = {id: null
             , tourneyId: this.selectedTourney.id
             , roundId: this.selectedRound.id
             , playoffId: null
@@ -182,7 +184,7 @@ export class TabResultListView extends AbstractListView {
 
     onPlayoffRowSelect(event) {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-        this.tourneyService.selectedMeetingDb = {
+        this.meetingService.selectedMeetingDb = {
               id: null
             , tourneyId: this.selectedTourney.id
             , roundId: null

@@ -42,8 +42,8 @@ export class MeetingDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedMeetingDb  = this.tourneyService.selectedMeetingDb;   
-        this.selectedMeeting  = this.tourneyService.selectedMeeting;   
+        this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
+        this.selectedMeeting  = this.meetingService.selectedMeeting;   
 
         this.alreadyPassed = false;
 

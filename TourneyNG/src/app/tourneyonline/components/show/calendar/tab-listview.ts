@@ -7,6 +7,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './tab-listview.html'
@@ -18,11 +19,12 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(CalendarTabListView.tabDvRedirect, tourneyService, router, location, dfp);
+        super(CalendarTabListView.tabDvRedirect, tourneyService, meetingService, router, location, dfp);
         console.log("Entering CalendarTabListView.constructor()");
     }
 

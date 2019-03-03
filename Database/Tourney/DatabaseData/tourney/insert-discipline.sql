@@ -3,8 +3,6 @@
 
 DELETE FROM discipline;
 
-SELECT pg_catalog.setval('tbl_discipline_id_seq', 1, false);
-
 insert into discipline values (DEFAULT,'Calcio Balilla','Calcio balilla');
 insert into discipline values (DEFAULT,'Calcio','Calcio a 11');
 insert into discipline values (DEFAULT,'Basket','Palla a canestro');

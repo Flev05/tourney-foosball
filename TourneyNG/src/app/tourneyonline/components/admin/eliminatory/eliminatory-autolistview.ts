@@ -6,6 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './eliminatory-autolistview.html'
@@ -18,11 +19,12 @@ export class EliminatoryAutoListView extends AbstractEliminatoryListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryAutoListView.autoRedirect, tourneyService, router, location, dfp);
+        super(EliminatoryAutoListView.autoRedirect, tourneyService, meetingService, router, location, dfp);
     }
  
     ngOnInit() {

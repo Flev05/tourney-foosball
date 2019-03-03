@@ -10,7 +10,6 @@ import { Meeting } from '../domain/meeting';
 import { LoginService } from './login-service';
 import { Router } from '@angular/router';
 import { MeetingDb } from '../domain/meeting-db';
-import { environment } from 'environments/environment';
 import { TourneyService } from './tourney-service';
 
 const httpOptions = {
@@ -18,7 +17,9 @@ const httpOptions = {
 };
  
 const meetingUrl = 'api/meetings';  
-const loadMeetingUrl = meetingUrl + '/load';  
+const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';  
+const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
+const loadMeetingByEliminatoryIdUrl    = meetingUrl + '/loadByEliminatoryId';  
 const insertMeetingUrl = meetingUrl + '/insert';
 const updateMeetingUrl = meetingUrl + '/update';
 const deleteMeetingUrl = meetingUrl + '/delete';
@@ -34,12 +35,7 @@ export class MeetingService {
     meetings: Meeting[];
     mdbs: Meeting[];
 
-    constructor(private http: HttpClient
-        , protected router: Router
-        , private loginService: LoginService
-        , private tourneyService: TourneyService
-        ) 
-    { 
+    constructor(private http: HttpClient, protected router: Router) { 
         console.log("Constructor of TourneyService");
     }
 
@@ -48,13 +44,10 @@ export class MeetingService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadRoundMeeting(tourneyId: number, roundId: number) :  Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId;
-        let url = loadMeetingUrl + queryString;
-        
-        if(this.loginService.isUserLogged) {
-            url = loadMeetingUrl + queryString;
-        }
-        
+        let url = loadMeetingByRoundIdUrl + "/" + tourneyId + "/" + roundId;
+
+        console.log("Url=" + url);
+
         const obs :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
@@ -68,13 +61,12 @@ export class MeetingService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadPlayoffMeeting(tourneyId: number, playoffId: number) : Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "playoffId=" + playoffId;
-        let url = loadMeetingUrl + queryString;
+        const queryString = "?" + "playoffId=" + playoffId;
 
-        if(this.loginService.isUserLogged) {
-            url = loadMeetingUrl + queryString;
-        }
-        
+        let url = loadMeetingByPlayoffIdUrl + "/" + tourneyId + "/" + playoffId;
+
+        console.log("Url=" + url);
+
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadPlayoffMeetingDb url=' + url))
@@ -88,13 +80,10 @@ export class MeetingService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadEliminatoryMeeting(tourneyId: number, eliminatoryId: number) : Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "eliminatoryId=" + eliminatoryId;
-        let url = loadMeetingUrl + queryString;
-
-        if(this.loginService.isUserLogged) {
-            url = loadMeetingUrl + queryString;
-        }
+        let url = loadMeetingByEliminatoryIdUrl + "/" + tourneyId + "/" + eliminatoryId;
         
+        console.log("Url=" + url);
+
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
@@ -105,9 +94,9 @@ export class MeetingService {
 
     saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
         if(m.id == null) {
-            if(environment.inMemoryDataService) {
-                m.id = this.tourneyService.getSequenceNumber();
-            }
+            // if(environment.inMemoryDataService) {
+            //     m.id = this.tourneyService.getSequenceNumber();
+            // }
 
             this.addMeetingDb(m, tourneyId, roundId, null, null)
         } else {
@@ -117,9 +106,9 @@ export class MeetingService {
 
     savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
         if(m.id == null) {
-            if(environment.inMemoryDataService) {
-                m.id = this.tourneyService.getSequenceNumber();
-            }
+            // if(environment.inMemoryDataService) {
+            //     m.id = this.tourneyService.getSequenceNumber();
+            // }
             this.addMeetingDb(m, tourneyId, null, playoffId, null)
         } else {
             this.updateMeetingDb(m, tourneyId, null, playoffId, null)
@@ -128,9 +117,9 @@ export class MeetingService {
 
     saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
         if(m.id == null) {
-            if(environment.inMemoryDataService) {
-                m.id = this.tourneyService.getSequenceNumber();
-            }
+            // if(environment.inMemoryDataService) {
+            //     m.id = this.tourneyService.getSequenceNumber();
+            // }
             this.addMeetingDb(m, tourneyId, null, null, eliminatoryId)
         } else {
             this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId)
@@ -189,7 +178,7 @@ export class MeetingService {
     /** PUT: update the MeetingDb on the db server */
     updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
         const id =  mdb.id;
-        let url = updateMeetingUrl + "/" + id;
+        let url = updateMeetingUrl;
 
         return this.http.put(url, mdb, httpOptions).pipe(
             tap(_ => this.log('updated MeetingDb url=' + url)),

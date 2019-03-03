@@ -13,17 +13,19 @@ import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-l
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { EliminatoryAutoListView } from './eliminatory-autolistview';
 import { EliminatoryManualListView } from './eliminatory-manuallistview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryAutoListView.autoRedirectLV, tourneyService, router, location, dfp);
+        super(EliminatoryAutoListView.autoRedirectLV, tourneyService, meetingService, router, location, dfp);
     }
 
     ngOnInit() {
@@ -213,13 +215,13 @@ export class LevelService extends AbstractEliminatoryListView {
             let m = e.round.onewayMeetings[0];
             m.team1 = t1;
             m.team2 = t2;
-            this.tourneyService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+            this.meetingService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
             
             m = e.round.onewayMeetings[1];
             m.team1 = t2;
             m.team2 = t1;
             
-            this.tourneyService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+            this.meetingService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
         }
     } 
 
@@ -404,8 +406,8 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         };
 
-        this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
-        this.tourneyService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
+        this.meetingService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
+        this.meetingService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
 
         return e;
     }
@@ -461,7 +463,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
 
-        this.tourneyService.selectedMeetingDb = {id: null
+        this.meetingService.selectedMeetingDb = {id: null
             , tourneyId: this.selectedTourney.id
             , roundId: null
             , playoffId: null

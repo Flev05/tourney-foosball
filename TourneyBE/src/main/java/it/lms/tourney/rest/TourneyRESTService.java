@@ -43,9 +43,9 @@ public class TourneyRESTService extends AbstractRESTService {
     @GET
     @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<TourneyVO> findByUserId(@PathParam("clientId") Integer clientId) {
+    public List<TourneyVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: findByClientId()");
+        logger.debug(logId() + "GET: loadByClientId()");
 
         List<Tourney> tourneyList = tourneyDao.findTourneysByClientId(clientId);
 

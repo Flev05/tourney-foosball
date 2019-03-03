@@ -277,7 +277,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             , this.selectedTourney.id
             , this.selectedMeetingRow.eliminatoryId
         );
-        this.tourneyService.selectedMeetingDb = mdb;
+        this.meetingService.selectedMeetingDb = mdb;
 
         for(let level=0; level<this.eliminatories.length; level++) {
             let e = this.eliminatories[level];

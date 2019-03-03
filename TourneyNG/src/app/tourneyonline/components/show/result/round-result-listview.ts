@@ -242,7 +242,7 @@ export class RoundResultListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.tourneyService.selectedMeeting = this.selectedRow;
+        this.meetingService.selectedMeeting = this.selectedRow;
 
         this.gotoDetailView();
     }

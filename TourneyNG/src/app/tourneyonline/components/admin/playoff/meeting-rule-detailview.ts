@@ -9,6 +9,7 @@ import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './meeting-rule-detailview.html',
@@ -29,6 +30,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected countryService: CountryService
     ) { 
         super(tourneyService, location, countryService);
@@ -40,7 +42,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        this.selectedMeeting = this.tourneyService.selectedMeeting;
+        this.selectedMeeting = this.meetingService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
 
@@ -61,7 +63,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         this.selectedMeeting.datetime = new Date(dt);
 
         if( this.selectedTourney.isOnewayRound != "true" ) {
-            let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.tourneyService.selectedMeeting);
+            let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.meetingService.selectedMeeting);
             if( index > -1 ) {
                 let rtDateTime = this.selectedPlayoff.round.onewayMeetings[index].datetime;
                 if(rtDateTime < this.selectedMeeting.datetime) {

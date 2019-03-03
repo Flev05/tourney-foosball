@@ -8,6 +8,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './meeting-detailview.html',
@@ -27,6 +28,7 @@ export class MeetingDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected countryService: CountryService
     ) { 
         super(tourneyService, location, countryService);
@@ -38,7 +40,7 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-        this.selectedMeeting = this.tourneyService.selectedMeeting;
+        this.selectedMeeting = this.meetingService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
         

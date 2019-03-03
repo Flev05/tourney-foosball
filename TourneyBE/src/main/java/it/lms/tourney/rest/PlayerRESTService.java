@@ -43,9 +43,9 @@ public class PlayerRESTService extends AbstractRESTService {
     @GET
     @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<PlayerVO> findByClientId(@PathParam("clientId") Integer clientId) {
+    public List<PlayerVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: findByClientId()");
+        logger.debug(logId() + "GET: loadByClientId()");
 
         List<Player> playerList = playerDao.findPlayersByClientId(clientId);
 

@@ -21,7 +21,6 @@ import { TourneyDb } from '../domain/tourney.db';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
-import { MeetingDb } from '../domain/meeting-db';
 import { environment } from 'environments/environment';
 import { Classification } from '../domain/classification';
 import { MeetingStatus } from '../domain/enumerations';
@@ -55,9 +54,6 @@ export class TourneyService {
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
 
-    selectedMeetingDb: MeetingDb;
-    selectedMeeting: Meeting;
-
     selectedTeams:  Team[];
 
     newTourney : boolean = false;
@@ -72,8 +68,6 @@ export class TourneyService {
     playoffsConfig: boolean;
 
     originalTeams: Team[];
-    meetings: Meeting[];
-    mdbs: Meeting[];
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
     newRule: boolean;
@@ -327,20 +321,6 @@ export class TourneyService {
             tap(_ => this.log('updated TourneyDb url=' + url)),
             catchError(this.handleError<TourneyDb>('updateTourneyDb'))
         );
-    }
- 
-    private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
-
-        let mdb: MeetingDb = {
-              id: m.id
-            , tourneyId: tourneyId
-            , roundId: roundId
-            , playoffId: playoffId
-            , eliminatoryId: eliminatoryId
-            , json: JSON.stringify(m)
-        }
-
-        return mdb;
     }
  
     doRoundDelete(round: Round): void {

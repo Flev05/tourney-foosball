@@ -58,7 +58,7 @@ export class ClientService {
     }
 
     loadAllClients (userId: number, selector: (err: any, caught: Observable<ClientVO[]> ) => Observable<ClientVO[]>): Observable<ClientVO[]> {
-        const url = loadClientByUserIDUrl + userId;
+        const url = loadClientByUserIDUrl +  "/" + userId;
         console.log(url);
  
         return this.http.get<ClientVO[]>(url).pipe(

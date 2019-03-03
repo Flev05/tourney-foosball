@@ -135,8 +135,7 @@ public class Converter extends AbstractLogger {
 
         TourneyVO tvo = new TourneyVO();
 
-        ClientVO cvo = convertClientPoVo(tpo.getClient());
-        tvo.setClientVO(cvo);
+        tvo.setClientId(tpo.getClient().getId());
         tvo.setId(tpo.getId());
         tvo.setJson(tpo.getJson());
         tvo.setTourneyName(tpo.getTourneyName());
@@ -148,10 +147,10 @@ public class Converter extends AbstractLogger {
 
         Tourney tpo = new Tourney();
 
-        Client cpo = clientDao.findById(tvo.getClientVO().getId());
+        Client cpo = clientDao.findById(tvo.getClientId());
+        tpo.setClient(cpo);
 
         tpo.setTourneyName(tvo.getTourneyName());
-        tpo.setClient(cpo);
         tpo.setId(tpo.getId());
         tpo.setJson(tpo.getJson());
 

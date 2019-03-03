@@ -739,7 +739,7 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        if( this.tourneyService.containsPhase(PhaseType.P) ) {
+        if( this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound) {
             for(let p of this.selectedTourney.playoffs) {
                 for(let m of p.round.onewayMeetings) {
                     this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
@@ -750,10 +750,13 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        if( this.tourneyService.containsPhase(PhaseType.E) ) {
+        if( this.tourneyService.containsPhase(PhaseType.E) && !this.incompleteEliminatoryConfiguration ) {
             for(let el of this.selectedTourney.eliminatoryLevels) {
                 for(let e of el.eliminatories) {
                     for(let m of e.round.onewayMeetings) {
+                        this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                    }
+                    for(let m of e.round.roundtripMeetings) {
                         this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
                     }
                 }

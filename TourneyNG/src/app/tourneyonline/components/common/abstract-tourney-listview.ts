@@ -43,12 +43,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             { field: 'datetime',    header: 'Data' }
         ];
 
-        this.loadTourney();
-    }
-
-    protected loadTourney() {
-        console.log("Entering AbstractTourneyListView.loadTourney()");
         this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onComplete());
+
+        this.playerService.loadAllPlayers().subscribe(p => this.playerService.playerPool = p);
+
+        this.teamService.loadAllTeams().subscribe(t => this.teamService.teamPool = t);
     }
 
     onError(e: any): any {
@@ -66,8 +65,10 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         }
 
         this.tourneys = this.filter(this.tourneys);
-        this.selectedTourney = this.tourneys[0];
-        this.selectedTourney.meetingsForDelete = [];
+        if( this.tourneys.length > 0 ) {
+            this.selectedTourney = this.tourneys[0];
+            this.selectedTourney.meetingsForDelete = [];
+        }
 
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {
@@ -75,14 +76,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             let dt = this.dateFormatPipe.transform(t.datetime);
             this.rows.push({t:t, tourneyName: t.tourneyName, datetime: dt});
         }
-        this.playerService.loadAllPlayers().subscribe(p => this.playerService.playerPool = p, e => this.onError(e));
 
-        this.teamService.loadAllTeams().subscribe(t => this.teamService.teamPool = t, e => this.onError(e));
-
-        if( this.tourneys.length == 0 ) {
-            this.router.navigate([homePage]);
-            return;
-        }
+        // if( this.tourneys.length == 0 ) {
+        //     this.router.navigate([homePage]);
+        //     return;
+        // }
     }
 
     protected abstract filter(tourneys: Tourney[]): Tourney[];

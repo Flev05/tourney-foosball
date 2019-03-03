@@ -23,7 +23,7 @@ import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { Classification } from '../domain/classification';
-import { MeetingStatus } from '../domain/enumerations';
+import { MeetingStatus, TourneyType } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
 
 const httpOptions = {
@@ -284,7 +284,9 @@ export class TourneyService {
     /** POST: add a new tourney to the server */
     private addTourney (tourney: Tourney): Observable<Tourney> {
         let json: string = JSON.stringify(tourney);
-        let tourneyDb: TourneyDb = {id: tourney.id, json: json};
+
+        let clientId = this.clientService.selectedClient.id;
+        let tourneyDb: TourneyDb = {id: null, clientId: clientId, tourneyName: tourney.tourneyName, json: json};
 
         let url = insertTourneyUrl;
 
@@ -297,16 +299,18 @@ export class TourneyService {
     /** PUT: prepare the TourneyDb by stringify of received tourney to save on the server */
     private updateTourney (tourney: Tourney ): Observable<Tourney> {
         let json: string = JSON.stringify(tourney);
-        let tourneyDb: TourneyDb = {id: tourney.id, json: json};
+
+        let clientId = this.clientService.selectedClient.id;
+        let tourneyDb: TourneyDb = {id: tourney.id, clientId: clientId, tourneyName: tourney.tourneyName, json: json};
 
         return this.updateTourneyDb(tourneyDb);
     }
 
     saveTourney (tourney: Tourney ): Observable<Tourney> {
         if(tourney.id == null) {
-            if(environment.inMemoryDataService) {
-                tourney.id = this.getSequenceNumber();
-            }
+            // if(environment.inMemoryDataService) {
+            //     tourney.id = this.getSequenceNumber();
+            // }
             return this.addTourney(tourney);
         }
         return this.updateTourney(tourney);
@@ -374,7 +378,7 @@ export class TourneyService {
         r.onewayMeetings = [];
     }
 
-    deleteUnusedMeetings(meetings: Meeting[] ): void {
+     deleteUnusedMeetings(meetings: Meeting[] ): void {
         for(let m of meetings) {
             this.deleteMeeting(m);
         }

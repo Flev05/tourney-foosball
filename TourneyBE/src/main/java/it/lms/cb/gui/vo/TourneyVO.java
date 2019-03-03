@@ -11,7 +11,7 @@ public class TourneyVO extends AbstractVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String            tourneyName;
-    private ClientVO          clientVO;
+    private Integer           clientId;
     private String            json;
 
     public TourneyVO() {
@@ -38,14 +38,13 @@ public class TourneyVO extends AbstractVO implements Serializable {
         this.json = json;
     }
 
-    public ClientVO getClientVO() {
+    public Integer getClientId() {
 
-        return clientVO;
+        return clientId;
     }
 
-    public void setClientVO(ClientVO clientVO) {
+    public void setClientId(Integer clientId) {
 
-        this.clientVO = clientVO;
+        this.clientId = clientId;
     }
-
 }

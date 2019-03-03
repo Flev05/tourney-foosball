@@ -8,8 +8,8 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Country } from '../domain/country';
 
-const countryUrl = 'api/countries';  // URL to web api
-const loadAllCountryUrl = countryUrl + '/loadAll';  // URL to web api
+const countryUrl = 'api/countries';   
+const loadAllCountryUrl = countryUrl + '/loadAll';   
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

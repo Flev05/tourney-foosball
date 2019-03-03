@@ -29,6 +29,7 @@ import { environment } from 'environments/environment';
 import { UrcService } from './service/urc-service';
 import {SlideMenuModule} from 'primeng/slidemenu';
 import { DisciplineService } from './service/discipline-service';
+import { MeetingService } from './service/meeting-service';
 
 
 const forDevelopEnvOnly: any[] = [];
@@ -69,6 +70,7 @@ if (environment.inMemoryDataService) {
       , TeamService
       , UrcService
       , DisciplineService
+      , MeetingService
   ],
   bootstrap: [AppComponent]
 })

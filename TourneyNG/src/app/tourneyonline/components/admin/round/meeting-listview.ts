@@ -12,6 +12,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './meeting-listview.html'
@@ -44,6 +45,7 @@ export class MeetingListView extends AbstractListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         private   dateFormatPipe: DateFormatPipe
@@ -67,7 +69,7 @@ export class MeetingListView extends AbstractListView {
             return;
         }
 
-        const subsbr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        const subsbr = this.meetingService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
 

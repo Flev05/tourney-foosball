@@ -19,6 +19,7 @@ import {LoginRoutingModule} from './login-routing.module';
 import {LoginDetailView} from './login-detailview';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { ClientLoginListView } from './client-listview';
 
 @NgModule({
 	imports: [
@@ -43,7 +44,8 @@ import { MessageModule } from 'primeng/message';
         ,MessageModule
 	],
 	declarations: [
-                LoginDetailView,
+                  LoginDetailView
+                , ClientLoginListView
 	]
 })
 export class LoginModule {}

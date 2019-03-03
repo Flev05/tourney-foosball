@@ -337,7 +337,11 @@
                 Disciplina:
             </div>
             <div class="ui-grid-col-3">
-                <p-dropdown [options]="disciplines" [(ngModel)]="selectedTourney.discipline" optionLabel="name" [autoWidth]="false">
+                <p-dropdown [options]="disciplineOptions" 
+                    [(ngModel)]="selectedDiscipline" 
+                    optionLabel="label" 
+                    (onChange)="onDisciplineChange($event.value)" 
+                    [autoWidth]="false">
                 </p-dropdown>
             </div>
         </div>

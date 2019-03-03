@@ -28,6 +28,7 @@ import { InMemoryDataService } from './in-memory-data-service/in-memory-data.ser
 import { environment } from 'environments/environment';
 import { UrcService } from './service/urc-service';
 import {SlideMenuModule} from 'primeng/slidemenu';
+import { DisciplineService } from './service/discipline-service';
 
 
 const forDevelopEnvOnly: any[] = [];
@@ -67,6 +68,7 @@ if (environment.inMemoryDataService) {
       , PlayerService
       , TeamService
       , UrcService
+      , DisciplineService
   ],
   bootstrap: [AppComponent]
 })

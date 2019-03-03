@@ -3,7 +3,7 @@
 
 DELETE FROM country;
 
-SELECT pg_catalog.setval('tbl_locations_id_seq', 1, false);
+SELECT pg_catalog.setval('tbl_counties_id_seq', 1, false);
 
 insert into country values (DEFAULT,'ABANO TERME','A001','PD','35031','IT');
 insert into country values (DEFAULT,'ABBADIA CERRETO','A004','LO','26834','IT');

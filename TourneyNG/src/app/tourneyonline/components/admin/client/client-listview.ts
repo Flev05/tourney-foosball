@@ -53,6 +53,11 @@ export class ClientListView extends AbstractListView {
     private onComplete(): void {
         console.log("onComplete()");
         this.isUserDeveloper = this.loginService.isDeveloper();
+
+        if( this.clients.length == 1 ) {
+            this.selectedClient = this.clients.length[0];
+            this.onRowSelect(null);
+        }
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
@@ -123,11 +128,10 @@ export class ClientListView extends AbstractListView {
         console.log(e);
     }
 
-
     onRowSelect(event) {
         console.log(event.data);
 
-        this.clientService.selectedClient = this.selectedClient;
+        this.clientService.setSelectedClient(this.selectedClient);
         this.clientService.newClient = false;
 
         this.gotoDetailView();

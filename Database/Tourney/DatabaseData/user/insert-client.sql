@@ -9,10 +9,10 @@ insert into client (id
 , country_id) 
 values(
 DEFAULT
-, 'Luciano Martino'
+, 'Cliente Developer'
 , 'Via Nilde Iotti, 8'
-, '3397858194'
+, '+39 339 78 58 194'
 , 'luciano.martino@gmail.com'
-, 'www.calciobalillapregnana.it'
+, 'www.erebus-soft.it'
 , (select id from country where city = 'PREGNANA MILANESE') 
 );

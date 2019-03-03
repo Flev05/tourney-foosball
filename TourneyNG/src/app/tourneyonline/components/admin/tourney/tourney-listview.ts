@@ -24,7 +24,7 @@ export class TourneyListView extends AbstractTourneyListView {
     toDate  : Date;
 
     clientOptions: Combobox[];
-    isUserLogged: boolean;
+    clientsCBEnabled: boolean;
 
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
@@ -48,13 +48,19 @@ export class TourneyListView extends AbstractTourneyListView {
         this.toDate = new Date();
         this.clientOptions = this.clientService.clientOptions;
 
-        this.isUserLogged = this.loginService.isUserLogged;
+        this.clientsCBEnabled = this.loginService.isUserLogged && this.clientOptions.length > 1 ? true : false;
 
         this.tourneyFormGroup = this.fb.group({
             'selectedClientOption': new FormControl(this.clientService.selectedClientOption),
             'fromDate': new FormControl(this.fromDate),
             'toDate': new FormControl(this.toDate),
        });
+    }
+    
+    onClientChange(cb: Combobox) {
+        console.log(cb);
+
+        this.clientService.setSelectedClient(this.clientService.selectedClients.find( c => c.id == cb.value ));
     }
 
     onSearch(value: string) {

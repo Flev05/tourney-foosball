@@ -22,6 +22,7 @@ public class Tourney extends AbstractPO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String            json;
+    private String            tourneyName;
 
     private Client            client;
     private Session           session;
@@ -57,6 +58,17 @@ public class Tourney extends AbstractPO implements Serializable {
     public void setJson(String json) {
 
         this.json = json;
+    }
+
+    @Column(name = "tourney_name")
+    public String getTourneyName() {
+
+        return tourneyName;
+    }
+
+    public void setTourneyName(String tourneyName) {
+
+        this.tourneyName = tourneyName;
     }
 
     // bi-directional many-to-one association to Client

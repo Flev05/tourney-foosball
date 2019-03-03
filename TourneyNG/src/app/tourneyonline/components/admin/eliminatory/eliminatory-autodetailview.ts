@@ -10,6 +10,7 @@ import { Message } from 'app/components/common/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',
@@ -40,7 +41,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService
+        protected meetingService: MeetingService,
+        protected countryService: CountryService,
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -96,7 +98,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        this.tourneyService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
+        this.meetingService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
 
         if(!this.isOneway) {
             let m2 = this.selectedEliminatory.round.onewayMeetings[1];
@@ -107,7 +109,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-            this.tourneyService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
+            this.meetingService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;

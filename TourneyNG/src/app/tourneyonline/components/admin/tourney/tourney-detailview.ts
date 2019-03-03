@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, Direction, RoundType } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType } from '../../../domain/enumerations';
 import { Discipline } from 'app/tourneyonline/domain/discipline';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
@@ -19,6 +19,8 @@ import { LevelService } from '../eliminatory/level-service';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { FromRound } from 'app/tourneyonline/domain/from-round';
+import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -37,6 +39,8 @@ export class TourneyDetailView extends AbstractDetailView {
     submitted: boolean;
 
     disciplines: Discipline[];
+    disciplineOptions : Combobox[];
+    selectedDiscipline: Combobox;
 
     gender: string = "tourney";
 
@@ -78,7 +82,9 @@ export class TourneyDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
+        protected meetingService: MeetingService,
         protected levelService: LevelService,
+        protected disciplineService: DisciplineService,
         private router: Router 
     ) { 
         super(tourneyService, location, countryService);
@@ -89,9 +95,9 @@ export class TourneyDetailView extends AbstractDetailView {
         
         super.ngOnInit();
         
-        this.tourneyService.loadDisciplines().subscribe(t => {
-            this.disciplines = t;
-        });
+        this.disciplineService.loadAllDisciplines().subscribe(t => {this.disciplines = t;}
+            , (error) => this.onError(error)
+            , ()=>this.onLoadDisciplineComplete());
 
         if(this.tourneyService.newTourney) {
             this.initTourney();
@@ -116,6 +122,18 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
+    }
+
+    private onLoadDisciplineComplete() {
+        this.disciplineOptions = [];
+        for( let d of this.disciplines ) {
+            let cb : Combobox = {label: d.name, value: d.id};
+            this.disciplineOptions.push(cb);
+        }
+
+        if( this.selectedTourney != undefined ) {
+            this.selectedDiscipline = {label: this.selectedTourney.discipline.name, value: this.selectedTourney.discipline.id};
+        }
     }
 
     private initTourney() {
@@ -153,6 +171,7 @@ export class TourneyDetailView extends AbstractDetailView {
         
         this.selectedTourney.meetingsForDelete = []
         this.selectedTourney.selectedTeamsNumCombobox = {label: "", value: 0};
+        this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
         this.tourneyService.selectedTourney = this.selectedTourney;    
     }
@@ -335,6 +354,13 @@ export class TourneyDetailView extends AbstractDetailView {
         this.levelService.selectedTeamsNumCombobox = event;
         this.levelService.onTeamEliminatoryNumChange(event);
         this.eliminatoryRows = this.levelService.rows;
+    }
+    
+    onDisciplineChange(cb: Combobox) {
+        console.log(cb);
+
+        this.selectedTourney.discipline.name = cb.label;
+        this.selectedTourney.discipline.id = cb.value;
     }
 
     onRoundNumChange(cb: Combobox) {
@@ -667,6 +693,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log(event);
         this.updatePhases(event, PhaseType.P);
     }
+
     onEliminatoryPhaseChange(event) {
         console.log("Entering onEliminatoryPhaseChange()");
         console.log(event);
@@ -704,10 +731,10 @@ export class TourneyDetailView extends AbstractDetailView {
         if( this.tourneyService.containsPhase(PhaseType.R) ) {
             for(let r of this.selectedTourney.rounds) {
                 for(let m of r.onewayMeetings) {
-                    this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                    this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
                 }
                 for(let m of r.roundtripMeetings) {
-                    this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                    this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
                 }
             }
         }
@@ -715,10 +742,10 @@ export class TourneyDetailView extends AbstractDetailView {
         if( this.tourneyService.containsPhase(PhaseType.P) ) {
             for(let p of this.selectedTourney.playoffs) {
                 for(let m of p.round.onewayMeetings) {
-                    this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                    this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
                 }
                 for(let m of p.round.roundtripMeetings) {
-                    this.tourneyService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                    this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
                 }
             }
         }
@@ -727,7 +754,7 @@ export class TourneyDetailView extends AbstractDetailView {
             for(let el of this.selectedTourney.eliminatoryLevels) {
                 for(let e of el.eliminatories) {
                     for(let m of e.round.onewayMeetings) {
-                        this.tourneyService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                        this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
                     }
                 }
             }

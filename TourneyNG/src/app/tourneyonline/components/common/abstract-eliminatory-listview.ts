@@ -15,6 +15,7 @@ import { DateFormatPipe } from './date-format-pipe';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 export abstract class AbstractEliminatoryListView extends AbstractListView {
          
@@ -64,6 +65,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     constructor(
         protected redirect: string,
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         protected dateFormatPipe: DateFormatPipe
@@ -157,7 +159,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             for (let e of topElimLevel.eliminatories) {
                 this.eliminatoryRoundMap.set(e.id, e.round);
                 this.elHttpCounter++;
-                let abs = this.tourneyService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
+                let abs = this.meetingService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
                 abs.subscribe(mdbs => this.addToMeetingMap(mdbs), e => this.onError(e));
             }
         }

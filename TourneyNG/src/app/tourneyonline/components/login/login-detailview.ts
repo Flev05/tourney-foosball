@@ -6,6 +6,10 @@ import { Message } from 'app/components/common/api';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import {Md5} from "md5-typescript";
 import { Observable, of } from 'rxjs';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { ClientVO } from 'app/tourneyonline/domain/client-vo';
+
+const redirect : string = "/login/lv";
 
 @Component({
     templateUrl: './login-detailview.html',
@@ -34,6 +38,7 @@ export class LoginDetailView implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         private loginService: LoginService,
+        private clientService: ClientService,
     ) {}
 
     ngOnInit() {
@@ -103,13 +108,20 @@ export class LoginDetailView implements OnInit {
     onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
         
-        if(this.loginService.isUserLogged)  {
-            let redirect = '/clients';
-            console.log("navigate to=" + redirect);
-            this.router.navigate([redirect]);
-        } else {
+        if(!this.loginService.isUserLogged)  {
             this.loginFailed = true;
+            return;
         }
+
+        let cvo: ClientVO = {
+            id                     : null,
+            businessName           : ""
+        };
+
+        this.clientService.selectedClient = cvo;
+
+        console.log("navigate to=" + redirect);
+        this.router.navigate([redirect]);
     }
 
     get diagnostic() { return JSON.stringify(this.loginformGroup.value); }

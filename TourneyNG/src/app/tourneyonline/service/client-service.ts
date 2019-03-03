@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
 import { ClientVO } from '../domain/client-vo';
 import { Combobox } from '../domain/tourney-combobox';
@@ -12,7 +11,13 @@ import { Combobox } from '../domain/tourney-combobox';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const clientUrl = 'api/clients';  // URL to web api
+
+const clientUrl = 'api/clients';   
+const loadClientByUserIDUrl = clientUrl   + '/loadByUserId';   
+const loadClientUrl = clientUrl   + '/load';   
+const insertClientUrl = clientUrl + '/insert';   
+const updateClientUrl = clientUrl + '/update';   
+const deleteClientUrl = clientUrl + '/delete';   
 
 @Injectable()
 export class ClientService {
@@ -20,7 +25,10 @@ export class ClientService {
     selectedClientOption : Combobox;
     clientOptions : Combobox[];
     selectedClients : ClientVO[];
+
     selectedClient : ClientVO;
+
+    selectedClientName: string = "";
 
     newClient : boolean = false;
 
@@ -33,20 +41,24 @@ export class ClientService {
         console.log("Constructor of ClientService");
     }
 
-    setSelectClients(clients: ClientVO[]): any {
-        this.selectedClients = clients;
-
-        this.selectedClient = clients[0];
-        this.selectedClientOption = {label: this.selectedClient.businessName, value: this.selectedClient.id};
+    setSelectedClient(cvo : ClientVO) {
+        this.selectedClient = cvo;
+        this.selectedClientName = cvo.businessName;
+        this.selectedClientOption = {label: cvo.businessName, value: cvo.id};
         this.clientOptions = [];
 
-        for(let c of clients ) {
+        for(let c of this.selectedClients ) {
             this.clientOptions.push({label: c.businessName, value: c.id});
         }
     }
 
+    setSelectClients(clients: ClientVO[]): any {
+        this.selectedClients = clients;
+        this.setSelectedClient(clients[0]);
+    }
+
     loadAllClients (userId: number, selector: (err: any, caught: Observable<ClientVO[]> ) => Observable<ClientVO[]>): Observable<ClientVO[]> {
-        const url = clientUrl + "/findByUserId/" + userId;
+        const url = loadClientByUserIDUrl + userId;
         console.log(url);
  
         return this.http.get<ClientVO[]>(url).pipe(
@@ -56,18 +68,18 @@ export class ClientService {
     }
 
     /** GET hero by id. Will 404 if id not found */
-    getClient(id: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
-        const url = `${clientUrl}/find/${id}`;
+    getClient(clientId: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
+        const url = `${loadClientUrl}/${clientId}`;
         console.log(url);
         return this.http.get<ClientVO>(url).pipe(
-            tap(_ => this.log(`fetched Client id=${id}`)),
+            tap(_ => this.log(`fetched Client url=` + url)),
             catchError(selector)
         );
     }
 
     /** POST: add a new Client to the server */
     private createClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
-        let url = clientUrl + "/insert";
+        let url = insertClientUrl;
         console.log(url);
 
         return this.http.post<ClientVO>(url, client, httpOptions).pipe(
@@ -78,7 +90,7 @@ export class ClientService {
 
     /** PUT: update the Client on the server */
     private updateClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
-        const url = clientUrl + "/update";
+        const url = updateClientUrl;
         console.log(url);
         
         return this.http.put(url, client, httpOptions).pipe(
@@ -97,7 +109,7 @@ export class ClientService {
     /** DELETE: delete the Client from the server */
     deleteClient (clientId: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         const id = clientId;
-        const url = `${clientUrl}/delete/${id}`;
+        const url = `${deleteClientUrl}/${id}`;
         console.log(url);
 
         return this.http.delete<ClientVO>(url, httpOptions).pipe(

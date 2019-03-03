@@ -23,8 +23,7 @@
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
         
-        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.firstname}} {{loginService.userLogged.lastname}}</p>
-        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}}</p>
+        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}} / {{clientService.selectedClientName}}</p>
 
         <div class="layout-menu">
            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 

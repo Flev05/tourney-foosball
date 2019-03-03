@@ -11,6 +11,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './meeting-detailview.html'
@@ -32,6 +33,7 @@ export class MeetingDetailView extends AbstractDetailView {
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected countryService: CountryService
     ) { 
         super(tourneyService, location, countryService);
@@ -154,13 +156,13 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
         if( this.selectedMeetingDb.roundId != null ) {
-            this.tourneyService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
+            this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
         }
         if( this.selectedMeetingDb.playoffId != null ) {
-            this.tourneyService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
+            this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
-            this.tourneyService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
+            this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
         }
  
         this.updateNextLevel();
@@ -247,11 +249,11 @@ export class MeetingDetailView extends AbstractDetailView {
                 nextMeeting.team2 = onewayLevelMeeting.team2;
             }
         }
-        let mdb = this.tourneyService.completeEliminatoryMeetingDb(nextMeeting
+        let mdb = this.meetingService.completeEliminatoryMeetingDb(nextMeeting
             , this.selectedTourney.id
             , nextEliminatory.id
         );        
-        this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
+        this.meetingService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     onError(n:any) {

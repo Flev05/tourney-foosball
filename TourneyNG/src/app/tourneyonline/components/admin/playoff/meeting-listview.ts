@@ -11,6 +11,7 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { AbstractRuleListView } from '../../common/abstract-rule-listview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './meeting-listview.html'
@@ -43,6 +44,7 @@ export class MeetingListView extends AbstractRuleListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         private   dateFormatPipe: DateFormatPipe
@@ -61,7 +63,7 @@ export class MeetingListView extends AbstractRuleListView {
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
 
-        const subsbr = this.tourneyService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        const subsbr = this.meetingService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
  

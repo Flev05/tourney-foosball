@@ -10,7 +10,9 @@ import { DateFormatPipe } from './date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
- 
+
+const homePage: string = "/";
+
 export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected tourneys: Tourney[];
@@ -55,7 +57,9 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     protected onComplete(): any {
         console.log("Entering onComplete()");
+
         this.tourneys = [];
+
         for(let tdb of this.tdbs) {
             let t = JSON.parse(tdb.json);
             this.tourneys.push(t);
@@ -74,6 +78,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.playerService.loadAllPlayers().subscribe(p => this.playerService.playerPool = p, e => this.onError(e));
 
         this.teamService.loadAllTeams().subscribe(t => this.teamService.teamPool = t, e => this.onError(e));
+
+        if( this.tourneys.length == 0 ) {
+            this.router.navigate([homePage]);
+            return;
+        }
     }
 
     protected abstract filter(tourneys: Tourney[]): Tourney[];

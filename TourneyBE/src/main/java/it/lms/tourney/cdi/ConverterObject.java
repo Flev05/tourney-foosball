@@ -8,7 +8,8 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-// @Target({ Target.METHOD, Target.FIELD, Target.PARAMETER, Target.TYPE })
-public @interface PersistentObject {
+// @Target({ METHOD, Target.FIELD, Target.PARAMETER, Target.TYPE })
+// @Target({ METHOD, FIELD, PARAMETER, TYPE })
+public @interface ConverterObject {
 
 }

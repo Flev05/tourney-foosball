@@ -11,6 +11,7 @@ import { Combobox } from '../domain/tourney-combobox';
 import { Roles } from '../domain/enumerations';
 
 const roleUrl = 'api/roles';  // URL to web api
+const loadRoleByUserId = roleUrl + "/loadAllRoles";
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -82,7 +83,7 @@ export class RoleService {
 
     loadLowerRoles (loggedUserId : number): Observable<RoleVO[]> {
  
-        let url = roleUrl + "/findAllRoles/" + loggedUserId;
+        let url = loadRoleByUserId + "/" + loggedUserId;
 
         return this.http.get<RoleVO[]>(url, httpOptions)
         .pipe(

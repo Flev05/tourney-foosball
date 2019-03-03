@@ -50,11 +50,4 @@ public class Resources {
         return logger;
     }
 
-    // @Produces
-    // public CdiLogger produceCdiLog(InjectionPoint injectionPoint) {
-    //
-    // CdiLogger cl = CdiLogger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
-    //
-    // return cl;
-    // }
 }

@@ -5,9 +5,11 @@ import { Login } from 'app/tourneyonline/domain/login';
 import { Message } from 'app/components/common/api';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import {Md5} from "md5-typescript";
-import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { UserService } from 'app/tourneyonline/service/user-service';
 import { Observable, of } from 'rxjs';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { ClientVO } from 'app/tourneyonline/domain/client-vo';
+
+const redirect : string = "/login/lv";
 
 @Component({
     templateUrl: './login-detailview.html',
@@ -30,42 +32,38 @@ export class LoginDetailView implements OnInit {
 
     loginformGroup: FormGroup;
 
-    submitted: boolean;
-    isLoginFailed: any;
+    loginFailed: boolean;
 
     constructor(
         private fb: FormBuilder,
         private router: Router,
         private loginService: LoginService,
-        private userService: UserService,
+        private clientService: ClientService,
     ) {}
 
     ngOnInit() {
-        this.isLoginFailed = false;
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
-        const username = this.loginService.selectedLogin==undefined ? '' : this.loginService.selectedLogin.username;
+        const username = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;
 
         this.loginformGroup = this.fb.group({
             'username': new FormControl(username, Validators.required),
-            'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
+            'password': new FormControl("", Validators.required),
         });
     }
 
     onSubmit(value: string) {
-        this.submitted = true;
 
         this.formLogin.username = this.loginformGroup.get('username').value;
 
-        let md5 = Md5.init(this.loginformGroup.get('password').value)
-        this.formLogin.password = md5;
-        console.log("MD5(password)=" + md5);
-
-        this.isLoginFailed = false;
-        this.loginService.userLogged=true;
+        let md5 = Md5.init(this.loginformGroup.get('password').value);
+        this.formLogin.password = md5.toUpperCase();
+        console.log("MD5(password)=" + this.formLogin.password);
 
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         
+        this.loginService.isUserLogged = true;
+        this.loginFailed = false;
         subscr.subscribe(uvo=> this.next(uvo), e => this.onError(e), () => this.onComplete());  
     }
 
@@ -74,8 +72,9 @@ export class LoginDetailView implements OnInit {
         return (error: any): Observable<Login> => {                      
             console.error("Entering Observable<Login>"); // log to console instead
 
-            this.loginService.userLogged=false;
-  
+            this.loginService.isUserLogged=false;
+            this.loginFailed = true;
+
             // TODO: send the error to remote logging infrastructure
             console.error(error); // log to console instead
       
@@ -87,31 +86,42 @@ export class LoginDetailView implements OnInit {
         };
     }
     
-    next(uvo: UserVO) {
+    next(uvo: Login) {
         console.log("Entering next()"); // log to console instead
         console.log(uvo);
-        
-        this.userService.selectedUser = uvo;
+
+        if( uvo != undefined ) {
+            this.loginService.setUserLogged(uvo);
+        } else {
+            this.loginService.isUserLogged = false;
+            this.loginFailed = true;
+        }
     }
 
     onError(e:any) {
         console.error("Entering LoginDetailView.onError()");
         console.error(e);
+        this.loginService.isUserLogged = false;
+        this.loginFailed = true;
     }
 
     onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
-
-        if(this.loginService.userLogged)  {
-            this.isLoginFailed = false;
-            this.userService.setSelectedUser(this.userService.selectedUser);
-            let redirect = '/clients';
-            console.log("navigate to=" + redirect);
-            this.router.navigate([redirect]);
-        } else {
-            this.isLoginFailed = true;
+        
+        if(!this.loginService.isUserLogged)  {
+            this.loginFailed = true;
+            return;
         }
-        console.log("isLoginFailed=" + this.isLoginFailed);
+
+        let cvo: ClientVO = {
+            id                     : null,
+            businessName           : ""
+        };
+
+        this.clientService.selectedClient = cvo;
+
+        console.log("navigate to=" + redirect);
+        this.router.navigate([redirect]);
     }
 
     get diagnostic() { return JSON.stringify(this.loginformGroup.value); }

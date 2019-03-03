@@ -21,8 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -36,6 +34,11 @@ import it.lms.tourney.po.User;
 
 @Stateless
 public class SessionDao extends BaseJPACrudDao<Session, Integer> {
+
+    public SessionDao() {
+
+        super(Session.class);
+    }
 
     public Session findSessionBy(User u) {
 
@@ -64,7 +67,6 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         return po;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(User u, String requestedSessionId, String userInfo) {
 
         Session s = new Session();
@@ -76,7 +78,6 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         super.insertPo(s);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Session s, String requestedSessionId, String userInfo) {
 
         s.setUserSession(requestedSessionId);
@@ -86,7 +87,6 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         super.updatePo(s);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Session session) throws Exception {
 
         logger.debug(logId() + "Entering insert(" + session + ")");
@@ -94,7 +94,6 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         insertPo(session);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Session session) throws Exception {
 
         logger.debug(logId() + "Entering save(" + session + ")");

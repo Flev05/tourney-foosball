@@ -14,6 +14,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TeamDetailView } from '../../admin/team/team-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './round-result-listview.html'
@@ -50,6 +51,7 @@ export class RoundResultListView extends AbstractListView {
     roundTeams: Team[];
 
     constructor( protected tourneyService: TourneyService
+        , private meetingService: MeetingService
         , protected router: Router
         , protected location: Location
         , protected dfp: DateFormatPipe
@@ -73,7 +75,7 @@ export class RoundResultListView extends AbstractListView {
             { field: 'teamName2',   header: 'Trasferta' }
         ];
 
-        const subsbr = this.tourneyService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        const subsbr = this.meetingService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
 

@@ -26,27 +26,27 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
 	imports: [
-		CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        GrowlModule,
-        PanelModule,
-        DropdownModule,
-        InputTextModule,
-        InputTextareaModule,
-        ButtonModule,
-        TabViewModule,
-        CodeHighlighterModule,
-        TableModule,
-        DialogModule,
-        SliderModule
+        CommonModule
+        ,FormsModule
+        ,ReactiveFormsModule
+        ,GrowlModule
+        ,PanelModule
+        ,DropdownModule
+        ,InputTextModule
+        ,InputTextareaModule
+        ,ButtonModule
+        ,TabViewModule
+        ,CodeHighlighterModule
+        ,TableModule
+        ,DialogModule
+        ,SliderModule
         ,AutoCompleteModule
         ,RadioButtonModule
         ,FieldsetModule
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
-		,ClientRoutingModule,
+		,ClientRoutingModule
 	],
 	declarations: [
 		ClientListView,

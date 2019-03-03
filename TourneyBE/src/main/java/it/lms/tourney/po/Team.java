@@ -22,6 +22,7 @@ public class Team extends AbstractPO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String            json;
+    private String            teamName;
 
     private Client            client;
     private Session           session;
@@ -33,7 +34,8 @@ public class Team extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + " Team [json=" + json + ", client=" + client + ", session=" + session + "]";
+        return super.toString() + " Team [json=" + json + ", teamName=" + teamName + ", client=" + client + ", session="
+                + session + "]";
     }
 
     @Id
@@ -57,6 +59,17 @@ public class Team extends AbstractPO implements Serializable {
     public void setJson(String json) {
 
         this.json = json;
+    }
+
+    @Column(name = "team_name")
+    public String getTeamName() {
+
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+
+        this.teamName = teamName;
     }
 
     // bi-directional many-to-one association to Client

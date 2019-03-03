@@ -3,21 +3,9 @@ package it.lms.tourney.rest;
 
 import java.security.Principal;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-
-import org.apache.log4j.Logger;
-
 import it.lms.tourney.cdi.AbstractLogger;
 
 public abstract class AbstractRESTService extends AbstractLogger {
-
-    @Inject
-    Logger                       logger;
-
-    @Context
-    protected HttpServletRequest request;
 
     protected String getUserAgent() {
 

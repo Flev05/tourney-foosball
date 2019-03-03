@@ -230,12 +230,18 @@
 
 <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSearch(tourneyFormGroup.value)">
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div *ngIf="userLogged" class="ui-grid-row">
+
+    
+    <div *ngIf="clientsCBEnabled" class="ui-grid-row">
         <div class="ui-grid-col-3">
             Cliente:
         </div>
         <div class="ui-grid-col-3">
-            <p-dropdown [options]="clientOptions" formControlName="selectedClientOption" optionLabel="label"></p-dropdown>
+            <p-dropdown [options]="clientOptions" 
+                formControlName="selectedClientOption" 
+                optionLabel="label"
+                (onChange)="onClientChange($event.value)">
+            </p-dropdown>
         </div>
     </div>    
 

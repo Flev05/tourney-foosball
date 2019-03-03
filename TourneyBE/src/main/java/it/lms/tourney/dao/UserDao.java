@@ -2,12 +2,12 @@
 package it.lms.tourney.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -40,6 +40,12 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug(logId() + "Entering findOwnerUsers()");
         return findUsersByRole(Role.ROLES.OWNER);
+    }
+
+    public List<User> findAdminUsers() {
+
+        logger.debug(logId() + "Entering findAdminUsers()");
+        return findUsersByRole(Role.ROLES.ADMIN);
     }
 
     private List<User> findUsersByRole(Role.ROLES role) {
@@ -102,7 +108,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      * @return the BO found
      * @throws DaoException id the select fails
      */
-    public User findUserBy(String username) throws DaoException {
+    public User findUserBy(String username) {
 
         logger.debug(logId() + "Entering findUserBy(" + username + ")");
 
@@ -120,14 +126,38 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return po;
     }
 
-    public boolean isDeveloperUser(String username) throws DaoException {
+    public boolean isDeveloperUser(String username) {
 
         List<String> rtList = new ArrayList<>();
         rtList.add(Role.ROLES.DEVELOPER.name());
         return isUserBelongingTo(username, rtList);
     }
 
-    private boolean isUserBelongingTo(String username, List<String> roles) throws DaoException {
+    public boolean isDeveloperUser(Integer userId) {
+
+        User user = findById(userId);
+        List<String> rtList = new ArrayList<>();
+        rtList.add(Role.ROLES.DEVELOPER.name());
+        return isUserBelongingTo(user.getUsername(), rtList);
+    }
+
+    public boolean isOwnerUser(Integer userId) {
+
+        User user = findById(userId);
+        List<String> rtList = new ArrayList<>();
+        rtList.add(Role.ROLES.OWNER.name());
+        return isUserBelongingTo(user.getUsername(), rtList);
+    }
+
+    public boolean isAdminUser(Integer userId) {
+
+        User user = findById(userId);
+        List<String> rtList = new ArrayList<>();
+        rtList.add(Role.ROLES.ADMIN.name());
+        return isUserBelongingTo(user.getUsername(), rtList);
+    }
+
+    private boolean isUserBelongingTo(String username, List<String> roles) {
 
         logger.debug(logId() + "Entering isUserBelongingTo()");
 
@@ -137,29 +167,30 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return isUserBelongingTo(username, sa);
     }
 
-    private boolean isUserBelongingTo(String username, String[] roles) throws DaoException {
+    private boolean isUserBelongingTo(String username, String[] roles) {
 
         logger.debug(logId() + "Entering isUserBelongingTo()");
 
-        List<String> roleList = new ArrayList<>();
-        for (String s : roles) {
-            roleList.add(s);
-        }
+        List<String> roleList = Arrays.asList(roles);
 
-        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
 
-        Root<User> root = cq.from(User.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Predicate p = getCb().equal(root.get(User_.username), username);
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
 
-        Predicate pAndQ = getCb().and(p);
+        Predicate p = getCb().equal(urcUserJoin.get(User_.username), username);
+        Predicate q = urcRoleJoin.get(Role_.name).in(roleList);
+
+        Predicate pAndQ = getCb().and(p, q);
         cq = cq.select(root);
         cq = cq.where(pAndQ);
 
-        TypedQuery<User> nq = getEm().createQuery(cq);
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
-        List<User> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " User(s)] ";
+        List<UserRoleClient> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " Entitys] ";
         logger.info(logId() + info);
 
         if (poList.isEmpty()) {
@@ -196,14 +227,16 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         logger.debug(logId() + "Entering findUserBy(" + username + "," + md5Password + ")");
 
-        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
 
-        Predicate p = getCb().equal(root.get(User_.username), username);
-        Predicate q = getCb().equal(root.get(User_.password), md5Password);
-        Predicate pAndQ = getCb().and(p, q);
-        cq.select(root).where(pAndQ);
+        Predicate p = cb.equal(root.get(User_.username), username);
+        Predicate q = cb.equal(root.get(User_.password), md5Password);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
 
         TypedQuery<User> nq = getEm().createQuery(cq);
 
@@ -245,20 +278,21 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return po;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insert(User po) throws DaoException {
+    public void insert(User po) {
+
+        logger.debug(logId() + "Entering insert(" + po + ")");
 
         insertPo(po);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(User po) throws DaoException {
+    public void update(User po) {
+
+        logger.debug(logId() + "Entering update(" + po + ")");
 
         updatePo(po);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void delete(User po) throws DaoException {
+    public void delete(User po) {
 
         logger.debug(logId() + "Entering deletePo(" + po + ")");
 

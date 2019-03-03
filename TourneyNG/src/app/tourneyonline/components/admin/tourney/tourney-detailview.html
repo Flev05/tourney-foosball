@@ -155,7 +155,7 @@
             <li>Fasi</li>
             <li>Turni</li>
             <li>Playoff</li>
-            <li>Goals</li>
+            <li>Goal</li>
             <li>Vittoria</li>
             <li>Sconfitta</li>
             <li>Pareggio</li>
@@ -187,9 +187,9 @@
             Se previsti i Playoff, si deve specificare se ci sono i Turni di ritorno o solo andata.
         </p>
 
-        <h4>Goals</h4>
+        <h4>Goal</h4>
         <p>
-            Nei tornei a punti, specificare i Goals necessari da segnare per aggiudicarsi la vittoria
+            Nei tornei a punti, specificare i Goal necessari da segnare per aggiudicarsi la vittoria
         </p>
         <h4>Vittoria</h4>
         <p>
@@ -337,7 +337,11 @@
                 Disciplina:
             </div>
             <div class="ui-grid-col-3">
-                <p-dropdown [options]="disciplines" [(ngModel)]="selectedTourney.discipline" optionLabel="name" [autoWidth]="false">
+                <p-dropdown [options]="disciplineOptions" 
+                    [(ngModel)]="selectedDiscipline" 
+                    optionLabel="label" 
+                    (onChange)="onDisciplineChange($event.value)" 
+                    [autoWidth]="false">
                 </p-dropdown>
             </div>
         </div>
@@ -440,7 +444,7 @@
                 <li>Gara</li>
                 <li>Durata</li>
                 <li>Fasi</li>
-                <li>Goals</li>
+                <li>Goal</li>
                 <li>Vittoria</li>
                 <li>Sconfitta</li>
                 <li>Pareggio</li>
@@ -463,9 +467,9 @@
                 la spiegazione del caso.
             </p>
     
-            <h4>Goals</h4>
+            <h4>Goal</h4>
             <p>
-                Nei tornei a punti, specificare i Goals necessari da segnare per aggiudicarsi la vittoria
+                Nei tornei a punti, specificare i Goal necessari da segnare per aggiudicarsi la vittoria
             </p>
             <h4>Vittoria</h4>
             <p>
@@ -579,12 +583,12 @@
         <p-fieldset legend="Punteggi">
             <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
                 <div class="ui-grid-col-3">
-                    Goals:
+                    Goal:
                 </div>
                 <div class="ui-grid-col-3">
                     <p-spinner [(ngModel)]="selectedTourney.pointsNeededToWin" tooltipPosition="right"
                         [min]="1"
-                        pTooltip="Goals necessari per aggiudicarsi la vittoria della partita">
+                        pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
                     </p-spinner>
                 </div>
             </div>
@@ -596,7 +600,7 @@
                 <div class="ui-grid-col-3">
                     <p-spinner [(ngModel)]="selectedTourney.matchWinnerScores" tooltipPosition="right"
                         [min]="1"
-                        pTooltip="Punti assegnati alla squadra per la vittoria della singola partita">
+                        pTooltip="Punti assegnati in caso di vittoria">
                     </p-spinner>
                 </div>
                 <div class="ui-grid-col-3">
@@ -611,7 +615,7 @@
                 <div class="ui-grid-col-3">
                     <p-spinner [(ngModel)]="selectedTourney.matchBalanceScores" tooltipPosition="right"
                         [min]="1"
-                        pTooltip="Punti assegnati alla squadra al pareggio della singola gara">
+                        pTooltip="Punti assegnati in caso di pareggio">
                     </p-spinner>
                 </div>
                 <div class="ui-grid-col-3">
@@ -852,7 +856,7 @@
                 Gironi:
             </div>
             <div class="ui-grid-col-3" tooltipPosition="right" 
-                    pTooltip="Scegliere il numero di gironi all'italiana che compone il torneo">
+                    pTooltip="Scegliere il numero di gironi che compongono il torneo">
                 <p-dropdown id="roundId" 
                     [options]="roundsCombobox" 
                     [(ngModel)]="tourneyService.selectedRoundsNumCB"  

@@ -1,7 +1,18 @@
-import { Role } from './role';
-import { CommonUserVO } from './common-user-vo';
+import { Country } from './country';
 
-export interface UserVO extends CommonUserVO
+export interface UserVO
 {
-    roles?      : Role[];
+    id?             : number;
+
+    username?       : string;
+    password?       : string;
+    firstname?      : string;
+    lastname?       : string;
+
+    address?        : string;
+    email?          : string;
+    phoneNumber?    : string;
+    description?    : string;
+
+    country?        : Country;
 }

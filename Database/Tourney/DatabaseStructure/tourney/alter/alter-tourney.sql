@@ -23,3 +23,4 @@ ALTER TABLE ONLY tourney
 
 ALTER TABLE tourney OWNER TO :SCHEMA_USER_NAME;
 
+CREATE UNIQUE INDEX tourney_name_client_id_key_index ON tourney (client_id, tourney_name);

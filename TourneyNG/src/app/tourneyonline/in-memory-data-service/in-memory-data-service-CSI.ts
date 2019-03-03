@@ -1,8 +1,6 @@
 import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, RoundType, Direction, MeetingStatus } from "../domain/enumerations";
 import { Tourney } from "../domain/tourney";
 import { TourneyDb } from "../domain/tourney.db";
-import { MeetingDb } from "../domain/meeting-db";
-import { Meeting } from "../domain/meeting";
 
 export class InMemoryDataServiceCSI  {
   static json1: string = JSON.stringify({
@@ -25,7 +23,7 @@ export class InMemoryDataServiceCSI  {
     ,datetime: new Date(2018, 11, 24, 10, 33)
     ,address: 'Via Roma, 110'
     ,country: {id:1, city: "Pregnana Milanese", cityCode:"F206", provinceCode: "MI", zipCode:"20010", countryCode:"IT"}
-    ,discipline: {name:"Calcio Balilla", code:"cb"}
+    ,discipline: {name:"Calcio Balilla", id: 0}
 
     ,tourneyType: TourneyType.Score
 

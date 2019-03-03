@@ -23,3 +23,4 @@ ALTER TABLE ONLY player
   	
 ALTER TABLE player OWNER TO :SCHEMA_USER_NAME;
 
+CREATE UNIQUE INDEX player_name_client_id_key_index ON player (client_id, player_name);

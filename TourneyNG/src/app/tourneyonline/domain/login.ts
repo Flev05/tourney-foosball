@@ -1,6 +1,7 @@
-export interface Login
+import { UserVO } from "./user-vo";
+import { RoleVO } from "./role-vo";
+
+export interface Login extends UserVO
 {
-    id?       : number;
-    username? : string;
-    password? : string;
+    roles?          : RoleVO[];
 }

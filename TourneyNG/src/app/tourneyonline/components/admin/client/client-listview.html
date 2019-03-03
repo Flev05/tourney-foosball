@@ -48,16 +48,14 @@
     [value]="clients" 
     selectionMode="single" 
     [(selection)]="selectedClient" 
-    (onRowSelect)="onRowSelect($event)" 
-    [paginator]="true" 
-    [rows]="20">
+    (onRowSelect)="onRowSelect($event)" >
 
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
-            <th>X</th>
+            <th class="deleteColSize">X</th>
         </tr>
     </ng-template>
 
@@ -71,12 +69,10 @@
             </td>
         </tr>
     </ng-template>
-
-    <ng-template pTemplate="summary" let-rowData>
-        <div style="text-align:left">
-            <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Cliente"></button>
-        </div>
-    </ng-template>        
 </p-table>
+
+<div *ngIf="isUserDeveloper" style="text-align:left">
+    <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Cliente"></button>
+</div>
  
  

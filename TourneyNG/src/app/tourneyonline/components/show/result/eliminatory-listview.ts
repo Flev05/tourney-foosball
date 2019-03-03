@@ -12,6 +12,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -26,11 +27,12 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
     constructor(
         protected tourneyService: TourneyService,
+        protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryListView.autoRedirect, tourneyService, router, location, dfp);
+        super(EliminatoryListView.autoRedirect, tourneyService, meetingService, router, location, dfp);
     }
             
     /**
@@ -213,10 +215,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 nr.teams[1] = e.round.teams[0];
             }
             
-            // let mdb = this.tourneyService.prepareMdb(nm, this.selectedTourney.id, 0, 0, nextEliminatory.id);
-            // this.tourneyService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
-
-            this.tourneyService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
+            this.meetingService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
         }
     }
 
@@ -274,7 +273,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         let m: Meeting = this.selectedMeetingRow.round.meetings[this.selectedMeetingRow.meetingIndex];
 
-        let mdb = this.tourneyService.completeEliminatoryMeetingDb(m
+        let mdb = this.meetingService.completeEliminatoryMeetingDb(m
             , this.selectedTourney.id
             , this.selectedMeetingRow.eliminatoryId
         );

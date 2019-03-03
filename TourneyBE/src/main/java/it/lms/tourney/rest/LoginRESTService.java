@@ -1,19 +1,3 @@
-/*
- * JBoss, Home of Professional Open Source
- * Copyright 2015, Red Hat, Inc. and/or its affiliates, and individual
- * contributors by the @authors tag. See the copyright.txt in the
- * distribution for a full listing of individual contributors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package it.lms.tourney.rest;
 
@@ -26,15 +10,15 @@ import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import it.lms.cb.gui.vo.RoleVO;
 import it.lms.cb.gui.vo.UserVO;
+import it.lms.tourney.cdi.Converter;
+import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.po.Login;
@@ -44,9 +28,7 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 
 /**
- * JAX-RS Example
- * <p/>
- * This class produces a RESTful service to read/write the contents of the members table.
+ * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/logon")
 @RequestScoped
@@ -59,9 +41,33 @@ public class LoginRESTService extends AbstractRESTService {
     @Inject
     private UserDao    userDao;
 
+    @Inject
+    @ConverterObject
+    private Converter  converter;
+
     public LoginRESTService() {
 
         super();
+    }
+
+    /**
+     * Called to perform the system logout
+     */
+    @PUT
+    @Path("/logout/{loggedUserId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response doLogout(@PathParam("loggedUserId") Integer loggedUserId) {
+
+        logger.debug(logId() + "PUT: doLogout(" + loggedUserId + ")");
+
+        try {
+            super.invalidateSession();
+        } catch (Exception e) {
+            logger.error(logId() + "Ignore logout Exception:" + e);
+        }
+
+        Response.ResponseBuilder builder = Response.ok();
+        return builder.build();
     }
 
     /**
@@ -123,9 +129,9 @@ public class LoginRESTService extends AbstractRESTService {
             String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") successful";
             logger.debug(message);
 
-            String jsonString = prepareResponse(u);
+            UserVO uvo = prepareResponse(u);
 
-            builder = Response.status(Response.Status.OK).entity(jsonString);
+            builder = Response.status(Response.Status.OK).entity(uvo);
         } catch (Exception e) {
 
             logger.error(logId() + "Login failed", e);
@@ -137,53 +143,19 @@ public class LoginRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    private String prepareResponse(User u) throws JsonProcessingException {
+    private UserVO prepareResponse(User u) {
 
-        ObjectMapper om = new ObjectMapper();
-
-        UserVO uvo = new UserVO();
+        UserVO uvo = converter.convertUserPoVo(u);
         for (UserRoleClient urc : u.getUrcSet()) {
 
-            uvo.setId(u.getId());
-            uvo.setAddress(u.getAddress());
-            uvo.setCountry(u.getCountry());
-            uvo.setEmail(u.getEmail());
-            uvo.setFirstname(u.getFirstname());
-            uvo.setLastname(u.getLastname());
-            uvo.setPassword(u.getPassword());
-            uvo.setPhoneNumber(u.getPhoneNumber());
-            uvo.setUsername(u.getUsername());
-
-            RoleVO rvo = new RoleVO();
-            uvo.getRoles().add(rvo);
-
             Role r = urc.getRole();
-            rvo.setDescription(r.getDescription());
-            rvo.setName(r.getName());
+
+            RoleVO rvo = converter.convertRolePoVo(r);
+            uvo.getRoles().add(rvo);
         }
 
-        String jsonString = om.writeValueAsString(uvo);
-        logger.debug(logId() + jsonString);
-        return jsonString;
-    }
+        logger.debug(logId() + uvo);
 
-    /**
-     * Called to perform the system logout
-     */
-    @PUT
-    @Path("/logout")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response doLogout(Login login) {
-
-        // Create an "ok" response
-        Response.ResponseBuilder builder = Response.ok();
-        try {
-            super.invalidateSession();
-        } catch (Exception e) {
-            logger.error(logId() + "Ignore logout Exception:" + e);
-        }
-
-        return builder.build();
+        return uvo;
     }
 }

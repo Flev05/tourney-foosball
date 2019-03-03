@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
-import {Message} from '../../../../components/common/api';
-import { Password } from '../../../domain/password';
-import { UserService } from '../../../service/user-service';
-import { LoginService } from '../../../service/login-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
+import { Password } from 'app/tourneyonline/domain/password';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { Message } from 'primeng/api';
 
 @Component({
     templateUrl: './user-changepassword.html',
@@ -22,7 +22,6 @@ import { LoginService } from '../../../service/login-service';
   `]
 })
 export class UserChangePassword implements OnInit {
-
 
     formLogin: Password;
 
@@ -43,7 +42,7 @@ export class UserChangePassword implements OnInit {
         this.formLogin = {"id":1, "username":"", "password" : "", "newPassword" : "", "confirmedPassword" : ""};
 
         this.userform = this.fb.group({
-            'username': new FormControl(this.loginService.selectedLogin.username),
+            'username': new FormControl(this.loginService.userLogged.username),
             'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
             'newPassword': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
             'confirmedPassword': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),

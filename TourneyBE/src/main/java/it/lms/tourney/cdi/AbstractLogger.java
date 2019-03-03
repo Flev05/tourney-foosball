@@ -17,8 +17,11 @@
 
 package it.lms.tourney.cdi;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
@@ -34,6 +37,9 @@ import javax.ws.rs.core.Context;
  * </pre>
  */
 public abstract class AbstractLogger {
+
+    @Inject
+    protected Logger             logger;
 
     @Context
     protected HttpServletRequest request;

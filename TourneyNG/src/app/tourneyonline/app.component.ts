@@ -3,6 +3,7 @@ import {trigger,state,style,transition,animate} from '@angular/animations';
 import { Router } from '@angular/router';
 import { LoginService } from './service/login-service';
 import { RoleService } from './service/role-service';
+import { ClientService } from './service/client-service';
 
 @Component({
   selector: 'app-root',
@@ -42,10 +43,10 @@ export class AppComponent implements OnInit{
     
     notification: boolean = false;
     
-    constructor(
-          protected loginService: LoginService
-        , protected roleService: RoleService
-        , private router: Router
+    constructor(protected loginService: LoginService
+          , protected roleService: RoleService
+          , protected clientService: ClientService
+          , private router: Router
     ) {}
 
     ngOnInit() {
@@ -70,13 +71,11 @@ export class AppComponent implements OnInit{
 
     logout(event) {
         this.menuActive = false;
-
-        this.loginService.userLogged=false;
-
         this.loginService.sendLogout().subscribe(() => this.goHome());  
     }
 
     goHome(): void {
+        this.loginService.isUserLogged=false;
         let redirect = '/login';
         this.router.navigate([redirect]);
     }

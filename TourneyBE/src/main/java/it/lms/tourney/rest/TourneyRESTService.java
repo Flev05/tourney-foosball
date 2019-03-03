@@ -1,0 +1,171 @@
+
+package it.lms.tourney.rest;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import it.lms.cb.gui.vo.TourneyVO;
+import it.lms.tourney.cdi.Converter;
+import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.TourneyDao;
+import it.lms.tourney.po.Tourney;
+
+/**
+ * JAX-RS to produces a RESTful service to read/write by DAOs.
+ */
+@Path("/tourneys")
+@RequestScoped
+public class TourneyRESTService extends AbstractRESTService {
+
+    @Inject
+    private TourneyDao tourneyDao;
+
+    @Inject
+    @ConverterObject
+    private Converter  converter;
+
+    @GET
+    @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<TourneyVO> findByUserId(@PathParam("clientId") Integer clientId) {
+
+        logger.debug(logId() + "GET: findByClientId()");
+
+        List<Tourney> tourneyList = tourneyDao.findTourneysByClientId(clientId);
+
+        List<TourneyVO> tourneyVoList = tourneyList.stream().map(tpo -> converter.convertTourneyPoVo(tpo))
+                .collect(Collectors.toList());
+
+        return tourneyVoList;
+    }
+
+    @GET
+    @Path("/loadBySessionId")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<TourneyVO> loadBySessionId() {
+
+        logger.debug(logId() + "GET: loadBySessionId()");
+
+        String sessionId = super.getSessionId();
+        List<Tourney> tourneyList = tourneyDao.findTourneysBySessionId(sessionId);
+
+        List<TourneyVO> tourneyVoList = tourneyList.stream().map(tpo -> converter.convertTourneyPoVo(tpo))
+                .collect(Collectors.toList());
+
+        return tourneyVoList;
+    }
+
+    @GET
+    @Path("/load/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Tourney lookupTourneyById(@PathParam("id") Integer id) {
+
+        logger.debug(logId() + "GET: lookupTourneyById(" + id + ")");
+
+        Tourney tourney = tourneyDao.getById(id);
+        if (tourney == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return tourney;
+    }
+
+    /**
+     * Creates a new tourney from the values provided. Performs validation, and will return a JAX-RS response with
+     * either 200 ok, or with a map of fields, and related errors.
+     */
+    @POST
+    @Path("/insert")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createTourney(TourneyVO tvo) {
+
+        logger.debug(logId() + "POST: createTourney(" + tvo + ")");
+
+        Map<String, String> responseObj = new HashMap<String, String>();
+        Tourney foundTourney = tourneyDao.getByTourneyName(tvo.getTourneyName());
+        if (foundTourney != null) {
+
+            logger.error("Tourney found");
+            responseObj.put("errorCode", "TourneyAlreadyExists");
+            responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
+
+        Tourney tourney = newTourney(tvo);
+
+        tvo = converter.convertTourneyPoVo(tourney);
+
+        logger.debug(tvo);
+
+        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+
+        return builder.build();
+    }
+
+    private Tourney newTourney(TourneyVO tvo) {
+
+        Tourney cpo = converter.convertTourneyVoPo(tvo);
+
+        tourneyDao.insert(cpo);
+        return cpo;
+    }
+
+    /**
+     * Updates the received tourney found in the database. Performs validation, and will return a JAX-RS response with
+     * either 200 ok, or with a map of fields, and related errors.
+     */
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTourney(TourneyVO tvo) {
+
+        logger.debug(logId() + "PUT: updateTourney(" + tvo + ")");
+
+        Tourney tpo = converter.convertTourneyVoPo(tvo);
+
+        tourneyDao.update(tpo);
+
+        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Removes a the received tourney from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/delete/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteTourney(@PathParam("id") Integer id) {
+
+        logger.debug(logId() + "DELETE: deleteTourney(" + id + ")");
+
+        Tourney tourney = tourneyDao.getById(id);
+        tourneyDao.delete(tourney);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+}

@@ -3,7 +3,7 @@ package it.lms.cb.gui.vo;
 
 import java.io.Serializable;
 
-public class RoleVO implements Serializable {
+public class RoleVO extends AbstractVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -13,7 +13,7 @@ public class RoleVO implements Serializable {
     @Override
     public String toString() {
 
-        return "RoleVO [name=" + name + ", description=" + description + "]";
+        return super.toString() + " RoleVO [name=" + name + ", description=" + description + "]";
     }
 
     public String getName() {

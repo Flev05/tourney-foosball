@@ -22,8 +22,11 @@
     </div>
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
+        
+        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}} / {{clientService.selectedClientName}}</p>
+
         <div class="layout-menu">
-            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
+           <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
                     (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
                 <img src="assets/showcase/images/icons/menu-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/menu.svg" class="layout-menu-icon-inactive"/>
@@ -35,21 +38,21 @@
             </div>
         </div>
 
-        <div *ngIf="loginService.userLogged" class="layout-menu">
+        <div *ngIf="loginService.isUserLogged" class="layout-menu">
             <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
-                <span>Admin</span>
+                <span>Utenti/Clienti</span>
             </a>
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
-                <a *ngIf="roleService.isDeveloper()" [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
-                <a *ngIf="roleService.isOwner()"     [routerLink]="['/users']"   (click)="menuActive = false">&#9679; Utenti</a>
-                <a *ngIf="roleService.isAdmin()"     [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Reset Password</a>
+                <a *ngIf="loginService.isDeveloper()" [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>
+                <a *ngIf="loginService.isOwner()"     [routerLink]="['/users']"   (click)="menuActive = false">&#9679; Utenti</a>
+                <a *ngIf="loginService.isAdmin()"     [routerLink]="['/users/resetPasswordLv']" (click)="menuActive = false">&#9679; Reset Password</a>
             </div>
         </div>
     
-        <div *ngIf="roleService.isAdmin()" class="layout-menu">
+        <div class="layout-menu">
             <a id="manager-id" #managermenutitle [class.active-menuitem]="managermenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
@@ -79,7 +82,7 @@
             </div>
         </div>
    
-        <div *ngIf="!loginService.userLogged" class="layout-menu">
+        <div *ngIf="!loginService.isUserLogged" class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
@@ -91,7 +94,7 @@
             </div>
         </div>
 
-        <div *ngIf="loginService.userLogged" class="layout-menu">
+        <div *ngIf="loginService.isUserLogged" class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>

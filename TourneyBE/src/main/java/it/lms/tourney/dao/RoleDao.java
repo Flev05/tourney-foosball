@@ -2,19 +2,25 @@
 package it.lms.tourney.dao;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role.ROLES;
 import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
+import it.lms.tourney.po.UserRoleClient_;
+import it.lms.tourney.po.User_;
 
 @Stateless
 public class RoleDao extends BaseJPACrudDao<Role, Integer> {
@@ -34,13 +40,41 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     }
 
     /**
+     * Finds all the roles associated to the received User
+     * 
+     * @param u the received User
+     * @return the list of the roles associated to the User
+     */
+    public List<Role> findRoleByUser(User u) {
+
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Predicate p = getCb().equal(root.get(UserRoleClient_.user), u);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+
+        List<UserRoleClient> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " Entity(ies)] ";
+        logger.info(logId() + info);
+
+        List<Role> roleList = poList.stream().map(urc -> urc.getRole()).collect(Collectors.toList());
+
+        return roleList;
+    }
+
+    /**
      * Selects all the records in the Role table, converts the got Role in their corresponding BO and returns a list of
      * that BO
      * 
      * @return the list of Role BO
      * @throws DaoException if a problem occurs during the find operation
      */
-    public List<Role> findAllRoles() throws DaoException {
+    public List<Role> findAllRoles() {
 
         logger.debug(logId() + "Entering findAllRoles()");
 
@@ -128,7 +162,6 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
         return po;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void save(Role po) throws DaoException {
 
         if (po.isNull()) {
@@ -150,7 +183,6 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * @param bo the BO to save
      * @throws DaoException if a problem occurs during the insert operation
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Role po) throws DaoException {
 
         logger.debug(logId() + "Entering insertPo()");
@@ -164,11 +196,87 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      * @param bo the BO to save
      * @throws DaoException if a problem occurs during the delete operation
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(Role po) throws DaoException {
 
         logger.debug(logId() + "Entering deletePo()");
 
         super.deletePo(po);
+    }
+
+    /**
+     * Finds the max role among the roles of each client belonging to the received logged user id
+     * 
+     * @param loggedUserId the logged user id
+     * @return the max role of the received user id
+     */
+    public ROLES findMaxRole(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findMaxRole()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+
+        Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        ROLES maxRole = ROLES.FOLLOWER;
+        List<Role> roleList = resultList.stream().map(urc -> urc.getRole()).collect(Collectors.toList());
+
+        for (Role r : roleList) {
+            for (ROLES enumRole : ROLES.values()) {
+                if (r.getName().equals(enumRole.name())) {
+                    if (enumRole.getValue() > maxRole.getValue()) {
+                        maxRole = enumRole;
+                    }
+                }
+            }
+        }
+
+        return maxRole;
+    }
+
+    /**
+     * Finds all the roles where its role is lesser or equals of the role of the received user
+     * 
+     * @param loggedUserId
+     * @return
+     */
+    public List<Role> findRolesLesserThan(Integer loggedUserId) {
+
+        logger.debug(logId() + "Entering findRolesLesserThan()");
+
+        ROLES maxRole = findMaxRole(loggedUserId);
+
+        List<Role> fullRoleList = findAllRoles();
+
+        List<Role> realRoleList = fullRoleList.stream().filter(r -> lesserThan(r, maxRole))
+                .collect(Collectors.toList());
+
+        return realRoleList;
+    }
+
+    private boolean lesserThan(Role r, ROLES maxRole) {
+
+        Role.ROLES rv = Role.ROLES.resolve(r.getName());
+        if (rv != null) {
+            if (rv.getValue() <= maxRole.getValue()) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
     }
 }

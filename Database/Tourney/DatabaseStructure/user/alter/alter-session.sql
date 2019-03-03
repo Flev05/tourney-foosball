@@ -4,5 +4,5 @@
 
 ALTER TABLE ONLY session ADD CONSTRAINT session_id_pk PRIMARY KEY (id); 
       
-CREATE UNIQUE INDEX user_session_index
-ON session (user_session);
+CREATE UNIQUE INDEX user_id_session_index
+ON session (user_id, user_session);

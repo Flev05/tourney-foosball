@@ -10,7 +10,6 @@ import { Tourney } from '../domain/tourney';
 import { Round } from '../domain/round';
 import { Playoff } from '../domain/playoff';
 import { Team } from '../domain/team';
-import { Discipline } from '../domain/discipline';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
@@ -26,14 +25,18 @@ import { MeetingDb } from '../domain/meeting-db';
 import { environment } from 'environments/environment';
 import { Classification } from '../domain/classification';
 import { MeetingStatus } from '../domain/enumerations';
+import { MeetingService } from './meeting-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-const tourneyUrl = 'api/tourneys';  // URL to web api
-const typologiesUrl = 'api/typologies';  // URL to web api
-const meetingUrl = 'api/meetings';  // URL to web api
+const tourneyUrl = 'api/tourneys';  
+const loadTourneyByClientIdUrl = tourneyUrl + '/loadByClientId';  
+const loadTourneyUrl = tourneyUrl + '/loadByClientId';  
+const insertTourneyUrl = tourneyUrl + '/insert';
+const updateTourneyUrl = tourneyUrl + '/update';
+const deleteTourneyUrl = tourneyUrl + '/delete';
 
 const classificationLabel = "°";
 
@@ -229,11 +232,11 @@ export class TourneyService {
     /**
      * Loads all tourneys published from the database
      */
-    loadAllTourneys (): Observable<TourneyDb[]> {
-        let url = tourneyUrl;
+    loadAllTourneys(): Observable<TourneyDb[]> {
+        let url = loadTourneyByClientIdUrl;
 
-        if(this.loginService.userLogged) {
-            url = tourneyUrl + "?" + "clientId=" + this.clientService.selectedClientOption.value;
+        if(this.loginService.isUserLogged) {
+            url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id
         }
         
         return this.http.get<TourneyDb[]>(url).pipe(
@@ -243,12 +246,11 @@ export class TourneyService {
     }
 
     loadTourneys(fromDate: Date, toDate: Date): any {
-        let url = tourneyUrl;
+        let url = loadTourneyUrl;
 
-        if(this.loginService.userLogged) {
-            url = tourneyUrl 
-            + "?" + "clientId=" + this.clientService.selectedClientOption.value
-            + "&" + "fromDate=" + fromDate 
+        if(this.loginService.isUserLogged) {
+            url = loadTourneyUrl + "/" + this.clientService.selectedClient.id
+            + "?" + "fromDate=" + fromDate 
             + "&" + "toDate="   + toDate;
         }
         
@@ -258,77 +260,9 @@ export class TourneyService {
           );
     }
 
-    /** 
-     * Loads all the meetings of the receìved tourney and round
-     *  GET meetings by params. Will 404 if meetings not found 
-     */
-    loadRoundMeeting(tourneyId: number, roundId: number) :  Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "roundId=" + roundId;
-        let url = meetingUrl + queryString;
-        
-        if(this.loginService.userLogged) {
-            url = tourneyUrl + queryString;
-        }
-        
-        const obs :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
-        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
-        );
-
-        return obs;
-    }
-
-    /** 
-     * Loads all the meetings of the receìved tourney and playoff ids
-     *  GET meetings by params. Will 404 if meetings not found 
-     */
-    loadPlayoffMeeting(tourneyId: number, playoffId: number) : Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "playoffId=" + playoffId;
-        let url = meetingUrl + queryString;
-
-        if(this.loginService.userLogged) {
-            url = tourneyUrl + queryString;
-        }
-        
-        const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
-        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadPlayoffMeetingDb url=' + url))
-        );
-
-        return obs;
-    }
-
-    /** 
-     * Loads all the meetings of the receìved tourney and eliminatory ids
-     *  GET meetings by params. Will 404 if meetings not found 
-     */
-    loadEliminatoryMeeting(tourneyId: number, eliminatoryId: number) : Observable<MeetingDb[]> {
-        const queryString = "?" + "tourneyId=" + tourneyId + "&" + "eliminatoryId=" + eliminatoryId;
-        let url = meetingUrl + queryString;
-
-        if(this.loginService.userLogged) {
-            url = tourneyUrl + queryString;
-        }
-        
-        const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
-        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
-        );
-
-        return obs;
-    }
-    
-    loadDisciplines (): Observable<Discipline[]> {
-        return this.http.get<Discipline[]>(typologiesUrl)
-        .pipe(
-            tap(_ => this.log('fetched all typologies of the tourney')),
-            catchError(this.handleError('loadTypologies', []))
-          );
-    }
-
     loadTourneyPlayoff (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(tourneyUrl)
+        return this.http.get<Tourney[]>(loadTourneyUrl)
         .pipe(
             tap(_ => this.log('fetched all Playoff tourneys')),
             catchError(this.handleError('loadTourneyPlayoff', []))
@@ -337,7 +271,7 @@ export class TourneyService {
 
     loadTourneyElimination (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(tourneyUrl)
+        return this.http.get<Tourney[]>(loadTourneyUrl)
         .pipe(
             tap(_ => this.log('fetched all Elimination tourneys')),
             catchError(this.handleError('loadTourneyElimination', []))
@@ -346,7 +280,7 @@ export class TourneyService {
 
     /** GET hero by id. Will 404 if id not found */
     getTourney(id: number): Observable<Tourney> {
-        const url = `${tourneyUrl}/${id}`;
+        const url = `${loadTourneyUrl}/${id}`;
         return this.http.get<Tourney>(url).pipe(
             tap(_ => this.log('fetched Tourney id='+id)),
             catchError(this.handleError<Tourney>('getTourney id='+id))
@@ -358,8 +292,10 @@ export class TourneyService {
         let json: string = JSON.stringify(tourney);
         let tourneyDb: TourneyDb = {id: tourney.id, json: json};
 
-        return this.http.post<TourneyDb>(tourneyUrl, tourneyDb, httpOptions).pipe(
-            tap((tourney: TourneyDb) => this.log('added Tourney w/ id=' + tourney.id)),
+        let url = insertTourneyUrl;
+
+        return this.http.post<TourneyDb>(url, tourneyDb, httpOptions).pipe(
+            tap((tourney: TourneyDb) => this.log('added Tourney url=' + url)),
             catchError(this.handleError<TourneyDb>('addTourney'))
         );
     }
@@ -385,58 +321,14 @@ export class TourneyService {
     /** PUT: update the tourney on the server */
     private updateTourneyDb (tourney: TourneyDb ): Observable<TourneyDb> {
         const id =  tourney.id;
-        let url = tourneyUrl + "/" + id;
-
-        if(this.loginService.userLogged) {
-            url = tourneyUrl +  "/" + id;
-        }
+        let url = updateTourneyUrl + id;
 
         return this.http.put(url, tourney, httpOptions).pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),
             catchError(this.handleError<TourneyDb>('updateTourneyDb'))
         );
     }
-
-    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
-        if(m.id == null) {
-            if(environment.inMemoryDataService) {
-                m.id = this.getSequenceNumber();
-            }
-
-            this.addMeetingDb(m, tourneyId, roundId, null, null)
-        } else {
-            this.updateMeetingDb(m, tourneyId, roundId, null, null)
-        }
-    }
-
-    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
-        if(m.id == null) {
-            if(environment.inMemoryDataService) {
-                m.id = this.getSequenceNumber();
-            }
-            this.addMeetingDb(m, tourneyId, null, playoffId, null)
-        } else {
-            this.updateMeetingDb(m, tourneyId, null, playoffId, null)
-        }
-    }
-
-    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
-        if(m.id == null) {
-            if(environment.inMemoryDataService) {
-                m.id = this.getSequenceNumber();
-            }
-            this.addMeetingDb(m, tourneyId, null, null, eliminatoryId)
-        } else {
-            this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId)
-        }
-    }
-
-    private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): void {
-        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-
-        this.addMeeting(mdb);
-    }
-
+ 
     private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
 
         let mdb: MeetingDb = {
@@ -450,59 +342,7 @@ export class TourneyService {
 
         return mdb;
     }
-
-    /** POST: add a new MeetingDb to the db server */
-    private addMeeting (mdb: MeetingDb): void {
-        let url = meetingUrl;
-
-        let obs = this.http.post<MeetingDb>(url, mdb, httpOptions).pipe(
-            tap((m: MeetingDb) => this.log('added MeetingDb, url=' + url)),
-            catchError(this.handleError<MeetingDb>('addMeetingDb, url=' + url))
-        );
-        obs.subscribe();
-    }
-
-    completeRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): MeetingDb {
-        return this.prepareMdb(m, tourneyId, roundId, 0, 0);
-    }
-
-    completePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): MeetingDb {
-        return this.prepareMdb(m, tourneyId, 1, playoffId, 0);
-    }
-
-    completeEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): MeetingDb {
-        return this.prepareMdb(m, tourneyId, 0, 0, eliminatoryId);
-    }
-
-    private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number) {
-        let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-        let obs = this.updateMeetingMdb(mdb);
-        obs.subscribe();
-    }
-
-    /** PsUT: update the MeetingDb on the server */
-    // updateMeeting (m: Meeting):  Observable<Meeting> {
-
-    //     let obs = this.updateMeetingMdb(mdb);
-
-    //     return obs;
-    // }
-
-    /** PUT: update the MeetingDb on the db server */
-    updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
-        const id =  mdb.id;
-        let url = meetingUrl + "/" + id;
-
-        if(this.loginService.userLogged) {
-            url = tourneyUrl +  "/" + id;
-        }
-
-        return this.http.put(url, mdb, httpOptions).pipe(
-            tap(_ => this.log('updated MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb>('updateMeetingDb'))
-        );
-    }
-
+ 
     doRoundDelete(round: Round): void {
         console.log("doDelete(): " + round.name);
         let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";
@@ -562,8 +402,9 @@ export class TourneyService {
 
     /** DELETE: delete the MeetingDb from the server */
     private deleteMeeting (m: Meeting ): void {
+
         let id: number = m.id;
-        const url = meetingUrl + "/" + id;
+        const url = MeetingService.deleteMeetingUrl + "/" + id;
 
         let json = url + ", " + m.name;
 
@@ -578,7 +419,7 @@ export class TourneyService {
     /** DELETE: delete the tourney from the server */
     deleteTourney (tourney: Tourney | number): Observable<Tourney> {
         const id = typeof tourney === 'number' ? tourney : tourney.id;        
-        const url = tourneyUrl + "/" + id;
+        const url = deleteTourneyUrl + "/" + id;
 
         return this.http.delete<Tourney>(url, httpOptions).pipe(
             tap(_ => this.log('deleted Tourney id=' + id)),
@@ -776,7 +617,7 @@ export class TourneyService {
                 rows[row].won = c.won;    
                 rows[row].lost = c.lost;    
                 rows[row].balanced = c.balanced;    
-                rows[row].goalsDone = c.goalsDone;    
+                rows[row].goalsDone = c.goalsDone + ":" + c.goalsConceded;
                 rows[row].goalsConceded = c.goalsConceded;    
                 rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
 

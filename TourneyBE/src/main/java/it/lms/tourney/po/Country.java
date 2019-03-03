@@ -32,7 +32,7 @@ public class Country extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + "Country [city=" + city + ", cityCode=" + cityCode + ", provinceCode=" + provinceCode
+        return super.toString() + " Country [city=" + city + ", cityCode=" + cityCode + ", provinceCode=" + provinceCode
                 + ", zipCode=" + zipCode + ", countryCode=" + countryCode + "]";
     }
 

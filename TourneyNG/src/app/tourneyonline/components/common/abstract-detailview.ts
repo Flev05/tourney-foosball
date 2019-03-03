@@ -43,4 +43,10 @@ export abstract class AbstractDetailView extends AbstractView {
             r.classification.push(c);
         }
     }
+
+    onError(e:any) {
+        console.log("onError()");
+        console.log(e);
+    }
+
 }

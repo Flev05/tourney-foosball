@@ -8,14 +8,11 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.apache.log4j.Logger;
 
 import it.lms.tourney.cdi.AbstractLogger;
 
@@ -25,9 +22,6 @@ import it.lms.tourney.cdi.AbstractLogger;
  */
 public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends AbstractLogger {
 
-    @Inject
-    protected Logger        logger;
-
     @PersistenceContext
     private EntityManager   em;
 
@@ -36,10 +30,6 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
     private Class<PO>       entityClass;
     private CriteriaBuilder cb = null;
-
-    public BaseJPACrudDao() {
-
-    }
 
     protected BaseJPACrudDao(Class<PO> entityClass) {
 
@@ -80,6 +70,8 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         PO mpo = this.merge(entity);
 
         makePersistent(mpo);
+
+        entity = mpo;
         logger.debug(logId() + "update successful");
     }
 
@@ -100,7 +92,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
         PO mpo = this.merge(entity);
 
-        makePersistent(mpo);
+        em.remove(mpo);
         logger.debug(logId() + "delete successful");
     }
 
@@ -172,19 +164,8 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         return po;
     }
 
-    protected PO findById(ID id) {
+    public PO findById(ID id) {
 
         return em.find(entityClass, id);
-    }
-
-    private Query getAllQuery() {
-
-        return em.createQuery("select m from " + entityClass.getSimpleName() + " m");
-    }
-
-    @SuppressWarnings("unchecked")
-    protected List<PO> findAll() {
-
-        return (List<PO>) getAllQuery().getResultList();
     }
 }

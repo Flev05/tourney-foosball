@@ -4,11 +4,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable  } from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Country } from '../domain/country';
 
 const countryUrl = 'api/countries';  // URL to web api
+const loadAllCountryUrl = countryUrl + '/loadAll';  // URL to web api
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -26,8 +27,9 @@ export class CountryService {
     }
 
     loadCountries (): Observable<Country[]> {
- 
-        return this.http.get<Country[]>(countryUrl)
+        let url = loadAllCountryUrl;
+
+        return this.http.get<Country[]>(url)
         .pipe(
             tap(_ => this.log(`fetched all countries`)),
             catchError(this.handleError('loadCountries', []))

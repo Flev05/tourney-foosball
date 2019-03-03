@@ -16,11 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import it.lms.tourney.cdi.ConverterObject;
+
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "user_table")
+@ConverterObject
 public class User extends AbstractPO implements Serializable {
 
     private static final long   serialVersionUID = 1L;

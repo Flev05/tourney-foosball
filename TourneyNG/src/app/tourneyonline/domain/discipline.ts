@@ -1,4 +1,5 @@
 export interface Discipline {
-    name? : string;
-    code? : string;
+    id?     : number;
+    name?   : string;
+    description?   : string;
 }

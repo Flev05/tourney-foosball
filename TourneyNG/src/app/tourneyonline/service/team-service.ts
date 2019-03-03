@@ -14,7 +14,12 @@ import { TableCols } from '../domain/table-cols';
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const teamUrl = 'api/teams';  // URL to web api
+const teamUrl = 'api/teams';
+const loadTeamByClientIdUrl = teamUrl +'/loadByClientId';
+const loadTeamUrl   = teamUrl +'/load';
+const insertTeamUrl = teamUrl +'/insert';
+const updateTeamUrl = teamUrl +'/update';
+const deleteTeamUrl = teamUrl +'/delete';
 
 @Injectable()
 export class TeamService {
@@ -34,11 +39,7 @@ export class TeamService {
 
     loadAllTeams (): Observable<Team[]> {
  
-        let url = teamUrl;
-
-        if(this.loginService.userLogged) {
-            url = teamUrl + "?" + "clientId=" + this.clientService.selectedClient.id;
-        }
+        let url = loadTeamByClientIdUrl + "/" + this.clientService.selectedClient.id;
 
         return this.http.get<Team[]>(url)
         .pipe(
@@ -49,16 +50,20 @@ export class TeamService {
 
     /** GET hero by id. Will 404 if id not found */
     getTeam(id: number): Observable<Team> {
-        const url = `${teamUrl}/${id}`;
+        const url = `${loadTeamUrl}/${id}`;
+
         return this.http.get<Team>(url).pipe(
-            tap(_ => this.log(`fetched Team id=${id}`)),
+            tap(_ => this.log(`fetched Team url=` + url)),
             catchError(this.handleError<Team>(`getTeam id=${id}`))
         );
     }
 
     /** POST: add a new Team to the server */
     private addTeam (team: Team): Observable<Team> {
-        return this.http.post<Team>(teamUrl, team, httpOptions).pipe(
+
+        let url = insertTeamUrl;
+
+        return this.http.post<Team>(url, team, httpOptions).pipe(
             tap((team: Team) => this.log(`added Team w/ id=${team.id}`)),
             catchError(this.handleError<Team>('addTeam'))
         );
@@ -66,7 +71,7 @@ export class TeamService {
 
     /** PUT: update the Team on the server */
     private updateTeam (team: Team ): Observable<Team> {
-        const url = `${teamUrl}`;
+        let url = updateTeamUrl;
         
         console.log(team);
 
@@ -86,10 +91,10 @@ export class TeamService {
     /** DELETE: delete the Team from the server */
     deleteTeam (team: Team) : Observable<Team> {
         const id = team.id;
-        const url = `${teamUrl}/${id}`;
+        let url = deleteTeamUrl + "/" + id;
 
         return this.http.delete<Team>(url, httpOptions).pipe(
-            tap(_ => this.log(`deleted Team id=${id}`)),
+            tap(_ => this.log(`deleted Team id=` + id)),
             catchError(this.handleError<Team>('deleteTeam'))
         );
     }

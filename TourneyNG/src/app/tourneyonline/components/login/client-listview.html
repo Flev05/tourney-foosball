@@ -1,0 +1,48 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista elenco clienti</span>
+        <span>Vista per la sezione del cliente di lavoro</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <p-accordion>
+        <p-accordionTab header="Istruzioni">            
+            <p>
+                La vista contiene i clienti di proprietà dell'utente che ha fatto il login.
+                Selezionare il cliente su cui si vuole operarare per la sessione di lavoro.
+                Se si vuole cambiare cliente, occorre uscire, rientrare e selezionare un cliente diverso.
+            </p>
+        </p-accordionTab>
+    </p-accordion>    
+</div>
+
+<div *ngIf="onLoadClientError" style="margin-top:30px">
+    <p-message severity="error" text="Sistema momentaneamente non disponibile, riprovare più tardi"></p-message>
+</div>    
+                        
+<p-table [columns]="cols" 
+    [responsive]="true"
+    [value]="clients" 
+    selectionMode="single" 
+    [(selection)]="selectedClient" 
+    (onRowSelect)="onRowSelect($event)" >
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+ 

@@ -4,7 +4,7 @@ package it.lms.tourney.rest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,7 +27,7 @@ import it.lms.tourney.po.Meeting;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/meetings")
-@RequestScoped
+@Stateless
 public class MeetingRESTService extends AbstractRESTService {
 
     @Inject

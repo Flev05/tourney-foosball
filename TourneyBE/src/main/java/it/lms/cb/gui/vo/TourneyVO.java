@@ -18,6 +18,13 @@ public class TourneyVO extends AbstractVO implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+
+        return super.toString() + " TourneyVO [tourneyName=" + tourneyName + ", clientId=" + clientId + ", json=" + json
+                + "]";
+    }
+
     public String getTourneyName() {
 
         return tourneyName;

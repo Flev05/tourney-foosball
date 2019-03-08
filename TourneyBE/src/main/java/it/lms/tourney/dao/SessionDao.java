@@ -20,7 +20,6 @@ package it.lms.tourney.dao;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,7 +31,6 @@ import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
 import it.lms.tourney.po.User;
 
-@Stateless
 public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
     public SessionDao() {

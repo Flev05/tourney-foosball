@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -24,7 +23,6 @@ import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
 
-@Stateless
 public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
     @Inject

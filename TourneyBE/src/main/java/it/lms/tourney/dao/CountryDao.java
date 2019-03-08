@@ -19,7 +19,6 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
@@ -33,7 +32,6 @@ import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Country_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
-@Stateless
 public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
     public CountryDao() {

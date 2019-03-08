@@ -21,7 +21,6 @@ import { TourneyDb } from '../domain/tourney.db';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
-import { environment } from 'environments/environment';
 import { Classification } from '../domain/classification';
 import { MeetingStatus, TourneyType } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
@@ -308,9 +307,6 @@ export class TourneyService {
 
     saveTourney (tourney: Tourney ): Observable<Tourney> {
         if(tourney.id == null) {
-            // if(environment.inMemoryDataService) {
-            //     tourney.id = this.getSequenceNumber();
-            // }
             return this.addTourney(tourney);
         }
         return this.updateTourney(tourney);
@@ -319,7 +315,7 @@ export class TourneyService {
     /** PUT: update the tourney on the server */
     private updateTourneyDb (tourney: TourneyDb ): Observable<TourneyDb> {
         const id =  tourney.id;
-        let url = updateTourneyUrl + id;
+        let url = updateTourneyUrl;
 
         return this.http.put(url, tourney, httpOptions).pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),

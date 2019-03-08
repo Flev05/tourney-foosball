@@ -151,8 +151,8 @@ public class Converter extends AbstractLogger {
         tpo.setClient(cpo);
 
         tpo.setTourneyName(tvo.getTourneyName());
-        tpo.setId(tpo.getId());
-        tpo.setJson(tpo.getJson());
+        tpo.setId(tvo.getId());
+        tpo.setJson(tvo.getJson());
 
         return tpo;
     }

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,7 +31,7 @@ import it.lms.tourney.po.Client;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/clients")
-@RequestScoped
+@Stateless
 public class ClientRESTService extends AbstractRESTService {
 
     @Inject

@@ -4,9 +4,8 @@ package it.lms.tourney.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -31,8 +30,7 @@ import it.lms.tourney.po.UserRoleClient;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/logon")
-@RequestScoped
-@Transactional
+@Stateless
 public class LoginRESTService extends AbstractRESTService {
 
     @Inject

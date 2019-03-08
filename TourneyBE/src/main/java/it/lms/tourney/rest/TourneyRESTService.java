@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,7 +30,7 @@ import it.lms.tourney.po.Tourney;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/tourneys")
-@RequestScoped
+@Stateless
 public class TourneyRESTService extends AbstractRESTService {
 
     @Inject
@@ -122,10 +122,11 @@ public class TourneyRESTService extends AbstractRESTService {
 
     private Tourney newTourney(TourneyVO tvo) {
 
-        Tourney cpo = converter.convertTourneyVoPo(tvo);
+        Tourney tpo = converter.convertTourneyVoPo(tvo);
 
-        tourneyDao.insert(cpo);
-        return cpo;
+        tourneyDao.insert(tpo);
+
+        return tpo;
     }
 
     /**

@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -40,7 +39,6 @@ import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
-@Stateless
 public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
     public ClientDao() {

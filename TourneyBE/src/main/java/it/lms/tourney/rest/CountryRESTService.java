@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,7 +25,7 @@ import it.lms.tourney.po.Country;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/countries")
-@RequestScoped
+@Stateless
 public class CountryRESTService extends AbstractRESTService {
 
     @Inject

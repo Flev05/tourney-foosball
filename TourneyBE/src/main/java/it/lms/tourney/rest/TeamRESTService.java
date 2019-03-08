@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,7 +30,7 @@ import it.lms.tourney.po.Team;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/teams")
-@RequestScoped
+@Stateless
 public class TeamRESTService extends AbstractRESTService {
 
     @Inject

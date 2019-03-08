@@ -4,7 +4,6 @@ package it.lms.tourney.dao;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -22,7 +21,6 @@ import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
 
-@Stateless
 public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
     public RoleDao() throws DaoException {

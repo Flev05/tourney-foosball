@@ -4,7 +4,7 @@ package it.lms.tourney.rest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,7 +22,7 @@ import it.lms.tourney.po.Role;
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/roles")
-@RequestScoped
+@Stateless
 public class RoleRESTService extends AbstractRESTService {
 
     @Inject

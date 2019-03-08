@@ -750,7 +750,8 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        if( this.tourneyService.containsPhase(PhaseType.E) && !this.incompleteEliminatoryConfiguration ) {
+        let elconf = this.incompleteEliminatoryConfiguration == undefined ? true : this.incompleteEliminatoryConfiguration;
+        if( this.tourneyService.containsPhase(PhaseType.E) && !elconf ) {
             for(let el of this.selectedTourney.eliminatoryLevels) {
                 for(let e of el.eliminatories) {
                     for(let m of e.round.onewayMeetings) {

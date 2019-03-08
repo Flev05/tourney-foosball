@@ -61,6 +61,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         for(let tdb of this.tdbs) {
             let t = JSON.parse(tdb.json);
+            t.id = tdb.id;
             this.tourneys.push(t);
         }
 

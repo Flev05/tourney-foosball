@@ -19,7 +19,6 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -30,7 +29,6 @@ import it.lms.tourney.po.Discipline;
 import it.lms.tourney.po.Discipline_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
-@Stateless
 public class DisciplineDao extends BaseJPACrudDao<Discipline, Integer> {
 
     public DisciplineDao() {

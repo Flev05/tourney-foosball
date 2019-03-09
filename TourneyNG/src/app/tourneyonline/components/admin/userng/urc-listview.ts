@@ -65,7 +65,7 @@ export class UrcListView extends AbstractListView {
                 , firstname: urcvo.userVo.firstname
                 , lastname: urcvo.userVo.lastname
                 , phoneNumber: urcvo.userVo.phoneNumber
-                , client: urcvo.clientVo.businessName
+                , client: urcvo.clientVO.businessName
             }
 
             this.rows.push(row);
@@ -107,7 +107,7 @@ export class UrcListView extends AbstractListView {
         let urcId = urcvo.id;
         this.urcService.selectedUrc = this.urcList.find( urc => urc.id == urcId );
        
-        let name =  urcvo.userVo.username + "/" + urcvo.clientVo.businessName;
+        let name =  urcvo.userVo.username + "/" + urcvo.clientVO.businessName;
         let popup = 'Sicuro di voler rimuovere la relazione Utente/Cliente: [' + name + "]?";
 
         this.onDeleteError = false;

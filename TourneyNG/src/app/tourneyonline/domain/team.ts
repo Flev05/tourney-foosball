@@ -1,13 +1,14 @@
 
 import { Player } from './player';
 import { Country } from './country';
+import { ClientVO } from './client-vo';
 
 export interface Team {
     id?:       number;
-    clientId?: number;
+    clientVO?: ClientVO;
     teamName?: string;
+    address? : string;
     ruleName?: string;
-    address?:  string;
     country?:  Country;
     players?:  Player[];
 }

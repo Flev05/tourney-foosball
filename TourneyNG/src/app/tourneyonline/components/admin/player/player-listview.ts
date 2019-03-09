@@ -32,15 +32,29 @@ export class PlayerListView extends AbstractListView {
         super.ngOnInit();
       
         this.cols = PlayerService.cols;
-        this.playerService.loadAllPlayers().subscribe(t => this.playerService.playerPool = t, e => this.onError(e), () => this.onComplete());
+
+        this.playerService.loadAllPlayers( () => this.onComplete() );
     }
 
-    onComplete(): void {
-        this.rows = this.players = this.playerService.playerPool;
+    private onComplete(): any {
+        console.log("Entering onComplete()");
+        this.playerService.playerPool = [];
+
+        for( let pvo of this.playerService.playerPoolVO ) {
+            let ppo: Player = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
+            ppo.country = pvo.country;
+            ppo.clientVO = pvo.clientVO;
+            ppo.playerName = pvo.playerName;
+
+            this.playerService.playerPool.push(ppo);
+        }
+
+        this.rows = this.players = this.playerService.playerPool;    
     }
 
     create() {
-        this.selectedPlayer={};
+        this.selectedPlayer={id:null, playerName: ""};
         this.playerService.selectedPlayer = this.selectedPlayer;
         this.playerService.newPlayer = true;
         this.gotoDetailView();
@@ -49,7 +63,7 @@ export class PlayerListView extends AbstractListView {
     onRowSelect(event) {
         console.log(event.data);
         this.playerService.selectedPlayer = this.selectedRow;
-
+        this.playerService.newPlayer = false;
         this.gotoDetailView();
     }
 
@@ -57,9 +71,9 @@ export class PlayerListView extends AbstractListView {
         this.location.back();
     }
 
-    doDelete(player: any) {
+    doDelete(player: Player) {
         console.log(player);
-        let popup = 'Sicuro di voler rimuovere il giocatore: ' + player.lastname + " " + player.firstname;
+        let popup = 'Sicuro di voler rimuovere il giocatore: ' + player.playerName;
 
         if(confirm(popup + "?")) {
             this.playerService.deletePlayer(player).subscribe(n => this.next(n));

@@ -75,6 +75,7 @@ export class TourneyDetailView extends AbstractDetailView {
     incompleteEliminatoryConfiguration: boolean;
 
     meetingDaysMap: Map<number, Meeting[]>;
+    teamLabel: string;
 
     constructor(
         protected location: Location,
@@ -116,14 +117,16 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.prepareEliminatory();
 
-        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
+        if(this.selectedTourney.maxMatchesPerMeeting <= 2) {
             this.allMatchesEnabled = false;
         }
 
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin % 2 == 0 ? (spin / 2) + 1 : Math.ceil(spin / 2);
-    }
 
+        this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre";
+    }
+    
     private onLoadDisciplineComplete() {
         this.disciplineOptions = [];
         for( let d of this.disciplines ) {
@@ -293,7 +296,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     addTeams() {
-        this.teamService.loadAllTeams().subscribe(t => this.teamService.teamPool = t, e => this.onError(e), () => this.onComplete());
+        this.teamService.loadAllTeams( () => this.onComplete() );
     }
 
     private onComplete(): void {
@@ -714,7 +717,7 @@ export class TourneyDetailView extends AbstractDetailView {
     onSpinnerChange(event) {
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         
-        if(spin == 1) {
+        if(spin == 1 || spin == 2) {
             this.allMatchesEnabled = false;
         } else {
             this.allMatchesEnabled = true;

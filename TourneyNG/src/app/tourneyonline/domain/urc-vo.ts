@@ -7,5 +7,5 @@ export interface UserRoleClientVO
     id?         : number;
     userVo?     : UserVO;
     roleVo?     : RoleVO;
-    clientVo ?  : ClientVO;
+    clientVO?   : ClientVO;
 }

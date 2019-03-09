@@ -6,6 +6,9 @@ import { Player } from 'app/tourneyonline/domain/player';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { Observable, of } from 'rxjs';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
 
 
 @Component({
@@ -16,10 +19,13 @@ export class PlayerDetailView extends AbstractDetailView {
 
     toggleable: boolean = false;
     playerAlreadyExists: boolean;
+    onSavePlayerError: boolean;
+    badRequest: boolean;
     
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
+        protected clientService: ClientService,
         protected countryService: CountryService,
         private   playerService: PlayerService
     ) { 
@@ -42,37 +48,73 @@ export class PlayerDetailView extends AbstractDetailView {
 
     enableSaveButton() : string {
         let n : String = this.selectedPlayer.playerName;
-        let a : String = this.selectedPlayer.address;
-        let p : String = this.selectedPlayer.phoneNumber;
-        let m : String = this.selectedPlayer.email;
-        return a.trim() == "" || n.trim() == "" || p.trim() == "" || m.trim() == "" ? "disabled" : "";
+
+        if( n == undefined  ) {
+            return  "disabled";
+        }
+
+        return   n.trim() == "" ? "disabled" : "";
     }
 
     onSubmit(value: string) {
 
-        if(this.playerService.newPlayer) {
-            this.playerService.newPlayer = false;
-            this.playerAlreadyExists = false;
-            
-            let pl = this.verifyPlayer(this.selectedPlayer.playerName);
-            if(pl != null) {
-                this.playerAlreadyExists = true;
-                return;
-            }
-        }
+        this.selectedPlayer.clientVO = this.clientService.selectedClient;
 
-        this.playerService.savePlayer(this.selectedPlayer).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        let pvo : PlayerVO = {
+            id: this.selectedPlayer.id
+          , playerName: this.selectedPlayer.playerName
+          , country: this.selectedPlayer.country
+          , clientVO: this.selectedPlayer.clientVO
+          , json: JSON.stringify(this.selectedPlayer)
+        };
+
+        this.playerAlreadyExists = false;
+
+        const subscriber = this.playerService.savePlayer(pvo, this.savePlayerErrorHandler('Create player operation'));
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }
 
-    private verifyPlayer(playerName: string): Player {
-        let p2 = playerName.trim().toUpperCase();
-        for(let p of this.playerService.playerPool) {
-            let p1 = p.playerName.trim().toUpperCase();
-            if( p1 == p2 ) {
-                return p;
-            }
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSavePlayerError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+
+    private onSaveComplete() {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSavePlayerError ) {
+            this.playerService.newPlayer = false;
+            super.goBack();
         }
-        return null;
+    }
+
+    private savePlayerErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering savePlayerErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onSavePlayerError = true;
+
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "PlayerAlreadyExists" ) {
+                this.playerAlreadyExists = true;
+                return of(result as T);
+            }
+      
+            return of(result as T);
+        };
     }
  
     onError(n:any) {

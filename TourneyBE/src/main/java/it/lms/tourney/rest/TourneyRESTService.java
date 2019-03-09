@@ -98,7 +98,7 @@ public class TourneyRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createTourney(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Tourney foundTourney = tourneyDao.getByTourneyName(tvo.getTourneyName());
+        Tourney foundTourney = tourneyDao.getByTourneyName(tvo.getClientVO().getId(), tvo.getTourneyName());
         if (foundTourney != null) {
 
             logger.error("Tourney found");
@@ -140,6 +140,18 @@ public class TourneyRESTService extends AbstractRESTService {
     public Response updateTourney(TourneyVO tvo) {
 
         logger.debug(logId() + "PUT: updateTourney(" + tvo + ")");
+
+        Map<String, String> responseObj = new HashMap<String, String>();
+        Tourney foundTourney = tourneyDao.getByTourneyName(tvo.getClientVO().getId(), tvo.getTourneyName());
+        if (foundTourney != null && !foundTourney.getId().equals(tvo.getId())) {
+
+            logger.error("Tourney found");
+            responseObj.put("errorCode", "TourneyAlreadyExists");
+            responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
 
         Tourney tpo = converter.convertTourneyVoPo(tvo);
 

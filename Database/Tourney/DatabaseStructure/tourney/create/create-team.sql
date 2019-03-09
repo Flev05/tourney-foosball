@@ -7,5 +7,6 @@ CREATE TABLE team
 	, team_name		character varying(256)	NOT NULL	-- the the name in clear of the team
   	, client_id		integer NOT NULL 	-- the foreign key toward the CLIENT table
   	, session_id	integer 			-- the foreign key toward the SESSION table
+  	, country_id	integer 			-- the foreign key toward the COUNTRY table
 	, json 			varchar 			-- the JSON string representing the meeting
 );

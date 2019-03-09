@@ -1,0 +1,10 @@
+import { ClientVO } from "./client-vo";
+import { Country } from "./country";
+
+export interface TeamVO {
+    id?         : number;
+    teamName?   : string;
+    clientVO?   : ClientVO;
+    country?    : Country;
+    json?       : string;
+}

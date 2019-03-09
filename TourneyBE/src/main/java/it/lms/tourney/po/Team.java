@@ -26,6 +26,7 @@ public class Team extends AbstractPO implements Serializable {
 
     private Client            client;
     private Session           session;
+    private Country           country;
 
     public Team() {
 
@@ -35,7 +36,7 @@ public class Team extends AbstractPO implements Serializable {
     public String toString() {
 
         return super.toString() + " Team [json=" + json + ", teamName=" + teamName + ", client=" + client + ", session="
-                + session + "]";
+                + session + ", country=" + country + "]";
     }
 
     @Id
@@ -98,4 +99,16 @@ public class Team extends AbstractPO implements Serializable {
         this.session = session;
     }
 
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    public Country getCountry() {
+
+        return country;
+    }
+
+    public void setCountry(Country country) {
+
+        this.country = country;
+    }
 }

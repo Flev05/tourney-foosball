@@ -12,6 +12,7 @@ import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from './tourney-combobox';
 import { Meeting } from './meeting';
+import { ClientVO } from './client-vo';
 
 export interface Tourney {
     id?: number;
@@ -21,6 +22,7 @@ export interface Tourney {
     datetime? : Date;
 
     address? : string;
+    clientVO? : ClientVO;
     country? : Country;
 
     isOnewayRound?: string;

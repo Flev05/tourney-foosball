@@ -94,7 +94,7 @@ export class UrcDetailView extends AbstractDetailView {
                 },
             }
 
-            this.urcService.selectedUrc = {userVo: uvo, roleVo: null, clientVo: null};
+            this.urcService.selectedUrc = {userVo: uvo, roleVo: null, clientVO: null};
         }
 
         this.selectedUrc = this.urcService.selectedUrc;
@@ -131,7 +131,7 @@ export class UrcDetailView extends AbstractDetailView {
             let selectedRow = {id: cvo.id, businessName: cvo.businessName, selectedRole: this.defaultRole};
 
             if( !this.urcService.newUser ) {
-                let foundUrc = this.urcService.urcList.find( urc => urc.clientVo.id == cvo.id && urc.userVo.id == this.selectedUser.id);
+                let foundUrc = this.urcService.urcList.find( urc => urc.clientVO.id == cvo.id && urc.userVo.id == this.selectedUser.id);
                 if( foundUrc != undefined ) {
                     let cb : Combobox = {label: foundUrc.roleVo.name, value: foundUrc.roleVo.id};
                     selectedRow = {id: foundUrc.id, businessName: cvo.businessName, selectedRole: cb};
@@ -201,7 +201,7 @@ export class UrcDetailView extends AbstractDetailView {
                 id        : null,
                 userVo    : this.selectedUrc.userVo,
                 roleVo    : rvo,
-                clientVo  : cvo
+                clientVO  : cvo
             };
 
             urcList.push(urc);

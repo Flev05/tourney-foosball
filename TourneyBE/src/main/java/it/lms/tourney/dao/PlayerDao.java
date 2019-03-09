@@ -109,20 +109,23 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
         return resultList;
     }
 
-    public Player getByPlayerName(String playerName) {
+    public Player getByPlayerName(Integer clientId, String playerName) {
 
         logger.debug(logId() + "Entering getByPlayerName(" + playerName + ")");
 
         CriteriaBuilder cb = getCb();
-        CriteriaQuery<Player> criteria = cb.createQuery(Player.class);
-        Root<Player> root = criteria.from(Player.class);
+        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+        Root<Player> root = cq.from(Player.class);
+        Join<Player, Client> playerClientJoin = root.join(Player_.client);
 
         Predicate p = cb.equal(root.get(Player_.playerName), playerName);
+        Predicate q = cb.equal(playerClientJoin.get(Client_.id), clientId);
 
-        criteria = criteria.select(root);
-        criteria = criteria.where(p);
+        cq = cq.select(root);
+        cq = cq.where(p, q);
+        cq = cq.orderBy(cb.asc(root.get(Player_.playerName)));
 
-        TypedQuery<Player> tq = getEm().createQuery(criteria);
+        TypedQuery<Player> tq = getEm().createQuery(cq);
 
         List<Player> resultList = tq.getResultList();
 

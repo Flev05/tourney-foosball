@@ -1,10 +1,11 @@
 import { Country } from './country';
+import { ClientVO } from './client-vo';
 
 export interface Player
 {
     id?             : number;
-    clientId?       : number;
-    playerName?      : string;
+    clientVO?       : ClientVO;
+    playerName?     : string;
     address?        : string;
     phoneNumber?    : string;
     email?          : string;

@@ -772,7 +772,7 @@
             </ng-template>
             <ng-template pTemplate="summary" let-rowData>
                 <div style="text-align:left">
-                    <button label="Gestisci Squadre"
+                    <button label="{{teamLabel}}"
                         [disabled]="notAllowedPhases()" 
                         pButton icon="fa fa-plus" 
                         type="button" 

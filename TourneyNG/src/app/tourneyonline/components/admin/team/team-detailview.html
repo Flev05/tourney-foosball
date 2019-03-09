@@ -17,7 +17,10 @@
 </div>
 
 <h4><span>Squadra: {{selectedTeam.teamName}}</span></h4>
-
+<p>
+    I campi contrassegnati con * sono obbligatori!
+</p>
+    
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
@@ -66,8 +69,8 @@
             + " (" + selectedTeam.country.provinceCode +")" : "" }}
 
         </div>
-    </div>                    
-</div>
+    </div> 
+</div>                   
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
@@ -82,7 +85,13 @@
     </div>
 </div>
 
-<p>
-    I campi contrassegnati con * sono obbligatori!
-</p>
-    
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="teamAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già una squadra con nome {{selectedTeam.teamName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+ 
+
+ 

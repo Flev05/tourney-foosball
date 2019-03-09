@@ -29,20 +29,18 @@
 </div>
 
 <h4><span>Giocatore: {{selectedPlayer.playerName}}</span></h4>
-
-<div *ngIf="playerAlreadyExists" class="ui-grid-row" style="margin-top:30px">
-    <p-message severity="error" text="Attenzione! L'utente {{selectedPlayer.playerName}} esiste già."></p-message>
-    <p-message severity="error" text="In caso di omonimia, usare un nome numerato, altrimenti usare quello esistente."></p-message>
-</div>   
-
+ 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
-
+<p>
+    I campi contrassegnati con * sono obbligatori!
+</p>
+    
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Nominativo:
+            Nominativo*:
         </div>
         <div class="ui-grid-col-5" pTooltip="Il nome del giocatore è obbligatorio, può essere anche un nick name.">                                
             <input pInputText type="text" [(ngModel)]="selectedPlayer.playerName"/>
@@ -51,7 +49,7 @@
         
     <div class="ui-grid-row">
         <div class="ui-grid-col-3" pTooltip="La via del giocatore è obbligatoria.">
-            Via*:
+            Via:
         </div>
         <div class="ui-grid-col-5">
             <input pInputText type="text" [(ngModel)]="selectedPlayer.address"/>
@@ -115,9 +113,14 @@
         </div>
     </div>
 </div>
-<p>
-    I campi contrassegnati con * sono obbligatori!
-</p>
-    
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="playerAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già un giocatore con nome {{selectedPlayer.playerName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+ 
 
  

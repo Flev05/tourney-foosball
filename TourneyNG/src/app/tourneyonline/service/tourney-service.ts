@@ -17,7 +17,7 @@ import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { PlayoffRule } from '../domain/playoff-rule';
 import { Meeting } from '../domain/meeting';
 import { LoginService } from './login-service';
-import { TourneyDb } from '../domain/tourney.db';
+import { TourneyVO } from '../domain/tourney.vo';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Router } from '@angular/router';
@@ -225,14 +225,14 @@ export class TourneyService {
     /**
      * Loads all tourneys published from the database
      */
-    loadAllTourneys(): Observable<TourneyDb[]> {
+    loadAllTourneys(): Observable<TourneyVO[]> {
         let url = loadTourneyByClientIdUrl;
 
         if(this.loginService.isUserLogged) {
             url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id
         }
         
-        return this.http.get<TourneyDb[]>(url).pipe(
+        return this.http.get<TourneyVO[]>(url).pipe(
             tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
             catchError(this.handleError('loadTourneyDb', []))
           );
@@ -247,7 +247,7 @@ export class TourneyService {
             + "&" + "toDate="   + toDate;
         }
         
-        return this.http.get<TourneyDb[]>(url).pipe(
+        return this.http.get<TourneyVO[]>(url).pipe(
             tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
             catchError(this.handleError('loadTourneyDb', []))
           );
@@ -284,14 +284,14 @@ export class TourneyService {
     private addTourney (tourney: Tourney): Observable<Tourney> {
         let json: string = JSON.stringify(tourney);
 
-        let clientId = this.clientService.selectedClient.id;
-        let tourneyDb: TourneyDb = {id: null, clientId: clientId, tourneyName: tourney.tourneyName, json: json};
+        let cvo = this.clientService.selectedClient;
+        let tourneyDb: TourneyVO = {id: null, clientVO: cvo, tourneyName: tourney.tourneyName, json: json};
 
         let url = insertTourneyUrl;
 
-        return this.http.post<TourneyDb>(url, tourneyDb, httpOptions).pipe(
-            tap((tourney: TourneyDb) => this.log('added Tourney url=' + url)),
-            catchError(this.handleError<TourneyDb>('addTourney'))
+        return this.http.post<TourneyVO>(url, tourneyDb, httpOptions).pipe(
+            tap((tvo: TourneyVO) => this.log('added Tourney url=' + url + " (id=" + tvo.id + ")")),
+            catchError(this.handleError<TourneyVO>('addTourney'))
         );
     }
 
@@ -299,8 +299,8 @@ export class TourneyService {
     private updateTourney (tourney: Tourney ): Observable<Tourney> {
         let json: string = JSON.stringify(tourney);
 
-        let clientId = this.clientService.selectedClient.id;
-        let tourneyDb: TourneyDb = {id: tourney.id, clientId: clientId, tourneyName: tourney.tourneyName, json: json};
+        let cvo = this.clientService.selectedClient;
+        let tourneyDb: TourneyVO = {id: tourney.id, clientVO: cvo, tourneyName: tourney.tourneyName, json: json};
 
         return this.updateTourneyDb(tourneyDb);
     }
@@ -313,13 +313,13 @@ export class TourneyService {
     }
 
     /** PUT: update the tourney on the server */
-    private updateTourneyDb (tourney: TourneyDb ): Observable<TourneyDb> {
+    private updateTourneyDb (tourney: TourneyVO ): Observable<TourneyVO> {
         const id =  tourney.id;
         let url = updateTourneyUrl;
 
         return this.http.put(url, tourney, httpOptions).pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),
-            catchError(this.handleError<TourneyDb>('updateTourneyDb'))
+            catchError(this.handleError<TourneyVO>('updateTourneyDb'))
         );
     }
  

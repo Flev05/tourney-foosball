@@ -60,7 +60,11 @@ export class TourneyListView extends AbstractTourneyListView {
     onClientChange(cb: Combobox) {
         console.log(cb);
 
-        this.clientService.setSelectedClient(this.clientService.selectedClients.find( c => c.id == cb.value ));
+        const sc = this.clientService.selectedClients.find(c => c.id == cb.value);
+
+        this.clientService.setSelectedClient(sc);
+
+        this.ngOnInit();
     }
 
     onSearch(value: string) {

@@ -19,8 +19,6 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -82,7 +80,6 @@ public class CountryDao extends BaseJPACrudDao<Country, Integer> {
         return resultList;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insert(Country country) throws Exception {
 
         logger.debug(logId() + "Entering insert(" + country.getCity() + ")");
@@ -90,7 +87,6 @@ public class CountryDao extends BaseJPACrudDao<Country, Integer> {
         super.insertPo(country);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void update(Country country) throws Exception {
 
         logger.debug(logId() + "Entering save(" + country + ")");
@@ -98,7 +94,6 @@ public class CountryDao extends BaseJPACrudDao<Country, Integer> {
         super.updatePo(country);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(Country country) throws Exception {
 
         logger.debug(logId() + "Entering delete(" + country + ")");

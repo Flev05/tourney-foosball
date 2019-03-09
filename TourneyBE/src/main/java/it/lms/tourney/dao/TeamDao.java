@@ -99,6 +99,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
         cq = cq.select(root);
         cq = cq.where(p);
+        cq = cq.orderBy(cb.asc(root.get(Team_.teamName)));
 
         TypedQuery<Team> tq = getEm().createQuery(cq);
 
@@ -109,7 +110,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
         return resultList;
     }
 
-    public Team getByTeamName(String teamName) {
+    public Team getByTeamName(Integer clientId, String teamName) {
 
         logger.debug(logId() + "Entering getByTeamName(" + teamName + ")");
 
@@ -117,10 +118,14 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
         CriteriaQuery<Team> criteria = cb.createQuery(Team.class);
         Root<Team> root = criteria.from(Team.class);
 
+        Join<Team, Client> teamClientJoin = root.join(Team_.client);
+
         Predicate p = cb.equal(root.get(Team_.teamName), teamName);
 
+        Predicate q = cb.equal(teamClientJoin.get(Client_.id), clientId);
+
         criteria = criteria.select(root);
-        criteria = criteria.where(p);
+        criteria = criteria.where(p, q);
 
         TypedQuery<Team> tq = getEm().createQuery(criteria);
 

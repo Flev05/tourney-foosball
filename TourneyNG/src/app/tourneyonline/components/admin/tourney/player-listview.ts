@@ -61,11 +61,26 @@ export class PlayerListView extends AbstractDetailView {
  
     updateTeamList() {
 
-        this.playerService.loadAllPlayers().subscribe(p => this.playerService.playerPool = p, e => this.onError(e));
+        this.playerService.loadAllPlayers( () => this.onComplete() ) ;
 
         this.router.navigate([REDIRECT_PLAYER_PL]);
     }
-    
+    private onComplete(): any {
+        console.log("Entering onComplete()");
+        this.playerService.playerPool = [];
+
+        for( let pvo of this.playerService.playerPoolVO ) {
+            let ppo: Player = JSON.parse(pvo.json);
+            ppo.country = pvo.country;
+            ppo.clientVO = pvo.clientVO;
+            ppo.playerName = pvo.playerName;
+
+            this.playerService.playerPool.push(ppo);
+        }
+
+        this.selectedTeam.players = this.playerService.playerPool;    
+    }
+
     updateTeamDetails() {
         this.teamService.newTeam = false;
         this.router.navigate([REDIRECT_TEAM_DV]);
@@ -76,10 +91,5 @@ export class PlayerListView extends AbstractDetailView {
         this.playerService.selectedPlayer = this.selectedPlayer;
         this.playerService.newPlayer = false;
         this.router.navigate([REDIRECT_PLAYER_DV]);
-    }
-
-    onError(n:any) {
-        let msgerr: string = 'Creazione/Modifica nuova squadra fallita';
-        console.log(msgerr);
     }
 }

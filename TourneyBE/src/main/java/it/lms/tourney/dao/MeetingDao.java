@@ -32,7 +32,6 @@ import it.lms.tourney.po.Meeting_;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.Tourney_;
 
-// The @Stateless annotation eliminates the need for manual transaction demarcation
 public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
     public MeetingDao() {

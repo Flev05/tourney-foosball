@@ -8,6 +8,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from './team-detailview';
+import { TeamVO } from 'app/tourneyonline/domain/team-vo';
 
 @Component({
     templateUrl: './team-listview.html'
@@ -31,9 +32,25 @@ export class TeamListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         
-        this.teamService.loadAllTeams().subscribe(t => this.teams = t, e => this.onError(e));
+        this.teamService.loadAllTeams( () => this.onComplete() );
     }
 
+    private onComplete(): any {
+        console.log("Entering onComplete()");
+        this.teamService.teamPool = [];
+
+        for( let pvo of this.teamService.teamPoolVO ) {
+            let ppo: TeamVO = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
+            ppo.country = pvo.country;
+            ppo.clientVO = pvo.clientVO;
+            ppo.teamName = pvo.teamName;
+
+            this.teamService.teamPool.push(ppo);
+        }
+        this.teams = this.teamService.teamPool;
+    }
+    
     doDelete(team: Team) {
         console.log(team.teamName);
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName ;
@@ -54,7 +71,7 @@ export class TeamListView extends AbstractListView {
     }
 
     create() {
-        this.selectedTeam={id:0, teamName:""};
+        this.selectedTeam={id:null, teamName:""};
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = true;
         this.gotoDetailView();
@@ -64,7 +81,7 @@ export class TeamListView extends AbstractListView {
         console.log(event.data);
 
         this.teamService.selectedTeam = this.selectedTeam;
-
+        this.teamService.newTeam = false;
         this.gotoDetailView();
     }
 }

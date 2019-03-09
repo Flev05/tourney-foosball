@@ -1,6 +1,6 @@
 import { TourneyType, AccessMode, PhaseType, EliminatoryMode, TeamSortType, RoundType, Direction, MeetingStatus } from "../domain/enumerations";
 import { Tourney } from "../domain/tourney";
-import { TourneyDb } from "../domain/tourney.db";
+import { TourneyVO } from "../domain/tourney.vo";
 
 export class InMemoryDataServiceCSI  {
   static json1: string = JSON.stringify({
@@ -170,7 +170,7 @@ export class InMemoryDataServiceCSI  {
     ,objectives:[]
   }
     
-  static tourneyDb : TourneyDb = {
+  static tourneyDb : TourneyVO = {
       id: InMemoryDataServiceCSI.tourney.id
     , json: JSON.stringify(InMemoryDataServiceCSI.tourney)
   };

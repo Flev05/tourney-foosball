@@ -9,10 +9,10 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Player.class)
 public class Player_ {
 
+    public static volatile SingularAttribute<Player, Integer> id;
     public static volatile SingularAttribute<Player, Session> session;
     public static volatile SingularAttribute<Player, String>  json;
     public static volatile SingularAttribute<Player, String>  playerName;
     public static volatile SingularAttribute<Player, Client>  client;
-    public static volatile SingularAttribute<Player, Integer> id;
-
+    public static volatile SingularAttribute<Player, Country> country;
 }

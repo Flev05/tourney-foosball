@@ -2,6 +2,7 @@
 package it.lms.cb.gui.vo;
 
 import it.lms.tourney.cdi.ViewObject;
+import it.lms.tourney.po.Country;
 
 /**
  * The persistent class for the user database table.
@@ -14,6 +15,7 @@ public class TeamVO extends AbstractVO {
     private String            json;
     private String            teamName;
     private ClientVO          clientVO;
+    private Country           country;
 
     public TeamVO() {
 
@@ -22,7 +24,8 @@ public class TeamVO extends AbstractVO {
     @Override
     public String toString() {
 
-        return super.toString() + " Player [json=" + json + ", client=" + clientVO + ", teamName=" + teamName + "]";
+        return super.toString() + " Team [json=" + json + ", clientVO=" + clientVO + ", teamName=" + teamName
+                + ", country=" + country + "]";
     }
 
     public String getJson() {
@@ -54,4 +57,15 @@ public class TeamVO extends AbstractVO {
 
         this.clientVO = clientVO;
     }
+
+    public Country getCountry() {
+
+        return country;
+    }
+
+    public void setCountry(Country country) {
+
+        this.country = country;
+    }
+
 }

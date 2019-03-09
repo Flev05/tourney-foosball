@@ -99,7 +99,7 @@ public class PlayerRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createPlayer(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Player foundPlayer = playerDao.getByPlayerName(tvo.getPlayerName());
+        Player foundPlayer = playerDao.getByPlayerName(tvo.getClientVO().getId(), tvo.getPlayerName());
         if (foundPlayer != null) {
 
             logger.error("Player found");
@@ -140,6 +140,17 @@ public class PlayerRESTService extends AbstractRESTService {
     public Response updatePlayer(PlayerVO tvo) {
 
         logger.debug(logId() + "PUT: updatePlayer(" + tvo + ")");
+        Map<String, String> responseObj = new HashMap<String, String>();
+        Player foundPlayer = playerDao.getByPlayerName(tvo.getClientVO().getId(), tvo.getPlayerName());
+        if (foundPlayer != null && !foundPlayer.getId().equals(tvo.getId())) {
+
+            logger.error("Player found");
+            responseObj.put("errorCode", "PlayerAlreadyExists");
+            responseObj.put("message", "Player " + tvo.getPlayerName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
 
         Player tpo = converter.convertPlayerVoPo(tvo);
 

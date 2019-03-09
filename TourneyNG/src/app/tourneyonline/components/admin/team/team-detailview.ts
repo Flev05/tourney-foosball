@@ -7,6 +7,9 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { Observable, of } from 'rxjs';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TeamVO } from 'app/tourneyonline/domain/team-vo';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -19,10 +22,14 @@ export class TeamDetailView extends AbstractDetailView {
     msgs: Message[] = [];
 
     toggleable: boolean = false;
+    onSaveTeamError: boolean;
+    teamAlreadyExists: boolean;
+    badRequest: boolean;
 
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
+        protected clientService: ClientService,
         protected countryService: CountryService,
         private   teamService: TeamService
     ) { 
@@ -40,18 +47,80 @@ export class TeamDetailView extends AbstractDetailView {
             this.selectedTeam={id: null, teamName:""};
             this.selectedTeam.players = [];
         }
+        this.teamAlreadyExists = false;
     }
 
     onSubmit(value: string) {        
-        this.teamService.newTeam = false;
-        this.teamService.saveTeam(this.selectedTeam).subscribe(n => this.next(n), e => this.onError(e), () => this.goBack());
+        this.selectedTeam.clientVO = this.clientService.selectedClient;
+
+        let tvo : TeamVO = {
+            id: this.selectedTeam.id
+          , teamName: this.selectedTeam.teamName
+          , country: this.selectedTeam.country
+          , clientVO: this.selectedTeam.clientVO
+          , json: JSON.stringify(this.selectedTeam)
+        };
+
+        this.teamAlreadyExists = false;
+        const subscriber = this.teamService.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+    }
+
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSaveTeamError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+ 
+    private saveTeamErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTeamErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onSaveTeamError = true;
+
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "TeamAlreadyExists" ) {
+                this.teamAlreadyExists = true;
+                return of(result as T);
+            }
+      
+            return of(result as T);
+        };
+    }
+    
+    private onSaveComplete() {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSaveTeamError ) {
+            if(this.teamService.newTeam) {
+                this.teamService.teamPool.push(this.selectedTeam);
+            }
+
+            this.teamService.newTeam = false;
+            super.goBack();
+        }
     }
 
     enableSaveButton() : string {
         let n : String = this.selectedTeam.teamName;
-        let a : String = this.selectedTeam.address;
 
-        return  n.trim() == "" || a.trim() == "" ? "disabled" : "";
+        if( n == undefined ) {
+            return  "disabled";
+        }
+
+        return  n.trim() == "" ? "disabled" : "";
     }
 
     onError(n:any) {

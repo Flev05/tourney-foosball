@@ -15,10 +15,12 @@ import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.CountryDao;
 import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Meeting;
 import it.lms.tourney.po.Player;
 import it.lms.tourney.po.Role;
@@ -41,6 +43,9 @@ public class Converter extends AbstractLogger {
 
     @Inject
     UserRoleClientDao urcDao;
+
+    @Inject
+    CountryDao        countryDao;
 
     public RoleVO convertRolePoVo(Role rpo) {
 
@@ -135,7 +140,9 @@ public class Converter extends AbstractLogger {
 
         TourneyVO tvo = new TourneyVO();
 
-        tvo.setClientId(tpo.getClient().getId());
+        ClientVO cvo = convertClientPoVo(tpo.getClient());
+
+        tvo.setClientVO(cvo);
         tvo.setId(tpo.getId());
         tvo.setJson(tpo.getJson());
         tvo.setTourneyName(tpo.getTourneyName());
@@ -147,7 +154,7 @@ public class Converter extends AbstractLogger {
 
         Tourney tpo = new Tourney();
 
-        Client cpo = clientDao.findById(tvo.getClientId());
+        Client cpo = clientDao.findById(tvo.getClientVO().getId());
         tpo.setClient(cpo);
 
         tpo.setTourneyName(tvo.getTourneyName());
@@ -164,6 +171,9 @@ public class Converter extends AbstractLogger {
         ClientVO cvo = convertClientPoVo(ppo.getClient());
         pvo.setClientVO(cvo);
 
+        Country country = countryDao.getById(ppo.getCountry().getId());
+        pvo.setCountry(country);
+
         pvo.setId(ppo.getId());
         pvo.setJson(ppo.getJson());
         pvo.setPlayerName(ppo.getPlayerName());
@@ -177,6 +187,10 @@ public class Converter extends AbstractLogger {
 
         ClientVO cvo = convertClientPoVo(tpo.getClient());
         tvo.setClientVO(cvo);
+
+        Country country = countryDao.getById(tpo.getCountry().getId());
+
+        tvo.setCountry(country);
 
         tvo.setId(tpo.getId());
         tvo.setJson(tpo.getJson());
@@ -192,6 +206,9 @@ public class Converter extends AbstractLogger {
         Client cpo = clientDao.findById(pvo.getClientVO().getId());
         ppo.setClient(cpo);
 
+        Country country = countryDao.findById(pvo.getCountry().getId());
+        ppo.setCountry(country);
+
         ppo.setId(pvo.getId());
         ppo.setJson(pvo.getJson());
         ppo.setPlayerName(pvo.getPlayerName());
@@ -206,7 +223,11 @@ public class Converter extends AbstractLogger {
         Client cpo = clientDao.findById(tvo.getClientVO().getId());
         tpo.setClient(cpo);
 
+        Country country = countryDao.findById(tvo.getCountry().getId());
+        tpo.setCountry(country);
+
         tpo.setId(tvo.getId());
+        tpo.setTeamName(tvo.getTeamName());
         tpo.setJson(tvo.getJson());
 
         return tpo;

@@ -8,8 +8,8 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Player } from '../domain/player';
 import { TableCols } from '../domain/table-cols';
-import { LoginService } from './login-service';
 import { ClientService } from './client-service';
+import { PlayerVO } from '../domain/player-vo';
 
 const playerUrl = 'api/players';  
 const loadPlayerByClientIdUrl = playerUrl + "/loadByClientId";
@@ -25,6 +25,7 @@ const httpOptions = {
 @Injectable()
 export class PlayerService {
     playerPool: Player[];
+    playerPoolVO: PlayerVO[];
     selectedPlayer : Player;
     newPlayer : boolean = false;
     
@@ -34,19 +35,25 @@ export class PlayerService {
         { field: 'email',       header: 'Email' }
     ];
 
-    constructor(private http: HttpClient, private loginService: LoginService, private clientService: ClientService) { 
+    constructor(private http: HttpClient, private clientService: ClientService) { 
         console.log("Constructor of PlayerService");
     }
 
-    loadAllPlayers (): Observable<Player[]> {
+    loadAllPlayers (complete: () => void): void {
 
         let url = loadPlayerByClientIdUrl + "/" + this.clientService.selectedClient.id;
 
-        return this.http.get<Player[]>(url)
+        let observer : Observable<Player[]> =  this.http.get<Player[]>(url)
         .pipe(
             tap(_ => this.log(`fetched all players`)),
             catchError(this.handleError('loadAllPlayers', []))
-          );
+        );
+
+        observer.subscribe(p => this.playerPoolVO = p, e => this.onError(e), () => complete());
+    }
+
+    private onError(e: any): any {
+        console.log("Entering onError()" + e);
     }
 
     /** GET hero by id. Will 404 if id not found */
@@ -60,32 +67,33 @@ export class PlayerService {
     }
 
     /** POST: add a new Player to the server */
-    private addPlayer (player: Player): Observable<Player> {
+    private addPlayer (player: PlayerVO, selector: (err: any, caught: Observable<PlayerVO> ) => Observable<PlayerVO> ): Observable<PlayerVO> {
         const url = insertPlayerUrl;
 
-        return this.http.post<Player>(url, player, httpOptions).pipe(
-            tap((player: Player) => this.log(`added Player w/ id=${player.id}`)),
-            catchError(this.handleError<Player>('addPlayer'))
+        return this.http.post<PlayerVO>(url, player, httpOptions).pipe(
+            tap((player: PlayerVO) => this.log(`added Player w/ id=${player.id}`)),
+            catchError(selector)
         );
     }
 
     /** PUT: update the Player on the server */
-    private updatePlayer (player: Player ): Observable<Player> {
+    private updatePlayer (player: PlayerVO, selector: (err: any, caught: Observable<PlayerVO> ) => Observable<PlayerVO> ): Observable<PlayerVO> {
         const url = updatePlayerUrl;
         
         console.log(url);
 
         return this.http.put(url, player, httpOptions).pipe(
             tap(_ => this.log(`updated Player url=` + url)),
-            catchError(this.handleError<Player>('updatePlayer'))
+            catchError(selector)
         );
     }
-
-    savePlayer(player: Player): Observable<Player> {
-        if(player.id == null) {
-            return this.addPlayer(player);
+    
+    savePlayer(pvo: PlayerVO, selector: (err: any, caught: Observable<PlayerVO> ) => Observable<PlayerVO> ): Observable<PlayerVO> {
+        
+        if(pvo.id == null) {
+            return this.addPlayer(pvo, selector);
         }
-        return this.updatePlayer(player);
+        return this.updatePlayer(pvo, selector);
     }
     
     /** DELETE: delete the Player from the server */

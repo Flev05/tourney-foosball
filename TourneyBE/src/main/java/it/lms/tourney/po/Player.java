@@ -12,14 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import it.lms.tourney.cdi.ConverterObject;
-
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "player")
-@ConverterObject
 public class Player extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +26,7 @@ public class Player extends AbstractPO implements Serializable {
 
     private Client            client;
     private Session           session;
+    private Country           country;
 
     public Player() {
 
@@ -38,7 +36,7 @@ public class Player extends AbstractPO implements Serializable {
     public String toString() {
 
         return super.toString() + " Player [json=" + json + ", playerName=" + playerName + ", client=" + client
-                + ", session=" + session + "]";
+                + ", session=" + session + ", country=" + country + "]";
     }
 
     @Id
@@ -99,5 +97,18 @@ public class Player extends AbstractPO implements Serializable {
     public void setSession(Session session) {
 
         this.session = session;
+    }
+
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    public Country getCountry() {
+
+        return country;
+    }
+
+    public void setCountry(Country country) {
+
+        this.country = country;
     }
 }

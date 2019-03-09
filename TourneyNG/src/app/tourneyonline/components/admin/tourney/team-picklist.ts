@@ -6,7 +6,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { Router } from '@angular/router';
-import { TeamListView } from '../team/team-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 

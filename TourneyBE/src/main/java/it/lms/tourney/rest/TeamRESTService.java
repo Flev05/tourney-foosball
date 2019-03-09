@@ -99,7 +99,7 @@ public class TeamRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createTeam(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Team foundTeam = teamDao.getByTeamName(tvo.getTeamName());
+        Team foundTeam = teamDao.getByTeamName(tvo.getClientVO().getId(), tvo.getTeamName());
         if (foundTeam != null) {
 
             logger.error("Team found");
@@ -140,6 +140,17 @@ public class TeamRESTService extends AbstractRESTService {
     public Response updateTeam(TeamVO tvo) {
 
         logger.debug(logId() + "PUT: updateTeam(" + tvo + ")");
+        Map<String, String> responseObj = new HashMap<String, String>();
+        Team foundTeam = teamDao.getByTeamName(tvo.getClientVO().getId(), tvo.getTeamName());
+        if (foundTeam != null && !foundTeam.getId().equals(tvo.getId())) {
+
+            logger.error("Team found");
+            responseObj.put("errorCode", "TeamAlreadyExists");
+            responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
 
         Team tpo = converter.convertTeamVoPo(tvo);
 

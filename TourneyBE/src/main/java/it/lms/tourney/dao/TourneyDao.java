@@ -116,7 +116,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         return resultList;
     }
 
-    public Tourney getByTourneyName(String tourneyName) {
+    public Tourney getByTourneyName(Integer clientId, String tourneyName) {
 
         logger.debug(logId() + "Entering getByTourneyName()");
 
@@ -125,10 +125,15 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
         Root<Tourney> root = cq.from(Tourney.class);
 
-        Predicate p = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
+        Join<Tourney, Client> tourneyClientJoin = root.join(Tourney_.client);
+
+        Predicate p = cb.equal(tourneyClientJoin.get(Client_.id), clientId);
+
+        Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
 
         cq = cq.select(root);
-        cq = cq.where(p);
+        cq = cq.where(p, q);
+        cq = cq.orderBy(cb.asc(root.get(Tourney_.tourneyName)));
 
         TypedQuery<Tourney> tq = getEm().createQuery(cq);
 

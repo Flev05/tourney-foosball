@@ -19,11 +19,11 @@
    Database/Tourney/DatabaseStructure
 
    e lanciare il comando:
-   psql -h 127.0.0.1 -d tourneydbtest -U tourney -f execute-test.sql
+   psql -h 127.0.0.1 -d tourneydbtest -U postgres -f execute-test.sql
 
 3) Popolare lo schema di TEST nel seguente modo:
    Portarsi sotto la directory:
-   Database/Tourney/DatabaseData/user
+   Database/Tourney/DatabaseData
 
    e lanciare il comando:
    psql -h 127.0.0.1 -d tourneydbtest -U tourney -f insert-all.sql

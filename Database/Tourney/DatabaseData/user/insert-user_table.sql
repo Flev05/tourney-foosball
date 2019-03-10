@@ -1,6 +1,8 @@
 -- Tourney 1.0
 -- ==============
 
+DELETE FROM USER_table;
+
 insert into USER_table(id 
 , firstname
 , lastname

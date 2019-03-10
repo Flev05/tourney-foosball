@@ -6,3 +6,4 @@
 \i alter-meeting.sql
 
 \i alter-ipg.sql
+\i alter-discipline.sql

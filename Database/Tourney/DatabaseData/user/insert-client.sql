@@ -1,5 +1,7 @@
 -- Tourney 1.0
 
+DELETE FROM client;
+
 insert into client (id
 , business_name
 , address

@@ -42,11 +42,7 @@
 <h3>
     Torneo: {{selectedTourney.tourneyName}}
 </h3> 
-
-<div *ngIf="isEmpty" style="margin-top:30px">
-    <p-message severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
-</div>     
-    
+ 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
@@ -121,13 +117,13 @@
 
     <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">  
         <div style="margin-top:30px">
-            <p-message *ngIf="incompleteConfiguration" 
+            <p-message *ngIf="incompleteEliminatoryConfiguration" 
                 severity="error" 
                 text="Attenzione! Non non è stato inserito ancora nessun risultato!">
             </p-message>
         </div>     
 
-        <p-table *ngIf="!incompleteConfiguration" 
+        <p-table *ngIf="!incompleteEliminatoryConfiguration" 
                 [columns]="eliminatoryCols"
                 [value]="eliminatoryLevelRows" 
                 [responsive]="true"

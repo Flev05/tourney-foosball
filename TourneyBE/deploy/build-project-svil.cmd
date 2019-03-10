@@ -15,7 +15,7 @@ set BE_DIR=%TOURNEY_DIR%\TourneyBE
 set WEB_CONTENT_DIR=%BE_DIR%\WebContent
 set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
 
-call build-ng.cmd
+call build-svil.cmd
 
 cd %BE_DIR%\deploy
 call copy-web-inf.cmd

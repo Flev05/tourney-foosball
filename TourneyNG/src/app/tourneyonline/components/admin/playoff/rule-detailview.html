@@ -80,10 +80,8 @@
 
 <h3>Torneo: {{selectedTourney.tourneyName}}</h3>
 <h3>Girone Playoff: {{selectedPlayoff.round.name}}</h3>
-<h4>Regola N°: {{selectedIndex}}</h4>
-    
 
-<form [formGroup]="playoffConfigFormGroup" (ngSubmit)="onSubmit(playoffConfigFormGroup.value)">
+<form [formGroup]="playoffConfigFormGroup" >
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button type="submit" icon="fa fa-arrow-left" pButton label="Indietro"></button>
     </div>              

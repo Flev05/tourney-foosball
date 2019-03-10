@@ -6,8 +6,6 @@ import { HomeComponent } from './components/home/home.component';
     imports: [
         RouterModule.forRoot([
             {path: '', component: HomeComponent},
-            {path: 'dfm',       loadChildren: './components/common/dfm.module#DateFormatModule'},
-            
             {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
             {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
 

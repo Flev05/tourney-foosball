@@ -79,7 +79,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     constructor(
         protected location: Location,
-        protected tourneyService: TourneyService,
+        public tourneyService: TourneyService,
         protected countryService: CountryService,
         protected playerService: PlayerService,
         protected teamService: TeamService,

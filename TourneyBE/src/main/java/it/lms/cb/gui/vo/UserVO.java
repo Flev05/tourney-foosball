@@ -4,9 +4,9 @@ package it.lms.cb.gui.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.lms.tourney.cdi.ViewObject;
+import it.lms.tourney.cdi.DaoQualifier;
 
-@ViewObject
+@DaoQualifier
 public class UserVO extends CommonUserVO {
 
     private static final long serialVersionUID = 1L;

@@ -36,6 +36,7 @@ import it.lms.tourney.po.Tourney_;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 //@Stateless
+//@DaoQualifier
 public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
     public TourneyDao() {

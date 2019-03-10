@@ -40,10 +40,6 @@
 <h3>
     Torneo: {{selectedTourney.tourneyName}}
 </h3> 
-
-<div *ngIf="isEmpty" style="margin-top:30px">
-    <p-message severity="error" text="Attenzione, bisogna compilare prima i gironi o playoff"></p-message>
-</div>     
     
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -81,13 +77,13 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsPlayoff()" header="Playoff">    
-        <div *ngIf="incompletePlayoffConfiguration" style="margin-top:30px">
+        <div *ngIf="incompleteEliminatoryConfiguration" style="margin-top:30px">
             <p-message severity="error" 
                 text="Attenzione! Le regole del passaggio di turno ai playoff non sono complete!">
             </p-message>
         </div>     
 
-        <p-table *ngIf="!incompletePlayoffConfiguration" [columns]="cols"
+        <p-table *ngIf="!incompleteEliminatoryConfiguration" [columns]="cols"
             [value]="playoffRows"
             [responsive]="true"> 
             

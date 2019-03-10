@@ -70,15 +70,15 @@ export abstract class AbstractView implements OnInit {
         return false;
     }
 
-    protected containsRound(): boolean {
+    containsRound(): boolean {
         return this.containsPhase(PhaseType.R, this.selectedTourney.phases);
     }
 
-    protected containsPlayoff(): boolean {
+    containsPlayoff(): boolean {
         return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
     }
 
-    protected containsEliminatory(): boolean {
+    containsEliminatory(): boolean {
         return this.containsPhase(PhaseType.E, this.selectedTourney.phases);
     }
 

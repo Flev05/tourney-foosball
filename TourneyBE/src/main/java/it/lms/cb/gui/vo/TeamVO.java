@@ -1,13 +1,13 @@
 
 package it.lms.cb.gui.vo;
 
-import it.lms.tourney.cdi.ViewObject;
+import it.lms.tourney.cdi.DaoQualifier;
 import it.lms.tourney.po.Country;
 
 /**
  * The persistent class for the user database table.
  */
-@ViewObject
+@DaoQualifier
 public class TeamVO extends AbstractVO {
 
     private static final long serialVersionUID = 1L;

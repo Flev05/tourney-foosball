@@ -51,7 +51,7 @@
         </p>
         <p>
             Per maggior informazioni si rimanda alla pagina di introduzione relativa alla:
-            <a class="home-button" [routerLink]="['/demo']" (click)="menuActive = false">Versione Demo</a>
+            <a class="home-button" [routerLink]="['/demo']">Versione Demo</a>
         </p>
     
         <h4>Utenti con account</h4>
@@ -67,7 +67,7 @@
         </p>
         <p>
             Per procurarsi un account si rimanda alla pagina di introduzione relativa alla:
-            <a class="home-button" [routerLink]="['/lease']" (click)="menuActive = false">Versione Noleggio</a>
+            <a class="home-button" [routerLink]="['/lease']">Versione Noleggio</a>
         </p>
 
         <h4>Utenti foollower</h4>
@@ -77,7 +77,7 @@
             Tipicamente sono i partecipanti al torneo o tifosi che seguono l'andamento del torneo e vogliono
             vedere l'evoluzione in tempo reale.
             Per maggiori dettagli si veda la pagina:
-            <a class="home-button" [routerLink]="['/realtime']" (click)="menuActive = false">Tempo Reale</a>
+            <a class="home-button" [routerLink]="['/realtime']">Tempo Reale</a>
         </p>
 
         <h3>Definizione torneo</h3>
@@ -139,7 +139,7 @@
         </p>
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/adminplayer']" (click)="menuActive = false">Giocatori</a>
+            <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>
         </p>
         
         <h4>Configurazione squadre</h4>
@@ -149,7 +149,7 @@
         </p>
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù:
-            <a class="home-button" [routerLink]="['/adminteam']" (click)="menuActive = false">Squadre</a>
+            <a class="home-button" [routerLink]="['/adminteam']">Squadre</a>
         </p>
         
         <h3>Configurazione gironi</h3>
@@ -161,7 +161,7 @@
         </p>
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/adminround']" (click)="menuActive = false">Gironi</a>
+            <a class="home-button" [routerLink]="['/adminround']">Gironi</a>
         </p>        
 
         <h3>Configurazione playoff</h3>
@@ -172,7 +172,7 @@
         </p>            
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/adminplayoff']" (click)="menuActive = false">Playoff</a>
+            <a class="home-button" [routerLink]="['/adminplayoff']">Playoff</a>
         </p>
 
         <h3>Configurazione eliminatorie</h3>
@@ -183,7 +183,7 @@
         </p>
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/admineliminatory']" (click)="menuActive = false">Eliminatorie</a>
+            <a class="home-button" [routerLink]="['/admineliminatory']">Eliminatorie</a>
         </p> 
 
         <h3>Obiettivi</h3>
@@ -195,7 +195,7 @@
         </p>
         <p>
             La vista preposta allo scopo è accessibile alla voce di menù: 
-            <a class="home-button" [routerLink]="['/adminobjective']" (click)="menuActive = false">Obiettivi</a>
+            <a class="home-button" [routerLink]="['/adminobjective']">Obiettivi</a>
         </p>
     </p-accordionTab>
 
@@ -232,7 +232,7 @@
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
     
-    <div *ngIf="clientsCBEnabled" class="ui-grid-row">
+    <!-- <div *ngIf="clientsCBEnabled" class="ui-grid-row">
         <div class="ui-grid-col-3">
             Cliente:
         </div>
@@ -243,7 +243,7 @@
                 (onChange)="onClientChange($event.value)">
             </p-dropdown>
         </div>
-    </div>    
+    </div>     -->
 
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">

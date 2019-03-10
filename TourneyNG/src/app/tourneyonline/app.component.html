@@ -23,7 +23,17 @@
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
         
-        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}} / {{clientService.selectedClientName}}</p>
+        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}}</p>
+
+        <div *ngIf="clientsCBEnabled()" class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <p-dropdown [options]="clientOptions" 
+                    [(ngModel)]="selectedClientOption" 
+                    optionLabel="label"
+                    (onChange)="onClientChange($event.value)">
+                </p-dropdown>
+            </div>
+        </div>           
 
         <div class="layout-menu">
            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 

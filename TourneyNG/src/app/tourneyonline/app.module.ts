@@ -30,6 +30,8 @@ import { UrcService } from './service/urc-service';
 import {SlideMenuModule} from 'primeng/slidemenu';
 import { DisciplineService } from './service/discipline-service';
 import { MeetingService } from './service/meeting-service';
+import { DateFormatPipe } from './components/common/date-format-pipe';
+import { DateFormatModule } from './components/common/date-format.module';
 
 
 const forDevelopEnvOnly: any[] = [];
@@ -56,6 +58,8 @@ if (environment.inMemoryDataService) {
     ,ButtonModule
     ,BrowserAnimationsModule
     ,SlideMenuModule
+    , DateFormatModule
+    
     // , forDevelopEnvOnly
   ],
   providers: [

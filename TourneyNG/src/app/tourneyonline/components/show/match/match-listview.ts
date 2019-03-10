@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { AbstractListView } from '../../common/abstract-listview';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,8 +18,7 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
         }
   `]
 })
-export class MatchListView implements OnInit {
-    selectedTourney: Tourney;
+export class MatchListView extends AbstractListView {
     selectedMeeting: Meeting;
 
     matches: Match[];
@@ -27,11 +27,14 @@ export class MatchListView implements OnInit {
     constructor(
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
+        protected router: Router,
         protected location: Location
-    ) {}    
+    ) {
+
+        super("", tourneyService, router, location);
+    }    
 
     ngOnInit() {
-        this.selectedTourney = this.tourneyService.selectedTourney;
         this.selectedMeeting = this.meetingService.selectedMeetingDb;
         this.matches = this.selectedMeeting.matches;
 

@@ -68,7 +68,7 @@
 <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
 <h4><span>Girone: {{selectedRound.name}}</span></h4>
 
-<form [formGroup]="roundFormGroup" (ngSubmit)="onSubmit(roundFormGroup.value)">
+<form [formGroup]="roundFormGroup">
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button  type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
         

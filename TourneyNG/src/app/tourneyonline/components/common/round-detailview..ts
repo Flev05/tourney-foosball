@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 
-import { AbstractTourneyDetailView } from './tourney-detailview';
+import { AbstractTourneyDetailView } from './abstract-tourney-detailview';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Meeting } from 'app/tourneyonline/domain/meeting';

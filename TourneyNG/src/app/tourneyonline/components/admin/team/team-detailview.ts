@@ -50,7 +50,7 @@ export class TeamDetailView extends AbstractDetailView {
         this.teamAlreadyExists = false;
     }
 
-    onSubmit(value: string) {        
+    onSubmit() {        
         this.selectedTeam.clientVO = this.clientService.selectedClient;
 
         let tvo : TeamVO = {

@@ -36,7 +36,7 @@ export class TabResultListView extends AbstractListView {
     incompletePlayoffConfiguration: boolean;
 
     constructor(
-        protected tourneyService: TourneyService,
+        public tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,

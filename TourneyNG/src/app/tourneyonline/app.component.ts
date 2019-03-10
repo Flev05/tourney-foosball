@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoginService } from './service/login-service';
 import { RoleService } from './service/role-service';
 import { ClientService } from './service/client-service';
+import { Combobox } from './domain/tourney-combobox';
 
 @Component({
   selector: 'app-root',
@@ -42,8 +43,11 @@ export class AppComponent implements OnInit{
     activeMenuId: string;
     
     notification: boolean = false;
-    
-    constructor(protected loginService: LoginService
+
+    clientOptions: Combobox[];
+    selectedClientOption : Combobox;
+
+    constructor( public loginService: LoginService
           , protected roleService: RoleService
           , protected clientService: ClientService
           , private router: Router
@@ -51,8 +55,33 @@ export class AppComponent implements OnInit{
 
     ngOnInit() {
         setTimeout(()=>this.notification = true , 1000);
+
+        this.clientsCBEnabled();
     }
-    
+
+    clientsCBEnabled(): boolean {
+
+        if(!this.loginService.isUserLogged || this.clientService.clientOptions == undefined) {
+            return false;
+        }
+
+        this.clientOptions = this.clientService.clientOptions;
+        let en = this.loginService.isUserLogged && this.clientOptions.length > 0 ? true : false;
+        this.selectedClientOption = this.clientService.selectedClientOption;
+        en = en && this.loginService.isUserLogged;
+        return en;
+    }
+        
+    onClientChange(cb: Combobox) {
+        console.log(cb);
+
+        const sc = this.clientService.selectedClients.find(c => c.id == cb.value);
+
+        this.clientService.setSelectedClient(sc);
+
+        this.ngOnInit();
+    }
+
     changeTheme(event: Event, theme: string) {
         let themeLink: HTMLLinkElement = <HTMLLinkElement> document.getElementById('theme-css');
         themeLink.href = 'assets/components/themes/' + theme + '/theme.css';

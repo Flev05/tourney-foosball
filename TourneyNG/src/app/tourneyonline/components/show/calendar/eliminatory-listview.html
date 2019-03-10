@@ -24,7 +24,7 @@
 <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
 <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
 
-<p-table *ngIf="!incompleteConfiguration" 
+<p-table *ngIf="!incompleteEliminatoryConfiguration" 
         [columns]="cols"
         [value]="eliminatoryRows"
         [responsive]="true">

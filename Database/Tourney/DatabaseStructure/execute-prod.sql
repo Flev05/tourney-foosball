@@ -1,6 +1,6 @@
 -- Tourney 1.0
 -- ==============
--- psql -d tourneydb -U tourney -f execute-prod.sql
+-- psql -h 127.0.0.1 -d tourneydb -U tourney -f execute-prod.sql
 
 \set SCHEMA_USER_NAME tourney;
 

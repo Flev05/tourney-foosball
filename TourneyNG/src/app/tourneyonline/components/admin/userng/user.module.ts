@@ -26,6 +26,8 @@ import {UserResetPasswordLv} from './user-reset-password-lv';
 import {UserResetPasswordDv} from './user-reset-password-dv';
 import { UrcListView } from './urc-listview';
 import { UrcDetailView } from './urc-detailview';
+import { UserDetailView } from './user-detailview';
+import { UserListView } from './user-listview';
 
 @NgModule({
 	imports: [
@@ -52,10 +54,12 @@ import { UrcDetailView } from './urc-detailview';
 		,UserRoutingModule
 	],
 	declarations: [UrcListView,
-		UrcDetailView,
-        UserChangePassword,
-        UserResetPasswordLv,
-        UserResetPasswordDv,
+         UrcDetailView
+         ,UserDetailView
+         ,UserListView
+         ,UserChangePassword
+        ,UserResetPasswordLv
+        ,UserResetPasswordDv
 	]
 })
 export class UserModule {}

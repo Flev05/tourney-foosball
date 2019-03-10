@@ -62,7 +62,7 @@
             Password*:
         </div>
         <div class="ui-grid-col-6">
-            <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria - Min(8)"/>
+            <input pInputText type="password" placeholder="Obbligatoria - Min(8)"/>
         </div>
     </div>
 
@@ -71,7 +71,7 @@
             Ripetere Password*:
         </div>
         <div class="ui-grid-col-6">
-            <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria - Min(8)"/>
+            <input pInputText type="password" placeholder="Obbligatoria - Min(8)"/>
         </div>
     </div>
 
@@ -142,20 +142,10 @@
 <div *ngIf="badRequest" style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
-<div *ngIf="isRetypePasswordFailed">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
-    </div>
-</div>
 
 <div *ngIf="userAlreadyExists">
     <div class="ui-message ui-messages-error ui-corner-all">
         <p-message severity="error" text="Esiste già un utente con username {{selectedUser.username}}. Scegliere un'altra username e riprovare"></p-message>
     </div>
 </div>
-
-<div *ngIf="loginFailed">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="L'utente non risulta registrato."></p-message>
-    </div>
-</div>
+ 

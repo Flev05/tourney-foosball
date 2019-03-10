@@ -74,7 +74,7 @@ export class ClientDetailView extends AbstractDetailView {
         this.userEnabled = true;
     }
 
-    onSubmit(value: string) {
+    onSubmit() {
 
         this.clearErrors();
 

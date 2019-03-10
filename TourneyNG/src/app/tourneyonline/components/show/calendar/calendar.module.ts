@@ -23,6 +23,7 @@ import { AccordionModule } from 'app/components/accordion/accordion';
 import { MessagesModule } from 'app/components/messages/messages';
 import { MessageModule } from 'app/components/message/message';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { RuleListView } from './rule-listview';
 
 @NgModule({
 	imports: [
@@ -50,6 +51,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
          CalendarTourneyListView
         ,CalendarEliminatoryListView
         ,CalendarTabListView
+        ,RuleListView
     ]
     ,providers: [DateFormatPipe]        
 })

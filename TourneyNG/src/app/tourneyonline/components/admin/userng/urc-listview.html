@@ -33,7 +33,7 @@
     </p-accordion>    
 </div>
 
-<div *ngIf="onLoadUserError" style="margin-top:30px">
+<div *ngIf="onLoadUrcError" style="margin-top:30px">
     <p-message severity="error" text="Sistema momentaneamente non disponibile, riprovare più tardi"></p-message>
 </div>    
 <div *ngIf="onDeleteError" style="margin-top:30px">
@@ -48,7 +48,7 @@
     [value]="rows" 
     [responsive]="true"
     selectionMode="single" 
-    [(selection)]="selectedUrc" 
+    [(selection)]="urcService.selectedUrc" 
     (onRowSelect)="onRowSelect($event)">
 
     <ng-template pTemplate="header" let-columns>

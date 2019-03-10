@@ -27,7 +27,7 @@ export class UrcListView extends AbstractListView {
 
     constructor(        
             protected tourneyService: TourneyService
-          , protected urcService: UrcService
+          , public urcService: UrcService
           , private loginService: LoginService
           , public router: Router
           , protected location: Location) 

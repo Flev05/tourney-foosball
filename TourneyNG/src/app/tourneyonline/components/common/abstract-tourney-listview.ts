@@ -15,7 +15,7 @@ import { Player } from 'app/tourneyonline/domain/player';
 
 export abstract class AbstractTourneyListView extends AbstractListView {
 
-    protected tourneys: Tourney[];
+    tourneys: Tourney[];
     toggleable: boolean = false;
     tdbs : TourneyVO[] = [];
 

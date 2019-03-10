@@ -19,12 +19,15 @@ const redirect = '/match/matchlv';
   `]
 })
 export class MeetingListView extends AbstractListView {
+    selectedMeeting : Meeting;
+    cols: any[];
+    rows: any[];
+
     constructor(protected tourneyService: TourneyService, protected location: Location, public router: Router) { 
         super(redirect, tourneyService, router, location);
         console.log("MeetingListView.constructor()");
     }
 
-    selectedMeeting : Meeting;
 
     onRowSelect(event) {
         console.log("MeetingListView.onRowSelect()event: " + event);

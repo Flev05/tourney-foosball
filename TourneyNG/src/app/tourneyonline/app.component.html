@@ -23,7 +23,17 @@
 
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
         
-        <p *ngIf="loginService.isUserLogged">{{loginService.userLogged.username}} / {{clientService.selectedClientName}}</p>
+        <p *ngIf="loginService.isUserLogged">LoggedIn: {{loginService.userLogged.username}}</p>
+
+        <div *ngIf="clientsCBEnabled()" class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <p-dropdown [options]="clientOptions" 
+                    [(ngModel)]="selectedClientOption" 
+                    optionLabel="label"
+                    (onChange)="onClientChange($event.value)">
+                </p-dropdown>
+            </div>
+        </div>           
 
         <div class="layout-menu">
            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
@@ -86,7 +96,7 @@
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
-                <span>Login</span>
+                <span>Login/Logout</span>
             </a>
             <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/login']" (click)="menuActive = false">&#9679; Login</a>

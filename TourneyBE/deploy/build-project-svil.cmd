@@ -4,10 +4,10 @@ REM Ufficio
 rem set TOURNEY_DIR=D:\luciano\EREBUS\Tourneys
 
 Laptop LENOVO
-rem set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
+set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
 
 REM Desktop HP
-set TOURNEY_DIR=C:\DATA\DEVELOP\EREBUS\CalcioBalilla
+rem set TOURNEY_DIR=C:\DATA\DEVELOP\EREBUS\CalcioBalilla
 
 set FE_DIR=%TOURNEY_DIR%\TourneyNG
 set BE_DIR=%TOURNEY_DIR%\TourneyBE
@@ -15,7 +15,7 @@ set BE_DIR=%TOURNEY_DIR%\TourneyBE
 set WEB_CONTENT_DIR=%BE_DIR%\WebContent
 set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
 
-call build-ng.cmd
+call build-svil.cmd
 
 cd %BE_DIR%\deploy
 call copy-web-inf.cmd

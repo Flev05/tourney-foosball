@@ -95,7 +95,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
         Join<Player, Session> playerSessionJoin = root.join(Player_.session);
 
-        Predicate p = cb.equal(playerSessionJoin.get(Session_.id), sessionId);
+        Predicate p = cb.equal(playerSessionJoin.get(Session_.userSession), sessionId);
 
         cq = cq.select(root);
         cq = cq.where(p);
@@ -109,9 +109,9 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
         return resultList;
     }
 
-    public Player getByPlayerName(Integer clientId, String playerName) {
+    public Player getPlayerByClientId(Integer clientId, String playerName) {
 
-        logger.debug(logId() + "Entering getByPlayerName(" + playerName + ")");
+        logger.debug(logId() + "Entering getPlayerByClientId(" + playerName + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Player> cq = cb.createQuery(Player.class);
@@ -120,6 +120,34 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
         Predicate p = cb.equal(root.get(Player_.playerName), playerName);
         Predicate q = cb.equal(playerClientJoin.get(Client_.id), clientId);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
+        cq = cq.orderBy(cb.asc(root.get(Player_.playerName)));
+
+        TypedQuery<Player> tq = getEm().createQuery(cq);
+
+        List<Player> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        if (resultList.isEmpty()) {
+            return null;
+        }
+
+        return resultList.get(0);
+    }
+
+    public Player getPlayerBySessionId(String userSession, String playerName) {
+
+        logger.debug(logId() + "Entering getPlayerBySessionId(" + userSession + "," + playerName + ")");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+        Root<Player> root = cq.from(Player.class);
+        Join<Player, Session> playerSessionJoin = root.join(Player_.session);
+
+        Predicate p = cb.equal(root.get(Player_.playerName), playerName);
+        Predicate q = cb.equal(playerSessionJoin.get(Session_.userSession), userSession);
 
         cq = cq.select(root);
         cq = cq.where(p, q);

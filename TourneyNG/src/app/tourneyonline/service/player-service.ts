@@ -10,9 +10,12 @@ import { Player } from '../domain/player';
 import { TableCols } from '../domain/table-cols';
 import { ClientService } from './client-service';
 import { PlayerVO } from '../domain/player-vo';
+import { LoginService } from './login-service';
 
 const playerUrl = 'api/players';  
-const loadPlayerByClientIdUrl = playerUrl + "/loadByClientId";
+const loadPlayerByClientIdUrl  = playerUrl + "/loadByClientId";
+const loadPlayerBySessionIdUrl = playerUrl + '/loadBySessionId';  
+
 const loadPlayerUrl = playerUrl + "/load";
 const insertPlayerUrl = playerUrl + "/insert";
 const updatePlayerUrl = playerUrl + "/update";
@@ -35,13 +38,17 @@ export class PlayerService {
         { field: 'email',       header: 'Email' }
     ];
 
-    constructor(private http: HttpClient, private clientService: ClientService) { 
+    constructor(private http: HttpClient, private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of PlayerService");
     }
 
     loadAllPlayers (complete: () => void): void {
 
-        let url = loadPlayerByClientIdUrl + "/" + this.clientService.selectedClient.id;
+        let url = loadPlayerBySessionIdUrl;
+
+        if(this.loginService.isUserLogged) {
+            url = loadPlayerByClientIdUrl + "/" + this.clientService.selectedClient.id;
+        }
 
         let observer : Observable<Player[]> =  this.http.get<Player[]>(url)
         .pipe(

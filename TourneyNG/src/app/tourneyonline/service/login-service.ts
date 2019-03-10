@@ -18,7 +18,7 @@ const logoutUrl = 'api/logon/logout';  // URL to web server api
 export class LoginService {
 
     userLogged   : Login;
-    isUserLogged : boolean ;
+    isUserLogged : boolean = false;
 
     constructor(private http: HttpClient, private roleService : RoleService) { 
         console.log("Constructor of LoginService");

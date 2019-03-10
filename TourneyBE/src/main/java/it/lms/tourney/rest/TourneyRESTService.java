@@ -23,7 +23,9 @@ import javax.ws.rs.core.Response;
 import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.TourneyDao;
+import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Tourney;
 
 /**
@@ -35,6 +37,9 @@ public class TourneyRESTService extends AbstractRESTService {
 
     @Inject
     private TourneyDao tourneyDao;
+
+    @Inject
+    private SessionDao sessionDao;
 
     @Inject
     @ConverterObject
@@ -98,7 +103,29 @@ public class TourneyRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createTourney(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Tourney foundTourney = tourneyDao.getByTourneyName(tvo.getClientVO().getId(), tvo.getTourneyName());
+
+        Session spo = null;
+        Tourney foundTourney;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTourney = tourneyDao.getTourneyBySession(sessionId, tvo.getTourneyName());
+            spo = sessionDao.findBySessionId(sessionId);
+            String userAgent = super.getUserAgent();
+
+            if (spo == null) {
+                String message = logId() + "User Session doesn't exist, create a new one";
+                logger.error(message);
+
+                spo = sessionDao.insert(null, sessionId, userAgent);
+            } else {
+                spo = sessionDao.update(spo, sessionId, userAgent);
+            }
+
+        } else {
+            Integer clientId = tvo.getClientVO().getId();
+            foundTourney = tourneyDao.getTourneyByClient(clientId, tvo.getTourneyName());
+        }
+
         if (foundTourney != null) {
 
             logger.error("Tourney found");
@@ -109,7 +136,7 @@ public class TourneyRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        Tourney tourney = newTourney(tvo);
+        Tourney tourney = newTourney(tvo, spo);
 
         tvo = converter.convertTourneyPoVo(tourney);
 
@@ -120,9 +147,9 @@ public class TourneyRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    private Tourney newTourney(TourneyVO tvo) {
+    private Tourney newTourney(TourneyVO tvo, Session spo) {
 
-        Tourney tpo = converter.convertTourneyVoPo(tvo);
+        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
 
         tourneyDao.insert(tpo);
 
@@ -142,8 +169,19 @@ public class TourneyRESTService extends AbstractRESTService {
         logger.debug(logId() + "PUT: updateTourney(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Tourney foundTourney = tourneyDao.getByTourneyName(tvo.getClientVO().getId(), tvo.getTourneyName());
-        if (foundTourney != null && !foundTourney.getId().equals(tvo.getId())) {
+
+        Session spo = null;
+        Tourney foundTourney;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTourney = tourneyDao.getTourneyBySession(sessionId, tvo.getTourneyName());
+            spo = sessionDao.findBySessionId(sessionId);
+        } else {
+            foundTourney = tourneyDao.getTourneyByClient(tvo.getClientVO().getId(), tvo.getTourneyName());
+        }
+
+        Integer tourneyId = tvo.getId();
+        if (foundTourney != null && !foundTourney.getId().equals(tourneyId)) {
 
             logger.error("Tourney found");
             responseObj.put("errorCode", "TourneyAlreadyExists");
@@ -153,7 +191,7 @@ public class TourneyRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        Tourney tpo = converter.convertTourneyVoPo(tvo);
+        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
 
         tourneyDao.update(tpo);
 

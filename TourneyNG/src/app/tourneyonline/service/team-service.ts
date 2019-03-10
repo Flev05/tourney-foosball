@@ -10,12 +10,14 @@ import { Team } from '../domain/team';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { TeamVO } from '../domain/team-vo';
+import { LoginService } from './login-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 const teamUrl = 'api/teams';
-const loadTeamByClientIdUrl = teamUrl +'/loadByClientId';
+const loadTeamByClientIdUrl  = teamUrl +'/loadByClientId';
+const loadTeamBySessionIdUrl = teamUrl +'/loadBySessionId';
 const loadTeamUrl   = teamUrl +'/load';
 const insertTeamUrl = teamUrl +'/insert';
 const updateTeamUrl = teamUrl +'/update';
@@ -34,13 +36,16 @@ export class TeamService {
     teamPool: Team[];
     teamPoolVO: TeamVO[];
 
-    constructor(private http: HttpClient,  private clientService: ClientService) { 
+    constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }
 
     loadAllTeams (complete: () => void): void {
  
-        let url = loadTeamByClientIdUrl + "/" + this.clientService.selectedClient.id;
+        let url = loadTeamBySessionIdUrl;
+        if(this.loginService.isUserLogged) {
+            url = loadTeamByClientIdUrl + "/" + this.clientService.selectedClient.id;
+        }
 
         let observer :  Observable<TeamVO[]>  = this.http.get<TeamVO[]>(url)
         .pipe(
@@ -54,7 +59,6 @@ export class TeamService {
     private onError(e: any): any {
         console.log("Entering onError()" + e);
     }
-
 
     /** GET hero by id. Will 404 if id not found */
     getTeam(id: number): Observable<Team> {

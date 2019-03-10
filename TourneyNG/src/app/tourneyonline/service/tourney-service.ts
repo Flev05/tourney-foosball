@@ -31,6 +31,7 @@ const httpOptions = {
 
 const tourneyUrl = 'api/tourneys';  
 const loadTourneyByClientIdUrl = tourneyUrl + '/loadByClientId';  
+const loadTourneyBySessionIdUrl = tourneyUrl + '/loadBySessionId';  
 const loadTourneyUrl = tourneyUrl + '/loadByClientId';  
 const insertTourneyUrl = tourneyUrl + '/insert';
 const updateTourneyUrl = tourneyUrl + '/update';
@@ -226,7 +227,7 @@ export class TourneyService {
      * Loads all tourneys published from the database
      */
     loadAllTourneys(): Observable<TourneyVO[]> {
-        let url = loadTourneyByClientIdUrl;
+        let url = loadTourneyBySessionIdUrl;
 
         if(this.loginService.isUserLogged) {
             url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id
@@ -239,13 +240,12 @@ export class TourneyService {
     }
 
     loadTourneys(fromDate: Date, toDate: Date): any {
-        let url = loadTourneyUrl;
+        let url = loadTourneyBySessionIdUrl;
 
         if(this.loginService.isUserLogged) {
-            url = loadTourneyUrl + "/" + this.clientService.selectedClient.id
-            + "?" + "fromDate=" + fromDate 
-            + "&" + "toDate="   + toDate;
+            url = loadTourneyUrl + "/" + this.clientService.selectedClient.id;
         }
+        url += + "?" + "fromDate=" + fromDate + "&" + "toDate="   + toDate;
         
         return this.http.get<TourneyVO[]>(url).pipe(
             tap(_ => this.log('fetched all tourneys from DB, url=' + url)),

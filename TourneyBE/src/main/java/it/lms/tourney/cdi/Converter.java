@@ -24,6 +24,7 @@ import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Meeting;
 import it.lms.tourney.po.Player;
 import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Team;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
@@ -59,6 +60,10 @@ public class Converter extends AbstractLogger {
     }
 
     public ClientVO convertClientPoVo(Client cpo) {
+
+        if (cpo == null) {
+            return null;
+        }
 
         ClientVO cvo = new ClientVO();
 
@@ -150,12 +155,16 @@ public class Converter extends AbstractLogger {
         return tvo;
     }
 
-    public Tourney convertTourneyVoPo(TourneyVO tvo) {
+    public Tourney convertTourneyVoPo(TourneyVO tvo, Session spo) {
 
         Tourney tpo = new Tourney();
 
-        Client cpo = clientDao.findById(tvo.getClientVO().getId());
-        tpo.setClient(cpo);
+        if (spo == null) {
+            Client cpo = clientDao.findById(tvo.getClientVO().getId());
+            tpo.setClient(cpo);
+        } else {
+            tpo.setSession(spo);
+        }
 
         tpo.setTourneyName(tvo.getTourneyName());
         tpo.setId(tvo.getId());
@@ -171,8 +180,10 @@ public class Converter extends AbstractLogger {
         ClientVO cvo = convertClientPoVo(ppo.getClient());
         pvo.setClientVO(cvo);
 
-        Country country = countryDao.getById(ppo.getCountry().getId());
-        pvo.setCountry(country);
+        if (ppo.getCountry() != null) {
+            Country country = countryDao.getById(ppo.getCountry().getId());
+            pvo.setCountry(country);
+        }
 
         pvo.setId(ppo.getId());
         pvo.setJson(ppo.getJson());
@@ -188,9 +199,10 @@ public class Converter extends AbstractLogger {
         ClientVO cvo = convertClientPoVo(tpo.getClient());
         tvo.setClientVO(cvo);
 
-        Country country = countryDao.getById(tpo.getCountry().getId());
-
-        tvo.setCountry(country);
+        if (tpo.getCountry() != null) {
+            Country country = countryDao.getById(tpo.getCountry().getId());
+            tvo.setCountry(country);
+        }
 
         tvo.setId(tpo.getId());
         tvo.setJson(tpo.getJson());
@@ -199,15 +211,21 @@ public class Converter extends AbstractLogger {
         return tvo;
     }
 
-    public Player convertPlayerVoPo(PlayerVO pvo) {
+    public Player convertPlayerVoPo(PlayerVO pvo, Session spo) {
 
         Player ppo = new Player();
 
-        Client cpo = clientDao.findById(pvo.getClientVO().getId());
-        ppo.setClient(cpo);
+        if (spo == null) {
+            Client cpo = clientDao.findById(pvo.getClientVO().getId());
+            ppo.setClient(cpo);
+        } else {
+            ppo.setSession(spo);
+        }
 
-        Country country = countryDao.findById(pvo.getCountry().getId());
-        ppo.setCountry(country);
+        if (pvo.getCountry() != null) {
+            Country country = countryDao.findById(pvo.getCountry().getId());
+            ppo.setCountry(country);
+        }
 
         ppo.setId(pvo.getId());
         ppo.setJson(pvo.getJson());
@@ -216,15 +234,21 @@ public class Converter extends AbstractLogger {
         return ppo;
     }
 
-    public Team convertTeamVoPo(TeamVO tvo) {
+    public Team convertTeamVoPo(TeamVO tvo, Session spo) {
 
         Team tpo = new Team();
 
-        Client cpo = clientDao.findById(tvo.getClientVO().getId());
-        tpo.setClient(cpo);
+        if (spo == null) {
+            Client cpo = clientDao.findById(tvo.getClientVO().getId());
+            tpo.setClient(cpo);
+        } else {
+            tpo.setSession(spo);
+        }
 
-        Country country = countryDao.findById(tvo.getCountry().getId());
-        tpo.setCountry(country);
+        if (tvo.getCountry() != null) {
+            Country country = countryDao.findById(tvo.getCountry().getId());
+            tpo.setCountry(country);
+        }
 
         tpo.setId(tvo.getId());
         tpo.setTeamName(tvo.getTeamName());

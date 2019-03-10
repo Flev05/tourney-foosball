@@ -19,6 +19,7 @@ public class User_ {
     public static volatile SingularAttribute<User, String>    email;
     public static volatile SingularAttribute<User, String>    username;
     public static volatile SingularAttribute<User, String>    lastname;
+    public static volatile SingularAttribute<User, String>    description;
 
     public static volatile SetAttribute<User, UserRoleClient> urcSet;
 }

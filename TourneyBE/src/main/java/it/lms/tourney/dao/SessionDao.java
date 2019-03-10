@@ -38,6 +38,33 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         super(Session.class);
     }
 
+    public Session findBySessionId(String sessionId) {
+
+        logger.debug(logId() + "Entering findBySessionId(" + sessionId + ")");
+
+        CriteriaBuilder cb = getEm().getCriteriaBuilder();
+        CriteriaQuery<Session> criteria = cb.createQuery(Session.class);
+        Root<Session> root = criteria.from(Session.class);
+
+        Predicate p = cb.equal(root.get(Session_.userSession), sessionId);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p);
+
+        TypedQuery<Session> cq = getEm().createQuery(criteria);
+
+        List<Session> poList = cq.getResultList();
+        String info = "[Found " + poList.size() + " Session(s)] ";
+        logger.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        Session po = poList.get(0);
+        return po;
+    }
+
     public Session findSessionBy(User u) {
 
         logger.debug(logId() + "Entering findSessionBy(" + u + ")");
@@ -65,7 +92,7 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         return po;
     }
 
-    public void insert(User u, String requestedSessionId, String userInfo) {
+    public Session insert(User u, String requestedSessionId, String userInfo) {
 
         Session s = new Session();
         s.setUser(u);
@@ -74,15 +101,19 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         s.setCreationDate(new Date());
 
         super.insertPo(s);
+
+        return s;
     }
 
-    public void update(Session s, String requestedSessionId, String userInfo) {
+    public Session update(Session s, String requestedSessionId, String userInfo) {
 
         s.setUserSession(requestedSessionId);
         s.setUserInfo(userInfo);
         s.setCreationDate(new Date());
 
         super.updatePo(s);
+
+        return s;
     }
 
     public void insert(Session session) throws Exception {

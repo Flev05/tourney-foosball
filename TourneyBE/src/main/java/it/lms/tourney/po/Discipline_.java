@@ -9,5 +9,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Discipline.class)
 public class Discipline_ {
 
-    public static volatile SingularAttribute<Discipline, String> name;
+    public static volatile SingularAttribute<Discipline, Integer> id;
+    public static volatile SingularAttribute<Discipline, String>  name;
 }

@@ -103,7 +103,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         Join<Tourney, Session> tourneySessionJoin = root.join(Tourney_.session);
 
-        Predicate p = cb.equal(tourneySessionJoin.get(Session_.id), sessionId);
+        Predicate p = cb.equal(tourneySessionJoin.get(Session_.userSession), sessionId);
 
         cq = cq.select(root);
         cq = cq.where(p);
@@ -117,9 +117,9 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         return resultList;
     }
 
-    public Tourney getByTourneyName(Integer clientId, String tourneyName) {
+    public Tourney getTourneyByClient(Integer clientId, String tourneyName) {
 
-        logger.debug(logId() + "Entering getByTourneyName()");
+        logger.debug(logId() + "Entering getTourneyByClient()");
 
         CriteriaBuilder cb = getCb();
 
@@ -129,6 +129,38 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         Join<Tourney, Client> tourneyClientJoin = root.join(Tourney_.client);
 
         Predicate p = cb.equal(tourneyClientJoin.get(Client_.id), clientId);
+
+        Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
+        cq = cq.orderBy(cb.asc(root.get(Tourney_.tourneyName)));
+
+        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+
+        List<Tourney> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        if (resultList.isEmpty()) {
+            return null;
+        }
+
+        return resultList.get(0);
+    }
+
+    public Tourney getTourneyBySession(String sessionId, String tourneyName) {
+
+        logger.debug(logId() + "Entering getTourneyBySession()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+        Root<Tourney> root = cq.from(Tourney.class);
+
+        Join<Tourney, Session> tourneySessionJoin = root.join(Tourney_.session);
+
+        Predicate p = cb.equal(tourneySessionJoin.get(Session_.id), sessionId);
 
         Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
 

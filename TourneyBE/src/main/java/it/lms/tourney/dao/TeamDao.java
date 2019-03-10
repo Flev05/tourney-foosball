@@ -95,7 +95,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
         Join<Team, Session> teamSessionJoin = root.join(Team_.session);
 
-        Predicate p = cb.equal(teamSessionJoin.get(Session_.id), sessionId);
+        Predicate p = cb.equal(teamSessionJoin.get(Session_.userSession), sessionId);
 
         cq = cq.select(root);
         cq = cq.where(p);
@@ -110,9 +110,9 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
         return resultList;
     }
 
-    public Team getByTeamName(Integer clientId, String teamName) {
+    public Team getTeamClientId(Integer clientId, String teamName) {
 
-        logger.debug(logId() + "Entering getByTeamName(" + teamName + ")");
+        logger.debug(logId() + "Entering getTeamClientId(" + teamName + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Team> criteria = cb.createQuery(Team.class);
@@ -123,6 +123,35 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
         Predicate p = cb.equal(root.get(Team_.teamName), teamName);
 
         Predicate q = cb.equal(teamClientJoin.get(Client_.id), clientId);
+
+        criteria = criteria.select(root);
+        criteria = criteria.where(p, q);
+
+        TypedQuery<Team> tq = getEm().createQuery(criteria);
+
+        List<Team> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        if (resultList.isEmpty()) {
+            return null;
+        }
+
+        return resultList.get(0);
+    }
+
+    public Team getTeamSessionId(String userSession, String teamName) {
+
+        logger.debug(logId() + "Entering getTeamSessionId(" + userSession + ")");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<Team> criteria = cb.createQuery(Team.class);
+        Root<Team> root = criteria.from(Team.class);
+
+        Join<Team, Session> teamSessionJoin = root.join(Team_.session);
+
+        Predicate p = cb.equal(root.get(Team_.teamName), teamName);
+
+        Predicate q = cb.equal(teamSessionJoin.get(Session_.userSession), userSession);
 
         criteria = criteria.select(root);
         criteria = criteria.where(p, q);

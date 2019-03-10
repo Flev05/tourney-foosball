@@ -24,7 +24,9 @@ import it.lms.cb.gui.vo.PlayerVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.PlayerDao;
+import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.po.Player;
+import it.lms.tourney.po.Session;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by DAOs.
@@ -34,11 +36,14 @@ import it.lms.tourney.po.Player;
 public class PlayerRESTService extends AbstractRESTService {
 
     @Inject
-    private PlayerDao playerDao;
+    private PlayerDao  playerDao;
+
+    @Inject
+    private SessionDao sessionDao;
 
     @Inject
     @ConverterObject
-    private Converter converter;
+    private Converter  converter;
 
     @GET
     @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
@@ -99,7 +104,27 @@ public class PlayerRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createPlayer(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Player foundPlayer = playerDao.getByPlayerName(tvo.getClientVO().getId(), tvo.getPlayerName());
+        Player foundPlayer;
+        Session spo = null;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundPlayer = playerDao.getPlayerBySessionId(sessionId, tvo.getPlayerName());
+            spo = sessionDao.findBySessionId(sessionId);
+            String userAgent = super.getUserAgent();
+
+            if (spo == null) {
+                String message = logId() + "User Session doesn't exist, create a new one";
+                logger.error(message);
+
+                spo = sessionDao.insert(null, sessionId, userAgent);
+            } else {
+                spo = sessionDao.update(spo, sessionId, userAgent);
+            }
+        } else {
+            Integer clientId = tvo.getClientVO().getId();
+            foundPlayer = playerDao.getPlayerByClientId(clientId, tvo.getPlayerName());
+        }
+
         if (foundPlayer != null) {
 
             logger.error("Player found");
@@ -110,7 +135,7 @@ public class PlayerRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        Player player = newPlayer(tvo);
+        Player player = newPlayer(tvo, spo);
 
         tvo = converter.convertPlayerPoVo(player);
 
@@ -121,9 +146,9 @@ public class PlayerRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    private Player newPlayer(PlayerVO tvo) {
+    private Player newPlayer(PlayerVO tvo, Session spo) {
 
-        Player cpo = converter.convertPlayerVoPo(tvo);
+        Player cpo = converter.convertPlayerVoPo(tvo, spo);
 
         playerDao.insert(cpo);
         return cpo;
@@ -141,7 +166,19 @@ public class PlayerRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "PUT: updatePlayer(" + tvo + ")");
         Map<String, String> responseObj = new HashMap<String, String>();
-        Player foundPlayer = playerDao.getByPlayerName(tvo.getClientVO().getId(), tvo.getPlayerName());
+
+        Player foundPlayer;
+
+        Session spo = null;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundPlayer = playerDao.getPlayerBySessionId(sessionId, tvo.getPlayerName());
+            spo = sessionDao.findBySessionId(sessionId);
+        } else {
+            Integer clientId = tvo.getClientVO().getId();
+            foundPlayer = playerDao.getPlayerByClientId(clientId, tvo.getPlayerName());
+        }
+
         if (foundPlayer != null && !foundPlayer.getId().equals(tvo.getId())) {
 
             logger.error("Player found");
@@ -152,7 +189,7 @@ public class PlayerRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        Player tpo = converter.convertPlayerVoPo(tvo);
+        Player tpo = converter.convertPlayerVoPo(tvo, spo);
 
         playerDao.update(tpo);
 

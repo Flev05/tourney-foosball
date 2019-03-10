@@ -23,7 +23,9 @@ import javax.ws.rs.core.Response;
 import it.lms.cb.gui.vo.TeamVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.TeamDao;
+import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Team;
 
 /**
@@ -34,11 +36,14 @@ import it.lms.tourney.po.Team;
 public class TeamRESTService extends AbstractRESTService {
 
     @Inject
-    private TeamDao   teamDao;
+    private TeamDao    teamDao;
+
+    @Inject
+    private SessionDao sessionDao;
 
     @Inject
     @ConverterObject
-    private Converter converter;
+    private Converter  converter;
 
     @GET
     @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
@@ -99,7 +104,24 @@ public class TeamRESTService extends AbstractRESTService {
         logger.debug(logId() + "POST: createTeam(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
-        Team foundTeam = teamDao.getByTeamName(tvo.getClientVO().getId(), tvo.getTeamName());
+        Team foundTeam;
+        Session spo = null;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
+            spo = sessionDao.findBySessionId(sessionId);
+            String userAgent = super.getUserAgent();
+            if (spo == null) {
+                String message = logId() + "User Session doesn't exist, create a new one";
+                logger.error(message);
+                spo = sessionDao.insert(null, sessionId, userAgent);
+            } else {
+                spo = sessionDao.update(spo, sessionId, userAgent);
+            }
+        } else {
+            foundTeam = teamDao.getTeamClientId(tvo.getClientVO().getId(), tvo.getTeamName());
+        }
+
         if (foundTeam != null) {
 
             logger.error("Team found");
@@ -110,7 +132,7 @@ public class TeamRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        Team team = newTeam(tvo);
+        Team team = newTeam(tvo, spo);
 
         tvo = converter.convertTeamPoVo(team);
 
@@ -121,9 +143,9 @@ public class TeamRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    private Team newTeam(TeamVO tvo) {
+    private Team newTeam(TeamVO tvo, Session spo) {
 
-        Team cpo = converter.convertTeamVoPo(tvo);
+        Team cpo = converter.convertTeamVoPo(tvo, spo);
 
         teamDao.insert(cpo);
         return cpo;
@@ -141,7 +163,17 @@ public class TeamRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "PUT: updateTeam(" + tvo + ")");
         Map<String, String> responseObj = new HashMap<String, String>();
-        Team foundTeam = teamDao.getByTeamName(tvo.getClientVO().getId(), tvo.getTeamName());
+
+        Team foundTeam;
+        Session spo = null;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
+            spo = sessionDao.findBySessionId(sessionId);
+        } else {
+            foundTeam = teamDao.getTeamClientId(tvo.getClientVO().getId(), tvo.getTeamName());
+        }
+
         if (foundTeam != null && !foundTeam.getId().equals(tvo.getId())) {
 
             logger.error("Team found");
@@ -152,7 +184,7 @@ public class TeamRESTService extends AbstractRESTService {
             return builder.build();
         }
 
-        Team tpo = converter.convertTeamVoPo(tvo);
+        Team tpo = converter.convertTeamVoPo(tvo, spo);
 
         teamDao.update(tpo);
 

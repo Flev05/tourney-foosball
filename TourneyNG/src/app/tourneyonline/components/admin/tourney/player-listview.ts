@@ -23,6 +23,7 @@ export class PlayerListView extends AbstractDetailView {
     selectedTeam: Team;
     selectedPlayer: Player;
     playerCols: TableCols[];
+    playerLabel: string;
 
     constructor(
         protected location: Location,
@@ -65,6 +66,7 @@ export class PlayerListView extends AbstractDetailView {
 
         this.router.navigate([REDIRECT_PLAYER_PL]);
     }
+
     private onComplete(): any {
         console.log("Entering onComplete()");
         this.playerService.playerPool = [];
@@ -78,7 +80,8 @@ export class PlayerListView extends AbstractDetailView {
             this.playerService.playerPool.push(ppo);
         }
 
-        this.selectedTeam.players = this.playerService.playerPool;    
+        this.selectedTeam.players = this.playerService.playerPool;   
+        this.playerLabel = this.selectedTeam.players.length == 0 ? "Aggiungi Giocatori" : "Gestisci Giocatori";
     }
 
     updateTeamDetails() {

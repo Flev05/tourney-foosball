@@ -6,6 +6,8 @@ import { RoleService } from './service/role-service';
 import { ClientService } from './service/client-service';
 import { Combobox } from './domain/tourney-combobox';
 
+const redirectTourneyListView = '/login/lv';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -22,6 +24,7 @@ import { Combobox } from './domain/tourney-combobox';
           transition('hidden => visible', animate('400ms ease-out'))
       ]),
   
+      
       trigger('notificationTopbar', [
         state('hidden', style({
           height: '0',
@@ -66,7 +69,7 @@ export class AppComponent implements OnInit{
         }
 
         this.clientOptions = this.clientService.clientOptions;
-        let en = this.loginService.isUserLogged && this.clientOptions.length > 0 ? true : false;
+        let en = this.loginService.isUserLogged && this.clientOptions.length > 1 ? true : false;
         this.selectedClientOption = this.clientService.selectedClientOption;
         en = en && this.loginService.isUserLogged;
         return en;
@@ -79,7 +82,9 @@ export class AppComponent implements OnInit{
 
         this.clientService.setSelectedClient(sc);
 
-        this.ngOnInit();
+        this.clientService.retirectToTourney = true;
+
+        this.router.navigate([redirectTourneyListView]);
     }
 
     changeTheme(event: Event, theme: string) {

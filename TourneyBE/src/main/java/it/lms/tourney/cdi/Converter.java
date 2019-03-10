@@ -86,7 +86,7 @@ public class Converter extends AbstractLogger {
         urcvo.setRoleVo(roleVo);
 
         ClientVO clientVo = convertClientPoVo(urc.getClient());
-        urcvo.setClientVo(clientVo);
+        urcvo.setClientVO(clientVo);
 
         return urcvo;
     }

@@ -13,6 +13,6 @@
     color: #2399e5;
 }
 
-.deleteColSize {
+.deleteColSize, .checkBoxColSize {
     width: 20mm;
 }

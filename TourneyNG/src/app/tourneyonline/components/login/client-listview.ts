@@ -37,6 +37,12 @@ export class ClientLoginListView extends AbstractListView {
 
     ngOnInit() {
         console.log("ClientListView.ngOnInit()");
+
+        if( this.clientService.retirectToTourney ) {
+            this.clientService.retirectToTourney = false;
+            this.gotoDetailView();
+            return;
+        }
         this.clientService.newClient = false;
 
         this.onLoadClientError = false;
@@ -51,10 +57,8 @@ export class ClientLoginListView extends AbstractListView {
 
         this.clientService.setSelectClients(this.clients);
         
-        if( this.clients.length == 1 ) {
-            this.selectedClient = this.clients.length[0];
-            this.gotoListView();
-        }
+        this.selectedClient = this.clients.length[0];
+        this.gotoListView();
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
@@ -81,7 +85,6 @@ export class ClientLoginListView extends AbstractListView {
     }
  
     private gotoListView() {
-        this.clientService.setSelectedClient(this.selectedClient);
         this.clientService.newClient = false;
         this.gotoDetailView();
     }

@@ -7,7 +7,7 @@ public class UserRoleClientVO extends AbstractVO {
 
     UserVO                    userVo;
     RoleVO                    roleVo;
-    ClientVO                  clientVo;
+    ClientVO                  clientVO;
 
     public UserRoleClientVO() {
 
@@ -16,8 +16,8 @@ public class UserRoleClientVO extends AbstractVO {
     @Override
     public String toString() {
 
-        return super.toString() + " UserRoleClientVO [userVo=" + userVo + ", roleVo=" + roleVo + ", clientVo="
-                + clientVo + "]";
+        return super.toString() + " UserRoleClientVO [userVo=" + userVo + ", roleVo=" + roleVo + ", clientVO="
+                + clientVO + "]";
     }
 
     public UserVO getUserVo() {
@@ -40,14 +40,14 @@ public class UserRoleClientVO extends AbstractVO {
         this.roleVo = roleVo;
     }
 
-    public ClientVO getClientVo() {
+    public ClientVO getClientVO() {
 
-        return clientVo;
+        return clientVO;
     }
 
-    public void setClientVo(ClientVO clientVo) {
+    public void setClientVO(ClientVO clientVO) {
 
-        this.clientVo = clientVo;
+        this.clientVO = clientVO;
     }
 
 }

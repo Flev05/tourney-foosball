@@ -123,6 +123,4 @@ export class LoginDetailView implements OnInit {
         console.log("navigate to=" + redirect);
         this.router.navigate([redirect]);
     }
-
-    get diagnostic() { return JSON.stringify(this.loginformGroup.value); }
 }

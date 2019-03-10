@@ -145,7 +145,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         Role rpo = roleDao.findById(urcvo.getRoleVo().getId());
 
-        Client cpo = clientDao.findById(urcvo.getClientVo().getId());
+        Client cpo = clientDao.findById(urcvo.getClientVO().getId());
 
         UserRoleClient urc = new UserRoleClient();
         urc.setUser(upo);

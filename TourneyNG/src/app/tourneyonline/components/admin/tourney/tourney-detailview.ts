@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType } from '../../../domain/enumerations';
@@ -21,6 +22,7 @@ import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { FromRound } from 'app/tourneyonline/domain/from-round';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -76,6 +78,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
     meetingDaysMap: Map<number, Meeting[]>;
     teamLabel: string;
+    tourneyAlreadyExists: boolean;
+    onSaveTourneyError: boolean;
+    badRequest: boolean;
 
     constructor(
         protected location: Location,
@@ -310,20 +315,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
-
-    doTeamDelete(team: Team) {
-        console.log("doTeamDelete(" + team.teamName+")");
-        let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName + "?";
-
-        if(confirm(popup)) {
-            let index: number = this.selectedTourney.teams.indexOf(team);
-            if(index > -1) {
-                this.selectedTourney.teams.splice(index, 1);
-                this.teamService.deleteTeam(team).subscribe(n => this.next(n), e => this.onError(e) );
-            }
-        }
-    }
-    
+     
     onRoundRowSelect(event) {
         console.log(event.data);
 
@@ -333,7 +325,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     doRoundDelete(round: Round) {
-        this.tourneyService.doRoundDelete(round);
+        this.tourneyService.doRoundDelete(round, this.saveTourneyErrorHandler('Delete Round operation'));
     }
 
     addRound() {
@@ -343,7 +335,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     doPlayoffDelete(playoff: Playoff) {
-        this.tourneyService.doPlayoffDelete(playoff);
+        this.tourneyService.doPlayoffDelete(playoff, this.saveTourneyErrorHandler('Delete Playoff operation'));
     }
 
     addPlayoff() {
@@ -767,7 +759,62 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), () => this.gotoListView());
+        this.tourneyAlreadyExists = false;
+
+        let tvo : TourneyVO = {
+            id: this.selectedTeam.id
+          , tourneyName: this.selectedTourney.tourneyName
+          , country: this.selectedTourney.country
+          , clientVO: this.selectedTourney.clientVO
+          , json: JSON.stringify(this.selectedTourney)
+        };
+
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+
+    }
+
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSaveTourneyError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+
+    private onSaveComplete() {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSaveTourneyError ) {
+            this.playerService.newPlayer = false;
+            this.gotoListView();
+        }
+    }
+
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onSaveTourneyError = true;
+
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "TourneyAlreadyExists" ) {
+                this.tourneyAlreadyExists = true;
+                return of(result as T);
+            }
+      
+            return of(result as T);
+        };
     }
 
     private gotoListView() {
@@ -818,12 +865,11 @@ export class TourneyDetailView extends AbstractDetailView {
 
     enableSaveButton() : string {
         let n : String = this.selectedTourney.tourneyName;
-        let a : String = this.selectedTourney.address;
 
         let fase1 = this.notAllowedPhases();
         let fase2 = !this.atLeastOnePhase();
 
-        return a.trim() == "" || n.trim() == "" || fase1 || fase2 ? "disabled" : "";
+        return n.trim() == "" || fase1 || fase2 ? "disabled" : "";
     }
 
     onError(n:any) {

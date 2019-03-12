@@ -21,12 +21,12 @@ public class Team extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String            json;
     private String            teamName;
-
     private Client            client;
     private Session           session;
     private Country           country;
+
+    private String            json;
 
     public Team() {
 
@@ -35,8 +35,8 @@ public class Team extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + " Team [json=" + json + ", teamName=" + teamName + ", client=" + client + ", session="
-                + session + ", country=" + country + "]";
+        return super.toString() + " Team [teamName=" + teamName + ", client=" + client + ", session=" + session
+                + ", country=" + country + ", json=" + json + "]";
     }
 
     @Id

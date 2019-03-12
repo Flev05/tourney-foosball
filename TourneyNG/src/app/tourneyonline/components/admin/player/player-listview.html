@@ -94,3 +94,8 @@
     </ng-template>
 
 </p-table>
+
+<div *ngIf="onDeletePlayerError" style="margin-top:30px">
+    <p-message severity="error" text="Impossibile rimuore il giocatore {{selectedPlayer.playerName}} perchè ancora in uso!"></p-message>
+</div>    
+ 

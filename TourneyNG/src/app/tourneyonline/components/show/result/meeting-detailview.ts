@@ -12,6 +12,7 @@ import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './meeting-detailview.html'
@@ -167,7 +168,18 @@ export class MeetingDetailView extends AbstractDetailView {
  
         this.updateNextLevel();
 
-        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
+        const observer = this.tourneyService.saveTourney(this.selectedTourney, this.saveTourneyErrorHandler("Turney save operation"));
+        observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
+    }
+
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+            
+            return of(result as T);
+        };
     }
 
     /**

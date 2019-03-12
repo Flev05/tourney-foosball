@@ -7,5 +7,6 @@ CREATE TABLE tourney
 	, tourney_name	character varying(256)			-- the the name in clear of the tourney
   	, client_id		integer			-- the foreign key toward the CLIENT table
   	, session_id	integer 		-- the foreign key toward the SESSION table
+  	, country_id	integer 		-- the foreign key toward the COUNTRY table
 	, json 			varchar			-- the JSON string representing the tourney
 );

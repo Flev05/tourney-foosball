@@ -13,6 +13,7 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './matrix-detailview.html',
@@ -218,7 +219,7 @@ export class MatrixDetailView extends AbstractDetailView {
         return String.fromCharCode(code);
     }
  
-    save() {
+    private save() {
         for(let i=0; i<this.matrix.rows.length; i++) {
             let r = this.matrix.rows[i];
             let sum: number = 0;
@@ -251,9 +252,19 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.classificationRows = this.prepareClassificationGui();
 
-        this.tourneyService.saveTourney(this.selectedTourney).subscribe(n => this.next(n));
+        this.tourneyService.saveTourney(this.selectedTourney, this.saveTourneyErrorHandler('Create Tourney operation')).subscribe(n => this.next(n));
     }
 
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+            
+            return of(result as T);
+        };
+    }
+    
     private prepareClassificationGui(): any[] {
         this.classificationCols = [
             { field: 'rowNumber',   header: 'N°'},

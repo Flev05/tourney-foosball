@@ -104,13 +104,13 @@ export class PlayerService {
     }
     
     /** DELETE: delete the Player from the server */
-    deletePlayer (player: Player) : Observable<Player> {
+    deletePlayer (player: Player, selector: (err: any, caught: Observable<Player> ) => Observable<Player> ) : Observable<Player> {
         const id = player.id;
         const url = deletePlayerUrl + "/" + id;
 
         return this.http.delete<Player>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Player id=${id}`)),
-            catchError(this.handleError<Player>('deletePlayer'))
+            catchError(selector)
         );
     }
 

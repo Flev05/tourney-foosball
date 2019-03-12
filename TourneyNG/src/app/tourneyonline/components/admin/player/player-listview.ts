@@ -5,6 +5,7 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { Player } from 'app/tourneyonline/domain/player';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { Observable, of } from 'rxjs';
 
 const redirect: string = "adminplayer/dv";
 
@@ -18,6 +19,8 @@ export class PlayerListView extends AbstractListView {
 
     selectedPlayer: Player;
     players: Player[];
+    onDeletePlayerError: boolean;
+    deletePlayer: Player;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -32,6 +35,7 @@ export class PlayerListView extends AbstractListView {
         super.ngOnInit();
       
         this.cols = PlayerService.cols;
+        this.onDeletePlayerError = false;
 
         this.playerService.loadAllPlayers( () => this.onComplete() );
     }
@@ -76,13 +80,50 @@ export class PlayerListView extends AbstractListView {
         let popup = 'Sicuro di voler rimuovere il giocatore: ' + player.playerName;
 
         if(confirm(popup + "?")) {
-            this.playerService.deletePlayer(player).subscribe(n => this.next(n));
+            this.deletePlayer = player;
+            const observer = this.playerService.deletePlayer(player, this.deletePlayerErrorHandler("Delete player operation"));
 
-            let index: number = this.players.indexOf(player);
+            observer.subscribe(n => this.next(n), e => this.subscribeErrorHandler(e), () => this.onDeleteComplete());
+        }
+    }
+    
+    private deletePlayerErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering deletePlayerErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onDeletePlayerError = true;
+      
+            return of(result as T);
+        };
+    }
+
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onDeletePlayerError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+
+    private onDeleteComplete() {
+        console.log("Entering onDeleteComplete()");
+        if( !this.onDeletePlayerError ) {
+            
+            let index: number = this.players.indexOf(this.deletePlayer);
             if(index > -1) {
                 this.players.splice(index, 1);
                 this.rows.splice(index, 1);
             }
+
+            super.goBack();
         }
     }
 }

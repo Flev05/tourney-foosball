@@ -102,13 +102,13 @@ export class TeamService {
     }
     
     /** DELETE: delete the Team from the server */
-    deleteTeam (team: Team) : Observable<Team> {
+    deleteTeam (team: Team , selector: (err: any, caught: Observable<Team> ) => Observable<Team>) : Observable<Team> {
         const id = team.id;
         let url = deleteTeamUrl + "/" + id;
 
         return this.http.delete<Team>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Team id=` + id)),
-            catchError(this.handleError<Team>('deleteTeam'))
+            catchError(selector)
         );
     }
 

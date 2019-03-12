@@ -9,6 +9,7 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './playoff-listview.html'
@@ -28,6 +29,7 @@ export class PlayoffListView extends AbstractListView {
     newPlayoff: boolean;
 
     playoffCols: TableCols[] = TourneyService.playoffCols;
+    onDeletePlayoffError: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -39,6 +41,7 @@ export class PlayoffListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
+        this.onDeletePlayoffError = false;
 
         this.selectedTourney = this.tourneyService.selectedTourney;
         this.playoffs = this.selectedTourney.playoffs;
@@ -95,7 +98,20 @@ export class PlayoffListView extends AbstractListView {
     }
 
     doDelete(playoff: Playoff) {
-        this.tourneyService.doPlayoffDelete(playoff);
+        this.onDeletePlayoffError = false;
+        this.tourneyService.doPlayoffDelete(playoff, this.deletePlayerErrorHandler("Delete playoff operation"));
+    }
+
+    private deletePlayerErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering deletePlayerErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onDeletePlayoffError = true;
+      
+            return of(result as T);
+        };
     }
 
     onError(n:any) {

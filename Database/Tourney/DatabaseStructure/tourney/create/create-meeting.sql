@@ -8,5 +8,6 @@ CREATE TABLE meeting
   	, round_id 	 		integer				-- the ROUND identifier
   	, playoff_id 	 	integer				-- the PLAYOFF identifier
   	, eliminatory_id 	integer				-- the ELIMINATORY identifier
+  	, country_id		integer 			-- the foreign key toward the COUNTRY table
 	, json 				varchar 			-- the JSON string representing the meeting
 );

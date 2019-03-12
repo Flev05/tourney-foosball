@@ -1221,3 +1221,13 @@
     </div>
 </div>
 
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="tourneyAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già un torneo con nome {{selectedTourney.tourneyName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+ 
+
+ 

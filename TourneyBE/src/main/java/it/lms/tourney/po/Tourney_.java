@@ -14,5 +14,6 @@ public class Tourney_ {
     public static volatile SingularAttribute<Tourney, String>  tourneyName;
     public static volatile SingularAttribute<Tourney, Client>  client;
     public static volatile SingularAttribute<Tourney, Integer> id;
+    public static volatile SingularAttribute<Tourney, Country> country;
 
 }

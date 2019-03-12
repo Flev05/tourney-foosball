@@ -281,49 +281,45 @@ export class TourneyService {
     }
 
     /** POST: add a new tourney to the server */
-    private addTourney (tourney: Tourney): Observable<Tourney> {
-        let json: string = JSON.stringify(tourney);
-
-        let cvo = this.clientService.selectedClient;
-        let tourneyDb: TourneyVO = {id: null, clientVO: cvo, tourneyName: tourney.tourneyName, json: json};
+    private addTourney (tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
 
         let url = insertTourneyUrl;
 
-        return this.http.post<TourneyVO>(url, tourneyDb, httpOptions).pipe(
+        return this.http.post<TourneyVO>(url, tvo, httpOptions).pipe(
             tap((tvo: TourneyVO) => this.log('added Tourney url=' + url + " (id=" + tvo.id + ")")),
-            catchError(this.handleError<TourneyVO>('addTourney'))
+            catchError(selector)
         );
     }
 
     /** PUT: prepare the TourneyDb by stringify of received tourney to save on the server */
-    private updateTourney (tourney: Tourney ): Observable<Tourney> {
+    private updateTourney (tourney: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let json: string = JSON.stringify(tourney);
 
         let cvo = this.clientService.selectedClient;
         let tourneyDb: TourneyVO = {id: tourney.id, clientVO: cvo, tourneyName: tourney.tourneyName, json: json};
 
-        return this.updateTourneyDb(tourneyDb);
+        return this.updateTourneyDb(tourneyDb, selector);
     }
 
-    saveTourney (tourney: Tourney ): Observable<Tourney> {
+    saveTourney (tourney: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         if(tourney.id == null) {
-            return this.addTourney(tourney);
+            return this.addTourney(tourney, selector);
         }
-        return this.updateTourney(tourney);
+        return this.updateTourney(tourney, selector);
     }
 
     /** PUT: update the tourney on the server */
-    private updateTourneyDb (tourney: TourneyVO ): Observable<TourneyVO> {
+    private updateTourneyDb (tourney: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         const id =  tourney.id;
         let url = updateTourneyUrl;
 
         return this.http.put(url, tourney, httpOptions).pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),
-            catchError(this.handleError<TourneyVO>('updateTourneyDb'))
+            catchError(selector)
         );
     }
  
-    doRoundDelete(round: Round): void {
+    doRoundDelete(round: Round, selector: (err: any, caught: Observable<Round> ) => Observable<Round> ): void {
         console.log("doDelete(): " + round.name);
         let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";
 
@@ -334,12 +330,12 @@ export class TourneyService {
                 for(let r of rounds) {
                     this.removeRound(r);
                 }
-                this.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+                this.updateTourney(this.selectedTourney, selector).subscribe(n => this.next(n), e => this.onError(e));
             }
         }
     }
 
-    doPlayoffDelete(playoff: Playoff): any {
+    doPlayoffDelete(playoff: Playoff, selector: (err: any, caught: Observable<Playoff> ) => Observable<Playoff> ): void {
         console.log(playoff);
         let popup = 'Sicuro di voler rimuovere la regola di playoff: '+ playoff.playoffName + "?";
 
@@ -352,9 +348,8 @@ export class TourneyService {
             let index = this.selectedTourney.playoffs.indexOf(playoff);
             if(index > -1) {
                 this.selectedTourney.playoffs.splice(index, 1);
-                this.updateTourney(this.selectedTourney).subscribe(n => this.next(n), e => this.onError(e));
+                this.updateTourney(this.selectedTourney, selector).subscribe(n => this.next(n), e => this.onError(e));
             }
-            
         }
     }
 

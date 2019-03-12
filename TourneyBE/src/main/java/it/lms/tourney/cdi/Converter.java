@@ -151,6 +151,7 @@ public class Converter extends AbstractLogger {
         tvo.setId(tpo.getId());
         tvo.setJson(tpo.getJson());
         tvo.setTourneyName(tpo.getTourneyName());
+        tvo.setCountry(tpo.getCountry());
 
         return tvo;
     }
@@ -164,6 +165,11 @@ public class Converter extends AbstractLogger {
             tpo.setClient(cpo);
         } else {
             tpo.setSession(spo);
+        }
+
+        if (tvo.getCountry() != null) {
+            Country country = countryDao.getById(tvo.getCountry().getId());
+            tpo.setCountry(country);
         }
 
         tpo.setTourneyName(tvo.getTourneyName());

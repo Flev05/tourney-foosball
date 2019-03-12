@@ -9,6 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from './team-detailview';
 import { TeamVO } from 'app/tourneyonline/domain/team-vo';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './team-listview.html'
@@ -19,6 +20,8 @@ export class TeamListView extends AbstractListView {
     selectedTeam: Team;
 
     teams: Team[];
+    deleteTeam: Team;
+    onDeleteTeamError: boolean;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -54,11 +57,13 @@ export class TeamListView extends AbstractListView {
     doDelete(team: Team) {
         console.log(team.teamName);
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName ;
-
+        this.deleteTeam = team;
+        
         if(confirm(popup)) {            
             let index: number = this.teams.indexOf(team);
             if(index > -1) {
-                this.teamService.deleteTeam(team).subscribe(n => this.next(n), e => this.onError(e));
+                const observer = this.teamService.deleteTeam(team, this.deleteTeamErrorHandler("Team player operation"));
+                observer.subscribe(n => this.next(n), e => this.subscribeErrorHandler(e), () => this.onDeleteComplete());
             }
         }
     }
@@ -83,6 +88,45 @@ export class TeamListView extends AbstractListView {
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = false;
         this.gotoDetailView();
+    }
+
+    private deleteTeamErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering deleteTeamErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onDeleteTeamError = true;
+      
+            return of(result as T);
+        };
+    }
+
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onDeleteTeamError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+
+    private onDeleteComplete() {
+        console.log("Entering onDeleteComplete()");
+        if( !this.onDeleteTeamError ) {
+            
+            let index: number = this.teams.indexOf(this.deleteTeam);
+            if(index > -1) {
+                this.teams.splice(index, 1);
+            }
+
+            super.goBack();
+        }
     }
 }
 

@@ -27,6 +27,7 @@ public class Meeting extends AbstractPO implements Serializable {
     private Integer           roundId;
     private Integer           playoffId;
     private Integer           eliminatoryId;
+    private Country           country;
 
     public Meeting() {
 
@@ -35,8 +36,8 @@ public class Meeting extends AbstractPO implements Serializable {
     @Override
     public String toString() {
 
-        return super.toString() + " Meeting [json=" + json + ", tourney=" + tourney + ", roundId=" + roundId
-                + ", playoffId=" + playoffId + ", eliminatoryId=" + eliminatoryId + "]";
+        return super.toString() + " Meeting [tourney=" + tourney + ", roundId=" + roundId + ", playoffId=" + playoffId
+                + ", eliminatoryId=" + eliminatoryId + ", country=" + country + "json=" + json + "]";
     }
 
     @Id
@@ -108,4 +109,16 @@ public class Meeting extends AbstractPO implements Serializable {
         this.tourney = tourney;
     }
 
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    public Country getCountry() {
+
+        return country;
+    }
+
+    public void setCountry(Country country) {
+
+        this.country = country;
+    }
 }

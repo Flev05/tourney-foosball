@@ -292,13 +292,9 @@ export class TourneyService {
     }
 
     /** PUT: prepare the TourneyDb by stringify of received tourney to save on the server */
-    private updateTourney (tourney: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
-        let json: string = JSON.stringify(tourney);
+    private updateTourney (tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
 
-        let cvo = this.clientService.selectedClient;
-        let tourneyDb: TourneyVO = {id: tourney.id, clientVO: cvo, tourneyName: tourney.tourneyName, json: json};
-
-        return this.updateTourneyDb(tourneyDb, selector);
+        return this.updateTourneyDb(tvo, selector);
     }
 
     saveTourney (tourney: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
@@ -310,7 +306,6 @@ export class TourneyService {
 
     /** PUT: update the tourney on the server */
     private updateTourneyDb (tourney: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
-        const id =  tourney.id;
         let url = updateTourneyUrl;
 
         return this.http.put(url, tourney, httpOptions).pipe(

@@ -762,7 +762,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyAlreadyExists = false;
 
         let tvo : TourneyVO = {
-            id: this.selectedTeam.id
+            id: this.selectedTourney.id
           , tourneyName: this.selectedTourney.tourneyName
           , country: this.selectedTourney.country
           , clientVO: this.selectedTourney.clientVO
@@ -771,7 +771,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
-
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

@@ -62,6 +62,8 @@ export class TeamDetailView extends AbstractDetailView {
         };
 
         this.teamAlreadyExists = false;
+        this.onSaveTeamError = false;
+
         const subscriber = this.teamService.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
         subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }

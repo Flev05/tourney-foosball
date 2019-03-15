@@ -33,8 +33,8 @@ export class TeamService {
         { field: 'teamName',   header: 'Nome' },
         { field: 'address',    header: 'Indirizzo' },
     ];
-    teamPool: Team[];
-    teamPoolVO: TeamVO[];
+    teamPool: Team[] = [];
+    teamPoolVO: TeamVO[] = [];
 
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");

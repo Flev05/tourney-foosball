@@ -94,10 +94,6 @@ export class MeetingService {
 
     saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): void {
         if(m.id == null) {
-            // if(environment.inMemoryDataService) {
-            //     m.id = this.tourneyService.getSequenceNumber();
-            // }
-
             this.addMeetingDb(m, tourneyId, roundId, null, null)
         } else {
             this.updateMeetingDb(m, tourneyId, roundId, null, null)
@@ -106,9 +102,6 @@ export class MeetingService {
 
     savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): void {
         if(m.id == null) {
-            // if(environment.inMemoryDataService) {
-            //     m.id = this.tourneyService.getSequenceNumber();
-            // }
             this.addMeetingDb(m, tourneyId, null, playoffId, null)
         } else {
             this.updateMeetingDb(m, tourneyId, null, playoffId, null)
@@ -117,9 +110,6 @@ export class MeetingService {
 
     saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): void {
         if(m.id == null) {
-            // if(environment.inMemoryDataService) {
-            //     m.id = this.tourneyService.getSequenceNumber();
-            // }
             this.addMeetingDb(m, tourneyId, null, null, eliminatoryId)
         } else {
             this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId)

@@ -14,6 +14,7 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { NewTourneyDetailView } from './new-tourney-detailview';
 import { TourneyDetailView } from './tourney-detailview';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -25,6 +26,7 @@ export class TourneyListView extends AbstractTourneyListView {
 
     clientOptions: Combobox[];
     clientsCBEnabled: boolean;
+    onDeleteTourneyError: boolean;
 
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
@@ -86,14 +88,31 @@ export class TourneyListView extends AbstractTourneyListView {
         console.log("doDelete(): " + tourney.tourneyName);
         let popup = 'Sicuro di voler rimuovere il torneo: ' + tourney.tourneyName + "?";
 
+        this.onDeleteTourneyError = false;
+
         if(confirm(popup)) {
-            this.tourneyService.deleteTourney(tourney.t).subscribe(n => this.next(n), e => this.onError(e));
+
+            const observer = this.tourneyService.deleteTourney(tourney.t, this.deleteTourneyErrorHandler("Delete tourney operation"));
+            observer.subscribe(n => this.next(n), e => this.onError(e));
+
             let index: number = this.tourneys.indexOf(tourney.t);
             if(index > -1) {
                 this.tourneys.splice(index, 1);
                 this.rows.splice(index, 1);
             }
         }
+    }
+        
+    private deleteTourneyErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering deleteTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onDeleteTourneyError = true;
+      
+            return of(result as T);
+        };
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

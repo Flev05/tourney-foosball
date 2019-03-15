@@ -43,9 +43,9 @@ export class PlayerListView extends AbstractDetailView {
 
         this.selectedTeam = this.teamService.selectedTeam;
         this.playerCols = PlayerService.cols;
-        
+
         if(this.teamService.newTeam) {
-            this.selectedTeam.id = this.tourneyService.getSequenceNumber(); 
+            this.selectedTeam.id = null; 
             this.selectedTeam.players = [];
             this.teamService.newTeam = false;
         }
@@ -58,6 +58,8 @@ export class PlayerListView extends AbstractDetailView {
                 alreadyInTeam.push(p[j]);
             }
         }
+        
+        this.playerLabel = this.selectedTeam.players.length == 0 ? "Aggiungi Giocatori" : "Gestisci Giocatori";
     }
  
     updateTeamList() {

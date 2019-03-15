@@ -2,6 +2,7 @@
 package it.lms.tourney.po;
 
 import javax.annotation.Generated;
+import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -16,4 +17,5 @@ public class Tourney_ {
     public static volatile SingularAttribute<Tourney, Integer> id;
     public static volatile SingularAttribute<Tourney, Country> country;
 
+    public static volatile SetAttribute<Tourney, Meeting>      meetings;
 }

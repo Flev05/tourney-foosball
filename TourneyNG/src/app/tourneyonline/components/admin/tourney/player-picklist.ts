@@ -20,6 +20,7 @@ export class PlayerPickList extends AbstractListView {
 
     avalilablePlayers: string[];
     targetPlayers: string[];
+    returnLabel: string;
 
     constructor( protected tourneyService: TourneyService
         , public router: Router
@@ -34,6 +35,7 @@ export class PlayerPickList extends AbstractListView {
     ngOnInit() {
         console.log("PlayerPickList.ngOnInit() ");
         super.ngOnInit();
+        this.returnLabel = "Indietro";
         this.prepareAvailablePlayers();
     }
     
@@ -59,19 +61,34 @@ export class PlayerPickList extends AbstractListView {
         }
     }
     
+    onMoveToTarget(event) {
+        console.log("Entering onMoveToTarget()");
+        this.returnLabel = "Salva e torna";
+    }
+
+    onMoveToSource(event) {
+        console.log("Entering onMoveToSource()");
+        this.returnLabel = "Salva e torna";
+    }
+
     goBack(): void {
-        this.selectedTeam.players = [];
-        for(let pn of this.targetPlayers) {
-            let t: Team = this.playerService.playerPool.find(x => x.playerName == pn);
-            this.selectedTeam.players.push(t);
-        }
+        this.copyTargetPlayers();
         this.location.back();
     }
 
     newPlayer() {
         this.playerService.selectedPlayer = {};
         this.playerService.newPlayer = true;
+        this.copyTargetPlayers();
         this.router.navigate([REDIRECT_PLAYER_DV]);
+    }
+
+    private copyTargetPlayers() {
+        this.selectedTeam.players = [];
+        for (let pn of this.targetPlayers) {
+            let p: Player = this.playerService.playerPool.find(x => x.playerName == pn);
+            this.selectedTeam.players.push(p);
+        }
     }
 
     onError(n:any) {

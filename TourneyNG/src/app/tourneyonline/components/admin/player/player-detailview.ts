@@ -21,6 +21,7 @@ export class PlayerDetailView extends AbstractDetailView {
     playerAlreadyExists: boolean;
     onSavePlayerError: boolean;
     badRequest: boolean;
+    newPlayerVO: PlayerVO;
     
     constructor(
         protected location: Location,
@@ -60,7 +61,7 @@ export class PlayerDetailView extends AbstractDetailView {
 
         this.selectedPlayer.clientVO = this.clientService.selectedClient;
 
-        let pvo : PlayerVO = {
+        this.newPlayerVO = {
             id: this.selectedPlayer.id
           , playerName: this.selectedPlayer.playerName
           , country: this.selectedPlayer.country
@@ -69,8 +70,9 @@ export class PlayerDetailView extends AbstractDetailView {
         };
 
         this.playerAlreadyExists = false;
+        this.onSavePlayerError = false;
 
-        const subscriber = this.playerService.savePlayer(pvo, this.savePlayerErrorHandler('Create player operation'));
+        const subscriber = this.playerService.savePlayer(this.newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
         subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }
 
@@ -91,6 +93,15 @@ export class PlayerDetailView extends AbstractDetailView {
     private onSaveComplete() {
         console.log("Entering onSaveComplete()");
         if( !this.onSavePlayerError ) {
+            if(this.playerService.newPlayer) {
+
+                let ppo: Player = JSON.parse(this.newPlayerVO.json);
+                ppo.country = this.newPlayerVO.country;
+                ppo.clientVO = this.newPlayerVO.clientVO;
+                ppo.playerName = this.newPlayerVO.playerName;
+    
+                this.playerService.playerPool.push(ppo);
+            }
             this.playerService.newPlayer = false;
             super.goBack();
         }

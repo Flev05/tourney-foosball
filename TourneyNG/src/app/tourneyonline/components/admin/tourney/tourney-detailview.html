@@ -743,7 +743,7 @@
             </p-accordionTab>
         </p-accordion>
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="!enableSaveButton()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <p-table [columns]="teamCols"
                 [value]="selectedTourney.teams"
                 [responsive]="true"

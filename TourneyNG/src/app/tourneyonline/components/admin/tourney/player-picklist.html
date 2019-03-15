@@ -33,7 +33,7 @@
 <h4><span>Squadra: {{selectedTeam.teamName}}</span></h4>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="{{returnLabel}}"></button>
 </div>                  
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -44,6 +44,8 @@
         [responsive]="true"
         dragdrop="true" 
         dragdropScope="players" 
+        (onMoveToTarget)="onMoveToTarget($event)"
+        (onMoveToSource)="onMoveToSource($event)"
         [sourceStyle]="{'height':'400px'}" 
         [targetStyle]="{'height':'400px'}">
 

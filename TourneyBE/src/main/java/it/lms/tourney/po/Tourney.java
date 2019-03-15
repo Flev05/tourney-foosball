@@ -2,14 +2,18 @@
 package it.lms.tourney.po;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -26,6 +30,8 @@ public class Tourney extends AbstractPO implements Serializable {
     private Session           session;
     private Country           country;
     private String            json;
+
+    private Set<Meeting>      meetings;
 
     public Tourney() {
 
@@ -109,5 +115,17 @@ public class Tourney extends AbstractPO implements Serializable {
     public void setCountry(Country country) {
 
         this.country = country;
+    }
+
+    // bi-directional one-to-many association to Meeting
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "tourney", fetch = FetchType.LAZY)
+    public Set<Meeting> getMeetings() {
+
+        return this.meetings;
+    }
+
+    public void setMeetings(Set<Meeting> meetings) {
+
+        this.meetings = meetings;
     }
 }

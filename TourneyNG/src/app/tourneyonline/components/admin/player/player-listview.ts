@@ -122,8 +122,6 @@ export class PlayerListView extends AbstractListView {
                 this.players.splice(index, 1);
                 this.rows.splice(index, 1);
             }
-
-            super.goBack();
         }
     }
 }

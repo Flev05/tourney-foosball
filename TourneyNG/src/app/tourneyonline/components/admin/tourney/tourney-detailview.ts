@@ -23,6 +23,7 @@ import { FromRound } from 'app/tourneyonline/domain/from-round';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -86,6 +87,7 @@ export class TourneyDetailView extends AbstractDetailView {
         protected location: Location,
         public tourneyService: TourneyService,
         protected countryService: CountryService,
+        protected clientService: ClientService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
         protected meetingService: MeetingService,
@@ -301,7 +303,13 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     addTeams() {
-        this.teamService.loadAllTeams( () => this.onComplete() );
+
+        let tvo: TourneyVO = this.saveTourney();
+
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onComplete());
+
+        // this.teamService.loadAllTeams( () => this.onComplete() );
     }
 
     private onComplete(): void {
@@ -719,58 +727,58 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     onSubmit() {
-        this.submitted = true;
-
-        this.tourneyService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
-
-        if( this.tourneyService.containsPhase(PhaseType.R) ) {
-            for(let r of this.selectedTourney.rounds) {
-                for(let m of r.onewayMeetings) {
-                    this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-                }
-                for(let m of r.roundtripMeetings) {
-                    this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-                }
-            }
-        }
-
-        if( this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound) {
-            for(let p of this.selectedTourney.playoffs) {
-                for(let m of p.round.onewayMeetings) {
-                    this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                }
-                for(let m of p.round.roundtripMeetings) {
-                    this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                }
-            }
-        }
-
-        let elconf = this.incompleteEliminatoryConfiguration == undefined ? true : this.incompleteEliminatoryConfiguration;
-        if( this.tourneyService.containsPhase(PhaseType.E) && !elconf ) {
-            for(let el of this.selectedTourney.eliminatoryLevels) {
-                for(let e of el.eliminatories) {
-                    for(let m of e.round.onewayMeetings) {
-                        this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
-                    }
-                    for(let m of e.round.roundtripMeetings) {
-                        this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
-                    }
-                }
-            }
-        }
-
-        this.tourneyAlreadyExists = false;
-
-        let tvo : TourneyVO = {
-            id: this.selectedTourney.id
-          , tourneyName: this.selectedTourney.tourneyName
-          , country: this.selectedTourney.country
-          , clientVO: this.selectedTourney.clientVO
-          , json: JSON.stringify(this.selectedTourney)
-        };
+        let tvo: TourneyVO = this.saveTourney();
 
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+    }
+
+    private saveTourney() {
+        this.submitted = true;
+        this.tourneyService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
+        if (this.tourneyService.containsPhase(PhaseType.R)) {
+            for (let r of this.selectedTourney.rounds) {
+                for (let m of r.onewayMeetings) {
+                    this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                }
+                for (let m of r.roundtripMeetings) {
+                    this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                }
+            }
+        }
+        if (this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound) {
+            for (let p of this.selectedTourney.playoffs) {
+                for (let m of p.round.onewayMeetings) {
+                    this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                }
+                for (let m of p.round.roundtripMeetings) {
+                    this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                }
+            }
+        }
+        let elconf = this.incompleteEliminatoryConfiguration == undefined ? true : this.incompleteEliminatoryConfiguration;
+        if (this.tourneyService.containsPhase(PhaseType.E) && !elconf) {
+            for (let el of this.selectedTourney.eliminatoryLevels) {
+                for (let e of el.eliminatories) {
+                    for (let m of e.round.onewayMeetings) {
+                        this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                    }
+                    for (let m of e.round.roundtripMeetings) {
+                        this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                    }
+                }
+            }
+        }
+        this.tourneyAlreadyExists = false;
+        this.onSaveTourneyError = false;
+        let tvo: TourneyVO = {
+            id: this.selectedTourney.id,
+            tourneyName: this.selectedTourney.tourneyName,
+            country: this.selectedTourney.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(this.selectedTourney)
+        };
+        return tvo;
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

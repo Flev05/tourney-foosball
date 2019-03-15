@@ -150,7 +150,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         for (let rowNumber=0; rowNumber<this.eliminatoryLevels.length; rowNumber++) {
 
-            let topElimLevel = this.eliminatoryLevels[rowNumber];
+            let topElimLevel: EliminatoryLevel = this.eliminatoryLevels[rowNumber];
 
             let level = topElimLevel.level == -1 ? 2 : this.pow2(topElimLevel.level);
             
@@ -192,6 +192,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 let meetings: Array<Meeting> = new Array<Meeting>();
                 for(let mdb of meetingsDb) {
                     let m: Meeting = JSON.parse(mdb.json);
+                    m.id = mdb.id;
                     meetings.push(m);
                 }
                 round.onewayMeetings = meetings;
@@ -293,7 +294,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             let e = this.eliminatories[i];
 
             let onewayDatetime    = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
-            let roundtripDatetime = this.dateFormatPipe.transform(e.round.onewayMeetings[1].datetime);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
 
             this.rows.push({e:e
                 , rowNumber: i+1 
@@ -365,7 +366,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             let fromRound2      = e.rule2.fromRound.round.label
             let fromPlayoff2    = e.rule2.fromPlayoff.round.label
 
-            let roundtripDatetime = this.dateFormatPipe.transform(e.round.onewayMeetings[1].datetime);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
 
             let fullList = {e:e
                 , onewayDatetime: onewayDatetime

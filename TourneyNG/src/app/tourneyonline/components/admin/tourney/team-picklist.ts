@@ -18,6 +18,7 @@ export class TeamPickList extends AbstractListView {
 
     avalilableTeams: string[];
     targetTeams: string[];
+    returnLabel: string;
 
     constructor( protected tourneyService: TourneyService
         , public router: Router
@@ -30,6 +31,9 @@ export class TeamPickList extends AbstractListView {
     ngOnInit() {
         console.log("TeamPickList.ngOnInit() ");
         super.ngOnInit();
+
+        this.returnLabel = "Indietro";
+
         this.prepareAvailableTeams();
     }
     
@@ -48,19 +52,49 @@ export class TeamPickList extends AbstractListView {
             }
         }
     }
+
+    onMoveToTarget(event) {
+        console.log("Entering onMoveToTarget()");
+        this.returnLabel = "Salva e torna";
+    }
+
+    onMoveToSource(event) {
+        console.log("Entering onMoveToSource()");
+        this.returnLabel = "Salva e torna";
+    }
  
     newTeam() {
         this.teamService.newTeam = true;
+        this.returnLabel = "Salva e torna";
+        
         this.router.navigate([TeamDetailView.redirect]);
     }
     
     goBack(): void {
-        this.selectedTourney.teams = [];
-        for(let pn of this.targetTeams) {
-            let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
-            this.selectedTourney.teams.push(t);
-        }
+        this.returnLabel = "Salva e torna";
+        this.alignTourneyTeams();
         super.goBack();
+    }
+
+    private alignTourneyTeams() {
+        let tempTeams : Team[] = [...this.selectedTourney.teams];
+        for( let t of tempTeams ) {
+            let tn = this.targetTeams.find( tt => tt == t.teamName );
+            if( tn == undefined ) {
+                let index = this.selectedTourney.teams.indexOf(t);
+                if( index > -1 ) {
+                    this.selectedTourney.teams.splice(index, 1);
+                }
+            }
+        }
+
+        for (let pn of this.targetTeams) {
+            let team : Team = this.selectedTourney.teams.find( t => t.teamName == pn );
+            if( team == undefined ) {
+                let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
+                this.selectedTourney.teams.push(t);
+            }
+        }
     }
 
     onError(n:any) {

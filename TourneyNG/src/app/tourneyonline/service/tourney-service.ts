@@ -387,13 +387,13 @@ export class TourneyService {
     }
     
     /** DELETE: delete the tourney from the server */
-    deleteTourney (tourney: Tourney | number): Observable<Tourney> {
-        const id = typeof tourney === 'number' ? tourney : tourney.id;        
+    deleteTourney (tourney: Tourney, selector: (err: any, caught: Observable<Tourney> ) => Observable<Tourney> ) : Observable<Tourney> {
+        const id = tourney.id;        
         const url = deleteTourneyUrl + "/" + id;
 
         return this.http.delete<Tourney>(url, httpOptions).pipe(
             tap(_ => this.log('deleted Tourney id=' + id)),
-            catchError(this.handleError<Tourney>('deleteTourney'))
+            catchError(selector)
         );
     }
 

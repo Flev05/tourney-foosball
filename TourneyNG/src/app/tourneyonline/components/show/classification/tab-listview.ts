@@ -28,7 +28,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
     }
 
     ngOnInit() {
-        this.activeIndex = this.tourneyService.selectedTabIndex;
+        this.activeIndex = this.selectedTourney.selectedTabIndex;
 
         super.ngOnInit();
 
@@ -58,7 +58,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
         this.activeIndex = index;
-        this.tourneyService.selectedTabIndex = this.activeIndex;
+        this.selectedTourney.selectedTabIndex = this.activeIndex;
     }
     
     protected processEliminationTree(): void {

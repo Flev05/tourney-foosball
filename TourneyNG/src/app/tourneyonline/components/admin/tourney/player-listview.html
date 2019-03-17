@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Squadra</span>
-        <span>Vista di dettaglio di una squadra del torneo</span>
+        <span>Lista dei giocatori che compongono la squadra</span>
     </div>
 </div>
 
@@ -9,12 +9,13 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>
-            La vista contiene l'elenco dei giocatori della squadra selezionata.
+            La vista contiene l'elenco dei giocatori della squadra selezionata, più 2 bottoni.
             Potete effettuare le seguenti operazioni:
         </p>
         <ul>
-            <li>Nuovo giocatore</li>
-            <li>Gestisci lista giocatori</li>
+            <li>Nuovo Giocatore</li>
+            <li>Gestisci Giocatori</li>
+            <li>Dettaglio Squadra</li>
         </ul>        
 
         <h4>Nuovo giocatore</h4>
@@ -31,12 +32,18 @@
             Alla fine dell'operazione di creazione, dovete salvare esplicatmente con il bottone Salva
         </p>
 
-        <h4>Gestisci lista giocatori</h4>
+        <h4>Gestisci Giocatori</h4>
         <p>
             Con il bottone Gestisci Giocatori, si accede alla vista per aggiornare la lista dei giocatori 
             che forma la squadra.
         </p>
-    
+
+        <h4>Dettaglio Squadra</h4>
+        <p>
+            Con il bottone Dettaglio Squadra, si naviga verso la vista la lista di dettaglio  
+            della squadra dove potete modificare i dati anagrafici della squadra.
+        </p>
+
     </p-accordionTab>
 </p-accordion>
 </div>
@@ -89,14 +96,14 @@
                 </button>
             </div>
 
-            <!-- <div class="ui-grid-col-3">
+            <div class="ui-grid-col-3">
                 <button pButton type="button" 
                     icon="pi pi-check" 
                     label="Dettaglio Squadra" 
                     (click)="updateTeamDetails()">
                 </button>
             </div>
-     -->
+    
         </div>
     </div>
     

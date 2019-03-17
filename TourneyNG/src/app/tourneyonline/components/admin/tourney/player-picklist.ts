@@ -89,6 +89,9 @@ export class PlayerPickList extends AbstractListView {
             let p: Player = this.playerService.playerPool.find(x => x.playerName == pn);
             this.selectedTeam.players.push(p);
         }
+
+        let team = this.selectedTourney.teams.find( t => t.teamName == this.selectedTeam.teamName);
+        console.log(team);
     }
 
     onError(n:any) {

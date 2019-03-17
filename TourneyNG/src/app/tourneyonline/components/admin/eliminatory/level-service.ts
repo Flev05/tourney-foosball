@@ -62,7 +62,8 @@ export class LevelService extends AbstractEliminatoryListView {
 
     processEliminationTree(): void {
 
-        this.prepareEliminationTree(this.selectedTeamsNumCombobox.value);
+        let teamNo = this.selectedTeamsNumCombobox.value == 0 && this.selectedTourney.teams.length >= 2 ? this.selectedTourney.teams.length: this.selectedTeamsNumCombobox.value;
+        this.prepareEliminationTree(teamNo);
 
         if (this.isStandalone) {
             this.processStandalone();
@@ -86,12 +87,14 @@ export class LevelService extends AbstractEliminatoryListView {
         let levelsCombobox: Combobox[] =  this.tourneyService.prepareLevelCombobox(teamsNo);
 
         if(this.eliminatoryLevels.length==0) {
-            for(let i=0; i<levelsCombobox.length; i++ ) {
-                let lcb = levelsCombobox[i];
-                let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);
-                this.eliminatoryLevels.push(el);
+            if(levelsCombobox.length > 0 ) {
+                for(let i=0; i<levelsCombobox.length; i++ ) {
+                    let lcb = levelsCombobox[i];
+                    let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);
+                    this.eliminatoryLevels.push(el);
+                }
+                this.addOptionalLevel();  
             }
-            this.addOptionalLevel();  
             return;
         }     
         
@@ -159,6 +162,10 @@ export class LevelService extends AbstractEliminatoryListView {
      * no rounds and no playoffs.
      */
     private processStandalone() {
+        if( this.eliminatoryLevels.length == 0 ) {
+            this.incompleteEliminatoryConfiguration = true;
+            return;
+        }
 
         let topElimLevel = this.eliminatoryLevels[0];
 

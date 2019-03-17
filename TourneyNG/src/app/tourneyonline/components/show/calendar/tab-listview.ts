@@ -29,7 +29,7 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
     }
 
     ngOnInit() {
-        this.activeIndex = this.tourneyService.selectedTabIndex;
+        this.activeIndex = this.selectedTourney.selectedTabIndex;
 
         super.ngOnInit();
 
@@ -56,7 +56,7 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
         this.activeIndex = index;
-        this.tourneyService.selectedTabIndex = this.activeIndex;
+        this.selectedTourney.selectedTabIndex = this.activeIndex;
     }
     
     protected processEliminationTree(): void {
@@ -68,12 +68,6 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
             for(let e of el.eliminatories) {
                 allRounds.push(e.round);
             }
-            
-            // const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
-            // for(let er of eRows) {
-            //     er.roundName = el.name + " - " + er.roundName;
-            // }
-            // this.eliminatoryRows = this.eliminatoryRows.concat(eRows);
         }
     }
     

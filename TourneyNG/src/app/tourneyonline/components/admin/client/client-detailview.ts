@@ -79,9 +79,15 @@ export class ClientDetailView extends AbstractDetailView {
         this.clearErrors();
 
         const subscriber = this.clientService.saveClient(this.selectedClient, this.saveClientErrorHandler('Create client operation'));
-        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        subscriber.subscribe(cs => this.newClientNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
 
         this.clientService.newClient = false;
+    }
+    
+    private newClientNext(tvo:ClientVO) {
+        console.log("newClientNext()");
+        console.log(tvo);
+        this.selectedClient.id = tvo.id;
     }
 
     private clearErrors() {

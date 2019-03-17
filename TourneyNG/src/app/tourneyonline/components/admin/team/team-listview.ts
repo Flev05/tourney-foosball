@@ -124,8 +124,6 @@ export class TeamListView extends AbstractListView {
             if(index > -1) {
                 this.teams.splice(index, 1);
             }
-
-            super.goBack();
         }
     }
 }

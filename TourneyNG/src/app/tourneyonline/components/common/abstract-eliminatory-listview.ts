@@ -122,11 +122,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     /**
-        <th>Squadre</th>
-        <th>Nome</th>
-        <td>{{rowIndex + 1}}</td>
-        <td>{{rowData.level == -1 ? 2 : pow2(rowData.level)}}</td>
-        <td>{{rowData.name}}</td>
+        For each eliminatory level configureted in selected tourney, loads their corresponding meetings,
+        for both the one way and round trip meetings
      */
     loadEliminatoryLevels() {
         this.meetingMap = new Map<number, MeetingDb[]>();
@@ -143,11 +140,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.incompleteEliminatoryConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
         }
 
-        this.elHttpCounter = 0;
-        this.eliminatoryLevelRows = [];
-        
         this.eliminatoryCols = this.prepareELCols();
 
+        this.elHttpCounter = 0;
+        for (let l=0; l<this.eliminatoryLevels.length; l++) {
+            let el: EliminatoryLevel = this.eliminatoryLevels[l];
+            this.elHttpCounter += el.eliminatories.length;
+        }
+        
+        this.eliminatoryLevelRows = [];
         for (let rowNumber=0; rowNumber<this.eliminatoryLevels.length; rowNumber++) {
 
             let topElimLevel: EliminatoryLevel = this.eliminatoryLevels[rowNumber];
@@ -158,19 +159,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             for (let e of topElimLevel.eliminatories) {
                 this.eliminatoryRoundMap.set(e.id, e.round);
-                this.elHttpCounter++;
                 let abs = this.meetingService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
                 abs.subscribe(mdbs => this.addToMeetingMap(mdbs), e => this.onError(e));
             }
         }
-    }
-    
-    protected prepareELCols(): TableCols[] {
-       let eliminatoryCols = [
-           { field: 'name',        header: 'Livello' },
-           { field: 'level',       header: 'Squadre' },
-        ];
-        return eliminatoryCols;
     }
     
     private addToMeetingMap(mdbs: MeetingDb[]): void {
@@ -201,6 +193,14 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             this.processEliminationTree();
         }
+    }    
+
+    protected prepareELCols(): TableCols[] {
+       let eliminatoryCols = [
+           { field: 'name',        header: 'Livello' },
+           { field: 'level',       header: 'Squadre' },
+        ];
+        return eliminatoryCols;
     }
 
     protected processEliminationTree(): void {

@@ -25,7 +25,7 @@ export class PlayoffListView extends AbstractListView {
 
     atLeastOnePlayoff: boolean;
     displayDialog: boolean;
-    newRound: Playoff;
+    newRoundPlayoff: Playoff;
     newPlayoff: boolean;
 
     playoffCols: TableCols[] = TourneyService.playoffCols;
@@ -57,13 +57,14 @@ export class PlayoffListView extends AbstractListView {
         this.newPlayoff = true;
         this.displayDialog = true;
 
-        this.newRound = {
+        this.newRoundPlayoff = {
               id:this.tourneyService.getSequenceNumber()
             , round:{id: this.tourneyService.getSequenceNumber()
                 , name: ""
                 , type: RoundType.P
                 , teams:[]
                 , onewayMeetings: []
+                , roundtripMeetings: []
                 , classification: []
               }
             , playoffRules: null
@@ -73,21 +74,21 @@ export class PlayoffListView extends AbstractListView {
     save() {
 
         this.displayDialog = false;
-        if(this.newRound.round.name != "") {
+        if(this.newRoundPlayoff.round.name != "") {
             let pls = [...this.playoffs];
             
             if (this.newPlayoff) {
-                pls.push(this.newRound);
+                pls.push(this.newRoundPlayoff);
             } else {
                 const index = this.playoffs.indexOf(this.selectedPlayoff);
                 if(index > -1) {
-                    pls[index] = this.newRound;
+                    pls[index] = this.newRoundPlayoff;
                 }
             }
             this.playoffs = pls;
         }
 
-        this.newRound = null;
+        this.newRoundPlayoff = null;
         this.newPlayoff = false;
         
         this.selectedTourney.playoffs = this.playoffs;

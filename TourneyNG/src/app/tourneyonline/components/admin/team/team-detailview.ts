@@ -65,7 +65,13 @@ export class TeamDetailView extends AbstractDetailView {
         this.onSaveTeamError = false;
 
         const subscriber = this.teamService.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
-        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+    }
+
+    private newTeamNext(tvo:TeamVO) {
+        console.log("newTeamNext()");
+        console.log(tvo);
+        this.selectedTeam.id = tvo.id;
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

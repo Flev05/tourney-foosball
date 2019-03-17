@@ -78,7 +78,7 @@ export class TabResultListView extends AbstractListView {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
 
-        this.tourneyService.selectedTabIndex = index;
+        this.selectedTourney.selectedTabIndex = index;
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {

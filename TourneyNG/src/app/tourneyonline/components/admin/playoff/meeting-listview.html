@@ -28,8 +28,6 @@
 <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
 <h4><span>Incontri: {{meetingsNoMsg}}</span></h4>
 
-<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-
 <p-tabView  (onChange)="onChangeTab($event)">
     <p-tabPanel header="Andata">
         <p-table [columns]="meetingsCols"
@@ -122,3 +120,5 @@
         </p-table>
     </p-tabPanel>    
 </p-tabView>
+
+<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>

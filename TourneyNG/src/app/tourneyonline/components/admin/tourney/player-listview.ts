@@ -75,6 +75,7 @@ export class PlayerListView extends AbstractDetailView {
 
         for( let pvo of this.playerService.playerPoolVO ) {
             let ppo: Player = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
             ppo.country = pvo.country;
             ppo.clientVO = pvo.clientVO;
             ppo.playerName = pvo.playerName;

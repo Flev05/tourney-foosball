@@ -21,6 +21,8 @@ export interface Tourney {
     isDaily?: string;
     datetime? : Date;
 
+    selectedTabIndex?: number;
+
     address? : string;
     clientVO? : ClientVO;
     country? : Country;

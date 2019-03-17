@@ -73,7 +73,13 @@ export class PlayerDetailView extends AbstractDetailView {
         this.onSavePlayerError = false;
 
         const subscriber = this.playerService.savePlayer(this.newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
-        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+    }
+    
+    private newPlayerNext(tvo:PlayerVO) {
+        console.log("newPlayerNext()");
+        console.log(tvo);
+        this.selectedPlayer.id = tvo.id;
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

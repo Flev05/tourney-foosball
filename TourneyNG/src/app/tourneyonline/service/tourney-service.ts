@@ -71,7 +71,6 @@ export class TourneyService {
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
     newRule: boolean;
-    selectedTabIndex: number = 0;
     selectedRoundTabIndex: number = 0;
     selectedPlayoffTabIndex: number = 0;
     isStandalone: boolean;
@@ -100,7 +99,7 @@ export class TourneyService {
         { field: 'goalsDone',   header: 'Gf:Gs'},
         { field: 'goalsDiff',   header: 'D'},
     ];
-
+    
     constructor(private http: HttpClient
         , protected router: Router
         , private loginService: LoginService

@@ -7,10 +7,14 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Meeting } from '../domain/meeting';
-import { LoginService } from './login-service';
 import { Router } from '@angular/router';
 import { MeetingDb } from '../domain/meeting-db';
-import { TourneyService } from './tourney-service';
+import { Tourney } from '../domain/tourney';
+import { Team } from '../domain/team';
+import { Direction, MeetingStatus } from '../domain/enumerations';
+import { PlayoffRule } from '../domain/playoff-rule';
+import { Match } from '../domain/match';
+import { AbstractService } from '../components/common/abstract-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,12 +24,17 @@ const meetingUrl = 'api/meetings';
 const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';  
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
 const loadMeetingByEliminatoryIdUrl    = meetingUrl + '/loadByEliminatoryId';  
+
 const insertMeetingUrl = meetingUrl + '/insert';
 const updateMeetingUrl = meetingUrl + '/update';
-const deleteMeetingUrl = meetingUrl + '/delete';
+
+const deleteMeetingUrl                  = meetingUrl + '/delete';
+const deleteMeetingByRoundIdUrl         = meetingUrl + "/deleteByRoundId"
+const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deleteByPlayoffId"
+const deleteMeetingByEliminatoryIdUrl   = meetingUrl + "/deleteByEliminatoryId"
 
 @Injectable()
-export class MeetingService {
+export class MeetingService extends AbstractService {
 
     static deleteMeetingUrl: string = deleteMeetingUrl;
     
@@ -35,8 +44,28 @@ export class MeetingService {
     meetings: Meeting[];
     mdbs: Meeting[];
 
-    constructor(private http: HttpClient, protected router: Router) { 
-        console.log("Constructor of TourneyService");
+    // private mdbList: MeetingDb[];
+
+    isRoundTrip: boolean;
+    meetingsNoMsg: string;
+
+    // private selectedRound: Round;
+    onewayDaysNo: number;
+    roundtripDaysNo: number;
+    
+    onewayMeetingDaysMap: Map<number, Meeting[]>;
+    onewayDays: any[];
+
+    roundtripMeetingDaysMap: Map<number, Meeting[]>;
+    roundtripDays: any[];
+
+    allDaysNo: number;
+    selectedTourney: Tourney;
+
+    constructor(protected http: HttpClient, protected router: Router) 
+    { 
+        super();
+        console.log("Constructor of MeetingService");
     }
 
     /** 
@@ -130,6 +159,7 @@ export class MeetingService {
             , roundId: roundId
             , playoffId: playoffId
             , eliminatoryId: eliminatoryId
+            , country: m.country
             , json: JSON.stringify(m)
         }
 
@@ -183,7 +213,7 @@ export class MeetingService {
     }
 
     /** DELETE: delete the MeetingDb from the server */
-    private deleteMeeting (m: Meeting ): void {
+    deleteMeeting (m: Meeting ): void {
         let id: number = m.id;
         const url = deleteMeetingUrl + "/" + id;
 
@@ -196,7 +226,40 @@ export class MeetingService {
 
         obs.subscribe();
     }
+
+    deleteMeetingByRoundId (roundId: number ): void {
+        const url = deleteMeetingByRoundIdUrl + "/" + roundId;
+
+        let obs = this.http.delete<Meeting>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb: ' + roundId)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + roundId))
+        );
+
+        obs.subscribe();
+    }
      
+    deleteMeetingByPlayoffId (playoffId: number ): void {
+        const url = deleteMeetingByPlayoffIdUrl + "/" + playoffId;
+
+        let obs = this.http.delete<Meeting>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb: ' + playoffId)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + playoffId))
+        );
+
+        obs.subscribe();
+    }
+     
+    deleteMeetingByEliminatoryId (eliminatoryId: number ): void {
+        const url = deleteMeetingByEliminatoryIdUrl + "/" + eliminatoryId;
+
+        let obs = this.http.delete<Meeting>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb: ' + eliminatoryId)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + eliminatoryId))
+        );
+
+        obs.subscribe();
+    }
+
     private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
       
@@ -214,5 +277,76 @@ export class MeetingService {
     /** Log a HeroService message with the MessageService */
     private log(message: string) {
         console.log('TourneyService: ' + message);
+    }
+
+    
+    protected sortMeetings(meetings: any[]): any[] {
+        return meetings.sort((m1, m2) => {
+            if (m1.dateAndTime > m2.dateAndTime) {
+                return 1;
+            }
+            if (m1.dateAndTime < m2.dateAndTime) {
+                return -1;
+            }
+            return 0;
+        });
+    }
+
+    protected newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
+        let m = this.createMeeting(t1, t2, null, null, day, d);
+        return m;
+    }
+    
+    createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
+        let matches = new Array<Match>();
+
+        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
+            let m: Match = {id:i
+                ,players1: []
+                ,players2: []
+                ,score1:0
+                ,score2:0
+            };
+            matches.push(m);
+        }
+
+        let name = "";
+        if(t1!=null) {
+            name = t1.teamName;
+            if(t2!=null) {
+                name += " - " + t2.teamName; 
+            }
+        } else {
+            if(t2!=null) {
+                name = t2.teamName; 
+            }
+        }
+
+        let ruleName = this.makeRuleName(pr1, pr2);
+        
+        let m : Meeting = {
+            id: null,
+            name: name,
+            datetime: this.selectedTourney.datetime,
+            address: this.selectedTourney.address,
+            country: this.selectedTourney.country,
+            day: day,
+            team1: t1,
+            team2: t2,
+            points1: 0,
+            points2: 0,
+            rule1: pr1,
+            rule2: pr2,
+            ruleName: ruleName,
+            direction: d,
+            status: MeetingStatus.ToPlay,
+            matches: matches
+        };
+
+        return m;
+    }
+        
+    protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
+        return "";
     }
 }

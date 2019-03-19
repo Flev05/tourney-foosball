@@ -287,6 +287,11 @@ public class Converter extends AbstractLogger {
         mpo.setPlayoffId(mvo.getPlayoffId());
         mpo.setRoundId(mvo.getRoundId());
 
+        if (mvo.getCountry() != null) {
+            Country country = countryDao.findById(mvo.getCountry().getId());
+            mpo.setCountry(country);
+        }
+
         Tourney tpo = tourneyDao.findById(mvo.getTourneyId());
 
         mpo.setTourney(tpo);

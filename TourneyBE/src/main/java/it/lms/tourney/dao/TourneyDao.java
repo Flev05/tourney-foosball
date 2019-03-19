@@ -181,25 +181,25 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         return resultList.get(0);
     }
 
-    public void insert(Tourney Tourney) {
+    public void insert(Tourney t) {
 
-        logger.debug(logId() + "Entering insert(" + Tourney + ")");
+        logger.debug(logId() + "Entering insert(" + t.getJson() + ")");
 
-        super.insertPo(Tourney);
+        super.insertPo(t);
     }
 
-    public void update(Tourney Tourney) {
+    public void update(Tourney t) {
 
-        logger.debug(logId() + "Entering update(" + Tourney + ")");
+        logger.debug(logId() + "Entering update(" + t.getId() + ")");
 
-        super.updatePo(Tourney);
+        super.updatePo(t);
     }
 
-    public void delete(Tourney Tourney) {
+    public void delete(Tourney t) {
 
-        logger.debug(logId() + "Entering delete(" + Tourney + ")");
+        logger.debug(logId() + "Entering delete(" + t.getId() + ")");
 
-        super.deletePo(Tourney);
+        super.deletePo(t);
     }
 
 }

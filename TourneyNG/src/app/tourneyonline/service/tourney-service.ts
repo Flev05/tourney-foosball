@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
 import { Classification } from '../domain/classification';
 import { MeetingStatus, TourneyType } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
+import { AbstractService } from '../components/common/abstract-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -40,7 +41,7 @@ const deleteTourneyUrl = tourneyUrl + '/delete';
 const classificationLabel = "°";
 
 @Injectable()
-export class TourneyService {
+export class TourneyService extends AbstractService {
     tourneys: Tourney[];
 
     positionsCombobox: Combobox[];
@@ -86,9 +87,6 @@ export class TourneyService {
     ];
     redirect: string;
 
-    selectedTeams4PlayoffsCB: Combobox;
-    selectedPlayoffsCB: Combobox;
-    selectedRoundsNumCB: Combobox;
     classificationCols: TableCols[] = [
         { field: 'teamName',    header: 'Team'},
         { field: 'points',      header: 'Pt.'},
@@ -103,8 +101,10 @@ export class TourneyService {
     constructor(private http: HttpClient
         , protected router: Router
         , private loginService: LoginService
-        , private clientService: ClientService) 
+        , private clientService: ClientService
+        , private meetingService: MeetingService) 
     { 
+        super();
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
     }
@@ -336,53 +336,32 @@ export class TourneyService {
         if(confirm(popup)) {
 
             for( let m of playoff.round.onewayMeetings) {
-                this.deleteMeeting(m);
+                this.meetingService.deleteMeeting(m);
             }
 
             let index = this.selectedTourney.playoffs.indexOf(playoff);
             if(index > -1) {
                 this.selectedTourney.playoffs.splice(index, 1);
-                this.updateTourney(this.selectedTourney, selector).subscribe(n => this.next(n), e => this.onError(e));
+                this.updateTourney(this.selectedTourney, selector).subscribe(n => this.next(n), e => this.onError(e) );
             }
         }
     }
-
+   
     private next(n:any) {
-    }
-
-    private onError(n:any) {
-        let msgerr : string = 'MeetingDb reload failed';
-        console.log(msgerr);
     }
 
     private removeRound(r: Round): any {
         for(let m of r.onewayMeetings) {
-            this.deleteMeeting(m);
+            this.meetingService.deleteMeeting(m);
         }
 
         r.onewayMeetings = [];
     }
 
-     deleteUnusedMeetings(meetings: Meeting[] ): void {
+    private deleteUnusedMeetings(meetings: Meeting[] ): void {
         for(let m of meetings) {
-            this.deleteMeeting(m);
+            this.meetingService.deleteMeeting(m);
         }
-    }
-
-    /** DELETE: delete the MeetingDb from the server */
-    private deleteMeeting (m: Meeting ): void {
-
-        let id: number = m.id;
-        const url = MeetingService.deleteMeetingUrl + "/" + id;
-
-        let json = url + ", " + m.name;
-
-        let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb:' + json)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + json))
-        );
-
-        obs.subscribe();
     }
     
     /** DELETE: delete the tourney from the server */

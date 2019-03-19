@@ -22,6 +22,9 @@ export interface Tourney {
     datetime? : Date;
 
     selectedTabIndex?: number;
+    selectedTeams4PlayoffsCB?: Combobox;
+    selectedPlayoffsCB?: Combobox;
+    selectedRoundsNumCB?: Combobox;
 
     address? : string;
     clientVO? : ClientVO;
@@ -60,5 +63,5 @@ export interface Tourney {
     selectedTeamsNumCombobox?: Combobox;
 
     teams?: Team[];
-    meetingsForDelete?: Meeting[];
+    // meetingsForDelete?: Meeting[];
 }

@@ -424,7 +424,7 @@
 
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
-            <div *ngIf="nextButtonEnabled"  class="ui-grid-col-2">
+            <div class="ui-grid-col-2">
                 <button pButton type="button"
                     class="ui-button-success" 
                     icon="fa fa-arrow-right" 
@@ -862,23 +862,27 @@
                 <p>
                     Scegliere se ci sono turni di solo andata o di andata e ritorno.
                 </p>
-        
-                <p>
-                    Scegliere, dalla combo box Squadre, il numero di squadre per ciascun girone.
-                </p>
+
                 <p>
                     Scegliere, dalla combo box Gironi, il numero di gironi all'italiana del torneo.
                     Se il numero di squadre per girone non è un numero intero, ci saranno alcuni gironi
                     con una squadra in più degli altri.
                 </p>
                 <p>
-                    In funzione di queste 2 scelte il sistema propone una compilazione d'ufficio di ciascun girone.
+                    In funzione di questa scelta il sistema propone una compilazione d'ufficio di ciascun girone basato sul numero 
+                    di squadre configurate per il torneo.
                     Potete modificare il contenuto del girone spostando le squadre presenti al suo interno
                     dall'area dei Selezionati a quella dei Disponibile ed assegnarli ad altri gironi.
                 </p>
+
                 <p>
-                    ATTENZIONE! A fronte di una modifica al numero di squadre o gironi, si perderanno irrimediabilmente 
-                    tutte le precedenti impostazioni.
+                    Per ciascun girone, dovete configurare il luogo e le date di ciascun incontro del girone.
+                    Questo è necessario se il girone si sviluppa su più giornate e in luoghi diversi, altrimenti potete 
+                    risparmiarvi questa operazione e passare alla scheda successiva.
+                </p>
+                <p>
+                    ATTENZIONE! A fronte di una modifica al numero di gironi, si perderanno irrimediabilmente 
+                    tutte le precedenti impostazioni che vanno rifatte.
                 </p>
             </p-accordionTab>
         </p-accordion>   
@@ -926,7 +930,7 @@
                         pTooltip="Scegliere il numero di gironi che compongono il torneo">
                     <p-dropdown id="roundId" 
                         [options]="roundsCombobox" 
-                        [(ngModel)]="tourneyService.selectedRoundsNumCB"  
+                        [(ngModel)]="selectedTourney.selectedRoundsNumCB"  
                         optionLabel="label"
                         (onChange)="onRoundNumChange($event.value)" 
                         [autoWidth]="false">
@@ -1063,7 +1067,7 @@
                         pTooltip="Scegliere il numero di squadre per girone che passerà il turno dai gironi all'italiana ai playoff">
                     <p-dropdown id="teamsRoundId" 
                         [options]="team4playoffsCombobox" 
-                        [(ngModel)]="tourneyService.selectedTeams4PlayoffsCB"  
+                        [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
                         optionLabel="label"
                         (onChange)="onTeams4PlayoffsChange($event.value)" 
                         placeholder="Seleziona"
@@ -1080,7 +1084,7 @@
                         pTooltip="Scegliere il numero di gironi di playoff della fase di playoff">
                     <p-dropdown id="playoffId" 
                         [options]="playoffsCombobox" 
-                        [(ngModel)]="tourneyService.selectedPlayoffsCB"  
+                        [(ngModel)]="selectedTourney.selectedPlayoffsCB"  
                         optionLabel="label"
                         (onChange)="onPlayoffNumChange($event.value)" 
                         [autoWidth]="false">

@@ -16,25 +16,4 @@ export abstract class AbstractRuleListView extends AbstractListView {
         super(redirect, tourneyService, router, location);
     }
 
-    protected isEquals(m: Meeting, pr1: PlayoffRule, pr2: PlayoffRule): boolean {
-        let rule1: string = this.makeRule(pr1);
-        let rule2: string = this.makeRule(pr2);
-
-        let b: boolean = m.rule1.fromRound.position.label == rule2;
-        b = b && m.rule2.fromRound.position.label == rule1;
-
-        return b;
-    }
-
-    protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
-        if( pr1 == null && pr1 == null) {
-            return "";
-        }
-    
-        return this.makeRule(pr1) + " " + this.makeRule(pr2);
-    }
-    
-    protected makeRule(rule: PlayoffRule): string {
-        return rule.fromRound.position.label + "." + rule.fromRound.round.label;
-    }
 }

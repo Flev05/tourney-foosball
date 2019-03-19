@@ -3,9 +3,10 @@ package it.lms.cb.gui.vo;
 
 import java.io.Serializable;
 
- 
+import it.lms.tourney.po.Country;
+
 /**
- * The view object VO class 
+ * The view object VO class
  */
 public class MeetingVO extends AbstractVO implements Serializable {
 
@@ -18,6 +19,8 @@ public class MeetingVO extends AbstractVO implements Serializable {
     private Integer           playoffId;
     private Integer           eliminatoryId;
 
+    private Country           country;
+
     public MeetingVO() {
 
     }
@@ -26,19 +29,20 @@ public class MeetingVO extends AbstractVO implements Serializable {
     public String toString() {
 
         return super.toString() + " Meeting [json=" + json + ", tourneyId=" + tourneyId + ", roundId=" + roundId
-                + ", playoffId=" + playoffId + ", eliminatoryId=" + eliminatoryId + "]";
+                + ", playoffId=" + playoffId + ", eliminatoryId=" + eliminatoryId + ", country=" + country + "]";
     }
- 
 
     public Integer getTourneyId() {
-		return tourneyId;
-	}
 
-	public void setTourneyId(Integer tourneyId) {
-		this.tourneyId = tourneyId;
-	}
+        return tourneyId;
+    }
 
-	public String getJson() {
+    public void setTourneyId(Integer tourneyId) {
+
+        this.tourneyId = tourneyId;
+    }
+
+    public String getJson() {
 
         return json;
     }
@@ -77,5 +81,15 @@ public class MeetingVO extends AbstractVO implements Serializable {
 
         this.eliminatoryId = eliminatoryId;
     }
- 
+
+    public Country getCountry() {
+
+        return country;
+    }
+
+    public void setCountry(Country country) {
+
+        this.country = country;
+    }
+
 }

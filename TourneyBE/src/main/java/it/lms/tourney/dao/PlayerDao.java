@@ -174,14 +174,14 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
     public void update(Player player) {
 
-        logger.debug(logId() + "Entering update(" + player + ")");
+        logger.debug(logId() + "Entering update(" + player.getId() + ")");
 
         super.updatePo(player);
     }
 
     public void delete(Player player) {
 
-        logger.debug(logId() + "Entering delete(" + player + ")");
+        logger.debug(logId() + "Entering delete(" + player.getId() + ")");
 
         super.deletePo(player);
     }

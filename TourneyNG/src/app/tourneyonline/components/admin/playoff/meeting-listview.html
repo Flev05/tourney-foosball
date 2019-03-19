@@ -26,12 +26,12 @@
 
 <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
 <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
-<h4><span>Incontri: {{meetingsNoMsg}}</span></h4>
+<h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>
 
-<p-tabView  (onChange)="onChangeTab($event)">
+<p-tabView >
     <p-tabPanel header="Andata">
         <p-table [columns]="meetingsCols"
-            [value]="onewayDays" 
+            [value]="meetingService.onewayDays" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -42,13 +42,13 @@
             <ng-template pTemplate="caption">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goOnewayLeft()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingService.goOnewayLeft()"></button>
                     </div>
                     <div class="ui-grid-col-3">
-                        Giornata {{onewayDaysNo}} di {{allDaysNo}}
+                        Giornata {{meetingService.onewayDaysNo}} di {{meetingService.allDaysNo}}
                     </div>
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goOnewayRight()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingService.goOnewayRight()"></button>
                     </div>
                 </div>
             </ng-template>
@@ -74,10 +74,10 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
+    <p-tabPanel *ngIf="meetingService.isRoundTrip" header="Ritorno">
         <p-table 
             [columns]="meetingsCols"
-            [value]="roundtripDays" 
+            [value]="meetingService.roundtripDays" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -88,13 +88,13 @@
             <ng-template pTemplate="caption">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goRoundtripLeft()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingService.goRoundtripLeft()"></button>
                     </div>
                     <div class="ui-grid-col-3">
-                        Giornata {{roundtripDaysNo}} di {{allDaysNo}}
+                        Giornata {{meetingService.roundtripDaysNo}} di {{meetingService.allDaysNo}}
                     </div>
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goRoundtripRight()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingService.goRoundtripRight()"></button>
                     </div>
                 </div>
             </ng-template>

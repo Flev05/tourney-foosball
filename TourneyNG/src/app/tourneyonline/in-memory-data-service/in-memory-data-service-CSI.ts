@@ -49,7 +49,6 @@ export class InMemoryDataServiceCSI  {
     ,pointsNeededToWin:9
     ,pointsGoldenGoalTieBreakWin:1
     ,pointsGoldenGoalTieBreakDefeat:0
-    ,meetingsForDelete:[]
    
     ,teams:[
         {id:20,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110"

@@ -19,6 +19,7 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -143,25 +144,55 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
         return resultList;
     }
 
-    public void insert(Meeting client) {
+    public void insert(Meeting m) {
 
-        logger.debug(logId() + "Entering insert(" + client + ")");
+        logger.debug(logId() + "Entering insert(" + m.getJson() + ")");
 
-        super.insertPo(client);
+        super.insertPo(m);
     }
 
-    public void update(Meeting client) {
+    public void update(Meeting m) {
 
-        logger.debug(logId() + "Entering update(" + client + ")");
+        logger.debug(logId() + "Entering update(" + m.getId() + ")");
 
-        super.updatePo(client);
+        super.updatePo(m);
     }
 
-    public void delete(Meeting client) {
+    public void delete(Meeting m) {
 
-        logger.debug(logId() + "Entering delete(" + client + ")");
+        logger.debug(logId() + "Entering delete(" + m.getId() + ")");
 
-        super.deletePo(client);
+        super.deletePo(m);
+    }
+
+    public void deleteByRoundId(Integer tourneyId) {
+
+        Query query = getEm()
+                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId is not null");
+
+        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
+
+        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+    }
+
+    public void deleteByPlayoffId(Integer tourneyId) {
+
+        Query query = getEm()
+                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoffId is not null");
+
+        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
+
+        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+    }
+
+    public void deleteByEliminatoryId(Integer tourneyId) {
+
+        Query query = getEm()
+                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryId is not null");
+
+        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
+
+        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
     }
 
 }

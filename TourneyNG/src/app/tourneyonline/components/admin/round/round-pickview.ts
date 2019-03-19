@@ -54,6 +54,7 @@ export class RoundDetailView extends AbstractDetailView {
                 name: "",
                 teams: [],
                 onewayMeetings: [],
+                roundtripMeetings: [],
                 classification: [],
                 type: RoundType.R,
                 matrix: null,
@@ -113,80 +114,7 @@ export class RoundDetailView extends AbstractDetailView {
         }
         this.router.navigate([RoundDetailView.meetingListviewRedirect]);
     }
-
-    // onSubmit(value: string) {
-
-    //     this.targetTeams = this.roundFormGroup.get('targetTeams').value;
-
-    //     let teamTourneyMap: Map<string,Team> = new Map<string,Team>();
-    //     for(let t of this.selectedTourney.teams) {
-    //         teamTourneyMap.set(t.teamName, t);
-    //     }
-    //     let teamMap: Map<string,Team> = new Map<string,Team>();
-    //     for(let t of this.selectedRound.teams) {
-    //         teamMap.set(t.teamName, t);
-    //     }
-
-    //     for(let tn of this.targetTeams) {
-    //         if(!teamMap.has(tn)) {
-    //             let t = teamTourneyMap.get(tn);
-    //             teamMap.set(t.teamName, t);
-    //             this.selectedRound.teams.push(t);
-    //             this.selectedRound.classification.push(t);
-    //         }
-    //     }
-
-    //     let teamNameMap: Map<string,string> = new Map<string,string>();
-    //     for(let tn of this.targetTeams) {
-    //         teamNameMap.set(tn, tn);
-    //     }
-    //     let tempTeams: Team[] = [];
-    //     for(let t of this.selectedRound.teams) {
-    //         if(teamNameMap.has(t.teamName)) {
-    //             tempTeams.push(t);
-    //         } else {
-    //             this.removeFromClassification(t);
-    //         }
-    //     }
-    //     this.selectedRound.teams = tempTeams;
-    // }
-
-    // private removeFromClassification(t: Team): any {
-    //     let index = this.selectedRound.classification.indexOf(t);
-    //     if(index > -1) {
-    //         this.selectedRound.classification.splice(index, 1);
-    //     }
-    // }
-
-    // private addTeamToMeetings(team: Team) {
-    //     for (let t of this.selectedRound.teams) {
-    //         let m = this.createMeeting(team, t, null, null, Direction.OneWay);
-            
-    //         this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);
-
-    //         this.selectedRound.onewayMeetings.push(m);
-    //         if (this.selectedTourney.isOnewayRound != "true") {
-    //             m = this.createMeeting(t, team, null, null, Direction.RoundTrip);
-    //             this.selectedRound.onewayMeetings.push(m);
-
-    //             this.tourneyService.saveRoundMeetingDb(m, this.selectedTourney.id, this.selectedRound.id);                
-    //         }
-    //     }
-    // }
-
-    // private removeFromMeetings(team: Team): void {
-
-    //     let temp : Meeting[] = [];
-    //     for(let m of this.selectedRound.onewayMeetings) {
-    //         if(m.team1.id == team.id || m.team2.id == team.id) {
-    //             this.selectedTourney.meetingsForDelete.push(m);
-    //         } else {
-    //             temp.push(m);
-    //         }
-    //     }
-    //     this.selectedRound.onewayMeetings = temp;    
-    // }
-
+ 
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         let items: string[] = event.items;
@@ -195,8 +123,6 @@ export class RoundDetailView extends AbstractDetailView {
             let teamToAdd: Team = this.selectedTourney.teams.find( t => t.teamName == i );
             if( teamToAdd != undefined ) {   
                 this.selectedRound.teams.push(teamToAdd);
-                // let c: Classification = this.newClassification(teamToAdd, 0);
-                // this.selectedRound.classification.push(c);
             }
         }
     }
@@ -213,8 +139,6 @@ export class RoundDetailView extends AbstractDetailView {
                     this.selectedRound.teams.splice(index, 1);
                 }
             }
-            // teamToRemove  = this.selectedRound.classification.find( c => c.team.teamName == i );
-            // this.removeFromClassification(teamToRemove);
         }
     }
  

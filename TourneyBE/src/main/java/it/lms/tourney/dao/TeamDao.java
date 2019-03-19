@@ -177,14 +177,14 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
     public void update(Team team) {
 
-        logger.debug(logId() + "Entering update(" + team + ")");
+        logger.debug(logId() + "Entering update(" + team.getId() + ")");
 
         super.updatePo(team);
     }
 
     public void delete(Team team) {
 
-        logger.debug(logId() + "Entering delete(" + team + ")");
+        logger.debug(logId() + "Entering delete(" + team.getId() + ")");
 
         super.deletePo(team);
     }

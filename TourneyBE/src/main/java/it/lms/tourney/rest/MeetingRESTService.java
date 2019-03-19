@@ -149,4 +149,62 @@ public class MeetingRESTService extends AbstractRESTService {
 
         return builder.build();
     }
+
+    /**
+     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/deleteByRoundId/{tourneyId:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteByRoundId(@PathParam("tourneyId") Integer tourneyId) {
+
+        logger.debug(logId() + "DELETE: deleteByRoundId(" + tourneyId + ")");
+
+        meetingDao.deleteByRoundId(tourneyId);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
+    /**
+     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/deleteByPlayoffId/{tourneyId:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteByPlayoffId(@PathParam("tourneyId") Integer tourneyId) {
+
+        logger.debug(logId() + "DELETE: deleteByPlayoffId(" + tourneyId + ")");
+
+        meetingDao.deleteByPlayoffId(tourneyId);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
+    /**
+     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/deleteByEliminatoryId/{tourneyId:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteByEliminatoryId(@PathParam("tourneyId") Integer tourneyId) {
+
+        logger.debug(logId() + "DELETE: deleteByEliminatoryId(" + tourneyId + ")");
+
+        meetingDao.deleteByEliminatoryId(tourneyId);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
 }

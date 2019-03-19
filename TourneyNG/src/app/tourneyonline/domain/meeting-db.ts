@@ -1,3 +1,5 @@
+import { Country } from "./country";
+
 export interface MeetingDb
 {
     id?             : number;
@@ -5,5 +7,6 @@ export interface MeetingDb
     roundId?        : number;
     playoffId?      : number;
     eliminatoryId?  : number;
+    country?        : Country;
     json?           : string;
 }

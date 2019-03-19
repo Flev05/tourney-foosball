@@ -29,7 +29,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         , protected teamService : TeamService
         , public router: Router
         , protected location: Location
-        , private dateFormatPipe: DateFormatPipe) 
+        , protected dateFormatPipe: DateFormatPipe) 
     { 
         super(redirect, tourneyService, router, location);
     }
@@ -56,6 +56,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         for( let pvo of this.playerService.playerPoolVO ) {
             let ppo: Player = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
             ppo.country = pvo.country;
             ppo.clientVO = pvo.clientVO;
             ppo.playerName = pvo.playerName;
@@ -69,9 +70,10 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         for( let pvo of this.teamService.teamPoolVO ) {
             let ppo: TeamVO = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
+            ppo.teamName = pvo.teamName;
             ppo.country = pvo.country;
             ppo.clientVO = pvo.clientVO;
-            ppo.teamName = pvo.teamName;
 
             this.teamService.teamPool.push(ppo);
         }
@@ -98,7 +100,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.tourneys = this.filter(this.tourneys);
         if( this.tourneys.length > 0 ) {
             this.selectedTourney = this.tourneys[0];
-            this.selectedTourney.meetingsForDelete = [];
+            // this.selectedTourney.meetingsForDelete = [];
         }
 
         this.rows = [];

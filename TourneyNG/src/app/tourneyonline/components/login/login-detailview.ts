@@ -59,11 +59,11 @@ export class LoginDetailView implements OnInit {
         let md5 = Md5.init(this.loginformGroup.get('password').value);
         this.formLogin.password = md5.toUpperCase();
         console.log("MD5(password)=" + this.formLogin.password);
-
-        const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         
         this.loginService.isUserLogged = true;
         this.loginFailed = false;
+
+        const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         subscr.subscribe(uvo=> this.next(uvo), e => this.onError(e), () => this.onComplete());  
     }
 

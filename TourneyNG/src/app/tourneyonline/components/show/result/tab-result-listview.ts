@@ -35,6 +35,8 @@ export class TabResultListView extends AbstractListView {
 
     incompletePlayoffConfiguration: boolean;
 
+    selectedTabIndex: number = 0;
+
     constructor(
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,

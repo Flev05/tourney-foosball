@@ -40,16 +40,4 @@ export abstract class AbstractListView extends AbstractView {
     onError(e:any) {
         console.log(e);
     }
-
-    protected sortMeetings(meetings: any[]): any[] {
-        return meetings.sort((m1, m2) => {
-            if (m1.dateAndTime > m2.dateAndTime) {
-                return 1;
-            }
-            if (m1.dateAndTime < m2.dateAndTime) {
-                return -1;
-            }
-            return 0;
-        });
-    }
 }

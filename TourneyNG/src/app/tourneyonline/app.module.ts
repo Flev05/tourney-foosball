@@ -32,7 +32,9 @@ import { DisciplineService } from './service/discipline-service';
 import { MeetingService } from './service/meeting-service';
 import { DateFormatModule } from './components/common/date-format.module';
 import { DropdownModule } from 'app/components/dropdown/dropdown';
-
+import { MeetingPlayoffService } from './components/admin/playoff/meeting-playoff-service';
+import { MeetingRoundService } from './components/admin/round/meeting-round-service';
+import { DateFormatPipe } from './components/common/date-format-pipe';
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {
@@ -46,24 +48,25 @@ if (environment.inMemoryDataService) {
     HomeComponent
   ],
   imports: [
-     BrowserModule
-    ,FormsModule
-    ,TableModule
-    ,OrderListModule
-    ,ReactiveFormsModule
-    ,AppRoutingModule
-    ,HttpClientModule
-    ,InputTextModule
-    ,DialogModule
-    ,ButtonModule
-    ,BrowserAnimationsModule
-    ,SlideMenuModule
+      BrowserModule
+    , FormsModule
+    , TableModule
+    , OrderListModule
+    , ReactiveFormsModule
+    , AppRoutingModule
+    , HttpClientModule
+    , InputTextModule
+    , DialogModule
+    , ButtonModule
+    , BrowserAnimationsModule
+    , SlideMenuModule
     , DateFormatModule
-    ,DropdownModule
+    , DropdownModule
     // , forDevelopEnvOnly
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }
+      , DateFormatPipe
       , TourneyService
       , ClientService
       , UserService
@@ -75,6 +78,8 @@ if (environment.inMemoryDataService) {
       , UrcService
       , DisciplineService
       , MeetingService
+      , MeetingPlayoffService
+      , MeetingRoundService
   ],
   bootstrap: [AppComponent]
 })

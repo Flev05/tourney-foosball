@@ -127,10 +127,10 @@ export class LevelService extends AbstractEliminatoryListView {
             for(let d of deleted) {
                 for(let e of d.eliminatories) {
                     for(let m of e.round.onewayMeetings) {
-                        this.selectedTourney.meetingsForDelete.push(m);
+                        this.meetingService.deleteMeeting(m);
                     }
                     for(let m of e.round.roundtripMeetings) {
-                        this.selectedTourney.meetingsForDelete.push(m);
+                        this.meetingService.deleteMeeting(m);
                     }
                 }
             }
@@ -187,16 +187,17 @@ export class LevelService extends AbstractEliminatoryListView {
             teamMap.set(t.id, t);
         }
 
+
         for(let t of round.teams) {
             if(!teamMap.has(t.id)) {
                 for(let m of round.onewayMeetings) {
                     if(m.team1.id == t.id || m.team2.id == t.id) {
-                        this.selectedTourney.meetingsForDelete.push(m);
+                        this.meetingService.deleteMeeting(m);
                     }
                 }
                 for(let m of round.roundtripMeetings) {
                     if(m.team1.id == t.id || m.team2.id == t.id) {
-                        this.selectedTourney.meetingsForDelete.push(m);
+                        this.meetingService.deleteMeeting(m);
                     }
                 }
             }
@@ -417,8 +418,8 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         };
 
-        let m1: Meeting = this.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
-        let m2: Meeting = this.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
+        let m1: Meeting = this.meetingService.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
+        let m2: Meeting = this.meetingService.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
 
         m1 = this.meetingService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
         m2 = this.meetingService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);

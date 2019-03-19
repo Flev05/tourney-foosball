@@ -53,7 +53,7 @@
     Torneo: {{selectedTourney.tourneyName}}
 </h3> 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
 </div>                  
 
 <div style="margin-top:30px">
@@ -101,14 +101,14 @@
 </p-table>
 
 <p-dialog header="Girone" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
-    <div *ngIf="newRound">
+    <div *ngIf="newPlayoff">
         <div class="ui-g ui-fluid">
             <div class="ui-g-12">
                 <div class="ui-g-5">
                     <label for="newRoundId">Nome girone</label>
                 </div>
                 <div class="ui-g-10">
-                    <input pInputText id="newRoundId" [(ngModel)]="newRound.round.name" />
+                    <input pInputText id="newRoundId" [(ngModel)]="newRoundPlayoff.round.name" />
                 </div>
             </div>
         </div>

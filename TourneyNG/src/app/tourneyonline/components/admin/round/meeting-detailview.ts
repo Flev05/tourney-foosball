@@ -8,13 +8,12 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingRoundService } from './meeting-round-service';
 
 @Component({
     templateUrl: './meeting-detailview.html',
 })
 export class MeetingDetailView extends AbstractDetailView {
-
 
     meetingFormGroup: FormGroup;
     toggleable: boolean = false;
@@ -28,7 +27,7 @@ export class MeetingDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected meetingService: MeetingService,
+        public meetingService: MeetingRoundService,
         protected countryService: CountryService
     ) { 
         super(tourneyService, location, countryService);

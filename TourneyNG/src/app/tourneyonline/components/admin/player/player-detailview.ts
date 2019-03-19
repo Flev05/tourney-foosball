@@ -57,7 +57,7 @@ export class PlayerDetailView extends AbstractDetailView {
         return   n.trim() == "" ? "disabled" : "";
     }
 
-    onSubmit(value: string) {
+    onSubmit() {
 
         this.selectedPlayer.clientVO = this.clientService.selectedClient;
 

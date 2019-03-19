@@ -55,14 +55,6 @@ export class RuleListView extends AbstractListView {
         this.router.navigate([RuleListView.redirectToMeeting]);
     }
   
-
-    private removePlayoff(p: Playoff): any {
-        for(let m of p.round.onewayMeetings) {
-            this.selectedTourney.meetingsForDelete.push(m);
-        }
-        p.round.onewayMeetings = [];
-    }
-
     onError(n:any) {
         let msgerr : string;
 

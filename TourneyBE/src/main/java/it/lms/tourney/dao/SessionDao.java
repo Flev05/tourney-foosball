@@ -111,23 +111,23 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
         s.setUserInfo(userInfo);
         s.setCreationDate(new Date());
 
-        super.updatePo(s);
+        this.update(s);
 
         return s;
     }
 
-    public void insert(Session session) throws Exception {
+    public void insert(Session s) {
 
-        logger.debug(logId() + "Entering insert(" + session + ")");
+        logger.debug(logId() + "Entering insert(" + s + ")");
 
-        insertPo(session);
+        insertPo(s);
     }
 
-    public void update(Session session) throws Exception {
+    public void update(Session s) {
 
-        logger.debug(logId() + "Entering save(" + session + ")");
+        logger.debug(logId() + "Entering save(" + s.getId() + ")");
 
-        super.updatePo(session);
+        super.updatePo(s);
     }
 
 }

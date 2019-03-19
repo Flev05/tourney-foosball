@@ -1,11 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Direction, MeetingStatus, PhaseType } from 'app/tourneyonline/domain/enumerations';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
-import { Team } from 'app/tourneyonline/domain/team';
-import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Match } from 'app/tourneyonline/domain/match';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Country } from 'app/tourneyonline/domain/country';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
@@ -23,11 +19,7 @@ export abstract class AbstractView implements OnInit {
     ) {}
 
     protected cloneObject(c: any): any {
-        let obj = {};
-        for (let prop in c) {
-            obj[prop] = c[prop];
-        }
-        return obj;
+        return this.tourneyService.cloneObject(c);
     }
 
     ngOnInit() {
@@ -107,58 +99,4 @@ export abstract class AbstractView implements OnInit {
         }
         return filtered;
     }
-
-    protected createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
-        let matches = new Array<Match>();
-
-        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
-            let m: Match = {id:i
-                ,players1: []
-                ,players2: []
-                ,score1:0
-                ,score2:0
-            };
-            matches.push(m);
-        }
-
-        let name = "";
-        if(t1!=null) {
-            name = t1.teamName;
-            if(t2!=null) {
-                name += " - " + t2.teamName; 
-            }
-        } else {
-            if(t2!=null) {
-                name = t2.teamName; 
-            }
-        }
-
-        let ruleName = this.makeRuleName(pr1, pr2);
-        
-        let m : Meeting = {
-            id: null,
-            name: name,
-            datetime: this.selectedTourney.datetime,
-            address: this.selectedTourney.address,
-            country: this.selectedTourney.country,
-            day: day,
-            team1: t1,
-            team2: t2,
-            points1: 0,
-            points2: 0,
-            rule1: pr1,
-            rule2: pr2,
-            ruleName: ruleName,
-            direction: d,
-            status: MeetingStatus.ToPlay,
-            matches: matches
-        };
-
-        return m;
-    }
-    
-    protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
-        return "";
-    }
-
 }

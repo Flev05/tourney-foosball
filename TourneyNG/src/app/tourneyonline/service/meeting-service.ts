@@ -37,6 +37,8 @@ const deleteMeetingByEliminatoryIdUrl   = meetingUrl + "/deleteByEliminatoryId"
 export class MeetingService extends AbstractService {
 
     static deleteMeetingUrl: string = deleteMeetingUrl;
+
+    selectedTourney: Tourney;
     
     selectedMeetingDb: MeetingDb;
     selectedMeeting: Meeting;
@@ -60,7 +62,6 @@ export class MeetingService extends AbstractService {
     roundtripDays: any[];
 
     allDaysNo: number;
-    selectedTourney: Tourney;
 
     constructor(protected http: HttpClient, protected router: Router) 
     { 

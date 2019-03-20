@@ -38,6 +38,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
     ngOnInitLight() {
         super.ngOnInit();
+        this.meetingService.selectedTourney = this.selectedTourney;
     }
 
     private prepareConfigELGui() {

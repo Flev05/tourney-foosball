@@ -22,6 +22,7 @@ export interface Tourney {
     datetime? : Date;
 
     selectedTabIndex?: number;
+    saveButtonEnabled? : boolean;
     selectedTeams4PlayoffsCB?: Combobox;
     selectedPlayoffsCB?: Combobox;
     selectedRoundsNumCB?: Combobox;

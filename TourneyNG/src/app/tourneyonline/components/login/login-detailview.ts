@@ -10,6 +10,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 
 const redirect : string = "/login/lv";
+const redirectToTourney = '/admintourney';
 
 @Component({
     templateUrl: './login-detailview.html',
@@ -119,6 +120,20 @@ export class LoginDetailView implements OnInit {
         };
 
         this.clientService.selectedClient = cvo;
+
+        let loggedUserId = this.loginService.userLogged.id;
+
+        const subsrciber = this.clientService.loadAllClients(loggedUserId, this.handleLoginError('loadAllClients()'));
+        subsrciber.subscribe(clients => this.processClientNext(clients), e => this.onError(e));
+    }
+    
+    private processClientNext(clients: ClientVO[]): void {
+        if( clients.length == 1 ) {
+            this.clientService.setSelectClients(clients);
+            
+            this.router.navigate([redirectToTourney]);
+            return;
+        }
 
         console.log("navigate to=" + redirect);
         this.router.navigate([redirect]);

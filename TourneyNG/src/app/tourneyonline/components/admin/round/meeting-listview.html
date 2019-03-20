@@ -26,7 +26,7 @@
 <h4><span>Girone: {{selectedRound.name}}</span></h4>
 <h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>
 
-<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
+<button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
 
 <div style="margin-top:30px">
     <p-message *ngIf="!atLeast2teams" severity="error" text="Attenzione! Il girone è vuoto, inserire almeno 2 squadre"></p-message>

@@ -26,7 +26,7 @@ export class MeetingRoundService extends MeetingService {
         console.log("Constructor of MeetingRoundService");
     }
 
-    createRoundMeeting(tourney: Tourney, round : Round ) : void {
+    createRoundMeeting( tourney: Tourney, round : Round ) : void {
         this.selectedTourney = tourney;
         const subsbr = this.loadRoundMeeting(tourney.id, round.id);
         subsbr.subscribe(meetings => this.roundMeetingNext(meetings, round), e => this.onError(e));

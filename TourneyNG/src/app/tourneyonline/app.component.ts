@@ -82,8 +82,6 @@ export class AppComponent implements OnInit{
 
         this.clientService.setSelectedClient(sc);
 
-        this.clientService.retirectToTourney = true;
-
         this.router.navigate([redirectTourneyListView]);
     }
 

@@ -57,7 +57,7 @@
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
                 <span *ngIf="loginService.isDeveloper()">Utenti/Clienti</span>
-                <span *ngIf="loginService.isOwner()">Utenti</span>
+                <span *ngIf="loginService.isOwnerNotDeveloper()">Utenti</span>
             </a>
             <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
                 <a *ngIf="loginService.isDeveloper()" [routerLink]="['/clients']" (click)="menuActive = false">&#9679; Clienti</a>

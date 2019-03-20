@@ -29,6 +29,10 @@ export class LoginService {
         return this.userLogged && this.roleService.isDeveloper();
     }
 
+    isOwnerNotDeveloper(): boolean {
+        return this.userLogged && this.roleService.isOwner() && !this.roleService.isDeveloper();
+    }
+
     isOwner(): boolean {
         return this.userLogged && this.roleService.isOwner();
     }

@@ -26,6 +26,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Player } from 'app/tourneyonline/domain/player';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingRoundService } from '../round/meeting-round-service';
+import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -83,8 +84,6 @@ export class TourneyDetailView extends AbstractDetailView {
     onSaveTourneyError: boolean;
     badRequest: boolean;
 
-    saveButtonEnabled : boolean = false;
-
     roundTabEnabled: boolean = false;
     playoffTabEnabled: boolean = false;
     eliminatoryTabEnabled: boolean = false;
@@ -92,6 +91,7 @@ export class TourneyDetailView extends AbstractDetailView {
     teamTabEnabled: boolean = false;
 
     nextButtonLabel: string = "Avanti";
+    nextButtonClass: string = "fa fa-arrow-right";
 
     constructor(
         protected location: Location,
@@ -100,7 +100,8 @@ export class TourneyDetailView extends AbstractDetailView {
         protected clientService: ClientService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
-        protected meetingService: MeetingRoundService,
+        protected meetingRoundService: MeetingRoundService,
+        protected meetingPlayoffService: MeetingPlayoffService,
         protected levelService: LevelService,
         protected disciplineService: DisciplineService,
         private router: Router 
@@ -144,19 +145,66 @@ export class TourneyDetailView extends AbstractDetailView {
         this.enableTabsAndButtons();
     }
 
+    private initTourney() {
+        this.selectedTourney = {};
+
+        this.selectedTourney.id = null;
+        this.selectedTourney.datetime = new Date();
+        this.selectedTourney.tourneyName = "";
+        this.selectedTourney.isDaily = "true";
+        this.selectedTourney.address = "";
+        this.selectedTourney.tourneyType = TourneyType.Score;
+        this.selectedTourney.matchBalanceScores = 0;
+        this.selectedTourney.matchWinnerScores = 3;
+        this.selectedTourney.access = AccessMode.PU;
+        this.selectedTourney.objectives = [];
+        this.selectedTourney.rounds = [];
+        this.selectedTourney.eliminatoryLevels = [];
+        this.selectedTourney.teams = [];
+        this.selectedTourney.playoffs = [];
+        this.selectedTourney.pointsNeededToWin = 9;
+        this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
+        this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
+        this.selectedTourney.maxMatchesPerMeeting = 1;
+        this.selectedTourney.isAllMatches = "false";
+        this.selectedTourney.playersPerTeam = 1;
+        this.selectedTourney.phases = [PhaseType.R];
+        this.selectedTourney.eliminatoryMode = EliminatoryMode.A;
+        this.selectedTourney.teamSortType = TeamSortType.O;
+        this.selectedTourney.isOnewayRound = "true";
+        this.selectedTourney.isOnewayPlayoff = "true";
+                
+        this.selectedTourney.selectedTeamsNumCombobox = {label: "", value: 0};
+        this.selectedTourney.discipline = {id:0, name: "", description: ""};
+
+        this.tourneyService.selectedTourney = this.selectedTourney;    
+
+        this.selectedTourney.selectedTabIndex = 0;
+        this.selectedTourney.saveButtonEnabled = false;
+        this.roundTabEnabled = false;
+        this.playoffTabEnabled = false;
+        this.teamTabEnabled = false;
+        this.eliminatoryTabEnabled = false;
+        this.selectedTourney.selectedTeams4PlayoffsCB = {label: "", value: 0};
+        this.selectedTourney.selectedPlayoffsCB       = {label: "", value: 0};
+        this.selectedTourney.selectedRoundsNumCB      = {label: "", value: 0};
+    }
+
     private enableTabsAndButtons(): any {
-        this.modeTabEnabled = this.selectedTourney.selectedTabIndex >= 1 ? true : false
-        this.teamTabEnabled = this.selectedTourney.selectedTabIndex >= 2 ? true : false
-        
+        this.modeTabEnabled = !this.selectedTourney.saveButtonEnabled && this.selectedTourney.selectedTabIndex >= 1 ? true : false
+        this.teamTabEnabled = !this.selectedTourney.saveButtonEnabled && this.selectedTourney.selectedTabIndex >= 2 ? true : false
+
+        this.makeButtonLabel();
+
         if(this.containsRound()) {
             if( this.selectedTourney.selectedTabIndex == 3 ) {
                 this.prepareRounds();
             }
-            this.roundTabEnabled = this.selectedTourney.selectedTabIndex >= 3 ? true : false;
+            this.roundTabEnabled = !this.selectedTourney.saveButtonEnabled && this.selectedTourney.selectedTabIndex >= 3 ? true : false;
         }
 
         if( this.containsPlayoff() ) {
-            this.playoffTabEnabled = this.selectedTourney.selectedTabIndex >= 4 ? true : false; 
+            this.playoffTabEnabled = !this.selectedTourney.saveButtonEnabled && this.selectedTourney.selectedTabIndex >= 4 ? true : false; 
             if( this.selectedTourney.selectedTabIndex == 4 ) {
                 this.preparePlayoffs();
             }
@@ -171,23 +219,38 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
         
-        this.eliminatoryTabEnabled = this.selectedTourney.selectedTabIndex >= eliminatoryIndex ? true : false;
+        this.eliminatoryTabEnabled = !this.selectedTourney.saveButtonEnabled && this.selectedTourney.selectedTabIndex >= eliminatoryIndex ? true : false;
 
         if( this.selectedTourney.selectedTabIndex == eliminatoryIndex ) {
             this.prepareEliminatory();
         }
-
-        this.makeButtonLabel();
     }
 
     private makeButtonLabel() {
-        let maxTabs = 3 + this.selectedTourney.phases.length - 1;
-        if (this.selectedTourney.selectedTabIndex == maxTabs) {
+
+        let lastTabIndex = this.getLastTabIndex();
+
+        if (this.selectedTourney.selectedTabIndex == lastTabIndex) {
             this.nextButtonLabel = "Fine";
+            this.nextButtonClass = "fa fa-save";
         }
         else {
             this.nextButtonLabel = "Avanti";
+            this.nextButtonClass = "fa fa-arrow-right";
         }
+    }
+
+    private getLastTabIndex() {
+        let lastTabIndex = 3;
+        if (this.containsRound()) {
+            if (this.containsPlayoff()) {
+                lastTabIndex = 4;
+                if (this.containsEliminatory()) {
+                    lastTabIndex = 5;
+                }
+            }
+        }
+        return lastTabIndex;
     }
 
     private alignTourney(): any {
@@ -252,53 +315,6 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
-    private initTourney() {
-        this.selectedTourney = {};
-
-        this.selectedTourney.id = null;
-        this.selectedTourney.datetime = new Date();
-        this.selectedTourney.tourneyName = "";
-        this.selectedTourney.isDaily = "true";
-        this.selectedTourney.address = "";
-        this.selectedTourney.tourneyType = TourneyType.Score;
-        this.selectedTourney.matchBalanceScores = 0;
-        this.selectedTourney.matchWinnerScores = 3;
-        this.selectedTourney.access = AccessMode.PU;
-        this.selectedTourney.objectives = [];
-        this.selectedTourney.rounds = [];
-        this.selectedTourney.playoffs = [];
-        this.selectedTourney.eliminatoryLevels = [];
-        this.selectedTourney.teams = [];
-        this.selectedTourney.playoffs = [];
-        this.selectedTourney.pointsNeededToWin = 9;
-        this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
-        this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
-        this.selectedTourney.maxMatchesPerMeeting = 1;
-        this.selectedTourney.isAllMatches = "false";
-        this.selectedTourney.playersPerTeam = 1;
-        this.selectedTourney.phases = [PhaseType.R];
-        this.selectedTourney.eliminatoryMode = EliminatoryMode.A;
-        this.selectedTourney.teamSortType = TeamSortType.O;
-        this.selectedTourney.isOnewayRound = "true";
-        this.selectedTourney.isOnewayPlayoff = "true";
-                
-        // this.selectedTourney.meetingsForDelete = [];
-
-        this.selectedTourney.selectedTeamsNumCombobox = {label: "", value: 0};
-        this.selectedTourney.discipline = {id:0, name: "", description: ""};
-
-        this.tourneyService.selectedTourney = this.selectedTourney;    
-
-        this.selectedTourney.selectedTabIndex = 0;
-        this.saveButtonEnabled = false;
-        this.roundTabEnabled = false;
-        this.playoffTabEnabled = false;
-        this.teamTabEnabled = false;
-        this.eliminatoryTabEnabled = false;
-        this.selectedTourney.selectedTeams4PlayoffsCB = {label: "", value: 0};
-        this.selectedTourney.selectedPlayoffsCB       = {label: "", value: 0};
-        this.selectedTourney.selectedRoundsNumCB      = {label: "", value: 0};
-    }
 
     private prepareRounds(): void {
         console.log("Entering prepareRounds()");
@@ -324,12 +340,6 @@ export class TourneyDetailView extends AbstractDetailView {
             let cb: Combobox = { label: "" + r, value: r };
             this.roundsCombobox.push(cb);
         } 
-
-        // if(this.selectedTourney.rounds.length > 0) {
-        //     R = this.selectedTourney.rounds.length;
-        // }
-        // let cb: Combobox = { label: "" + R, value: R };
-        // this.selectedTourney.selectedRoundsNumCB = cb;
 
         this.roundRows = this.selectedTourney.rounds;
         this.atLeastOneRound = this.selectedTourney.rounds.length >= 1 ? true : false;
@@ -368,25 +378,6 @@ export class TourneyDetailView extends AbstractDetailView {
             let cb: Combobox = { label: "" + r, value: r };
             this.playoffsCombobox.push(cb);
         } 
-
-        // if(this.selectedTourney.selectedTeams4PlayoffsCB == undefined) {
-        //     N = 0;
-        //     if(this.selectedTourney.rounds.length > 0) {
-        //         N = this.selectedTourney.rounds[0].teams.length;
-        //     }
-        //     let cb: Combobox = { label: "" + N, value: N };
-        //     this.selectedTourney.selectedTeams4PlayoffsCB = cb;        
-        // }
-
-        // if(this.selectedTourney.selectedPlayoffsCB == undefined) {
-        //     R = 0;
-        //     if(this.selectedTourney.playoffs.length > 0) {
-        //         R = this.selectedTourney.playoffs.length;
-        //     }
-
-        //     let cb: Combobox = { label: "" + R, value: R };
-        //     this.selectedTourney.selectedPlayoffsCB = cb;
-        // }
 
         this.playoffRows = this.selectedTourney.playoffs;
         for(let p of this.playoffRows) {
@@ -531,7 +522,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
     
     private resetRounds() {
-        this.meetingService.deleteMeetingByRoundId(this.selectedTourney.id);
+        this.meetingRoundService.deleteMeetingByRoundId(this.selectedTourney.id);
 
         for (let r of this.selectedTourney.rounds) {
             r.onewayMeetings = [];
@@ -559,7 +550,7 @@ export class TourneyDetailView extends AbstractDetailView {
             matrix: null,
         };
 
-        this.meetingService.createRoundMeeting(this.selectedTourney, r);
+        this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
         
         return r;
     }
@@ -612,6 +603,10 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log(cb);
 
         this.preparePlayoffRules(cb);
+
+        for(let p of this.selectedTourney.playoffs ) {
+            this.meetingPlayoffService.createPlayoffMeeting(this.selectedTourney, p);
+        }
     }
 
     /**
@@ -693,7 +688,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let rule = playoffRules[r];
 
             if(this.selectedTourney.playoffs.length <= poCounter) {
-                let p: Playoff = this.createPlayoff(1);
+                let p: Playoff = this.createPlayoff(r/2);
                 this.selectedTourney.playoffs.push(p);    
             }
             this.selectedTourney.playoffs[poCounter].playoffRules.push(rule);
@@ -706,7 +701,7 @@ export class TourneyDetailView extends AbstractDetailView {
         for (; r < N; r++) {
             let rule = playoffRules[r];
             if(this.selectedTourney.playoffs.length <= poCounter) {
-                let p: Playoff = this.createPlayoff(1);
+                let p: Playoff = this.createPlayoff(r);
                 this.selectedTourney.playoffs.push(p);    
             }
             this.selectedTourney.playoffs[poCounter].playoffRules.push(rule);
@@ -721,7 +716,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private resetPlayoff() {
-        this.meetingService.deleteMeetingByPlayoffId(this.selectedTourney.id);
+        this.meetingPlayoffService.deleteMeetingByPlayoffId(this.selectedTourney.id);
 
         for (let p of this.selectedTourney.playoffs) {
             p.round.onewayMeetings = [];
@@ -738,22 +733,15 @@ export class TourneyDetailView extends AbstractDetailView {
         this.router.navigate([REDIRECT_PLAYOFF_DV]);
     }
 
-    // private markMeetingsForDelete(round: Round): any {
-    //     for(let m of round.onewayMeetings) {
-    //         if(m.id != null) {
-    //             this.selectedTourney.meetingsForDelete.push(m);
-    //         }
-    //     }
-    // }
-
     private createPlayoff(i: number): Playoff {
         let po: Playoff = {
-            id:this.tourneyService.getSequenceNumber()
+            id: this.tourneyService.getSequenceNumber()
           , round:{id: this.tourneyService.getSequenceNumber()
               , name: "Playoff."+ (1 + i)
               , type: RoundType.P
               , teams:[]
               , onewayMeetings: []
+              , roundtripMeetings: []
               , classification: []
             }
           , playoffRules: []
@@ -866,6 +854,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     prevTab() {
         this.selectedTourney.selectedTabIndex = this.selectedTourney.selectedTabIndex > 0 ? this.selectedTourney.selectedTabIndex-1 : 0;
+        this.makeButtonLabel();
     }
 
     nextTab() {
@@ -889,20 +878,16 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.tourneyService.newTourney = false;
 
-        let maxTabs = 3 + this.selectedTourney.phases.length - 1;
-        
-        if( this.selectedTourney.selectedTabIndex == maxTabs ) {
-            this.selectedTourney.selectedTabIndex = 0;
-            this.gotoListView();
-            return;
-        }
+        let lastTabIndex = this.getLastTabIndex();
 
-        this.saveButtonEnabled = this.selectedTourney.selectedTabIndex == maxTabs? true : false;
-        if(this.saveButtonEnabled) {
+        if( this.selectedTourney.selectedTabIndex == lastTabIndex ) {
+            this.selectedTourney.saveButtonEnabled = true;
+            this.selectedTourney.selectedTabIndex = 0;
             this.roundTabEnabled = true;
             this.playoffTabEnabled = true;
             this.teamTabEnabled = true;
             this.eliminatoryTabEnabled = true;
+            this.gotoListView();
             return;
         }
 
@@ -914,34 +899,31 @@ export class TourneyDetailView extends AbstractDetailView {
     private saveTourney() {
         this.onSaveTourneyError = false;
         
-        // this.meetingService.deleteUnusedMeetings(this.selectedTourney.meetingsForDelete);
-
         if (this.tourneyService.containsPhase(PhaseType.R) && this.selectedTourney.selectedTabIndex > 2 ) {
             for (let r of this.selectedTourney.rounds) {
                 for (let m of r.onewayMeetings) {
-                    let observer = this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                    let observer = this.meetingRoundService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
                     observer.subscribe( n => this.saveMeetingNext(n, m));
                 }
                 for (let m of r.roundtripMeetings) {
-                    let observer = this.meetingService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-                    observer.subscribe( n => this.saveMeetingNext(n, m));
-                }
-            }
-        }
-        if (this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound && this.selectedTourney.selectedTabIndex > 3 ) {
-            for (let p of this.selectedTourney.playoffs) {
-                for (let m of p.round.onewayMeetings) {
-                    let observer = this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                    observer.subscribe( n => this.saveMeetingNext(n, m));
-                }
-                for (let m of p.round.roundtripMeetings) {
-                    let observer = this.meetingService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                    let observer = this.meetingRoundService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
                     observer.subscribe( n => this.saveMeetingNext(n, m));
                 }
             }
         }
 
-        // let elconf = this.incompleteEliminatoryConfiguration == undefined ? true : this.incompleteEliminatoryConfiguration;
+        if (this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound && this.selectedTourney.selectedTabIndex > 3 ) {
+            for (let p of this.selectedTourney.playoffs) {
+                for (let m of p.round.onewayMeetings) {
+                    let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                    observer.subscribe( n => this.saveMeetingNext(n, m));
+                }
+                for (let m of p.round.roundtripMeetings) {
+                    let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                    observer.subscribe( n => this.saveMeetingNext(n, m));
+                }
+            }
+        }
         
         if (this.tourneyService.containsPhase(PhaseType.E)) {
             if( (this.tourneyService.containsPhase(PhaseType.R) && this.selectedTourney.selectedTabIndex > 3) 
@@ -950,11 +932,11 @@ export class TourneyDetailView extends AbstractDetailView {
                 for (let el of this.selectedTourney.eliminatoryLevels) {
                     for (let e of el.eliminatories) {
                         for (let m of e.round.onewayMeetings) {
-                            let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                            let observer = this.meetingRoundService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
                             observer.subscribe( n => this.saveMeetingNext(n, m));
                         }
                         for (let m of e.round.roundtripMeetings) {
-                            let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
+                            let observer = this.meetingRoundService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
                             observer.subscribe( n => this.saveMeetingNext(n, m));
                         }
                     }
@@ -964,6 +946,16 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.tourneyAlreadyExists = false;
         this.onSaveTourneyError = false;
+
+        for( let r of this.selectedTourney.rounds ) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+        }
+        for( let p of this.selectedTourney.playoffs ) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+
         let tvo: TourneyVO = {
             id: this.selectedTourney.id,
             tourneyName: this.selectedTourney.tourneyName,
@@ -1071,11 +1063,12 @@ export class TourneyDetailView extends AbstractDetailView {
 
     enableSaveButton() : string {
         let n : String = this.selectedTourney.tourneyName;
+        let a : String = this.selectedTourney.address;
 
         let fase1 = this.notAllowedPhases();
         let fase2 = !this.atLeastOnePhase();
 
-        return n.trim() == "" || fase1 || fase2 ? "disabled" : "";
+        return n.trim() == "" || a.trim() == "" || fase1 || fase2 ? "disabled" : "";
     }
 
     teamButtonDisabled() : string {

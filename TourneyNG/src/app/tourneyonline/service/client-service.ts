@@ -31,7 +31,6 @@ export class ClientService {
     selectedClientName: string = "";
 
     newClient : boolean = false;
-    retirectToTourney : boolean = false;
 
     static clientCols = [
         { field: 'businessName', header: 'Nominativo' },

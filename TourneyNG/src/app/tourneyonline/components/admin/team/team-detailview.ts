@@ -51,7 +51,7 @@ export class TeamDetailView extends AbstractDetailView {
     }
 
     onSubmit() {        
-        this.selectedTeam.clientId = this.clientService.selectedClient.id;
+        this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
 
         let tvo : TeamVO = {
             id: this.selectedTeam.id

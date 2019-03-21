@@ -183,8 +183,10 @@ public class Converter extends AbstractLogger {
 
         PlayerVO pvo = new PlayerVO();
 
-        ClientVO cvo = convertClientPoVo(ppo.getClient());
-        pvo.setClientVO(cvo);
+        if (ppo.getClient() != null) {
+            ClientVO cvo = convertClientPoVo(ppo.getClient());
+            pvo.setClientVO(cvo);
+        }
 
         if (ppo.getCountry() != null) {
             Country country = countryDao.getById(ppo.getCountry().getId());
@@ -202,8 +204,10 @@ public class Converter extends AbstractLogger {
 
         TeamVO tvo = new TeamVO();
 
-        ClientVO cvo = convertClientPoVo(tpo.getClient());
-        tvo.setClientId(cvo.getId());
+        if (tpo.getClient() != null) {
+            ClientVO cvo = convertClientPoVo(tpo.getClient());
+            tvo.setClientId(cvo.getId());
+        }
 
         if (tpo.getCountry() != null) {
             Country country = countryDao.getById(tpo.getCountry().getId());

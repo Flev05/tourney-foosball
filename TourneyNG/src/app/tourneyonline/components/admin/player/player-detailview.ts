@@ -59,7 +59,7 @@ export class PlayerDetailView extends AbstractDetailView {
 
     onSubmit() {
 
-        this.selectedPlayer.clientId = this.clientService.selectedClient.id;
+        this.selectedPlayer.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
 
         this.newPlayerVO = {
             id: this.selectedPlayer.id

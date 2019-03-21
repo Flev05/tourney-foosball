@@ -1,10 +1,10 @@
 REM Attenzione: lanciare i comandi con il cut and past in una finestra DOS
 
 REM Ufficio
-set TOURNEY_DIR=D:\luciano\EREBUS\Tourneys
+rem set TOURNEY_DIR=D:\luciano\EREBUS\Tourneys
 
 Laptop LENOVO
-rem set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
+set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
 
 REM Desktop HP
 rem set TOURNEY_DIR=C:\DATA\DEVELOP\EREBUS\CalcioBalilla

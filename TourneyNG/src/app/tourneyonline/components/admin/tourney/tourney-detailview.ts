@@ -814,6 +814,14 @@ export class TourneyDetailView extends AbstractDetailView {
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }
 
+    private onSaveComplete() {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSaveTourneyError ) {
+            this.playerService.newPlayer = false;
+            this.gotoListView();
+        }
+    }
+
     prevTab() {
         this.selectedTourney.selectedTabIndex = this.selectedTourney.selectedTabIndex > 0 ? this.selectedTourney.selectedTabIndex-1 : 0;
         this.makeButtonLabel();
@@ -821,10 +829,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
     nextTab() {
         
-        this.selectedTourney.selectedTabIndex++;
-        
         let lastTabIndex = this.getLastTabIndex();
-        if( this.selectedTourney.selectedTabIndex > lastTabIndex ) {
+        if( this.selectedTourney.selectedTabIndex >= lastTabIndex ) {
             this.selectedTourney.saveButtonEnabled = true;
             this.selectedTourney.selectedTabIndex = 0;
         }
@@ -841,20 +847,13 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.id = tvo.id;
     }
 
-    private onSaveComplete() {
-        console.log("Entering onSaveComplete()");
-        if( !this.onSaveTourneyError ) {
-            this.playerService.newPlayer = false;
-            this.gotoListView();
-        }
-    }
-
     private onNextSaveComplete(): void {
         console.log("Entering onNextSaveComplete()");
         if( this.onSaveTourneyError ) {
-            this.selectedTourney.selectedTabIndex--;
             return;
         }
+
+        this.selectedTourney.selectedTabIndex++;        
 
         this.tourneyService.newTourney = false;
 

@@ -310,13 +310,8 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
-
     private prepareRounds(): void {
         console.log("Entering prepareRounds()");
-
-        if( !this.containsRound() ) {
-            return;
-        }
 
         this.team4roundsCombobox = [];
 
@@ -342,13 +337,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private preparePlayoffs(): void {
         console.log("Entering preparePlayoffs()");
-
-        if( !this.containsPlayoff() ) {
-            return;
-        }
-        if( this.selectedTourney.selectedTabIndex <= 3 ) {
-            return;
-        }
         
         this.team4playoffsCombobox = [];
 
@@ -381,14 +369,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private prepareEliminatory() {
-        if( !this.containsEliminatory() ) {
-            return;
-        }
-
-        let eliminatoryIndex = this.getEliminatoryIndex();
-        if( !this.selectedTourney.saveButtonEnabled && this.selectedTourney.selectedTabIndex == eliminatoryIndex ) {
-            return;
-        }
+        console.log("Entering prepareEliminatory()");
 
         this.levelService.ngOnInit();
         this.eliminatoryCols = this.levelService.cols;

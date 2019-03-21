@@ -1,10 +1,9 @@
 import { Country } from "./country";
-import { ClientVO } from "./client-vo";
 
 export interface PlayerVO {
     id?         : number;
     playerName? : string;
-    clientVO?   : ClientVO;
+    clientId?   : number;
     country?    : Country;
     json?       : string;
 }

@@ -4,7 +4,7 @@ import { Country } from "./country";
 export interface TeamVO {
     id?         : number;
     teamName?   : string;
-    clientVO?   : ClientVO;
+    clientId?   : number;
     country?    : Country;
     json?       : string;
 }

@@ -58,17 +58,7 @@ export class TourneyListView extends AbstractTourneyListView {
             'toDate': new FormControl(this.toDate),
        });
     }
-    
-    onClientChange(cb: Combobox) {
-        console.log(cb);
-
-        const sc = this.clientService.selectedClients.find(c => c.id == cb.value);
-
-        this.clientService.setSelectedClient(sc);
-
-        this.ngOnInit();
-    }
-
+ 
     onSearch(value: string) {
 
         this.clientService.selectedClientOption = this.tourneyFormGroup.get('selectedClientOption').value;

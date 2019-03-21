@@ -6,7 +6,7 @@ import { RoleService } from './service/role-service';
 import { ClientService } from './service/client-service';
 import { Combobox } from './domain/tourney-combobox';
 
-const redirectTourneyListView = '/login/lv';
+const redirectTourneyListView = "/login/tourneyLv";
 
 @Component({
   selector: 'app-root',

@@ -58,7 +58,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             let ppo: Player = JSON.parse(pvo.json);
             ppo.id = pvo.id;
             ppo.country = pvo.country;
-            ppo.clientVO = pvo.clientVO;
+            ppo.clientId = pvo.clientId;
             ppo.playerName = pvo.playerName;
 
             this.playerService.playerPool.push(ppo);
@@ -73,7 +73,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             ppo.id = pvo.id;
             ppo.teamName = pvo.teamName;
             ppo.country = pvo.country;
-            ppo.clientVO = pvo.clientVO;
+            ppo.clientId = pvo.clientId;
 
             this.teamService.teamPool.push(ppo);
         }
@@ -100,7 +100,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.tourneys = this.filter(this.tourneys);
         if( this.tourneys.length > 0 ) {
             this.selectedTourney = this.tourneys[0];
-            // this.selectedTourney.meetingsForDelete = [];
         }
 
         this.rows = [];

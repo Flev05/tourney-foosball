@@ -49,8 +49,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 		,ClientRoutingModule
 	],
 	declarations: [
-		ClientListView,
-		ClientDetailView
+          ClientListView
+        , ClientDetailView
 	]
 })
 export class ClientModule {}

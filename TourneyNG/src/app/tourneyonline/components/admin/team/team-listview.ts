@@ -46,7 +46,7 @@ export class TeamListView extends AbstractListView {
             let ppo: TeamVO = JSON.parse(pvo.json);
             ppo.id = pvo.id;
             ppo.country = pvo.country;
-            ppo.clientVO = pvo.clientVO;
+            ppo.clientId = pvo.clientId;
             ppo.teamName = pvo.teamName;
 
             this.teamService.teamPool.push(ppo);

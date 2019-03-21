@@ -106,7 +106,7 @@ public class TeamRESTService extends AbstractRESTService {
         Map<String, String> responseObj = new HashMap<String, String>();
         Team foundTeam;
         Session spo = null;
-        if (tvo.getClientVO() == null) {
+        if (tvo.getClientId() == null) {
             String sessionId = request.getSession().getId();
             foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
             spo = sessionDao.findBySessionId(sessionId);
@@ -119,7 +119,7 @@ public class TeamRESTService extends AbstractRESTService {
                 spo = sessionDao.update(spo, sessionId, userAgent);
             }
         } else {
-            foundTeam = teamDao.getTeamClientId(tvo.getClientVO().getId(), tvo.getTeamName());
+            foundTeam = teamDao.getTeamClientId(tvo.getClientId(), tvo.getTeamName());
         }
 
         if (foundTeam != null) {
@@ -166,12 +166,12 @@ public class TeamRESTService extends AbstractRESTService {
 
         Team foundTeam;
         Session spo = null;
-        if (tvo.getClientVO() == null) {
+        if (tvo.getClientId() == null) {
             String sessionId = request.getSession().getId();
             foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
             spo = sessionDao.findBySessionId(sessionId);
         } else {
-            foundTeam = teamDao.getTeamClientId(tvo.getClientVO().getId(), tvo.getTeamName());
+            foundTeam = teamDao.getTeamClientId(tvo.getClientId(), tvo.getTeamName());
         }
 
         if (foundTeam != null && !foundTeam.getId().equals(tvo.getId())) {

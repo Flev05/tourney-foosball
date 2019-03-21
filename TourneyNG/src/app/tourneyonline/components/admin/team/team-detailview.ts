@@ -51,13 +51,13 @@ export class TeamDetailView extends AbstractDetailView {
     }
 
     onSubmit() {        
-        this.selectedTeam.clientVO = this.clientService.selectedClient;
+        this.selectedTeam.clientId = this.clientService.selectedClient.id;
 
         let tvo : TeamVO = {
             id: this.selectedTeam.id
           , teamName: this.selectedTeam.teamName
           , country: this.selectedTeam.country
-          , clientVO: this.selectedTeam.clientVO
+          , clientId: this.selectedTeam.clientId
           , json: JSON.stringify(this.selectedTeam)
         };
 

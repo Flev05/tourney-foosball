@@ -59,13 +59,13 @@ export class PlayerDetailView extends AbstractDetailView {
 
     onSubmit() {
 
-        this.selectedPlayer.clientVO = this.clientService.selectedClient;
+        this.selectedPlayer.clientId = this.clientService.selectedClient.id;
 
         this.newPlayerVO = {
             id: this.selectedPlayer.id
           , playerName: this.selectedPlayer.playerName
           , country: this.selectedPlayer.country
-          , clientVO: this.selectedPlayer.clientVO
+          , clientId: this.selectedPlayer.clientId
           , json: JSON.stringify(this.selectedPlayer)
         };
 
@@ -103,7 +103,7 @@ export class PlayerDetailView extends AbstractDetailView {
 
                 let ppo: Player = JSON.parse(this.newPlayerVO.json);
                 ppo.country = this.newPlayerVO.country;
-                ppo.clientVO = this.newPlayerVO.clientVO;
+                ppo.clientId = this.newPlayerVO.clientId;
                 ppo.playerName = this.newPlayerVO.playerName;
     
                 this.playerService.playerPool.push(ppo);

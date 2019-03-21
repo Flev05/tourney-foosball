@@ -422,7 +422,7 @@
         </div>
     </div>
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 <button pButton type="button"
@@ -726,7 +726,7 @@
 
         </p-fieldset>
 
-        <div *ngIf="modeTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     <button pButton type="button" 

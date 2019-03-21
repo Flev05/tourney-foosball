@@ -11,7 +11,6 @@ import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from './tourney-combobox';
-import { Meeting } from './meeting';
 import { ClientVO } from './client-vo';
 
 export interface Tourney {
@@ -52,17 +51,15 @@ export interface Tourney {
     maxMatchesPerMeeting?: number;
     isAllMatches?: string;
     playersPerTeam?: number;
-    
-    objectives?: Final[];
-    rounds?: Round[];
-    playoffs?: Playoff[];
-
-    eliminatoryLevels?: Array<EliminatoryLevel>;
-    teamSortType?: TeamSortType;
 
     eliminatoryMode?: EliminatoryMode;
     selectedTeamsNumCombobox?: Combobox;
+    teamSortType?: TeamSortType;
 
+    objectives?: Final[];
     teams?: Team[];
-    // meetingsForDelete?: Meeting[];
+
+    rounds?: Round[];
+    playoffs?: Playoff[];
+    eliminatoryLevels?: Array<EliminatoryLevel>;
 }

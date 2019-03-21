@@ -73,6 +73,11 @@ export class ClientLoginListView extends AbstractListView {
 
     onRowSelect(event) {
         console.log(event.data);
+
+        const sc = this.clientService.selectedClients.find(c => c.id == this.selectedClient.id);
+
+        this.clientService.setSelectedClient(sc);
+
         this.gotoListView();
     }
  

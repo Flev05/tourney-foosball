@@ -20,6 +20,7 @@ import {LoginDetailView} from './login-detailview';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ClientLoginListView } from './client-listview';
+import { ClientTourneyListView } from './client-tourney-listview';
 
 @NgModule({
 	imports: [
@@ -46,6 +47,7 @@ import { ClientLoginListView } from './client-listview';
 	declarations: [
                   LoginDetailView
                 , ClientLoginListView
+                , ClientTourneyListView
 	]
 })
 export class LoginModule {}

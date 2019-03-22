@@ -1150,8 +1150,7 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel header="Eliminazioni Dirette" *ngIf="containsEliminatory()"
-        pTooltip="Scheda per la configurazione delle eliminazioni dirette">  
+    <p-tabPanel header="Eliminazioni Dirette" *ngIf="containsEliminatory()">  
         <p-accordion>
             <p-accordionTab header="Istruzioni">                                
             <h3>Istruzioni</h3>
@@ -1289,7 +1288,7 @@
                 <div class="ui-grid-col-2" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di squadre iniziali delle eliminazioni dirette, anche tutte">
                     <p-dropdown id="teamsPlayoffId" 
-                        [options]="teamsCombobox" 
+                        [options]="eliminatoryTeamsCombobox" 
                         [(ngModel)]="selectedTourney.selectedTeamsNumCombobox"  
                         optionLabel="label"
                         (onChange)="onTeamEliminatoryNumChange($event.value)" 

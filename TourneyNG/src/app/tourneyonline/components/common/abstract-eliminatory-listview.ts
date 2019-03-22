@@ -41,9 +41,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     isModeEnabled: boolean;
 
     selectedLevelCombobox: Combobox;
-    selectedTeamsNumCombobox: Combobox;
-    teamsCombobox: Combobox[];
-    incompleteEliminatoryConfiguration: boolean;
+    eliminatoryTeamsCombobox: Combobox[];
     eliminatoryCols: { field: string; header: string; }[];
     eliminatoryLevelRows: any[];
     
@@ -87,8 +85,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         
-        this.teamsCombobox = this.tourneyService.teamsCombobox;
-        this.selectedTeamsNumCombobox = this.selectedTourney.selectedTeamsNumCombobox;
+        this.eliminatoryTeamsCombobox = this.tourneyService.eliminatoryTeamsCombobox;
   
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
 
@@ -101,11 +98,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
              this.isModeEnabled = true;
         }
 
-        this.incompleteEliminatoryConfiguration = true;
         if (this.selectedTourney.phases.length == 1 &&
             this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
         {
-            this.incompleteEliminatoryConfiguration = false;
             this.isStandalone = true;
         } else {
             this.isStandalone = false;
@@ -130,14 +125,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryRoundMap = new Map<number, Round>();
 
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.incompleteEliminatoryConfiguration = true;
         if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {
             return;
-        }
-        if( this.tourneyService.containsPhase(PhaseType.R) ) {
-            this.incompleteEliminatoryConfiguration = this.selectedTourney.teams.length >= 2 && this.eliminatoryLevels.length > 0 ? false : true;
-        } else {
-            this.incompleteEliminatoryConfiguration = this.eliminatoryLevels.length > 0 ? false : true;
         }
 
         this.eliminatoryCols = this.prepareELCols();

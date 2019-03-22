@@ -63,7 +63,7 @@ export class TourneyDetailView extends AbstractDetailView {
     playoffRows: Playoff[];
     selectedPlayoff: Playoff;
     
-    teamsCombobox: Combobox[];
+    eliminatoryTeamsCombobox: Combobox[];
     eliminatoryMode: EliminatoryMode;
     eliminatoryCols: TableCols[];
     eliminatoryRows: any[];
@@ -76,7 +76,6 @@ export class TourneyDetailView extends AbstractDetailView {
     atLeastOneRound: boolean;
     playoffsCombobox: Combobox[];
     team4playoffsCombobox: Combobox[];
-    incompleteEliminatoryConfiguration: boolean;
 
     meetingDaysMap: Map<number, Meeting[]>;
     teamLabel: string;
@@ -92,6 +91,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     nextButtonLabel: string = "Avanti";
     nextButtonClass: string = "fa fa-arrow-right";
+    rewind: boolean;
 
     constructor(
         protected location: Location,
@@ -162,7 +162,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.maxMatchesPerMeeting = 1;
         this.selectedTourney.isAllMatches = "false";
         this.selectedTourney.playersPerTeam = 1;
-        this.selectedTourney.phases = [PhaseType.R];
+        this.selectedTourney.phases = [PhaseType.R, PhaseType.P, PhaseType.E];
         this.selectedTourney.eliminatoryMode = EliminatoryMode.A;
         this.selectedTourney.teamSortType = TeamSortType.O;
         this.selectedTourney.isOnewayRound = "true";
@@ -225,7 +225,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let lastTabIndex = this.getLastTabIndex();
 
-        if (this.selectedTourney.selectedTabIndex == lastTabIndex) {
+        if (this.selectedTourney.selectedTabIndex >= lastTabIndex) {
             this.nextButtonLabel = "Fine";
             this.nextButtonClass = "fa fa-save";
         }
@@ -243,6 +243,8 @@ export class TourneyDetailView extends AbstractDetailView {
                 if (this.containsEliminatory()) {
                     lastTabIndex = 5;
                 }
+            } else if (this.containsEliminatory()) {
+                lastTabIndex = 4;
             }
         }
         return lastTabIndex;
@@ -374,8 +376,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.levelService.ngOnInit();
         this.eliminatoryCols = this.levelService.cols;
         this.eliminatoryRows = this.levelService.rows;
-        this.teamsCombobox   = this.levelService.teamsCombobox;
-        this.incompleteEliminatoryConfiguration = this.levelService.incompleteEliminatoryConfiguration;
+        this.eliminatoryTeamsCombobox   = this.levelService.eliminatoryTeamsCombobox;
     }
 
     onChangeTab(e) {
@@ -425,8 +426,7 @@ export class TourneyDetailView extends AbstractDetailView {
     onTeamEliminatoryNumChange(event) {
         console.log(event);
 
-        this.levelService.selectedTeamsNumCombobox = event;
-        this.levelService.onTeamEliminatoryNumChange(event);
+        this.levelService.onTeamEliminatoryNumChange(this.selectedTourney.selectedTeamsNumCombobox);
         this.eliminatoryRows = this.levelService.rows;
     }
     
@@ -830,9 +830,11 @@ export class TourneyDetailView extends AbstractDetailView {
     nextTab() {
         
         let lastTabIndex = this.getLastTabIndex();
+        this.rewind = false;
         if( this.selectedTourney.selectedTabIndex >= lastTabIndex ) {
             this.selectedTourney.saveButtonEnabled = true;
             this.selectedTourney.selectedTabIndex = 0;
+            this.rewind = true;
         }
 
         let tvo: TourneyVO = this.saveTourney();
@@ -853,14 +855,15 @@ export class TourneyDetailView extends AbstractDetailView {
             return;
         }
 
-        this.selectedTourney.selectedTabIndex++;        
-
         this.tourneyService.newTourney = false;
 
-        if( this.selectedTourney.selectedTabIndex == 0 ) {
+        if( this.rewind ) {
+            this.rewind = false;
             this.gotoListView();
             return;
         }
+
+        this.selectedTourney.selectedTabIndex++;        
 
         this.refreshTabsAndButtons();
     }

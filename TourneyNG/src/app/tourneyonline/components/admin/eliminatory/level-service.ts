@@ -31,7 +31,7 @@ export class LevelService extends AbstractEliminatoryListView {
     ngOnInit() {
         this.ngOnInitLight();
 
-        this.loadMeetings();
+        this.prepareEliminatoryLevels();
 
         this.prepareConfigELGui();
     }
@@ -51,7 +51,7 @@ export class LevelService extends AbstractEliminatoryListView {
         }
     }
 
-    private loadMeetings(): any {
+    private prepareEliminatoryLevels(): any {
 
         if(this.eliminatoryLevels.length == 0) {
             this.processEliminationTree();
@@ -63,13 +63,16 @@ export class LevelService extends AbstractEliminatoryListView {
 
     processEliminationTree(): void {
 
-        let teamNo = this.selectedTeamsNumCombobox.value == 0 && this.selectedTourney.teams.length >= 2 ? this.selectedTourney.teams.length: this.selectedTeamsNumCombobox.value;
+        let teamNo = this.selectedTourney.selectedTeamsNumCombobox.value == 0 && this.selectedTourney.teams.length >= 2 ? 
+            this.selectedTourney.teams.length : 
+            this.selectedTourney.selectedTeamsNumCombobox.value;
+        
         this.prepareEliminationTree(teamNo);
 
         if (this.isStandalone) {
             this.processStandalone();
         } else {
-            this.prepareAutomaticEliminatoryRules(this.selectedTeamsNumCombobox.value);
+            this.prepareAutomaticEliminatoryRules(this.selectedTourney.selectedTeamsNumCombobox.value);
         }
 
         super.processEliminationTree();
@@ -164,7 +167,6 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private processStandalone() {
         if( this.eliminatoryLevels.length == 0 ) {
-            this.incompleteEliminatoryConfiguration = true;
             return;
         }
 
@@ -435,7 +437,7 @@ export class LevelService extends AbstractEliminatoryListView {
         console.log("Entering onRowSelect()");
         this.selectedRow = event;
 
-        this.tourneyService.teamsCombobox = this.teamsCombobox;
+        this.tourneyService.eliminatoryTeamsCombobox = this.eliminatoryTeamsCombobox;
         
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
         this.tourneyService.selectedEliminatoryLevel = this.selectedRow.el;
@@ -451,7 +453,7 @@ export class LevelService extends AbstractEliminatoryListView {
  
     onTeamEliminatoryNumChange(event) {
 
-        let N: number = this.selectedTeamsNumCombobox.value;
+        let N: number = this.selectedTourney.selectedTeamsNumCombobox.value;
         this.prepareEliminationTree(N);
 
         this.tourneyService.regenerateStandaloneTopLevel = true;
@@ -460,8 +462,6 @@ export class LevelService extends AbstractEliminatoryListView {
         } else {
             this.prepareAutomaticEliminatoryRules(N);
         }
-
-        this.selectedTourney.selectedTeamsNumCombobox = this.selectedTeamsNumCombobox;
 
         this.prepareConfigELGui();
     }

@@ -46,7 +46,7 @@ export class TourneyService extends AbstractService {
 
     positionsCombobox: Combobox[];
     roundsCombobox: Combobox[];
-    teamsCombobox: Combobox[];
+    eliminatoryTeamsCombobox: Combobox[];
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
@@ -136,10 +136,10 @@ export class TourneyService extends AbstractService {
         let max: number = this.selectedTourney.teams.length;
     
         let all = {label: "Tutte", value: max};
-        this.teamsCombobox = [];
-        this.teamsCombobox.push(all);
+        this.eliminatoryTeamsCombobox = [];
+        this.eliminatoryTeamsCombobox.push(all);
         for(let i=min; i<=max; i++) {
-            this.teamsCombobox.push({label: "" + i, value: i});
+            this.eliminatoryTeamsCombobox.push({label: "" + i, value: i});
         }
         
         this.roundsCombobox = [];
@@ -172,7 +172,7 @@ export class TourneyService extends AbstractService {
         }
 
         if(this.selectedTourney.selectedTeamsNumCombobox == undefined) {
-            this.selectedTourney.selectedTeamsNumCombobox = this.teamsCombobox[0];
+            this.selectedTourney.selectedTeamsNumCombobox = this.eliminatoryTeamsCombobox[0];
         }
 
         return teamsNo;

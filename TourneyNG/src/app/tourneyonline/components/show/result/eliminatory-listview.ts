@@ -52,7 +52,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         super.ngOnInit();
 
         this.incompleteMessage = "Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!";
-        this.incompleteConfiguration = this.incompleteEliminatoryConfiguration;
+        this.incompleteConfiguration = !this.selectedTourney.saveButtonEnabled;
 
         if( !this.incompleteConfiguration ) {
             super.loadEliminatoryLevels();

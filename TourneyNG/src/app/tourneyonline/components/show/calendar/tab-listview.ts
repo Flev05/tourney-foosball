@@ -45,10 +45,7 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
                 if( p.playoffRules.length == 0 ) {
                     this.incompletePlayoffConfiguration = true;
                 }
-            }        }
-
-        if(super.containsEliminatory()) {
-            super.loadEliminatoryLevels();
+            }        
         }
     }
     

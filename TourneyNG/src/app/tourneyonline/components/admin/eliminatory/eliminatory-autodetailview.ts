@@ -17,8 +17,6 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 })
 export class AutoEliminatoryDetailView extends AbstractDetailView {
     
-    msgs: Message[] = [];
-
     eliminatoryFormGroup: FormGroup;
     toggleable: boolean = false;
 
@@ -70,7 +68,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         this.m2 = this.m1;
         if(!this.isOneway) {
-            this.m2 = this.selectedEliminatory.round.onewayMeetings[1];
+            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
             if(this.m2.country!=undefined) {
                 this.fullAddress2 = this.m2.address + " - " 
                     + this.m2.country.zipCode + " " + this.m2.country.city
@@ -98,18 +96,14 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m1.address = this.eliminatoryFormGroup.get('address1').value;
         m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        this.meetingService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
-
         if(!this.isOneway) {
-            let m2 = this.selectedEliminatory.round.onewayMeetings[1];
+            let m2 = this.selectedEliminatory.round.roundtripMeetings[0];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             if(m2.datetime < m1.datetime) {
                 m2.datetime = m1.datetime;
             }
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
-
-            this.meetingService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
@@ -121,11 +115,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
     }
     
     onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        msgerr = 'Modifica eliminazione diretta fallita';
-
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        let msgerr : string = 'Modifica eliminazione diretta fallita';
+        console.error(msgerr);
     }
 }

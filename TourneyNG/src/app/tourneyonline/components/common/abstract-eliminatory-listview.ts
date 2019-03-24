@@ -6,7 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'app/components/common/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import {  PhaseType } from 'app/tourneyonline/domain/enumerations';
+import {  PhaseType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
@@ -106,6 +106,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.isStandalone = false;
         }
         this.tourneyService.isStandalone = this.isStandalone;
+
+        this.loadEliminatoryMeetings();
     }
 
     protected prepareGui() {
@@ -120,7 +122,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         For each eliminatory level configureted in selected tourney, loads their corresponding meetings,
         for both the one way and round trip meetings
      */
-    loadEliminatoryLevels() {
+    loadEliminatoryMeetings() {
         this.meetingMap = new Map<number, MeetingDb[]>();
         this.eliminatoryRoundMap = new Map<number, Round>();
 
@@ -165,19 +167,23 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.elHttpCounter--;
 
         if(this.elHttpCounter == 0) {
-
             for(let key of this.eliminatoryRoundMap.keys()) {
                 let eid: number = +key;
                 let round = this.eliminatoryRoundMap.get(eid);
                 let meetingsDb: MeetingDb[] = this.meetingMap.get(eid);
-                let meetings: Array<Meeting> = new Array<Meeting>();
+                let onewayMeetings: Array<Meeting> = new Array<Meeting>();
+                let roundtripMeetings: Array<Meeting> = new Array<Meeting>();
                 for(let mdb of meetingsDb) {
                     let m: Meeting = JSON.parse(mdb.json);
                     m.id = mdb.id;
-                    meetings.push(m);
+                    if( m.direction == Direction.OneWay ) {
+                        onewayMeetings.push(m);
+                    } else {
+                        roundtripMeetings.push(m);
+                    }
                 }
-                round.onewayMeetings = meetings;
-                round.onewayMeetings = this.sortMeetings(round.onewayMeetings)
+                round.onewayMeetings = this.sortMeetings(onewayMeetings)
+                round.roundtripMeetings = this.sortMeetings(roundtripMeetings)
             }
 
             this.processEliminationTree();

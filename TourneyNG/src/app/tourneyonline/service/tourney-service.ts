@@ -171,8 +171,8 @@ export class TourneyService extends AbstractService {
             }                    
         }
 
-        if(this.selectedTourney.selectedTeamsNumCombobox == undefined) {
-            this.selectedTourney.selectedTeamsNumCombobox = this.eliminatoryTeamsCombobox[0];
+        if(this.selectedTourney.selectedEliminatoryTeamsCombobox == undefined) {
+            this.selectedTourney.selectedEliminatoryTeamsCombobox = this.eliminatoryTeamsCombobox[0];
         }
 
         return teamsNo;

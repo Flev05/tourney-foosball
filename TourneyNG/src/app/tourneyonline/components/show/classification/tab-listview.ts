@@ -48,10 +48,6 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
                 }
             }
         }
-
-        if(super.containsEliminatory()) {
-            super.loadEliminatoryLevels();
-        }
     }
     
     onChangeTab(e) {

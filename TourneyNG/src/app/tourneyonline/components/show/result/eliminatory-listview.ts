@@ -53,10 +53,6 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         this.incompleteMessage = "Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!";
         this.incompleteConfiguration = !this.selectedTourney.saveButtonEnabled;
-
-        if( !this.incompleteConfiguration ) {
-            super.loadEliminatoryLevels();
-        }
     }
     
     protected processEliminationTree(): void {
@@ -215,7 +211,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
                 nr.teams[1] = e.round.teams[0];
             }
             
-            this.meetingService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
+            // this.meetingService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
         }
     }
 

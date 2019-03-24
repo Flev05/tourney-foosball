@@ -83,7 +83,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
  
         let m2: Meeting = m1;
         if(!this.isOneway) {
-            m2 = this.selectedEliminatory.round.onewayMeetings[1];
+            m2 = this.selectedEliminatory.round.roundtripMeetings[0];
             m2.datetime = new Date(m2.datetime);
             if(m2.country!=undefined) {
                 this.fullAddress2 = m2.address + " - " 
@@ -210,18 +210,14 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
         }
 
-        this.meetingService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, this.selectedEliminatory.id);
-
         if(!this.isOneway) {
-            let m2 = this.selectedEliminatory.round.onewayMeetings[1];
+            let m2 = this.selectedEliminatory.round.roundtripMeetings[0];
             m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
             if(m2.datetime < m1.datetime) {
                 m2.datetime = m1.datetime;
             }
             m2.address = this.eliminatoryFormGroup.get('address2').value;
             m2.country = this.eliminatoryFormGroup.get('country2').value;
-
-            this.meetingService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, this.selectedEliminatory.id);
         }
     }
 

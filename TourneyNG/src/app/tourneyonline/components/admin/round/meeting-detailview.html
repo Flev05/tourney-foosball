@@ -27,7 +27,7 @@
 <form [formGroup]="meetingFormGroup">
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
+        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Fatto"></button>
     </div>                  
 
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -76,10 +76,15 @@
             <div class="ui-grid-col-3">
                 Data e ora:
             </div>
-            <div class="ui-grid-col-3">
-                <p-calendar formControlName="dateAndTime" [locale]="it" dateFormat="dd/mm/yy" showTime="false">
+            <div class="ui-grid-col-3" tooltipPosition="right"
+                    pTooltip="Indicare la data e ora di inizio dell'incontro.">
+                <p-calendar formControlName="dateAndTime" 
+                    [locale]="it" 
+                    dateFormat="dd/mm/yy" 
+                    [showIcon]="true"
+                    showTime="false">
                 </p-calendar>
-            </div>
+            </div>            
         </div>
     </div>
 </form>   

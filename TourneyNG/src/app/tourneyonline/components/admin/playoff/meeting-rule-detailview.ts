@@ -10,6 +10,9 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { MeetingRoundService } from '../round/meeting-round-service';
+import { MeetingPlayoffService } from './meeting-playoff-service';
 
 @Component({
     templateUrl: './meeting-rule-detailview.html',
@@ -31,7 +34,8 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
-        protected countryService: CountryService
+        protected countryService: CountryService,
+        protected meetingPlayoffService: MeetingPlayoffService
     ) { 
         super(tourneyService, location, countryService);
     }
@@ -74,9 +78,18 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
+
+        let observer = this.meetingPlayoffService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
+        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
     }
-    
-    goBack(): void {
+
+    private saveMeetingNext(n:  MeetingDb, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(n);
+        m.id = n.id;
+    }
+
+    done(): void {
         this.save();
         super.goBack();
     }

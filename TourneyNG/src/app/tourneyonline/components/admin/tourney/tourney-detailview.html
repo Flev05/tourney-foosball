@@ -422,14 +422,14 @@
         </div>
     </div>
 
-    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
                 <button pButton type="button"
                     class="ui-button-success" 
-                    icon="fa fa-arrow-right" 
+                    icon="{{nextButtonIcon}}" 
                     iconPos="right"
-                    label="Avanti" 
+                    label="{{nextButtonLabel}}" 
                     (click)="nextTab()"
                     [disabled]="enableSaveButton()">
                 </button>
@@ -726,9 +726,9 @@
 
         </p-fieldset>
 
-        <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
+                <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
                     <button pButton type="button" 
                         class="ui-button-success"   
                         icon="fa fa-arrow-left" 
@@ -740,10 +740,11 @@
                 <div class="ui-grid-col-2">
                     <button pButton type="button"
                         class="ui-button-success" 
-                        icon="fa fa-arrow-right" 
+                        icon="{{nextButtonIcon}}" 
                         iconPos="right"
                         label="{{nextButtonLabel}}" 
-                        (click)="nextTab()">
+                        (click)="nextTab()"
+                        [disabled]="enableSaveButton()">
                     </button>
                 </div>
             </div>
@@ -824,9 +825,9 @@
                 </ng-template>        
             </p-table>
 
-            <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -838,7 +839,7 @@
                     <div class="ui-grid-col-2">
                         <button pButton type="button"
                             class="ui-button-success" 
-                            icon="fa fa-arrow-right" 
+                            icon="{{nextButtonIcon}}" 
                             iconPos="right"
                             label="{{nextButtonLabel}}" 
                             (click)="nextTab()"
@@ -971,9 +972,9 @@
                 </ng-template>
             </p-table>
 
-            <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -985,7 +986,7 @@
                     <div class="ui-grid-col-2">
                         <button pButton type="button"
                             class="ui-button-success" 
-                            icon="{{nextButtonClass}}" 
+                            icon="{{nextButtonIcon}}" 
                             iconPos="right"
                             label="{{nextButtonLabel}}" 
                             (click)="nextTab()"
@@ -1124,9 +1125,9 @@
                 </ng-template>
             </p-table>
 
-            <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -1138,7 +1139,7 @@
                     <div class="ui-grid-col-2">
                         <button pButton type="button"
                             class="ui-button-success" 
-                            icon="{{nextButtonClass}}" 
+                            icon="{{nextButtonIcon}}" 
                             iconPos="right"
                             label="{{nextButtonLabel}}" 
                             (click)="nextTab()"
@@ -1289,7 +1290,7 @@
                         pTooltip="Scegliere il numero di squadre iniziali delle eliminazioni dirette, anche tutte">
                     <p-dropdown id="teamsPlayoffId" 
                         [options]="eliminatoryTeamsCombobox" 
-                        [(ngModel)]="selectedTourney.selectedTeamsNumCombobox"  
+                        [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCombobox"  
                         optionLabel="label"
                         (onChange)="onTeamEliminatoryNumChange($event.value)" 
                         placeholder="Seleziona"
@@ -1323,9 +1324,9 @@
                 </ng-template>
             </p-table>
 
-            <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -1337,11 +1338,11 @@
                     <div class="ui-grid-col-2">
                         <button pButton type="button"
                             class="ui-button-success" 
-                            icon="{{nextButtonClass}}" 
+                            icon="{{nextButtonIcon}}" 
                             iconPos="right"
                             label="{{nextButtonLabel}}" 
                             (click)="nextTab()"
-                            [disabled]="enableSaveButton()">
+                            [disabled]="eliminatoryButtonDisabled()">
                         </button>
                     </div>
                 </div>
@@ -1349,19 +1350,6 @@
         </div>
     </p-tabPanel>            
 </p-tabView>
-
-<div *ngIf="selectedTourney.saveButtonEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div  class="ui-grid-col-2">
-            <button class="ui-button-success" 
-                pButton (click)="onSubmit()" 
-                icon="pi pi-save" 
-                label="Salva" 
-                [disabled]="enableSaveButton()">
-            </button>
-        </div>
-    </div>
-</div>
 
 <div *ngIf="badRequest" style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>

@@ -91,7 +91,6 @@ export class MeetingService extends AbstractService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadPlayoffMeeting(tourneyId: number, playoffId: number) : Observable<MeetingDb[]> {
-        const queryString = "?" + "playoffId=" + playoffId;
 
         let url = loadMeetingByPlayoffIdUrl + "/" + tourneyId + "/" + playoffId;
 

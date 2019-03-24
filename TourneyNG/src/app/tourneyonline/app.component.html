@@ -71,7 +71,7 @@
                     (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
                 <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
-                <span>Configurazioni</span>
+                <span>Tornei</span>
             </a>
             <div [ngClass]="{submenushow: (managermenutitle.id == activeMenuId), 'submenuhide': (managermenutitle.id != activeMenuId)}">
                 <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>

@@ -53,7 +53,7 @@ export interface Tourney {
     playersPerTeam?: number;
 
     eliminatoryMode?: EliminatoryMode;
-    selectedTeamsNumCombobox?: Combobox;
+    selectedEliminatoryTeamsCombobox?: Combobox;
     teamSortType?: TeamSortType;
 
     objectives?: Final[];

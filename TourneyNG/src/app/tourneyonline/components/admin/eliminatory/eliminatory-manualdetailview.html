@@ -45,240 +45,237 @@
 </p-accordion>
 </div>
 
-<div class="content-section implementation">
-    <p-growl [value]="msgs" sticky="sticky"></p-growl>    
+<p-growl [value]="msgs" sticky="sticky"></p-growl>    
 
-    <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-    <h4><span>Livello: {{selectedEliminatoryLevel.name}}</span></h4>
-    <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
-      
-    <form [formGroup]="eliminatoryFormGroup" >
-        <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-        </div>                  
+<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+<h4><span>Livello: {{selectedEliminatoryLevel.name}}</span></h4>
+<h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
+    
+<form [formGroup]="eliminatoryFormGroup" >
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
+    </div>                  
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
-            <h4 *ngIf="isTopLevel">Regole di accoppiamento</h4>
+        <h4 *ngIf="isTopLevel">Regole di accoppiamento</h4>
 
-            <div *ngIf="isTopLevel && isStandalone">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-4">
-                        <p-dropdown id="team1" [options]="availableTeams" formControlName="team1" 
+        <div *ngIf="isTopLevel && isStandalone">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <p-dropdown id="team1" [options]="availableTeams" formControlName="team1" 
+                        optionLabel="label">
+                    </p-dropdown>
+                </div>
+            </div>
+            Vs         
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <p-dropdown id="team2" [options]="availableTeams" formControlName="team2" 
+                        optionLabel="label">
+                </p-dropdown>
+                </div>
+            </div>                      
+        </div>
+
+        <div *ngIf="isTopLevel && !isStandalone">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="positionId">Classificata</label>
+                    </div>
+                    <p-dropdown id="positionId" 
+                        [options]="positions" 
+                        formControlName="position1" 
+                        optionLabel="label">
+                    </p-dropdown>
+                </div>
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="roundId">Girone</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="roundId" 
+                            [options]="rounds" 
+                            formControlName="round1" 
                             optionLabel="label">
                         </p-dropdown>
                     </div>
                 </div>
-                Vs         
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-4">
-                        <p-dropdown id="team2" [options]="availableTeams" formControlName="team2" 
+                <div *ngIf="isPlayoff" class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="playoffId">Playoff</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="playoffId" 
+                            [options]="playoffs" 
+                            formControlName="playoff1" 
+                            optionLabel="label">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>       
+            Vs         
+            <div *ngIf="isTopLevel" class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="vin">Classificata</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="vin" 
+                            [options]="positions" 
+                            formControlName="position2" 
+                            optionLabel="label">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="round">Girone</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="round" 
+                            [options]="rounds" 
+                            formControlName="round2" 
                             optionLabel="label">
                     </p-dropdown>
                     </div>
-                </div>                      
-            </div>
-
-            <div *ngIf="isTopLevel && !isStandalone">
-                <div class="ui-g ui-fluid">
-                    <div class="ui-g-12">
-                        <div class="ui-g-4">
-                            <label for="positionId">Classificata</label>
-                        </div>
-                        <p-dropdown id="positionId" 
-                            [options]="positions" 
-                            formControlName="position1" 
+                </div>
+                <div *ngIf="isPlayoff" class="ui-g-12">
+                    <div class="ui-g-4">
+                        <label for="playoff">Playoff</label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-dropdown id="playoff"    
+                            [options]="playoffs" 
+                            formControlName="playoff2" 
                             optionLabel="label">
                         </p-dropdown>
                     </div>
-                    <div class="ui-g-12">
-                        <div class="ui-g-4">
-                            <label for="roundId">Girone</label>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <p-dropdown id="roundId" 
-                                [options]="rounds" 
-                                formControlName="round1" 
-                                optionLabel="label">
-                            </p-dropdown>
-                        </div>
-                    </div>
-                    <div *ngIf="isPlayoff" class="ui-g-12">
-                        <div class="ui-g-4">
-                            <label for="playoffId">Playoff</label>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <p-dropdown id="playoffId" 
-                                [options]="playoffs" 
-                                formControlName="playoff1" 
-                                optionLabel="label">
-                            </p-dropdown>
-                        </div>
-                    </div>
-                </div>       
-                Vs         
-                <div *ngIf="isTopLevel" class="ui-g ui-fluid">
-                    <div class="ui-g-12">
-                        <div class="ui-g-4">
-                            <label for="vin">Classificata</label>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <p-dropdown id="vin" 
-                                [options]="positions" 
-                                formControlName="position2" 
-                                optionLabel="label">
-                            </p-dropdown>
-                        </div>
-                    </div>
-                    <div class="ui-g-12">
-                        <div class="ui-g-4">
-                            <label for="round">Girone</label>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <p-dropdown id="round" 
-                                [options]="rounds" 
-                                formControlName="round2" 
-                                optionLabel="label">
-                        </p-dropdown>
-                        </div>
-                    </div>
-                    <div *ngIf="isPlayoff" class="ui-g-12">
-                        <div class="ui-g-4">
-                            <label for="playoff">Playoff</label>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <p-dropdown id="playoff"    
-                                [options]="playoffs" 
-                                formControlName="playoff2" 
-                                optionLabel="label">
-                            </p-dropdown>
-                        </div>
-                    </div>
-                </div>      
-            </div>
-
-            <h4>Andata</h4>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Data e ora:
                 </div>
-                <div class="ui-grid-col-3" >
-                    <p-calendar formControlName="meetingDate1" 
-                        [locale]="it" 
-                        dateFormat="dd/mm/yy" 
-                        showTime="true"
-                        pTooltip="Data e ora di inizio dell'incontro di andata">
-                    </p-calendar>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Via:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="address1"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid
-                        && eliminatoryFormGroup.controls['address1'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
-                            La via dell'incontro di andata è obbligatoria
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    <label for="country-id">Comune:</label>
-                </div>
-                <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" formControlName="country1" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="searchCountry($event)" field="city"
-                        placeholder="Comune" [minLength]="1">
-                    </p-autoComplete>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Indirizzo:
-                </div>
-                <div class="ui-grid-col-8">
-                    {{fullAddress1}}
-                </div>
-            </div>                  
-  
-            <h4 *ngIf="!selectedEliminatoryLevel.isOneway" >Ritorno</h4>
-            
-            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Data e ora:
-                </div>
-                <div class="ui-grid-col-3" >
-                    <p-calendar formControlName="meetingDate2" 
-                        [locale]="it" 
-                        dateFormat="dd/mm/yy" 
-                        showTime="true"
-                        pTooltip="Data e ora di inizio dell'incontro di ritorno">
-                    </p-calendar>
-                </div>
-            </div>
-
-            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Via:
-                </div>
-                <div class="ui-grid-col-5">
-                    <input pInputText type="text" formControlName="address2"/>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid
-                            && eliminatoryFormGroup.controls['address2'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
-                            La via dell'incontro di ritorno è obbligatoria
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    <label for="country-id">Comune:</label>
-                </div>
-                <div class="ui-grid-col-5">
-                    <p-autoComplete id="country-id" formControlName="country2" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="search($event)" field="city"
-                        placeholder="Comune" [minLength]="1">
-                    </p-autoComplete>
-                </div>
-            </div>
-
-            <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
-                <div class="ui-grid-col-3">
-                    Indirizzo:
-                </div>
-                <div class="ui-grid-col-8">
-                    {{fullAddress2}}
-                </div>
-            </div>                                                     
+            </div>      
         </div>
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div style="margin-top:30px">
-                <p-message *ngIf="isDoubleSelection" 
-                    severity="error" 
-                    text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
-                </p-message>
-            </div>   
+        <h4>Andata</h4>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3" >
+                <p-calendar formControlName="meetingDate1" 
+                    [locale]="it" 
+                    dateFormat="dd/mm/yy" 
+                    showTime="true"
+                    pTooltip="Data e ora di inizio dell'incontro di andata">
+                </p-calendar>
+            </div>
         </div>
 
-    </form>   
-</div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Via:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="address1"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid
+                    && eliminatoryFormGroup.controls['address1'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
+                        La via dell'incontro di andata è obbligatoria
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" formControlName="country1" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" field="city"
+                    placeholder="Comune" [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{fullAddress1}}
+            </div>
+        </div>                  
+
+        <h4 *ngIf="!selectedEliminatoryLevel.isOneway" >Ritorno</h4>
+        
+        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3" >
+                <p-calendar formControlName="meetingDate2" 
+                    [locale]="it" 
+                    dateFormat="dd/mm/yy" 
+                    showTime="true"
+                    pTooltip="Data e ora di inizio dell'incontro di ritorno">
+                </p-calendar>
+            </div>
+        </div>
+
+        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Via:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="address2"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid
+                        && eliminatoryFormGroup.controls['address2'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
+                        La via dell'incontro di ritorno è obbligatoria
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" formControlName="country2" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="search($event)" field="city"
+                    placeholder="Comune" [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{fullAddress2}}
+            </div>
+        </div>                                                     
+    </div>
+
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div style="margin-top:30px">
+            <p-message *ngIf="isDoubleSelection" 
+                severity="error" 
+                text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
+            </p-message>
+        </div>   
+    </div>
+</form>   
  

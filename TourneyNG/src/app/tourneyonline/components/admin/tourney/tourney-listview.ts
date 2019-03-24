@@ -67,7 +67,7 @@ export class TourneyListView extends AbstractTourneyListView {
         this.toDate   = this.tourneyFormGroup.get('toDate').value;
 
         const subsbr = this.tourneyService.loadTourneys(this.fromDate, this.toDate);
-        subsbr.subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onComplete());
+        subsbr.subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
     }
 
     create() {

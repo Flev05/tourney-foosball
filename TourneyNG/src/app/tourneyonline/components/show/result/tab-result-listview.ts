@@ -72,7 +72,7 @@ export class TabResultListView extends AbstractListView {
         }
 
         if(super.containsEliminatory()) {
-            this.levelService.loadEliminatoryLevels();
+            this.levelService.loadEliminatoryMeetings();
         }
     }
 

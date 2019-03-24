@@ -43,7 +43,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             { field: 'datetime',    header: 'Data' }
         ];
 
-        this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onComplete());
+        this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
 
         this.playerService.loadAllPlayers( () => this.onLoadPlayersComplete() );
 
@@ -83,8 +83,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         console.log("Entering onError()" + e);
     }
 
-    protected onComplete(): any {
-        console.log("Entering onComplete()");
+    protected onLoadAllTourneysComplete(): any {
+        console.log("Entering onLoadAllTourneysComplete()");
 
         this.tourneys = [];
 

@@ -119,7 +119,8 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{fullAddress1}}
+                {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
+                + " (" + m1.country.provinceCode +")" : "" }}
             </div>
         </div>                  
 
@@ -171,7 +172,8 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{fullAddress2}}
+                {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
+                + " (" + m2.country.provinceCode +")" : "" }}
             </div>
         </div>                  
     </div>

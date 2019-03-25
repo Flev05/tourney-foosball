@@ -10,6 +10,8 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Team } from 'app/tourneyonline/domain/team';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './meeting-detailview.html',
@@ -44,7 +46,17 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting = this.meetingService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
+               
+        this.selectedMeeting.address =  this.selectedTourney.address;
+        this.selectedMeeting.country =  this.selectedTourney.country;
         
+        let homeTeamId = this.selectedMeeting.team1.id;
+        let homeTeam : Team = this.selectedTourney.teams.find( t => t.id == homeTeamId);
+        if( homeTeam != undefined ) {
+            this.selectedMeeting.address = homeTeam.address;
+            this.selectedMeeting.country = homeTeam.country;
+        }
+
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),
             
@@ -63,7 +75,7 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
 
-        if( this.selectedTourney.isOnewayRound != "true" ) {
+        if( this.selectedMeeting.direction == Direction.RoundTrip ) {
             let index = this.selectedRound.onewayMeetings.indexOf(this.selectedMeeting);
             if( index > -1 ) {
                 let rtDateTime = this.selectedRound.onewayMeetings[index].datetime;

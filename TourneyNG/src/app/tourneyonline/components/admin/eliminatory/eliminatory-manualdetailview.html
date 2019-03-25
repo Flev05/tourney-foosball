@@ -53,7 +53,7 @@
     
 <form [formGroup]="eliminatoryFormGroup" >
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
+        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Fatto"></button>
     </div>                  
 
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -208,7 +208,8 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{fullAddress1}}
+                {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
+                + " (" + m1.country.provinceCode +")" : "" }}
             </div>
         </div>                  
 
@@ -264,14 +265,15 @@
                 Indirizzo:
             </div>
             <div class="ui-grid-col-8">
-                {{fullAddress2}}
+                {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
+                + " (" + m2.country.provinceCode +")" : "" }}
             </div>
         </div>                                                     
     </div>
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="isDoubleSelection" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div style="margin-top:30px">
-            <p-message *ngIf="isDoubleSelection" 
+            <p-message 
                 severity="error" 
                 text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
             </p-message>

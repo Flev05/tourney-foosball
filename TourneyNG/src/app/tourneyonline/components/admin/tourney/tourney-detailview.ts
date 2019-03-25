@@ -394,7 +394,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
     addTeams() {
 
-        let tvo: TourneyVO = this.saveTourney();
+        this.saveTourneyMeetings();
+        let tvo: TourneyVO = this.prepareTourneyVO();
 
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onComplete());
@@ -830,7 +831,8 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private doSave(): void {
-        let tvo: TourneyVO = this.saveTourney();
+        this.saveTourneyMeetings();
+        let tvo: TourneyVO = this.prepareTourneyVO();
 
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
@@ -864,7 +866,13 @@ export class TourneyDetailView extends AbstractDetailView {
             rewind = true;
         }
 
-        let tvo: TourneyVO = this.saveTourney();
+        this.saveTourneyMeetings();
+               
+        if( !rewind ) {
+            this.selectedTourney.selectedTabIndex++;        
+        }
+
+        let tvo: TourneyVO = this.prepareTourneyVO();
 
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.onNextSaveComplete(rewind));
@@ -889,12 +897,10 @@ export class TourneyDetailView extends AbstractDetailView {
             return;
         }
 
-        this.selectedTourney.selectedTabIndex++;        
-
         this.refreshTabsAndButtons();
     }
 
-    private saveTourney() {
+    private saveTourneyMeetings() : void {
         this.onSaveTourneyError = false;
         
         if (this.tourneyService.containsPhase(PhaseType.R) && this.selectedTourney.selectedTabIndex > 2 ) {
@@ -942,12 +948,12 @@ export class TourneyDetailView extends AbstractDetailView {
                 }
             }
         }
+    }
 
+    private prepareTourneyVO() : TourneyVO {
         this.tourneyAlreadyExists = false;
         this.onSaveTourneyError = false;
-
         this.clearTourneyMeetings();
-
         let tvo: TourneyVO = {
             id: this.selectedTourney.id,
             tourneyName: this.selectedTourney.tourneyName,

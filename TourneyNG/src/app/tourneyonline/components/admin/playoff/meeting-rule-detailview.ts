@@ -11,8 +11,9 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { MeetingRoundService } from '../round/meeting-round-service';
 import { MeetingPlayoffService } from './meeting-playoff-service';
+import { Team } from 'app/tourneyonline/domain/team';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './meeting-rule-detailview.html',
@@ -49,6 +50,16 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         this.selectedMeeting = this.meetingService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
+       
+        // this.selectedMeeting.address =  this.selectedTourney.address;
+        // this.selectedMeeting.country =  this.selectedTourney.country;
+
+        let homeTeamId = this.selectedMeeting.team1.id;
+        let homeTeam : Team = this.selectedTourney.teams.find( t => t.id == homeTeamId);
+        if( homeTeam != undefined ) {
+            this.selectedMeeting.address = homeTeam.address;
+            this.selectedMeeting.country = homeTeam.country;
+        }
 
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),
@@ -66,7 +77,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
         this.selectedMeeting.datetime = new Date(dt);
 
-        if( this.selectedTourney.isOnewayRound != "true" ) {
+        if( this.selectedMeeting.direction == Direction.RoundTrip ) {
             let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.meetingService.selectedMeeting);
             if( index > -1 ) {
                 let rtDateTime = this.selectedPlayoff.round.onewayMeetings[index].datetime;

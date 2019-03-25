@@ -13,6 +13,7 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './eliminatory-manualdetailview.html',
@@ -44,6 +45,9 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
     availableTeams: Combobox[];
     isDoubleSelection: boolean;
 
+    m1: Meeting ;
+    m2: Meeting ;
+
     constructor(
         private fb: FormBuilder,
         protected location: Location,
@@ -73,25 +77,25 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.playoffs = this.tourneyService.playoffsCombobox;
         this.isStandalone = this.tourneyService.isStandalone;
 
-        let m1: Meeting = this.selectedEliminatory.round.onewayMeetings[0];
-        m1.datetime = new Date(m1.datetime);
-        if(m1.country!=undefined) {
-            this.fullAddress1 = m1.address + " - " 
-                + m1.country.zipCode + " " + m1.country.city
-                + " (" + m1.country.provinceCode +")";
+        this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
+        this.m1.datetime = new Date(this.m1.datetime);
+        if(this.m1.country!=undefined) {
+            this.fullAddress1 = this.m1.address + " - " 
+                + this.m1.country.zipCode + " " + this.m1.country.city
+                + " (" + this.m1.country.provinceCode +")";
         }
  
-        let m2: Meeting = m1;
+        this.m2 = this.m1;
         if(!this.isOneway) {
-            m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            m2.datetime = new Date(m2.datetime);
-            if(m2.country!=undefined) {
-                this.fullAddress2 = m2.address + " - " 
-                    + m2.country.zipCode + " " + m2.country.city
-                    + " (" + m2.country.provinceCode +")";
+            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+            this.m2.datetime = new Date(this.m2.datetime);
+            if(this.m2.country!=undefined) {
+                this.fullAddress2 = this.m2.address + " - " 
+                    + this.m2.country.zipCode + " " + this.m2.country.city
+                    + " (" + this.m2.country.provinceCode +")";
             }
-            if(m2.datetime.getTime() < m1.datetime.getTime()) {
-                m2.datetime = m1.datetime;
+            if(this.m2.datetime.getTime() < this.m1.datetime.getTime()) {
+                this.m2.datetime = this.m1.datetime;
             }
         }
 
@@ -105,8 +109,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
                 this.availableTeams.push(cb);
             }
     
-            team1CB = {label:m1.team1.teamName, value: m1.team1.id};
-            team2CB = {label:m1.team2.teamName, value: m1.team2.id};
+            team1CB = {label:this.m1.team1.teamName, value: this.m1.team1.id};
+            team2CB = {label:this.m1.team2.teamName, value: this.m1.team2.id};
         }
 
         this.isDoubleSelection = false;
@@ -119,13 +123,13 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.eliminatoryFormGroup = this.fb.group({
 
-            'meetingDate1':  new FormControl(m1.datetime),
-            'address1':  new FormControl(m1.address),
-            'country1':  new FormControl(m1.country),
+            'meetingDate1':  new FormControl(this.m1.datetime),
+            'address1':  new FormControl(this.m1.address),
+            'country1':  new FormControl(this.m1.country),
 
-            'meetingDate2':  new FormControl(m2.datetime),
-            'address2':  new FormControl(m2.address),
-            'country2':  new FormControl(m2.country),    
+            'meetingDate2':  new FormControl(this.m2.datetime),
+            'address2':  new FormControl(this.m2.address),
+            'country2':  new FormControl(this.m2.country),    
 
             'positions':  new FormControl(this.positions),
             'rounds':  new FormControl(this.rounds),
@@ -146,18 +150,19 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         });
     }
     
-    goBack(): void {
-        this.save();
-        super.goBack();
+    done(): void {
+        if(this.save()) {
+            super.goBack();
+        }
     }
 
-    private save() {
+    private save() : boolean {
 
-        let m1 = this.selectedEliminatory.round.onewayMeetings[0];
+        this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
 
-        m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
-        m1.address = this.eliminatoryFormGroup.get('address1').value;
-        m1.country = this.eliminatoryFormGroup.get('country1').value;
+        this.m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
+        this.m1.address = this.eliminatoryFormGroup.get('address1').value;
+        this.m1.country = this.eliminatoryFormGroup.get('country1').value;
 
         let p1: Combobox = this.eliminatoryFormGroup.get('position1').value;
         let p2: Combobox = this.eliminatoryFormGroup.get('position2').value;
@@ -167,7 +172,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.isDoubleSelection = false;
         if(this.isPlayoff && r1.value > 0 && po1.value > 0) {
             this.isDoubleSelection = true;
-            return;
+            return false;
         }
 
         if(r1.value > 0) {
@@ -187,7 +192,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.isDoubleSelection = false;
         if(this.isPlayoff && r2.value > 0 && po2.value > 0) {
             this.isDoubleSelection = true;
-            return;
+            return false;
         }
 
         if(r2.value > 0) {
@@ -204,21 +209,35 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         if(this.isStandalone) {
             let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
             let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
-            m1.team1 = this.getTeam(team1CB);
-            m1.team2 = this.getTeam(team2CB);
+            this.m1.team1 = this.getTeam(team1CB);
+            this.m1.team2 = this.getTeam(team2CB);
 
-            m1.name = m1.team2.teamName + " - " + m1.team1.teamName;
+            this.m1.name = this.m1.team2.teamName + " - " + this.m1.team1.teamName;
         }
+
+        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
+        observer.subscribe( n => this.saveMeetingNext(n, this.m1));
 
         if(!this.isOneway) {
-            let m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
-            if(m2.datetime < m1.datetime) {
-                m2.datetime = m1.datetime;
+            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+            this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+            if(this.m2.datetime < this.m1.datetime) {
+                this.m2.datetime = this.m1.datetime;
             }
-            m2.address = this.eliminatoryFormGroup.get('address2').value;
-            m2.country = this.eliminatoryFormGroup.get('country2').value;
+            this.m2.address = this.eliminatoryFormGroup.get('address2').value;
+            this.m2.country = this.eliminatoryFormGroup.get('country2').value;
+
+            let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
+            observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
         }
+
+        return true;
+    }
+
+    private saveMeetingNext(n:  MeetingDb, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(n);
+        m.id = n.id;
     }
 
     doubleSelection() {

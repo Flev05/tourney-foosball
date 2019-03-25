@@ -104,10 +104,19 @@ export class LevelService extends AbstractEliminatoryListView {
             let deleted: EliminatoryLevel[] = this.eliminatoryLevels.splice(0, maxCurrentLevel - selectedLevel);
             for(let d of deleted) {
                 for(let e of d.eliminatories) {
-                    for(let m of e.round.onewayMeetings) {
+                    let onewayTemp = [...e.round.onewayMeetings];
+                    for(let m of onewayTemp) {
+                        let delIndex = e.round.onewayMeetings.indexOf(m);
+                        let rm = e.round.onewayMeetings.splice(delIndex, 1);
+                        console.log("Splice=" + rm);
                         this.meetingService.deleteMeeting(m);
                     }
-                    for(let m of e.round.roundtripMeetings) {
+
+                    let roundtripTemp = [...e.round.roundtripMeetings];
+                    for(let m of roundtripTemp) {
+                        let delIndex = e.round.roundtripMeetings.indexOf(m);
+                        let rm = e.round.roundtripMeetings.splice(delIndex, 1);
+                        console.log("Splice=" + rm);
                         this.meetingService.deleteMeeting(m);
                     }
                 }
@@ -395,9 +404,6 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let m1: Meeting = this.meetingService.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
         let m2: Meeting = this.meetingService.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
-
-        // m1 = this.meetingService.completeEliminatoryMeetingDb(m1, this.selectedTourney.id, e.id);
-        // m2 = this.meetingService.completeEliminatoryMeetingDb(m2, this.selectedTourney.id, e.id);
 
         e.round.onewayMeetings.push(m1);
         e.round.roundtripMeetings.push(m2);

@@ -6,11 +6,11 @@ import {FormControl,FormGroup,FormBuilder, Validators} from '@angular/forms';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { Message } from 'app/components/common/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',
@@ -90,25 +90,37 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     private save() {
 
-        let m1 = this.selectedEliminatory.round.onewayMeetings[0];
+        this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
 
-        m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
-        m1.address = this.eliminatoryFormGroup.get('address1').value;
-        m1.country = this.eliminatoryFormGroup.get('country1').value;
+        this.m1.datetime = this.eliminatoryFormGroup.get('meetingDate1').value;
+        this.m1.address = this.eliminatoryFormGroup.get('address1').value;
+        this.m1.country = this.eliminatoryFormGroup.get('country1').value;
 
+        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
+        observer.subscribe( n => this.saveMeetingNext(n, this.m1));
+        
         if(!this.isOneway) {
-            let m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
-            if(m2.datetime < m1.datetime) {
-                m2.datetime = m1.datetime;
+            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+            this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+            if(this.m2.datetime < this.m1.datetime) {
+                this.m2.datetime = this.m1.datetime;
             }
-            m2.address = this.eliminatoryFormGroup.get('address2').value;
-            m2.country = this.eliminatoryFormGroup.get('country2').value;
+            this.m2.address = this.eliminatoryFormGroup.get('address2').value;
+            this.m2.country = this.eliminatoryFormGroup.get('country2').value;
+
+            let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
+            observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
     }
     
+    private saveMeetingNext(n:  MeetingDb, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(n);
+        m.id = n.id;
+    }
+
     goBack(): void {
         this.save();
         super.goBack();

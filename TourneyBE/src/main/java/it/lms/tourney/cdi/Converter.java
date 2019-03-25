@@ -278,6 +278,8 @@ public class Converter extends AbstractLogger {
         mvo.setRoundId(mpo.getRoundId());
         mvo.setTourneyId(mpo.getTourney().getId());
 
+        mvo.setCountry(mpo.getCountry());
+
         return mvo;
     }
 

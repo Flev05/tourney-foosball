@@ -54,12 +54,12 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         // this.selectedMeeting.address =  this.selectedTourney.address;
         // this.selectedMeeting.country =  this.selectedTourney.country;
 
-        let homeTeamId = this.selectedMeeting.team1.id;
-        let homeTeam : Team = this.selectedTourney.teams.find( t => t.id == homeTeamId);
-        if( homeTeam != undefined ) {
-            this.selectedMeeting.address = homeTeam.address;
-            this.selectedMeeting.country = homeTeam.country;
-        }
+        // let homeTeamId = this.selectedMeeting.team1.id;
+        // let homeTeam : Team = this.selectedTourney.teams.find( t => t.id == homeTeamId);
+        // if( homeTeam != undefined ) {
+        //     this.selectedMeeting.address = homeTeam.address;
+        //     this.selectedMeeting.country = homeTeam.country;
+        // }
 
         this.meetingFormGroup = this.fb.group({
             'name':    new FormControl(this.selectedMeeting.name),

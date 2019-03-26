@@ -20,7 +20,6 @@ export class MeetingListView extends AbstractListView {
     
     selectedRow: Meeting;
 
-    msgs: Message[] = [];
     selectedRound: Round;
     atLeast2teams: boolean;
  

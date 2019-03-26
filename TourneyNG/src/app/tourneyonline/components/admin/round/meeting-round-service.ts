@@ -186,13 +186,13 @@ export class MeetingRoundService extends MeetingService {
             let onewayMeetings: Meeting[] = this.onewayMeetingDaysMap.get(key);
 
             for( let m of onewayMeetings ) {   
-                // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+                m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
     
                 let rtm = round.roundtripMeetings.find( i => this.whereCondition(m, m.team2, m.team1));
 
                 if( rtm == undefined ) {
                     rtm = this.newMeeting(m.team2, m.team1, m.day, Direction.RoundTrip);
-                    // rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
+                    rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
 
                 if( !this.roundtripMeetingDaysMap.has(key) ) {

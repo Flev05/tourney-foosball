@@ -46,12 +46,9 @@ export class MeetingService extends AbstractService {
     meetings: Meeting[];
     mdbs: Meeting[];
 
-    // private mdbList: MeetingDb[];
-
     isRoundTrip: boolean;
     meetingsNoMsg: string;
 
-    // private selectedRound: Round;
     onewayDaysNo: number;
     roundtripDaysNo: number;
     

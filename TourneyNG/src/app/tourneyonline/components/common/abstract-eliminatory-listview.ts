@@ -117,6 +117,14 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.prepareNotStandaloneGui();
         }
     }
+    
+    protected prepareELCols(): TableCols[] {
+        let eliminatoryCols = [
+            { field: 'name',        header: 'Livello' },
+            { field: 'level',       header: 'Squadre' },
+         ];
+         return eliminatoryCols;
+     }
 
     /**
         For each eliminatory level configureted in selected tourney, loads their corresponding meetings,
@@ -189,14 +197,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.processEliminationTree();
         }
     }    
-
-    protected prepareELCols(): TableCols[] {
-       let eliminatoryCols = [
-           { field: 'name',        header: 'Livello' },
-           { field: 'level',       header: 'Squadre' },
-        ];
-        return eliminatoryCols;
-    }
 
     protected processEliminationTree(): void {
     }

@@ -31,9 +31,8 @@ export class LevelService extends AbstractEliminatoryListView {
     ngOnInit() {
         this.ngOnInitLight();
 
-        this.processEliminationTree();
-
-        this.prepareEliminatoryLevelsGui();
+        // this.processEliminationTree();
+        // this.prepareEliminatoryLevelsGui();
     }
 
     ngOnInitLight() {
@@ -41,6 +40,10 @@ export class LevelService extends AbstractEliminatoryListView {
         this.meetingService.selectedTourney = this.selectedTourney;
     }
 
+    /**
+     * Specializes the corresponding method of the base class because of the asynchrnous behabiour of the
+     * http REST call to the BE to load the meetingds from the database.
+     */
     processEliminationTree(): void {
 
         let teamNo: number = this.selectedTourney.selectedEliminatoryTeamsCombobox.value;
@@ -49,6 +52,8 @@ export class LevelService extends AbstractEliminatoryListView {
         }
 
         this.processEliminatoryTeams(teamNo);
+
+        this.prepareEliminatoryLevelsGui();
     }
 
     /**
@@ -158,7 +163,7 @@ export class LevelService extends AbstractEliminatoryListView {
         let round = topElimLevel.standaloneRound;
         if(round==undefined) {
             round = {id:this.tourneyService.getSequenceNumber()
-                , name:""
+                , name: ""
                 , type: RoundType.E
                 , teams: []
                 , onewayMeetings:[]
@@ -175,15 +180,23 @@ export class LevelService extends AbstractEliminatoryListView {
 
         for(let t of round.teams) {
             if(!teamMap.has(t.id)) {
-                for(let m of round.onewayMeetings) {
-                    if(m.team1.id == t.id || m.team2.id == t.id) {
-                        this.meetingService.deleteMeeting(m);
-                    }
+
+                let onewayTemp = [...round.onewayMeetings];
+
+                for(let m of onewayTemp) {
+                    let delIndex = round.onewayMeetings.indexOf(m);
+                    let rm = round.onewayMeetings.splice(delIndex, 1);
+                    console.log("Splice=" + rm);
+                    this.meetingService.deleteMeeting(m);
                 }
-                for(let m of round.roundtripMeetings) {
-                    if(m.team1.id == t.id || m.team2.id == t.id) {
-                        this.meetingService.deleteMeeting(m);
-                    }
+
+                let roundtripTemp = [...round.roundtripMeetings];
+
+                for(let m of roundtripTemp) {
+                    let delIndex = round.roundtripMeetings.indexOf(m);
+                    let rm = round.roundtripMeetings.splice(delIndex, 1);
+                    console.log("Splice=" + rm);
+                    this.meetingService.deleteMeeting(m);
                 }
             }
         }
@@ -217,13 +230,10 @@ export class LevelService extends AbstractEliminatoryListView {
             let m = e.round.onewayMeetings[0];
             m.team1 = t1;
             m.team2 = t2;
-            // this.meetingService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
             
             m = e.round.roundtripMeetings[0];
             m.team1 = t2;
             m.team2 = t1;
-            
-            // this.meetingService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
         }
     } 
 

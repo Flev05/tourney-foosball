@@ -604,7 +604,7 @@
                 </div>
             </div>
 
-            <div class="ui-grid-row">
+            <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.isAllMatches=='true'" class="ui-grid-row">
                 <div class="ui-grid-col-3">
                     Vittoria:
                 </div>
@@ -634,10 +634,10 @@
                 </div>
             </div>
 
-            <div *ngIf="selectedTourney.tourneyType=='score'" 
+            <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.isAllMatches=='true'" 
                 class="ui-grid-row" >
                 <div class="ui-grid-col-3">
-                    Vittoria (Golden goal/Tie break):
+                    Vittoria (Golden goal o Tie break):
                 </div>
                 <div class="ui-grid-col-3">
                     <p-spinner [(ngModel)]="selectedTourney.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
@@ -650,10 +650,10 @@
                 </div>
             </div>                
 
-            <div *ngIf="selectedTourney.tourneyType=='score'"
+            <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.isAllMatches=='true'"
                 class="ui-grid-row" >
                 <div class="ui-grid-col-3">
-                    Sconfitta (Golden goal/Tie break):
+                    Sconfitta (Golden goal o Tie break):
                 </div>
                 <div class="ui-grid-col-3">
                     <p-spinner [(ngModel)]="selectedTourney.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"

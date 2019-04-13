@@ -214,11 +214,9 @@ export class MeetingService extends AbstractService {
         let id: number = m.id;
         const url = deleteMeetingUrl + "/" + id;
 
-        let json = url + ", " + m.name;
-
         let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb:' + json)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + json))
+            tap(_ => this.log('deleting MeetingDb:' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
         );
 
         obs.subscribe();

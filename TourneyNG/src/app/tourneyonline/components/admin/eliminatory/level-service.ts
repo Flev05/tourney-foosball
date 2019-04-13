@@ -14,6 +14,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { EliminatoryAutoListView } from './eliminatory-autolistview';
 import { EliminatoryManualListView } from './eliminatory-manuallistview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { Round } from 'app/tourneyonline/domain/round';
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
@@ -30,9 +31,6 @@ export class LevelService extends AbstractEliminatoryListView {
 
     ngOnInit() {
         this.ngOnInitLight();
-
-        // this.processEliminationTree();
-        // this.prepareEliminatoryLevelsGui();
     }
 
     ngOnInitLight() {
@@ -112,17 +110,24 @@ export class LevelService extends AbstractEliminatoryListView {
                     let onewayTemp = [...e.round.onewayMeetings];
                     for(let m of onewayTemp) {
                         let delIndex = e.round.onewayMeetings.indexOf(m);
-                        let rm = e.round.onewayMeetings.splice(delIndex, 1);
-                        console.log("Splice=" + rm);
-                        this.meetingService.deleteMeeting(m);
+                        let rm: Meeting[] = e.round.onewayMeetings.splice(delIndex, 1);
+                        console.log("Removing oneway:");
+                        console.log(rm[0]);
+                        
+                        if( m.id != null ) {
+                            this.meetingService.deleteMeeting(m);
+                        }
                     }
 
                     let roundtripTemp = [...e.round.roundtripMeetings];
                     for(let m of roundtripTemp) {
                         let delIndex = e.round.roundtripMeetings.indexOf(m);
-                        let rm = e.round.roundtripMeetings.splice(delIndex, 1);
-                        console.log("Splice=" + rm);
-                        this.meetingService.deleteMeeting(m);
+                        let rm: Meeting[] = e.round.roundtripMeetings.splice(delIndex, 1);
+                        console.log("Removing roundtrip:");
+                        console.log(rm[0]);
+                        if( m.id != null ) {
+                            this.meetingService.deleteMeeting(m);
+                        }
                     }
                 }
             }
@@ -152,17 +157,20 @@ export class LevelService extends AbstractEliminatoryListView {
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
      * no rounds and no playoffs.
+     * 
+     * @param teamCount the number of teams to allocate on the top eliminatory level
      */
-    private processStandalone() {
+    private prepareStandaloneTopLevel(teamCount: number) {
+        console.log("Entering prepareStandaloneTopLevel("+teamCount+")");
+
         if( this.eliminatoryLevels.length == 0 ) {
             return;
         }
+        
+        let topElimLevel: EliminatoryLevel = this.eliminatoryLevels[0];        
 
-        let topElimLevel = this.eliminatoryLevels[0];
-
-        let round = topElimLevel.standaloneRound;
-        if(round==undefined) {
-            round = {id:this.tourneyService.getSequenceNumber()
+        if( topElimLevel.standaloneRound == undefined )  {
+            topElimLevel.standaloneRound = {id:this.tourneyService.getSequenceNumber()
                 , name: ""
                 , type: RoundType.E
                 , teams: []
@@ -170,37 +178,19 @@ export class LevelService extends AbstractEliminatoryListView {
                 , roundtripMeetings:[]
                 , classification:[]         
             };
-            topElimLevel.standaloneRound = round;
+        }
+        let round : Round = topElimLevel.standaloneRound;
+
+        let power2 = this.tourneyService.power2Padding(teamCount);
+        if( round.teams.length == power2 ) {
+            return;
         }
 
         let teamMap: Map<number, Team> = new Map<number, Team>();
         for(let t of this.tourneyService.selectedTeams) {
             teamMap.set(t.id, t);
         }
-
-        for(let t of round.teams) {
-            if(!teamMap.has(t.id)) {
-
-                let onewayTemp = [...round.onewayMeetings];
-
-                for(let m of onewayTemp) {
-                    let delIndex = round.onewayMeetings.indexOf(m);
-                    let rm = round.onewayMeetings.splice(delIndex, 1);
-                    console.log("Splice=" + rm);
-                    this.meetingService.deleteMeeting(m);
-                }
-
-                let roundtripTemp = [...round.roundtripMeetings];
-
-                for(let m of roundtripTemp) {
-                    let delIndex = round.roundtripMeetings.indexOf(m);
-                    let rm = round.roundtripMeetings.splice(delIndex, 1);
-                    console.log("Splice=" + rm);
-                    this.meetingService.deleteMeeting(m);
-                }
-            }
-        }
-
+ 
         round.teams = this.tourneyService.selectedTeams;
         let tmpTeams: Array<Team> = this.sortAndPad(round.teams);
 
@@ -224,16 +214,17 @@ export class LevelService extends AbstractEliminatoryListView {
             let t2: Team = descTeam[i];
             
             let e: Eliminatory = topLevelEliminatories[i];
-            e.round.teams[0] = t1;
-            e.round.teams[1] = t2;
+            e.round.teams = [];
+            e.round.teams.push(t1);
+            e.round.teams.push(t2);
             
-            let m = e.round.onewayMeetings[0];
-            m.team1 = t1;
-            m.team2 = t2;
+            let m1: Meeting = this.meetingService.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
+            e.round.onewayMeetings = [];
+            e.round.onewayMeetings.push(m1);
             
-            m = e.round.roundtripMeetings[0];
-            m.team1 = t2;
-            m.team2 = t1;
+            let m2: Meeting = this.meetingService.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
+            e.round.roundtripMeetings =  [];
+            e.round.roundtripMeetings.push(m2);
         }
     } 
 
@@ -385,8 +376,8 @@ export class LevelService extends AbstractEliminatoryListView {
                 , type: RoundType.E
                 , teams:[t1, t2]
                 , classification: []
-                , onewayMeetings: []
-                , roundtripMeetings: []
+                , onewayMeetings: [t2, t1]
+                , roundtripMeetings: [t2, t1]
             },
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),
@@ -462,10 +453,12 @@ export class LevelService extends AbstractEliminatoryListView {
         };     
     }
 
-    onTeamEliminatoryNumChange(event) {
+    onTeamEliminatoryNumChange(event) : any[] {
 
         let teamNo: number = this.selectedTourney.selectedEliminatoryTeamsCombobox.value;
         this.processEliminatoryTeams(teamNo);
+
+        return this.eliminatoryLevelRows;
     }
 
     private processEliminatoryTeams(teamCount: number) {
@@ -474,7 +467,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         this.tourneyService.regenerateStandaloneTopLevel = true;
         if (this.isStandalone) {
-            this.processStandalone();
+            this.prepareStandaloneTopLevel(teamCount);
         } else {
             this.prepareAutomaticEliminatoryRules(teamCount);
         }
@@ -483,12 +476,12 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     private prepareEliminatoryLevelsGui() {
-        this.cols = super.prepareELCols();
+        this.eliminatoryCols = super.prepareELCols();
         
-        this.rows = [];
+        this.eliminatoryLevelRows = [];
         for (let i = 0; i < this.eliminatoryLevels.length; i++) {
             let el = this.eliminatoryLevels[i];
-            this.rows.push({ el: el, level: el.level == -1 ? 2 : this.pow2(el.level), name: el.name });
+            this.eliminatoryLevelRows.push({ el: el, level: el.level == -1 ? 2 : this.pow2(el.level), name: el.name });
         }
     }
 

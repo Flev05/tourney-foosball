@@ -379,8 +379,8 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("Entering prepareEliminatory()");
 
         this.levelService.ngOnInit();
-        this.eliminatoryCols = this.levelService.cols;
-        this.eliminatoryRows = this.levelService.rows;
+        this.eliminatoryCols = this.levelService.eliminatoryCols;
+        this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
         this.eliminatoryTeamsCombobox = this.levelService.eliminatoryTeamsCombobox;
     }
 
@@ -433,7 +433,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log(event);
 
         this.levelService.onTeamEliminatoryNumChange(this.selectedTourney.selectedEliminatoryTeamsCombobox);
-        this.eliminatoryRows = this.levelService.rows;
+        this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
     }
     
     onDisciplineChange(cb: Combobox) {
@@ -931,7 +931,9 @@ export class TourneyDetailView extends AbstractDetailView {
         
         if (this.tourneyService.containsPhase(PhaseType.E)) {
             if( this.selectedTourney.saveButtonEnabled ) {
-                
+
+                this.levelService.ngOnInit();
+
                 this.selectedTourney.eliminatoryLevels = [...this.levelService.eliminatoryLevels];
 
                 for (let el of this.selectedTourney.eliminatoryLevels) {

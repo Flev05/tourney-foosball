@@ -19,8 +19,8 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 export abstract class AbstractEliminatoryListView extends AbstractListView {
          
-    cols: TableCols[] ;
-    rows: any[];
+    eliminatoryCols: TableCols[] ;
+    eliminatoryLevelRows: any[];
     selectedRow: any;
 
     msgs: Message[] = [];
@@ -37,14 +37,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     isOneway: string;
     isStandalone: boolean;
-    
-    isModeEnabled: boolean;
 
     selectedLevelCombobox: Combobox;
     eliminatoryTeamsCombobox: Combobox[];
-    eliminatoryCols: { field: string; header: string; }[];
-    eliminatoryLevelRows: any[];
-    
+  
     elHttpCounter: number;
     eliminatoryRoundMap: Map<number, Round>;
     meetingMap: Map<number, MeetingDb[]>;
@@ -88,16 +84,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryTeamsCombobox = this.tourneyService.eliminatoryTeamsCombobox;
   
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-
-        if( this.containsPhase(PhaseType.R, this.selectedTourney.phases) && 
-            this.containsPhase(PhaseType.P, this.selectedTourney.phases) &&
-            this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
-        {
-            this.isModeEnabled = false;
-        } else {
-             this.isModeEnabled = true;
-        }
-
+ 
         if (this.selectedTourney.phases.length == 1 &&
             this.containsPhase(PhaseType.E, this.selectedTourney.phases)) 
         {
@@ -135,11 +122,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryRoundMap = new Map<number, Round>();
 
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {
+        this.eliminatoryCols = this.prepareELCols();
+        if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {    
+            this.processEliminationTree()
             return;
         }
-
-        this.eliminatoryCols = this.prepareELCols();
 
         this.elHttpCounter = 0;
         for (let l=0; l<this.eliminatoryLevels.length; l++) {
@@ -272,26 +259,26 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
      */
     prepareStandaloneGui(): void {
-        this.cols = [
+        this.eliminatoryCols = [
         ];
 
         if(this.isTopLevel) {
-            this.cols.push({ field: 'teamName1', header: 'Team 1'});
-            this.cols.push({ field: 'teamName2', header: 'Team 2'});
+            this.eliminatoryCols.push({ field: 'teamName1', header: 'Team 1'});
+            this.eliminatoryCols.push({ field: 'teamName2', header: 'Team 2'});
         }
 
-        this.cols.push({ field: 'onewayDatetime', header: 'Andata' });
+        this.eliminatoryCols.push({ field: 'onewayDatetime', header: 'Andata' });
         if(!this.selectedEliminatoryLevel.isOneway) {
-            this.cols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+            this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
-        this.rows = [];
+        this.eliminatoryLevelRows = [];
         for(let i=0;i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
             let onewayDatetime    = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
 
-            this.rows.push({e:e
+            this.eliminatoryLevelRows.push({e:e
                 , rowNumber: i+1 
                 , teamName1: e.round.onewayMeetings[0].team1.teamName
                 , teamName2: e.round.onewayMeetings[0].team2.teamName
@@ -324,31 +311,31 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
     */
    protected prepareNotStandaloneGui(): void {
-        this.cols = [
+        this.eliminatoryCols = [
             { field: 'onewayDatetime', header: 'Andata'}
         ];
 
         if(this.isTopLevel) {
-            this.cols.push({ field: 'position1', header: 'Classif.'});
-            this.cols.push({ field: 'fromRound1', header: 'Girone' });
+            this.eliminatoryCols.push({ field: 'position1', header: 'Classif.'});
+            this.eliminatoryCols.push({ field: 'fromRound1', header: 'Girone' });
             if(this.isPlayoff) {
-                this.cols.push({ field: 'fromPlayoff1', header: 'Playoff'});
+                this.eliminatoryCols.push({ field: 'fromPlayoff1', header: 'Playoff'});
             }
 
-            this.cols.push({ field: 'versus', header: 'Vs'});
+            this.eliminatoryCols.push({ field: 'versus', header: 'Vs'});
 
-            this.cols.push({ field: 'position2', header: 'Classif.'});
-            this.cols.push({ field: 'fromRound2', header: 'Girone' });
+            this.eliminatoryCols.push({ field: 'position2', header: 'Classif.'});
+            this.eliminatoryCols.push({ field: 'fromRound2', header: 'Girone' });
             if(this.isPlayoff) {
-                this.cols.push({ field: 'fromPlayoff2', header: 'Playoff'});
+                this.eliminatoryCols.push({ field: 'fromPlayoff2', header: 'Playoff'});
             }
         }
 
         if(!this.selectedEliminatoryLevel.isOneway) {
-            this.cols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+            this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
 
-        this.rows = [];
+        this.eliminatoryLevelRows = [];
         for(let i=0;i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
@@ -374,7 +361,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 , fromPlayoff2: fromPlayoff2
                 , roundtripDatetime: roundtripDatetime
             };
-            this.rows.push(fullList);
+            this.eliminatoryLevelRows.push(fullList);
         }
     }
 
@@ -392,7 +379,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
      * @param rounds the list of round containg the meetings
      */
     protected prepareCalendarGui(rounds: Round[] ): any[] {
-        this.cols = [
+        this.eliminatoryCols = [
             { field: 'rowNumber', header: 'N°'},
             { field: 'teamName1', header: 'Team 1'},
             { field: 'teamName2', header: 'Team 2'},
@@ -421,7 +408,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 let currentKey = round.name;  
                 if(!raoundMap.has(currentKey)) {
                     raoundMap.set(currentKey, round);
-                    let len = this.cols.length;
+                    let len = this.eliminatoryCols.length;
                     rows[row].rowspanSize = len;
                 } else {
                     rows[row].rowspanSize = undefined;

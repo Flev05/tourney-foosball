@@ -333,7 +333,6 @@ export class MeetingService extends AbstractService {
             rule1: pr1,
             rule2: pr2,
             ruleName: ruleName,
-            direction: d,
             status: MeetingStatus.ToPlay,
             matches: matches
         };

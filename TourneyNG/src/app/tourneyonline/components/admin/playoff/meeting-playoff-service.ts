@@ -38,7 +38,7 @@ export class MeetingPlayoffService extends MeetingService {
             let m: Meeting = JSON.parse(mdb.json);
             m.id = mdb.id;
             m.country = mdb.country;
-            if( m.direction == Direction.OneWay ) {
+            if( playoff.round.direction == Direction.OneWay ) {
                 playoff.round.onewayMeetings.push(m);
             } else {
                 playoff.round.roundtripMeetings.push(m);

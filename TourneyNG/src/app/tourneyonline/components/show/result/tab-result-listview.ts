@@ -137,7 +137,7 @@ export class TabResultListView extends AbstractListView {
             rows[row].id = m.id;
             rows[row].dateAndTime = this.dfp.transform(m.datetime);
             rows[row].rowNumber = rowNumber;
-            rows[row].roundtrip = m.direction == Direction.OneWay ? "A" : "R";
+            rows[row].roundtrip = round.direction == Direction.OneWay ? "A" : "R";
             rows[row].roundId = round.id;
             rows[row].eliminatoryId = 0;    
             rows[row].playoffId = 0;

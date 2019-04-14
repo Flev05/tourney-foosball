@@ -77,7 +77,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
         this.selectedMeeting.datetime = new Date(dt);
 
-        if( this.selectedMeeting.direction == Direction.RoundTrip ) {
+        if( this.selectedPlayoff.round.direction == Direction.RoundTrip ) {
             let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.meetingService.selectedMeeting);
             if( index > -1 ) {
                 let rtDateTime = this.selectedPlayoff.round.onewayMeetings[index].datetime;

@@ -143,7 +143,6 @@ static prepareDefaultMeeting(r : Round  )  {
           , team2: t2
           , points1: 0
           , points2: 0
-          , direction: Direction.OneWay
           , matches: []
         };
 

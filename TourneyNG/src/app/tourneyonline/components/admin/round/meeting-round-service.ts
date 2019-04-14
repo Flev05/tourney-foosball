@@ -41,7 +41,7 @@ export class MeetingRoundService extends MeetingService {
             let m: Meeting = JSON.parse(mdb.json);
             m.id = mdb.id;
             m.country = mdb.country;
-            if( m.direction == Direction.OneWay ) {
+            if( round.direction == Direction.OneWay ) {
                 round.onewayMeetings.push(m);
             } else {
                 round.roundtripMeetings.push(m);

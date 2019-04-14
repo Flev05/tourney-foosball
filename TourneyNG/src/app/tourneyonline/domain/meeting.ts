@@ -2,7 +2,7 @@ import { Team } from './team';
 import { Country } from './country';
 import { Match } from './match';
 import { PlayoffRule } from './playoff-rule';
-import { Direction, MeetingStatus } from './enumerations';
+import { MeetingStatus } from './enumerations';
 
 export interface Meeting
 {
@@ -14,7 +14,6 @@ export interface Meeting
     country?        : Country;
     team1?          : Team;
     team2?          : Team;
-    direction?      : Direction;
     day?            : number;
     status?         : MeetingStatus;
     points1?        : number;

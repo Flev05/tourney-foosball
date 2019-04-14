@@ -75,7 +75,7 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
         this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
 
-        if( this.selectedMeeting.direction == Direction.RoundTrip ) {
+        if( this.selectedRound.direction == Direction.RoundTrip ) {
             let index = this.selectedRound.onewayMeetings.indexOf(this.selectedMeeting);
             if( index > -1 ) {
                 let rtDateTime = this.selectedRound.onewayMeetings[index].datetime;

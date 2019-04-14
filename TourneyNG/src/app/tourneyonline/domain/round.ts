@@ -1,7 +1,7 @@
 import { Classification } from './classification';
 import { Team } from './team';
 import { Meeting } from './meeting';
-import { RoundType } from './enumerations';
+import { RoundType, Direction } from './enumerations';
 import { Matrix } from './matrix';
 
 export interface Round {
@@ -10,6 +10,7 @@ export interface Round {
     name: string;
     type: RoundType;
 
+    direction?: Direction;
     teams?:  Team[];
     onewayMeetings?: Meeting[];
     roundtripMeetings?: Meeting[];

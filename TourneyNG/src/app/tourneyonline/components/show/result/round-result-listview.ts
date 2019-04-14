@@ -91,7 +91,7 @@ export class RoundResultListView extends AbstractListView {
         this.selectedRound.roundtripMeetings = [];
         for( let mdb of this.mdbList ) {
             let m: Meeting = JSON.parse(mdb.json);
-            if( m.direction == Direction.OneWay ) {
+            if( this.selectedRound.direction == Direction.OneWay ) {
                 this.selectedRound.onewayMeetings.push(m);
             } else {
                 this.selectedRound.roundtripMeetings.push(m);

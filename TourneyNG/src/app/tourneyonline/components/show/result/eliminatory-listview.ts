@@ -9,7 +9,7 @@ import { MeetingDetailView } from './meeting-detailview';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { MeetingStatus, Direction } from 'app/tourneyonline/domain/enumerations';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
@@ -87,7 +87,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
             let row = this.prepareEliminationMeetingGui(e, 0, classificationMap);
             this.eliminatoryRows = this.eliminatoryRows.concat(row);
-            if(!this.selectedEliminatoryLevel.isOneway) {
+            if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
                 row = this.prepareEliminationMeetingGui(e, 1, classificationMap);
                 this.eliminatoryRows.push(row);
             }

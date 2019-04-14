@@ -373,7 +373,7 @@ export class LevelService extends AbstractEliminatoryListView {
             , name: lcb.label
             , level: lcb.value
             , isTopLevel: top == 0 ? true : false
-            , isOneway: true
+            , direction: Direction.OneWay
             , eliminatories: els
         };
 

@@ -75,7 +75,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
             this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
             this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
-            this.isOneway = this.selectedEliminatoryLevel.isOneway ? "true" : "false" ;
+            this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false" ;
             this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
         }
 
@@ -146,12 +146,12 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             for (let e of topElimLevel.eliminatories) {
                 this.eliminatoryRoundMap.set(e.id, e.round);
                 let abs = this.meetingService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
-                abs.subscribe(mdbs => this.addToMeetingMap(mdbs), e => this.onError(e));
+                abs.subscribe(mdbs => this.addToMeetingMap(topElimLevel, mdbs), e => this.onError(e));
             }
         }
     }
     
-    private addToMeetingMap(mdbs: MeetingDb[]): void {
+    private addToMeetingMap(el: EliminatoryLevel,  mdbs: MeetingDb[]): void {
         console.log("Entering addToMeetingMap(mdbs.length=" + mdbs.length + ")");
         if(mdbs.length == 0 ) {
             return;
@@ -172,7 +172,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 for(let mdb of meetingsDb) {
                     let m: Meeting = JSON.parse(mdb.json);
                     m.id = mdb.id;
-                    if( m.direction == Direction.OneWay ) {
+                    if( el.direction == Direction.OneWay ) {
                         onewayMeetings.push(m);
                     } else {
                         roundtripMeetings.push(m);
@@ -193,13 +193,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     onOnewayClick() {
         console.log("Entering onOnewayClick()");
-        this.selectedEliminatoryLevel.isOneway=true;
+        this.selectedEliminatoryLevel.direction=Direction.OneWay;
         this.onClickManageMeeting(true);
     }
 
     onRoundtripClick() {
         console.log("Entering onRoundtripClick()");
-        this.selectedEliminatoryLevel.isOneway=false;
+        this.selectedEliminatoryLevel.direction=Direction.RoundTrip;
         this.onClickManageMeeting(false);
     }
 
@@ -271,7 +271,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
 
         this.eliminatoryCols.push({ field: 'onewayDatetime', header: 'Andata' });
-        if(!this.selectedEliminatoryLevel.isOneway) {
+        if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
             this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
         this.eliminatoryLevelRows = [];
@@ -334,7 +334,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
         }
 
-        if(!this.selectedEliminatoryLevel.isOneway) {
+        if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
             this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
 

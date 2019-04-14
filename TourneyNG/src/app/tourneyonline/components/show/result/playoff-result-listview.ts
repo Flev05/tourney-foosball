@@ -94,7 +94,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
         this.selectedPlayoff.round.roundtripMeetings = [];
         for( let mdb of this.mdbList ) {
             let m: Meeting = JSON.parse(mdb.json);
-            if( m.direction == Direction.OneWay ) {
+            if( this.selectedPlayoff.round.direction == Direction.OneWay ) {
                 this.selectedPlayoff.round.onewayMeetings.push(m);
             } else {
                 this.selectedPlayoff.round.roundtripMeetings.push(m);

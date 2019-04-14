@@ -14,6 +14,7 @@ import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './eliminatory-manualdetailview.html',
@@ -67,7 +68,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.isOneway = this.selectedEliminatoryLevel.isOneway;
+        this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay;
         this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 

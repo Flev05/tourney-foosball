@@ -11,6 +11,7 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',
@@ -53,7 +54,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.isOneway = this.selectedEliminatoryLevel.isOneway;
+        this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay ? true : false;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.m1 = this.selectedEliminatory.round.onewayMeetings[0];

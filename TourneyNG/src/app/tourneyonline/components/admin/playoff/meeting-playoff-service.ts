@@ -21,7 +21,6 @@ export class MeetingPlayoffService extends MeetingService {
         ) 
     { 
         super( http, router );
-        
         console.log("Constructor of MeetingPlayoffService");
     }
 

@@ -1283,7 +1283,7 @@
 
         <div *ngIf="eliminatoryTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             
-            <div  class="ui-grid-row">
+            <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Squadre:
                 </div>
@@ -1304,7 +1304,6 @@
                 [value]="eliminatoryRows" 
                 [responsive]="true"
                 selectionMode="single" 
-                [(selection)]="selectedTourney.eliminatorySelectedRow"  
                 (onRowSelect)="onEliminatoryRowSelect($event)">
             
                 <ng-template pTemplate="header" let-columns>

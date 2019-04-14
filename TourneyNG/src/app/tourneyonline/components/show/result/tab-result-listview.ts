@@ -199,7 +199,7 @@ export class TabResultListView extends AbstractListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
 
-        this.levelService.onEliminatoryRowSelect();
+        this.levelService.onEliminatoryRowSelect(event);
         
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
 

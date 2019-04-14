@@ -35,7 +35,8 @@ export class TeamService {
     ];
     teamPool: Team[] = [];
     teamPoolVO: TeamVO[] = [];
-
+    isTeamsChanged: boolean;
+    
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }

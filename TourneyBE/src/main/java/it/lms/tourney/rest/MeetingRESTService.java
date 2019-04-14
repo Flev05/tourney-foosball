@@ -44,7 +44,7 @@ public class MeetingRESTService extends AbstractRESTService {
     public List<MeetingVO> loadByRoundId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("roundId") Integer roundId) {
 
-        logger.debug(logId() + "GET: loadByRoundId()");
+        logger.debug(logId() + "GET: loadByRoundId(" + roundId + ", " + roundId + ")");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByRoundId(tourneyId, roundId);
 
@@ -60,7 +60,7 @@ public class MeetingRESTService extends AbstractRESTService {
     public List<MeetingVO> loadByPlayoffId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("playoffId") Integer playoffId) {
 
-        logger.debug(logId() + "GET: loadByPlayoffId()");
+        logger.debug(logId() + "GET: loadByPlayoffId(" + tourneyId + ", " + playoffId + ")");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffId(tourneyId, playoffId);
 
@@ -76,7 +76,7 @@ public class MeetingRESTService extends AbstractRESTService {
     public List<MeetingVO> loadByEliminatoryIdId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("eliminatoryId") Integer eliminatoryId) {
 
-        logger.debug(logId() + "GET: loadByEliminatoryIdId()");
+        logger.debug(logId() + "GET: loadByEliminatoryIdId(" + tourneyId + ", " + eliminatoryId + ")");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByEliminatoryId(tourneyId, eliminatoryId);
 

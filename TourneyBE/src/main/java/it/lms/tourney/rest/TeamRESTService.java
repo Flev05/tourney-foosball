@@ -50,7 +50,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TeamVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: loadByClientId()");
+        logger.debug(logId() + "GET: loadByClientId(" + clientId + ")");
 
         List<Team> teamList = teamDao.findTeamsByClientId(clientId);
 

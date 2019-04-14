@@ -69,7 +69,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-
+        this.meetingService.selectedTourney = this.tourneyService.selectedTourney;
         this.tourneyService.prepareEliminatoriesComboBoxes();
  
         if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
@@ -164,8 +164,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         if(this.elHttpCounter == 0) {
             for(let key of this.eliminatoryRoundMap.keys()) {
                 let eid: number = +key;
-                let round = this.eliminatoryRoundMap.get(eid);
                 let meetingsDb: MeetingDb[] = this.meetingMap.get(eid);
+                console.log("meetingMap.get(" + key + ")=" );
+                console.log(meetingsDb);
                 let onewayMeetings: Array<Meeting> = new Array<Meeting>();
                 let roundtripMeetings: Array<Meeting> = new Array<Meeting>();
                 for(let mdb of meetingsDb) {
@@ -177,6 +178,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                         roundtripMeetings.push(m);
                     }
                 }
+
+                let round = this.eliminatoryRoundMap.get(eid);
                 round.onewayMeetings = this.sortMeetings(onewayMeetings)
                 round.roundtripMeetings = this.sortMeetings(roundtripMeetings)
             }
@@ -208,7 +211,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     protected newDummyTeam() : Team {
-        let dummy: Team = {id: this.tourneyService.getSequenceNumber(), teamName: ""};
+        let dummy: Team = {id: this.tourneyService.getSequenceNumber(), teamName: "", isDummy: true};
         return dummy;
     }
 

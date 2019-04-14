@@ -1,5 +1,4 @@
 import { Eliminatory } from "./eliminatory";
-import { Round } from "./round";
 
 export class EliminatoryLevel  {
     id: number;
@@ -9,5 +8,4 @@ export class EliminatoryLevel  {
     isOneway: boolean;
 
     eliminatories: Array<Eliminatory>;
-    standaloneRound?: Round;
 }

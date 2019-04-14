@@ -1,16 +1,25 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Aggiungi Squadre</span>
-        <span>Vista elenco per aggiungere le squadre al torneo</span>
+        <span class="feature-title">{{selectedTourney.tourneyName}}</span>
+        <span>Vista per la composizione delle squadre del torneo</span>
     </div>
 </div>
 
 <div class="content-section documentation">
 <p-accordion>
-    <p-accordionTab header="Introduzione">            
+    <p-accordionTab header="Istruzioni">            
         <p>
             Da questa vista potete aggiungere una o più squadre selezionandole da quelle disponibili.
             Se la squadra non esiste, la potete creare con il bottone Nuova Squadra
+        </p>
+        <p>
+            Attenzione! L'ordine delle squadre è rilevante, esse sono elencate secondo il criterio delle teste
+            di serie, in cui la prima squadra è la più forte, la seconda quella immediatamente dopo, l'ultima
+            la più debole.
+        </p>
+        <p>
+            Si può disabilitare tale assunzione con la check box: Ordinamento Casuale. Se spuntate la casella,
+            il programma considera tutte le squadre allo stesso livello e compone gli incontri in modo casuale.
         </p>
     </p-accordionTab>
 </p-accordion>
@@ -24,6 +33,16 @@
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
+    <div class="ui-grid-col-3" tooltipPosition="right"
+            pTooltip="Indicare se l'ordine delle squadre è rilevante o casuale">
+        <div class="ui-g radiobuttons">
+            <div class="ui-g-12">
+                <p-checkbox [(ngModel)]="selectedTourney.teamsWeightEnabled" binary="true" label="Ordinamento Casuale">
+                </p-checkbox>
+            </div>
+        </div>          
+    </div>
+
     <p-pickList [source]="avalilableTeams" [target]="targetTeams" 
             sourceHeader="Disponibili {{avalilableTeams.length}}" 
             targetHeader="Selezionati {{targetTeams.length}}" 
@@ -33,7 +52,8 @@
             [sourceStyle]="{'height':'400px'}" 
             [targetStyle]="{'height':'400px'}"
             (onMoveToTarget)="onMoveToTarget($event)"
-            (onMoveToSource)="onMoveToSource($event)">
+            (onMoveToSource)="onMoveToSource($event)"
+            (onTargetReorder)="onMoveToSource($event)">
         <ng-template let-t pTemplate="item">
             <div class="ui-helper-clearfix">
                 <div>{{t}}</div>

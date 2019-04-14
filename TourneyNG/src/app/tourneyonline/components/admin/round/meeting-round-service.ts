@@ -13,7 +13,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { Team } from 'app/tourneyonline/domain/team';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
-
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
@@ -22,7 +22,7 @@ export class MeetingRoundService extends MeetingService {
         , protected router: Router
         , protected dateFormatPipe: DateFormatPipe ) 
     { 
-        super( http, router );
+        super(  http, router );
         console.log("Constructor of MeetingRoundService");
     }
 

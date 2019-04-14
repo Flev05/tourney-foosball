@@ -97,7 +97,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.m1.country = this.eliminatoryFormGroup.get('country1').value;
 
         let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
-        observer.subscribe( n => this.saveMeetingNext(n, this.m1));
+        observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m1));
         
         if(!this.isOneway) {
             this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
@@ -109,16 +109,16 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             this.m2.country = this.eliminatoryFormGroup.get('country2').value;
 
             let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
-            observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
+            observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m2));    
         }
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
     }
     
-    private saveMeetingNext(n:  MeetingDb, m: Meeting): void {
+    private saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
         console.log("saveMeetingNext()");
-        console.log(n);
-        m.id = n.id;
+        console.log(mdb);
+        m.id = mdb.id;
     }
 
     goBack(): void {

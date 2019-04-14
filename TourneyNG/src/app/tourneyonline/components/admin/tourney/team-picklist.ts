@@ -52,20 +52,33 @@ export class TeamPickList extends AbstractListView {
             }
         }
     }
+    
+    onRandomTeamChange(event) {
+        console.log("Entering onRandomTeamChange()");
+        console.log(event);
+        if(event) {
+            this.selectedTourney.teamsWeightEnabled = true;
+        } else {
+            this.selectedTourney.teamsWeightEnabled = false;
+        }
+    }
 
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         this.returnLabel = "Salva e torna";
+        this.teamService.isTeamsChanged = true;
     }
 
     onMoveToSource(event) {
         console.log("Entering onMoveToSource()");
         this.returnLabel = "Salva e torna";
+        this.teamService.isTeamsChanged = true;
     }
  
     newTeam() {
         this.teamService.newTeam = true;
         this.returnLabel = "Salva e torna";
+        this.teamService.isTeamsChanged = true;
         
         this.router.navigate([TeamDetailView.redirect]);
     }
@@ -77,23 +90,10 @@ export class TeamPickList extends AbstractListView {
     }
 
     private alignTourneyTeams() {
-        let tempTeams : Team[] = [...this.selectedTourney.teams];
-        for( let t of tempTeams ) {
-            let tn = this.targetTeams.find( tt => tt == t.teamName );
-            if( tn == undefined ) {
-                let index = this.selectedTourney.teams.indexOf(t);
-                if( index > -1 ) {
-                    this.selectedTourney.teams.splice(index, 1);
-                }
-            }
-        }
-
+        this.selectedTourney.teams = [];
         for (let pn of this.targetTeams) {
-            let team : Team = this.selectedTourney.teams.find( t => t.teamName == pn );
-            if( team == undefined ) {
-                let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
-                this.selectedTourney.teams.push(t);
-            }
+            let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
+            this.selectedTourney.teams.push(t);
         }
     }
 

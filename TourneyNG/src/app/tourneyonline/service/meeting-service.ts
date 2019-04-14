@@ -15,6 +15,7 @@ import { Direction, MeetingStatus } from '../domain/enumerations';
 import { PlayoffRule } from '../domain/playoff-rule';
 import { Match } from '../domain/match';
 import { AbstractService } from '../components/common/abstract-service';
+import { TourneyService } from './tourney-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -60,7 +61,7 @@ export class MeetingService extends AbstractService {
 
     allDaysNo: number;
 
-    constructor(protected http: HttpClient, protected router: Router) 
+    constructor( protected http: HttpClient, protected router: Router) 
     { 
         super();
         console.log("Constructor of MeetingService");
@@ -194,12 +195,11 @@ export class MeetingService extends AbstractService {
  
     /** PUT: update the MeetingDb on the db server */
     updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
-        const id =  mdb.id;
         let url = updateMeetingUrl;
 
         return this.http.put(url, mdb, httpOptions).pipe(
-            tap(_ => this.log('updated MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb>('updateMeetingDb'))
+            tap(_ => this.log('updated updateMeetingMdb url=' + url)),
+            catchError(this.handleError<MeetingDb>('updateMeetingMdb'))
         );
     }
 

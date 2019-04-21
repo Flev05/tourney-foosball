@@ -26,7 +26,7 @@ export class MeetingPlayoffService extends MeetingService {
 
     createPlayoffMeeting(tourney: Tourney, playoff : Playoff ) : void {
         this.selectedTourney = tourney;
-        const subsbr = this.loadRoundMeeting(tourney.id, playoff.round.id);
+        const subsbr = this.loadPlayoffMeeting(tourney.id, playoff.round.id);
         subsbr.subscribe(meetings => this.playoffMeetingNext(meetings, playoff), e => this.onError(e));
     }
 
@@ -38,7 +38,7 @@ export class MeetingPlayoffService extends MeetingService {
             let m: Meeting = JSON.parse(mdb.json);
             m.id = mdb.id;
             m.country = mdb.country;
-            if( playoff.round.direction == Direction.OneWay ) {
+            if( m.direction == Direction.OneWay ) {
                 playoff.round.onewayMeetings.push(m);
             } else {
                 playoff.round.roundtripMeetings.push(m);

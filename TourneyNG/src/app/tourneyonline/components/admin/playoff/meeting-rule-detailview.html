@@ -1,7 +1,9 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Incontri playoff</span>
-        <span>Vista di dettaglio di un incontro di playoff</span>
+        <span class="feature-title">Vista di dettaglio Incontri playoff</span>
+        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+        <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
+        <h4><span>Regola: "{{selectedMeeting.ruleName}}"</span></h4>        
     </div>
 </div>
 
@@ -23,10 +25,6 @@
     </p-accordionTab>
 </p-accordion>
 </div>
-
-<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-<h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
-<h4><span>Regola: "{{selectedMeeting.ruleName}}"</span></h4>
 
 <form [formGroup]="meetingFormGroup">
     <div class="ui-dialog-buttonpane ui-helper-clearfix">

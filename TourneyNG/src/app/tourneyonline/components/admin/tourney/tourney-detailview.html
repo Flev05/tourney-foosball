@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Torneo</span>
-        <span>Vista di dettaglio torneo</span>
+        <span class="feature-title">Vista di dettaglio torneo</span>        
+        <h2>Torneo: {{selectedTourney.tourneyName}}</h2>
     </div>
 </div>
 
@@ -256,8 +256,6 @@
     </p-accordionTab>
 </p-accordion>
 </div>
-
-<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
  
 <p-tabView [activeIndex]="selectedTourney.selectedTabIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Generalità">
@@ -1288,7 +1286,7 @@
                     Squadre:
                 </div>
                 <div class="ui-grid-col-2" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di squadre iniziali delle eliminazioni dirette, anche tutte">
+                        pTooltip="Scegliere il numero di squadre con cui incominciare le eliminazioni dirette, anche tutte">
                     <p-dropdown id="teamsPlayoffId" 
                         [options]="eliminatoryTeamsCombobox" 
                         [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCombobox"  

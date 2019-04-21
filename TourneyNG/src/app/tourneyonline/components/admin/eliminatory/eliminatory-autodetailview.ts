@@ -30,7 +30,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
     selectedEliminatoryLevel: EliminatoryLevel;
     isTopLevel: boolean;
-    private isOneway: boolean;
+    isOneway: boolean;
 
     isStandalone: boolean;
     m1: Meeting;
@@ -54,7 +54,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay ? true : false;
+        this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.m1 = this.selectedEliminatory.round.onewayMeetings[0];

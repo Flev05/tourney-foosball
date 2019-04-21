@@ -172,7 +172,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 for(let mdb of meetingsDb) {
                     let m: Meeting = JSON.parse(mdb.json);
                     m.id = mdb.id;
-                    if( el.direction == Direction.OneWay ) {
+                    if( m.direction == Direction.OneWay ) {
                         onewayMeetings.push(m);
                     } else {
                         roundtripMeetings.push(m);

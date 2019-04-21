@@ -1,7 +1,8 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Incontri dei gironi di playoff</span>
-        <span>Incontri dei playoff del torneo</span>
+        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+        <h4><span>Girone Playoff: {{selectedPlayoff.round.name}}</span></h4>
+        <h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>
     </div>
 </div>
     
@@ -24,9 +25,6 @@
 </p-accordion>    
 </div>
 
-<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-<h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
-<h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>
 
 <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
 

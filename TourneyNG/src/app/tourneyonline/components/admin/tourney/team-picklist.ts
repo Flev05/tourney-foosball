@@ -8,6 +8,7 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { Router } from '@angular/router';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
+import { MeetingRoundService } from '../round/meeting-round-service';
 
 @Component({
     templateUrl: './team-picklist.html',
@@ -23,7 +24,8 @@ export class TeamPickList extends AbstractListView {
     constructor( protected tourneyService: TourneyService
         , public router: Router
         , protected location: Location
-        , private teamService: TeamService) 
+        , private teamService: TeamService
+        , private meetingRoundService: MeetingRoundService) 
     { 
         super("", tourneyService, router, location);
     }
@@ -95,6 +97,8 @@ export class TeamPickList extends AbstractListView {
             let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
             this.selectedTourney.teams.push(t);
         }
+        
+        this.meetingRoundService.saveEliminatoryMeetings(this.selectedTourney);
     }
 
     onError(n:any) {

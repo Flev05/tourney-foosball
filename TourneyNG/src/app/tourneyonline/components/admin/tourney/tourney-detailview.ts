@@ -27,7 +27,6 @@ import { Player } from 'app/tourneyonline/domain/player';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
-import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -159,7 +158,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.pointsGoldenGoalTieBreakWin = 2;
         this.selectedTourney.pointsGoldenGoalTieBreakDefeat = 1;
         this.selectedTourney.maxMatchesPerMeeting = 1;
-        this.selectedTourney.isAllMatches = "false";
+        this.selectedTourney.isAllMatches = "true";
         this.selectedTourney.playersPerTeam = 1;
         this.selectedTourney.phases = [PhaseType.R, PhaseType.P, PhaseType.E];
         this.selectedTourney.eliminatoryMode = EliminatoryMode.A;
@@ -168,7 +167,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isOnewayPlayoff = "true";
         this.selectedTourney.teamsWeightEnabled = true;
                 
-        this.selectedTourney.selectedEliminatoryTeamsCombobox = {label: "", value: 0};
+        this.selectedTourney.selectedEliminatoryTeamsCombobox = {label: "", value: -1};
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
         this.tourneyService.selectedTourney = this.selectedTourney;    
@@ -256,6 +255,10 @@ export class TourneyDetailView extends AbstractDetailView {
         return lastTabIndex;
     }
 
+    /**
+     * Aligns the global teams and players data to the corresponding teams and players in the
+     * selected trourney. The alignment is on the base of their names
+     */
     private alignTourney(): any {
         this.disciplineService.loadAllDisciplines().subscribe(t => {this.disciplines = t;}
             , (error) => this.onError(error)
@@ -381,7 +384,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.levelService.ngOnInit();
         this.eliminatoryCols = this.levelService.eliminatoryCols;
-        this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
+        if(this.selectedTourney.selectedEliminatoryTeamsCombobox.value >= 0 ) {
+            this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
+        }
         this.eliminatoryTeamsCombobox = this.levelService.eliminatoryTeamsCombobox;
     }
 
@@ -938,19 +943,7 @@ export class TourneyDetailView extends AbstractDetailView {
         if (this.tourneyService.containsPhase(PhaseType.E) && 
             (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= eliminatoryIndex) )
         {
-            this.selectedTourney.eliminatoryLevels = [...this.levelService.eliminatoryLevels];
-            for (let el of this.selectedTourney.eliminatoryLevels) {
-                for (let e of el.eliminatories) {
-                    for (let m of e.round.onewayMeetings) {
-                        let observer = this.meetingRoundService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
-                        observer.subscribe( mdb => this.saveEliminatoryMeetingNext(mdb, e, m));
-                    }
-                    for (let m of e.round.roundtripMeetings) {
-                        let observer = this.meetingRoundService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
-                        observer.subscribe( mdb => this.saveEliminatoryMeetingNext(mdb, e, m));
-                    }
-                }
-            }
+            this.meetingRoundService.saveEliminatoryMeetings(this.selectedTourney);
         }
     }
 
@@ -972,6 +965,9 @@ export class TourneyDetailView extends AbstractDetailView {
      * Clears tourney local meetings array before create che JSON string to save on the Back End
      */
     private clearTourneyMeetings() {
+        if(!this.selectedTourney.saveButtonEnabled) {
+            return;
+        }
         for (let r of this.selectedTourney.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
@@ -986,13 +982,6 @@ export class TourneyDetailView extends AbstractDetailView {
                 e.round.roundtripMeetings = [];
             }
         }
-    }
-
-    private saveEliminatoryMeetingNext(mdb:  MeetingDb, e: Eliminatory, m: Meeting): void {
-        console.log("saveMeetingNext()");
-        console.log(mdb);
-        m.id = mdb.id;
-        e.id = mdb.eliminatoryId;
     }
 
     private saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {

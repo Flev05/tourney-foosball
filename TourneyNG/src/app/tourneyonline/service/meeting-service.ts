@@ -322,6 +322,7 @@ export class MeetingService extends AbstractService {
         let m : Meeting = {
             id: null,
             name: name,
+            direction: d,
             datetime: this.selectedTourney.datetime,
             address:  this.selectedTourney.address,
             country:  this.selectedTourney.country,
@@ -343,4 +344,6 @@ export class MeetingService extends AbstractService {
     protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
         return "";
     }
+
+    
 }

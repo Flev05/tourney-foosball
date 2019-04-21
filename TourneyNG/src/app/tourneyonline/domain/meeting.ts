@@ -2,12 +2,13 @@ import { Team } from './team';
 import { Country } from './country';
 import { Match } from './match';
 import { PlayoffRule } from './playoff-rule';
-import { MeetingStatus } from './enumerations';
+import { MeetingStatus, Direction } from './enumerations';
 
 export interface Meeting
 {
     id?             : number;
     name?           : string;
+    direction?      : Direction
     datetime?       : Date;
     dateAndTime?    : any;
     address?        : string;

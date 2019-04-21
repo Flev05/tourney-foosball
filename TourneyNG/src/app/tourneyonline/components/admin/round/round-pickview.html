@@ -1,7 +1,8 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Gestione girone</span>
-        <span>Modificare un girone</span>
+        <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
+        <h4><span>Girone: {{selectedRound.name}}</span></h4>        
     </div>
 </div>
 
@@ -64,9 +65,6 @@
     </p-accordionTab>
 </p-accordion>
 </div>
-
-<h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
-<h4><span>Girone: {{selectedRound.name}}</span></h4>
 
 <form [formGroup]="roundFormGroup">
     <div class="ui-dialog-buttonpane ui-helper-clearfix">

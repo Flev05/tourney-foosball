@@ -1,7 +1,9 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Gestione Incontri</span>
-        <span>Vista di dettaglio di un incontro</span>
+        <span class="feature-title">Vista di dettaglio di incontri di un girone</span>
+        <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+        <h3><span>Girone: "{{selectedRound.name}}"</span></h3>
+        <h4><span>Incontro: "{{selectedMeeting.name}}"</span></h4>        
     </div>
 </div>
 
@@ -20,9 +22,6 @@
 </p-accordion>
 </div>
 
-<h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-<h3><span>Girone: "{{selectedRound.name}}"</span></h3>
-<h4><span>Incontro: "{{selectedMeeting.name}}"</span></h4>
 
 <form [formGroup]="meetingFormGroup">
 

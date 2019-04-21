@@ -28,7 +28,7 @@ export class MeetingListView extends AbstractListView {
 
     constructor(
         protected tourneyService: TourneyService,
-        public meetingService: MeetingRoundService,
+        public meetingRoundService: MeetingRoundService,
         protected router: Router,
         protected location: Location
     ) {
@@ -56,13 +56,13 @@ export class MeetingListView extends AbstractListView {
             this.isRoundTrip = false;
         }
 
-        this.meetingService.createRoundMeeting(this.selectedTourney, this.selectedRound);
+        this.meetingRoundService.createRoundMeeting(this.selectedTourney, this.selectedRound);
     }
      
     onRowSelect(event) {
         console.log(event.data);
 
-        this.meetingService.selectedMeeting = this.selectedRow;
+        this.meetingRoundService.selectedMeeting = this.selectedRow;
 
         this.gotoDetailView();
     }

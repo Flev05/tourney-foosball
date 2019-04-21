@@ -208,11 +208,12 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private prepareStandaloneTopLevel(topLevel : EliminatoryLevel): void {
         console.log("Entering prepareStandaloneTopLevel()");
-
-        if( this.teamService.isTeamsChanged ) {
-            this.teamService.isTeamsChanged = false;
-            this.removeLevel(topLevel);
+        if( !this.teamService.isTeamsChanged ) {
+            return;
         }
+
+        this.teamService.isTeamsChanged = false;
+        this.removeLevel(topLevel);
 
         let tmpTeams: Array<Team> = this.sortAndPad(this.selectedTourney.teams);
 

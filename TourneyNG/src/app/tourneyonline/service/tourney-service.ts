@@ -134,9 +134,9 @@ export class TourneyService extends AbstractService {
 
         let max: number = this.selectedTourney.teams.length;
     
-        let all = {label: "Tutte", value: max};
+        // let all = {label: "Tutte", value: max};
         this.eliminatoryTeamsCombobox = [];
-        this.eliminatoryTeamsCombobox.push(all);
+        // this.eliminatoryTeamsCombobox.push(all);
         for(let i=min; i<=max; i++) {
             this.eliminatoryTeamsCombobox.push({label: "" + i, value: i});
         }

@@ -39,7 +39,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
     eliminatories: Eliminatory[];  
 
-    private isOneway: boolean;
+    isOneway: boolean;
     isPlayoff: boolean;
     isTopLevel: boolean;
     isStandalone: boolean;
@@ -48,6 +48,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
     m1: Meeting ;
     m2: Meeting ;
+    position1: Combobox;
+    position2: Combobox;
 
     constructor(
         private fb: FormBuilder,
@@ -116,10 +118,10 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.isDoubleSelection = false;
 
-        let p1 = this.selectedEliminatory.rule1.fromRound.position.value > 0 ?
+        this.position1 = this.selectedEliminatory.rule1.fromRound.position.value > 0 ?
             this.selectedEliminatory.rule1.fromRound.position : this.selectedEliminatory.rule1.fromPlayoff.position;
 
-        let p2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
+        this.position2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
             this.selectedEliminatory.rule2.fromRound.position : this.selectedEliminatory.rule2.fromPlayoff.position;
 
         this.eliminatoryFormGroup = this.fb.group({
@@ -136,11 +138,11 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             'rounds':  new FormControl(this.rounds),
             'playoffs':  new FormControl(this.playoffs),
 
-            'position1':  new FormControl(p1),
+            'position1':  new FormControl(this.position1),
             'round1':  new FormControl(this.selectedEliminatory.rule1.fromRound.round),
             'playoff1':  new FormControl(this.selectedEliminatory.rule1.fromPlayoff.round),
 
-            'position2':  new FormControl(p2),            
+            'position2':  new FormControl(this.position2),            
             'round2':  new FormControl(this.selectedEliminatory.rule2.fromRound.round),
             'playoff2':  new FormControl(this.selectedEliminatory.rule2.fromPlayoff.round),            
 

@@ -1,7 +1,9 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Incontri dei gironi</span>
-        <span>Incontri di gironi e playoff del torneo</span>
+        <span class="feature-title">Incontri di gironi e playoff</span>
+        <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+        <h4><span>Girone: {{selectedRound.name}}</span></h4>
+        <h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>        
     </div>
 </div>
     
@@ -21,10 +23,6 @@
     </p-accordionTab>
 </p-accordion>    
 </div>
-
-<h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-<h4><span>Girone: {{selectedRound.name}}</span></h4>
-<h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>
 
 <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
 

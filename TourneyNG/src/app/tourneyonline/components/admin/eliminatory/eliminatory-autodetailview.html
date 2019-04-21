@@ -1,6 +1,9 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Configurazione Eliminazione diretta automatica</span>
+        <span class="feature-title">Eliminazioni Dirette</span>
+        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+        <h4><span>Livello: {{selectedEliminatoryLevel.name}}</span></h4>
+        <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
     </div>
 </div>
 
@@ -32,10 +35,6 @@
 </p-accordion>
 </div>
 
-<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-<h4><span>Livello: {{selectedEliminatoryLevel.name}}</span></h4>
-<h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
-    
 <form [formGroup]="eliminatoryFormGroup" >
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
@@ -49,7 +48,7 @@
                     {{m1.team1.teamName}}
                 </div>
             </div>
-            Vs         
+            <h4>Vs</h4>   
             <div class="ui-grid-row">
                 <div class="ui-grid-col-4">
                     {{m1.team2.teamName}}
@@ -63,7 +62,7 @@
                     {{selectedEliminatory.rule1.fromRound.position.label}} - {{selectedEliminatory.rule1.fromRound.round.label}}
                 </div>
             </div>
-            Vs         
+            <h4>Vs</h4>   
             <div class="ui-grid-row">
                 <div class="ui-grid-col-4">
                     {{selectedEliminatory.rule2.fromRound.position.label}} - {{selectedEliminatory.rule2.fromRound.round.label}}
@@ -124,9 +123,9 @@
             </div>
         </div>                  
 
-        <h4 *ngIf="!selectedEliminatoryLevel.isOneway" >Ritorno</h4>
+        <h4 *ngIf="!isOneway" >Ritorno</h4>
 
-        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+        <div *ngIf="!isOneway" class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Data e ora:
             </div>
@@ -136,7 +135,7 @@
             </div>
         </div>
             
-        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+        <div *ngIf="!isOneway" class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Via:
             </div>
@@ -154,7 +153,7 @@
             </div>
         </div>
 
-        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+        <div *ngIf="!isOneway" class="ui-grid-row">
             <div class="ui-grid-col-2">
                 <label for="country-id">Comune:</label>
             </div>
@@ -167,7 +166,7 @@
             </div>
         </div>
 
-        <div *ngIf="!selectedEliminatoryLevel.isOneway" class="ui-grid-row">
+        <div *ngIf="!isOneway" class="ui-grid-row">
             <div class="ui-grid-col-2">
                 Indirizzo:
             </div>

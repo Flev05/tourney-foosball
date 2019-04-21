@@ -13,7 +13,7 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { Team } from 'app/tourneyonline/domain/team';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
-import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
@@ -41,7 +41,7 @@ export class MeetingRoundService extends MeetingService {
             let m: Meeting = JSON.parse(mdb.json);
             m.id = mdb.id;
             m.country = mdb.country;
-            if( round.direction == Direction.OneWay ) {
+            if( m.direction == Direction.OneWay ) {
                 round.onewayMeetings.push(m);
             } else {
                 round.roundtripMeetings.push(m);
@@ -316,4 +316,25 @@ export class MeetingRoundService extends MeetingService {
         this.shiftRoundtripDay(this.roundtripDaysNo);
     }
 
+    saveEliminatoryMeetings(st : Tourney) {
+        for (let el of st.eliminatoryLevels) {
+            for (let e of el.eliminatories) {
+                for (let m of e.round.onewayMeetings) {
+                    let observer = this.saveEliminatoryMeetingDb(m, st.id, e.id);
+                    observer.subscribe(mdb => this.saveEliminatoryMeetingNext(mdb, e, m));
+                }
+                for (let m of e.round.roundtripMeetings) {
+                    let observer = this.saveEliminatoryMeetingDb(m, st.id, e.id);
+                    observer.subscribe(mdb => this.saveEliminatoryMeetingNext(mdb, e, m));
+                }
+            }
+        }
+    }
+
+    private saveEliminatoryMeetingNext(mdb:  MeetingDb, e: Eliminatory, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(mdb);
+        m.id = mdb.id;
+        e.id = mdb.eliminatoryId;
+    }
 }

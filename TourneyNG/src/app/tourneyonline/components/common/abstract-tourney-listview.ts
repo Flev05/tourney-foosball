@@ -44,9 +44,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         ];
 
         this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
-
         this.playerService.loadAllPlayers( () => this.onLoadPlayersComplete() );
-
         this.teamService.loadAllTeams( () => this.onLoadTeamsComplete() );
     }
 

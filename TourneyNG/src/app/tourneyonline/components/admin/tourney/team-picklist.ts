@@ -93,12 +93,13 @@ export class TeamPickList extends AbstractListView {
 
     private alignTourneyTeams() {
         this.selectedTourney.teams = [];
-        for (let pn of this.targetTeams) {
-            let t: Team = this.teamService.teamPool.find(x => x.teamName == pn);
+        for (let tn of this.targetTeams) {
+            let t: Team = this.teamService.teamPool.find(x => x.teamName == tn);
             this.selectedTourney.teams.push(t);
+        }       
+        if( this.tourneyService.isStandalone ) {
+            this.meetingRoundService.saveEliminatoryMeetings(this.selectedTourney);
         }
-        
-        this.meetingRoundService.saveEliminatoryMeetings(this.selectedTourney);
     }
 
     onError(n:any) {

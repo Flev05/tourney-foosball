@@ -192,7 +192,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.roundTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 3 ? true : false;
         if(this.containsRound() && this.roundTabEnabled ) {
-            this.prepareRounds();
+            this.prepareRoundsCombobox();
         }
 
         this.playoffTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 4 ? true : false; 
@@ -322,8 +322,8 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
-    private prepareRounds(): void {
-        console.log("Entering prepareRounds()");
+    private prepareRoundsCombobox(): void {
+        console.log("Entering prepareRoundsCombobox()");
 
         this.team4roundsCombobox = [];
 
@@ -453,52 +453,26 @@ export class TourneyDetailView extends AbstractDetailView {
     onRoundNumChange(cb: Combobox) {
         console.log(cb);
 
-        let popup = 'ATTENZIONE! Se si cambia il numero di gironi si perdono tutte le impostazioni preesistenti. Confermi?';
-
-        if(!confirm(popup)) {
-            return;
-        } 
+        if(this.selectedTourney.rounds.length > 0 ) {
+            let popup = 'ATTENZIONE! Se si cambia il numero di gironi si perdono tutte le impostazioni preesistenti. Confermi?';
+            if(!confirm(popup)) {
+                return;
+            } 
+        }
 
         this.selectedTourney.selectedRoundsNumCB = cb;
 
         this.resetRoundMeetings(this.selectedTourney);
        
-        let T = this.selectedTourney.teams.length;
+        let T: number = this.selectedTourney.teams.length;
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
 
         let teamsPerRound: number = Math.floor(T/R);
         let teamsModRound: number = T % R;
 
-        let randomTeams: Team[] = [];
-
-        for(let t=0; t<T; t++) {
-            let team: Team = this.selectedTourney.teams[t];
-            randomTeams.push(team);
-        }
-
-        randomTeams.sort((t1, t2) =>{
-            let rand = Math.random();
-            if(rand < 0.5) {
-                return 1;
-            }
-            return -1;
-        });
-
-        for(let i=0; i<R; i++) {
-            let r: Round = this.prepareRound(i, teamsPerRound, randomTeams);
-            this.selectedTourney.rounds.push(r);
-        }
-
-        for(let r=0; r<teamsModRound; r++) {
-            let start = R * teamsPerRound;
-            let teams: Team[] = this.cutoffTeams(randomTeams, start, 1);
-            for(let t of teams) {
-                let round: Round = this.selectedTourney.rounds[r];
-                round.teams.push(t);
-                let c: Classification = this.tourneyService.newClassification(t, 0);
-                round.classification.push(c);
-            }
-        }
+        let randomTeams: Team[] = this.prepareTourneyTeams(T);
+        
+        this.prepareTourneyRounds(R, teamsPerRound, randomTeams, teamsModRound);
 
         for( let r of this.selectedTourney.rounds ) {
             this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
@@ -514,6 +488,78 @@ export class TourneyDetailView extends AbstractDetailView {
         this.saveRoundMeetings();
     }
 
+    /**
+     * Prepares the rounds of the selected tourney in function of the received parameters.
+     * 
+     * The received team list is spawn on the number of received rounds so each round contains
+     * at most the same number of teams.
+     */
+    private prepareTourneyRounds(roundCount: number, teamsPerRound: number, randomTeams: Team[], teamsModRound: number) {
+        this.selectedTourney.rounds = [];
+        for (let i = 0; i < roundCount; i++) {
+            let r: Round = this.prepareRound(i, teamsPerRound, randomTeams);
+            this.selectedTourney.rounds.push(r);
+        }
+        for (let r = 0; r < teamsModRound; r++) {
+            let start = roundCount * teamsPerRound;
+            let teams: Team[] = this.cutoffTeams(randomTeams, start, 1);
+            for (let t of teams) {
+                let round: Round = this.selectedTourney.rounds[r];
+                round.teams.push(t);
+                let c: Classification = this.tourneyService.newClassification(t, 0);
+                round.classification.push(c);
+            }
+        }
+    }
+
+    /**
+     * Prepares the list of toruney teams in function of team weight check box.
+     * If enabled, the list order is rilevant and the first team is the stronger while
+     * the last is the weaker.
+     * If not enabled, all the teams have the same weight and the method will compute 
+     * a new random list of the original list of teams.
+     * 
+     * @param T the number of teams to prepare
+     * @returns the list of team list
+     */
+    private prepareTourneyTeams(T : number) : Team[]  {
+        let randomTeams: Team[] = [];
+        
+        if( this.selectedTourney.teamsWeightEnabled ) {
+            let f = 0;
+            let l = T - 1;
+
+            while( f <= l ) {
+                let t1 = this.selectedTourney.teams[f];
+                let t2 = this.selectedTourney.teams[l];
+                if( f == l ) {
+                    randomTeams.push(t1);
+                    break;
+                }
+
+                randomTeams.push(t1);
+                randomTeams.push(t2);
+
+                f++;
+                l--;
+            }            
+        } else {
+            for(let t=0; t<T; t++) {
+                let team: Team = this.selectedTourney.teams[t];
+                randomTeams.push(team);
+            }
+            randomTeams.sort((t1, t2) =>{
+                let rand = Math.random();
+                if(rand < 0.5) {
+                    return 1;
+                }
+                return -1;
+            });
+        }
+
+        return randomTeams;
+    }
+
     private resetRoundMeetings(tourney: Tourney) {
         this.meetingRoundService.deleteAllMeetingsByRoundId(tourney.id);
 
@@ -523,7 +569,6 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         tourney.rounds = [];
-        this.roundRows = tourney.rounds;
     }
     
     private saveRoundMeetings() {
@@ -808,7 +853,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log(event);
         this.updatePhases(event, PhaseType.R);
         if(event) {
-            this.prepareRounds();
+            this.prepareRoundsCombobox();
         }
     }
 

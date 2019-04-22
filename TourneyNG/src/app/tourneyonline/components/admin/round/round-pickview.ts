@@ -68,14 +68,17 @@ export class RoundPickList extends AbstractDetailView {
         this.selectedRound = this.tourneyService.selectedRound;
 
         this.targetTeams = [];
-        for(let t of this.selectedRound.teams) {
-            this.targetTeams.push(t.teamName);
+
+        let roundTmp = [...this.selectedRound.teams];
+        for(let rt of roundTmp) {
+            let team = this.selectedTourney.teams.find( t => t.teamName == rt.teamName );
+            if( team != undefined ) {
+                this.targetTeams.push(rt.teamName);
+            }
         }
 
         this.availableTeams = [];
-        for(let k=0; k<this.selectedTourney.teams.length; k++ ) {
-            let team = this.selectedTourney.teams[k];
-        
+        for(let team of this.selectedTourney.teams ) {
             let found: boolean = false;
             for(let i=0; i<this.selectedTourney.rounds.length; i++ ) {
                 let t = this.selectedTourney.rounds[i];
@@ -108,12 +111,22 @@ export class RoundPickList extends AbstractDetailView {
  
     goMeeting() {        
         if( this.isTeamsChanged ) {
-            this.makeTeamList();
             this.isTeamsChanged = false;
+            this.makeTeamList();
             this.meetingRoundService.remakeRoundMeeting(this.selectedTourney, this.selectedRound);
         }
 
         this.router.navigate([RoundPickList.meetingListviewRedirect]);
+    }
+    
+    goBack(): void {
+        if( this.isTeamsChanged ) {
+            this.isTeamsChanged = false;
+            this.makeTeamList();
+            this.meetingRoundService.remakeRoundMeeting(this.selectedTourney, this.selectedRound);
+        }
+
+        super.goBack();
     }
  
     private makeTeamList() {
@@ -125,16 +138,6 @@ export class RoundPickList extends AbstractDetailView {
                 this.selectedRound.teams.push(foundTeam);
             }
         }
-    }
-
-    goBack(): void {
-        if( this.isTeamsChanged ) {
-            this.makeTeamList();
-            this.isTeamsChanged = false;
-            this.meetingRoundService.remakeRoundMeeting(this.selectedTourney, this.selectedRound);
-        }
-
-        super.goBack();
     }
 
     onMoveToTarget(event) {

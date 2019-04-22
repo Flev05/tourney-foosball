@@ -41,9 +41,8 @@ export class MeetingRoundService extends MeetingService {
     }
 
     protected next(n:any) {
-        console.error(n);
+        console.debug(n);
     }
-
 
     private createAndSaveRoundMeeting(tourney: Tourney, round: Round): void {
         this.createRoundMeeting(tourney, round);

@@ -90,6 +90,7 @@
                 dragdropScope="rounds" 
                 (onMoveToTarget)="onMoveToTarget($event)"
                 (onMoveToSource)="onMoveToSource($event)"
+                (onTargetReorder)="onTargetReorder($event)"
                 [sourceStyle]="{'height':'300px'}" 
                 [targetStyle]="{'height':'300px'}">
             <ng-template let-team pTemplate="item">

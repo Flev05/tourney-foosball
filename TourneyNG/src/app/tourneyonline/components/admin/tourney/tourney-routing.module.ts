@@ -4,7 +4,7 @@ import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { PlayerListView } from './player-listview';
 import { TeamPickList } from './team-picklist';
-import { RoundDetailView } from '../round/round-pickview';
+import { RoundPickList } from '../round/round-pickview';
 import { RuleListView } from '../playoff/rule-listview';
 import { PlayerDetailView } from '../player/player-detailview';
 import { PlayerPickList } from './player-picklist';
@@ -20,7 +20,7 @@ import { NewTourneyDetailView } from './new-tourney-detailview';
 			{ path: 'dv/team',		component: PlayerListView },
 			{ path: 'dv/addteam',	component: TeamPickList },	
 			{ path: 'dv/updateteam',component: TeamDetailView },
-			{ path: 'dv/round',		component: RoundDetailView },	
+			{ path: 'dv/round',		component: RoundPickList },	
 			{ path: 'dv/playoff',	component: RuleListView },	
 			{ path: 'dv/playerdv',  component: PlayerDetailView },
 			{ path: 'dv/playerpl',  component: PlayerPickList },

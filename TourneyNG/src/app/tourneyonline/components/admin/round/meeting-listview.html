@@ -3,7 +3,7 @@
         <span class="feature-title">Incontri di gironi e playoff</span>
         <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
         <h4><span>Girone: {{selectedRound.name}}</span></h4>
-        <h4><span>Incontri: {{meetingService.meetingsNoMsg}}</span></h4>        
+        <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>        
     </div>
 </div>
     
@@ -35,7 +35,7 @@
         (onChange)="onChangeTab($event)">
     <p-tabPanel header="Andata">
         <p-table [columns]="cols"
-            [value]="meetingService.onewayDays" 
+            [value]="meetingRoundService.onewayDays" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -46,13 +46,13 @@
             <ng-template pTemplate="caption">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingService.goOnewayLeft()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingRoundService.goOnewayLeft()"></button>
                     </div>
                     <div class="ui-grid-col-3">
-                        Giornata {{meetingService.onewayDaysNo}} di {{meetingService.allDaysNo}}
+                        Giornata {{meetingRoundService.onewayDaysNo}} di {{meetingRoundService.allDaysNo}}
                     </div>
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingService.goOnewayRight()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingRoundService.goOnewayRight()"></button>
                     </div>
                 </div>
             </ng-template>
@@ -81,7 +81,7 @@
     <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
         <p-table 
             [columns]="cols"
-            [value]="meetingService.roundtripDays" 
+            [value]="meetingRoundService.roundtripDays" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -92,13 +92,13 @@
             <ng-template pTemplate="caption">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingService.goRoundtripLeft()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingRoundService.goRoundtripLeft()"></button>
                     </div>
                     <div class="ui-grid-col-3">
-                        Giornata {{meetingService.roundtripDaysNo}} di {{meetingService.allDaysNo}}
+                        Giornata {{meetingRoundService.roundtripDaysNo}} di {{meetingRoundService.allDaysNo}}
                     </div>
                     <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingService.goRoundtripRight()"></button>
+                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingRoundService.goRoundtripRight()"></button>
                     </div>
                 </div>
             </ng-template>

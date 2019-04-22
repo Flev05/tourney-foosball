@@ -30,12 +30,13 @@ const insertMeetingUrl = meetingUrl + '/insert';
 const updateMeetingUrl = meetingUrl + '/update';
 
 const deleteMeetingUrl                  = meetingUrl + '/delete';
-const deleteMeetingByRoundIdUrl         = meetingUrl + "/deleteByRoundId"
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deleteByPlayoffId"
 const deleteMeetingByEliminatoryIdUrl   = meetingUrl + "/deleteByEliminatoryId"
 
 @Injectable()
 export class MeetingService extends AbstractService {
+    protected deleteAllMeetingsByRoundIdUrl: string = meetingUrl + "/deleteAllMeetingsByRoundId"
+    protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
 
     static deleteMeetingUrl: string = deleteMeetingUrl;
 
@@ -222,8 +223,8 @@ export class MeetingService extends AbstractService {
         obs.subscribe();
     }
 
-    deleteMeetingByRoundId (roundId: number ): void {
-        const url = deleteMeetingByRoundIdUrl + "/" + roundId;
+    deleteAllMeetingsByRoundId (roundId: number ): void {
+        const url = this.deleteAllMeetingsByRoundIdUrl + "/" + roundId;
 
         let obs = this.http.delete<Meeting>(url).pipe(
             tap(_ => this.log('deleting MeetingDb: ' + roundId)),
@@ -255,7 +256,7 @@ export class MeetingService extends AbstractService {
         obs.subscribe();
     }
 
-    private handleError<T> (operation = 'operation', result?: T) {
+    protected handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
       
           // TODO: send the error to remote logging infrastructure
@@ -270,11 +271,10 @@ export class MeetingService extends AbstractService {
       }
       
     /** Log a HeroService message with the MessageService */
-    private log(message: string) {
+    protected log(message: string) {
         console.log('TourneyService: ' + message);
     }
 
-    
     protected sortMeetings(meetings: any[]): any[] {
         return meetings.sort((m1, m2) => {
             if (m1.dateAndTime > m2.dateAndTime) {

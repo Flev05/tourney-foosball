@@ -164,14 +164,34 @@ public class MeetingRESTService extends AbstractRESTService {
      * map of fields, and related errors.
      */
     @DELETE
-    @Path("/deleteByRoundId/{tourneyId:[0-9][0-9]*}")
+    @Path("/deleteAllMeetingsByRoundId/{tourneyId:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteByRoundId(@PathParam("tourneyId") Integer tourneyId) {
+    public Response deleteAllMeetingsByRoundId(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[DELETE: deleteByRoundId(" + tourneyId + ")]");
+        logger.debug(logId() + "[DELETE: deleteAllMeetingsByRoundId(" + tourneyId + ")]");
 
-        meetingDao.deleteByRoundId(tourneyId);
+        meetingDao.deleteAllMeetingsByRoundId(tourneyId);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
+    /**
+     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * map of fields, and related errors.
+     */
+    @DELETE
+    @Path("/deleteMeetingsByRoundId/{tourneyId:[0-9][0-9]*}/{roundId:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteMeetingsByRoundId(@PathParam("tourneyId") Integer tourneyId,
+            @PathParam("roundId") Integer roundId) {
+
+        logger.debug(logId() + "[DELETE: deleteMeetingsByRoundId(" + tourneyId + ", " + roundId + ")]");
+
+        meetingDao.deleteMeetingsByRoundId(tourneyId, roundId);
 
         Response.ResponseBuilder builder = Response.ok();
 

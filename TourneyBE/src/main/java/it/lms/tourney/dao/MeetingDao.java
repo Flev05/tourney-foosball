@@ -165,14 +165,28 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
         super.deletePo(m);
     }
 
-    public void deleteByRoundId(Integer tourneyId) {
+    public void deleteAllMeetingsByRoundId(Integer tourneyId) {
 
         Query query = getEm()
                 .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId is not null");
 
         int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
+    }
+
+    public void deleteMeetingsByRoundId(Integer tourneyId, Integer roundId) {
+
+        Query query = getEm()
+                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId = :roundId");
+
+        query = query.setParameter("tourneyId", tourneyId);
+        query = query.setParameter("roundId", roundId);
+
+        int deletedCount = query.executeUpdate();
+
+        logger.debug(logId() + "[Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId + " and roundId="
+                + roundId + "]");
     }
 
     public void deleteByPlayoffId(Integer tourneyId) {

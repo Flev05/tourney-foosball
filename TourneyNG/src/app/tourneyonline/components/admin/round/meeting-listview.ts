@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Message } from 'app/components/common/api';
 
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { AbstractListView } from '../../common/abstract-listview';
@@ -56,7 +55,7 @@ export class MeetingListView extends AbstractListView {
             this.isRoundTrip = false;
         }
 
-        this.meetingRoundService.createRoundMeeting(this.selectedTourney, this.selectedRound);
+        // this.meetingRoundService.createRoundMeeting(this.selectedTourney, this.selectedRound);
     }
      
     onRowSelect(event) {

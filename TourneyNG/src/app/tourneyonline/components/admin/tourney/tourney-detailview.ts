@@ -27,6 +27,7 @@ import { Player } from 'app/tourneyonline/domain/player';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -452,9 +453,15 @@ export class TourneyDetailView extends AbstractDetailView {
     onRoundNumChange(cb: Combobox) {
         console.log(cb);
 
+        let popup = 'ATTENZIONE! Se si cambia il numero di gironi si perdono tutte le impostazioni preesistenti. Confermi?';
+
+        if(!confirm(popup)) {
+            return;
+        } 
+
         this.selectedTourney.selectedRoundsNumCB = cb;
 
-        this.resetRoundMeetings();
+        this.resetRoundMeetings(this.selectedTourney);
        
         let T = this.selectedTourney.teams.length;
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
@@ -481,6 +488,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let r: Round = this.prepareRound(i, teamsPerRound, randomTeams);
             this.selectedTourney.rounds.push(r);
         }
+
         for(let r=0; r<teamsModRound; r++) {
             let start = R * teamsPerRound;
             let teams: Team[] = this.cutoffTeams(randomTeams, start, 1);
@@ -492,24 +500,36 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
+        for( let r of this.selectedTourney.rounds ) {
+            this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
+        }
+
         this.roundRows = this.selectedTourney.rounds;
 
         this.selectedTourney.selectedPlayoffsCB       = {label: "", value: 0};
         this.selectedTourney.selectedTeams4PlayoffsCB = {label: "", value: 0};
 
         this.selectedTourney.selectedEliminatoryTeamsCombobox = {label: "", value: 0};
-    }
-    
-    private resetRoundMeetings() {
-        this.meetingRoundService.deleteMeetingByRoundId(this.selectedTourney.id);
 
-        for (let r of this.selectedTourney.rounds) {
+        this.saveRoundMeetings();
+    }
+
+    private resetRoundMeetings(tourney: Tourney) {
+        this.meetingRoundService.deleteAllMeetingsByRoundId(tourney.id);
+
+        for (let r of tourney.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
         }
 
-        this.selectedTourney.rounds = [];
-        this.roundRows = this.selectedTourney.rounds;
+        tourney.rounds = [];
+        this.roundRows = tourney.rounds;
+    }
+    
+    private saveRoundMeetings() {
+        for (let r of this.selectedTourney.rounds) {
+            this.meetingRoundService.saveRoundMeeting(r);
+        }
     }
 
     private prepareRound(i: number, teamsPerRound: number, randomTeams: Team[]): Round {
@@ -528,8 +548,6 @@ export class TourneyDetailView extends AbstractDetailView {
             classification: classifications,
             matrix: null,
         };
-
-        this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
         
         return r;
     }
@@ -912,16 +930,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.onSaveTourneyError = false;
         
         if (this.tourneyService.containsPhase(PhaseType.R) && (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex > 2) ) {
-            for (let r of this.selectedTourney.rounds) {
-                for (let m of r.onewayMeetings) {
-                    let observer = this.meetingRoundService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-                    observer.subscribe( n => this.saveMeetingNext(n, m));
-                }
-                for (let m of r.roundtripMeetings) {
-                    let observer = this.meetingRoundService.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-                    observer.subscribe( n => this.saveMeetingNext(n, m));
-                }
-            }
+            this.saveRoundMeetings();
         }
 
         if (this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound && 
@@ -930,11 +939,11 @@ export class TourneyDetailView extends AbstractDetailView {
             for (let p of this.selectedTourney.playoffs) {
                 for (let m of p.round.onewayMeetings) {
                     let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                    observer.subscribe( n => this.saveMeetingNext(n, m));
+                    observer.subscribe( n => this.meetingRoundService.saveMeetingNext(n, m));
                 }
                 for (let m of p.round.roundtripMeetings) {
                     let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                    observer.subscribe( n => this.saveMeetingNext(n, m));
+                    observer.subscribe( n => this.meetingRoundService.saveMeetingNext(n, m));
                 }
             }
         }
@@ -982,12 +991,6 @@ export class TourneyDetailView extends AbstractDetailView {
                 e.round.roundtripMeetings = [];
             }
         }
-    }
-
-    private saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
-        console.log("saveMeetingNext()");
-        console.log(mdb);
-        m.id = mdb.id;
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

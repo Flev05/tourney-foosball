@@ -1,5 +1,3 @@
-
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -14,9 +12,11 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { Team } from 'app/tourneyonline/domain/team';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
+    selectedRound: Round;
  
     constructor(protected http: HttpClient
         , protected router: Router
@@ -25,28 +25,51 @@ export class MeetingRoundService extends MeetingService {
         super(  http, router );
         console.log("Constructor of MeetingRoundService");
     }
+    
+    remakeRoundMeeting( tourney: Tourney, round : Round ) : void {
+        this.selectedTourney = tourney;
+        this.selectedRound = round;
+
+        const url = this.deleteMeetingsByRoundIdUrl + "/" + tourney.id + "/" + round.id;
+
+        let obs = this.http.delete<Meeting>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb: ' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
+        );
+
+        obs.subscribe(cs => this.next(cs), e => this.handleError(e), () => this.createAndSaveRoundMeeting(tourney, round));
+    }
+
+    protected next(n:any) {
+        console.error(n);
+    }
+
+
+    private createAndSaveRoundMeeting(tourney: Tourney, round: Round): void {
+        this.createRoundMeeting(tourney, round);
+
+        this.saveRoundMeeting(round);
+    }
 
     createRoundMeeting( tourney: Tourney, round : Round ) : void {
         this.selectedTourney = tourney;
-        const subsbr = this.loadRoundMeeting(tourney.id, round.id);
-        subsbr.subscribe(meetings => this.roundMeetingNext(meetings, round), e => this.onError(e));
-    }
-    
-    private roundMeetingNext(meetingsdb: MeetingDb[], round: Round): void {
 
+        // const subsbr = this.loadRoundMeeting(tourney.id, round.id);
+        // subsbr.subscribe(meetings => this.roundMeetingNext(meetings, round), e => this.onError(e));
+    
         round.onewayMeetings = [];
         round.roundtripMeetings = [];
 
-        for( let mdb of meetingsdb ) {
-            let m: Meeting = JSON.parse(mdb.json);
-            m.id = mdb.id;
-            m.country = mdb.country;
-            if( m.direction == Direction.OneWay ) {
-                round.onewayMeetings.push(m);
-            } else {
-                round.roundtripMeetings.push(m);
-            }
-        }
+        // for( let mdb of meetingsdb ) {
+        //     let m: Meeting = JSON.parse(mdb.json);
+        //     m.id = mdb.id;
+        //     m.country = mdb.country;
+        //     if( m.direction == Direction.OneWay ) {
+        //         round.onewayMeetings.push(m);
+        //     } else {
+        //         round.roundtripMeetings.push(m);
+        //     }
+        // }
 
         this.prepareMeetings(round);
 
@@ -91,7 +114,7 @@ export class MeetingRoundService extends MeetingService {
     /**
      * Prepares the meetings of the teams using the Berger algorithm
      */
-    private applyBergerAlgorithm(round: Round,teams: Team[]): void {
+    private applyBergerAlgorithm(round: Round, teams: Team[]): void {
         let teamsNo = teams.length;
         let giornate = teamsNo - 1;
 
@@ -231,7 +254,6 @@ export class MeetingRoundService extends MeetingService {
         return m;
     }
     
-    
     protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
         return "";
     }
@@ -336,5 +358,22 @@ export class MeetingRoundService extends MeetingService {
         console.log(mdb);
         m.id = mdb.id;
         e.id = mdb.eliminatoryId;
+    }
+
+    public saveRoundMeeting(r: Round) {
+        for (let m of r.onewayMeetings) {
+            let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+            observer.subscribe(n => this.saveMeetingNext(n, m));
+        }
+        for (let m of r.roundtripMeetings) {
+            let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+            observer.subscribe(n => this.saveMeetingNext(n, m));
+        }
+    }
+    
+    public saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(mdb);
+        m.id = mdb.id;
     }
 }

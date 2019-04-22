@@ -12,11 +12,12 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { MeetingRoundService } from './meeting-round-service';
 
 @Component({
     templateUrl: './round-pickview.html',
 })
-export class RoundDetailView extends AbstractDetailView {
+export class RoundPickList extends AbstractDetailView {
     static meetingListviewRedirect: string = "adminround/lv/meetingLv";
 
     selectedRound: Round;
@@ -33,19 +34,21 @@ export class RoundDetailView extends AbstractDetailView {
     meetingEnabled: boolean;
     selectedMeetingGroupNumCombobox: Combobox;
     meetingGroupCombobox: Combobox[];
+    isTeamsChanged: any;
 
     constructor(
         private fb: FormBuilder,
         protected location: Location,
         protected router: Router,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService
+        protected countryService: CountryService,
+        public meetingRoundService: MeetingRoundService,
     ) { 
         super(tourneyService, location, countryService);
     }
 
     ngOnInit() {
-        console.log("RoundDetailView.ngOnInit() ");
+        console.log("RoundPickList.ngOnInit() ");
 
         super.ngOnInit();
         
@@ -103,18 +106,37 @@ export class RoundDetailView extends AbstractDetailView {
         });
     }
  
-    goMeeting() {
+    goMeeting() {        
+        if( this.isTeamsChanged ) {
+            this.makeTeamList();
+            this.isTeamsChanged = false;
+            this.meetingRoundService.remakeRoundMeeting(this.selectedTourney, this.selectedRound);
+        }
+
+        this.router.navigate([RoundPickList.meetingListviewRedirect]);
+    }
+ 
+    private makeTeamList() {
         this.targetTeams = this.roundFormGroup.get('targetTeams').value;
         this.selectedRound.teams = [];
-        for( let n of this.targetTeams ) {
-            let foundTeam = this.selectedTourney.teams.find( t => t.teamName == n);
-            if( foundTeam != undefined ) {
+        for (let n of this.targetTeams) {
+            let foundTeam = this.selectedTourney.teams.find(t => t.teamName == n);
+            if (foundTeam != undefined) {
                 this.selectedRound.teams.push(foundTeam);
             }
         }
-        this.router.navigate([RoundDetailView.meetingListviewRedirect]);
     }
- 
+
+    goBack(): void {
+        if( this.isTeamsChanged ) {
+            this.makeTeamList();
+            this.isTeamsChanged = false;
+            this.meetingRoundService.remakeRoundMeeting(this.selectedTourney, this.selectedRound);
+        }
+
+        super.goBack();
+    }
+
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         let items: string[] = event.items;
@@ -125,6 +147,7 @@ export class RoundDetailView extends AbstractDetailView {
                 this.selectedRound.teams.push(teamToAdd);
             }
         }
+        this.isTeamsChanged = true;
     }
 
     onMoveToSource(event) {
@@ -140,6 +163,14 @@ export class RoundDetailView extends AbstractDetailView {
                 }
             }
         }
+        this.isTeamsChanged = true;
+    }
+
+    onTargetReorder(event) {
+        console.log("Entering onTargetReorder()");
+        let items: string[] = event.items;
+        console.log(items);
+        this.isTeamsChanged = true;
     }
  
     onError(n:any) {

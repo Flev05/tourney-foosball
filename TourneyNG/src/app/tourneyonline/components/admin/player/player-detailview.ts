@@ -9,7 +9,7 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
-
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './player-detailview.html',
@@ -49,11 +49,9 @@ export class PlayerDetailView extends AbstractDetailView {
 
     enableSaveButton() : string {
         let n : String = this.selectedPlayer.playerName;
-
         if( n == undefined  ) {
             return  "disabled";
         }
-
         return   n.trim() == "" ? "disabled" : "";
     }
 
@@ -75,7 +73,7 @@ export class PlayerDetailView extends AbstractDetailView {
         const subscriber = this.playerService.savePlayer(this.newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
         subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     }
-    
+ 
     private newPlayerNext(tvo:PlayerVO) {
         console.log("newPlayerNext()");
         console.log(tvo);
@@ -134,7 +132,7 @@ export class PlayerDetailView extends AbstractDetailView {
         };
     }
  
-    onError(n:any) {
+    onError(n:any): any {
         let msgerr : string = 'Creazione/Modifica giocatore fallita';
         console.error(msgerr);
     }

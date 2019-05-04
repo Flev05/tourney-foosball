@@ -8,6 +8,8 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { Router } from '@angular/router';
 import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
 
@@ -21,12 +23,14 @@ export class PlayerPickList extends AbstractListView {
     avalilablePlayers: string[];
     targetPlayers: string[];
     returnLabel: string;
+    isPlayersChanged: boolean;
 
     constructor( protected tourneyService: TourneyService
         , public router: Router
         , protected location: Location
         , private teamService: TeamService
         , private playerService: PlayerService
+        , private clientService: ClientService
         ) 
     { 
         super("", tourneyService, router, location);
@@ -41,7 +45,8 @@ export class PlayerPickList extends AbstractListView {
     
     private prepareAvailablePlayers(): void {
         this.selectedTeam = this.teamService.selectedTeam;
-        
+        this.isPlayersChanged = false;
+
         this.targetPlayers = [];
         for(let p of this.selectedTeam.players) {
             this.targetPlayers.push(p.playerName);
@@ -64,11 +69,13 @@ export class PlayerPickList extends AbstractListView {
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         this.returnLabel = "Salva e torna";
+        this.isPlayersChanged = true;
     }
 
     onMoveToSource(event) {
         console.log("Entering onMoveToSource()");
         this.returnLabel = "Salva e torna";
+        this.isPlayersChanged = true;
     }
 
     goBack(): void {
@@ -79,28 +86,44 @@ export class PlayerPickList extends AbstractListView {
     newPlayer() {
         this.playerService.selectedPlayer = {};
         this.playerService.newPlayer = true;
-        this.copyTargetPlayers();
+        this.isPlayersChanged = true;
+        this.returnLabel = "Salva e torna";
         this.router.navigate([REDIRECT_PLAYER_DV]);
     }
 
+    /**
+     * Verifies if some player was moved and, if so, replaces all the players in the selected team
+     * with the players in the target area.
+     * At last saves the selected tourney in the DB
+     */
     private copyTargetPlayers() {
+        if(!this.isPlayersChanged) {
+            return;
+        }
         this.selectedTeam.players = [];
         for (let pn of this.targetPlayers) {
             let p: Player = this.playerService.playerPool.find(x => x.playerName == pn);
             this.selectedTeam.players.push(p);
         }
 
-        let team = this.selectedTourney.teams.find( t => t.teamName == this.selectedTeam.teamName);
-        console.log(team);
+        let tvo: TourneyVO = {
+            id: this.selectedTourney.id,
+            tourneyName: this.selectedTourney.tourneyName,
+            country: this.selectedTourney.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(this.selectedTourney)
+        };
+        const subscriber = this.tourneyService.saveTourney(tvo,  this.onError("Player update failed"));
+        subscriber.subscribe(cs => this.next(cs));
     }
 
-    onError(n:any) {
+    onError(n:any) : any {
         let msgerr : string;
 
         if(this.teamService.newTeam) {
-            msgerr = 'Creazione nuova squadra fallita';
+            msgerr = 'Creation failed';
         } else {
-            msgerr = 'Modifica squadra fallita';
+            msgerr = 'Update failed';
         }
         console.log(msgerr);
     }

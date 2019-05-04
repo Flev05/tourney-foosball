@@ -10,6 +10,9 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TeamVO } from 'app/tourneyonline/domain/team-vo';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { TourneyStatus } from 'app/tourneyonline/domain/enumerations';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -25,6 +28,7 @@ export class TeamDetailView extends AbstractDetailView {
     onSaveTeamError: boolean;
     teamAlreadyExists: boolean;
     badRequest: boolean;
+    tdbs: TourneyVO[];
 
     constructor(
         protected location: Location,
@@ -66,6 +70,60 @@ export class TeamDetailView extends AbstractDetailView {
 
         const subscriber = this.teamService.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+
+        // this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
+    } 
+    
+    private onLoadAllTourneysComplete(): void {
+        let tourneys: Tourney[] = [];
+
+        for(let tvo of this.tdbs) {
+            let t: Tourney = JSON.parse(tvo.json);
+            t.id = tvo.id;
+            t.tourneyName = tvo.tourneyName;
+            t.country = tvo.country;
+            t.clientVO = tvo.clientVO;
+            tourneys.push(t);
+        }
+
+        for( let tourney of tourneys ) {
+            if( tourney.tourneyStatus != TourneyStatus.Terminated ) {
+                let foundTeam: Team = tourney.teams.find(t => t.teamName == this.selectedTeam.teamName);
+                if( foundTeam != undefined ) {
+                    let index = tourney.teams.indexOf(foundTeam);
+                    if( index != -1 ) {
+                        tourney.teams[index] = this.selectedTeam;
+                        let tvo: TourneyVO = {
+                            id: tourney.id,
+                            tourneyName: tourney.tourneyName,
+                            country: tourney.country,
+                            clientVO: this.clientService.selectedClient,
+                            json: JSON.stringify(tourney)
+                        };
+                        const obs = this.tourneyService.saveTourney(tvo,  this.saveTourneyErrorHandler("Tourney update failed"));
+                        obs.subscribe(cs => this.next(cs));
+                    }
+                }
+            }
+        }
+    }
+    
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "TourneyAlreadyExists" ) {
+                return of(result as T);
+            }
+      
+            return of(result as T);
+        };
     }
 
     private newTeamNext(tvo:TeamVO) {
@@ -131,15 +189,7 @@ export class TeamDetailView extends AbstractDetailView {
         return  n.trim() == "" ? "disabled" : "";
     }
 
-    onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        if(this.teamService.newTeam) {
-            msgerr = 'Creazione nuova squadra fallita';
-        } else {
-            msgerr = 'Modifica squadra fallita';
-        }
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+    onError(message:any): any {
+        console.error(message);
     }
 }

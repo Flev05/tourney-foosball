@@ -41,9 +41,6 @@ public class RoleRESTService extends AbstractRESTService {
 
         List<Role> roleList = roleDao.findRolesLesserThan(loggedUserId);
 
-        List<RoleVO> roleVoList = roleList.stream().map(rpo -> converter.convertRolePoVo(rpo))
-                .collect(Collectors.toList());
-
-        return roleVoList;
+        return roleList.stream().map(rpo -> converter.convertRolePoVo(rpo)).collect(Collectors.toList());
     }
 }

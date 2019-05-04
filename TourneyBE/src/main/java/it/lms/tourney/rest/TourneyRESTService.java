@@ -54,10 +54,23 @@ public class TourneyRESTService extends AbstractRESTService {
 
         List<Tourney> tourneyList = tourneyDao.findTourneysByClientId(clientId);
 
-        List<TourneyVO> tourneyVoList = tourneyList.stream().map(tpo -> converter.convertTourneyPoVo(tpo))
-                .collect(Collectors.toList());
+        return tourneyList.stream().map(tpo -> converter.convertLightTourneyPoVo(tpo)).collect(Collectors.toList());
+    }
 
-        return tourneyVoList;
+    @GET
+    @Path("/loadTourneyById/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public TourneyVO loadTourneyById(@PathParam("tourneyId") Integer tourneyId) {
+
+        logger.debug(logId() + "GET: loadTourneyById(" + tourneyId + ")");
+
+        Tourney tpo = tourneyDao.getById(tourneyId);
+
+        TourneyVO tvo = converter.convertTourneyPoVo(tpo);
+        if (tvo == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return tvo;
     }
 
     @GET
@@ -70,10 +83,7 @@ public class TourneyRESTService extends AbstractRESTService {
         String sessionId = super.getSessionId();
         List<Tourney> tourneyList = tourneyDao.findTourneysBySessionId(sessionId);
 
-        List<TourneyVO> tourneyVoList = tourneyList.stream().map(tpo -> converter.convertTourneyPoVo(tpo))
-                .collect(Collectors.toList());
-
-        return tourneyVoList;
+        return tourneyList.stream().map(tpo -> converter.convertTourneyPoVo(tpo)).collect(Collectors.toList());
     }
 
     @GET
@@ -102,7 +112,7 @@ public class TourneyRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "POST: createTourney(" + tvo + ")");
 
-        Map<String, String> responseObj = new HashMap<String, String>();
+        Map<String, String> responseObj = new HashMap<>();
 
         Session spo = null;
         Tourney foundTourney;
@@ -168,7 +178,7 @@ public class TourneyRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "PUT: updateTourney(" + tvo + ")");
 
-        Map<String, String> responseObj = new HashMap<String, String>();
+        Map<String, String> responseObj = new HashMap<>();
 
         Session spo = null;
         Tourney foundTourney;

@@ -54,10 +54,7 @@ public class PlayerRESTService extends AbstractRESTService {
 
         List<Player> playerList = playerDao.findPlayersByClientId(clientId);
 
-        List<PlayerVO> playerVoList = playerList.stream().map(tpo -> converter.convertPlayerPoVo(tpo))
-                .collect(Collectors.toList());
-
-        return playerVoList;
+        return playerList.stream().map(tpo -> converter.convertPlayerPoVo(tpo)).collect(Collectors.toList());
     }
 
     @GET
@@ -71,10 +68,7 @@ public class PlayerRESTService extends AbstractRESTService {
 
         List<Player> playerList = playerDao.findPlayersBySessionId(sessionId);
 
-        List<PlayerVO> playerVoList = playerList.stream().map(tpo -> converter.convertPlayerPoVo(tpo))
-                .collect(Collectors.toList());
-
-        return playerVoList;
+        return playerList.stream().map(tpo -> converter.convertPlayerPoVo(tpo)).collect(Collectors.toList());
     }
 
     @GET
@@ -103,10 +97,10 @@ public class PlayerRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "POST: createPlayer(" + tvo + ")");
 
-        Map<String, String> responseObj = new HashMap<String, String>();
+        Map<String, String> responseObj = new HashMap<>();
         Player foundPlayer;
         Session spo = null;
-        if (tvo.getClientVO() == null) {
+        if (tvo.getClientId() == null) {
             String sessionId = request.getSession().getId();
             foundPlayer = playerDao.getPlayerBySessionId(sessionId, tvo.getPlayerName());
             spo = sessionDao.findBySessionId(sessionId);
@@ -121,7 +115,7 @@ public class PlayerRESTService extends AbstractRESTService {
                 spo = sessionDao.update(spo, sessionId, userAgent);
             }
         } else {
-            Integer clientId = tvo.getClientVO().getId();
+            Integer clientId = tvo.getClientId();
             foundPlayer = playerDao.getPlayerByClientId(clientId, tvo.getPlayerName());
         }
 
@@ -165,17 +159,17 @@ public class PlayerRESTService extends AbstractRESTService {
     public Response updatePlayer(PlayerVO tvo) {
 
         logger.debug(logId() + "PUT: updatePlayer(" + tvo + ")");
-        Map<String, String> responseObj = new HashMap<String, String>();
+        Map<String, String> responseObj = new HashMap<>();
 
         Player foundPlayer;
 
         Session spo = null;
-        if (tvo.getClientVO() == null) {
+        if (tvo.getClientId() == null) {
             String sessionId = request.getSession().getId();
             foundPlayer = playerDao.getPlayerBySessionId(sessionId, tvo.getPlayerName());
             spo = sessionDao.findBySessionId(sessionId);
         } else {
-            Integer clientId = tvo.getClientVO().getId();
+            Integer clientId = tvo.getClientId();
             foundPlayer = playerDao.getPlayerByClientId(clientId, tvo.getPlayerName());
         }
 

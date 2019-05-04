@@ -51,7 +51,7 @@ export class TabResultListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.levelService.ngOnInitLight();
+        this.levelService.ngOnInit();
 
         this.tourneyService.selectedEliminatoryLevelIndex = -1;
         this.tourneyService.selectedEliminatoryIndex = -1;

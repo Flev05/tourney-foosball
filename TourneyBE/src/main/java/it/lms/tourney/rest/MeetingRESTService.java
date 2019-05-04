@@ -95,6 +95,23 @@ public class MeetingRESTService extends AbstractRESTService {
         return meetingVoList;
     }
 
+    @GET
+    @Path("/loadAllEliminatoryMeetingsBy/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<MeetingVO> loadAllEliminatoryMeetingsBy(@PathParam("tourneyId") Integer tourneyId) {
+
+        logger.debug(logId() + "[GET: loadAllEliminatoryMeetingsBy(" + tourneyId + ")]");
+
+        List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsBy(tourneyId);
+
+        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+                .collect(Collectors.toList());
+
+        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
+
+        return meetingVoList;
+    }
+
     /**
      * Creates a new meeting from the values provided. Performs validation, and will return a JAX-RS response with
      * either 200 ok, or with a map of fields, and related errors.

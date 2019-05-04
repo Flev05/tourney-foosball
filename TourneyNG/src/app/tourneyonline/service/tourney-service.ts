@@ -20,7 +20,6 @@ import { LoginService } from './login-service';
 import { TourneyVO } from '../domain/tourney.vo';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
-import { Router } from '@angular/router';
 import { Classification } from '../domain/classification';
 import { MeetingStatus, TourneyType } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
@@ -31,9 +30,9 @@ const httpOptions = {
 };
 
 const tourneyUrl = 'api/tourneys';  
-const loadTourneyByClientIdUrl = tourneyUrl + '/loadByClientId';  
+const loadTourneyByClientIdUrl  = tourneyUrl + '/loadByClientId';  
 const loadTourneyBySessionIdUrl = tourneyUrl + '/loadBySessionId';  
-const loadTourneyUrl = tourneyUrl + '/loadByClientId';  
+const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';  
 const insertTourneyUrl = tourneyUrl + '/insert';
 const updateTourneyUrl = tourneyUrl + '/update';
 const deleteTourneyUrl = tourneyUrl + '/delete';
@@ -50,6 +49,7 @@ export class TourneyService extends AbstractService {
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
+
     selectedRound : Round;
     selectedPlayoff : Playoff;
     selectedEliminatory : Eliminatory;
@@ -97,8 +97,9 @@ export class TourneyService extends AbstractService {
         { field: 'goalsDiff',   header: 'D'},
     ];
     
+    private tvo: TourneyVO;
+
     constructor(private http: HttpClient
-        , protected router: Router
         , private loginService: LoginService
         , private clientService: ClientService
         , private meetingService: MeetingService) 
@@ -222,7 +223,7 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Loads all tourneys published from the database
+     * Loads all tourneys published from the database belonging to the same client
      */
     loadAllTourneys(): Observable<TourneyVO[]> {
         let url = loadTourneyBySessionIdUrl;
@@ -237,23 +238,51 @@ export class TourneyService extends AbstractService {
           );
     }
 
+    /**
+     * Loads the tourney selected by its id previously loaded from the list view
+     */
+    loadTourneyById(tourneyId : number, complete: () => void ): void {
+        let url = loadTourneyByIdUrl + "/" + tourneyId
+        console.log("loadTourneyById(): " + url);
+
+        const obs = this.http.get<TourneyVO>(url).pipe(
+            tap(_ => this.log('fetched tourney from DB by url=' + url)), 
+            catchError(this.handleError('loadTourneyDb')
+            )
+        );
+        obs.subscribe(tvo => this.tvo = tvo, e => this.onError(e), () => this.onLoadTourneyByIdComplete(complete));
+    }
+
+    private onLoadTourneyByIdComplete(complete: () => void) {
+        console.log("TourneyDetailView.onLoadTourneyByIdComplete() ");
+
+        this.selectedTourney = JSON.parse(this.tvo.json);
+
+        this.selectedTourney.id = this.tvo.id;
+        this.selectedTourney.tourneyName = this.tvo.tourneyName;
+        this.selectedTourney.country = this.tvo.country;
+        this.selectedTourney.clientVO = this.tvo.clientVO;
+
+        complete();
+    }
+
     loadTourneys(fromDate: Date, toDate: Date): any {
         let url = loadTourneyBySessionIdUrl;
 
         if(this.loginService.isUserLogged) {
-            url = loadTourneyUrl + "/" + this.clientService.selectedClient.id;
+            url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id;
         }
         url += + "?" + "fromDate=" + fromDate + "&" + "toDate="   + toDate;
         
         return this.http.get<TourneyVO[]>(url).pipe(
-            tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
+            tap(_ => this.log('fetched selected tourneys from DB, url=' + url)),
             catchError(this.handleError('loadTourneyDb', []))
           );
     }
 
     loadTourneyPlayoff (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(loadTourneyUrl)
+        return this.http.get<Tourney[]>(loadTourneyByClientIdUrl)
         .pipe(
             tap(_ => this.log('fetched all Playoff tourneys')),
             catchError(this.handleError('loadTourneyPlayoff', []))
@@ -262,20 +291,11 @@ export class TourneyService extends AbstractService {
 
     loadTourneyElimination (): Observable<Tourney[]> {
  
-        return this.http.get<Tourney[]>(loadTourneyUrl)
+        return this.http.get<Tourney[]>(loadTourneyByClientIdUrl)
         .pipe(
             tap(_ => this.log('fetched all Elimination tourneys')),
             catchError(this.handleError('loadTourneyElimination', []))
           );
-    }
-
-    /** GET hero by id. Will 404 if id not found */
-    getTourney(id: number): Observable<Tourney> {
-        const url = `${loadTourneyUrl}/${id}`;
-        return this.http.get<Tourney>(url).pipe(
-            tap(_ => this.log('fetched Tourney id='+id)),
-            catchError(this.handleError<Tourney>('getTourney id='+id))
-        );
     }
 
     /** POST: add a new tourney to the server */
@@ -295,18 +315,18 @@ export class TourneyService extends AbstractService {
         return this.updateTourneyDb(tvo, selector);
     }
 
-    saveTourney (tourney: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
-        if(tourney.id == null) {
-            return this.addTourney(tourney, selector);
+    saveTourney (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        if(tvo.id == null) {
+            return this.addTourney(tvo, selector);
         }
-        return this.updateTourney(tourney, selector);
+        return this.updateTourney(tvo, selector);
     }
 
     /** PUT: update the tourney on the server */
-    private updateTourneyDb (tourney: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+    private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let url = updateTourneyUrl;
 
-        return this.http.put(url, tourney, httpOptions).pipe(
+        return this.http.put(url, tvo, httpOptions).pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),
             catchError(selector)
         );
@@ -357,12 +377,6 @@ export class TourneyService extends AbstractService {
         r.onewayMeetings = [];
     }
 
-    private deleteUnusedMeetings(meetings: Meeting[] ): void {
-        for(let m of meetings) {
-            this.meetingService.deleteMeeting(m);
-        }
-    }
-    
     /** DELETE: delete the tourney from the server */
     deleteTourney (tourney: Tourney, selector: (err: any, caught: Observable<Tourney> ) => Observable<Tourney> ) : Observable<Tourney> {
         const id = tourney.id;        

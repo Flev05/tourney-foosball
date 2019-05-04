@@ -156,6 +156,21 @@ public class Converter extends AbstractLogger {
         return tvo;
     }
 
+    /**
+     * Converts the tourney PO in VO without the JSON attribute for the list view
+     * 
+     * @param tpo the PO to convert
+     * @return the converted VO
+     */
+    public TourneyVO convertLightTourneyPoVo(Tourney tpo) {
+
+        TourneyVO tvo = convertTourneyPoVo(tpo);
+
+        tvo.setJson(null);
+
+        return tvo;
+    }
+
     public Tourney convertTourneyVoPo(TourneyVO tvo, Session spo) {
 
         Tourney tpo = new Tourney();
@@ -185,7 +200,7 @@ public class Converter extends AbstractLogger {
 
         if (ppo.getClient() != null) {
             ClientVO cvo = convertClientPoVo(ppo.getClient());
-            pvo.setClientVO(cvo);
+            pvo.setClientId(cvo.getId());
         }
 
         if (ppo.getCountry() != null) {
@@ -226,7 +241,7 @@ public class Converter extends AbstractLogger {
         Player ppo = new Player();
 
         if (spo == null) {
-            Client cpo = clientDao.findById(pvo.getClientVO().getId());
+            Client cpo = clientDao.findById(pvo.getClientId());
             ppo.setClient(cpo);
         } else {
             ppo.setSession(spo);

@@ -33,8 +33,20 @@ public class Tourney extends AbstractPO implements Serializable {
 
     private Set<Meeting>      meetings;
 
-    public Tourney() {
+    @Override
+    public boolean equals(Object obj) {
 
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Tourney fobj = (Tourney) obj;
+        return tourneyName.equals(fobj.tourneyName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return tourneyName.hashCode() + super.hashCode();
     }
 
     @Override
@@ -44,16 +56,12 @@ public class Tourney extends AbstractPO implements Serializable {
                 + ", json=" + json + "]";
     }
 
+    @Override
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
 
         return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
     }
 
     @Column(name = "json")

@@ -6,7 +6,7 @@ import { Team } from './team';
 
 import { Discipline } from './discipline';
 
-import { TourneyType, TeamSortType } from './enumerations';
+import { TourneyType, TeamSortType, TourneyStatus } from './enumerations';
 import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
@@ -19,6 +19,8 @@ export interface Tourney {
     tourneyName? : string;
     isDaily?: string;
     datetime? : Date;
+
+    tourneyStatus?: TourneyStatus;
 
     selectedTabIndex?: number;
     saveButtonEnabled? : boolean;
@@ -60,7 +62,8 @@ export interface Tourney {
 
     objectives?: Final[];
     teams?: Team[];
-
+    isTeamsChanged?: boolean;
+    
     rounds?: Round[];
     playoffs?: Playoff[];
     eliminatoryLevels?: Array<EliminatoryLevel>;

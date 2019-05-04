@@ -1,0 +1,838 @@
+{
+	"id": 21,
+	"datetime": "2019-04-29T22:00:00.000Z",
+	"tourneyName": "Balilla StandAlone",
+	"isDaily": "true",
+	"address": "Via degli StandAlone",
+	"tourneyType": "score",
+	"matchBalanceScores": 0,
+	"matchWinnerScores": 3,
+	"access": "public",
+	"objectives": [],
+	"rounds": [],
+	"eliminatoryLevels": [
+		{
+			"id": 3,
+			"name": "Quarti di finale",
+			"level": 3,
+			"isTopLevel": true,
+			"direction": "A",
+			"eliminatories": [
+				{
+					"id": 1123,
+					"round": {
+						"id": 1124,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1121,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1122,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1125,
+						"fromRound": {
+							"id": 1126,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1127,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1128,
+						"fromRound": {
+							"id": 1129,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1130,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				},
+				{
+					"id": 1133,
+					"round": {
+						"id": 1134,
+						"name": "2",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1131,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1132,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1135,
+						"fromRound": {
+							"id": 1136,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1137,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1138,
+						"fromRound": {
+							"id": 1139,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1140,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				},
+				{
+					"id": 1143,
+					"round": {
+						"id": 1144,
+						"name": "3",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1141,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1142,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1145,
+						"fromRound": {
+							"id": 1146,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1147,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1148,
+						"fromRound": {
+							"id": 1149,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1150,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				},
+				{
+					"id": 1153,
+					"round": {
+						"id": 1154,
+						"name": "4",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1151,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1152,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1155,
+						"fromRound": {
+							"id": 1156,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1157,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1158,
+						"fromRound": {
+							"id": 1159,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1160,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "Semi finale",
+			"level": 2,
+			"isTopLevel": false,
+			"direction": "A",
+			"eliminatories": [
+				{
+					"id": 1043,
+					"round": {
+						"id": 1044,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1041,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1042,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1045,
+						"fromRound": {
+							"id": 1046,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1047,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1048,
+						"fromRound": {
+							"id": 1049,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1050,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				},
+				{
+					"id": 1053,
+					"round": {
+						"id": 1054,
+						"name": "2",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1051,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1052,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1055,
+						"fromRound": {
+							"id": 1056,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1057,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1058,
+						"fromRound": {
+							"id": 1059,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1060,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "Finalissima 1° e 2° posto",
+			"level": 1,
+			"isTopLevel": false,
+			"direction": "R",
+			"eliminatories": [
+				{
+					"id": 1063,
+					"round": {
+						"id": 1064,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1061,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1062,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1065,
+						"fromRound": {
+							"id": 1066,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1067,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1068,
+						"fromRound": {
+							"id": 1069,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1070,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "Finalina 3° e 4° posto",
+			"level": -1,
+			"isTopLevel": false,
+			"direction": "R",
+			"eliminatories": [
+				{
+					"id": 1073,
+					"round": {
+						"id": 1074,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1071,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1072,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [],
+						"roundtripMeetings": []
+					},
+					"rule1": {
+						"id": 1075,
+						"fromRound": {
+							"id": 1076,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1077,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1078,
+						"fromRound": {
+							"id": 1079,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1080,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
+		}
+	],
+	"teams": [
+		{
+			"id": 26,
+			"teamName": "Team 05",
+			"players": [],
+			"address": "Via del Team, 5",
+			"country": {
+				"id": 7419,
+				"city": "TRENTINARA",
+				"cityCode": "L377",
+				"provinceCode": "SA",
+				"zipCode": "84070",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 27,
+			"teamName": "Team 06",
+			"players": [],
+			"address": "Via del Team, 6",
+			"country": {
+				"id": 2642,
+				"city": "ERACLEA",
+				"cityCode": "D415",
+				"provinceCode": "VE",
+				"zipCode": "30020",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 28,
+			"teamName": "Team 07",
+			"players": [],
+			"address": "Via del Team, 7",
+			"country": {
+				"id": 7419,
+				"city": "TRENTINARA",
+				"cityCode": "L377",
+				"provinceCode": "SA",
+				"zipCode": "84070",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 29,
+			"teamName": "Team 08",
+			"players": [],
+			"address": "Via del Team, 8",
+			"country": {
+				"id": 7402,
+				"city": "TREBISACCE",
+				"cityCode": "L353",
+				"provinceCode": "CS",
+				"zipCode": "87075",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 36,
+			"teamName": "Team 15",
+			"players": [],
+			"address": "Via del Team 15",
+			"country": {
+				"id": 7018,
+				"city": "SPELLO",
+				"cityCode": "I888",
+				"provinceCode": "PG",
+				"zipCode": "06038",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 30,
+			"teamName": "Team 09",
+			"players": [],
+			"address": "Via del Team 09",
+			"country": {
+				"id": 7013,
+				"city": "SPADAFORA",
+				"cityCode": "I881",
+				"provinceCode": "ME",
+				"zipCode": "98048",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 23,
+			"teamName": "Team 02",
+			"players": [],
+			"address": "Via del Team, 2",
+			"country": {
+				"id": 7202,
+				"city": "TERME VIGLIATORE",
+				"cityCode": "M210",
+				"provinceCode": "ME",
+				"zipCode": "98050",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 38,
+			"teamName": "Team 17",
+			"players": [],
+			"address": "Via del Team 17",
+			"country": {
+				"id": 7027,
+				"city": "SPIAZZO",
+				"cityCode": "I899",
+				"provinceCode": "TN",
+				"zipCode": "38088",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		},
+		{
+			"id": 37,
+			"teamName": "Team 16",
+			"players": [],
+			"address": "Via del Team 16",
+			"country": {
+				"id": 7019,
+				"city": "SPERA",
+				"cityCode": "I889",
+				"provinceCode": "TN",
+				"zipCode": "38059",
+				"countryCode": "IT"
+			},
+			"clientId": 4
+		}
+	],
+	"playoffs": [],
+	"pointsNeededToWin": 9,
+	"pointsGoldenGoalTieBreakWin": 2,
+	"pointsGoldenGoalTieBreakDefeat": 1,
+	"maxMatchesPerMeeting": 3,
+	"isAllMatches": "true",
+	"playersPerTeam": 1,
+	"phases": [
+		"eliminatory"
+	],
+	"eliminatoryMode": "auto",
+	"teamSortType": "original",
+	"isOnewayRound": "true",
+	"isOnewayPlayoff": "true",
+	"teamsWeightEnabled": true,
+	"selectedEliminatoryTeamsCombobox": {
+		"label": "",
+		"value": 8
+	},
+	"discipline": {
+		"id": 1,
+		"name": "Calcio Balilla",
+		"description": ""
+	},
+	"selectedTabIndex": 3,
+	"saveButtonEnabled": true,
+	"selectedTeams4PlayoffsCB": {
+		"label": "",
+		"value": 0
+	},
+	"selectedPlayoffsCB": {
+		"label": "",
+		"value": 0
+	},
+	"selectedRoundsNumCB": {
+		"label": "",
+		"value": 0
+	},
+	"country": {
+		"id": 7055,
+		"city": "STAGNO LOMBARDO",
+		"cityCode": "I935",
+		"provinceCode": "CR",
+		"zipCode": "26049",
+		"countryCode": "IT"
+	},
+	"clientVO": {
+		"id": 4,
+		"selected": false,
+		"enabled": true,
+		"selectAll": false,
+		"businessName": "Cliente 3",
+		"address": "Via del Cliente, 3",
+		"phoneNumber": "555 666 999 8",
+		"email": "cliente3@cliente3.com",
+		"siteUrl": "www.cliente3.com",
+		"country": {
+			"id": 2177,
+			"city": "CLAINO CON OSTENO",
+			"cityCode": "C787",
+			"provinceCode": "CO",
+			"zipCode": "22010",
+			"countryCode": "IT"
+		}
+	},
+	"isTeamsChanged": true
+}

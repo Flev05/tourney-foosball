@@ -112,10 +112,42 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
     }
 
     /**
+     * Finds all meetings associated to the received tourney and eliminatory not null
+     * 
+     * @param tourneyId the tourney identifier
+     * @return the list of meetings related to the ids
+     */
+    public List<Meeting> findAllEliminatoryMeetingsBy(Integer tourneyId) {
+
+        logger.debug(logId() + "Entering findAllEliminatoryMeetingsBy()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+        Root<Meeting> root = cq.from(Meeting.class);
+
+        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+
+        Predicate p = cb.isNotNull(root.get(Meeting_.eliminatoryId));
+        Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+
+        cq = cq.select(root);
+        cq = cq.where(p, q);
+
+        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+
+        List<Meeting> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    /**
      * Finds all meetings associated to the received tourney and eliminatory id
      * 
      * @param tourneyId the tourney identifier
-     * @param roundId the eliminatory identifier
+     * @param eliminatoryId the eliminatory identifier
      * @return the list of meetings related to the ids
      */
     public List<Meeting> findMeetingsByEliminatoryId(Integer tourneyId, Integer eliminatoryId) {

@@ -8,7 +8,8 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { Router } from '@angular/router';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
-import { MeetingRoundService } from '../round/meeting-round-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Component({
     templateUrl: './team-picklist.html',
@@ -25,7 +26,7 @@ export class TeamPickList extends AbstractListView {
         , public router: Router
         , protected location: Location
         , private teamService: TeamService
-        , private meetingRoundService: MeetingRoundService) 
+        , private clientService: ClientService) 
     { 
         super("", tourneyService, router, location);
     }
@@ -35,7 +36,7 @@ export class TeamPickList extends AbstractListView {
         super.ngOnInit();
 
         this.returnLabel = "Indietro";
-
+        this.selectedTourney.isTeamsChanged = false;
         this.prepareAvailableTeams();
     }
     
@@ -68,41 +69,55 @@ export class TeamPickList extends AbstractListView {
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged = true;
+        this.selectedTourney.isTeamsChanged = true;
     }
 
     onMoveToSource(event) {
         console.log("Entering onMoveToSource()");
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged = true;
+        this.selectedTourney.isTeamsChanged = true;
     }
  
     newTeam() {
         this.teamService.newTeam = true;
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged = true;
+        this.selectedTourney.isTeamsChanged = true;
         
         this.router.navigate([TeamDetailView.redirect]);
     }
     
+    /**
+     * Before to return to the previous page, verifies if we added o removed some teams
+     * and, if so, align all the teams list in the tourney
+     */
     goBack(): void {
-        this.returnLabel = "Salva e torna";
         this.alignTourneyTeams();
         super.goBack();
     }
 
     private alignTourneyTeams() {
+        if(!this.selectedTourney.isTeamsChanged) {
+            return;
+        }
+
         this.selectedTourney.teams = [];
         for (let tn of this.targetTeams) {
             let t: Team = this.teamService.teamPool.find(x => x.teamName == tn);
             this.selectedTourney.teams.push(t);
         }       
-        if( this.tourneyService.isStandalone ) {
-            this.meetingRoundService.saveEliminatoryMeetings(this.selectedTourney);
-        }
+
+        let tvo: TourneyVO = {
+            id: this.selectedTourney.id,
+            tourneyName: this.selectedTourney.tourneyName,
+            country: this.selectedTourney.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(this.selectedTourney)
+        };
+        const subscriber = this.tourneyService.saveTourney(tvo,  this.onError("Player update failed"));
+        subscriber.subscribe(cs => this.next(cs));
     }
 
-    onError(n:any) {
+    onError(n:any) : any {
         let msgerr : string;
 
         if(this.teamService.newTeam) {

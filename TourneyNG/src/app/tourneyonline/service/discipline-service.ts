@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Discipline } from '../domain/discipline';
+import { Combobox } from '../domain/tourney-combobox';
 
 const disciplineUrl = 'api/disciplines';  
 const loadDisciplineUrl = disciplineUrl + "/loadAll";
@@ -21,18 +22,35 @@ export class DisciplineService {
     selectedDiscipline : Discipline;
 
     newDiscipline : boolean = false;
+    disciplines: Discipline[];
+    disciplineOptions : Combobox[];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of DisciplineService");
     }
 
-    loadAllDisciplines (): Observable<Discipline[]> {
+    loadAllDisciplines (): void {
         let url: string = loadDisciplineUrl;
 
-        return this.http.get<Discipline[]>(url).pipe(
-            tap(_ => this.log(`fetched all disciplines`)),
-            catchError(this.handleError('loadAllDisciplines', []))
+        const obs = this.http.get<Discipline[]>(url).pipe(
+            tap(_ => this.log(`fetched all disciplines`))
+            , catchError(this.handleError('loadAllDisciplines failure', [])
+            )
         );
+
+        obs.subscribe(t => {this.disciplines = t}, (error) => this.onError(error), ()=>this.onLoadDisciplineComplete());
+    }
+    
+    private onError(msgerr:any): any {
+        console.error(msgerr);
+    }
+
+    private onLoadDisciplineComplete() {
+        this.disciplineOptions = [];
+        for( let d of this.disciplines ) {
+            let cb : Combobox = {label: d.name, value: d.id};
+            this.disciplineOptions.push(cb);
+        }
     }
 
     /** GET hero by id. Will 404 if id not found */

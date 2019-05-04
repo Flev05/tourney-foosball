@@ -15,6 +15,7 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { NewTourneyDetailView } from './new-tourney-detailview';
 import { TourneyDetailView } from './tourney-detailview';
 import { Observable, of } from 'rxjs';
+import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -36,9 +37,10 @@ export class TourneyListView extends AbstractTourneyListView {
         , protected teamService : TeamService
         , public router: Router
         , public loc: Location
-        , protected dfp: DateFormatPipe) 
+        , protected dfp: DateFormatPipe
+        , protected disciplineService: DisciplineService ) 
     { 
-        super(TourneyDetailView.redirect, tourneyService, playerService, teamService, router, loc, dfp);
+        super(TourneyDetailView.redirect, tourneyService, playerService, teamService, router, loc, dfp, disciplineService);
     }
 
     ngOnInit() {
@@ -59,16 +61,13 @@ export class TourneyListView extends AbstractTourneyListView {
        });
     }
  
-    onSearch(value: string) {
-
-        this.clientService.selectedClientOption = this.tourneyFormGroup.get('selectedClientOption').value;
-
-        this.fromDate = this.tourneyFormGroup.get('fromDate').value;
-        this.toDate   = this.tourneyFormGroup.get('toDate').value;
-
-        const subsbr = this.tourneyService.loadTourneys(this.fromDate, this.toDate);
-        subsbr.subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
-    }
+    // onSearch(value: string) {
+    //     this.clientService.selectedClientOption = this.tourneyFormGroup.get('selectedClientOption').value;
+    //     this.fromDate = this.tourneyFormGroup.get('fromDate').value;
+    //     this.toDate   = this.tourneyFormGroup.get('toDate').value;
+    //     const subsbr = this.tourneyService.loadTourneys(this.fromDate, this.toDate);
+    //     subsbr.subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
+    // }
 
     create() {
         this.router.navigate([NewTourneyDetailView.redirect]);
@@ -81,7 +80,6 @@ export class TourneyListView extends AbstractTourneyListView {
         this.onDeleteTourneyError = false;
 
         if(confirm(popup)) {
-
             const observer = this.tourneyService.deleteTourney(tourney.t, this.deleteTourneyErrorHandler("Delete tourney operation"));
             observer.subscribe(n => this.next(n), e => this.onError(e));
 

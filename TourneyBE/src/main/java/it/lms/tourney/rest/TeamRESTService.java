@@ -54,10 +54,7 @@ public class TeamRESTService extends AbstractRESTService {
 
         List<Team> teamList = teamDao.findTeamsByClientId(clientId);
 
-        List<TeamVO> teamVoList = teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo))
-                .collect(Collectors.toList());
-
-        return teamVoList;
+        return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
     }
 
     @GET
@@ -71,10 +68,7 @@ public class TeamRESTService extends AbstractRESTService {
 
         List<Team> teamList = teamDao.findPlayersBySessionId(sessionId);
 
-        List<TeamVO> teamVoList = teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo))
-                .collect(Collectors.toList());
-
-        return teamVoList;
+        return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
     }
 
     @GET
@@ -103,7 +97,7 @@ public class TeamRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "POST: createTeam(" + tvo + ")");
 
-        Map<String, String> responseObj = new HashMap<String, String>();
+        Map<String, String> responseObj = new HashMap<>();
         Team foundTeam;
         Session spo = null;
         if (tvo.getClientId() == null) {
@@ -162,7 +156,7 @@ public class TeamRESTService extends AbstractRESTService {
     public Response updateTeam(TeamVO tvo) {
 
         logger.debug(logId() + "PUT: updateTeam(" + tvo + ")");
-        Map<String, String> responseObj = new HashMap<String, String>();
+        Map<String, String> responseObj = new HashMap<>();
 
         Team foundTeam;
         Session spo = null;

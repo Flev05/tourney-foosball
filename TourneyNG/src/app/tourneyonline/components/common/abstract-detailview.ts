@@ -19,8 +19,6 @@ export abstract class AbstractDetailView extends AbstractView {
     ngOnInit() {
         super.ngOnInit();
         
-        this.selectedTourney = this.tourneyService.selectedTourney;
-
         this.countryService.loadCountries().subscribe(c => {
             this.countries = c;
         });
@@ -48,5 +46,4 @@ export abstract class AbstractDetailView extends AbstractView {
         console.log("onError()");
         console.log(e);
     }
-
 }

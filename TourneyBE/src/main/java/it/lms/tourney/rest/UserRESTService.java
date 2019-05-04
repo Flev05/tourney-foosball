@@ -56,23 +56,14 @@ public class UserRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
 
-        List<UserRoleClient> urcList = new ArrayList<>();
-
-        if (userDao.isDeveloperUser(loggedUserId)) {
-            urcList = urcDao.findAllUrc();
-        }
-
-        urcList = urcDao.findUrcByUser(loggedUserId);
+        List<UserRoleClient> urcList = urcDao.findUrcByUser(loggedUserId);
 
         List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
 
         List<User> distinctElements = userList.stream().filter(distinctByKey(upo -> upo.getId()))
                 .collect(Collectors.toList());
 
-        List<UserVO> userVoList = distinctElements.stream().map(upo -> converter.convertUserPoVo(upo))
-                .collect(Collectors.toList());
-
-        return userVoList;
+        return distinctElements.stream().map(upo -> converter.convertUserPoVo(upo)).collect(Collectors.toList());
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
@@ -86,10 +77,7 @@ public class UserRESTService extends AbstractRESTService {
         List<User> userList = new ArrayList<>();
         userList.addAll(userSet);
 
-        List<UserVO> userVoList = userList.stream().map(upo -> converter.convertUserPoVo(upo))
-                .collect(Collectors.toList());
-
-        return userVoList;
+        return userList.stream().map(upo -> converter.convertUserPoVo(upo)).collect(Collectors.toList());
     }
 
     @GET
@@ -99,8 +87,7 @@ public class UserRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "GET: findUserById(" + id + ")");
 
-        User user = userDao.getUserById(id);
-        return user;
+        return userDao.getUserById(id);
     }
 
     /**
@@ -118,7 +105,7 @@ public class UserRESTService extends AbstractRESTService {
 
         User user = userDao.findUserBy(username);
         if (user != null) {
-            Map<String, String> responseObj = new HashMap<String, String>();
+            Map<String, String> responseObj = new HashMap<>();
 
             responseObj.put("errorCode", "UserAlreadyExists");
             responseObj.put("message", "User " + uvo.getUsername() + " already exists");

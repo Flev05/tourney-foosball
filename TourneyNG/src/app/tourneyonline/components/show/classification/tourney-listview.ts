@@ -8,6 +8,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -20,9 +21,10 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
         , protected teamService : TeamService
         , public router: Router
         , public loc: Location
-        , protected dfp: DateFormatPipe) 
+        , protected dfp: DateFormatPipe
+        , protected disciplineService: DisciplineService) 
     { 
-        super(ClassificationTourneyListView.redirect, tourneyService, playerService, teamService, router, loc, dfp);
+        super(ClassificationTourneyListView.redirect, tourneyService, playerService, teamService, router, loc, dfp, disciplineService);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

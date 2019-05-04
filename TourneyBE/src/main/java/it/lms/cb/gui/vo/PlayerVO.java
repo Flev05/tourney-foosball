@@ -14,18 +14,14 @@ public class PlayerVO extends AbstractVO {
 
     private String            json;
     private String            playerName;
-    private ClientVO          clientVO;
+    private Integer           clientId;
     private Country           country;
-
-    public PlayerVO() {
-
-    }
 
     @Override
     public String toString() {
 
         return super.toString() + " Player [json=" + json + ", country=" + country + ", playerName=" + playerName
-                + ", clientVO=" + clientVO + ", country=" + country + "]";
+                + ", clientId=" + clientId + ", country=" + country + "]";
     }
 
     public String getJson() {
@@ -48,14 +44,14 @@ public class PlayerVO extends AbstractVO {
         this.playerName = playerName;
     }
 
-    public ClientVO getClientVO() {
+    public Integer getClientId() {
 
-        return clientVO;
+        return clientId;
     }
 
-    public void setClientVO(ClientVO clientVO) {
+    public void setClientId(Integer clientId) {
 
-        this.clientVO = clientVO;
+        this.clientId = clientId;
     }
 
     public Country getCountry() {

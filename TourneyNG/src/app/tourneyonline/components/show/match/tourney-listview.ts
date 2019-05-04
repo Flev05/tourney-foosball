@@ -8,6 +8,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 
 const redirect = '/match/meetinglv';
 
@@ -27,9 +28,10 @@ export class MatchTourneyListView extends AbstractTourneyListView {
         , protected teamService : TeamService
         , public router: Router
         , public location: Location
-        , protected dfp: DateFormatPipe) 
+        , protected dfp: DateFormatPipe
+        , protected disciplineService: DisciplineService) 
     { 
-        super(redirect, tourneyService, playerService, teamService, router, location, dfp);
+        super(redirect, tourneyService, playerService, teamService, router, location, dfp, disciplineService);
     }
 
     onRowSelect(event) {

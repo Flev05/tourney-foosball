@@ -33,13 +33,8 @@ export class LevelService extends AbstractEliminatoryListView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.ngOnInitLight();
     }
-
-    ngOnInitLight() {
-        super.ngOnInit();
-    }
-
+ 
     /**
      * @Override
      * Specializes the corresponding method of the base class because of the asynchrnous behabiour of the
@@ -208,11 +203,10 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private prepareStandaloneTopLevel(topLevel : EliminatoryLevel): void {
         console.log("Entering prepareStandaloneTopLevel()");
-        if( !this.teamService.isTeamsChanged ) {
+        if( !this.selectedTourney.isTeamsChanged ) {
             return;
         }
 
-        this.teamService.isTeamsChanged = false;
         this.removeLevel(topLevel);
 
         let tmpTeams: Array<Team> = this.sortAndPad(this.selectedTourney.teams);

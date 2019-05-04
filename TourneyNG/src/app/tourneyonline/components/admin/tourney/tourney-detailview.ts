@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType, TourneyStatus } from '../../../domain/enumerations';
 import { Discipline } from 'app/tourneyonline/domain/discipline';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
@@ -24,7 +24,6 @@ import { DisciplineService } from 'app/tourneyonline/service/discipline-service'
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Player } from 'app/tourneyonline/domain/player';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
@@ -102,7 +101,7 @@ export class TourneyDetailView extends AbstractDetailView {
         protected meetingRoundService: MeetingRoundService,
         protected meetingPlayoffService: MeetingPlayoffService,
         protected levelService: LevelService,
-        protected disciplineService: DisciplineService,
+        private disciplineService: DisciplineService,
         private router: Router 
     ) { 
         super(tourneyService, location, countryService);
@@ -110,38 +109,48 @@ export class TourneyDetailView extends AbstractDetailView {
 
     ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
-        
         super.ngOnInit();
-
-        this.alignTourney();
-
-        if(this.tourneyService.newTourney) {
-            this.initTourney();
+        
+        if (this.tourneyService.newTourney) {
+            this.initNewTourney();
         }
 
-        this.selectedTourney = this.tourneyService.selectedTourney;
-
+        this.initiDisciplineCombobox();
+    
+        this.alignToTeamAndPlayerDetails();
+        
         this.selectedTourney.datetime = new Date(this.selectedTourney.datetime);
-
         this.atLeastTwoTeams = this.selectedTourney.teams.length >= 2 ? true : false;
         this.teamCols = TeamService.cols;
-
-        if(this.selectedTourney.maxMatchesPerMeeting <= 2) {
+        if (this.selectedTourney.maxMatchesPerMeeting <= 2) {
             this.allMatchesEnabled = false;
         }
-
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin;
-
         this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre";
+
+        if( this.selectedTourney.isTeamsChanged ) {
+            this.resetComboboxes();
+            if( !this.levelService.isStandalone ) {
+                this.selectedTourney.selectedEliminatoryTeamsCombobox = { label: "", value: -1 };
+                this.eliminatoryRows = [];
+            }
+        }
 
         this.refreshTabsAndButtons();
     }
+ 
+    private initiDisciplineCombobox() {
+        this.selectedDiscipline = { label: this.selectedTourney.discipline.name, value: this.selectedTourney.discipline.id };
+        this.disciplines = this.disciplineService.disciplines;
+        this.disciplineOptions = this.disciplineService.disciplineOptions;
+    }
 
-    private initTourney() {
+    private initNewTourney() {
         this.selectedTourney = {};
 
         this.selectedTourney.id = null;
+        this.selectedTourney.tourneyStatus = TourneyStatus.Started;
         this.selectedTourney.datetime = new Date();
         this.selectedTourney.tourneyName = "";
         this.selectedTourney.isDaily = "true";
@@ -168,10 +177,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isOnewayPlayoff = "true";
         this.selectedTourney.teamsWeightEnabled = true;
                 
-        this.selectedTourney.selectedEliminatoryTeamsCombobox = {label: "", value: -1};
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
-
-        this.tourneyService.selectedTourney = this.selectedTourney;    
 
         this.selectedTourney.selectedTabIndex = 0;
         this.selectedTourney.saveButtonEnabled = false;
@@ -179,12 +185,25 @@ export class TourneyDetailView extends AbstractDetailView {
         this.playoffTabEnabled = false;
         this.teamTabEnabled = false;
         this.eliminatoryTabEnabled = false;
-        this.selectedTourney.selectedTeams4PlayoffsCB = {label: "", value: 0};
-        this.selectedTourney.selectedPlayoffsCB       = {label: "", value: 0};
-        this.selectedTourney.selectedRoundsNumCB      = {label: "", value: 0};
+        this.selectedTourney.isTeamsChanged = true;
+
+        this.resetComboboxes();
+
+        this.selectedTourney.selectedEliminatoryTeamsCombobox = { label: "", value: -1 };
+        this.eliminatoryRows = [];
+
+        this.tourneyService.selectedTourney = this.selectedTourney;    
     }
 
-    private refreshTabsAndButtons(): any {
+    private resetComboboxes() {
+        this.selectedTourney.selectedRoundsNumCB = { label: "", value: 0 };
+        this.selectedTourney.selectedTeams4PlayoffsCB = { label: "", value: 0 };
+        this.selectedTourney.selectedPlayoffsCB = { label: "", value: 0 };
+        this.roundRows = [];
+        this.playoffRows = [];
+    }
+
+    private refreshTabsAndButtons( ): void {
         this.modeTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 1 ? true : false
         this.teamTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 2 ? true : false
 
@@ -197,11 +216,12 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.playoffTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 4 ? true : false; 
         if( this.containsPlayoff() && this.playoffTabEnabled) {
-            this.preparePlayoffs();
+            this.preparePlayoffsCombobox();
         }
 
         let eliminatoryIndex = this.getEliminatoryIndex();
-        this.eliminatoryTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= eliminatoryIndex ? true : false;
+        this.eliminatoryTabEnabled = (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= eliminatoryIndex)
+            ? true : false;
 
         if( this.containsEliminatory() && this.eliminatoryTabEnabled ) {
             this.prepareEliminatory();
@@ -223,7 +243,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private makeButtonLabel(): void {
 
-        if(this.selectedTourney.saveButtonEnabled) {
+        if( this.isSaveStatus() ) {
             this.nextButtonLabel = "Salva";
             this.nextButtonIcon = "fa fa-save";
             return;
@@ -239,6 +259,10 @@ export class TourneyDetailView extends AbstractDetailView {
             this.nextButtonLabel = "Avanti";
             this.nextButtonIcon = "fa fa-arrow-right";
         }
+    }
+
+    private isSaveStatus() : boolean {
+        return this.selectedTourney.saveButtonEnabled && (this.selectedTourney.selectedTabIndex < 2 || !this.selectedTourney.isTeamsChanged);
     }
 
     private getLastTabIndex() {
@@ -257,20 +281,19 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     /**
-     * Aligns the global teams and players data to the corresponding teams and players in the
-     * selected trourney. The alignment is on the base of their names
+     * Aligns the global teams and players details to the corresponding teams and players in the
+     * selected trourney. The alignment is on the base of their names and is needed becouse of
+     * the possibility the teams and players could be change their data as addresses, phone number
+     * and email.
      */
-    private alignTourney(): any {
-        this.disciplineService.loadAllDisciplines().subscribe(t => {this.disciplines = t;}
-            , (error) => this.onError(error)
-            , ()=>this.onLoadDisciplineComplete());
-
-        this.teamService.loadAllTeams(()=>this.onLoadTeamComplete());
+    private alignToTeamAndPlayerDetails(): any {
+        if(this.selectedTourney.tourneyStatus != TourneyStatus.Terminated) {
+            this.teamService.loadAllTeams(()=>this.onLoadTeamComplete());
+        }
     }
 
     private onLoadTeamComplete(): void {
         this.playerService.loadAllPlayers(()=>this.onLoadPlayerComplete());
-
         this.alignTeams();
     }
     
@@ -309,18 +332,6 @@ export class TourneyDetailView extends AbstractDetailView {
         team.country = teamFound.country;
         return team;
     }
-    
-    private onLoadDisciplineComplete() {
-        this.disciplineOptions = [];
-        for( let d of this.disciplines ) {
-            let cb : Combobox = {label: d.name, value: d.id};
-            this.disciplineOptions.push(cb);
-        }
-
-        if( this.selectedTourney != undefined ) {
-            this.selectedDiscipline = {label: this.selectedTourney.discipline.name, value: this.selectedTourney.discipline.id};
-        }
-    }
 
     private prepareRoundsCombobox(): void {
         console.log("Entering prepareRoundsCombobox()");
@@ -347,8 +358,8 @@ export class TourneyDetailView extends AbstractDetailView {
         this.atLeastOneRound = this.selectedTourney.rounds.length >= 1 ? true : false;
     }
 
-    private preparePlayoffs(): void {
-        console.log("Entering preparePlayoffs()");
+    private preparePlayoffsCombobox(): void {
+        console.log("Entering preparePlayoffsCombobox()");
         
         this.team4playoffsCombobox = [];
 
@@ -384,10 +395,12 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("Entering prepareEliminatory()");
 
         this.levelService.ngOnInit();
+
         this.eliminatoryCols = this.levelService.eliminatoryCols;
         if(this.selectedTourney.selectedEliminatoryTeamsCombobox.value >= 0 ) {
             this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
         }
+
         this.eliminatoryTeamsCombobox = this.levelService.eliminatoryTeamsCombobox;
     }
 
@@ -396,21 +409,28 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("Entering onChangeTab(): tab=" + index);
 
         this.selectedTourney.selectedTabIndex = index; 
+
+        if( this.selectedTourney.isTeamsChanged ) {
+            this.roundTabEnabled =  false;
+            this.playoffTabEnabled =   false; 
+            this.eliminatoryTabEnabled =  false;
+        }
         this.makeButtonLabel();
     }
 
     addTeams() {
 
-        this.saveTourneyMeetings();
+        // this.saveTourneyMeetings();
+        // let tvo: TourneyVO = this.prepareTourneyVO();
+        // const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        // subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onCompleteAddTeams());
 
-        let tvo: TourneyVO = this.prepareTourneyVO();
-        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onCompleteAddTeams());
-    }
-
-    private onCompleteAddTeams(): void {
         this.router.navigate([REDIRECT_ADD_TEAM_DV]);
     }
+
+    // private onCompleteAddTeams(): void {
+    //     this.router.navigate([REDIRECT_ADD_TEAM_DV]);
+    // }
 
     onTeamRowSelect(event) {
         console.log(event.data);
@@ -439,8 +459,7 @@ export class TourneyDetailView extends AbstractDetailView {
     onTeamEliminatoryNumChange(event) {
         console.log(event);
 
-        this.levelService.onTeamEliminatoryNumChange(this.selectedTourney.selectedEliminatoryTeamsCombobox);
-        this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
+        this.eliminatoryRows = this.levelService.onTeamEliminatoryNumChange(this.selectedTourney.selectedEliminatoryTeamsCombobox);
     }
     
     onDisciplineChange(cb: Combobox) {
@@ -862,7 +881,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log(event);
         this.updatePhases(event, PhaseType.P);
         if(event) {
-            this.preparePlayoffs();
+            this.preparePlayoffsCombobox();
         }
     }
 
@@ -924,7 +943,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     nextTab(): void {
 
-        if( this.selectedTourney.saveButtonEnabled) {
+        if( this.isSaveStatus() ) {
             this.doSave();
             return;
         }
@@ -962,13 +981,14 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.tourneyService.newTourney = false;
-
+        
         if( rewind ) {
+            this.selectedTourney.isTeamsChanged = false;
             this.gotoListView();
             return;
         }
 
-        this.refreshTabsAndButtons();
+        this.ngOnInit();
     }
 
     private saveTourneyMeetings() : void {
@@ -1004,6 +1024,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareTourneyVO() : TourneyVO {
         this.tourneyAlreadyExists = false;
         this.onSaveTourneyError = false;
+        this.tourneyService.selectedTourney = this.selectedTourney;
         this.clearTourneyMeetings();
         let tvo: TourneyVO = {
             id: this.selectedTourney.id,
@@ -1052,7 +1073,7 @@ export class TourneyDetailView extends AbstractDetailView {
         };
     }
 
-    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
         return (res: any): Observable<T> => {
             console.log("Entering saveTourneyErrorHandler()");
             console.log(`${operation} failed!`);
@@ -1144,7 +1165,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     eliminatoryButtonDisabled() : string {
-        return this.selectedTourney.selectedEliminatoryTeamsCombobox.value == 0 ? "disabled" : "";        
+        return this.selectedTourney.selectedEliminatoryTeamsCombobox.value <= 0 ? "disabled" : "";        
     }
 
     onError(n:any) {

@@ -32,3 +32,6 @@ export enum MeetingStatus {
 export enum Roles {
     Developer='DEVELOPER', Owner='OWNER', Admin='ADMIN', Operator='OPERATOR', Follower='FOLLOWER'
 }
+export enum TourneyStatus {
+    Started='S', Running='R', Terminated='E'
+}

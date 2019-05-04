@@ -29,8 +29,29 @@ public class Meeting extends AbstractPO implements Serializable {
     private Integer           eliminatoryId;
     private Country           country;
 
-    public Meeting() {
+    @Override
+    public boolean equals(Object obj) {
 
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Meeting fobj = (Meeting) obj;
+
+        boolean res0 = tourney.equals(fobj.tourney);
+        boolean res1 = roundId.equals(fobj.roundId);
+        boolean res2 = playoffId.equals(fobj.playoffId);
+        boolean res3 = eliminatoryId.equals(fobj.eliminatoryId);
+
+        return res0 && res1 && res2 && res3;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int sum1 = roundId == null ? 0 : roundId.hashCode();
+        int sum2 = playoffId == null ? 0 : playoffId.hashCode();
+        int sum3 = eliminatoryId == null ? 0 : eliminatoryId.hashCode();
+        return tourney.hashCode() + sum1 + sum2 + sum3 + super.hashCode();
     }
 
     @Override
@@ -40,16 +61,12 @@ public class Meeting extends AbstractPO implements Serializable {
                 + ", eliminatoryId=" + eliminatoryId + ", country=" + country + "json=" + json + "]";
     }
 
+    @Override
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
 
         return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
     }
 
     @Column(name = "json")

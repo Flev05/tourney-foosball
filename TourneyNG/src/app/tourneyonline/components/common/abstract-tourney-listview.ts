@@ -12,6 +12,7 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { TeamVO } from 'app/tourneyonline/domain/team-vo';
 import { Player } from 'app/tourneyonline/domain/player';
+import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 
 export abstract class AbstractTourneyListView extends AbstractListView {
 
@@ -29,7 +30,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         , protected teamService : TeamService
         , public router: Router
         , protected location: Location
-        , protected dateFormatPipe: DateFormatPipe) 
+        , protected dateFormatPipe: DateFormatPipe
+        , protected disciplineService: DisciplineService) 
     { 
         super(redirect, tourneyService, router, location);
     }
@@ -40,12 +42,13 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         this.cols = [
             { field: 'tourneyName', header: 'Nome' },
-            { field: 'datetime',    header: 'Data' }
+            { field: 'location',    header: 'Locazione' }
         ];
 
         this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
         this.playerService.loadAllPlayers( () => this.onLoadPlayersComplete() );
         this.teamService.loadAllTeams( () => this.onLoadTeamsComplete() );
+        this.disciplineService.loadAllDisciplines();
     }
 
     private onLoadPlayersComplete(): any {
@@ -62,6 +65,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             this.playerService.playerPool.push(ppo);
         }
     }
+
     private onLoadTeamsComplete(): any {
         console.log("Entering onLoadTeamsComplete()");
         this.teamService.teamPool = [];
@@ -77,6 +81,15 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         }
     }
 
+    onRowSelect(event) {
+        console.log("Entering onRowSelect()");
+        console.log(event.data);
+
+        this.tourneyService.newTourney = false;
+        
+        this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView());
+    }
+
     onError(e: any): any {
         console.log("Entering onError()" + e);
     }
@@ -87,7 +100,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.tourneys = [];
 
         for(let tvo of this.tdbs) {
-            let t: Tourney = JSON.parse(tvo.json);
+            // let t: Tourney = JSON.parse(tvo.json);
+            let t: Tourney = {};
             t.id = tvo.id;
             t.tourneyName = tvo.tourneyName;
             t.country = tvo.country;
@@ -103,21 +117,13 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
-            let dt = this.dateFormatPipe.transform(t.datetime);
-            this.rows.push({t:t, tourneyName: t.tourneyName, datetime: dt});
+            // let dt = this.dateFormatPipe.transform(t.datetime);
+            // this.rows.push({t:t, tourneyName: t.tourneyName, datetime: dt});
+            this.rows.push({id: t.id, tourneyName: t.tourneyName, location: t.country.city});
         }
     }
 
     protected abstract filter(tourneys: Tourney[]): Tourney[];
-
-    onRowSelect(event) {
-        console.log(event.data);
-
-        this.tourneyService.selectedTourney = this.selectedRow.t;
-        this.tourneyService.newTourney = false;
-
-        this.gotoDetailView();
-    }
 
     protected selectPhaseType(tourneys: Array<Tourney>, pt : PhaseType): Array<Tourney> {
         let tempTourneys = new Array<Tourney>();

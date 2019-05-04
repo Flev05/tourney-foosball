@@ -28,8 +28,20 @@ public class Player extends AbstractPO implements Serializable {
     private Country           country;
     private String            json;
 
-    public Player() {
+    @Override
+    public boolean equals(Object obj) {
 
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Player fobj = (Player) obj;
+        return playerName.equals(fobj.playerName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return playerName.hashCode() + super.hashCode();
     }
 
     @Override
@@ -39,16 +51,12 @@ public class Player extends AbstractPO implements Serializable {
                 + ", country=" + country + ", json=" + json + "]";
     }
 
+    @Override
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
 
         return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
     }
 
     @Column(name = "json")

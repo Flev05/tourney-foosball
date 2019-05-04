@@ -26,7 +26,7 @@ export abstract class AbstractListView extends AbstractView {
         console.log("Entering onChangeTab(): tab=" + index);
     }
     
-    protected gotoDetailView() {
+    protected gotoDetailView(): void {
         this.router.navigate([this.redirect]);
     }
 

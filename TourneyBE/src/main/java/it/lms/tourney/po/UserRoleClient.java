@@ -24,26 +24,18 @@ public class UserRoleClient extends AbstractPO implements Serializable {
     private Role              role;
     private Client            client;
 
-    public UserRoleClient() {
-
-    }
-
     @Override
     public String toString() {
 
         return super.toString() + " UserRoleClient [user=" + user + ", role=" + role + ", client=" + client + "]";
     }
 
+    @Override
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
 
         return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
     }
 
     // bi-directional many-to-one association to User

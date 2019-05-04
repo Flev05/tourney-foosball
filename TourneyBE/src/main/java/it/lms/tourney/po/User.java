@@ -53,16 +53,12 @@ public class User extends AbstractPO implements Serializable {
                 + phoneNumber + ", description=" + description + "]";
     }
 
+    @Override
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
 
         return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
     }
 
     @Column(name = "username")

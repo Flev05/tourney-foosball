@@ -42,7 +42,7 @@ export class PlayerService {
         console.log("Constructor of PlayerService");
     }
 
-    loadAllPlayers (complete: () => void): void {
+    loadAllPlayers( complete?: () => void ): void {
 
         let url = loadPlayerBySessionIdUrl;
 
@@ -56,7 +56,22 @@ export class PlayerService {
             catchError(this.handleError('loadAllPlayers', []))
         );
 
-        observer.subscribe(p => this.playerPoolVO = p, e => this.onError(e), () => complete());
+        observer.subscribe(p => this.playerPoolVO = p, e => this.onError(e), () => complete != null ? complete() : this.onLoadPlayersComplete());
+    }
+
+    private onLoadPlayersComplete(): any {
+        console.log("Entering onLoadPlayersComplete()");
+        this.playerPool = [];
+
+        for( let pvo of this.playerPoolVO ) {
+            let ppo: Player = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
+            ppo.country = pvo.country;
+            ppo.clientId = pvo.clientId;
+            ppo.playerName = pvo.playerName;
+
+            this.playerPool.push(ppo);
+        }
     }
 
     private onError(e: any): any {

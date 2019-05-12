@@ -41,9 +41,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
-        protected countryService: CountryService,
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {
@@ -122,7 +121,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         m.id = mdb.id;
     }
 
-    goBack(): void {
+    done(): void {
         this.save();
         super.goBack();
     }

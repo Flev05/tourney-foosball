@@ -35,13 +35,13 @@ export class TeamService {
     ];
     teamPool: Team[] = [];
     teamPoolVO: TeamVO[] = [];
+    isTeamsChanged: any;
     
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }
 
-    loadAllTeams (complete: () => void): void {
- 
+    loadAllTeams (complete?: () => void): void {
         let url = loadTeamBySessionIdUrl;
         if(this.loginService.isUserLogged) {
             url = loadTeamByClientIdUrl + "/" + this.clientService.selectedClient.id;
@@ -53,7 +53,22 @@ export class TeamService {
             catchError(this.handleError('loadAllTeams', []))
         );
 
-        observer.subscribe(t => this.teamPoolVO = t, e => this.onError(e), () => complete())
+        observer.subscribe(t => this.teamPoolVO = t, e => this.onError(e), () => complete != null ? complete() : this.onLoadTeamsComplete());
+    }
+
+    private onLoadTeamsComplete(): any {
+        console.log("Entering onLoadTeamsComplete()");
+        this.teamPool = [];
+
+        for( let pvo of this.teamPoolVO ) {
+            let ppo: TeamVO = JSON.parse(pvo.json);
+            ppo.id = pvo.id;
+            ppo.teamName = pvo.teamName;
+            ppo.country = pvo.country;
+            ppo.clientId = pvo.clientId;
+
+            this.teamPool.push(ppo);
+        }
     }
 
     private onError(e: any): any {

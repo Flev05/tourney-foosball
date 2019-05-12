@@ -56,11 +56,10 @@ export class UrcDetailView extends AbstractDetailView {
         private roleService: RoleService,
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService,
         protected clientService: ClientService,
         protected urcService: UrcService,
     ) {
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

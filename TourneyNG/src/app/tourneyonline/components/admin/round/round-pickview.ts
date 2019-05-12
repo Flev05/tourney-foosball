@@ -9,7 +9,6 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from './meeting-round-service';
@@ -41,10 +40,9 @@ export class RoundPickList extends AbstractDetailView {
         protected location: Location,
         protected router: Router,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService,
         public meetingRoundService: MeetingRoundService,
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

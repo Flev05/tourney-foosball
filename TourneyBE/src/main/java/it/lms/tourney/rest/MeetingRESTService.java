@@ -157,7 +157,7 @@ public class MeetingRESTService extends AbstractRESTService {
     }
 
     /**
-     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
      * map of fields, and related errors.
      */
     @DELETE
@@ -177,18 +177,18 @@ public class MeetingRESTService extends AbstractRESTService {
     }
 
     /**
-     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
      * map of fields, and related errors.
      */
     @DELETE
-    @Path("/deleteAllMeetingsByRoundId/{tourneyId:[0-9][0-9]*}")
+    @Path("/deleteRoundMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAllMeetingsByRoundId(@PathParam("tourneyId") Integer tourneyId) {
+    public Response deleteRoundMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[DELETE: deleteAllMeetingsByRoundId(" + tourneyId + ")]");
+        logger.debug(logId() + "[DELETE: deleteRoundMeetingsByTourneyId(" + tourneyId + ")]");
 
-        meetingDao.deleteAllMeetingsByRoundId(tourneyId);
+        meetingDao.deleteRoundMeetingsByTourneyId(tourneyId);
 
         Response.ResponseBuilder builder = Response.ok();
 
@@ -196,7 +196,7 @@ public class MeetingRESTService extends AbstractRESTService {
     }
 
     /**
-     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
      * map of fields, and related errors.
      */
     @DELETE
@@ -216,18 +216,18 @@ public class MeetingRESTService extends AbstractRESTService {
     }
 
     /**
-     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
      * map of fields, and related errors.
      */
     @DELETE
-    @Path("/deleteByPlayoffId/{tourneyId:[0-9][0-9]*}")
+    @Path("/deletePlayoffMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteByPlayoffId(@PathParam("tourneyId") Integer tourneyId) {
+    public Response deletePlayoffMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[DELETE: deleteByPlayoffId(" + tourneyId + ")]");
+        logger.debug(logId() + "[DELETE: deletePlayoffMeetingsByTourneyId(" + tourneyId + ")]");
 
-        meetingDao.deleteByPlayoffId(tourneyId);
+        meetingDao.deletePlayoffMeetingsByTourneyId(tourneyId);
 
         Response.ResponseBuilder builder = Response.ok();
 
@@ -235,18 +235,38 @@ public class MeetingRESTService extends AbstractRESTService {
     }
 
     /**
-     * Removes a the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
-     * map of fields, and related errors.
+     * Removes the meetings related to the received tourney and eliminatory ids.
      */
     @DELETE
-    @Path("/deleteByEliminatoryId/{tourneyId:[0-9][0-9]*}")
+    @Path("/deleteMeetingsByTourneyAndEliminatoryIds/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteByEliminatoryId(@PathParam("tourneyId") Integer tourneyId) {
+    public Response deleteMeetingsByTourneyAndEliminatoryIds(@PathParam("tourneyId") Integer tourneyId,
+            @PathParam("eliminatoryId") Integer eliminatoryId) {
 
-        logger.debug(logId() + "[DELETE: deleteByEliminatoryId(" + tourneyId + ")]");
+        logger.debug(logId() + "[DELETE: deleteMeetingsByTourneyAndEliminatoryIds(" + tourneyId + ", " + eliminatoryId
+                + ")]");
 
-        meetingDao.deleteByEliminatoryId(tourneyId);
+        meetingDao.deleteMeetingsByTourneyAndEliminatoryIds(tourneyId, eliminatoryId);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
+    /**
+     * Removes the meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a map of
+     * fields, and related errors.
+     */
+    @DELETE
+    @Path("/deleteEliminatoryMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteEliminatoryMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
+
+        logger.debug(logId() + "[DELETE: deleteEliminatoryMeetingsByTourneyId(" + tourneyId + ")]");
+
+        meetingDao.deleteEliminatoryMeetingsByTourneyId(tourneyId);
 
         Response.ResponseBuilder builder = Response.ok();
 

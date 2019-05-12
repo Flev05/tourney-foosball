@@ -28,14 +28,12 @@ export class UserDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         protected urcService: UrcService,
     ) {
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {
 
-        this.countryService.loadCountries().subscribe(data => {
-            this.countries = data;
-        });
+        this.countryService.loadAllCountries() ;
 
         if(this.userService.newUser) {
             this.userService.selectedUser = {

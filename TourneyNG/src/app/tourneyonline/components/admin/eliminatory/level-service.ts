@@ -38,18 +38,18 @@ export class LevelService extends AbstractEliminatoryListView {
     /**
      * @Override
      * Specializes the corresponding method of the base class because of the asynchrnous behabiour of the
-     * http REST call to the BE to load the meetingds from the database.
+     * http REST call to the BE to load the meetings from the database.
      */
     processEliminationTree(): void {
 
         let teamNo: number  = this.selectedTourney.teams.length;
-        if( !this.isStandalone ) {
-            teamNo = this.selectedTourney.selectedEliminatoryTeamsCombobox.value;
+        if( !this.isStandAlone(this.selectedTourney)  ) {
+            teamNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
             if(teamNo == 0) {
                 return;
             }
         } else {
-            this.selectedTourney.selectedEliminatoryTeamsCombobox.value = teamNo;
+            this.selectedTourney.selectedEliminatoryTeamsCB.value = teamNo;
         }
 
         this.processEliminatoryTeams(teamNo);
@@ -73,30 +73,41 @@ export class LevelService extends AbstractEliminatoryListView {
             maxCurrentLevel = this.eliminatoryLevels[0].level;
         }     
 
+        if(selectedLevel == maxCurrentLevel) {
+            if( this.isStandAlone(this.selectedTourney) ) {
+                let topLevel: EliminatoryLevel = this.eliminatoryLevels[0];
+                this.prepareStandaloneTopLevel(topLevel);
+            }
+        }
+
         if(selectedLevel > maxCurrentLevel) {
             if( this.eliminatoryLevels.length > 0 ) {
                 let el: EliminatoryLevel = this.eliminatoryLevels[0];
-                this.resetLevel(el);
+                this.cleanExTopLevel(el);
                 el.isTopLevel = false;
             }
 
             let tempElimList: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
             
-            for(let i = 0; i < levelsCombobox.length; i++ ) {        
+            for(let i = 0; i < levelsCombobox.length; i++ ) {
                 let lcb = levelsCombobox[i];
 
                 if( lcb.value <= maxCurrentLevel ) {
                     break;
                 }
 
-                let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);
-                tempElimList.push(el);
+                let topLevel: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);    
+                tempElimList.push(topLevel);
             }
 
             if( this.eliminatoryLevels.length==0 ) {
                 this.eliminatoryLevels = tempElimList;
             } else {
                 this.eliminatoryLevels = tempElimList.concat(this.eliminatoryLevels);
+            }
+            if( this.isStandAlone(this.selectedTourney) ) {
+                let topLevel: EliminatoryLevel = this.eliminatoryLevels[0];
+                this.prepareStandaloneTopLevel(topLevel);
             }
         } 
         
@@ -106,8 +117,11 @@ export class LevelService extends AbstractEliminatoryListView {
                 this.removeLevel(d);
             }
             let lcb = levelsCombobox[0];
-            let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, 0);
-            this.eliminatoryLevels[0] = el;
+            let topLevel: EliminatoryLevel = this.newEliminatoryLevel(lcb, 0);
+            if( this.isStandAlone(this.selectedTourney) ) {
+                this.prepareStandaloneTopLevel(topLevel);
+            }
+            this.eliminatoryLevels[0] = topLevel;
         }
 
         if(selectedLevel == 1) {
@@ -135,36 +149,21 @@ export class LevelService extends AbstractEliminatoryListView {
      * 
      * @param el eliminatory level to reset
      */
-    private resetLevel(el: EliminatoryLevel) {
-        console.log("Entering resetLevel()");
+    private cleanExTopLevel(el: EliminatoryLevel) {
+        console.log("Entering cleanExTopLevel()");
 
         for (let e of el.eliminatories) {
-            e.round.teams = [];
-            for (let m of e.round.onewayMeetings) {
-                console.log("Clear oneway:");
-                console.log(m);
-                this.updateMeeting(m, e);
-            }
-            for (let m of e.round.roundtripMeetings) {
-                console.log("Clear roundtrip:");
-                console.log(m);
-                this.updateMeeting(m, e);
-            }
-        }
-    }
+            this.meetingService.deleteMeetingsByTourneyAndEliminatoryIds(this.selectedTourney.id, e.id);
 
-    private updateMeeting(m: Meeting, e: Eliminatory) {
-        m.team1.teamName = "";
-        m.team2.teamName = "";
-        if (m.id != null) {
-            let mdb: MeetingDb = this.meetingService.completeEliminatoryMeetingDb(m, this.selectedTourney.id, e.id);
-            this.meetingService.updateMeetingMdb(mdb);
+            e.round.teams = [];
+            e.round.onewayMeetings = [];
+            e.round.roundtripMeetings = [];
         }
     }
 
     /**
      * Removes the received level by removing the teams and all configurated meetings
-     * found in its list of eliminatories
+     * found in its list of eliminatories, at last removes also the el from the selected toruney
      * 
      * @param el eliminatory level to remove
      */
@@ -196,6 +195,15 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     /**
+     * Removes the eleminatory levels for the selected tourney after having removed the corresponding
+     * meetings from the DB
+     */
+    public removeLevels() : void {
+        this.meetingService.deleteEliminatoryMeetingsByTourneyId(this.selectedTourney.id);
+        this.selectedTourney.eliminatoryLevels = [];
+    }
+
+    /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
      * no rounds and no playoffs.
      * 
@@ -203,11 +211,13 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private prepareStandaloneTopLevel(topLevel : EliminatoryLevel): void {
         console.log("Entering prepareStandaloneTopLevel()");
-        if( !this.selectedTourney.isTeamsChanged ) {
-            return;
-        }
 
-        this.removeLevel(topLevel);
+        if( !this.isSomeTeamsChanged(topLevel) ) {
+            console.log("There are the same teams, nothing todo!");
+            return;            
+        }
+        
+        this.cleanExTopLevel(topLevel);
 
         let tmpTeams: Array<Team> = this.sortAndPad(this.selectedTourney.teams);
 
@@ -238,6 +248,33 @@ export class LevelService extends AbstractEliminatoryListView {
             e.round.roundtripMeetings = [m2];
         }
     } 
+
+    /**
+     * Computes the differences from the team list in the selected torney against the team 
+     * list inside the receives eliminatories
+     * 
+     * @param topLevel the level to check
+     * @returns true if bo the team list are the same, false otherwise
+     */
+    private isSomeTeamsChanged(topLevel : EliminatoryLevel): boolean {
+        for( let team of this.selectedTourney.teams ) {
+            for( let el of topLevel.eliminatories ) {
+                if(el.round.teams.find(t => t.teamName == team.teamName) == undefined)  {
+                    return true;
+                }
+            }
+        }
+        
+        for( let el of topLevel.eliminatories ) {
+            for( let team of el.round.teams ) {
+                if(this.selectedTourney.teams.find(t => t.teamName == team.teamName) == undefined)  {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     /**
      * If teams weight not enabled, before sorts the received array of teams in a random way, 
@@ -423,7 +460,7 @@ export class LevelService extends AbstractEliminatoryListView {
         return e;
     }
 
-    onEliminatoryRowSelect(event) {
+    onEliminatoryRowSelect(event): void  {
         console.log("Entering onEliminatoryRowSelect()");
         this.selectedRow = event.data;
 
@@ -433,28 +470,27 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let redirect: string = EliminatoryAutoListView.autoRedirectLV;
 
-        if(!this.isStandalone) {
+        if(!this.isStandAlone(this.selectedTourney) ) {
             redirect = EliminatoryManualListView.manualRedirectLV;
         }
         
         this.router.navigate([redirect]);
     }
    
-    onTeamEliminatoryNumChange(event) : any[] {
+    onEliminatoryTeamNumChange(teamNo : number) : any[] {
 
-        let teamNo: number = this.selectedTourney.selectedEliminatoryTeamsCombobox.value;
         this.processEliminatoryTeams(teamNo);
 
         return this.eliminatoryLevelRows;
     }
 
-    private processEliminatoryTeams(teamCount: number) {
+    private processEliminatoryTeams(teamCount: number): void {
         
         this.prepareEliminationTree(teamCount);
 
-        if( this.isStandalone ) {
-            let topLevel: EliminatoryLevel = this.eliminatoryLevels[0];
-            this.prepareStandaloneTopLevel(topLevel);
+        if( this.isStandAlone(this.selectedTourney)  ) {
+            // let topLevel: EliminatoryLevel = this.eliminatoryLevels[0];
+            // this.prepareStandaloneTopLevel(topLevel);
         } else {
             this.prepareAutomaticEliminatoryRules(teamCount);
         }
@@ -462,7 +498,7 @@ export class LevelService extends AbstractEliminatoryListView {
         this.prepareEliminatoryLevelsGui();
     }
 
-    private prepareEliminatoryLevelsGui() {
+    private prepareEliminatoryLevelsGui(): void  {
         this.eliminatoryCols = super.prepareELCols();
         
         this.eliminatoryLevelRows = [];

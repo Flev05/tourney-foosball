@@ -10,6 +10,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from './team-detailview';
 import { TeamVO } from 'app/tourneyonline/domain/team-vo';
 import { Observable, of } from 'rxjs';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
     templateUrl: './team-listview.html'
@@ -27,6 +28,7 @@ export class TeamListView extends AbstractListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        protected countryService: CountryService,
         private   teamService: TeamService
     ) {
         super(TeamDetailView.redirect, tourneyService, router, location);
@@ -34,7 +36,7 @@ export class TeamListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-        
+        this.countryService.loadAllCountries();
         this.teamService.loadAllTeams( () => this.onComplete() );
     }
 

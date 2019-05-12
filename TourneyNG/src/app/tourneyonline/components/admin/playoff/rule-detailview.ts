@@ -31,9 +31,8 @@ export class RuleDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected tourneyService: TourneyService,
         protected location: Location,
-        protected countryService: CountryService
     ) {
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

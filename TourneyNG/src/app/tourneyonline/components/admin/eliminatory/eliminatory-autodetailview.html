@@ -1,8 +1,8 @@
 <div class="content-section introduction">
     <div>
         <span class="feature-title">Eliminazioni Dirette</span>
-        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-        <h4><span>Livello: {{selectedEliminatoryLevel.name}}</span></h4>
+        <h2><span>Torneo: {{selectedTourney.tourneyName}}</span></h2>
+        <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
         <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
     </div>
 </div>
@@ -37,7 +37,7 @@
 
 <form [formGroup]="eliminatoryFormGroup" >
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
+        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Fatto"></button>
     </div>                  
 
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">

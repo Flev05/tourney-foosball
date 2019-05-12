@@ -1,9 +1,10 @@
 {
-	"id": 21,
-	"datetime": "2019-04-29T22:00:00.000Z",
-	"tourneyName": "Balilla StandAlone",
+	"id": 37,
+	"wizardModeIndex": -1,
+	"datetime": "2019-05-26T22:00:00.000Z",
+	"tourneyName": "Primo Torneo",
 	"isDaily": "true",
-	"address": "Via degli StandAlone",
+	"address": "Via del primo",
 	"tourneyType": "score",
 	"matchBalanceScores": 0,
 	"matchWinnerScores": 3,
@@ -19,307 +20,6 @@
 			"direction": "A",
 			"eliminatories": [
 				{
-					"id": 1123,
-					"round": {
-						"id": 1124,
-						"name": "1",
-						"type": "eliminatory",
-						"teams": [
-							{
-								"id": 1121,
-								"teamName": "",
-								"isDummy": true
-							},
-							{
-								"id": 1122,
-								"teamName": "",
-								"isDummy": true
-							}
-						],
-						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
-					},
-					"rule1": {
-						"id": 1125,
-						"fromRound": {
-							"id": 1126,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1127,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					},
-					"rule2": {
-						"id": 1128,
-						"fromRound": {
-							"id": 1129,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1130,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					}
-				},
-				{
-					"id": 1133,
-					"round": {
-						"id": 1134,
-						"name": "2",
-						"type": "eliminatory",
-						"teams": [
-							{
-								"id": 1131,
-								"teamName": "",
-								"isDummy": true
-							},
-							{
-								"id": 1132,
-								"teamName": "",
-								"isDummy": true
-							}
-						],
-						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
-					},
-					"rule1": {
-						"id": 1135,
-						"fromRound": {
-							"id": 1136,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1137,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					},
-					"rule2": {
-						"id": 1138,
-						"fromRound": {
-							"id": 1139,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1140,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					}
-				},
-				{
-					"id": 1143,
-					"round": {
-						"id": 1144,
-						"name": "3",
-						"type": "eliminatory",
-						"teams": [
-							{
-								"id": 1141,
-								"teamName": "",
-								"isDummy": true
-							},
-							{
-								"id": 1142,
-								"teamName": "",
-								"isDummy": true
-							}
-						],
-						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
-					},
-					"rule1": {
-						"id": 1145,
-						"fromRound": {
-							"id": 1146,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1147,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					},
-					"rule2": {
-						"id": 1148,
-						"fromRound": {
-							"id": 1149,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1150,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					}
-				},
-				{
-					"id": 1153,
-					"round": {
-						"id": 1154,
-						"name": "4",
-						"type": "eliminatory",
-						"teams": [
-							{
-								"id": 1151,
-								"teamName": "",
-								"isDummy": true
-							},
-							{
-								"id": 1152,
-								"teamName": "",
-								"isDummy": true
-							}
-						],
-						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
-					},
-					"rule1": {
-						"id": 1155,
-						"fromRound": {
-							"id": 1156,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1157,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					},
-					"rule2": {
-						"id": 1158,
-						"fromRound": {
-							"id": 1159,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						},
-						"fromPlayoff": {
-							"id": 1160,
-							"position": {
-								"label": "",
-								"value": 0
-							},
-							"round": {
-								"label": "",
-								"value": 0
-							}
-						}
-					}
-				}
-			]
-		},
-		{
-			"id": 2,
-			"name": "Semi finale",
-			"level": 2,
-			"isTopLevel": false,
-			"direction": "A",
-			"eliminatories": [
-				{
 					"id": 1043,
 					"round": {
 						"id": 1044,
@@ -327,19 +27,190 @@
 						"type": "eliminatory",
 						"teams": [
 							{
-								"id": 1041,
-								"teamName": "",
-								"isDummy": true
+								"id": 12,
+								"teamName": "Team 01",
+								"players": [],
+								"clientVO": {
+									"id": 3,
+									"selected": false,
+									"enabled": true,
+									"selectAll": false,
+									"businessName": "Cliente 2",
+									"address": "Via del Cliente, 2",
+									"phoneNumber": "99 8855 44 55",
+									"email": "cliente2@cliente2.com",
+									"siteUrl": "www.cliente2.com",
+									"country": {
+										"id": 2189,
+										"city": "COAZZOLO",
+										"cityCode": "C804",
+										"provinceCode": "AT",
+										"zipCode": "14054",
+										"countryCode": "IT"
+									}
+								},
+								"country": {
+									"id": 7177,
+									"city": "TEANO",
+									"cityCode": "L083",
+									"provinceCode": "CE",
+									"zipCode": "81057",
+									"countryCode": "IT"
+								},
+								"address": "Via del Team, 1",
+								"clientId": 3
 							},
 							{
-								"id": 1042,
+								"id": 1123,
 								"teamName": "",
 								"isDummy": true
 							}
 						],
 						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": "Team 01 - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 12,
+									"teamName": "Team 01",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"country": {
+										"id": 7177,
+										"city": "TEANO",
+										"cityCode": "L083",
+										"provinceCode": "CE",
+										"zipCode": "81057",
+										"countryCode": "IT"
+									},
+									"address": "Via del Team, 1",
+									"clientId": 3
+								},
+								"team2": {
+									"id": 1123,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - Team 01",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1123,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 12,
+									"teamName": "Team 01",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"country": {
+										"id": 7177,
+										"city": "TEANO",
+										"cityCode": "L083",
+										"provinceCode": "CE",
+										"zipCode": "81057",
+										"countryCode": "IT"
+									},
+									"address": "Via del Team, 1",
+									"clientId": 3
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
 					},
 					"rule1": {
 						"id": 1045,
@@ -400,19 +271,190 @@
 						"type": "eliminatory",
 						"teams": [
 							{
-								"id": 1051,
-								"teamName": "",
-								"isDummy": true
+								"id": 13,
+								"teamName": "Team 02",
+								"players": [],
+								"clientVO": {
+									"id": 3,
+									"selected": false,
+									"enabled": true,
+									"selectAll": false,
+									"businessName": "Cliente 2",
+									"address": "Via del Cliente, 2",
+									"phoneNumber": "99 8855 44 55",
+									"email": "cliente2@cliente2.com",
+									"siteUrl": "www.cliente2.com",
+									"country": {
+										"id": 2189,
+										"city": "COAZZOLO",
+										"cityCode": "C804",
+										"provinceCode": "AT",
+										"zipCode": "14054",
+										"countryCode": "IT"
+									}
+								},
+								"country": {
+									"id": 5668,
+									"city": "REALMONTE",
+									"cityCode": "H205",
+									"provinceCode": "AG",
+									"zipCode": "92010",
+									"countryCode": "IT"
+								},
+								"address": "Via del Team, 2",
+								"clientId": 3
 							},
 							{
-								"id": 1052,
+								"id": 1122,
 								"teamName": "",
 								"isDummy": true
 							}
 						],
 						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": "Team 02 - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 13,
+									"teamName": "Team 02",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"country": {
+										"id": 5668,
+										"city": "REALMONTE",
+										"cityCode": "H205",
+										"provinceCode": "AG",
+										"zipCode": "92010",
+										"countryCode": "IT"
+									},
+									"address": "Via del Team, 2",
+									"clientId": 3
+								},
+								"team2": {
+									"id": 1122,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - Team 02",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1122,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 13,
+									"teamName": "Team 02",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"country": {
+										"id": 5668,
+										"city": "REALMONTE",
+										"cityCode": "H205",
+										"provinceCode": "AG",
+										"zipCode": "92010",
+										"countryCode": "IT"
+									},
+									"address": "Via del Team, 2",
+									"clientId": 3
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
 					},
 					"rule1": {
 						"id": 1055,
@@ -464,37 +506,199 @@
 							}
 						}
 					}
-				}
-			]
-		},
-		{
-			"id": 1,
-			"name": "Finalissima 1° e 2° posto",
-			"level": 1,
-			"isTopLevel": false,
-			"direction": "R",
-			"eliminatories": [
+				},
 				{
 					"id": 1063,
 					"round": {
 						"id": 1064,
-						"name": "1",
+						"name": "3",
 						"type": "eliminatory",
 						"teams": [
 							{
-								"id": 1061,
-								"teamName": "",
-								"isDummy": true
+								"id": 14,
+								"teamName": "Team 03",
+								"players": [],
+								"clientVO": {
+									"id": 3,
+									"selected": false,
+									"enabled": true,
+									"selectAll": false,
+									"businessName": "Cliente 2",
+									"address": "Via del Cliente, 2",
+									"phoneNumber": "99 8855 44 55",
+									"email": "cliente2@cliente2.com",
+									"siteUrl": "www.cliente2.com",
+									"country": {
+										"id": 2189,
+										"city": "COAZZOLO",
+										"cityCode": "C804",
+										"provinceCode": "AT",
+										"zipCode": "14054",
+										"countryCode": "IT"
+									}
+								},
+								"address": "Via del Team 03",
+								"country": {
+									"id": 5712,
+									"city": "RIANO",
+									"cityCode": "H267",
+									"provinceCode": "RM",
+									"zipCode": "00060",
+									"countryCode": "IT"
+								},
+								"clientId": 3
 							},
 							{
-								"id": 1062,
+								"id": 1121,
 								"teamName": "",
 								"isDummy": true
 							}
 						],
 						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": "Team 03 - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 14,
+									"teamName": "Team 03",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"address": "Via del Team 03",
+									"country": {
+										"id": 5712,
+										"city": "RIANO",
+										"cityCode": "H267",
+										"provinceCode": "RM",
+										"zipCode": "00060",
+										"countryCode": "IT"
+									},
+									"clientId": 3
+								},
+								"team2": {
+									"id": 1121,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - Team 03",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1121,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 14,
+									"teamName": "Team 03",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"address": "Via del Team 03",
+									"country": {
+										"id": 5712,
+										"city": "RIANO",
+										"cityCode": "H267",
+										"provinceCode": "RM",
+										"zipCode": "00060",
+										"countryCode": "IT"
+									},
+									"clientId": 3
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
 					},
 					"rule1": {
 						"id": 1065,
@@ -546,37 +750,229 @@
 							}
 						}
 					}
-				}
-			]
-		},
-		{
-			"id": 1,
-			"name": "Finalina 3° e 4° posto",
-			"level": -1,
-			"isTopLevel": false,
-			"direction": "R",
-			"eliminatories": [
+				},
 				{
 					"id": 1073,
 					"round": {
 						"id": 1074,
-						"name": "1",
+						"name": "4",
 						"type": "eliminatory",
 						"teams": [
 							{
-								"id": 1071,
-								"teamName": "",
-								"isDummy": true
+								"id": 15,
+								"teamName": "Team 04",
+								"players": [],
+								"clientVO": {
+									"id": 3,
+									"selected": false,
+									"enabled": true,
+									"selectAll": false,
+									"businessName": "Cliente 2",
+									"address": "Via del Cliente, 2",
+									"phoneNumber": "99 8855 44 55",
+									"email": "cliente2@cliente2.com",
+									"siteUrl": "www.cliente2.com",
+									"country": {
+										"id": 2189,
+										"city": "COAZZOLO",
+										"cityCode": "C804",
+										"provinceCode": "AT",
+										"zipCode": "14054",
+										"countryCode": "IT"
+									}
+								},
+								"address": "Via del Team, 4",
+								"country": {
+									"id": 7178,
+									"city": "TEGGIANO",
+									"cityCode": "D292",
+									"provinceCode": "SA",
+									"zipCode": "84039",
+									"countryCode": "IT"
+								},
+								"clientId": 3
 							},
 							{
-								"id": 1072,
-								"teamName": "",
-								"isDummy": true
+								"id": 50,
+								"teamName": "Team 05",
+								"players": [],
+								"address": "Via del Team 05",
+								"country": {
+									"id": 7202,
+									"city": "TERME VIGLIATORE",
+									"cityCode": "M210",
+									"provinceCode": "ME",
+									"zipCode": "98050",
+									"countryCode": "IT"
+								},
+								"clientId": 3
 							}
 						],
 						"classification": [],
-						"onewayMeetings": [],
-						"roundtripMeetings": []
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": "Team 04 - Team 05",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 15,
+									"teamName": "Team 04",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"address": "Via del Team, 4",
+									"country": {
+										"id": 7178,
+										"city": "TEGGIANO",
+										"cityCode": "D292",
+										"provinceCode": "SA",
+										"zipCode": "84039",
+										"countryCode": "IT"
+									},
+									"clientId": 3
+								},
+								"team2": {
+									"id": 50,
+									"teamName": "Team 05",
+									"players": [],
+									"address": "Via del Team 05",
+									"country": {
+										"id": 7202,
+										"city": "TERME VIGLIATORE",
+										"cityCode": "M210",
+										"provinceCode": "ME",
+										"zipCode": "98050",
+										"countryCode": "IT"
+									},
+									"clientId": 3
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": "Team 05 - Team 04",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 50,
+									"teamName": "Team 05",
+									"players": [],
+									"address": "Via del Team 05",
+									"country": {
+										"id": 7202,
+										"city": "TERME VIGLIATORE",
+										"cityCode": "M210",
+										"provinceCode": "ME",
+										"zipCode": "98050",
+										"countryCode": "IT"
+									},
+									"clientId": 3
+								},
+								"team2": {
+									"id": 15,
+									"teamName": "Team 04",
+									"players": [],
+									"clientVO": {
+										"id": 3,
+										"selected": false,
+										"enabled": true,
+										"selectAll": false,
+										"businessName": "Cliente 2",
+										"address": "Via del Cliente, 2",
+										"phoneNumber": "99 8855 44 55",
+										"email": "cliente2@cliente2.com",
+										"siteUrl": "www.cliente2.com",
+										"country": {
+											"id": 2189,
+											"city": "COAZZOLO",
+											"cityCode": "C804",
+											"provinceCode": "AT",
+											"zipCode": "14054",
+											"countryCode": "IT"
+										}
+									},
+									"address": "Via del Team, 4",
+									"country": {
+										"id": 7178,
+										"city": "TEGGIANO",
+										"cityCode": "D292",
+										"provinceCode": "SA",
+										"zipCode": "84039",
+										"countryCode": "IT"
+									},
+									"clientId": 3
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
 					},
 					"rule1": {
 						"id": 1075,
@@ -630,104 +1026,805 @@
 					}
 				}
 			]
+		},
+		{
+			"id": 2,
+			"name": "Semi finale",
+			"level": 2,
+			"isTopLevel": false,
+			"direction": "A",
+			"eliminatories": [
+				{
+					"id": 1083,
+					"round": {
+						"id": 1084,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1081,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1082,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 1081,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1082,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1082,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1081,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
+					},
+					"rule1": {
+						"id": 1085,
+						"fromRound": {
+							"id": 1086,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1087,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1088,
+						"fromRound": {
+							"id": 1089,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1090,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				},
+				{
+					"id": 1093,
+					"round": {
+						"id": 1094,
+						"name": "2",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1091,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1092,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 1091,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1092,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1092,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1091,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
+					},
+					"rule1": {
+						"id": 1095,
+						"fromRound": {
+							"id": 1096,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1097,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1098,
+						"fromRound": {
+							"id": 1099,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1100,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "Finalissima 1° e 2° posto",
+			"level": 1,
+			"isTopLevel": false,
+			"direction": "A",
+			"eliminatories": [
+				{
+					"id": 1103,
+					"round": {
+						"id": 1104,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1101,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1102,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 1101,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1102,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1102,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1101,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
+					},
+					"rule1": {
+						"id": 1105,
+						"fromRound": {
+							"id": 1106,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1107,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1108,
+						"fromRound": {
+							"id": 1109,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1110,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 1,
+			"name": "Finalina 3° e 4° posto",
+			"level": -1,
+			"isTopLevel": false,
+			"direction": "A",
+			"eliminatories": [
+				{
+					"id": 1113,
+					"round": {
+						"id": 1114,
+						"name": "1",
+						"type": "eliminatory",
+						"teams": [
+							{
+								"id": 1111,
+								"teamName": "",
+								"isDummy": true
+							},
+							{
+								"id": 1112,
+								"teamName": "",
+								"isDummy": true
+							}
+						],
+						"classification": [],
+						"onewayMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "A",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 1,
+								"team1": {
+									"id": 1111,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1112,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						],
+						"roundtripMeetings": [
+							{
+								"id": null,
+								"name": " - ",
+								"direction": "R",
+								"datetime": "2019-05-26T22:00:00.000Z",
+								"address": "Via del primo",
+								"country": {
+									"id": 4764,
+									"city": "OPERA",
+									"cityCode": "G078",
+									"provinceCode": "MI",
+									"zipCode": "20090",
+									"countryCode": "IT"
+								},
+								"day": 2,
+								"team1": {
+									"id": 1112,
+									"teamName": "",
+									"isDummy": true
+								},
+								"team2": {
+									"id": 1111,
+									"teamName": "",
+									"isDummy": true
+								},
+								"points1": 0,
+								"points2": 0,
+								"rule1": null,
+								"rule2": null,
+								"ruleName": "",
+								"status": "P",
+								"matches": [
+									{
+										"id": 0,
+										"players1": [],
+										"players2": [],
+										"score1": 0,
+										"score2": 0
+									}
+								]
+							}
+						]
+					},
+					"rule1": {
+						"id": 1115,
+						"fromRound": {
+							"id": 1116,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1117,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					},
+					"rule2": {
+						"id": 1118,
+						"fromRound": {
+							"id": 1119,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						},
+						"fromPlayoff": {
+							"id": 1120,
+							"position": {
+								"label": "",
+								"value": 0
+							},
+							"round": {
+								"label": "",
+								"value": 0
+							}
+						}
+					}
+				}
+			]
 		}
 	],
 	"teams": [
 		{
-			"id": 26,
-			"teamName": "Team 05",
+			"id": 12,
+			"teamName": "Team 01",
 			"players": [],
-			"address": "Via del Team, 5",
+			"clientVO": {
+				"id": 3,
+				"selected": false,
+				"enabled": true,
+				"selectAll": false,
+				"businessName": "Cliente 2",
+				"address": "Via del Cliente, 2",
+				"phoneNumber": "99 8855 44 55",
+				"email": "cliente2@cliente2.com",
+				"siteUrl": "www.cliente2.com",
+				"country": {
+					"id": 2189,
+					"city": "COAZZOLO",
+					"cityCode": "C804",
+					"provinceCode": "AT",
+					"zipCode": "14054",
+					"countryCode": "IT"
+				}
+			},
 			"country": {
-				"id": 7419,
-				"city": "TRENTINARA",
-				"cityCode": "L377",
-				"provinceCode": "SA",
-				"zipCode": "84070",
+				"id": 7177,
+				"city": "TEANO",
+				"cityCode": "L083",
+				"provinceCode": "CE",
+				"zipCode": "81057",
 				"countryCode": "IT"
 			},
-			"clientId": 4
+			"address": "Via del Team, 1",
+			"clientId": 3
 		},
 		{
-			"id": 27,
-			"teamName": "Team 06",
-			"players": [],
-			"address": "Via del Team, 6",
-			"country": {
-				"id": 2642,
-				"city": "ERACLEA",
-				"cityCode": "D415",
-				"provinceCode": "VE",
-				"zipCode": "30020",
-				"countryCode": "IT"
-			},
-			"clientId": 4
-		},
-		{
-			"id": 28,
-			"teamName": "Team 07",
-			"players": [],
-			"address": "Via del Team, 7",
-			"country": {
-				"id": 7419,
-				"city": "TRENTINARA",
-				"cityCode": "L377",
-				"provinceCode": "SA",
-				"zipCode": "84070",
-				"countryCode": "IT"
-			},
-			"clientId": 4
-		},
-		{
-			"id": 29,
-			"teamName": "Team 08",
-			"players": [],
-			"address": "Via del Team, 8",
-			"country": {
-				"id": 7402,
-				"city": "TREBISACCE",
-				"cityCode": "L353",
-				"provinceCode": "CS",
-				"zipCode": "87075",
-				"countryCode": "IT"
-			},
-			"clientId": 4
-		},
-		{
-			"id": 36,
-			"teamName": "Team 15",
-			"players": [],
-			"address": "Via del Team 15",
-			"country": {
-				"id": 7018,
-				"city": "SPELLO",
-				"cityCode": "I888",
-				"provinceCode": "PG",
-				"zipCode": "06038",
-				"countryCode": "IT"
-			},
-			"clientId": 4
-		},
-		{
-			"id": 30,
-			"teamName": "Team 09",
-			"players": [],
-			"address": "Via del Team 09",
-			"country": {
-				"id": 7013,
-				"city": "SPADAFORA",
-				"cityCode": "I881",
-				"provinceCode": "ME",
-				"zipCode": "98048",
-				"countryCode": "IT"
-			},
-			"clientId": 4
-		},
-		{
-			"id": 23,
+			"id": 13,
 			"teamName": "Team 02",
 			"players": [],
+			"clientVO": {
+				"id": 3,
+				"selected": false,
+				"enabled": true,
+				"selectAll": false,
+				"businessName": "Cliente 2",
+				"address": "Via del Cliente, 2",
+				"phoneNumber": "99 8855 44 55",
+				"email": "cliente2@cliente2.com",
+				"siteUrl": "www.cliente2.com",
+				"country": {
+					"id": 2189,
+					"city": "COAZZOLO",
+					"cityCode": "C804",
+					"provinceCode": "AT",
+					"zipCode": "14054",
+					"countryCode": "IT"
+				}
+			},
+			"country": {
+				"id": 5668,
+				"city": "REALMONTE",
+				"cityCode": "H205",
+				"provinceCode": "AG",
+				"zipCode": "92010",
+				"countryCode": "IT"
+			},
 			"address": "Via del Team, 2",
+			"clientId": 3
+		},
+		{
+			"id": 14,
+			"teamName": "Team 03",
+			"players": [],
+			"clientVO": {
+				"id": 3,
+				"selected": false,
+				"enabled": true,
+				"selectAll": false,
+				"businessName": "Cliente 2",
+				"address": "Via del Cliente, 2",
+				"phoneNumber": "99 8855 44 55",
+				"email": "cliente2@cliente2.com",
+				"siteUrl": "www.cliente2.com",
+				"country": {
+					"id": 2189,
+					"city": "COAZZOLO",
+					"cityCode": "C804",
+					"provinceCode": "AT",
+					"zipCode": "14054",
+					"countryCode": "IT"
+				}
+			},
+			"address": "Via del Team 03",
+			"country": {
+				"id": 5712,
+				"city": "RIANO",
+				"cityCode": "H267",
+				"provinceCode": "RM",
+				"zipCode": "00060",
+				"countryCode": "IT"
+			},
+			"clientId": 3
+		},
+		{
+			"id": 15,
+			"teamName": "Team 04",
+			"players": [],
+			"clientVO": {
+				"id": 3,
+				"selected": false,
+				"enabled": true,
+				"selectAll": false,
+				"businessName": "Cliente 2",
+				"address": "Via del Cliente, 2",
+				"phoneNumber": "99 8855 44 55",
+				"email": "cliente2@cliente2.com",
+				"siteUrl": "www.cliente2.com",
+				"country": {
+					"id": 2189,
+					"city": "COAZZOLO",
+					"cityCode": "C804",
+					"provinceCode": "AT",
+					"zipCode": "14054",
+					"countryCode": "IT"
+				}
+			},
+			"address": "Via del Team, 4",
+			"country": {
+				"id": 7178,
+				"city": "TEGGIANO",
+				"cityCode": "D292",
+				"provinceCode": "SA",
+				"zipCode": "84039",
+				"countryCode": "IT"
+			},
+			"clientId": 3
+		},
+		{
+			"id": 50,
+			"teamName": "Team 05",
+			"players": [],
+			"address": "Via del Team 05",
 			"country": {
 				"id": 7202,
 				"city": "TERME VIGLIATORE",
@@ -736,44 +1833,14 @@
 				"zipCode": "98050",
 				"countryCode": "IT"
 			},
-			"clientId": 4
-		},
-		{
-			"id": 38,
-			"teamName": "Team 17",
-			"players": [],
-			"address": "Via del Team 17",
-			"country": {
-				"id": 7027,
-				"city": "SPIAZZO",
-				"cityCode": "I899",
-				"provinceCode": "TN",
-				"zipCode": "38088",
-				"countryCode": "IT"
-			},
-			"clientId": 4
-		},
-		{
-			"id": 37,
-			"teamName": "Team 16",
-			"players": [],
-			"address": "Via del Team 16",
-			"country": {
-				"id": 7019,
-				"city": "SPERA",
-				"cityCode": "I889",
-				"provinceCode": "TN",
-				"zipCode": "38059",
-				"countryCode": "IT"
-			},
-			"clientId": 4
+			"clientId": 3
 		}
 	],
 	"playoffs": [],
 	"pointsNeededToWin": 9,
 	"pointsGoldenGoalTieBreakWin": 2,
 	"pointsGoldenGoalTieBreakDefeat": 1,
-	"maxMatchesPerMeeting": 3,
+	"maxMatchesPerMeeting": 1,
 	"isAllMatches": "true",
 	"playersPerTeam": 1,
 	"phases": [
@@ -784,17 +1851,12 @@
 	"isOnewayRound": "true",
 	"isOnewayPlayoff": "true",
 	"teamsWeightEnabled": true,
-	"selectedEliminatoryTeamsCombobox": {
-		"label": "",
-		"value": 8
-	},
 	"discipline": {
 		"id": 1,
 		"name": "Calcio Balilla",
 		"description": ""
 	},
-	"selectedTabIndex": 3,
-	"saveButtonEnabled": true,
+	"selectedTabIndex": 0,
 	"selectedTeams4PlayoffsCB": {
 		"label": "",
 		"value": 0
@@ -807,32 +1869,16 @@
 		"label": "",
 		"value": 0
 	},
+	"selectedEliminatoryTeamsCB": {
+		"label": "",
+		"value": 5
+	},
 	"country": {
-		"id": 7055,
-		"city": "STAGNO LOMBARDO",
-		"cityCode": "I935",
-		"provinceCode": "CR",
-		"zipCode": "26049",
+		"id": 4764,
+		"city": "OPERA",
+		"cityCode": "G078",
+		"provinceCode": "MI",
+		"zipCode": "20090",
 		"countryCode": "IT"
-	},
-	"clientVO": {
-		"id": 4,
-		"selected": false,
-		"enabled": true,
-		"selectAll": false,
-		"businessName": "Cliente 3",
-		"address": "Via del Cliente, 3",
-		"phoneNumber": "555 666 999 8",
-		"email": "cliente3@cliente3.com",
-		"siteUrl": "www.cliente3.com",
-		"country": {
-			"id": 2177,
-			"city": "CLAINO CON OSTENO",
-			"cityCode": "C787",
-			"provinceCode": "CO",
-			"zipCode": "22010",
-			"countryCode": "IT"
-		}
-	},
-	"isTeamsChanged": true
+	}
 }

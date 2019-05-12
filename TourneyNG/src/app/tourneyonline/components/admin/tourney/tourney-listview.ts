@@ -16,6 +16,9 @@ import { NewTourneyDetailView } from './new-tourney-detailview';
 import { TourneyDetailView } from './tourney-detailview';
 import { Observable, of } from 'rxjs';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { Team } from 'app/tourneyonline/domain/team';
+import { Player } from 'app/tourneyonline/domain/player';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -31,6 +34,7 @@ export class TourneyListView extends AbstractTourneyListView {
 
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
+        , protected countryService: CountryService
         , private clientService : ClientService
         , private loginService : LoginService
         , protected playerService : PlayerService
@@ -40,7 +44,7 @@ export class TourneyListView extends AbstractTourneyListView {
         , protected dfp: DateFormatPipe
         , protected disciplineService: DisciplineService ) 
     { 
-        super(TourneyDetailView.redirect, tourneyService, playerService, teamService, router, loc, dfp, disciplineService);
+        super(TourneyDetailView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, loc, dfp);
     }
 
     ngOnInit() {
@@ -68,6 +72,77 @@ export class TourneyListView extends AbstractTourneyListView {
     //     const subsbr = this.tourneyService.loadTourneys(this.fromDate, this.toDate);
     //     subsbr.subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
     // }
+    
+    onRowSelect(event) {
+        console.log("Entering onRowSelect()");
+        console.log(event.data);
+
+        this.tourneyService.newTourney = false;
+        
+        this.tourneyService.loadTourneyById(event.data.id, () => this.onLoadTourneyComplete( ));
+    }
+
+    private onLoadTourneyComplete() {
+        this.selectedTourney = this.tourneyService.selectedTourney;
+        this.alignToTeamAndPlayerDetails();
+    }
+
+    /**
+     * Aligns the global teams and players details to the corresponding teams and players in the
+     * selected trourney. The alignment is on the base of their names and is needed becouse of
+     * the possibility the teams and players could be change their data as addresses, phone number
+     * and email.
+     */
+    private alignToTeamAndPlayerDetails(): any {
+        if(this.selectedTourney.wizardModeIndex != -1) {
+            this.teamService.loadAllTeams(()=>this.onLoadTeamComplete());
+        } else {
+            this.gotoDetailView();
+        }
+    }
+
+    private onLoadTeamComplete(): void {
+        this.playerService.loadAllPlayers(()=>this.onLoadPlayerComplete());
+        this.alignTeams();
+    }
+    
+    private alignTeams(): any {
+        for( let team of this.selectedTourney.teams ) {
+            let teamFound = this.teamService.teamPool.find( t => t.teamName == team.teamName );
+            if( teamFound != undefined ) {
+                team = this.copyTeam(team, teamFound);
+            }
+        }
+    }
+    
+    private onLoadPlayerComplete(): void {
+        for( let team of this.selectedTourney.teams ) {
+            for( let player of team.players ) {
+                let playerFound = this.playerService.playerPool.find( p => p.playerName == player.playerName );
+                if( playerFound != undefined ) {
+                    player = this.copyPlayer(player, playerFound);
+                }
+            }
+        }
+
+        this.gotoDetailView();
+    }
+
+    private copyPlayer(player: Player, pf:  Player):  Player {
+        player.id = pf.id;
+        player.country = pf.country;
+        player.address = pf.address;
+        player.email = pf.email;
+        player.phoneNumber = pf.phoneNumber;
+        return player;
+    }
+
+    private copyTeam(team: Team, teamFound: Team): Team    {     
+        team.id = teamFound.id;
+        team.address = teamFound.address;
+        team.country = teamFound.country;
+        return team;
+    }
 
     create() {
         this.router.navigate([NewTourneyDetailView.redirect]);
@@ -80,10 +155,15 @@ export class TourneyListView extends AbstractTourneyListView {
         this.onDeleteTourneyError = false;
 
         if(confirm(popup)) {
-            const observer = this.tourneyService.deleteTourney(tourney.t, this.deleteTourneyErrorHandler("Delete tourney operation"));
-            observer.subscribe(n => this.next(n), e => this.onError(e));
+            const observer = this.tourneyService.deleteTourney(tourney, this.deleteTourneyErrorHandler("Delete tourney operation"));
+            observer.subscribe(n => this.next(n), e => this.onError(e), () => this.doDeleteComplete(tourney));
+        }
+    }
 
-            let index: number = this.tourneys.indexOf(tourney.t);
+    doDeleteComplete(tourney : Tourney): any {
+        let deletedTourney = this.tourneys.find( t => t.tourneyName == tourney.tourneyName );
+        if( deletedTourney != undefined ) {
+            let index: number = this.tourneys.indexOf(deletedTourney);
             if(index > -1) {
                 this.tourneys.splice(index, 1);
                 this.rows.splice(index, 1);

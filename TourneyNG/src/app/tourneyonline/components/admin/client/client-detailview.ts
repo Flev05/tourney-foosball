@@ -42,16 +42,14 @@ export class ClientDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         private   clientService: ClientService,
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {
         console.log("ClientDetailView.ngOnInit() ");
         super.ngOnInit();
         
-        this.countryService.loadCountries().subscribe(data => {
-            this.countries = data;
-        });
+        this.countryService.loadAllCountries();
 
         this.clientAddress = "";
 

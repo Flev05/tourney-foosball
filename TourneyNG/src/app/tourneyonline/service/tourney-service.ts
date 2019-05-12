@@ -135,9 +135,7 @@ export class TourneyService extends AbstractService {
 
         let max: number = this.selectedTourney.teams.length;
     
-        // let all = {label: "Tutte", value: max};
         this.eliminatoryTeamsCombobox = [];
-        // this.eliminatoryTeamsCombobox.push(all);
         for(let i=min; i<=max; i++) {
             this.eliminatoryTeamsCombobox.push({label: "" + i, value: i});
         }
@@ -171,8 +169,8 @@ export class TourneyService extends AbstractService {
             }                    
         }
 
-        if(this.selectedTourney.selectedEliminatoryTeamsCombobox == undefined) {
-            this.selectedTourney.selectedEliminatoryTeamsCombobox = this.eliminatoryTeamsCombobox[0];
+        if(this.selectedTourney.selectedEliminatoryTeamsCB == undefined) {
+            this.selectedTourney.selectedEliminatoryTeamsCB = this.eliminatoryTeamsCombobox[0];
         }
 
         return teamsNo;
@@ -254,7 +252,7 @@ export class TourneyService extends AbstractService {
     }
 
     private onLoadTourneyByIdComplete(complete: () => void) {
-        console.log("TourneyDetailView.onLoadTourneyByIdComplete() ");
+        console.log("TourneyService.onLoadTourneyByIdComplete() ");
 
         this.selectedTourney = JSON.parse(this.tvo.json);
 
@@ -373,7 +371,6 @@ export class TourneyService extends AbstractService {
         for(let m of r.onewayMeetings) {
             this.meetingService.deleteMeeting(m);
         }
-
         r.onewayMeetings = [];
     }
 

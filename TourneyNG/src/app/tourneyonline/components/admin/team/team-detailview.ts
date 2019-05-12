@@ -5,14 +5,12 @@ import { Message } from 'primeng/api';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TeamVO } from 'app/tourneyonline/domain/team-vo';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
-import { TourneyStatus } from 'app/tourneyonline/domain/enumerations';
-import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -37,13 +35,14 @@ export class TeamDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         private   teamService: TeamService
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {
         console.log("TeamDetailView.ngOnInit() ");
 
         super.ngOnInit();
+        this.countries = this.countryService.countries;
 
         this.selectedTeam = this.teamService.selectedTeam;
         
@@ -74,39 +73,39 @@ export class TeamDetailView extends AbstractDetailView {
         // this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
     } 
     
-    private onLoadAllTourneysComplete(): void {
-        let tourneys: Tourney[] = [];
+    // private onLoadAllTourneysComplete(): void {
+    //     let tourneys: Tourney[] = [];
 
-        for(let tvo of this.tdbs) {
-            let t: Tourney = JSON.parse(tvo.json);
-            t.id = tvo.id;
-            t.tourneyName = tvo.tourneyName;
-            t.country = tvo.country;
-            t.clientVO = tvo.clientVO;
-            tourneys.push(t);
-        }
+    //     for(let tvo of this.tdbs) {
+    //         let t: Tourney = JSON.parse(tvo.json);
+    //         t.id = tvo.id;
+    //         t.tourneyName = tvo.tourneyName;
+    //         t.country = tvo.country;
+    //         t.clientVO = tvo.clientVO;
+    //         tourneys.push(t);
+    //     }
 
-        for( let tourney of tourneys ) {
-            if( tourney.tourneyStatus != TourneyStatus.Terminated ) {
-                let foundTeam: Team = tourney.teams.find(t => t.teamName == this.selectedTeam.teamName);
-                if( foundTeam != undefined ) {
-                    let index = tourney.teams.indexOf(foundTeam);
-                    if( index != -1 ) {
-                        tourney.teams[index] = this.selectedTeam;
-                        let tvo: TourneyVO = {
-                            id: tourney.id,
-                            tourneyName: tourney.tourneyName,
-                            country: tourney.country,
-                            clientVO: this.clientService.selectedClient,
-                            json: JSON.stringify(tourney)
-                        };
-                        const obs = this.tourneyService.saveTourney(tvo,  this.saveTourneyErrorHandler("Tourney update failed"));
-                        obs.subscribe(cs => this.next(cs));
-                    }
-                }
-            }
-        }
-    }
+    //     for( let tourney of tourneys ) {
+    //         if( tourney.tourneyStatus != TourneyStatus.Terminated ) {
+    //             let foundTeam: Team = tourney.teams.find(t => t.teamName == this.selectedTeam.teamName);
+    //             if( foundTeam != undefined ) {
+    //                 let index = tourney.teams.indexOf(foundTeam);
+    //                 if( index != -1 ) {
+    //                     tourney.teams[index] = this.selectedTeam;
+    //                     let tvo: TourneyVO = {
+    //                         id: tourney.id,
+    //                         tourneyName: tourney.tourneyName,
+    //                         country: tourney.country,
+    //                         clientVO: this.clientService.selectedClient,
+    //                         json: JSON.stringify(tourney)
+    //                     };
+    //                     const obs = this.tourneyService.saveTourney(tvo,  this.saveTourneyErrorHandler("Tourney update failed"));
+    //                     obs.subscribe(cs => this.next(cs));
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     
     private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
         return (res: any): Observable<T> => {

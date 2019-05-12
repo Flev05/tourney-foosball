@@ -56,9 +56,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
-        protected countryService: CountryService
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

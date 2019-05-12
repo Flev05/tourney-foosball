@@ -53,22 +53,8 @@ export class MeetingRoundService extends MeetingService {
     createRoundMeeting( tourney: Tourney, round : Round ) : void {
         this.selectedTourney = tourney;
 
-        // const subsbr = this.loadRoundMeeting(tourney.id, round.id);
-        // subsbr.subscribe(meetings => this.roundMeetingNext(meetings, round), e => this.onError(e));
-    
         round.onewayMeetings = [];
         round.roundtripMeetings = [];
-
-        // for( let mdb of meetingsdb ) {
-        //     let m: Meeting = JSON.parse(mdb.json);
-        //     m.id = mdb.id;
-        //     m.country = mdb.country;
-        //     if( m.direction == Direction.OneWay ) {
-        //         round.onewayMeetings.push(m);
-        //     } else {
-        //         round.roundtripMeetings.push(m);
-        //     }
-        // }
 
         this.prepareMeetings(round);
 

@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 
 import { Country } from '../domain/country';
+import { AbstractService } from '../components/common/abstract-service';
 
 const countryUrl = 'api/countries';   
 const loadAllCountryUrl = countryUrl + '/loadAll';   
@@ -16,24 +17,28 @@ const httpOptions = {
 };
 
 @Injectable()
-export class CountryService {
+export class CountryService extends AbstractService {
 
     selectedCountry : Country;
 
     newCountry : boolean = false;
+    countries:   Country[] = [];
 
     constructor(private http: HttpClient) { 
+        super();
         console.log("Constructor of CountryService");
     }
 
-    loadCountries (): Observable<Country[]> {
+    loadAllCountries( complete?: () => void ): void {
         let url = loadAllCountryUrl;
 
-        return this.http.get<Country[]>(url)
-        .pipe(
-            tap(_ => this.log(`fetched all countries`)),
-            catchError(this.handleError('loadCountries', []))
-          );
+        const obs = this.http.get<Country[]>(url).pipe(
+        tap(_ => this.log(`fetched all countries`))
+            , catchError(this.handleError('loadCountries failure', [])
+            )
+        );
+
+        obs.subscribe(t => {this.countries = t}, e => this.onError(e), ()=> complete == null ? console.log() : complete());
     }
 
     /** GET hero by id. Will 404 if id not found */

@@ -27,10 +27,9 @@ export class PlayerDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected clientService: ClientService,
-        protected countryService: CountryService,
         private   playerService: PlayerService
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

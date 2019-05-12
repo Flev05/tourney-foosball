@@ -8,6 +8,8 @@ export abstract class AbstractService  {
         return obj;
     }
 
+    protected onComplete() {
+    }
     protected onError(n:any) {
         console.error(n);
     }

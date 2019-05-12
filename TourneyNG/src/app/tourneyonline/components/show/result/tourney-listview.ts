@@ -8,6 +8,7 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
       templateUrl: './tourney-listview.html'   
@@ -16,6 +17,7 @@ export class ResultTourneyListView extends AbstractTourneyListView {
     static redirect: string = '/result/lv';
 
     constructor(protected tourneyService: TourneyService
+        , protected countryService: CountryService
         , protected playerService : PlayerService
         , protected teamService : TeamService
         , public router: Router
@@ -23,7 +25,7 @@ export class ResultTourneyListView extends AbstractTourneyListView {
         , protected dfp: DateFormatPipe
         , protected disciplineService: DisciplineService) 
     { 
-        super(ResultTourneyListView.redirect, tourneyService, playerService, teamService, router, location, dfp, disciplineService);
+        super(ResultTourneyListView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, location, dfp);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

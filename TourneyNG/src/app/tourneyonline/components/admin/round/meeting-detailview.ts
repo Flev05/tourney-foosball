@@ -31,10 +31,9 @@ export class MeetingDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         public meetingService: MeetingRoundService,
-        protected countryService: CountryService,
         protected meetingRoundService: MeetingRoundService
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

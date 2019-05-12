@@ -28,12 +28,11 @@ export class PlayerListView extends AbstractDetailView {
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected countryService: CountryService,
         private   teamService: TeamService,
         private   playerService: PlayerService,
         private   router: Router
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

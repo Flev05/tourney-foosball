@@ -15,7 +15,6 @@ import { Direction, MeetingStatus } from '../domain/enumerations';
 import { PlayoffRule } from '../domain/playoff-rule';
 import { Match } from '../domain/match';
 import { AbstractService } from '../components/common/abstract-service';
-import { TourneyService } from './tourney-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -24,18 +23,20 @@ const httpOptions = {
 const meetingUrl = 'api/meetings';  
 const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';  
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
-const loadMeetingByEliminatoryIdUrl    = meetingUrl + '/loadByEliminatoryId';  
+const loadMeetingByEliminatoryIdUrl = meetingUrl + '/loadByEliminatoryId';  
+const loadAllEliminatoryMeetingsUrl = meetingUrl + '/loadAllEliminatoryMeetingsBy';  
 
 const insertMeetingUrl = meetingUrl + '/insert';
 const updateMeetingUrl = meetingUrl + '/update';
 
 const deleteMeetingUrl                  = meetingUrl + '/delete';
-const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deleteByPlayoffId"
-const deleteMeetingByEliminatoryIdUrl   = meetingUrl + "/deleteByEliminatoryId"
+const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
+const deleteEliminatoryMeetingsByTourneyIdUrl   = meetingUrl + "/deleteEliminatoryMeetingsByTourneyId"
+const deleteMeetingsByTourneyAndEliminatoryIdsUrl   = meetingUrl + "/deleteMeetingsByTourneyAndEliminatoryIds"
 
 @Injectable()
 export class MeetingService extends AbstractService {
-    protected deleteAllMeetingsByRoundIdUrl: string = meetingUrl + "/deleteAllMeetingsByRoundId"
+    protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
 
     static deleteMeetingUrl: string = deleteMeetingUrl;
@@ -109,6 +110,23 @@ export class MeetingService extends AbstractService {
      */
     loadEliminatoryMeeting(tourneyId: number, eliminatoryId: number) : Observable<MeetingDb[]> {
         let url = loadMeetingByEliminatoryIdUrl + "/" + tourneyId + "/" + eliminatoryId;
+        
+        console.log("Url=" + url);
+
+        const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
+        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
+        );
+
+        return obs;
+    }
+
+    /** 
+     * Loads all the meetings of the receìved tourney and eliminatory ids
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadAllEliminatoryMeeting(tourneyId: number) : Observable<MeetingDb[]> {
+        let url = loadAllEliminatoryMeetingsUrl + "/" + tourneyId;
         
         console.log("Url=" + url);
 
@@ -223,34 +241,45 @@ export class MeetingService extends AbstractService {
         obs.subscribe();
     }
 
-    deleteAllMeetingsByRoundId (roundId: number ): void {
-        const url = this.deleteAllMeetingsByRoundIdUrl + "/" + roundId;
+    deleteRoundMeetingsByTourneyId (tourneyId: number ): void {
+        const url = this.deleteRoundMeetingsByTourneyIdUrl + "/" + tourneyId;
 
         let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb: ' + roundId)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + roundId))
+            tap(_ => this.log('deleting MeetingDb: ' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
         );
 
         obs.subscribe();
     }
      
-    deleteMeetingByPlayoffId (playoffId: number ): void {
-        const url = deleteMeetingByPlayoffIdUrl + "/" + playoffId;
+    deletePlayoffMeetingsByTourneyId (tourneyId: number ): void {
+        const url = deleteMeetingByPlayoffIdUrl + "/" + tourneyId;
 
         let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb: ' + playoffId)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + playoffId))
+            tap(_ => this.log('deleting MeetingDb: ' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
         );
 
         obs.subscribe();
     }
      
-    deleteMeetingByEliminatoryId (eliminatoryId: number ): void {
-        const url = deleteMeetingByEliminatoryIdUrl + "/" + eliminatoryId;
+    deleteEliminatoryMeetingsByTourneyId (tourneyId: number ): void {
+        const url = deleteEliminatoryMeetingsByTourneyIdUrl + "/" + tourneyId;
 
         let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb: ' + eliminatoryId)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + eliminatoryId))
+            tap(_ => this.log('deleting MeetingDb: ' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
+        );
+
+        obs.subscribe();
+    }
+
+    deleteMeetingsByTourneyAndEliminatoryIds(tourneyId: number, eliminatoryId : number) {
+        const url = deleteMeetingsByTourneyAndEliminatoryIdsUrl + "/" + tourneyId + "/" + eliminatoryId;
+
+        let obs = this.http.delete<Meeting>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb: ' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
         );
 
         obs.subscribe();
@@ -344,6 +373,4 @@ export class MeetingService extends AbstractService {
     protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
         return "";
     }
-
-    
 }

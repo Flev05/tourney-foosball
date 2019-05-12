@@ -15,7 +15,7 @@ export abstract class AbstractView implements OnInit {
 
     constructor(
          protected tourneyService: TourneyService
-        , protected location: Location
+         , protected location: Location
     ) {}
 
     protected cloneObject(c: any): any {

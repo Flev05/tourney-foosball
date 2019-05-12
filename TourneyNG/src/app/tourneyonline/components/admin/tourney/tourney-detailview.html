@@ -726,7 +726,7 @@
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
-                <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
+                <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
                     <button pButton type="button" 
                         class="ui-button-success"   
                         icon="fa fa-arrow-left" 
@@ -754,14 +754,13 @@
     <p-tabPanel header="Squadre">
         <p-accordion>
             <p-accordionTab header="Istruzioni">     
-                <h3>Istruzioni</h3>
                 <p>
                     Vista elenco delle squadre che compongono il torneo.
                     Sono disponibili 2 operazioni:
                 </p>
                 <ul>
                     <li>Gestisci lista di giocatori della squadra</li>
-                    <li>Gestisci squadre</li>
+                    <li>Gestisci/Aggiungi squadre</li>
                 </ul>   
                 <h4>Gestisci lista di giocatori della squadra</h4>
                 <p>
@@ -769,11 +768,14 @@
                     che aprirà la vista elenco dei giocatori della squadra da cui potete gestire la lista dei giocatori come 
                     descritto nella vista corrispondente.
                 </p>
-                <h4>Gestisci squadre</h4>
+                <h4>Gestisci/Aggiungi squadre</h4>
                 <p>
                     Per gestire la lista delle squadre del torneo, dovete usare il bottone Gestisci Squadre che vi farà
                     accedere alla vista di gestione delle squadre come descritto nella vista corrispondente.
-                </p>                
+                    </p>                
+                <p>
+                    Per un nuovo torneo, creare almeno 2 squadre e spostarle nell'area delle squadre selezionate altrimenti il bottone Avanti resta disabilitato. 
+                </p>
             </p-accordionTab>
         </p-accordion>
 
@@ -825,7 +827,7 @@
 
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -972,7 +974,7 @@
 
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -1063,12 +1065,12 @@
                     Squadre:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di squadre per girone che passerà il turno dai gironi all'italiana ai playoff">
+                        pTooltip="Scegliere il numero di squadre per girone all'italiana che passerà il turno ai playoff">
                     <p-dropdown id="teamsRoundId" 
                         [options]="team4playoffsCombobox" 
                         [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
                         optionLabel="label"
-                        (onChange)="onTeams4PlayoffsChange($event.value)" 
+                        (onChange)="onPlayoffs4TeamsChange($event.value)" 
                         placeholder="Seleziona"
                         [autoWidth]="false">
                     </p-dropdown>
@@ -1125,7 +1127,7 @@
 
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -1287,11 +1289,11 @@
                 </div>
                 <div class="ui-grid-col-2" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di squadre con cui incominciare le eliminazioni dirette, anche tutte">
-                    <p-dropdown id="teamsPlayoffId" 
+                    <p-dropdown id="eliminatoryId" 
                         [options]="eliminatoryTeamsCombobox" 
-                        [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCombobox"  
+                        [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCB"  
                         optionLabel="label"
-                        (onChange)="onTeamEliminatoryNumChange($event.value)" 
+                        (onChange)="onEliminatoryTeamNumChange($event.value)" 
                         placeholder="Seleziona"
                         [autoWidth]="false">
                     </p-dropdown>
@@ -1324,7 +1326,7 @@
 
             <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                 <div class="ui-grid-row">
-                    <div *ngIf="!selectedTourney.saveButtonEnabled" class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
                         <button pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 

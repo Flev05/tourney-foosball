@@ -4,24 +4,18 @@ import { AbstractView } from './abstract-view';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 
 export abstract class AbstractDetailView extends AbstractView {
 
     constructor(
         protected tourneyService: TourneyService,
         protected location: Location,
-        protected countryService: CountryService,
     ) {
         super(tourneyService, location);
     }
 
     ngOnInit() {
         super.ngOnInit();
-        
-        this.countryService.loadCountries().subscribe(c => {
-            this.countries = c;
-        });
     }
 
     protected initClassification(r : Round) {

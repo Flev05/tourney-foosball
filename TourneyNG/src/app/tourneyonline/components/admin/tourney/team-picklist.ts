@@ -10,6 +10,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './team-picklist.html',
@@ -36,7 +37,6 @@ export class TeamPickList extends AbstractListView {
         super.ngOnInit();
 
         this.returnLabel = "Indietro";
-        this.selectedTourney.isTeamsChanged = false;
         this.prepareAvailableTeams();
     }
     
@@ -64,24 +64,24 @@ export class TeamPickList extends AbstractListView {
         } else {
             this.selectedTourney.teamsWeightEnabled = false;
         }
+        this.teamService.isTeamsChanged=true;;
     }
 
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         this.returnLabel = "Salva e torna";
-        this.selectedTourney.isTeamsChanged = true;
+        this.teamService.isTeamsChanged=true;;
     }
 
     onMoveToSource(event) {
         console.log("Entering onMoveToSource()");
         this.returnLabel = "Salva e torna";
-        this.selectedTourney.isTeamsChanged = true;
+        this.teamService.isTeamsChanged=true;;
     }
  
     newTeam() {
         this.teamService.newTeam = true;
         this.returnLabel = "Salva e torna";
-        this.selectedTourney.isTeamsChanged = true;
         
         this.router.navigate([TeamDetailView.redirect]);
     }
@@ -96,7 +96,7 @@ export class TeamPickList extends AbstractListView {
     }
 
     private alignTourneyTeams() {
-        if(!this.selectedTourney.isTeamsChanged) {
+        if(!this.teamService.isTeamsChanged) {
             return;
         }
 
@@ -113,18 +113,24 @@ export class TeamPickList extends AbstractListView {
             clientVO: this.clientService.selectedClient,
             json: JSON.stringify(this.selectedTourney)
         };
-        const subscriber = this.tourneyService.saveTourney(tvo,  this.onError("Player update failed"));
+        const subscriber = this.tourneyService.saveTourney(tvo,  this.saveTourneyErrorHandler("Team update failed"));
         subscriber.subscribe(cs => this.next(cs));
     }
 
-    onError(n:any) : any {
-        let msgerr : string;
-
-        if(this.teamService.newTeam) {
-            msgerr = 'Creazione nuova squadra fallita';
-        } else {
-            msgerr = 'Modifica squadra fallita';
-        }
-        console.log(msgerr);
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "TourneyAlreadyExists" ) {
+                return of(result as T);
+            }
+      
+            return of(result as T);
+        };
     }
 }

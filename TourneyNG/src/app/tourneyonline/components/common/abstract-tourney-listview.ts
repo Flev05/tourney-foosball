@@ -10,9 +10,8 @@ import { DateFormatPipe } from './date-format-pipe';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
-import { TeamVO } from 'app/tourneyonline/domain/team-vo';
-import { Player } from 'app/tourneyonline/domain/player';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 export abstract class AbstractTourneyListView extends AbstractListView {
 
@@ -26,12 +25,13 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
     constructor(protected redirect: string
         , protected tourneyService: TourneyService
+        , protected countryService: CountryService
         , protected playerService : PlayerService
         , protected teamService : TeamService
+        , protected disciplineService: DisciplineService
         , public router: Router
         , protected location: Location
-        , protected dateFormatPipe: DateFormatPipe
-        , protected disciplineService: DisciplineService) 
+        , protected dateFormatPipe: DateFormatPipe) 
     { 
         super(redirect, tourneyService, router, location);
     }
@@ -46,48 +46,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         ];
 
         this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
-        this.playerService.loadAllPlayers( () => this.onLoadPlayersComplete() );
-        this.teamService.loadAllTeams( () => this.onLoadTeamsComplete() );
-        this.disciplineService.loadAllDisciplines();
-    }
 
-    private onLoadPlayersComplete(): any {
-        console.log("Entering onLoadPlayersComplete()");
-        this.playerService.playerPool = [];
-
-        for( let pvo of this.playerService.playerPoolVO ) {
-            let ppo: Player = JSON.parse(pvo.json);
-            ppo.id = pvo.id;
-            ppo.country = pvo.country;
-            ppo.clientId = pvo.clientId;
-            ppo.playerName = pvo.playerName;
-
-            this.playerService.playerPool.push(ppo);
-        }
-    }
-
-    private onLoadTeamsComplete(): any {
-        console.log("Entering onLoadTeamsComplete()");
-        this.teamService.teamPool = [];
-
-        for( let pvo of this.teamService.teamPoolVO ) {
-            let ppo: TeamVO = JSON.parse(pvo.json);
-            ppo.id = pvo.id;
-            ppo.teamName = pvo.teamName;
-            ppo.country = pvo.country;
-            ppo.clientId = pvo.clientId;
-
-            this.teamService.teamPool.push(ppo);
-        }
-    }
-
-    onRowSelect(event) {
-        console.log("Entering onRowSelect()");
-        console.log(event.data);
-
-        this.tourneyService.newTourney = false;
-        
-        this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView());
+        this.playerService.loadAllPlayers(null);
+        this.teamService.loadAllTeams(null);
+        this.disciplineService.loadAllDisciplines();            
+        this.countryService.loadAllCountries();
     }
 
     onError(e: any): any {
@@ -100,7 +63,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.tourneys = [];
 
         for(let tvo of this.tdbs) {
-            // let t: Tourney = JSON.parse(tvo.json);
             let t: Tourney = {};
             t.id = tvo.id;
             t.tourneyName = tvo.tourneyName;
@@ -111,15 +73,22 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         this.tourneys = this.filter(this.tourneys);
         if( this.tourneys.length > 0 ) {
-            this.selectedTourney = this.tourneys[0];
+            // this.selectedTourney = this.tourneys[0];
         }
+
+        let emptyCountry = {
+            id : 0,
+            city : "",
+            cityCode     : "",
+            provinceCode : 0,
+            zipCode      : "",
+            countryCode  : ""
+        };
 
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
-            // let dt = this.dateFormatPipe.transform(t.datetime);
-            // this.rows.push({t:t, tourneyName: t.tourneyName, datetime: dt});
-            this.rows.push({id: t.id, tourneyName: t.tourneyName, location: t.country.city});
+            this.rows.push({id: t.id, tourneyName: t.tourneyName, location: t.country==null ? emptyCountry : t.country.city});
         }
     }
 

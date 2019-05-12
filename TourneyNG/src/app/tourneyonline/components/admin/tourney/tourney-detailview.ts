@@ -3,8 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType, TourneyStatus } from '../../../domain/enumerations';
-import { Discipline } from 'app/tourneyonline/domain/discipline';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType } from '../../../domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -23,7 +22,6 @@ import { FromRound } from 'app/tourneyonline/domain/from-round';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
-import { Player } from 'app/tourneyonline/domain/player';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
@@ -42,7 +40,6 @@ const REDIRECT_TOURNEY_LV   = 'admintourney/';
 export class TourneyDetailView extends AbstractDetailView {
     static redirect = 'admintourney/dv';
     
-    disciplines: Discipline[];
     disciplineOptions : Combobox[];
     selectedDiscipline: Combobox;
 
@@ -90,6 +87,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     nextButtonLabel: string = "Avanti";
     nextButtonIcon: string = "fa fa-arrow-right";
+    maxBoundaryTabIndex: number;
 
     constructor(
         protected location: Location,
@@ -104,21 +102,24 @@ export class TourneyDetailView extends AbstractDetailView {
         private disciplineService: DisciplineService,
         private router: Router 
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
         super.ngOnInit();
         
+        this.countries = this.countryService.countries;
+
         if (this.tourneyService.newTourney) {
             this.initNewTourney();
         }
+        this.maxBoundaryTabIndex = this.getLastTabIndex();
 
         this.initiDisciplineCombobox();
+
+        this.initUndefined();
     
-        this.alignToTeamAndPlayerDetails();
-        
         this.selectedTourney.datetime = new Date(this.selectedTourney.datetime);
         this.atLeastTwoTeams = this.selectedTourney.teams.length >= 2 ? true : false;
         this.teamCols = TeamService.cols;
@@ -129,20 +130,39 @@ export class TourneyDetailView extends AbstractDetailView {
         this.bestOffWinner = spin;
         this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre";
 
-        if( this.selectedTourney.isTeamsChanged ) {
-            this.resetComboboxes();
-            if( !this.levelService.isStandalone ) {
-                this.selectedTourney.selectedEliminatoryTeamsCombobox = { label: "", value: -1 };
-                this.eliminatoryRows = [];
-            }
-        }
+        this.turnOnWizardMode();
 
-        this.refreshTabsAndButtons();
+        this.prepareTabsGui();
+
+        this.resetMeetings();
     }
  
+    private turnOnWizardMode() {
+        if (this.teamService.isTeamsChanged) {
+            this.teamService.isTeamsChanged = false;
+            this.selectedTourney.wizardModeIndex = 2;
+        }
+    }
+
+    public isInWizardMode() {
+        return this.selectedTourney.wizardModeIndex > -1;
+    }
+
+    /**
+     * Workaround to inizialize the new attributes, during the development phase, for already existing tourney
+     */
+    private initUndefined() {
+        if (this.selectedTourney.wizardModeIndex == undefined) {
+            if (this.selectedTourney.selectedTabIndex <= this.maxBoundaryTabIndex) {
+                this.selectedTourney.wizardModeIndex = -1;
+            } else {
+                this.selectedTourney.wizardModeIndex = 0;
+            }
+        }
+    }
+
     private initiDisciplineCombobox() {
         this.selectedDiscipline = { label: this.selectedTourney.discipline.name, value: this.selectedTourney.discipline.id };
-        this.disciplines = this.disciplineService.disciplines;
         this.disciplineOptions = this.disciplineService.disciplineOptions;
     }
 
@@ -150,7 +170,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney = {};
 
         this.selectedTourney.id = null;
-        this.selectedTourney.tourneyStatus = TourneyStatus.Started;
+        this.selectedTourney.wizardModeIndex = -1;
         this.selectedTourney.datetime = new Date();
         this.selectedTourney.tourneyName = "";
         this.selectedTourney.isDaily = "true";
@@ -180,78 +200,127 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
         this.selectedTourney.selectedTabIndex = 0;
-        this.selectedTourney.saveButtonEnabled = false;
         this.roundTabEnabled = false;
         this.playoffTabEnabled = false;
         this.teamTabEnabled = false;
         this.eliminatoryTabEnabled = false;
-        this.selectedTourney.isTeamsChanged = true;
 
-        this.resetComboboxes();
-
-        this.selectedTourney.selectedEliminatoryTeamsCombobox = { label: "", value: -1 };
         this.eliminatoryRows = [];
 
         this.tourneyService.selectedTourney = this.selectedTourney;    
+        this.teamService.isTeamsChanged = false;
+        this.selectedTourney.wizardModeIndex = 0;
+
+        this.resetComboBoxes();
     }
 
-    private resetComboboxes() {
-        this.selectedTourney.selectedRoundsNumCB = { label: "", value: 0 };
+    private resetMeetings(): void {
+        
+        if( this.isInWizardMode() ) {
+            this.resetComboBoxes();
+
+            if( this.isRoundTabEnabled() ) {
+                this.resetRoundMeetings(this.selectedTourney);
+            }
+            if( this.isPlayoffTabEnabled() ) {
+                this.resetPlayoffMeetings();
+            }
+            if( this.isEliminatoryTabEnabled() ) {
+                this.resetEliminatoryMeetings();
+            }   
+            this.makeButtonLabel();
+        }
+    }
+
+    private resetComboBoxes() {
         this.selectedTourney.selectedTeams4PlayoffsCB = { label: "", value: 0 };
         this.selectedTourney.selectedPlayoffsCB = { label: "", value: 0 };
-        this.roundRows = [];
-        this.playoffRows = [];
+        this.selectedTourney.selectedRoundsNumCB = { label: "", value: 0 };
+        this.selectedTourney.selectedEliminatoryTeamsCB = { label: "", value: 0 };
     }
 
-    private refreshTabsAndButtons( ): void {
-        this.modeTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 1 ? true : false
-        this.teamTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 2 ? true : false
+    private prepareTabsGui( ): void {
+        this.enableTabsFlags();
 
-        this.makeButtonLabel();
-
-        this.roundTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 3 ? true : false;
-        if(this.containsRound() && this.roundTabEnabled ) {
+        if( this.isRoundTabEnabled() ) {
             this.prepareRoundsCombobox();
         }
 
-        this.playoffTabEnabled = this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= 4 ? true : false; 
-        if( this.containsPlayoff() && this.playoffTabEnabled) {
+        if( this.isPlayoffTabEnabled() ) {
             this.preparePlayoffsCombobox();
         }
 
-        let eliminatoryIndex = this.getEliminatoryIndex();
-        this.eliminatoryTabEnabled = (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= eliminatoryIndex)
-            ? true : false;
-
-        if( this.containsEliminatory() && this.eliminatoryTabEnabled ) {
-            this.prepareEliminatory();
+        if( this.isEliminatoryTabEnabled() ) {
+            this.levelService.ngOnInit();
+            if( !this.isInWizardMode() ) {
+                this.eliminatoryRows = this.levelService.loadEliminatoryMeetings();
+            }
+            this.prepareEliminatoryCombobox();
         }
     }
 
-    private getEliminatoryIndex() {
-        let eliminatoryIndex = 3;
-        if (this.containsRound()) {
-            if (this.containsPlayoff()) {
-                eliminatoryIndex = 5;
-            }
-            else {
-                eliminatoryIndex = 4;
-            }
+    private enableTabsFlags() {
+        this.modeTabEnabled = this.isModalityTabEnabled();
+        this.teamTabEnabled = this.isTeamTabEnabled();
+        this.roundTabEnabled = this.isRoundTabEnabled();
+        this.playoffTabEnabled = this.isPlayoffTabEnabled();
+        this.eliminatoryTabEnabled = this.isEliminatoryTabEnabled();
+        this.makeButtonLabel();
+    }
+
+    private isModalityTabEnabled(): boolean {
+        if( !this.isInWizardMode() ) {
+            return true;
         }
-        return eliminatoryIndex;
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex ? true : false;
+    }
+
+    private isTeamTabEnabled(): boolean {
+        if( !this.isInWizardMode() ) {
+            return true;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+    }
+
+    private isRoundTabEnabled(): boolean {
+        if( !this.containsRound() ) {
+            return false;
+        }
+        if( !this.isInWizardMode() ) {
+            return true;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+    }
+
+    private isPlayoffTabEnabled(): boolean {
+        if( !this.containsPlayoff() ) {
+            return false;
+        }
+        if( !this.isInWizardMode() ) {
+            return true;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+    }
+
+    private isEliminatoryTabEnabled(): boolean {
+        if( !this.containsEliminatory() ) {
+            return false;
+        }
+        if( !this.isInWizardMode() ) {
+            return true;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
     }
 
     private makeButtonLabel(): void {
 
-        if( this.isSaveStatus() ) {
+        if( !this.isInWizardMode()  ) {
             this.nextButtonLabel = "Salva";
             this.nextButtonIcon = "fa fa-save";
             return;
         }
 
-        let lastTabIndex = this.getLastTabIndex();
-
-        if (this.selectedTourney.selectedTabIndex >= lastTabIndex) {
+        if (this.selectedTourney.selectedTabIndex >= this.maxBoundaryTabIndex) {
             this.nextButtonLabel = "Fine";
             this.nextButtonIcon = "fa fa-save";
         }
@@ -259,10 +328,6 @@ export class TourneyDetailView extends AbstractDetailView {
             this.nextButtonLabel = "Avanti";
             this.nextButtonIcon = "fa fa-arrow-right";
         }
-    }
-
-    private isSaveStatus() : boolean {
-        return this.selectedTourney.saveButtonEnabled && (this.selectedTourney.selectedTabIndex < 2 || !this.selectedTourney.isTeamsChanged);
     }
 
     private getLastTabIndex() {
@@ -278,59 +343,6 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
         return lastTabIndex;
-    }
-
-    /**
-     * Aligns the global teams and players details to the corresponding teams and players in the
-     * selected trourney. The alignment is on the base of their names and is needed becouse of
-     * the possibility the teams and players could be change their data as addresses, phone number
-     * and email.
-     */
-    private alignToTeamAndPlayerDetails(): any {
-        if(this.selectedTourney.tourneyStatus != TourneyStatus.Terminated) {
-            this.teamService.loadAllTeams(()=>this.onLoadTeamComplete());
-        }
-    }
-
-    private onLoadTeamComplete(): void {
-        this.playerService.loadAllPlayers(()=>this.onLoadPlayerComplete());
-        this.alignTeams();
-    }
-    
-    private alignTeams(): any {
-        for( let team of this.selectedTourney.teams ) {
-            let teamFound = this.teamService.teamPool.find( t => t.teamName == team.teamName );
-            if( teamFound != undefined ) {
-                team = this.copyTeam(team, teamFound);
-            }
-        }
-    }
-    
-    private onLoadPlayerComplete(): void {
-        for( let team of this.selectedTourney.teams ) {
-            for( let player of team.players ) {
-                let playerFound = this.playerService.playerPool.find( p => p.playerName == player.playerName );
-                if( playerFound != undefined ) {
-                    player = this.copyPlayer(player, playerFound);
-                }
-            }
-        }
-    }
-
-    private copyPlayer(player:  Player, pf:  Player):  Player {
-        player.id = pf.id;
-        player.country = pf.country;
-        player.address = pf.address;
-        player.email = pf.email;
-        player.phoneNumber = pf.phoneNumber;
-        return player;
-    }
-
-    private copyTeam(team: Team, teamFound: Team): Team    {     
-        team.id = teamFound.id;
-        team.address = teamFound.address;
-        team.country = teamFound.country;
-        return team;
     }
 
     private prepareRoundsCombobox(): void {
@@ -391,17 +403,15 @@ export class TourneyDetailView extends AbstractDetailView {
         }
     }
 
-    private prepareEliminatory() {
-        console.log("Entering prepareEliminatory()");
+    private prepareEliminatoryCombobox() {
+        console.log("Entering prepareEliminatoryCombobox()");
 
-        this.levelService.ngOnInit();
-
+        this.eliminatoryTeamsCombobox = this.tourneyService.eliminatoryTeamsCombobox;
+ 
         this.eliminatoryCols = this.levelService.eliminatoryCols;
-        if(this.selectedTourney.selectedEliminatoryTeamsCombobox.value >= 0 ) {
+        if(this.selectedTourney.selectedEliminatoryTeamsCB.value >= 0 ) {
             this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
         }
-
-        this.eliminatoryTeamsCombobox = this.levelService.eliminatoryTeamsCombobox;
     }
 
     onChangeTab(e) {
@@ -410,27 +420,12 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.selectedTourney.selectedTabIndex = index; 
 
-        if( this.selectedTourney.isTeamsChanged ) {
-            this.roundTabEnabled =  false;
-            this.playoffTabEnabled =   false; 
-            this.eliminatoryTabEnabled =  false;
-        }
-        this.makeButtonLabel();
+        this.enableTabsFlags();
     }
 
     addTeams() {
-
-        // this.saveTourneyMeetings();
-        // let tvo: TourneyVO = this.prepareTourneyVO();
-        // const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        // subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.onCompleteAddTeams());
-
         this.router.navigate([REDIRECT_ADD_TEAM_DV]);
     }
-
-    // private onCompleteAddTeams(): void {
-    //     this.router.navigate([REDIRECT_ADD_TEAM_DV]);
-    // }
 
     onTeamRowSelect(event) {
         console.log(event.data);
@@ -456,10 +451,11 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyService.doPlayoffDelete(playoff, this.saveTourneyErrorHandler('Delete Playoff operation'));
     }
  
-    onTeamEliminatoryNumChange(event) {
+    onEliminatoryTeamNumChange(event) {
         console.log(event);
 
-        this.eliminatoryRows = this.levelService.onTeamEliminatoryNumChange(this.selectedTourney.selectedEliminatoryTeamsCombobox);
+        const teamsNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
+        this.eliminatoryRows = this.levelService.onEliminatoryTeamNumChange(teamsNo);
     }
     
     onDisciplineChange(cb: Combobox) {
@@ -502,7 +498,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.selectedPlayoffsCB       = {label: "", value: 0};
         this.selectedTourney.selectedTeams4PlayoffsCB = {label: "", value: 0};
 
-        this.selectedTourney.selectedEliminatoryTeamsCombobox = {label: "", value: 0};
+        this.selectedTourney.selectedEliminatoryTeamsCB = {label: "", value: 0};
 
         this.saveRoundMeetings();
     }
@@ -580,7 +576,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private resetRoundMeetings(tourney: Tourney) {
-        this.meetingRoundService.deleteAllMeetingsByRoundId(tourney.id);
+        this.meetingRoundService.deleteRoundMeetingsByTourneyId(tourney.id);
 
         for (let r of tourney.rounds) {
             r.onewayMeetings = [];
@@ -637,7 +633,7 @@ export class TourneyDetailView extends AbstractDetailView {
         return classifications;
     }
 
-    onTeams4PlayoffsChange(cb: Combobox) {
+    onPlayoffs4TeamsChange(cb: Combobox) {
         console.log(cb);
         this.selectedTourney.selectedTeams4PlayoffsCB = cb;
 
@@ -669,7 +665,9 @@ export class TourneyDetailView extends AbstractDetailView {
             this.meetingPlayoffService.createPlayoffMeeting(this.selectedTourney, p);
         }
 
-        this.selectedTourney.selectedEliminatoryTeamsCombobox = {label: "", value: 0};
+        this.selectedTourney.selectedEliminatoryTeamsCB = {label: "", value: 0};
+
+        this.savePlayoffMeetings();
     }
 
     /**
@@ -779,7 +777,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private resetPlayoffMeetings() {
-        this.meetingPlayoffService.deleteMeetingByPlayoffId(this.selectedTourney.id);
+        this.meetingPlayoffService.deletePlayoffMeetingsByTourneyId(this.selectedTourney.id);
 
         for (let p of this.selectedTourney.playoffs) {
             p.round.onewayMeetings = [];
@@ -788,6 +786,14 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.selectedTourney.playoffs = [];
         this.playoffRows = [];
+    }
+
+    private resetEliminatoryMeetings() {        
+        // this.levelService.removeLevels();
+        this.tourneyService.prepareEliminatoriesComboBoxes();
+        this.selectedTourney.selectedEliminatoryTeamsCB = { label: "", value: 0 };
+        this.eliminatoryRows = [];
+        this.selectedTourney.eliminatoryLevels = [];
     }
 
     onPlayoffRowSelect(event) {
@@ -890,7 +896,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log(event);
         this.updatePhases(event, PhaseType.E);
         if(event) {
-            this.prepareEliminatory();
+            this.prepareEliminatoryCombobox();
         }
     }
 
@@ -921,15 +927,15 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private doSave(): void {
-        this.saveTourneyMeetings();
+        console.log("Entering doSave()");
 
         let tvo: TourneyVO = this.prepareTourneyVO();
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.saveComplete());
     }
 
-    private onSaveComplete(): void {
-        console.log("Entering onSaveComplete()");
+    private saveComplete(): void {
+        console.log("Entering saveComplete()");
         if( !this.onSaveTourneyError ) {
             this.playerService.newPlayer = false;
             this.gotoListView();
@@ -942,30 +948,48 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     nextTab(): void {
+        console.log("Entering nextTab()");
 
-        if( this.isSaveStatus() ) {
+        if( !this.isInWizardMode() ) {
             this.doSave();
             return;
         }
         
-        let lastTabIndex = this.getLastTabIndex();
         let rewind = false;
-        if( this.selectedTourney.selectedTabIndex >= lastTabIndex ) {
-            this.selectedTourney.saveButtonEnabled = true;
-            this.selectedTourney.selectedTabIndex = 0;
+        if( this.selectedTourney.selectedTabIndex >= this.maxBoundaryTabIndex ) {
             rewind = true;
         }
 
-        this.saveTourneyMeetings();
-               
-        if( !rewind ) {
-            this.selectedTourney.selectedTabIndex++;        
+        if( this.levelService.isStandAlone(this.selectedTourney) ) {
+            if( this.selectedTourney.selectedTabIndex == 2 ) {
+                this.eliminatoryRows = this.levelService.loadEliminatoryMeetings();
+                // this.levelService.processEliminationTree();
+                this.eliminatoryRows = this.levelService.eliminatoryLevelRows;
+            }
+            if( this.selectedTourney.selectedTabIndex == 3 ) {
+                this.saveEliminatoryMeetings();
+            }
         }
 
-        let tvo: TourneyVO = this.prepareTourneyVO();
+        let tvo: TourneyVO = this.cloneTourneyVO(rewind);
 
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.onNextSaveComplete(rewind));
+        subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(rewind));
+    }
+
+    private saveEliminatoryMeetings() {
+        for (let el of this.selectedTourney.eliminatoryLevels) {
+            for( let elim of el.eliminatories ) {
+                for (let m of elim.round.onewayMeetings) {
+                    let observer = this.meetingRoundService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
+                    observer.subscribe(n => this.meetingRoundService.saveMeetingNext(n, m));
+                }
+                for (let m of elim.round.roundtripMeetings) {
+                    let observer = this.meetingRoundService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
+                    observer.subscribe(n => this.meetingRoundService.saveMeetingNext(n, m));
+                }
+            }
+        }
     }
 
     private saveTourneyNext(tvo: TourneyVO): void {
@@ -974,58 +998,68 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.id = tvo.id;
     }
 
-    private onNextSaveComplete(rewind : boolean): void {
-        console.log("Entering onNextSaveComplete()");
+    private nextSaveComplete(rewind : boolean): void {
+        console.log("Entering nextSaveComplete()");
         if( this.onSaveTourneyError ) {
             return;
         }
 
         this.tourneyService.newTourney = false;
-        
+
         if( rewind ) {
-            this.selectedTourney.isTeamsChanged = false;
             this.gotoListView();
             return;
         }
+        this.selectedTourney.selectedTabIndex++;
+        this.selectedTourney.wizardModeIndex++;
 
         this.ngOnInit();
     }
-
-    private saveTourneyMeetings() : void {
-        this.onSaveTourneyError = false;
-        
-        if (this.tourneyService.containsPhase(PhaseType.R) && (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex > 2) ) {
-            this.saveRoundMeetings();
-        }
-
-        if (this.tourneyService.containsPhase(PhaseType.P) && this.atLeastOneRound && 
-            (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex > 3 ) )
-        {
-            for (let p of this.selectedTourney.playoffs) {
-                for (let m of p.round.onewayMeetings) {
-                    let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                    observer.subscribe( n => this.meetingRoundService.saveMeetingNext(n, m));
-                }
-                for (let m of p.round.roundtripMeetings) {
-                    let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                    observer.subscribe( n => this.meetingRoundService.saveMeetingNext(n, m));
-                }
+ 
+    private savePlayoffMeetings() {
+        for (let p of this.selectedTourney.playoffs) {
+            for (let m of p.round.onewayMeetings) {
+                let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                observer.subscribe(n => this.meetingRoundService.saveMeetingNext(n, m));
+            }
+            for (let m of p.round.roundtripMeetings) {
+                let observer = this.meetingRoundService.savePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                observer.subscribe(n => this.meetingRoundService.saveMeetingNext(n, m));
             }
         }
+    }
 
-        let eliminatoryIndex = this.getEliminatoryIndex();
-        if (this.tourneyService.containsPhase(PhaseType.E) && 
-            (this.selectedTourney.saveButtonEnabled || this.selectedTourney.selectedTabIndex >= eliminatoryIndex) )
-        {
-            this.meetingRoundService.saveEliminatoryMeetings(this.selectedTourney);
+    private cloneTourneyVO(rewind : boolean) : TourneyVO {
+        this.tourneyAlreadyExists = false;
+        this.onSaveTourneyError = false;
+
+        this.clearTourneyMeetings();
+
+        let tmp = this.cloneObject(this.selectedTourney);
+        if( rewind ) {
+            tmp.selectedTabIndex = 0;
+            tmp.wizardModeIndex = -1;
+        } else {
+            tmp.selectedTabIndex++;
+            tmp.wizardModeIndex = tmp.selectedTabIndex;
         }
+        
+        let tvo: TourneyVO = {
+            id: this.selectedTourney.id,
+            tourneyName: this.selectedTourney.tourneyName,
+            country: this.selectedTourney.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(tmp)
+        };
+        return tvo;
     }
 
     private prepareTourneyVO() : TourneyVO {
         this.tourneyAlreadyExists = false;
         this.onSaveTourneyError = false;
-        this.tourneyService.selectedTourney = this.selectedTourney;
+
         this.clearTourneyMeetings();
+
         let tvo: TourneyVO = {
             id: this.selectedTourney.id,
             tourneyName: this.selectedTourney.tourneyName,
@@ -1040,7 +1074,7 @@ export class TourneyDetailView extends AbstractDetailView {
      * Clears tourney local meetings array before create che JSON string to save on the Back End
      */
     private clearTourneyMeetings() {
-        if(!this.selectedTourney.saveButtonEnabled) {
+        if( this.isInWizardMode() ) {
             return;
         }
         for (let r of this.selectedTourney.rounds) {
@@ -1051,12 +1085,12 @@ export class TourneyDetailView extends AbstractDetailView {
             p.round.onewayMeetings = [];
             p.round.roundtripMeetings = [];
         }
-        for (let el of this.selectedTourney.eliminatoryLevels) {
-            for (let e of el.eliminatories) {
-                e.round.onewayMeetings = [];
-                e.round.roundtripMeetings = [];
-            }
-        }
+        // for (let el of this.selectedTourney.eliminatoryLevels) {
+        //     for (let e of el.eliminatories) {
+        //         e.round.onewayMeetings = [];
+        //         e.round.roundtripMeetings = [];
+        //     }
+        // }
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
@@ -1165,7 +1199,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     eliminatoryButtonDisabled() : string {
-        return this.selectedTourney.selectedEliminatoryTeamsCombobox.value <= 0 ? "disabled" : "";        
+        return this.selectedTourney.selectedEliminatoryTeamsCB.value <= 0 ? "disabled" : "";        
     }
 
     onError(n:any) {

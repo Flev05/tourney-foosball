@@ -22,14 +22,14 @@ export class DisciplineService {
     selectedDiscipline : Discipline;
 
     newDiscipline : boolean = false;
-    disciplines: Discipline[];
     disciplineOptions : Combobox[];
+    private disciplines: Discipline[];
 
     constructor(private http: HttpClient) { 
         console.log("Constructor of DisciplineService");
     }
 
-    loadAllDisciplines (): void {
+    loadAllDisciplines ( complete?: () => void ): void {
         let url: string = loadDisciplineUrl;
 
         const obs = this.http.get<Discipline[]>(url).pipe(
@@ -38,19 +38,20 @@ export class DisciplineService {
             )
         );
 
-        obs.subscribe(t => {this.disciplines = t}, (error) => this.onError(error), ()=>this.onLoadDisciplineComplete());
+        obs.subscribe(t => {this.disciplines = t}, (error) => this.onError(error), () => this.onLoadDisciplineComplete(complete));
     }
     
     private onError(msgerr:any): any {
         console.error(msgerr);
     }
 
-    private onLoadDisciplineComplete() {
+    private onLoadDisciplineComplete(complete?: () => void) {
         this.disciplineOptions = [];
         for( let d of this.disciplines ) {
             let cb : Combobox = {label: d.name, value: d.id};
             this.disciplineOptions.push(cb);
         }
+        complete != null ? complete() : console.log();
     }
 
     /** GET hero by id. Will 404 if id not found */

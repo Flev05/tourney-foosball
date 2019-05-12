@@ -63,9 +63,8 @@ export class MatrixDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected router: Router,
-        protected countryService: CountryService
     ) { 
-        super(tourneyService, location, countryService);
+        super(tourneyService, location);
     }
 
     ngOnInit() {

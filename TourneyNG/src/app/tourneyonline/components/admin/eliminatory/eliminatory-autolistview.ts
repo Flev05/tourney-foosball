@@ -3,34 +3,32 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { AbstractListView } from '../../common/abstract-listview';
+import { LevelService } from './level-service';
 
 @Component({
     templateUrl: './eliminatory-autolistview.html'
 })
-export class EliminatoryAutoListView extends AbstractEliminatoryListView {
-    static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
-    static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
+export class EliminatoryAutoListView extends AbstractListView {
 
-    selectedRow: any;
+    eliminatoryLevelSelectedRow: any;
 
     constructor(
         protected tourneyService: TourneyService,
-        protected meetingService: MeetingService,
+        protected levelService: LevelService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryAutoListView.autoRedirect, tourneyService, meetingService, router, location, dfp);
+        super(LevelService.autoRedirect, tourneyService, router, location);
     }
  
     ngOnInit() {
-        super.ngOnInit();
+        this.levelService.ngOnInit();
 
-        this.prepareGui();
+        this.levelService.prepareGui();
     }
     
     getPosition1(e: Eliminatory): string {
@@ -45,9 +43,11 @@ export class EliminatoryAutoListView extends AbstractEliminatoryListView {
 
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
+        console.log(event);
 
-        this.tourneyService.selectedEliminatory = this.selectedRow.e;
-        this.router.navigate([EliminatoryAutoListView.autoRedirect]);
+        this.tourneyService.selectedEliminatory = event.data.eliminatory;
+        this.levelService.eliminatorySelectedRow = event.data;
+        this.router.navigate([LevelService.autoRedirect]);
     }
 }
 

@@ -217,7 +217,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
     private prepareEliminationMeetingGui(e: Eliminatory, meetingIndex: number, classificationMap: Map<string, Classification> ): any {
 
-        this.eliminatoryCols = this.prepareResultColums();
+        this.eliminatoryLevelCols = this.prepareResultColums();
 
         let round: Round = e.round;
         let m: Meeting = round.onewayMeetings[meetingIndex];

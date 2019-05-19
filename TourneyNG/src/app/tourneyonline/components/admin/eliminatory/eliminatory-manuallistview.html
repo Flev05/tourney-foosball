@@ -15,11 +15,11 @@
         In questa vista dovete completare 2 operazioni:
     </p> 
     <ul>
-        <li>1) Scegliere il turno</li>
+        <li>1) Selezionare i turni previsti</li>
         <li>2) Completare i livelli</li>
     </ul>
 
-    <h4>1) Scegliere il turno</h4>
+    <h4>1) Selezionare i turni previsti</h4>
     <p>
         Dovete specificare per ciascun livello di eliminazione diretta - finale, semifinale, quarti, ecc. - 
         se gli incontri sono di solo andata o andata e ritorno. Il sistema lo userà 
@@ -42,11 +42,11 @@
         Il livello più alto contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo 
         degli incontri.
         Quando selezionate tale livello, si aprirà la vista elenco contenente le regole 
-        per il passaggio del turno dai gironi (all'italiana e playoff se esistono) alle eliminazioni dirette 
+        per il passaggio del turno dai gironi all'italiana e playoff, se esistono, alle eliminazioni dirette 
         del livello più alto.
     </p>
     <p>
-        Gli altri livelli contengono solo la configurazione della data e del luogo.
+        Gli altri livelli contengono solo la configurazione della data e del luogo di svolgimento dell'incontro.
         Quando selezionate tale livello, si aprirà la vista elenco di tutte le date in cui si disputano gli incontri
         corrispondenti.
     </p>
@@ -82,10 +82,10 @@
 </div>        
 
 <p-table [columns]="eliminatoryCols"
-    [value]="eliminatoryLevelRows" 
+    [value]="eliminatoryRows" 
     [responsive]="true"
     selectionMode="single" 
-    [(selection)]="selectedRow"  
+    [(selection)]="eliminatorySelectedRow"  
     (onRowSelect)="onEliminatoryRowSelect($event)">
 
     <ng-template pTemplate="header" let-columns>

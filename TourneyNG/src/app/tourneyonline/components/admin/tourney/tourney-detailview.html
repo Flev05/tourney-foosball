@@ -1300,11 +1300,11 @@
                 </div>
             </div>
             
-            <p-table [columns]="eliminatoryCols"
-                [value]="eliminatoryRows" 
+            <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryLevelRows" 
                 [responsive]="true"
                 selectionMode="single" 
-                (onRowSelect)="onEliminatoryRowSelect($event)">
+                (onRowSelect)="onEliminatoryLevelRowSelect($event)">
             
                 <ng-template pTemplate="header" let-columns>
                     <tr>

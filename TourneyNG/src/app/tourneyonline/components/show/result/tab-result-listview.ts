@@ -72,8 +72,12 @@ export class TabResultListView extends AbstractListView {
         }
 
         if(super.containsEliminatory()) {
-            this.levelService.loadEliminatoryMeetings();
+            this.levelService.loadEliminatoryMeetings(() => this.loadComplete());
         }
+    }
+
+    private loadComplete():  void {
+         
     }
 
     onChangeTab(e) {
@@ -199,7 +203,7 @@ export class TabResultListView extends AbstractListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
 
-        this.levelService.onEliminatoryRowSelect(event);
+        this.levelService.onEliminatoryLevelRowSelect(event);
         
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
 

@@ -78,10 +78,10 @@
 </div>                
 
 <p-table [columns]="eliminatoryCols"
-    [value]="eliminatoryLevelRows" 
+    [value]="eliminatoryRows" 
     [responsive]="true"
     selectionMode="single" 
-    [(selection)]="selectedRow"  
+    [(selection)]="eliminatorySelectedRow"  
     (onRowSelect)="onEliminatoryRowSelect($event)">
     
     <ng-template pTemplate="header" let-columns>

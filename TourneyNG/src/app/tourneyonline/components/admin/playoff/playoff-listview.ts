@@ -72,7 +72,6 @@ export class PlayoffListView extends AbstractListView {
     }
 
     save() {
-
         this.displayDialog = false;
         if(this.newRoundPlayoff.round.name != "") {
             let pls = [...this.playoffs];
@@ -95,7 +94,7 @@ export class PlayoffListView extends AbstractListView {
     }
 
     onRowSelect(event) {
-        let playoff= event.data;
+        console.log(event.data);
     }
 
     doDelete(playoff: Playoff) {

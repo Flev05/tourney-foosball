@@ -12,13 +12,17 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { EliminatoryAutoListView } from './eliminatory-autolistview';
-import { EliminatoryManualListView } from './eliminatory-manuallistview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
+    static manualRedirectDV: string = '/admineliminatory/levelLv/eliminatoryLv/manualdv';
+    static manualRedirectLV: string = '/admineliminatory/levelLv/eliminatoryManualLv';
+
+    static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
+    static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
 
     constructor(
         protected tourneyService: TourneyService,
@@ -28,7 +32,7 @@ export class LevelService extends AbstractEliminatoryListView {
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryAutoListView.autoRedirectLV, tourneyService, meetingService, router, location, dfp);
+        super("", tourneyService, meetingService, router, location, dfp);
     }
 
     ngOnInit() {
@@ -324,8 +328,7 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private prepareAutomaticEliminatoryRules(selectedTeamsNo: number) {
         
-        let roundsNo = this.selectedTourney.rounds.length;
-        if(roundsNo == 0) {
+        if( this.selectedTourney.rounds.length == 0) {
             return;
         }
 
@@ -460,27 +463,24 @@ export class LevelService extends AbstractEliminatoryListView {
         return e;
     }
 
-    onEliminatoryRowSelect(event): void  {
-        console.log("Entering onEliminatoryRowSelect()");
-        this.selectedRow = event.data;
+    onEliminatoryLevelRowSelect(event): void  {
+        console.log("Entering onEliminatoryLevelRowSelect()");
+        this.eliminatoryLevelSelectedRow = event.data;
 
         this.tourneyService.eliminatoryTeamsCombobox = this.eliminatoryTeamsCombobox;
-        
-        this.tourneyService.selectedEliminatoryLevel = this.selectedRow.e;
+        this.tourneyService.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
+        this.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
 
-        let redirect: string = EliminatoryAutoListView.autoRedirectLV;
-
+        let redirect: string = LevelService.autoRedirectLV;
         if(!this.isStandAlone(this.selectedTourney) ) {
-            redirect = EliminatoryManualListView.manualRedirectLV;
+            redirect = LevelService.manualRedirectLV;
         }
         
         this.router.navigate([redirect]);
     }
    
-    onEliminatoryTeamNumChange(teamNo : number) : any[] {
-
+    onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
         this.processEliminatoryTeams(teamNo);
-
         return this.eliminatoryLevelRows;
     }
 
@@ -498,13 +498,19 @@ export class LevelService extends AbstractEliminatoryListView {
         this.prepareEliminatoryLevelsGui();
     }
 
-    private prepareEliminatoryLevelsGui(): void  {
-        this.eliminatoryCols = super.prepareELCols();
+    public prepareEliminatoryLevelsGui(): void  {
+        this.eliminatoryLevelCols = super.prepareELCols();
         
         this.eliminatoryLevelRows = [];
         for (let i = 0; i < this.eliminatoryLevels.length; i++) {
             let el = this.eliminatoryLevels[i];
-            this.eliminatoryLevelRows.push({ e: el, level: el.level == -1 ? 2 : this.pow2(el.level), name: el.name });
+            let elvo =  {
+                eliminatoryLevel : el
+                ,rowNumber: i+1
+                ,name: el.name
+                ,level: this.pow2(el.level)
+            }
+            this.eliminatoryLevelRows.push(elvo);
         }
     }
 }

@@ -1,0 +1,17 @@
+import { Eliminatory } from "./eliminatory";
+
+export class EliminatoryVO  {
+    eliminatory : Eliminatory;
+    rowNumber: number;
+    teamName1: string;
+    teamName2: string;
+    onewayDatetime: Date;
+    roundtripDatetime: DataCue;
+    position1: string;
+    fromRound1: string;
+    fromPlayoff1: string;
+    versus: string;
+    position2: string;
+    fromRound2: string;
+    fromPlayoff2: string;
+}

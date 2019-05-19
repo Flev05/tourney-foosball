@@ -82,7 +82,7 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
       
-        this.selectedEliminatoryLevel = this.selectedRow.e;
+        this.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
         this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
         
         for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {

@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.MeetingDao;
 import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.po.Session;
@@ -34,6 +35,9 @@ import it.lms.tourney.po.Tourney;
 @Path("/tourneys")
 @Stateless
 public class TourneyRESTService extends AbstractRESTService {
+
+    @Inject
+    private MeetingDao meetingDao;
 
     @Inject
     private TourneyDao tourneyDao;
@@ -204,6 +208,144 @@ public class TourneyRESTService extends AbstractRESTService {
         Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
 
         tourneyDao.update(tpo);
+
+        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Updates the received tourney found in the database. Performs validation, deletes the meetings related to the
+     * Rounds, and will return a JAX-RS response with either 200 ok, or with a map of fields, and related errors.
+     */
+    @PUT
+    @Path("/updateTourneyDeleteRoundMeetings")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTourneyDeleteRoundMeetings(TourneyVO tvo) {
+
+        logger.debug(logId() + "PUT: updateTourneyDeleteRoundMeetings(" + tvo + ")");
+
+        Map<String, String> responseObj = new HashMap<>();
+
+        Session spo = null;
+        Tourney foundTourney;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTourney = tourneyDao.getTourneyBySession(sessionId, tvo.getTourneyName());
+            spo = sessionDao.findBySessionId(sessionId);
+        } else {
+            foundTourney = tourneyDao.getTourneyByClient(tvo.getClientVO().getId(), tvo.getTourneyName());
+        }
+
+        Integer tourneyId = tvo.getId();
+        if (foundTourney != null && !foundTourney.getId().equals(tourneyId)) {
+
+            logger.error("Tourney found");
+            responseObj.put("errorCode", "TourneyAlreadyExists");
+            responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
+
+        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
+
+        tourneyDao.update(tpo);
+
+        meetingDao.deleteRoundMeetingsByTourneyId(tourneyId);
+
+        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Updates the received tourney found in the database. Performs validation, deletes the meetings related to the
+     * Playoffs, and will return a JAX-RS response with either 200 ok, or with a map of fields, and related errors.
+     */
+    @PUT
+    @Path("/updateTourneyDeletePlayoffMeetings")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTourneyDeletePlayoffMeetings(TourneyVO tvo) {
+
+        logger.debug(logId() + "PUT: updateTourneyDeletePlayoffMeetings(" + tvo + ")");
+
+        Map<String, String> responseObj = new HashMap<>();
+
+        Session spo = null;
+        Tourney foundTourney;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTourney = tourneyDao.getTourneyBySession(sessionId, tvo.getTourneyName());
+            spo = sessionDao.findBySessionId(sessionId);
+        } else {
+            foundTourney = tourneyDao.getTourneyByClient(tvo.getClientVO().getId(), tvo.getTourneyName());
+        }
+
+        Integer tourneyId = tvo.getId();
+        if (foundTourney != null && !foundTourney.getId().equals(tourneyId)) {
+
+            logger.error("Tourney found");
+            responseObj.put("errorCode", "TourneyAlreadyExists");
+            responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
+
+        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
+
+        tourneyDao.update(tpo);
+
+        meetingDao.deletePlayoffMeetingsByTourneyId(tourneyId);
+
+        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Updates the received tourney found in the database. Performs validation, deletes the meetings related to the
+     * Eliminatories, and will return a JAX-RS response with either 200 ok, or with a map of fields, and related errors.
+     */
+    @PUT
+    @Path("/updateTourneyDeleteEliminatoryMeetings")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTourneyDeleteEliminatoryMeetings(TourneyVO tvo) {
+
+        logger.debug(logId() + "PUT: updateTourneyDeleteEliminatoryMeetings(" + tvo + ")");
+
+        Map<String, String> responseObj = new HashMap<>();
+
+        Session spo = null;
+        Tourney foundTourney;
+        if (tvo.getClientVO() == null) {
+            String sessionId = request.getSession().getId();
+            foundTourney = tourneyDao.getTourneyBySession(sessionId, tvo.getTourneyName());
+            spo = sessionDao.findBySessionId(sessionId);
+        } else {
+            foundTourney = tourneyDao.getTourneyByClient(tvo.getClientVO().getId(), tvo.getTourneyName());
+        }
+
+        Integer tourneyId = tvo.getId();
+        if (foundTourney != null && !foundTourney.getId().equals(tourneyId)) {
+
+            logger.error("Tourney found");
+            responseObj.put("errorCode", "TourneyAlreadyExists");
+            responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
+
+            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+            return builder.build();
+        }
+
+        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
+
+        tourneyDao.update(tpo);
+
+        meetingDao.deleteEliminatoryMeetingsByTourneyId(tourneyId);
 
         Response.ResponseBuilder builder = Response.ok().entity(tvo);
 

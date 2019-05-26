@@ -23,9 +23,11 @@ import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
 export abstract class AbstractEliminatoryListView extends AbstractListView {
          
     eliminatoryLevelCols: TableCols[] ;
-    eliminatoryLevelRows: EliminatoryLevelVO[];
     eliminatoryLevelSelectedRow: EliminatoryLevelVO;
-
+    
+    eliminatoryCols: TableCols[] ;
+    eliminatoryLevelRows: EliminatoryLevelVO[];
+ 
     eliminatoryRows: EliminatoryVO[];
     eliminatorySelectedRow: EliminatoryVO;
 
@@ -115,11 +117,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
     
     protected prepareELCols(): TableCols[] {
-        let eliminatoryCols = [
+        let cols = [
             { field: 'name',        header: 'Livello' },
             { field: 'level',       header: 'Squadre' },
          ];
-         return eliminatoryCols;
+         return cols;
      }
 
     /**
@@ -208,13 +210,17 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     onOnewayClick() {
         console.log("Entering onOnewayClick()");
         this.selectedEliminatoryLevel.direction=Direction.OneWay;
-        this.onClickManageMeeting(true);
+        this.isOneway = "true";
+        this.prepareGui();
+        // this.onClickManageMeeting(true);
     }
 
     onRoundtripClick() {
         console.log("Entering onRoundtripClick()");
         this.selectedEliminatoryLevel.direction=Direction.RoundTrip;
-        this.onClickManageMeeting(false);
+        this.isOneway = "false";
+        this.prepareGui();
+        // this.onClickManageMeeting(false);
     }
 
     private onClickManageMeeting(isOneway: boolean) {
@@ -279,17 +285,17 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
      */
     prepareStandaloneGui(): void {
-        this.eliminatoryLevelCols = [
+        this.eliminatoryCols = [
         ];
 
         if(this.isTopLevel) {
-            this.eliminatoryLevelCols.push({ field: 'teamName1', header: 'Team 1'});
-            this.eliminatoryLevelCols.push({ field: 'teamName2', header: 'Team 2'});
+            this.eliminatoryCols.push({ field: 'teamName1', header: 'Team 1'});
+            this.eliminatoryCols.push({ field: 'teamName2', header: 'Team 2'});
         }
 
-        this.eliminatoryLevelCols.push({ field: 'onewayDatetime', header: 'Andata' });
+        this.eliminatoryCols.push({ field: 'onewayDatetime', header: 'Andata' });
         if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
-            this.eliminatoryLevelCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+            this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
         
         this.eliminatoryRows = [];
@@ -343,28 +349,28 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
     */
    protected prepareNotStandaloneGui(): void {
-        this.eliminatoryLevelCols = [
+        this.eliminatoryCols = [
             { field: 'onewayDatetime', header: 'Andata'}
         ];
 
         if(this.isTopLevel) {
-            this.eliminatoryLevelCols.push({ field: 'position1', header: 'Classif.'});
-            this.eliminatoryLevelCols.push({ field: 'fromRound1', header: 'Girone' });
+            this.eliminatoryCols.push({ field: 'position1', header: 'Classif.'});
+            this.eliminatoryCols.push({ field: 'fromRound1', header: 'Girone' });
             if(this.isPlayoff) {
-                this.eliminatoryLevelCols.push({ field: 'fromPlayoff1', header: 'Playoff'});
+                this.eliminatoryCols.push({ field: 'fromPlayoff1', header: 'Playoff'});
             }
 
-            this.eliminatoryLevelCols.push({ field: 'versus', header: 'Vs'});
+            this.eliminatoryCols.push({ field: 'versus', header: 'Vs'});
 
-            this.eliminatoryLevelCols.push({ field: 'position2', header: 'Classif.'});
-            this.eliminatoryLevelCols.push({ field: 'fromRound2', header: 'Girone' });
+            this.eliminatoryCols.push({ field: 'position2', header: 'Classif.'});
+            this.eliminatoryCols.push({ field: 'fromRound2', header: 'Girone' });
             if(this.isPlayoff) {
-                this.eliminatoryLevelCols.push({ field: 'fromPlayoff2', header: 'Playoff'});
+                this.eliminatoryCols.push({ field: 'fromPlayoff2', header: 'Playoff'});
             }
         }
 
         if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
-            this.eliminatoryLevelCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+            this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
 
         this.eliminatoryRows = [];

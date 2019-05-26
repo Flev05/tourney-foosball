@@ -25,14 +25,15 @@ const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
 const loadMeetingByEliminatoryIdUrl = meetingUrl + '/loadByEliminatoryId';  
 const loadAllEliminatoryMeetingsUrl = meetingUrl + '/loadAllEliminatoryMeetingsBy';  
+const loadEliminatoryMeetingByIdListUrl = meetingUrl + "/loadEliminatoryMeetingByIdList";
 
 const insertMeetingUrl = meetingUrl + '/insert';
 const updateMeetingUrl = meetingUrl + '/update';
 
 const deleteMeetingUrl                  = meetingUrl + '/delete';
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
-const deleteEliminatoryMeetingsByTourneyIdUrl   = meetingUrl + "/deleteEliminatoryMeetingsByTourneyId"
-const deleteMeetingsByTourneyAndEliminatoryIdsUrl   = meetingUrl + "/deleteMeetingsByTourneyAndEliminatoryIds"
+// const deleteEliminatoryMeetingsByTourneyIdUrl   = meetingUrl + "/deleteEliminatoryMeetingsByTourneyId"
+// const deleteMeetingsByTourneyAndEliminatoryIdsUrl   = meetingUrl + "/deleteMeetingsByTourneyAndEliminatoryIds"
 
 @Injectable()
 export class MeetingService extends AbstractService {
@@ -122,7 +123,7 @@ export class MeetingService extends AbstractService {
     }
 
     /** 
-     * Loads all the meetings of the receìved tourney and eliminatory ids
+     * Loads all the meetings of the receìved tourney  related where eliminatory are not null
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadAllEliminatoryMeeting(tourneyId: number) : Observable<MeetingDb[]> {
@@ -135,6 +136,22 @@ export class MeetingService extends AbstractService {
             catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
         );
 
+        return obs;
+    }
+
+    /** 
+     * Loads all the meetings of the receìved tourney id and eliminatory id list
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadEliminatoryMeetingByIdList(tourneyId: number, eliminiatoryIdList: number[]) : Observable<MeetingDb[]> {
+        let url = loadEliminatoryMeetingByIdListUrl + "/" + tourneyId;
+        
+        console.log("Url=" + url);
+
+        let obs = this.http.post<MeetingDb[]>(url, eliminiatoryIdList, httpOptions).pipe(
+            tap((m: MeetingDb[]) => this.log('added MeetingDb, url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
+        );
         return obs;
     }
 
@@ -168,8 +185,17 @@ export class MeetingService extends AbstractService {
         return this.addMeeting(mdb);
     }
 
-    private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
+    prepareRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number):  MeetingDb {
+        return this.prepareMdb(m, tourneyId, roundId, null, null);
+    }
+    preparePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number):  MeetingDb {
+        return this.prepareMdb(m, tourneyId, null, playoffId, null);
+    }
+    prepareEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number):  MeetingDb {
+        return this.prepareMdb(m, tourneyId, null, null, eliminatoryId);
+    }
 
+    private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
         let mdb: MeetingDb = {
               id: m.id
             , tourneyId: tourneyId
@@ -179,7 +205,6 @@ export class MeetingService extends AbstractService {
             , country: m.country
             , json: JSON.stringify(m)
         }
-
         return mdb;
     }
 
@@ -263,27 +288,27 @@ export class MeetingService extends AbstractService {
         obs.subscribe();
     }
      
-    deleteEliminatoryMeetingsByTourneyId (tourneyId: number ): void {
-        const url = deleteEliminatoryMeetingsByTourneyIdUrl + "/" + tourneyId;
+    // deleteEliminatoryMeetingsByTourneyId (tourneyId: number ): void {
+    //     const url = deleteEliminatoryMeetingsByTourneyIdUrl + "/" + tourneyId;
 
-        let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb: ' + url)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
-        );
+    //     let obs = this.http.delete<Meeting>(url).pipe(
+    //         tap(_ => this.log('deleting MeetingDb: ' + url)),
+    //         catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
+    //     );
 
-        obs.subscribe();
-    }
+    //     obs.subscribe();
+    // }
 
-    deleteMeetingsByTourneyAndEliminatoryIds(tourneyId: number, eliminatoryId : number) {
-        const url = deleteMeetingsByTourneyAndEliminatoryIdsUrl + "/" + tourneyId + "/" + eliminatoryId;
+    // deleteMeetingsByTourneyAndEliminatoryIds(tourneyId: number, eliminatoryId : number) {
+    //     const url = deleteMeetingsByTourneyAndEliminatoryIdsUrl + "/" + tourneyId + "/" + eliminatoryId;
 
-        let obs = this.http.delete<Meeting>(url).pipe(
-            tap(_ => this.log('deleting MeetingDb: ' + url)),
-            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
-        );
+    //     let obs = this.http.delete<Meeting>(url).pipe(
+    //         tap(_ => this.log('deleting MeetingDb: ' + url)),
+    //         catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
+    //     );
 
-        obs.subscribe();
-    }
+    //     obs.subscribe();
+    // }
 
     protected handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {

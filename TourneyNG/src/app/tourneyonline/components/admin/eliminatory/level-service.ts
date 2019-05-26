@@ -11,10 +11,10 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
-import { EliminatoryAutoListView } from './eliminatory-autolistview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
@@ -23,6 +23,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
     static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
     static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
+    meetingList: MeetingDb[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -73,9 +74,9 @@ export class LevelService extends AbstractEliminatoryListView {
         let selectedLevel = levelsCombobox[0].value;
         let maxCurrentLevel : number = 0;
 
-        if( this.eliminatoryLevels.length > 0 ) {
-            maxCurrentLevel = this.eliminatoryLevels[0].level;
-        }     
+        // if( this.eliminatoryLevels.length > 0 ) {
+        //     maxCurrentLevel = this.eliminatoryLevels[0].level;
+        // }     
 
         if(selectedLevel == maxCurrentLevel) {
             if( this.isStandAlone(this.selectedTourney) ) {
@@ -157,8 +158,7 @@ export class LevelService extends AbstractEliminatoryListView {
         console.log("Entering cleanExTopLevel()");
 
         for (let e of el.eliminatories) {
-            this.meetingService.deleteMeetingsByTourneyAndEliminatoryIds(this.selectedTourney.id, e.id);
-
+            // this.meetingService.deleteMeetingsByTourneyAndEliminatoryIds(this.selectedTourney.id, e.id);
             e.round.teams = [];
             e.round.onewayMeetings = [];
             e.round.roundtripMeetings = [];
@@ -182,7 +182,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 console.log("Removing oneway:");
                 console.log(rm[0]);
                 if (m.id != null) {
-                    this.meetingService.deleteMeeting(m);
+                    // this.meetingService.deleteMeeting(m);
                 }
             }
             let roundtripTemp = [...e.round.roundtripMeetings];
@@ -192,7 +192,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 console.log("Removing roundtrip:");
                 console.log(rm[0]);
                 if (m.id != null) {
-                    this.meetingService.deleteMeeting(m);
+                    // this.meetingService.deleteMeeting(m);
                 }
             }
         }
@@ -202,10 +202,10 @@ export class LevelService extends AbstractEliminatoryListView {
      * Removes the eleminatory levels for the selected tourney after having removed the corresponding
      * meetings from the DB
      */
-    public removeLevels() : void {
-        this.meetingService.deleteEliminatoryMeetingsByTourneyId(this.selectedTourney.id);
-        this.selectedTourney.eliminatoryLevels = [];
-    }
+    // public removeLevels() : void {
+    //     this.meetingService.deleteEliminatoryMeetingsByTourneyId(this.selectedTourney.id);
+    //     this.selectedTourney.eliminatoryLevels = [];
+    // }
 
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
@@ -388,7 +388,7 @@ export class LevelService extends AbstractEliminatoryListView {
     private addOptionalLevel() {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
         let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, -1);
-        el.level = -1;
+        el.level = 1;
         this.eliminatoryLevels.push(el);
     }
  
@@ -471,17 +471,56 @@ export class LevelService extends AbstractEliminatoryListView {
         this.tourneyService.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
         this.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
 
+        this.loadEliminatoryMeetingByIdList(this.selectedEliminatoryLevel);
+    }
+
+    private loadEliminatoryMeetingByIdList(el: EliminatoryLevel) {
+        let idList: number [] = [];
+        for (let e of el.eliminatories) {
+            idList.push(e.id);
+        }
+        let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList);
+        abs.subscribe(mdbs => this.meetingList = mdbs, e => this.onError(e), () => this.loadMetingListComplete(el));
+    }
+
+    private loadMetingListComplete(el: EliminatoryLevel) {
+        for (let e of el.eliminatories) {
+            for( let mdb of this.meetingList ) {
+                let m : Meeting = JSON.parse(mdb.json);
+                m.id = mdb.id;
+                if( m.direction == Direction.OneWay ) {
+                    e.round.onewayMeetings.push(m);
+                } else {
+                    e.round.roundtripMeetings.push(m);
+                }
+            }
+        }
+
         let redirect: string = LevelService.autoRedirectLV;
         if(!this.isStandAlone(this.selectedTourney) ) {
             redirect = LevelService.manualRedirectLV;
         }
-        
         this.router.navigate([redirect]);
     }
    
     onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
+        this.cleanEliminatoryMeetings();        
         this.processEliminatoryTeams(teamNo);
         return this.eliminatoryLevelRows;
+    }
+
+    private cleanEliminatoryMeetings( ) {
+        for (let el of this.eliminatoryLevels) {
+            for (let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        for (let el of this.eliminatoryLevels) {
+            el.eliminatories = [];
+        }
+        this.eliminatoryLevels = [];
+        this.eliminatoryLevelRows = [];
     }
 
     private processEliminatoryTeams(teamCount: number): void {

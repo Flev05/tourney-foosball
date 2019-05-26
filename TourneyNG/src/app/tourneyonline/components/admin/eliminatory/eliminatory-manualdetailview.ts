@@ -9,12 +9,12 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Message } from 'app/components/common/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { LevelService } from './level-service';
 
 @Component({
     templateUrl: './eliminatory-manualdetailview.html',
@@ -56,6 +56,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
+        
     ) { 
         super(tourneyService, location);
     }

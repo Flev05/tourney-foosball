@@ -36,8 +36,10 @@ const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';
 const insertTourneyUrl = tourneyUrl + '/insert';
 const updateTourneyUrl = tourneyUrl + '/update';
 const updateTourneyDeleteRoundMeetingsUrl = tourneyUrl + '/updateTourneyDeleteRoundMeetings';
-const updateTourneyDeletePlayoffMeetingsUrl = tourneyUrl + '/updateTourneyDeletePlayoffMeetings';
-const updateTourneyDeleteEliminatoryMeetingsUrl = tourneyUrl + '/updateTourneyDeleteEliminatoryMeetings';
+// const updateTourneyDeleteEliminatoryMeetingsUrl = tourneyUrl + '/updateTourneyDeleteEliminatoryMeetings';
+const updateTourneyRoundsUrl = tourneyUrl + "/updateTourneyRounds";
+const updateTourneyPlayoffsUrl = tourneyUrl + "/updateTourneyPlayoffs";
+const updateTourneyEliminatoriesUrl = tourneyUrl + "/updateTourneyEliminatories";
 const deleteTourneyUrl = tourneyUrl + '/delete';
 
 const classificationLabel = "°";
@@ -323,6 +325,30 @@ export class TourneyService extends AbstractService {
         return this.updateTourney(tvo, selector);
     }
 
+    updateTourneyAndPlayoffs(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyPlayoffsUrl;
+        return this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
+    updateTourneyAndRounds(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyRoundsUrl;
+        return this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
+    updateTourneyAndEliminatories(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyEliminatoriesUrl;
+        return this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
     /** PUT: update the tourney on the server */
     private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let url = updateTourneyUrl;
@@ -346,28 +372,26 @@ export class TourneyService extends AbstractService {
     }
  
     /** PUT: update the tourney and the playoff meetings on the server */
-    public updateTourneyDeletePlayoffMeetings (tvo: TourneyVO): void {
-        let url = updateTourneyDeletePlayoffMeetingsUrl;
+    // public updateTourneyDeletePlayoffMeetings (tvo: TourneyVO): void {
+    //     let url = updateTourneyDeletePlayoffMeetingsUrl;
 
-        let obs = this.http.put(url, tvo, httpOptions).pipe(
-            tap(_ => this.log('updated TourneyDb url=' + url)),
-            catchError(this.handleError('loadTourneyDb', []))
-        );
+    //     let obs = this.http.put(url, tvo, httpOptions).pipe(
+    //         tap(_ => this.log('updated TourneyDb url=' + url)),
+    //         catchError(this.handleError('loadTourneyDb', []))
+    //     );
 
-        obs.subscribe();
-    }
+    //     obs.subscribe();
+    // }
 
     /** PUT: update the tourney and the eliminatory meetings on the server */
-    public updateTourneyDeleteEliminatoryMeetings (tvo: TourneyVO): void {
-        let url = updateTourneyDeleteEliminatoryMeetingsUrl;
-
-        let obs = this.http.put(url, tvo, httpOptions).pipe(
-            tap(_ => this.log('updated TourneyDb url=' + url)),
-            catchError(this.handleError('loadTourneyDb', []))
-        );
-
-        obs.subscribe();
-    }
+    // public updateTourneyDeleteEliminatoryMeetings (tvo: TourneyVO): void {
+    //     let url = updateTourneyDeleteEliminatoryMeetingsUrl;
+    //     let obs = this.http.put(url, tvo, httpOptions).pipe(
+    //         tap(_ => this.log('updated TourneyDb url=' + url)),
+    //         catchError(this.handleError('loadTourneyDb', []))
+    //     );
+    //     obs.subscribe();
+    // }
     
     doRoundDelete(round: Round, selector: (err: any, caught: Observable<Round> ) => Observable<Round> ): void {
         console.log("doDelete(): " + round.name);

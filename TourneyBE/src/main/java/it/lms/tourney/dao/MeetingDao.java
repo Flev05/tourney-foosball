@@ -144,6 +144,39 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
     }
 
     /**
+     * Finds all meetings associated to the received tourney and eliminatory id list
+     * 
+     * @param tourneyId the tourney identifier
+     * @param idList the list of Eliminatory ids
+     * @return the list of meetings related to the ids
+     */
+    public List<Meeting> findAllEliminatoryMeetingsByIdList(Integer tourneyId, List<Integer> idList) {
+
+        logger.debug(logId() + "Entering findAllEliminatoryMeetingsByIdList()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+        Root<Meeting> root = cq.from(Meeting.class);
+
+        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+
+        Predicate p2 = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+        Predicate p3 = root.get(Meeting_.eliminatoryId).in(idList);
+
+        cq = cq.select(root);
+        cq = cq.where(p2, p3);
+
+        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+
+        List<Meeting> resultList = tq.getResultList();
+
+        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        return resultList;
+    }
+
+    /**
      * Finds all meetings associated to the received tourney and eliminatory id
      * 
      * @param tourneyId the tourney identifier
@@ -241,16 +274,16 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
         logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
     }
 
-    public void deleteMeetingsByTourneyAndEliminatoryIds(Integer tourneyId, Integer eliminatoryId) {
-
-        Query query = getEm().createQuery(
-                "DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryId = :eliminatoryId");
-
-        query = query.setParameter("tourneyId", tourneyId);
-        query = query.setParameter("eliminatoryId", eliminatoryId);
-
-        int deletedCount = query.executeUpdate();
-
-        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
-    }
+    // public void deleteMeetingsByTourneyAndEliminatoryIds(Integer tourneyId, Integer eliminatoryId) {
+    //
+    // Query query = getEm().createQuery(
+    // "DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryId = :eliminatoryId");
+    //
+    // query = query.setParameter("tourneyId", tourneyId);
+    // query = query.setParameter("eliminatoryId", eliminatoryId);
+    //
+    // int deletedCount = query.executeUpdate();
+    //
+    // logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+    // }
 }

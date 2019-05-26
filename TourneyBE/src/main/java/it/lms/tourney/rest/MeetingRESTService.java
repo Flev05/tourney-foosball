@@ -112,6 +112,25 @@ public class MeetingRESTService extends AbstractRESTService {
         return meetingVoList;
     }
 
+    @POST
+    @Path("/loadEliminatoryMeetingByIdList/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loadEliminatoryMeetingByIdList(@PathParam("tourneyId") Integer tourneyId, List<Integer> idsList) {
+
+        logger.debug(logId() + "[GET: loadEliminatoryMeetingByIdList(" + tourneyId + ")]");
+
+        List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsByIdList(tourneyId, idsList);
+
+        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+                .collect(Collectors.toList());
+
+        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
+
+        Response.ResponseBuilder builder = Response.ok().entity(meetingVoList);
+
+        return builder.build();
+    }
+
     /**
      * Creates a new meeting from the values provided. Performs validation, and will return a JAX-RS response with
      * either 200 ok, or with a map of fields, and related errors.
@@ -237,22 +256,22 @@ public class MeetingRESTService extends AbstractRESTService {
     /**
      * Removes the meetings related to the received tourney and eliminatory ids.
      */
-    @DELETE
-    @Path("/deleteMeetingsByTourneyAndEliminatoryIds/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMeetingsByTourneyAndEliminatoryIds(@PathParam("tourneyId") Integer tourneyId,
-            @PathParam("eliminatoryId") Integer eliminatoryId) {
-
-        logger.debug(logId() + "[DELETE: deleteMeetingsByTourneyAndEliminatoryIds(" + tourneyId + ", " + eliminatoryId
-                + ")]");
-
-        meetingDao.deleteMeetingsByTourneyAndEliminatoryIds(tourneyId, eliminatoryId);
-
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
+    // @DELETE
+    // @Path("/deleteMeetingsByTourneyAndEliminatoryIds/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
+    // @Consumes(MediaType.APPLICATION_JSON)
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response deleteMeetingsByTourneyAndEliminatoryIds(@PathParam("tourneyId") Integer tourneyId,
+    // @PathParam("eliminatoryId") Integer eliminatoryId) {
+    //
+    // logger.debug(logId() + "[DELETE: deleteMeetingsByTourneyAndEliminatoryIds(" + tourneyId + ", " + eliminatoryId
+    // + ")]");
+    //
+    // meetingDao.deleteMeetingsByTourneyAndEliminatoryIds(tourneyId, eliminatoryId);
+    //
+    // Response.ResponseBuilder builder = Response.ok();
+    //
+    // return builder.build();
+    // }
 
     /**
      * Removes the meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a map of

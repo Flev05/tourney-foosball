@@ -5,6 +5,8 @@
     </div>
 </div>
 
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+
 <div class="content-section documentation">
 <p-accordion>
     <p-accordionTab header="Introduzione">            
@@ -1065,7 +1067,7 @@
                     Squadre:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di squadre per girone all'italiana che passerà il turno ai playoff">
+                        pTooltip="Scegliere il numero di squadre, dai {{selectedTourney.selectedRoundsNumCB.value}} gironi all'italiana, che passeranno il turno ai playoff">
                     <p-dropdown id="teamsRoundId" 
                         [options]="team4playoffsCombobox" 
                         [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
@@ -1082,7 +1084,7 @@
                     Gironi:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di gironi di playoff della fase di playoff">
+                        pTooltip="Scegliere il numero di gironi della fase di playoff">
                     <p-dropdown id="playoffId" 
                         [options]="playoffsCombobox" 
                         [(ngModel)]="selectedTourney.selectedPlayoffsCB"  

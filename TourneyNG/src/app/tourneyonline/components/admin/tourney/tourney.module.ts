@@ -40,6 +40,7 @@ import { PlayerModule } from '../player/player.module';
 import { PlayerPickList } from './player-picklist';
 import { TeamModule } from '../team/team.module';
 import { NewTourneyDetailView } from './new-tourney-detailview';
+import {BlockUIModule} from 'primeng/blockui';
 
 @NgModule({
 	imports: [
@@ -69,6 +70,7 @@ import { NewTourneyDetailView } from './new-tourney-detailview';
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
+        ,BlockUIModule
 		,TourneyRoutingModule
 		,RoundModule
         ,PlayoffModule

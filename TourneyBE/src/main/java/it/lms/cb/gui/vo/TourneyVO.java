@@ -2,6 +2,7 @@
 package it.lms.cb.gui.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import it.lms.tourney.po.Country;
 
@@ -16,6 +17,7 @@ public class TourneyVO extends AbstractVO implements Serializable {
     private ClientVO          clientVO;
     private Country           country;
     private String            json;
+    private List<MeetingVO>   mdbs;
 
     public TourneyVO() {
 
@@ -68,4 +70,13 @@ public class TourneyVO extends AbstractVO implements Serializable {
         this.country = country;
     }
 
+    public List<MeetingVO> getMdbs() {
+
+        return mdbs;
+    }
+
+    public void setMdbs(List<MeetingVO> mdbs) {
+
+        this.mdbs = mdbs;
+    }
 }

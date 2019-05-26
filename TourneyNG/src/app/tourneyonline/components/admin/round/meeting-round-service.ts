@@ -47,7 +47,7 @@ export class MeetingRoundService extends MeetingService {
     private createAndSaveRoundMeeting(tourney: Tourney, round: Round): void {
         this.createRoundMeeting(tourney, round);
 
-        this.saveRoundMeeting(round);
+        // this.saveRoundMeeting(round);
     }
 
     createRoundMeeting( tourney: Tourney, round : Round ) : void {
@@ -345,16 +345,16 @@ export class MeetingRoundService extends MeetingService {
         e.id = mdb.eliminatoryId;
     }
 
-    public saveRoundMeeting(r: Round) {
-        for (let m of r.onewayMeetings) {
-            let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-            observer.subscribe(n => this.saveMeetingNext(n, m));
-        }
-        for (let m of r.roundtripMeetings) {
-            let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-            observer.subscribe(n => this.saveMeetingNext(n, m));
-        }
-    }
+    // public saveRoundMeeting(r: Round) {
+    //     for (let m of r.onewayMeetings) {
+    //         let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+    //         observer.subscribe(n => this.saveMeetingNext(n, m));
+    //     }
+    //     for (let m of r.roundtripMeetings) {
+    //         let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
+    //         observer.subscribe(n => this.saveMeetingNext(n, m));
+    //     }
+    // }
     
     public saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
         console.log("saveMeetingNext()");

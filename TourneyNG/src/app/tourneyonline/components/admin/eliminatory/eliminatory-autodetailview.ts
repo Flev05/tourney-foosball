@@ -7,11 +7,11 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { LevelService } from './level-service';
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',
@@ -114,7 +114,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
 
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
     }
-    
+ 
     private saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
         console.log("saveMeetingNext()");
         console.log(mdb);

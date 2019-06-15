@@ -344,17 +344,6 @@ export class MeetingRoundService extends MeetingService {
         m.id = mdb.id;
         e.id = mdb.eliminatoryId;
     }
-
-    // public saveRoundMeeting(r: Round) {
-    //     for (let m of r.onewayMeetings) {
-    //         let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-    //         observer.subscribe(n => this.saveMeetingNext(n, m));
-    //     }
-    //     for (let m of r.roundtripMeetings) {
-    //         let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, r.id);
-    //         observer.subscribe(n => this.saveMeetingNext(n, m));
-    //     }
-    // }
     
     public saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
         console.log("saveMeetingNext()");

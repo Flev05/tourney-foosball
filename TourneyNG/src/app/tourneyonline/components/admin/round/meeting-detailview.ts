@@ -6,7 +6,6 @@ import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
@@ -19,7 +18,6 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 export class MeetingDetailView extends AbstractDetailView {
 
     meetingFormGroup: FormGroup;
-    toggleable: boolean = false;
 
     selectedRound: Round;
     selectedMeeting: Meeting;
@@ -30,7 +28,6 @@ export class MeetingDetailView extends AbstractDetailView {
         private fb: FormBuilder,
         protected location: Location,
         protected tourneyService: TourneyService,
-        public meetingService: MeetingRoundService,
         protected meetingRoundService: MeetingRoundService
     ) { 
         super(tourneyService, location);
@@ -42,7 +39,7 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-        this.selectedMeeting = this.meetingService.selectedMeeting;
+        this.selectedMeeting = this.meetingRoundService.selectedMeeting;
 
         this.dateAndTime = new Date(this.selectedMeeting.datetime);
                
@@ -84,8 +81,8 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
 
-        let observer = this.meetingRoundService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
-        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+        // let observer = this.meetingRoundService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
+        // observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
 
         super.goBack();
     }

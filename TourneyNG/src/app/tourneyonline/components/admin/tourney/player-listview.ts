@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';

@@ -1,8 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Gestione girone</span>
-        <h3>Torneo: {{selectedTourney.tourneyName}}</h3> 
-        <h4><span>Girone: {{selectedRound.name}}</span></h4>        
+        <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
+        <h3>Girone: {{selectedRound.name}}</h3> 
     </div>
 </div>
 
@@ -66,38 +65,45 @@
 </p-accordion>
 </div>
 
-<form [formGroup]="roundFormGroup">
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
-        
-        <button *ngIf="meetingEnabled" 
-            type="button" 
-            icon="fa fa-user-plus" 
-            pButton (click)="goMeeting()" 
-            label="Incontri" 
-            class="ui-button-success">
-        </button>
-    </div>                  
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
+    
+    <button type="button" 
+        icon="fa fa-user-plus" 
+        pButton (click)="goMeeting()" 
+        label="Incontri" 
+        class="ui-button-success">
+    </button>
+</div>                  
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p-table [responsive]="true" 
+        [columns]="cols" 
+        [value]="teams" 
+        selectionMode="single"
+        [(selection)]="selectedTeam" 
+        (onRowSelect)="onRowSelect($event)" 
+        [scrollable]="true" 
+        scrollHeight="500px">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 15mm;">N°</th>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+                <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                <td *ngFor="let col of columns">
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
+                </td>         
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
  
-        <p-pickList [source]="availableTeams" 
-                [target]="targetTeams" 
-                sourceHeader="Disponibili {{availableTeams.length}}" 
-                targetHeader="Selezionati {{targetTeams.length}}" 
-                [responsive]="true"
-                dragdrop="true" 
-                dragdropScope="rounds" 
-                (onMoveToTarget)="onMoveToTarget($event)"
-                (onMoveToSource)="onMoveToSource($event)"
-                (onTargetReorder)="onTargetReorder($event)"
-                [sourceStyle]="{'height':'300px'}" 
-                [targetStyle]="{'height':'300px'}">
-            <ng-template let-team pTemplate="item">
-                <div class="ui-helper-clearfix">
-                    <div>{{team}}</div>
-                </div>
-            </ng-template>
-        </p-pickList>                                
-    </div>
-</form>   

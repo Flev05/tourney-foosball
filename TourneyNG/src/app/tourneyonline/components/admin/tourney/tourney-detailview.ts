@@ -91,6 +91,7 @@ export class TourneyDetailView extends AbstractDetailView {
     nextButtonIcon: string = "fa fa-arrow-right";
     maxBoundaryTabIndex: number;
     rewind: boolean;
+    teamsOrdered: string;
 
     constructor(
         protected location: Location,
@@ -120,6 +121,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.initNewTourney();
         }
         this.maxBoundaryTabIndex = this.getLastTabIndex();
+        this.teamsOrdered = this.selectedTourney.teamsWeightEnabled ? "true"  : "false";
 
         this.initiDisciplineCombobox();
 
@@ -573,6 +575,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareTourneyTeams(T : number) : Team[]  {
         let randomTeams: Team[] = [];
         
+        this.selectedTourney.teamsWeightEnabled = this.teamsOrdered=="true" ? true : false;
         if( this.selectedTourney.teamsWeightEnabled ) {
             return  this.selectedTourney.teams;         
         } 

@@ -15,6 +15,7 @@ import { Direction, MeetingStatus } from '../domain/enumerations';
 import { PlayoffRule } from '../domain/playoff-rule';
 import { Match } from '../domain/match';
 import { AbstractService } from '../components/common/abstract-service';
+import { Round } from '../domain/round';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -68,6 +69,20 @@ export class MeetingService extends AbstractService {
     { 
         super();
         console.log("Constructor of MeetingService");
+    }
+
+    public extractRoundMeetings(round : Round, mdbList: MeetingDb[] ) {
+        round.onewayMeetings = [];
+        round.roundtripMeetings = [];
+        for (let mdb of mdbList) {
+            let m: Meeting = JSON.parse(mdb.json);
+            if (m.direction == Direction.OneWay) {
+                round.onewayMeetings.push(m);
+            }
+            else {
+                round.roundtripMeetings.push(m);
+            }
+        }
     }
 
     /** 

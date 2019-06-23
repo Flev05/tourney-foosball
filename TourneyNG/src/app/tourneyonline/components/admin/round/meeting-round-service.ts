@@ -16,7 +16,6 @@ import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
-    selectedRound: Round;
  
     constructor(protected http: HttpClient
         , protected router: Router
@@ -28,7 +27,6 @@ export class MeetingRoundService extends MeetingService {
     
     remakeRoundMeeting( tourney: Tourney, round : Round ) : void {
         this.selectedTourney = tourney;
-        this.selectedRound = round;
 
         const url = this.deleteMeetingsByRoundIdUrl + "/" + tourney.id + "/" + round.id;
 
@@ -57,6 +55,76 @@ export class MeetingRoundService extends MeetingService {
         round.roundtripMeetings = [];
 
         this.prepareMeetings(round);
+
+        this.onewayDaysNo = 1;
+        this.shiftOnewayDay(this.onewayDaysNo);
+
+        this.roundtripDaysNo = 1;
+        this.shiftRoundtripDay(this.roundtripDaysNo);
+
+        this.allDaysNo = this.onewayMeetingDaysMap.size;
+        let meetingsNo = round.onewayMeetings.length;
+        this.isRoundTrip = false;
+
+        if (this.selectedTourney.isOnewayRound == "true") {
+            this.meetingsNoMsg = "" + meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
+        } else {
+            this.isRoundTrip = true;
+            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+        }
+    }
+
+     /**
+     * Converts the date and time and complete the round trip meetings copying from 
+     * its corresponding oneway meeting list
+     */
+    public prepareMeetingsMap(round : Round ): void {
+        this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
+        this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
+
+        for( let m of round.onewayMeetings ) {
+
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
+
+            let key = m.day;
+            // console.log( key + "° Giornata di andata");
+            if(!this.onewayMeetingDaysMap.has(key)) {
+                let emptyList: Meeting[] = [];
+                this.onewayMeetingDaysMap.set(key, emptyList);
+            }
+
+            let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
+            meetingList.push(m);
+        }
+
+        for( let m of round.roundtripMeetings ) {
+
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
+
+            let key = m.day;
+            console.log( key + "° Giornata di ritorno");
+            if(!this.roundtripMeetingDaysMap.has(key)) {
+                let emptyList: Meeting[] = [];
+                this.roundtripMeetingDaysMap.set(key, emptyList);
+            }
+
+            let meetingList: Meeting[] = this.roundtripMeetingDaysMap.get(key);
+            meetingList.push(m);
+        }
+    }
+
+    public onCompleteLoad(round: Round, mdbList: MeetingDb[]) {
+
+        this.extractRoundMeetings(round, mdbList);
+
+        this.prepareMeetingsMap(round);
 
         this.onewayDaysNo = 1;
         this.shiftOnewayDay(this.onewayDaysNo);
@@ -265,7 +333,7 @@ export class MeetingRoundService extends MeetingService {
         return temp;
     }
 
-    private shiftOnewayDay( currentDay : number) {
+    public shiftOnewayDay( currentDay : number) {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
         for( let d of this.onewayDays ) {
             d.teamName1 = d.team1.teamName;
@@ -273,7 +341,7 @@ export class MeetingRoundService extends MeetingService {
         }
     }
 
-    private shiftRoundtripDay( currentDay : number ) {
+    public shiftRoundtripDay( currentDay : number ) {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
         for( let d of this.roundtripDays ) {
             d.teamName1 = d.team1.teamName;

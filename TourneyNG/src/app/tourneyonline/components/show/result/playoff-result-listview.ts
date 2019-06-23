@@ -17,6 +17,7 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TeamDetailView } from '../../admin/team/team-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 
 @Component({
     templateUrl: './playoff-result-listview.html'
@@ -58,7 +59,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
 
     constructor(
           protected tourneyService: TourneyService
-        , private meetingService: MeetingService
+        , private meetingRoundService: MeetingRoundService
         , protected router: Router
         , protected location: Location
         , protected dfp: DateFormatPipe
@@ -79,7 +80,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
             { field: 'teamName2',   header: 'Trasferta' }
         ];
 
-        const subsbr = this.meetingService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        const subsbr = this.meetingRoundService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
 
@@ -311,7 +312,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
     onRowSelect(event) {
         console.log(event.data);
 
-        this.meetingService.selectedMeeting = this.selectedRow;
+        this.meetingRoundService.selectedMeeting = this.selectedRow;
 
         this.gotoDetailView();
     }

@@ -75,7 +75,6 @@ export class TeamDetailView extends AbstractDetailView {
     
     // private onLoadAllTourneysComplete(): void {
     //     let tourneys: Tourney[] = [];
-
     //     for(let tvo of this.tdbs) {
     //         let t: Tourney = JSON.parse(tvo.json);
     //         t.id = tvo.id;
@@ -84,7 +83,6 @@ export class TeamDetailView extends AbstractDetailView {
     //         t.clientVO = tvo.clientVO;
     //         tourneys.push(t);
     //     }
-
     //     for( let tourney of tourneys ) {
     //         if( tourney.tourneyStatus != TourneyStatus.Terminated ) {
     //             let foundTeam: Team = tourney.teams.find(t => t.teamName == this.selectedTeam.teamName);
@@ -107,23 +105,21 @@ export class TeamDetailView extends AbstractDetailView {
     //     }
     // }
     
-    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
-        return (res: any): Observable<T> => {
-            console.log("Entering saveTourneyErrorHandler()");
-            console.log(`${operation} failed!`);
-            console.error(res); // log to console instead
-      
-            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
-                this.badRequest = true;
-                return of(result as T);
-            } 
-            if( res.error.errorCode == "TourneyAlreadyExists" ) {
-                return of(result as T);
-            }
-      
-            return of(result as T);
-        };
-    }
+    // private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+    //     return (res: any): Observable<T> => {
+    //         console.log("Entering saveTourneyErrorHandler()");
+    //         console.log(`${operation} failed!`);
+    //         console.error(res); // log to console instead
+    //         if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+    //             this.badRequest = true;
+    //             return of(result as T);
+    //         } 
+    //         if( res.error.errorCode == "TourneyAlreadyExists" ) {
+    //             return of(result as T);
+    //         }
+    //         return of(result as T);
+    //     };
+    // }
 
     private newTeamNext(tvo:TeamVO) {
         console.log("newTeamNext()");

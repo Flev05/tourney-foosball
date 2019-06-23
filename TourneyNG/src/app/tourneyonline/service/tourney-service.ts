@@ -21,7 +21,7 @@ import { TourneyVO } from '../domain/tourney.vo';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Classification } from '../domain/classification';
-import { MeetingStatus, TourneyType } from '../domain/enumerations';
+import { MeetingStatus } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
 import { AbstractService } from '../components/common/abstract-service';
 
@@ -36,10 +36,11 @@ const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';
 const insertTourneyUrl = tourneyUrl + '/insert';
 const updateTourneyUrl = tourneyUrl + '/update';
 const updateTourneyDeleteRoundMeetingsUrl = tourneyUrl + '/updateTourneyDeleteRoundMeetings';
-// const updateTourneyDeleteEliminatoryMeetingsUrl = tourneyUrl + '/updateTourneyDeleteEliminatoryMeetings';
+const updateTourneyDeleteAllMeetingsUrl = tourneyUrl + "/updateTourneyDeleteAllMeetings";
 const updateTourneyRoundsUrl = tourneyUrl + "/updateTourneyRounds";
 const updateTourneyPlayoffsUrl = tourneyUrl + "/updateTourneyPlayoffs";
 const updateTourneyEliminatoriesUrl = tourneyUrl + "/updateTourneyEliminatories";
+
 const deleteTourneyUrl = tourneyUrl + '/delete';
 
 const classificationLabel = "°";
@@ -357,6 +358,18 @@ export class TourneyService extends AbstractService {
             tap(_ => this.log('updated TourneyDb url=' + url)),
             catchError(selector)
         );
+    }
+
+    /** PUT: update the tourney and the round meetings on the server */
+    public updateTourneyDeleteAllMeetings(tvo: TourneyVO): void {
+        let url = updateTourneyDeleteAllMeetingsUrl;
+
+        let obs = this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(this.handleError('loadTourneyVO', []))
+        );
+
+        obs.subscribe();
     }
 
     /** PUT: update the tourney and the round meetings on the server */

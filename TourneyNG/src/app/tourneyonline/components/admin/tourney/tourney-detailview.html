@@ -789,19 +789,24 @@
         </div>    
         
         <div *ngIf="teamTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            
-            <div class="ui-grid-col-5" tooltipPosition="right"
-                pTooltip="Indicare se le squadre sono ordinate come teste di serie o casuale">
-                <p-radioButton name="isTeamsOrderedGroupname" 
-                    label="Ordinamento Casuale" 
-                    value="true" 
-                    [(ngModel)]="teamsOrdered">
-                </p-radioButton>
-                <p-radioButton name="isTeamsOrderedGroupname" 
-                    label="Teste di serie" 
-                    value="false" 
-                    [(ngModel)]="teamsOrdered">
-                </p-radioButton>
+            <div class="ui-g" 
+                style="width:250px;margin-bottom:10px"
+                tooltipPosition="right" 
+                pTooltip="Indicare se le squadre sono in ordine casuale oppure ordinate come teste di serie">
+                <div class="ui-g-12">
+                    <p-radioButton name="isTeamsOrderedGroupname" 
+                        label="Ordinamento Casuale" 
+                        value="true" 
+                        [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                    </p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton name="isTeamsOrderedGroupname" 
+                        label="Teste di serie" 
+                        value="false" 
+                        [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                    </p-radioButton>
+                </div>
             </div>
 
             <p-table [columns]="teamCols"

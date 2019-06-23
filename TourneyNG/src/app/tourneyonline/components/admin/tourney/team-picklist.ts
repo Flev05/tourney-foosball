@@ -41,7 +41,6 @@ export class TeamPickList extends AbstractListView {
     }
     
     private prepareAvailableTeams(): void {
-        
         this.targetTeams = [];
         for(let t of this.selectedTourney.teams) {
             this.targetTeams.push(t.teamName);
@@ -55,28 +54,19 @@ export class TeamPickList extends AbstractListView {
             }
         }
     }
-    
-    onRandomTeamChange(event) {
-        console.log("Entering onRandomTeamChange()");
-        console.log(event);
-        if(event) {
-            this.selectedTourney.teamsWeightEnabled = true;
-        } else {
-            this.selectedTourney.teamsWeightEnabled = false;
-        }
-        this.teamService.isTeamsChanged=true;;
-    }
 
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged=true;;
+        this.teamService.isTeamsChanged=true;
+        this.resetAll();
     }
 
     onMoveToSource(event) {
         console.log("Entering onMoveToSource()");
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged=true;;
+        this.teamService.isTeamsChanged=true;
+        this.resetAll();
     }
  
     newTeam() {
@@ -93,6 +83,84 @@ export class TeamPickList extends AbstractListView {
     goBack(): void {
         this.alignTourneyTeams();
         super.goBack();
+    }
+
+    private resetAll(): void {
+        
+        if( this.isRoundTabEnabled() ) {
+            this.cleanRoundMeetings();
+        }
+        if( this.isPlayoffTabEnabled() ) {
+            this.cleanPlayoffMeetings();
+        }
+        if( this.isEliminatoryTabEnabled() ) {
+            this.cleanEliminatoryMeetings();
+        }   
+
+        let tvo: TourneyVO = this.prepareTourneyVOForRound();
+        this.tourneyService.updateTourneyDeleteAllMeetings(tvo);
+    }
+ 
+    private prepareTourneyVOForRound() {
+        this.cleanRoundMeetings();
+        let tvo: TourneyVO = {
+            id: this.selectedTourney.id,
+            tourneyName: this.selectedTourney.tourneyName,
+            country: this.selectedTourney.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(this.selectedTourney)
+        };
+        return tvo;
+    }
+
+    private cleanRoundMeetings() {
+        for (let r of this.selectedTourney.rounds) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+        }
+        this.selectedTourney.rounds = [];
+    }
+
+    private cleanPlayoffMeetings() {
+        for (let p of this.selectedTourney.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        this.selectedTourney.playoffs = [];
+    }
+    
+    private cleanEliminatoryMeetings( ) {
+        for (let el of this.selectedTourney.eliminatoryLevels) {
+            for (let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        for (let el of this.selectedTourney.eliminatoryLevels) {
+            el.eliminatories = [];
+        }
+        this.selectedTourney.eliminatoryLevels = [];
+    }
+ 
+    private isRoundTabEnabled(): boolean {
+        if( !this.containsRound() ) {
+            return false;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+    }
+
+    private isPlayoffTabEnabled(): boolean {
+        if( !this.containsPlayoff() ) {
+            return false;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+    }
+
+    private isEliminatoryTabEnabled(): boolean {
+        if( !this.containsEliminatory() ) {
+            return false;
+        }
+        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
     }
 
     private alignTourneyTeams() {

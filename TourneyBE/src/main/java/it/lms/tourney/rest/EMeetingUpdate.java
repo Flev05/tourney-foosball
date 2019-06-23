@@ -2,5 +2,5 @@
 package it.lms.tourney.rest;
 
 public enum EMeetingUpdate {
-    NONE, ROUND, PLAYOFF, ELIMNATORY
+    NONE, RESET, ROUND, PLAYOFF, ELIMNATORY
 }

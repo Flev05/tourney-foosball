@@ -1,7 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Vista per la composizione delle squadre del torneo</span>
-        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>        
+        <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
+        <h4><span>Composizione squadre</span></h4>        
     </div>
 </div>
 
@@ -13,14 +13,20 @@
             Se la squadra non esiste, la potete creare con il bottone Nuova Squadra
         </p>
         <p>
-            Attenzione! L'ordine delle squadre è rilevante, esse sono elencate secondo il criterio delle teste
-            di serie, in cui la prima squadra è la più forte, la seconda quella immediatamente dopo, l'ultima
-            la più debole.
+            La check box indica se l'ordine delle squadre è rilevante.
         </p>
         <p>
-            Si può disabilitare tale assunzione con la check box: Ordinamento Casuale. Se spuntate la casella,
-            il programma considera tutte le squadre allo stesso livello e compone gli incontri in modo casuale.
+            Se spuntata significa che le squadre sono elencate secondo il criterio delle teste
+            di serie, in cui la prima squadra è la più forte, la seconda quella immediatamente dopo, l'ultima
+            la più debole. 
         </p>
+        <p>
+            Se non spuntata, il programma considera tutte le squadre allo stesso livello e compone gli incontri in modo casuale.
+        </p>
+        <p>
+            Attenzione! Quando inserite o rimuovete una squadra dal torneo, il sistema rimuove tutti i gironi, playoff
+            ed eilninazioni dirette precedentemente definite e va in wizard mode e quindi dovete ricompilare tutte le schede corrispondenti.
+        </p>        
     </p-accordionTab>
 </p-accordion>
 </div>

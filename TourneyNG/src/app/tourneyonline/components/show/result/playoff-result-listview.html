@@ -17,7 +17,7 @@
         (onChange)="onChangeTab($event)">
     <p-tabPanel header="Andata">
         <p-table [columns]="cols"
-            [value]="onewayDays" 
+            [value]="meetingRoundService.onewayDays" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -63,7 +63,7 @@
     <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
         <p-table 
             [columns]="cols"
-            [value]="roundtripDays" 
+            [value]="meetingRoundService.roundtripDays" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  

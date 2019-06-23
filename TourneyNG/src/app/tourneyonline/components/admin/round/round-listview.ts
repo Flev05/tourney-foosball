@@ -8,6 +8,8 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TeamDetailView } from '../team/team-detailview';
+import { MeetingRoundService } from './meeting-round-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './round-listview.html',
@@ -20,11 +22,13 @@ export class RoundListView extends AbstractListView {
     teams: Team[];
 
     selectedRound: Round;
+    mdbList:  MeetingDb[];
 
     constructor(
         protected location: Location,
         protected router: Router,
         protected tourneyService: TourneyService,
+        protected meetingRoundService: MeetingRoundService,
         public teamService: TeamService,
     ) { 
         super(TeamDetailView.redirect, tourneyService, router, location);
@@ -44,7 +48,9 @@ export class RoundListView extends AbstractListView {
     }
  
     goMeeting() {        
-        this.router.navigate([RoundListView.meetingListviewRedirect]);
+        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+        
     }
     
     goBack(): void {
@@ -56,5 +62,11 @@ export class RoundListView extends AbstractListView {
 
         this.teamService.selectedTeam = this.selectedTeam;
         this.gotoDetailView();
+    }
+
+    private onCompleteLoad(): void {
+        this.meetingRoundService.selectedTourney = this.selectedTourney;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+        this.router.navigate([RoundListView.meetingListviewRedirect]);
     }
 }

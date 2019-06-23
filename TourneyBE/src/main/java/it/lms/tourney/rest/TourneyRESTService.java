@@ -190,6 +190,21 @@ public class TourneyRESTService extends AbstractRESTService {
      * meetings received in the tourney
      */
     @PUT
+    @Path("/updateTourneyDeleteAllMeetings")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTourneyDeleteAllMeetings(TourneyVO tvo) {
+
+        logger.debug(logId() + "PUT: updateTourneyDeleteAllMeetings(" + tvo + ")");
+
+        return updateTourney(tvo, EMeetingUpdate.RESET);
+    }
+
+    /**
+     * Updates the received tourney after deleting all Round meetings related to the tourney and inserting the list of
+     * meetings received in the tourney
+     */
+    @PUT
     @Path("/updateTourneyRounds")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -255,6 +270,10 @@ public class TourneyRESTService extends AbstractRESTService {
 
             Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
             return builder.build();
+        }
+
+        if (update == EMeetingUpdate.RESET) {
+            meetingDao.deleteAllMeetingsByTourneyId(tourneyId);
         }
 
         if (update == EMeetingUpdate.ROUND) {

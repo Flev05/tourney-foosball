@@ -91,7 +91,6 @@ export class TourneyDetailView extends AbstractDetailView {
     nextButtonIcon: string = "fa fa-arrow-right";
     maxBoundaryTabIndex: number;
     rewind: boolean;
-    teamsOrdered: string;
 
     constructor(
         protected location: Location,
@@ -121,7 +120,6 @@ export class TourneyDetailView extends AbstractDetailView {
             this.initNewTourney();
         }
         this.maxBoundaryTabIndex = this.getLastTabIndex();
-        this.teamsOrdered = this.selectedTourney.teamsWeightEnabled ? "true"  : "false";
 
         this.initiDisciplineCombobox();
 
@@ -210,7 +208,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.teamSortType = TeamSortType.O;
         this.selectedTourney.isOnewayRound = "true";
         this.selectedTourney.isOnewayPlayoff = "true";
-        this.selectedTourney.teamsWeightEnabled = true;
+        this.selectedTourney.teamsWeightEnabled = false;
                 
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
@@ -575,7 +573,6 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareTourneyTeams(T : number) : Team[]  {
         let randomTeams: Team[] = [];
         
-        this.selectedTourney.teamsWeightEnabled = this.teamsOrdered=="true" ? true : false;
         if( this.selectedTourney.teamsWeightEnabled ) {
             return  this.selectedTourney.teams;         
         } 
@@ -600,7 +597,7 @@ export class TourneyDetailView extends AbstractDetailView {
      */
     private resetRoundMeetings( ) {
         let tvo: TourneyVO = this.prepareTourneyVOForRound(true);
-        // this.tourneyService.updateTourneyDeleteRoundMeetings(tvo);
+        this.tourneyService.updateTourneyDeleteRoundMeetings(tvo);
     }
  
     private prepareTourneyVOForRound(cleanRounds: boolean) {

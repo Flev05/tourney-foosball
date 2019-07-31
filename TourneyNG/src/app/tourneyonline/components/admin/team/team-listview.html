@@ -60,7 +60,10 @@
     scrollHeight="500px">
 
     <ng-template pTemplate="caption">
-        <div style="text-align:left">
+        <div style="text-align:center">
+            Squadre ({{teams.length}})
+       </div>
+       <div style="text-align:left">
             <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
         </div>
     </ng-template>

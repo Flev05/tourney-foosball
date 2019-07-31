@@ -16,7 +16,6 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 })
 export class EliminatoryAutoListView extends AbstractListView {
 
-    eliminatoryLevelSelectedRow: any;
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows: EliminatoryVO[];
     eliminatoryCols: TableCols[];

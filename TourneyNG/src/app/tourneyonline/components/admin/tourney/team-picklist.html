@@ -13,19 +13,13 @@
             Se la squadra non esiste, la potete creare con il bottone Nuova Squadra
         </p>
         <p>
-            La check box indica se l'ordine delle squadre è rilevante.
-        </p>
-        <p>
-            Se spuntata significa che le squadre sono elencate secondo il criterio delle teste
-            di serie, in cui la prima squadra è la più forte, la seconda quella immediatamente dopo, l'ultima
-            la più debole. 
-        </p>
-        <p>
-            Se non spuntata, il programma considera tutte le squadre allo stesso livello e compone gli incontri in modo casuale.
+            Le radio button indicano se le squadre sono inserite in ordine casuale oppure come teste di serie e quindi in prima posizione
+            deve essere inserita la squadra più forte e per ultima quella più debole secondo un vostro criterio di classifica del rancking
+            utilizzato. Il programma terrà conto di tale scelta ed organizzarà gli incontri del girone in funzione di questa scelta.
         </p>
         <p>
             Attenzione! Quando inserite o rimuovete una squadra dal torneo, il sistema rimuove tutti i gironi, playoff
-            ed eilninazioni dirette precedentemente definite e va in wizard mode e quindi dovete ricompilare tutte le schede corrispondenti.
+            ed eilninazioni dirette precedentemente definiti, va in wizard mode e quindi dovete ricompilare tutte le schede corrispondenti.
         </p>        
     </p-accordionTab>
 </p-accordion>
@@ -38,14 +32,25 @@
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 
     <div class="ui-grid-col-3" tooltipPosition="right"
-            pTooltip="Indicare se l'ordine delle squadre è rilevante o casuale">
+            pTooltip="Indicare se le squadre sono in ordine casuale oppure ordinate come teste di serie">
         <div class="ui-g radiobuttons">
             <div class="ui-g-12">
-                <p-checkbox [(ngModel)]="selectedTourney.teamsWeightEnabled" binary="true" label="Ordinamento Casuale">
-                </p-checkbox>
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Ordinamento Casuale" 
+                    value="true" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
             </div>
-        </div>          
+            <div class="ui-g-12">
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Teste di serie" 
+                    value="false" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+            </div>
+        </div>
     </div>
+
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
             <button class="ui-button-success" pButton type="button" icon="fa fa-group" label="Nuova Squadra" 

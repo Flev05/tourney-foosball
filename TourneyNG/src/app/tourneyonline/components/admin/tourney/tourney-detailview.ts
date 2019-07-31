@@ -133,7 +133,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
         let spin = this.selectedTourney.maxMatchesPerMeeting;
         this.bestOffWinner = spin;
-        this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre";
+        this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre (" +this.selectedTourney.teams.length + ")";
 
         this.checkTeamsChanged();
 
@@ -1028,7 +1028,8 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     prevTab(): void {
-        this.selectedTourney.selectedTabIndex = this.selectedTourney.selectedTabIndex > 0 ? this.selectedTourney.selectedTabIndex-1 : 0;
+        this.selectedTourney.selectedTabIndex--;
+        this.selectedTourney.selectedTabIndex = this.selectedTourney.selectedTabIndex < 0 ? 0 : this.selectedTourney.selectedTabIndex;
         this.makeButtonLabel();
     }
 
@@ -1100,10 +1101,11 @@ export class TourneyDetailView extends AbstractDetailView {
             this.gotoListView();
             return;
         }
-        this.selectedTourney.selectedTabIndex++;
-        this.selectedTourney.wizardModeIndex++;
 
-        // this.ngOnInit();
+        this.selectedTourney.selectedTabIndex++;
+        this.selectedTourney.wizardModeIndex = this.selectedTourney.selectedTabIndex > this.selectedTourney.wizardModeIndex 
+            ? this.selectedTourney.wizardModeIndex++ 
+            : this.selectedTourney.wizardModeIndex;
     }
  
     private updatePlayoffMeetings() {

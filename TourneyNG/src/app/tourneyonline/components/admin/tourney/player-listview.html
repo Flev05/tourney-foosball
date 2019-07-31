@@ -10,20 +10,25 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>
-            La vista contiene l'elenco dei giocatori della squadra selezionata, più 2 bottoni.
-            Potete effettuare le seguenti operazioni:
+            La vista contiene le informazioni di dettaglio e la vista elenco dei giocatori della squadra.
+            Potete gestire la lista dei giocatori della squadra.
         </p>
         <ul>
-            <li>Nuovo Giocatore</li>
-            <li>Gestisci Giocatori</li>
-            <li>Dettaglio Squadra</li>
+            <li>Gestire la lista dei giocatori</li>
+            <li>Aprire la vista di dettaglio di un singolo giocatore</li>
         </ul>        
 
-        <h4>Nuovo giocatore</h4>
+        <h4>Gestire la lista dei giocatori</h4>
         <p>
-            Con il bottone Nuovo Giocatore, potete creare un nuovo giocatore non presente nella lista
-            dei giocatori esistenti, visibili alla voce di menù: 
-            <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>
+            Con il bottone Gestisci Giocatori si apre una vista in cui potere spostare i giocatori dalla lista di quelli disponibili
+            a livello di organizzazione a quella che compone la squadra. Si veda la descrizione nella vista corrispondnte per maggiori dettagli.
+        </p>
+
+        <h4>Aprire la vista di dettaglio di un singolo giocatore</h4>
+        <p>
+            Con un click sulla riga di un giocatore della lista, si apre la corrispondente vista di dettaglio dalla quale potete
+            modificare le informazioni del giocatore. Si veda la descrizione nella vista corrispondnte per maggiori dettagli.
+
         </p>
         <p>
             Il giocatore così creato farà parte della squadra selezionata e del pool di giocatori disponibili per tutti
@@ -31,12 +36,6 @@
         </p>
         <p>
             Alla fine dell'operazione di creazione, dovete salvare esplicatmente con il bottone Salva
-        </p>
-
-        <h4>Gestisci Giocatori</h4>
-        <p>
-            Con il bottone Gestisci Giocatori, si accede alla vista per aggiornare la lista dei giocatori 
-            che forma la squadra.
         </p>
 
         <h4>Dettaglio Squadra</h4>

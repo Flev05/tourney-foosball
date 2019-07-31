@@ -95,6 +95,12 @@
         [columns]="playoffCols" 
         [value]="playoffRules" 
         responsive="true">
+    
+        <ng-template pTemplate="caption">
+            <div style="text-align:center">
+                 Regole ({{playoffRules.length}})
+            </div>
+        </ng-template>
 
     <ng-template pTemplate="header" let-columns>
         <tr>

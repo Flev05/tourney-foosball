@@ -41,6 +41,7 @@ export class ClientListView extends AbstractListView {
 
     ngOnInit() {
         console.log("ClientListView.ngOnInit()");
+        this.loginService.blockedDocument = false;
         this.clientService.newClient = false;
 
         this.onLoadClientError = false;
@@ -62,7 +63,6 @@ export class ClientListView extends AbstractListView {
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
             this.onLoadClientError = true;
 
             console.log(`${operation} failed!`);

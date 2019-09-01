@@ -16,7 +16,6 @@ const redirect = '/admintourney';
     templateUrl: './client-listview.html'
 })
 export class ClientLoginListView extends AbstractListView {
-
     selectedClient: ClientVO;
 
     clients: ClientVO[];
@@ -43,6 +42,8 @@ export class ClientLoginListView extends AbstractListView {
         this.onLoadClientError = false;
         let loggedUserId = this.loginService.userLogged.id;
 
+        this.loginService.blockedDocument = true;
+
         const subsrciber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subsrciber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onComplete());
     }
@@ -51,11 +52,14 @@ export class ClientLoginListView extends AbstractListView {
         console.log("onComplete()");
 
         this.clientService.setSelectClients(this.clients);
+
+        this.loginService.blockedDocument = false;
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
+            this.loginService.blockedDocument = false;
+            
             this.onLoadClientError = true;
 
             console.log(`${operation} failed!`);
@@ -73,6 +77,8 @@ export class ClientLoginListView extends AbstractListView {
 
     onRowSelect(event) {
         console.log(event.data);
+
+        this.loginService.blockedDocument = true;
 
         const sc = this.clientService.selectedClients.find(c => c.id == this.selectedClient.id);
 

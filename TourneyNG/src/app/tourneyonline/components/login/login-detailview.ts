@@ -43,6 +43,7 @@ export class LoginDetailView implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.loginService.blockedDocument = false;
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
         const username = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;

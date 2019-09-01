@@ -21,6 +21,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ClientLoginListView } from './client-listview';
 import { ClientTourneyListView } from './client-tourney-listview';
+import { BlockUIModule } from 'primeng/blockui';
 
 @NgModule({
 	imports: [
@@ -43,6 +44,7 @@ import { ClientTourneyListView } from './client-tourney-listview';
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
+        ,BlockUIModule
 	],
 	declarations: [
                   LoginDetailView

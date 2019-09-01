@@ -24,6 +24,7 @@ import {ClientDetailView} from './client-detailview';
 import { FieldsetModule } from 'primeng/fieldset';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
+
 @NgModule({
 	imports: [
         CommonModule
@@ -46,7 +47,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
         ,AccordionModule
         ,MessagesModule
         ,MessageModule
-		,ClientRoutingModule
+        ,ClientRoutingModule
 	],
 	declarations: [
           ClientListView

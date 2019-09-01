@@ -19,6 +19,7 @@ export class LoginService {
 
     userLogged   : Login;
     isUserLogged : boolean = false;
+    blockedDocument: boolean;
 
     constructor(private http: HttpClient, private roleService : RoleService) { 
         console.log("Constructor of LoginService");

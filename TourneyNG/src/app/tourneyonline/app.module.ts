@@ -35,6 +35,7 @@ import { DropdownModule } from 'app/components/dropdown/dropdown';
 import { MeetingPlayoffService } from './components/admin/playoff/meeting-playoff-service';
 import { MeetingRoundService } from './components/admin/round/meeting-round-service';
 import { DateFormatPipe } from './components/common/date-format-pipe';
+import {SidebarModule} from 'primeng/sidebar';
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {
@@ -62,6 +63,7 @@ if (environment.inMemoryDataService) {
     , SlideMenuModule
     , DateFormatModule
     , DropdownModule
+    , SidebarModule
     // , forDevelopEnvOnly
   ],
   providers: [

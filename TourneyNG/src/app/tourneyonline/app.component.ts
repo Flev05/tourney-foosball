@@ -50,6 +50,8 @@ export class AppComponent implements OnInit{
     clientOptions: Combobox[];
     selectedClientOption : Combobox;
 
+    visibleSidebar1: boolean;
+
     constructor( public loginService: LoginService
           , protected roleService: RoleService
           , protected clientService: ClientService

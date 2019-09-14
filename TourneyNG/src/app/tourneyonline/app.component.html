@@ -1,4 +1,5 @@
 <div class="layout-wrapper">
+    
     <div id="layout-topbar">
         <a href="#" class="menu-button" (click)="onMenuButtonClick($event)">
             <i class="fa fa-bars"></i>
@@ -20,9 +21,8 @@
             </li> -->
         </ul>
     </div>
-
+     
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
-        
         <p *ngIf="loginService.isUserLogged">Utente: {{loginService.userLogged.username}}</p>
 
         <div *ngIf="clientsCBEnabled()" class="ui-grid-row">
@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <div id="layout-content">
+    <div id="layout-content1">
         <div>
             <router-outlet></router-outlet>
         </div>

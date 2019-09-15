@@ -49,7 +49,7 @@ export class ClientDetailView extends AbstractDetailView {
         console.log("ClientDetailView.ngOnInit() ");
         super.ngOnInit();
         
-        this.countryService.loadAllCountries();
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
 
         this.clientAddress = "";
 
@@ -70,6 +70,10 @@ export class ClientDetailView extends AbstractDetailView {
                 + " (" + this.selectedClient.country.provinceCode +")" : "";
         }
         this.userEnabled = true;
+    }
+
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
     }
 
     onSubmit() {

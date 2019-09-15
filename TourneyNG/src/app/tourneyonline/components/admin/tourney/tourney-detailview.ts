@@ -208,7 +208,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.teamSortType = TeamSortType.O;
         this.selectedTourney.isOnewayRound = "true";
         this.selectedTourney.isOnewayPlayoff = "true";
-        this.selectedTourney.teamsWeightEnabled = false;
+        this.selectedTourney.teamsWeightEnabled = "false";
                 
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
@@ -512,12 +512,9 @@ export class TourneyDetailView extends AbstractDetailView {
         let T: number = this.selectedTourney.teams.length;
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
 
-        let teamsPerRound: number = Math.floor(T/R);
-        let teamsModRound: number = T % R;
-
         let randomTeams: Team[] = this.prepareTourneyTeams(T);
         
-        this.prepareTourneyRounds(R, teamsPerRound, randomTeams, teamsModRound);
+        this.prepareTourneyRounds(R, randomTeams);
 
         for( let r of this.selectedTourney.rounds ) {
             this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
@@ -540,7 +537,7 @@ export class TourneyDetailView extends AbstractDetailView {
      * The received team list is spawn on the number of received rounds so each round contains
      * at most the same number of teams.
      */
-    private prepareTourneyRounds(roundCount: number, teamsPerRound: number, randomTeams: Team[], teamsModRound: number) {
+    private prepareTourneyRounds(roundCount: number, randomTeams: Team[]) {
         this.selectedTourney.rounds = [];
 
         for (let i = 0; i < roundCount; i++) {
@@ -573,7 +570,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareTourneyTeams(T : number) : Team[]  {
         let randomTeams: Team[] = [];
         
-        if( this.selectedTourney.teamsWeightEnabled ) {
+        if( this.selectedTourney.teamsWeightEnabled == "true" ) {
             return  this.selectedTourney.teams;         
         } 
 

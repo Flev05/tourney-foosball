@@ -76,6 +76,7 @@ export class MeetingService extends AbstractService {
         round.roundtripMeetings = [];
         for (let mdb of mdbList) {
             let m: Meeting = JSON.parse(mdb.json);
+            m.id = mdb.id;
             if (m.direction == Direction.OneWay) {
                 round.onewayMeetings.push(m);
             }

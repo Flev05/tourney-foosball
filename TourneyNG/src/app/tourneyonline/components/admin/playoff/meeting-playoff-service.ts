@@ -10,7 +10,6 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {

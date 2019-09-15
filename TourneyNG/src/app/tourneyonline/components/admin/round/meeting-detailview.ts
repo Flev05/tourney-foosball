@@ -38,6 +38,8 @@ export class MeetingDetailView extends AbstractDetailView {
 
         super.ngOnInit();
 
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
+
         this.selectedRound = this.tourneyService.selectedRound;
         this.selectedMeeting = this.meetingRoundService.selectedMeeting;
 
@@ -81,8 +83,8 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
 
-        // let observer = this.meetingRoundService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
-        // observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+        let observer = this.meetingRoundService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
+        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
 
         super.goBack();
     }

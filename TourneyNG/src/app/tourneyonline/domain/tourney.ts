@@ -57,7 +57,7 @@ export interface Tourney {
     selectedEliminatoryTeamsCB?: Combobox;
     teamSortType?: TeamSortType;
 
-    teamsWeightEnabled?: boolean;
+    teamsWeightEnabled?: string;
 
     objectives?: Final[];
     teams?: Team[];

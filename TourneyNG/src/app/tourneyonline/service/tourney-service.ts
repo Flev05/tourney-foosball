@@ -407,7 +407,7 @@ export class TourneyService extends AbstractService {
     // }
     
     doRoundDelete(round: Round, selector: (err: any, caught: Observable<Round> ) => Observable<Round> ): void {
-        console.log("doDelete(): " + round.name);
+        console.log("doRoundDelete(): " + round.name);
         let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";
 
         if(confirm(popup)) {

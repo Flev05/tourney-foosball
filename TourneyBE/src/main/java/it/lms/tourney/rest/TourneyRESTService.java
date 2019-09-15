@@ -304,6 +304,7 @@ public class TourneyRESTService extends AbstractRESTService {
         for (MeetingVO mvo : mdbs) {
             Meeting mpo = converter.convertMeetingVoPo(mvo);
             meetingDao.insert(mpo);
+            mvo.setId(mpo.getId());
         }
     }
 

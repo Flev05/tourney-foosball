@@ -955,7 +955,6 @@
                         <th *ngFor="let col of columns">
                             {{col.header}}
                         </th>
-                        <th style="width: 15mm;">X</th>
                     </tr>
                 </ng-template>
         
@@ -965,10 +964,7 @@
                         <td *ngFor="let col of columns">
                             <span class="ui-column-title">{{col.header}}</span>
                             {{rowData[col.field]}}
-                        </td>
-                        <td style="width: 15mm;">
-                            <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doRoundDelete(rowData)"></button>
-                        </td>                
+                        </td>           
                     </tr>
                 </ng-template>
             </p-table>

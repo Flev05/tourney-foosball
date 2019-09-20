@@ -11,7 +11,7 @@ import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
-import { LevelService } from './level-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
     templateUrl: './eliminatory-autodetailview.html',
@@ -41,6 +41,7 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
+        protected countryService: CountryService,
     ) { 
         super(tourneyService, location);
     }
@@ -49,6 +50,8 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
         console.log("EliminatoryDetailView.ngOnInit() ");
 
         super.ngOnInit();
+        
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
 
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
@@ -86,6 +89,10 @@ export class AutoEliminatoryDetailView extends AbstractDetailView {
             'address2': new FormControl(this.m2.address, Validators.compose([Validators.required])),
             'country2': new FormControl(this.m2.country),    
         });
+    }
+
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
     }
 
     private save() {

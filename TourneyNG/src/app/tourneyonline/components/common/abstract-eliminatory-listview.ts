@@ -100,8 +100,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.isStandalone = false;
         }
         this.tourneyService.isStandalone = this.isStandalone;
-
-        // this.loadEliminatoryMeetings();
     }
 
     public isStandAlone(tourney : Tourney ): boolean {
@@ -166,21 +164,18 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     
     private addToMeetingMap(complete: () => void,  mdbs: MeetingDb[]): void {
         console.log("Entering addToMeetingMap(mdbs.length=" + mdbs.length + ")");
-
-        this.elHttpCounter--;
-        if(this.elHttpCounter == 0) {
-            this.processEliminationTree();
-            complete();
-            return;
-        }
-
         if( mdbs.length == 0 ) {
             return;
         }
 
+        this.elHttpCounter--;
         let elid = mdbs[0].eliminatoryId;
         this.meetingMap.set(elid, mdbs);
- 
+    
+        if(this.elHttpCounter > 0) {
+            return;
+        }
+
         for(let key of this.eliminatoryRoundMap.keys()) {
             let eid: number = +key;
             let meetingsDb: MeetingDb[] = this.meetingMap.get(eid);
@@ -202,6 +197,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             round.onewayMeetings = this.sortMeetings(onewayMeetings);
             round.roundtripMeetings = this.sortMeetings(roundtripMeetings);
         }
+
+        this.processEliminationTree();
+        
+        complete();
     }    
 
     protected processEliminationTree(): void {
@@ -212,7 +211,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.selectedEliminatoryLevel.direction=Direction.OneWay;
         this.isOneway = "true";
         this.prepareGui();
-        // this.onClickManageMeeting(true);
     }
 
     onRoundtripClick() {
@@ -220,16 +218,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.selectedEliminatoryLevel.direction=Direction.RoundTrip;
         this.isOneway = "false";
         this.prepareGui();
-        // this.onClickManageMeeting(false);
     }
-
-    private onClickManageMeeting(isOneway: boolean) {
-
-        this.processEliminationTree();
-
-        this.prepareGui();
-    }
-
+ 
     protected newDummyTeam() : Team {
         let dummy: Team = {id: this.tourneyService.getSequenceNumber(), teamName: "", isDummy: true};
         return dummy;

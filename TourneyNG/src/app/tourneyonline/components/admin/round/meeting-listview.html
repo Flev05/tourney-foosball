@@ -30,31 +30,18 @@
 </div>     
 
 <p-tabView *ngIf="atLeast2teams" 
-        [activeIndex]="activeIndex"
+        [activeIndex]="selectedRound.selectedTabIndex"
         (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Andata">
+
+    <p-tabPanel header="Incontri girone di ANDATA ({{meetingRoundService.allDaysNo}} giornate)">
         <p-table [columns]="cols"
-            [value]="meetingRoundService.onewayDays" 
+            [value]="meetingRoundService.onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
-            (onRowSelect)="onRowSelect($event)"        
-            [scrollable]="true" 
-            scrollHeight="600px">
-
-            <ng-template pTemplate="caption">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingRoundService.goOnewayLeft()"></button>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        Giornata {{meetingRoundService.onewayDaysNo}} di {{meetingRoundService.allDaysNo}}
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingRoundService.goOnewayRight()"></button>
-                    </div>
-                </div>
-            </ng-template>
+            (onRowSelect)="onRowSelect($event)"
+            [paginator]="true"
+            [rows]="pageSize">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -77,30 +64,16 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
+    <p-tabPanel *ngIf="isRoundTrip" header="Incontri girone di RITORNO ({{meetingRoundService.allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
-            [value]="meetingRoundService.roundtripDays" 
+            [value]="meetingRoundService.roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onRowSelect($event)"        
-            [scrollable]="true" 
-            scrollHeight="600px">
-
-            <ng-template pTemplate="caption">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingRoundService.goRoundtripLeft()"></button>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        Giornata {{meetingRoundService.roundtripDaysNo}} di {{meetingRoundService.allDaysNo}}
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingRoundService.goRoundtripRight()"></button>
-                    </div>
-                </div>
-            </ng-template>
+            [paginator]="true"
+            [rows]="pageSize">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>

@@ -11,8 +11,9 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractListView } from '../../common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
-import { LevelService } from '../../admin/eliminatory/level-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { LevelService } from '../../admin/eliminatory/level-service';
+ 
 
 const REDIRECT_TOURNEY_LV   = 'showtourney/';
 const REDIRECT_ROUND_DV     = 'result/lv/round';
@@ -27,15 +28,19 @@ export class TabResultListView extends AbstractListView {
 
     roundCols: TableCols[] = TourneyService.roundCols;
     roundRows: Round[];
+    roundCount: number;
     selectedRound: Round;
 
     playoffCols: TableCols[] = TourneyService.playoffCols;
     playoffRows: Playoff[];
+    playoffCount: number;
     selectedPlayoff: Playoff;
 
     incompletePlayoffConfiguration: boolean;
+    incompleteEliminatoryConfiguration: boolean;
 
     selectedTabIndex: number = 0;
+    eliminatoryCount: number;
 
     constructor(
         public tourneyService: TourneyService,
@@ -50,19 +55,21 @@ export class TabResultListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-
-        this.levelService.ngOnInit();
-
+        
         this.tourneyService.selectedEliminatoryLevelIndex = -1;
         this.tourneyService.selectedEliminatoryIndex = -1;
 
+        this.roundCount = 0;
         if(super.containsRound()) {
             this.roundRows = this.selectedTourney.rounds;
+            this.roundCount = this.roundRows.length;
         }
 
+        this.playoffCount = 0;
         if(super.containsPlayoff()) {
             this.incompletePlayoffConfiguration = false;
             this.playoffRows = this.selectedTourney.playoffs;
+            this.playoffCount = this.playoffRows.length;
             for(let p of this.playoffRows) {
                 p.playoffName = p.round.name;
                 if( p.playoffRules.length == 0 ) {
@@ -71,13 +78,18 @@ export class TabResultListView extends AbstractListView {
             }
         }
 
+        this.eliminatoryCount  = 0;
         if(super.containsEliminatory()) {
+            this.levelService.ngOnInit();
+            this.incompleteEliminatoryConfiguration = true;
             this.levelService.loadEliminatoryMeetings(() => this.loadComplete());
         }
     }
 
     private loadComplete():  void {
-         
+        // this.levelService.prepareGui();
+        this.incompleteEliminatoryConfiguration = false;
+        this.eliminatoryCount = this.levelService.eliminatoryLevelRows.length;
     }
 
     onChangeTab(e) {

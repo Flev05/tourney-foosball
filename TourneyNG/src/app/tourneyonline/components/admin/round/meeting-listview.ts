@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -14,6 +14,9 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
     templateUrl: './meeting-listview.html'
 })
 export class MeetingListView extends AbstractListView {
+    @Input() showCurrentPageReport: boolean = true;
+    @Input() currentPageReportTemplate: string = '{currentPage} of {totalPages}';
+
     static redirect: string = "adminround/lv/meetingLv/dv";
     cols: TableCols[] ;
     
@@ -24,6 +27,7 @@ export class MeetingListView extends AbstractListView {
  
     isRoundTrip: boolean;
     mdbList: MeetingDb[];
+    pageSize: number = 10;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -38,7 +42,9 @@ export class MeetingListView extends AbstractListView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-        
+        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
             { field: 'teamName1',   header: 'In casa' },
@@ -54,10 +60,20 @@ export class MeetingListView extends AbstractListView {
         if (this.selectedTourney.isOnewayRound == "true") {
             this.isRoundTrip = false;
         }
-
-        // this.meetingRoundService.createRoundMeeting(this.selectedTourney, this.selectedRound);
     }
-     
+
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.selectedRound.selectedTabIndex = index; 
+    }
+
+    private onCompleteLoad(): void {
+        this.meetingRoundService.selectedTourney = this.selectedTourney;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+        this.pageSize = this.meetingRoundService.onewayDays.length;
+    }
+  
     onRowSelect(event) {
         console.log(event.data);
 

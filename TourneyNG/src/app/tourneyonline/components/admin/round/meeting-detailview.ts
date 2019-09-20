@@ -1,34 +1,28 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-
-import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
-
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { Team } from 'app/tourneyonline/domain/team';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
     templateUrl: './meeting-detailview.html',
 })
 export class MeetingDetailView extends AbstractDetailView {
 
-    meetingFormGroup: FormGroup;
-
     selectedRound: Round;
     selectedMeeting: Meeting;
     
     dateAndTime: Date;
 
-    constructor(
-        private fb: FormBuilder,
-        protected location: Location,
+    constructor( protected location: Location,
         protected tourneyService: TourneyService,
-        protected meetingRoundService: MeetingRoundService
+        protected meetingRoundService: MeetingRoundService,
+        protected countryService: CountryService
     ) { 
         super(tourneyService, location);
     }
@@ -43,36 +37,14 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedRound = this.tourneyService.selectedRound;
         this.selectedMeeting = this.meetingRoundService.selectedMeeting;
 
-        this.dateAndTime = new Date(this.selectedMeeting.datetime);
-               
-        this.selectedMeeting.address =  this.selectedTourney.address;
-        this.selectedMeeting.country =  this.selectedTourney.country;
-        
-        let homeTeamId = this.selectedMeeting.team1.id;
-        let homeTeam : Team = this.selectedTourney.teams.find( t => t.id == homeTeamId);
-        if( homeTeam != undefined ) {
-            this.selectedMeeting.address = homeTeam.address;
-            this.selectedMeeting.country = homeTeam.country;
-        }
+        this.selectedMeeting.datetime = new Date(this.selectedMeeting.datetime);
+    }
 
-        this.meetingFormGroup = this.fb.group({
-            'name':    new FormControl(this.selectedMeeting.name),
-            
-            'dateAndTime':    new FormControl(this.dateAndTime),
-
-            'address': new FormControl(this.selectedMeeting.address),
-            'country': new FormControl(this.selectedMeeting.country),
-        });
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
     }
 
     done() {
-        let dt = this.meetingFormGroup.get('dateAndTime').value;
-
-        this.selectedMeeting.datetime = new Date(dt);
-
-        this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
-        this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
-
         if( this.selectedRound.direction == Direction.RoundTrip ) {
             let index = this.selectedRound.onewayMeetings.indexOf(this.selectedMeeting);
             if( index > -1 ) {
@@ -82,7 +54,7 @@ export class MeetingDetailView extends AbstractDetailView {
                 }
             }
         }
-
+        
         let observer = this.meetingRoundService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id);
         observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
 

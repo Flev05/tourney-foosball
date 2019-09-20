@@ -570,7 +570,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareTourneyTeams(T : number) : Team[]  {
         let randomTeams: Team[] = [];
         
-        if( this.selectedTourney.teamsWeightEnabled == "true" ) {
+        if( this.selectedTourney.teamsWeightEnabled == "false" ) {
             return  this.selectedTourney.teams;         
         } 
 

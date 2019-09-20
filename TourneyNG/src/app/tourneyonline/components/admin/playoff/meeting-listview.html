@@ -25,34 +25,21 @@
 </p-accordion>    
 </div>
 
-
 <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
 
-<p-tabView >
-    <p-tabPanel header="Andata">
+<p-tabView [activeIndex]="selectedPlayoff.selectedTabIndex"
+        (onChange)="onChangeTab($event)">
+    <p-tabPanel header="Incontri girone di ANDATA playoff ({{meetingPlayoffService.allDaysNo}} giornate)">
+
         <p-table [columns]="meetingsCols"
-            [value]="meetingPlayoffService.onewayDays" 
+            [value]="meetingPlayoffService.onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onRowSelect($event)"        
-            [scrollable]="true" 
-            scrollHeight="600px">
-
-            <ng-template pTemplate="caption">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingPlayoffService.goOnewayLeft()"></button>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        Giornata {{meetingPlayoffService.onewayDaysNo}} di {{meetingPlayoffService.allDaysNo}}
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingPlayoffService.goOnewayRight()"></button>
-                    </div>
-                </div>
-            </ng-template>
-
+            [paginator]="true" 
+            [rows]="pageSize">
+ 
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th style="width: 15mm;">N°</th>
@@ -74,30 +61,16 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="meetingPlayoffService.isRoundTrip" header="Ritorno">
+    <p-tabPanel *ngIf="meetingPlayoffService.isRoundTrip" header="Incontri girone di RITORNO playoff ({{meetingPlayoffService.allDaysNo}} giornate)">
         <p-table 
             [columns]="meetingsCols"
-            [value]="meetingPlayoffService.roundtripDays" 
+            [value]="meetingPlayoffService.roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onRowSelect($event)"        
-            [scrollable]="true" 
-            scrollHeight="600px">
-
-            <ng-template pTemplate="caption">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="meetingPlayoffService.goRoundtripLeft()"></button>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        Giornata {{meetingPlayoffService.roundtripDaysNo}} di {{meetingPlayoffService.allDaysNo}}
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="meetingPlayoffService.goRoundtripRight()"></button>
-                    </div>
-                </div>
-            </ng-template>
+            [paginator]="true"
+            [rows]="pageSize">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>

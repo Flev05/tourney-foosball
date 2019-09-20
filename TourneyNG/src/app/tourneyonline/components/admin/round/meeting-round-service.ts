@@ -16,12 +16,13 @@ import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
+
  
     constructor(protected http: HttpClient
         , protected router: Router
         , protected dateFormatPipe: DateFormatPipe ) 
     { 
-        super(  http, router );
+        super(  http, router, dateFormatPipe );
         console.log("Constructor of MeetingRoundService");
     }
     
@@ -44,8 +45,6 @@ export class MeetingRoundService extends MeetingService {
 
     private createAndSaveRoundMeeting(tourney: Tourney, round: Round): void {
         this.createRoundMeeting(tourney, round);
-
-        // this.saveRoundMeeting(round);
     }
 
     createRoundMeeting( tourney: Tourney, round : Round ) : void {
@@ -74,54 +73,10 @@ export class MeetingRoundService extends MeetingService {
         }
     }
 
-     /**
-     * Converts the date and time and complete the round trip meetings copying from 
-     * its corresponding oneway meeting list
-     */
-    public prepareMeetingsMap(round : Round ): void {
-        this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
-        this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
-
-        for( let m of round.onewayMeetings ) {
-
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-
-            if( m.points1 > 0 || m.points2 > 0 ) {
-                m.dateAndTime = m.points1 + " - " + m.points2;
-            }
-
-            let key = m.day;
-            // console.log( key + "° Giornata di andata");
-            if(!this.onewayMeetingDaysMap.has(key)) {
-                let emptyList: Meeting[] = [];
-                this.onewayMeetingDaysMap.set(key, emptyList);
-            }
-
-            let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
-            meetingList.push(m);
-        }
-
-        for( let m of round.roundtripMeetings ) {
-
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-            if( m.points1 > 0 || m.points2 > 0 ) {
-                m.dateAndTime = m.points1 + " - " + m.points2;
-            }
-
-            let key = m.day;
-            console.log( key + "° Giornata di ritorno");
-            if(!this.roundtripMeetingDaysMap.has(key)) {
-                let emptyList: Meeting[] = [];
-                this.roundtripMeetingDaysMap.set(key, emptyList);
-            }
-
-            let meetingList: Meeting[] = this.roundtripMeetingDaysMap.get(key);
-            meetingList.push(m);
-        }
-    }
-
     public onCompleteLoad(round: Round, mdbList: MeetingDb[]) {
 
+        this.mdbList = mdbList;
+        
         this.extractRoundMeetings(round, mdbList);
 
         this.prepareMeetingsMap(round);
@@ -141,6 +96,17 @@ export class MeetingRoundService extends MeetingService {
         } else {
             this.isRoundTrip = true;
             this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+        }
+
+        this.completeAllMeetings();
+    }
+
+    private completeAllMeetings() {
+        this.onewayMeetings = [];
+        this.roundtripMeetings = [];
+        for (let day = 1; day <= this.allDaysNo; day++) {
+            this.onewayMeetings = this.onewayMeetings.concat(this.shiftOnewayDay(day));
+            this.roundtripMeetings = this.roundtripMeetings.concat(this.shiftRoundtripDay(day));
         }
     }
 
@@ -333,20 +299,22 @@ export class MeetingRoundService extends MeetingService {
         return temp;
     }
 
-    public shiftOnewayDay( currentDay : number) {
+    public shiftOnewayDay( currentDay : number) : any[] {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
         for( let d of this.onewayDays ) {
             d.teamName1 = d.team1.teamName;
             d.teamName2 = d.team2.teamName;
         }
+        return this.onewayDays;
     }
 
-    public shiftRoundtripDay( currentDay : number ) {
+    public shiftRoundtripDay( currentDay : number ) : any[] {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
         for( let d of this.roundtripDays ) {
             d.teamName1 = d.team1.teamName;
             d.teamName2 = d.team2.teamName;
         }
+        return this.roundtripDays;
     }
 
     goOnewayLeft() {

@@ -5,10 +5,11 @@ import { Location } from '@angular/common';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { PlayoffRule } from '../../../domain/playoff-rule';
+ 
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
 @Component({
     templateUrl: './rule-listview.html'

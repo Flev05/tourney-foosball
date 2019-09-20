@@ -26,7 +26,6 @@ import { SliderModule } from 'app/components/slider/slider';
 import { CalendarModule } from 'app/components/calendar/calendar';
 
 import {PlayoffRoutingModule} from './playoff-routing.module';
-import {PlayoffListView} from './playoff-listview';
 import { RuleListView } from './rule-listview';
 import { RuleDetailView } from './rule-detailview';
 import { MeetingListView } from './meeting-listview';
@@ -63,8 +62,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,MessageModule
     ],
 	declarations: [
-         PlayoffListView
-        ,RuleListView
+        RuleListView
         ,RuleDetailView
         ,MeetingListView
         ,MeetingRuleDetailView

@@ -7,6 +7,7 @@ import { Matrix } from './matrix';
 export interface Round {
     id: number;
     
+    selectedTabIndex?: number;
     name: string;
     type: RoundType;
 

@@ -16,6 +16,7 @@ import { PlayoffRule } from '../domain/playoff-rule';
 import { Match } from '../domain/match';
 import { AbstractService } from '../components/common/abstract-service';
 import { Round } from '../domain/round';
+import { DateFormatPipe } from '../components/common/date-format-pipe';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -33,8 +34,6 @@ const updateMeetingUrl = meetingUrl + '/update';
 
 const deleteMeetingUrl                  = meetingUrl + '/delete';
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
-// const deleteEliminatoryMeetingsByTourneyIdUrl   = meetingUrl + "/deleteEliminatoryMeetingsByTourneyId"
-// const deleteMeetingsByTourneyAndEliminatoryIdsUrl   = meetingUrl + "/deleteMeetingsByTourneyAndEliminatoryIds"
 
 @Injectable()
 export class MeetingService extends AbstractService {
@@ -64,8 +63,12 @@ export class MeetingService extends AbstractService {
     roundtripDays: any[];
 
     allDaysNo: number;
+    mdbList: MeetingDb[];
 
-    constructor( protected http: HttpClient, protected router: Router) 
+    onewayMeetings: Meeting[] = [];
+    roundtripMeetings: Meeting[] = [];
+    
+    constructor( protected http: HttpClient, protected router: Router, protected dateFormatPipe: DateFormatPipe) 
     { 
         super();
         console.log("Constructor of MeetingService");
@@ -169,6 +172,52 @@ export class MeetingService extends AbstractService {
             catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
         );
         return obs;
+    }
+
+     /**
+     * Converts the date and time and complete the round trip meetings copying from 
+     * its corresponding oneway meeting list
+     */
+    public prepareMeetingsMap(round : Round ): void {
+        this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
+        this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
+
+        for( let m of round.onewayMeetings ) {
+
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
+
+            let key = m.day;
+            // console.log( key + "° Giornata di andata");
+            if(!this.onewayMeetingDaysMap.has(key)) {
+                let emptyList: Meeting[] = [];
+                this.onewayMeetingDaysMap.set(key, emptyList);
+            }
+
+            let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
+            meetingList.push(m);
+        }
+
+        for( let m of round.roundtripMeetings ) {
+
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            if( m.points1 > 0 || m.points2 > 0 ) {
+                m.dateAndTime = m.points1 + " - " + m.points2;
+            }
+
+            let key = m.day;
+            console.log( key + "° Giornata di ritorno");
+            if(!this.roundtripMeetingDaysMap.has(key)) {
+                let emptyList: Meeting[] = [];
+                this.roundtripMeetingDaysMap.set(key, emptyList);
+            }
+
+            let meetingList: Meeting[] = this.roundtripMeetingDaysMap.get(key);
+            meetingList.push(m);
+        }
     }
 
     saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): Observable<MeetingDb> {

@@ -10,8 +10,8 @@ import { PlayoffResultListView } from './playoff-result-listview';
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: '', component: ResultTourneyListView },
-			{ path: 'lv', component: TabResultListView },
+			{ path: '', 					component: ResultTourneyListView },
+			{ path: 'lv', 					component: TabResultListView },
 			{ path: 'lv/round', 			component: RoundResultListView },
 			{ path: 'lv/playoff', 			component: PlayoffResultListView },
 			{ path: 'lv/eliminatoryLv/dv', 	component: EliminatoryListView },

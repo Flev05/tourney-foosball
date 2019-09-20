@@ -8,7 +8,6 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
 @Component({

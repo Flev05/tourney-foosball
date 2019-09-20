@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Calendario, risultati e classifiche </span>
+        <h2>Calendario, risultati e classifiche </h2>
         <span>Vista dei calendari, risultati e classifiche del torneo</span>
     </div>
 </div>
@@ -26,8 +26,8 @@
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
-<p-tabView [activeIndex]="selectedTabIndex" (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Gironi" *ngIf="containsRound()" >    
+<p-tabView [activeIndex]="selectedTourney.selectedTabIndex" (onChange)="onChangeTab($event)">
+    <p-tabPanel header="Gironi({{roundCount}})" *ngIf="containsRound()" >    
         <p-table [columns]="roundCols"
             [value]="roundRows"
             [responsive]="true"
@@ -58,7 +58,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
+    <p-tabPanel header="Playoff({{playoffCount}})" *ngIf="containsPlayoff()">    
         <div *ngIf="incompletePlayoffConfiguration" style="margin-top:30px">
             <p-message 
                 severity="error" 
@@ -95,7 +95,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette">    
+    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette({{eliminatoryCount}})">    
         <div *ngIf="incompleteEliminatoryConfiguration"  style="margin-top:30px">
             <p-message 
                 severity="error" 

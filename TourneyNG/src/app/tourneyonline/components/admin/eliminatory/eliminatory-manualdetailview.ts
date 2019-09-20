@@ -14,7 +14,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
-import { LevelService } from './level-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
     templateUrl: './eliminatory-manualdetailview.html',
@@ -56,7 +56,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
-        
+        protected countryService: CountryService,
     ) { 
         super(tourneyService, location);
     }
@@ -65,6 +65,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         console.log("EliminatoryDetailView.ngOnInit() ");
 
         super.ngOnInit();
+
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
 
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
 
@@ -124,6 +126,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         this.position2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
             this.selectedEliminatory.rule2.fromRound.position : this.selectedEliminatory.rule2.fromPlayoff.position;
 
+
         this.eliminatoryFormGroup = this.fb.group({
 
             'meetingDate1':  new FormControl(this.m1.datetime),
@@ -153,6 +156,10 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         });
     }
     
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
+    }
+
     done(): void {
         if(this.save()) {
             super.goBack();

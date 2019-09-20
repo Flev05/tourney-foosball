@@ -1,18 +1,14 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
-
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingPlayoffService } from './meeting-playoff-service';
-import { Team } from 'app/tourneyonline/domain/team';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
@@ -22,7 +18,6 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
     msgs: Message[] = [];
 
-    meetingFormGroup: FormGroup;
     toggleable: boolean = false;
 
     selectedPlayoff: Playoff;
@@ -30,54 +25,37 @@ export class MeetingRuleDetailView extends AbstractDetailView {
     
     dateAndTime: Date;
 
-    constructor(
-        private fb: FormBuilder,
-        protected location: Location,
+    constructor(protected location: Location,
         protected tourneyService: TourneyService,
-        protected meetingService: MeetingService,
-        protected meetingPlayoffService: MeetingPlayoffService
+        protected meetingPlayoffService: MeetingPlayoffService,
+        protected countryService: CountryService,
     ) { 
         super(tourneyService, location);
     }
 
     ngOnInit() {
-        console.log("MeetingDetailView.ngOnInit() ");
+        console.log("MeetingRuleDetailView.ngOnInit() ");
 
         super.ngOnInit();
+        
+        this.selectedTourney = this.tourneyService.selectedTourney;
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        this.selectedMeeting = this.meetingService.selectedMeeting;
+        this.selectedMeeting = this.meetingPlayoffService.selectedMeeting;
 
-        this.dateAndTime = new Date(this.selectedMeeting.datetime);
-       
-        // this.selectedMeeting.address =  this.selectedTourney.address;
-        // this.selectedMeeting.country =  this.selectedTourney.country;
+        this.selectedMeeting.datetime = new Date(this.selectedMeeting.datetime);
 
-        // let homeTeamId = this.selectedMeeting.team1.id;
-        // let homeTeam : Team = this.selectedTourney.teams.find( t => t.id == homeTeamId);
-        // if( homeTeam != undefined ) {
-        //     this.selectedMeeting.address = homeTeam.address;
-        //     this.selectedMeeting.country = homeTeam.country;
-        // }
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
+    }
 
-        this.meetingFormGroup = this.fb.group({
-            'name':    new FormControl(this.selectedMeeting.name),
-            
-            'dateAndTime':    new FormControl(this.dateAndTime),
-
-            'address': new FormControl(this.selectedMeeting.address),
-            'country': new FormControl(this.selectedMeeting.country),
-        });
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
     }
 
     private save() {
 
-        let dt = this.meetingFormGroup.get('dateAndTime').value;
-
-        this.selectedMeeting.datetime = new Date(dt);
-
         if( this.selectedPlayoff.round.direction == Direction.RoundTrip ) {
-            let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.meetingService.selectedMeeting);
+            let index = this.selectedPlayoff.round.onewayMeetings.indexOf(this.meetingPlayoffService.selectedMeeting);
             if( index > -1 ) {
                 let rtDateTime = this.selectedPlayoff.round.onewayMeetings[index].datetime;
                 if(rtDateTime < this.selectedMeeting.datetime) {
@@ -85,10 +63,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
                 }
             }
         }
-
-        this.selectedMeeting.address = this.meetingFormGroup.get('address').value;
-        this.selectedMeeting.country = this.meetingFormGroup.get('country').value;
-
+ 
         let observer = this.meetingPlayoffService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
         observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
     }

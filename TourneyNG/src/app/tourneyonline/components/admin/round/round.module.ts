@@ -11,6 +11,7 @@ import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
+import {PaginatorModule} from 'primeng/paginator';
 
 import {RoundRoutingModule} from './round-routing.module';
 import {RoundListView} from './round-listview';
@@ -57,7 +58,8 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,PickListModule
         ,MessagesModule
         ,MessageModule
-        ,RoundRoutingModule
+        ,RoundRoutingModule 
+        ,PaginatorModule
     ]
 	,declarations: [RoundListView
         ,MeetingListView

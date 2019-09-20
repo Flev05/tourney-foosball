@@ -6,4 +6,5 @@ export class Playoff  {
     round: Round;
     playoffRules: PlayoffRule[];
     playoffName?: string;
+    selectedTabIndex?: number;
 }

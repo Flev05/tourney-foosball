@@ -24,6 +24,8 @@ export class MeetingListView extends AbstractRuleListView {
     isRoundTrip: boolean;
     mdbList: MeetingDb[];
 
+    pageSize: number = 10;
+    
     constructor(
         protected tourneyService: TourneyService,
         public meetingPlayoffService: MeetingPlayoffService,
@@ -35,6 +37,7 @@ export class MeetingListView extends AbstractRuleListView {
 
     ngOnInit() {
         super.ngOnInit();
+        
 
         this.meetingsCols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -49,9 +52,23 @@ export class MeetingListView extends AbstractRuleListView {
             this.isRoundTrip = true;
         }
 
-        this.meetingPlayoffService.createPlayoffMeeting(this.selectedTourney, this.selectedPlayoff);
+        const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
-  
+   
+    onChangeTab(e) {
+        let index=e.index;
+        console.log("Entering onChangeTab(): tab=" + index);
+        this.selectedPlayoff.selectedTabIndex = index; 
+    }
+    
+    private onCompleteLoad(): void {
+        this.meetingPlayoffService.selectedTourney = this.selectedTourney;
+        this.meetingPlayoffService.onCompleteLoad(this.selectedPlayoff, this.mdbList);
+        this.pageSize = this.meetingPlayoffService.onewayDays.length;
+         
+    }
+
     onRowSelect(event) {
         console.log(event.data);
 

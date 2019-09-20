@@ -48,9 +48,7 @@ export class RoundListView extends AbstractListView {
     }
  
     goMeeting() {        
-        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
-        
+        this.router.navigate([RoundListView.meetingListviewRedirect]);
     }
     
     goBack(): void {
@@ -62,11 +60,5 @@ export class RoundListView extends AbstractListView {
 
         this.teamService.selectedTeam = this.selectedTeam;
         this.gotoDetailView();
-    }
-
-    private onCompleteLoad(): void {
-        this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
-        this.router.navigate([RoundListView.meetingListviewRedirect]);
     }
 }

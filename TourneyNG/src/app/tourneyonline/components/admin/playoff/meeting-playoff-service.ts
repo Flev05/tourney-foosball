@@ -10,41 +10,66 @@ import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {
+
 
     constructor(protected http: HttpClient
         , protected router: Router
         , protected dateFormatPipe: DateFormatPipe
         ) 
     { 
-        super( http, router );
+        super( http, router, dateFormatPipe );
         console.log("Constructor of MeetingPlayoffService");
     }
 
     createPlayoffMeeting(tourney: Tourney, playoff : Playoff ) : void {
         this.selectedTourney = tourney;
         this.playoffMeetingNext(playoff);
+    }
 
-        // const subsbr = this.loadPlayoffMeeting(tourney.id, playoff.round.id);
-        // subsbr.subscribe(meetings => this.playoffMeetingNext(meetings, playoff), e => this.onError(e));
+    public onCompleteLoad(playoff: Playoff, mdbList: MeetingDb[]) {
+
+        this.mdbList = mdbList;
+        
+        this.extractRoundMeetings(playoff.round, mdbList);
+
+        this.prepareMeetingsMap(playoff.round);
+
+        this.onewayDaysNo = 1;
+        this.shiftOnewayDays(this.onewayDaysNo);
+
+        this.roundtripDaysNo = 1;
+        this.shiftRoundtripDays(this.roundtripDaysNo);
+
+        this.allDaysNo = this.onewayMeetingDaysMap.size;
+        let meetingsNo = playoff.round.onewayMeetings.length;
+        this.isRoundTrip = false;
+
+        if (this.selectedTourney.isOnewayPlayoff == "true") {
+            this.meetingsNoMsg = "" + meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
+        } else {
+            this.isRoundTrip = true;
+            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+        }
+
+        this.completeAllMeetings();
+    }
+
+    private completeAllMeetings() {
+        this.onewayMeetings = [];
+        this.roundtripMeetings = [];
+        for (let day = 1; day <= this.allDaysNo; day++) {
+            this.onewayMeetings = this.onewayMeetings.concat(this.shiftOnewayDays(day));
+            this.roundtripMeetings = this.roundtripMeetings.concat(this.shiftRoundtripDays(day));
+        }
     }
 
     private playoffMeetingNext( playoff: Playoff) {
         playoff.round.onewayMeetings = [];
         playoff.round.roundtripMeetings = [];
-
-        // for( let mdb of meetingsdb ) {
-        //     let m: Meeting = JSON.parse(mdb.json);
-        //     m.id = mdb.id;
-        //     m.country = mdb.country;
-        //     if( m.direction == Direction.OneWay ) {
-        //         playoff.round.onewayMeetings.push(m);
-        //     } else {
-        //         playoff.round.roundtripMeetings.push(m);
-        //     }
-        // }
 
         this.preparePlayoffRules(playoff);
 
@@ -275,20 +300,22 @@ export class MeetingPlayoffService extends MeetingService {
         return temp;
     }
 
-    private shiftOnewayDays(currentDay : number) {
+    private shiftOnewayDays(currentDay : number) : any[] {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
         for( let d of this.onewayDays ) {
             d.ruleName1 = d.rule1.fromRound.position.label + " " + d.rule1.fromRound.round.label;
             d.ruleName2 = d.rule2.fromRound.position.label + " " + d.rule2.fromRound.round.label;;
         }
+        return this.onewayDays;
     }
 
-    private shiftRoundtripDays( currentDay : number) {
+    private shiftRoundtripDays( currentDay : number) : any[] {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
         for( let d of this.roundtripDays ) {
             d.ruleName1 = d.rule1.fromRound.position.label + " " + d.rule1.fromRound.round.label;
             d.ruleName2 = d.rule2.fromRound.position.label + " " + d.rule2.fromRound.round.label;;
         }
+        return this.roundtripDays;
     }
 
     goOnewayLeft() {

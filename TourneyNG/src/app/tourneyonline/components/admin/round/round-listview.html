@@ -1,7 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
-        <h3>Girone: {{selectedRound.name}}</h3> 
+        <h3>Torneo: {{selectedTourney.tourneyName}}, Girone: {{selectedRound.name}}</h3> 
     </div>
 </div>
 
@@ -87,7 +86,7 @@
 
     <ng-template pTemplate="caption">
         <div style="text-align:center">
-             Squadre ({{teams.length}})
+            Torneo: {{selectedTourney.tourneyName}}, Girone: {{selectedRound.name}}, Squadre ({{teams.length}})
         </div>
     </ng-template>
 

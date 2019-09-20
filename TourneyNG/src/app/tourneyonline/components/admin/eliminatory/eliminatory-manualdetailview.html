@@ -253,7 +253,7 @@
                 <div class="ui-grid-col-5">
                     <p-autoComplete id="country-id" formControlName="country2" 
                         [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="search($event)" field="city"
+                        (completeMethod)="searchCountry($event)" field="city"
                         placeholder="Comune" [minLength]="1">
                     </p-autoComplete>
                 </div>

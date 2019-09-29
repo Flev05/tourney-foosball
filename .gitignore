@@ -49,6 +49,7 @@ build.metadata
 **/.checkstyle
 **/bin/
 **/node_modules/
+**/node_modules-1/
 **/WebContent/
 **/tourney-ws/
 **/gradle.properties

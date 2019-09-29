@@ -48,6 +48,7 @@ export class RoundResultListView extends AbstractListView {
     
     teamsCols = TeamService.cols;
     roundTeams: Team[];
+    pageSize: number = 10;
 
     constructor( protected tourneyService: TourneyService
         , private meetingRoundService: MeetingRoundService
@@ -69,19 +70,26 @@ export class RoundResultListView extends AbstractListView {
         this.roundTeams = this.selectedRound.teams;
 
         this.cols = [
-            { field: 'teamName1',   header: 'In casa' },
             { field: 'dateAndTime', header: 'Data/Ora' },
+            { field: 'teamName1',   header: 'In casa' },
             { field: 'teamName2',   header: 'Trasferta' }
         ];
-
+        
+        this.selectedRound = this.tourneyService.selectedRound;
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onResultCompleteLoad());
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
 
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.tourneyService.selectedRoundTabIndex = index;
+        this.selectedRound.selectedTabIndex = index;
+    }
+
+    private onCompleteLoad(): void {
+        this.meetingRoundService.selectedTourney = this.selectedTourney;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+        this.pageSize = this.meetingRoundService.onewayDays.length;
     }
 
     public onResultCompleteLoad() {

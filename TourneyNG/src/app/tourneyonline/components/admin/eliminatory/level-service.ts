@@ -15,6 +15,8 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { FromRound } from 'app/tourneyonline/domain/from-round';
+import { Round } from 'app/tourneyonline/domain/round';
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
@@ -73,10 +75,6 @@ export class LevelService extends AbstractEliminatoryListView {
         let levelsCombobox: Combobox[] =  this.tourneyService.prepareLevelCombobox(teamsNo);
         let selectedLevel = levelsCombobox[0].value;
         let maxCurrentLevel : number = 0;
-
-        // if( this.eliminatoryLevels.length > 0 ) {
-        //     maxCurrentLevel = this.eliminatoryLevels[0].level;
-        // }     
 
         if(selectedLevel == maxCurrentLevel) {
             if( this.isStandAlone(this.selectedTourney) ) {
@@ -326,13 +324,13 @@ export class LevelService extends AbstractEliminatoryListView {
      * Next, iterates on the eliminatories list and updates the meetings with the first against the last 
      * team in the pad list
      */
-    private prepareAutomaticEliminatoryRules(selectedTeamsNo: number) {
+    public prepareAutomaticEliminatoryRules(selectedTeamsNo: number, automatic : boolean) {
         
         if( this.selectedTourney.rounds.length == 0) {
             return;
         }
 
-        let padTeamList: Array<Combobox> = new Array<Combobox>();
+        let padTeamList: Array<FromRound> = new Array<FromRound>();
  
         let power2 = this.tourneyService.power2Padding(selectedTeamsNo);
         let position: number = 0;
@@ -343,12 +341,16 @@ export class LevelService extends AbstractEliminatoryListView {
                 position++;
             }
 
-            let cb : Combobox = {label: "", value: 0};
-            if(i<selectedTeamsNo) {
-                let round = this.selectedTourney.rounds[mod];
-                cb = {label: round.name, value: position};
+            let r: Combobox = {label: "", value: 0}; 
+            let p: Combobox = {label: "", value: 0}; 
+            let fr : FromRound = {id:0, round: r, position: p, relativePosition: 0};
+            if( i < selectedTeamsNo ) {
+                let round: Round = this.selectedTourney.rounds[mod];
+                r = {label: round.name, value: position};
+                p = {label:"", value: position};
+                fr = {id:0, round: r, position: p, relativePosition: -1};
             }
-            padTeamList.push(cb);
+            padTeamList.push(fr);
         }
 
         const topLevel = this.eliminatoryLevels[0];
@@ -361,24 +363,33 @@ export class LevelService extends AbstractEliminatoryListView {
 
             let up = padTeamList[i];
             e.rule1.fromRound.id = this.tourneyService.getSequenceNumber();
-            let label = up.value == 0 ? "" : up.value  + "°";
-            
-            e.rule1.fromRound.position = {label: "" + label, value: up.value};
 
-            let round1 = this.selectedTourney.rounds.find(r =>r.name == up.label);
-            e.rule1.fromRound.round    = {label: up.label,   value: round1==undefined ? 0 : round1.id};
+            let label = up.round.value == 0 ? "" : up.round.value  + "°";
+            
+            e.rule1.fromRound.position = {label: label, value: up.position.value};
+
+            let round1 = this.selectedTourney.rounds.find(r =>r.name == up.round.label);
+            e.rule1.fromRound.round    = {label: up.round.label,   value: round1==undefined ? 0 : round1.id};
 
             e.rule1.fromPlayoff.position = {label: "", value: 0};
             e.rule1.fromPlayoff.round    = {label: "", value: 0};
 
             let down = padTeamList[--lastIndex];
             e.rule2.fromRound.id = this.tourneyService.getSequenceNumber();
-            label = down.value == 0 ? "" : down.value  + "°";
-            
-            e.rule2.fromRound.position = {label: "" + label, value: down.value};            
 
-            let round2 = this.selectedTourney.rounds.find(r =>r.name == down.label);
-            e.rule2.fromRound.round    = {label: down.label, value: round2==undefined ? 0 : round2.id};
+            label = down.position.value == 0 ? "" : down.position.value  + "°";
+            
+            e.rule2.fromRound.position = {label: label, value: down.position.value};            
+
+            e.rule1.fromRound.relativePosition = 0;
+            e.rule2.fromRound.relativePosition = 0;
+            if(automatic) {
+                e.rule1.fromRound.relativePosition = e.rule1.fromRound.relativePosition == -1 ? 0 : i % R + 1;
+                e.rule2.fromRound.relativePosition = e.rule2.fromRound.relativePosition == -1 ? 0 : lastIndex % R + 1;
+            }
+
+            let round2 = this.selectedTourney.rounds.find(r =>r.name == down.round.label);
+            e.rule2.fromRound.round    = {label: down.round.label, value: round2==undefined ? 0 : round2.id};
 
             e.rule2.fromPlayoff.position = {label: "", value: 0};
             e.rule2.fromPlayoff.round    = {label: "", value: 0};
@@ -435,10 +446,12 @@ export class LevelService extends AbstractEliminatoryListView {
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
+                    , relativePosition: 0
                 },
                 fromPlayoff: { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
+                    , relativePosition: 0
                 }
             },
             rule2: {
@@ -446,10 +459,12 @@ export class LevelService extends AbstractEliminatoryListView {
                 fromRound:   { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
+                    , relativePosition: 0
                 },
                 fromPlayoff: { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
+                    , relativePosition: 0
                 }
             }
         };
@@ -527,11 +542,8 @@ export class LevelService extends AbstractEliminatoryListView {
         
         this.prepareEliminationTree(teamCount);
 
-        if( this.isStandAlone(this.selectedTourney)  ) {
-            // let topLevel: EliminatoryLevel = this.eliminatoryLevels[0];
-            // this.prepareStandaloneTopLevel(topLevel);
-        } else {
-            this.prepareAutomaticEliminatoryRules(teamCount);
+        if( !this.isStandAlone(this.selectedTourney) ) {
+            this.prepareAutomaticEliminatoryRules(teamCount, true);
         }
 
         this.prepareEliminatoryLevelsGui();

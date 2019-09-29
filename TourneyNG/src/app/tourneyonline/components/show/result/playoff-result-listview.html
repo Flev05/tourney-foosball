@@ -15,7 +15,7 @@
 <p-tabView *ngIf="atLeastOneMatchForEachRound"
         [activeIndex]="tourneyService.selectedPlayoffTabIndex" 
         (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Andata">
+    <p-tabPanel header="Incontri playoff di ANDATA ({{meetingPlayoffService.allDaysNo}} giornate)">
         <p-table [columns]="cols"
             [value]="meetingRoundService.onewayDays" 
             [responsive]="true"
@@ -60,7 +60,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
+    <p-tabPanel *ngIf="isRoundTrip" header="Incontri playoff di RITORNO ({{meetingPlayoffService.allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
             [value]="meetingRoundService.roundtripDays" 

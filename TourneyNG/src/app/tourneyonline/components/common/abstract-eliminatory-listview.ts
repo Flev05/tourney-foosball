@@ -258,21 +258,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
      /**
-      * Prepares the columns and the rows for the eliminatories belonging to the selected eliminatory level in the
-      * Stand Alone use case
-      * 
-        <th>N°</th>
-        <th *ngIf="isTopLevel">Team 1</th>
-        <th *ngIf="isTopLevel">Team 2</th>
-        <th>Andata</th>
-        <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>
-
-        <td>{{rowIndex + 1}}</td>
-        <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team1.teamName}}</td>
-        <td *ngIf="isTopLevel"> - </td>
-        <td *ngIf="isTopLevel">{{rowData.round.meetings[0].team2.teamName}}</td>
-        <td>{{rowData.round.meetings[0].datetime | date : "dd/MM/y HH:mm" }}</td>
-        <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
+      * Prepares the columns and the rows for the eliminatories belonging to the selected eliminatory level 
+      * in the Stand Alone use case
      */
     prepareStandaloneGui(): void {
         this.eliminatoryCols = [
@@ -314,29 +301,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     /**
-     * Prepares the columns and the rows for the eliminatories belonging to the selected eliminatory level in the
-     * depending, from rounds and playoffs, eliminatory use case
-     * 
-        <th>N°</th>
-        <th>Andata</th>
-        <th *ngIf="isTopLevel">Classif.</th>
-        <th *ngIf="isTopLevel">Girone</th>
-        <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
-        <th *ngIf="isTopLevel">Classif.</th>
-        <th *ngIf="isTopLevel">Girone</th>
-        <th *ngIf="isPlayoff && isTopLevel">Playoff</th>
-        <th *ngIf="!selectedEliminatoryLevel.isOneway">Ritorno</th>     
-        
-        <td>{{rowIndex + 1}}</td>
-        <td>{{rowData.round.meetings[0].datetime | date: 'dd/MM/y HH:mm'}}</td>
-        <td *ngIf="isTopLevel">{{rowData.rule1.fromRound.position.value > 0 ? rowData.rule1.fromRound.position.label : rowData.rule1.fromPlayoff.position.label}}</td>
-        <td *ngIf="isTopLevel">{{rowData.rule1.fromRound.round.label}}</td>
-        <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule1.fromPlayoff.round.label}}</td>
-        <td *ngIf="isTopLevel"> - </td>
-        <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.position.value > 0 ? rowData.rule2.fromRound.position.label : rowData.rule2.fromPlayoff.position.label}}</td>
-        <td *ngIf="isTopLevel">{{rowData.rule2.fromRound.round.label}}</td>
-        <td *ngIf="isPlayoff && isTopLevel">{{rowData.rule2.fromPlayoff.round.label}}</td>
-        <td *ngIf="!selectedEliminatoryLevel.isOneway">{{rowData.round.meetings[1].datetime | date : "dd/MM/y HH:mm"}}</td>
+     * Prepares the columns and the rows for the eliminatories belonging to the selected eliminatory level
+     * Insert manually the rules to pass the from rounds and/or playoffs to direct eliminatories
     */
    protected prepareNotStandaloneGui(): void {
         this.eliminatoryCols = [
@@ -364,16 +330,16 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
 
         this.eliminatoryRows = [];
-        for(let i=0;i<this.eliminatories.length; i++) {
+        for(let i=0; i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
             let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
             let position1       = this.getPosition1(e);
-            let fromRound1      = e.rule1.fromRound.round.label
+            let fromRound1      = e.rule1.fromRound.relativePosition == 0 ? e.rule1.fromRound.round.label : ""
             let fromPlayoff1    = e.rule1.fromPlayoff.round.label
 
             let position2       = this.getPosition2(e);
-            let fromRound2      = e.rule2.fromRound.round.label
+            let fromRound2      = e.rule2.fromRound.relativePosition == 0 ? e.rule2.fromRound.round.label : ""
             let fromPlayoff2    = e.rule2.fromPlayoff.round.label
 
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
@@ -397,11 +363,15 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     getPosition1(e: Eliminatory): string {
-        return "";
+        return e.rule1.fromRound.relativePosition == 0 ? 
+            e.rule1.fromRound.position.value + "°" : 
+            e.rule1.fromRound.relativePosition + "° delle " + e.rule1.fromRound.position.value + "°";
     }
     
-    getPosition2(e: Eliminatory): string{
-        return "";
+    getPosition2(e: Eliminatory): string {
+        return e.rule2.fromRound.relativePosition == 0 ? 
+            e.rule2.fromRound.position.value + "°" : 
+            e.rule2.fromRound.relativePosition + "° delle " + e.rule2.fromRound.position.value + "°";
     }
 
      /**
@@ -463,4 +433,3 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         });
     }
 }
-

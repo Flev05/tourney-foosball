@@ -414,8 +414,9 @@
                     pTooltip="Indicare la data di inizio del torneo.">
                 <p-calendar [(ngModel)]="selectedTourney.datetime" 
                     [locale]="it" 
+                    [showIcon]="true"   
                     dateFormat="dd/mm/yy" 
-                    [showIcon]="true">
+                    showTime="true">
                 </p-calendar>
             </div>
         </div>

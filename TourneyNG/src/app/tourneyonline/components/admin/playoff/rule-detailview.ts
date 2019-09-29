@@ -63,6 +63,7 @@ export class RuleDetailView extends AbstractDetailView {
                 id: this.tourneyService.getSequenceNumber(),
                 position: { label: 1 + "°", value: 1 },
                 round: { label: "", value: 0 }
+                , relativePosition: 0
             }
         };
     }

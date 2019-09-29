@@ -95,7 +95,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette({{eliminatoryCount}})">    
+    <p-tabPanel header="Eliminazioni Dirette({{eliminatoryCount}})" *ngIf="containsEliminatory()" >    
         <div *ngIf="incompleteEliminatoryConfiguration"  style="margin-top:30px">
             <p-message 
                 severity="error" 
@@ -104,7 +104,7 @@
         </div>     
                     
         <p-table *ngIf="!incompleteEliminatoryConfiguration" 
-                [columns]="levelService.eliminatoryCols"
+                [columns]="levelService.eliminatoryLevelCols"
                 [value]="levelService.eliminatoryLevelRows" 
                 [responsive]="true"
                 selectionMode="single" 

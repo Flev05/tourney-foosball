@@ -13,13 +13,9 @@
 </div>     
 
 <p-tabView *ngIf="!incompleteRoundConfiguration" 
-        [activeIndex]="tourneyService.selectedRoundTabIndex"         
+        [activeIndex]="selectedRound.selectedTabIndex"         
         (onChange)="onChangeTab($event)">
-
-    <p-tabView *ngIf="atLeast2teams" 
-        [activeIndex]="selectedRound.selectedTabIndex"
-        (onChange)="onChangeTab($event)">
-
+ 
     <p-tabPanel header="Incontri girone di ANDATA ({{meetingRoundService.allDaysNo}} giornate)">
         <p-table [columns]="cols"
             [value]="meetingRoundService.onewayMeetings" 

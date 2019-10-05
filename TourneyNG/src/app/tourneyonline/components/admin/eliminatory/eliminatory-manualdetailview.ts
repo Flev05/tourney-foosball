@@ -185,14 +185,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             return false;
         }
 
-        if(r1.value > 0) {
-            this.selectedEliminatory.rule1.fromRound.position = p1;
-            this.selectedEliminatory.rule1.fromPlayoff.position = {label:"", value: 0};
-        } else {
-            this.selectedEliminatory.rule1.fromRound.position = {label:"", value: 0};
-            this.selectedEliminatory.rule1.fromPlayoff.position = p1;
-        }
-
+        this.selectedEliminatory.rule1.fromRound.position = p1;
         this.selectedEliminatory.rule1.fromRound.round   = r1;
         this.selectedEliminatory.rule1.fromPlayoff.round = po1;
 
@@ -204,15 +197,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
             this.isDoubleSelection = true;
             return false;
         }
-
-        if(r2.value > 0) {
-            this.selectedEliminatory.rule2.fromRound.position = p2;
-            this.selectedEliminatory.rule2.fromPlayoff.position = {label:"", value: 0};
-        } else {
-            this.selectedEliminatory.rule2.fromRound.position = {label:"", value: 0};
-            this.selectedEliminatory.rule2.fromPlayoff.position = p2;
-        }
         
+        this.selectedEliminatory.rule2.fromRound.position = p2;
         this.selectedEliminatory.rule2.fromRound.round   = r2;
         this.selectedEliminatory.rule2.fromPlayoff.round = po2;
 

@@ -903,7 +903,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareFromRound(pos: number, round: Round): PlayoffRule {
         let posCB:     Combobox    = { label: "" + pos + "°", value: pos };
         let roundCB:   Combobox    = { label: round.name, value: round.id };
-        let fromRound: FromRound   = { id: round.id, position: posCB, round: roundCB, relativePosition: posCB.value };
+        let fromRound: FromRound   = { id: round.id, isAutomatic:true, position: posCB, round: roundCB, relativePosition: posCB.value };
         let pr:        PlayoffRule = { id: pos, fromRound: fromRound };
         return pr;
     }    

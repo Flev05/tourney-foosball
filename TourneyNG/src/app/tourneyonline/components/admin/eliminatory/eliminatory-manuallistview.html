@@ -13,11 +13,12 @@
         Vista di dettaglio Eliminazione diretta manuale.
     </p>   
     <p> 
-        In questa vista dovete completare 2 operazioni:
+        In questa vista dovete completare le seguenti operazioni:
     </p> 
     <ul>
         <li>1) Selezionare i turni previsti</li>
-        <li>2) Completare i livelli</li>
+        <li>2) Selezionare la generazione dele regole in manuale o automatica</li>
+        <li>3) Completare i livelli</li>
     </ul>
 
     <h4>1) Selezionare i turni previsti</h4>
@@ -27,7 +28,14 @@
         poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
     </p>
 
-    <h4>2) Completare i livelli</h4>
+    <h4>2) Selezionare la generazione dele regole in manuale o automatica</h4>
+    <p>
+        Dovete specificare scegliere se far generare le regole di accoppiamento in automatico al programma
+        oppure volete copilarle da soli. L'opzione vale solo se il torneo non prevede gironi di playoff nel
+        qual caso la modalità è di default in manuale.
+    </p>
+
+    <h4>3) Completare i livelli</h4>
     <p> 
         Dovete selezionare tutti i livelli, uno per uno, accedere alla corrispondente vista di dettaglio
         di tipo manuale ed inserire i dati richiesti.
@@ -81,6 +89,27 @@
         </p-radioButton>
     </div>
 </div>        
+
+<div *ngIf="isEnabledGen()" class="ui-grid-row">
+    <div class="ui-grid-col-2">
+        Generazione:
+    </div>
+    <div class="ui-grid-col-5" tooltipPosition="right"
+            pTooltip="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
+        <p-radioButton name="isGenEliGroupname" 
+            label="Automatico" 
+            value="true" 
+            [(ngModel)]="isAutoGen"
+            (onClick)="onAutoGenClick()">
+        </p-radioButton>
+        <p-radioButton name="isGenEliGroupname" 
+            label="Manuale" 
+            value="false" 
+            [(ngModel)]="isAutoGen"
+            (onClick)="onManualGenClick()">
+        </p-radioButton>
+    </div>
+</div>   
 
 <p-table [columns]="eliminatoryCols"
     [value]="eliminatoryRows" 

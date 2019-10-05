@@ -195,16 +195,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
     }
-
-    /**
-     * Removes the eleminatory levels for the selected tourney after having removed the corresponding
-     * meetings from the DB
-     */
-    // public removeLevels() : void {
-    //     this.meetingService.deleteEliminatoryMeetingsByTourneyId(this.selectedTourney.id);
-    //     this.selectedTourney.eliminatoryLevels = [];
-    // }
-
+ 
     /**
      * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
      * no rounds and no playoffs.
@@ -330,9 +321,11 @@ export class LevelService extends AbstractEliminatoryListView {
             return;
         }
 
+        this.isAutomatic = this.containsPlayoff() ? false : automatic;
+
         let padTeamList: Array<FromRound> = new Array<FromRound>();
  
-        let power2 = this.tourneyService.power2Padding(selectedTeamsNo);
+        let power2: number = this.tourneyService.power2Padding(selectedTeamsNo);
         let position: number = 0;
         let R: number  = this.selectedTourney.rounds.length;
         for(let i=0; i<power2; i++) {
@@ -343,12 +336,12 @@ export class LevelService extends AbstractEliminatoryListView {
 
             let r: Combobox = {label: "", value: 0}; 
             let p: Combobox = {label: "", value: 0}; 
-            let fr : FromRound = {id:0, round: r, position: p, relativePosition: 0};
+            let fr : FromRound = {id:0, isAutomatic:this.isAutomatic, round: r, position: p, relativePosition: 0};
             if( i < selectedTeamsNo ) {
                 let round: Round = this.selectedTourney.rounds[mod];
                 r = {label: round.name, value: position};
                 p = {label:"", value: position};
-                fr = {id:0, round: r, position: p, relativePosition: -1};
+                fr = {id:0, isAutomatic:this.isAutomatic, round: r, position: p, relativePosition: 0};
             }
             padTeamList.push(fr);
         }
@@ -362,7 +355,6 @@ export class LevelService extends AbstractEliminatoryListView {
             let e: Eliminatory = topLevelEliminatories[i];
 
             let up = padTeamList[i];
-            e.rule1.fromRound.id = this.tourneyService.getSequenceNumber();
 
             let label = up.round.value == 0 ? "" : up.round.value  + "°";
             
@@ -375,7 +367,6 @@ export class LevelService extends AbstractEliminatoryListView {
             e.rule1.fromPlayoff.round    = {label: "", value: 0};
 
             let down = padTeamList[--lastIndex];
-            e.rule2.fromRound.id = this.tourneyService.getSequenceNumber();
 
             label = down.position.value == 0 ? "" : down.position.value  + "°";
             
@@ -384,8 +375,10 @@ export class LevelService extends AbstractEliminatoryListView {
             e.rule1.fromRound.relativePosition = 0;
             e.rule2.fromRound.relativePosition = 0;
             if(automatic) {
-                e.rule1.fromRound.relativePosition = e.rule1.fromRound.relativePosition == -1 ? 0 : i % R + 1;
-                e.rule2.fromRound.relativePosition = e.rule2.fromRound.relativePosition == -1 ? 0 : lastIndex % R + 1;
+                e.rule1.fromRound.relativePosition = i % R + 1;
+                if( e.rule2.fromRound.position.value > 0 )  {
+                    e.rule2.fromRound.relativePosition = lastIndex % R + 1;
+                }    
             }
 
             let round2 = this.selectedTourney.rounds.find(r =>r.name == down.round.label);
@@ -447,11 +440,13 @@ export class LevelService extends AbstractEliminatoryListView {
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
+                    , isAutomatic:true
                 },
                 fromPlayoff: { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
+                    , isAutomatic:true
                 }
             },
             rule2: {
@@ -460,11 +455,13 @@ export class LevelService extends AbstractEliminatoryListView {
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
+                    , isAutomatic:true
                 },
                 fromPlayoff: { id: this.tourneyService.getSequenceNumber()
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
+                    , isAutomatic:true
                 }
             }
         };

@@ -35,8 +35,7 @@ const updateMeetingUrl = meetingUrl + '/update';
 const deleteMeetingUrl                  = meetingUrl + '/delete';
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
 
-@Injectable()
-export class MeetingService extends AbstractService {
+export abstract class MeetingService extends AbstractService {
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
 

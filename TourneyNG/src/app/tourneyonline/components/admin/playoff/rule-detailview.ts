@@ -64,6 +64,7 @@ export class RuleDetailView extends AbstractDetailView {
                 position: { label: 1 + "°", value: 1 },
                 round: { label: "", value: 0 }
                 , relativePosition: 0
+                , isAutomatic:true
             }
         };
     }

@@ -20,6 +20,7 @@ export class EliminatoryAutoListView extends AbstractListView {
     eliminatoryRows: EliminatoryVO[];
     eliminatoryCols: TableCols[];
     isOneway: string;
+
     
     constructor(
         protected tourneyService: TourneyService,
@@ -39,6 +40,7 @@ export class EliminatoryAutoListView extends AbstractListView {
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryLevelCols;
         this.isOneway  = this.levelService.isOneway;
+
     }
     
     getPosition1(e: Eliminatory): string {

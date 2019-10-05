@@ -6,6 +6,7 @@ export class EliminatoryLevel  {
     name: string;
     level: number;
     isTopLevel: boolean;
+    isAutoGen?: string;
 
     direction?      : Direction;
 

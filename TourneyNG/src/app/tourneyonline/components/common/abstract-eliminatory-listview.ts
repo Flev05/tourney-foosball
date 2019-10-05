@@ -42,6 +42,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     isPlayoff: boolean;
 
     isTopLevel: boolean;
+    isAutomatic: boolean;
 
     isOneway: string;
     private isStandalone: boolean;
@@ -88,7 +89,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
         }
 
-        this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
+        this.isPlayoff = this.containsPlayoff();
         
         this.eliminatoryTeamsCombobox = this.tourneyService.eliminatoryTeamsCombobox;
   
@@ -310,18 +311,23 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         ];
 
         if(this.isTopLevel) {
-            this.eliminatoryCols.push({ field: 'position1', header: 'Classif.'});
-            this.eliminatoryCols.push({ field: 'fromRound1', header: 'Girone' });
-            if(this.isPlayoff) {
-                this.eliminatoryCols.push({ field: 'fromPlayoff1', header: 'Playoff'});
-            }
-
-            this.eliminatoryCols.push({ field: 'versus', header: 'Vs'});
-
-            this.eliminatoryCols.push({ field: 'position2', header: 'Classif.'});
-            this.eliminatoryCols.push({ field: 'fromRound2', header: 'Girone' });
-            if(this.isPlayoff) {
-                this.eliminatoryCols.push({ field: 'fromPlayoff2', header: 'Playoff'});
+            if( this.isAutomatic) {
+                this.eliminatoryCols.push({ field: 'position1', header: 'I° Squadra'});
+                this.eliminatoryCols.push({ field: 'position2', header: 'II° Squadra'});
+            } else {
+                this.eliminatoryCols.push({ field: 'position1', header: 'Classif.'});
+                this.eliminatoryCols.push({ field: 'fromRound1', header: 'Girone' });
+                if(this.isPlayoff) {
+                    this.eliminatoryCols.push({ field: 'fromPlayoff1', header: 'Playoff'});
+                }
+    
+                this.eliminatoryCols.push({ field: 'versus', header: 'Vs'});
+    
+                this.eliminatoryCols.push({ field: 'position2', header: 'Classif.'});
+                this.eliminatoryCols.push({ field: 'fromRound2', header: 'Girone' });
+                if(this.isPlayoff) {
+                    this.eliminatoryCols.push({ field: 'fromPlayoff2', header: 'Playoff'});
+                }
             }
         }
 
@@ -335,11 +341,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
             let position1       = this.getPosition1(e);
-            let fromRound1      = e.rule1.fromRound.relativePosition == 0 ? e.rule1.fromRound.round.label : ""
+            let fromRound1      = this.isAutomatic ? "" : e.rule1.fromRound.round.label
             let fromPlayoff1    = e.rule1.fromPlayoff.round.label
 
             let position2       = this.getPosition2(e);
-            let fromRound2      = e.rule2.fromRound.relativePosition == 0 ? e.rule2.fromRound.round.label : ""
+            let fromRound2      = this.isAutomatic ? "" : e.rule2.fromRound.round.label
             let fromPlayoff2    = e.rule2.fromPlayoff.round.label
 
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
@@ -363,15 +369,26 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     getPosition1(e: Eliminatory): string {
-        return e.rule1.fromRound.relativePosition == 0 ? 
-            e.rule1.fromRound.position.value + "°" : 
-            e.rule1.fromRound.relativePosition + "° delle " + e.rule1.fromRound.position.value + "°";
+
+        let pos1 = this.isAutomatic 
+            ? e.rule1.fromRound.relativePosition + "° delle " + e.rule1.fromRound.position.value + "°" 
+            : e.rule1.fromRound.position.value + "°";
+
+        return pos1;
     }
     
     getPosition2(e: Eliminatory): string {
-        return e.rule2.fromRound.relativePosition == 0 ? 
-            e.rule2.fromRound.position.value + "°" : 
-            e.rule2.fromRound.relativePosition + "° delle " + e.rule2.fromRound.position.value + "°";
+
+        let rule = e.rule2.fromRound.relativePosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
+        if( e.rule2.fromRound.position.value == 0 ) {
+            rule = "";
+        }
+
+        let pos2 = this.isAutomatic 
+            ? rule 
+            : e.rule2.fromRound.position.value + "°";
+
+        return pos2;
     }
 
      /**

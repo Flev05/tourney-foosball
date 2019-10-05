@@ -66,12 +66,6 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
             for(let e of el.eliminatories) {
                 allRounds.push(e.round);
             }
-            
-            // const eRows = super.prepareEliminatoryRound(allRounds, el.isOneway);
-            // for(let er of eRows) {
-            //     er.roundName = el.name + " - " + er.roundName;
-            // }
-            // this.eliminatoryRows = this.eliminatoryRows.concat(eRows);
         }
     }
 

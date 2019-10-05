@@ -383,29 +383,7 @@ export class TourneyService extends AbstractService {
 
         obs.subscribe();
     }
- 
-    /** PUT: update the tourney and the playoff meetings on the server */
-    // public updateTourneyDeletePlayoffMeetings (tvo: TourneyVO): void {
-    //     let url = updateTourneyDeletePlayoffMeetingsUrl;
-
-    //     let obs = this.http.put(url, tvo, httpOptions).pipe(
-    //         tap(_ => this.log('updated TourneyDb url=' + url)),
-    //         catchError(this.handleError('loadTourneyDb', []))
-    //     );
-
-    //     obs.subscribe();
-    // }
-
-    /** PUT: update the tourney and the eliminatory meetings on the server */
-    // public updateTourneyDeleteEliminatoryMeetings (tvo: TourneyVO): void {
-    //     let url = updateTourneyDeleteEliminatoryMeetingsUrl;
-    //     let obs = this.http.put(url, tvo, httpOptions).pipe(
-    //         tap(_ => this.log('updated TourneyDb url=' + url)),
-    //         catchError(this.handleError('loadTourneyDb', []))
-    //     );
-    //     obs.subscribe();
-    // }
-    
+  
     doRoundDelete(round: Round, selector: (err: any, caught: Observable<Round> ) => Observable<Round> ): void {
         console.log("doRoundDelete(): " + round.name);
         let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";

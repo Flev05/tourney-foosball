@@ -79,16 +79,19 @@ export class ObjectiveListView extends AbstractListView {
                 , position: { label: "1°", value: 0 }
                 , round: { label: "", value: 0 } 
                 , relativePosition: 0
+                , isAutomatic:true
             }
             , fromPlayoff: { id: this.tourneyService.getSequenceNumber()
                 , position: { label: "1°", value: 0 }
                 , round: { label: "", value: 0 } 
                 , relativePosition: 0
+                , isAutomatic:true
             }
             , fromEliminatory: { id: this.tourneyService.getSequenceNumber()
                 , position: { label: "1°", value: 0 }
                 , round: { label: "", value: 0 } 
                 , relativePosition: 0
+                , isAutomatic:true
             }
         };
 

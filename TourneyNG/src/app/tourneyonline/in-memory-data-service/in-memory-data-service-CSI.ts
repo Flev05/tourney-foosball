@@ -150,9 +150,11 @@ export class InMemoryDataServiceCSI  {
         ,playoffRules:[
              {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1}
              , relativePosition: 0
+             , isAutomatic:true
             }}
             ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2}
             , relativePosition: 0
+            , isAutomatic:true
           }}
           ]
       }
@@ -166,9 +168,11 @@ export class InMemoryDataServiceCSI  {
       ,playoffRules:[
           {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2}
           , relativePosition: 0
+          , isAutomatic:true
         }}
           ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1}
           , relativePosition: 0
+          , isAutomatic:true
         }}
         ]
       }

@@ -31,6 +31,7 @@ export class PlayerService {
     playerPoolVO: PlayerVO[];
     selectedPlayer : Player;
     newPlayer : boolean = false;
+    addPlayerButton: boolean = true;
     
     static cols: TableCols[]  = [
         { field: 'playerName',   header: 'Nome' },

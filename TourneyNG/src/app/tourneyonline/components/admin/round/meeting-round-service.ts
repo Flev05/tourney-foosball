@@ -73,13 +73,13 @@ export class MeetingRoundService extends MeetingService {
         }
     }
 
-    public onCompleteLoad(round: Round, mdbList: MeetingDb[]) {
+    public onCompleteLoad(round: Round, mdbList: MeetingDb[], isAdmin: boolean) {
 
         this.mdbList = mdbList;
         
         this.extractRoundMeetings(round, mdbList);
 
-        this.prepareMeetingsMap(round);
+        this.prepareMeetingsMap(round, isAdmin);
 
         this.onewayDaysNo = 1;
         this.shiftOnewayDay(this.onewayDaysNo);
@@ -268,7 +268,7 @@ export class MeetingRoundService extends MeetingService {
         });
     }
 
-    protected newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
+    public newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
         let m = this.createMeeting(t1, t2, null, null, day, d);
         return m;
     }

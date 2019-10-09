@@ -30,13 +30,13 @@ export class MeetingPlayoffService extends MeetingService {
         this.playoffMeetingNext(playoff);
     }
 
-    public onCompleteLoad(playoff: Playoff, mdbList: MeetingDb[]) {
+    public onCompleteLoad(playoff: Playoff, mdbList: MeetingDb[], isAdmin: boolean) {
 
         this.mdbList = mdbList;
         
         this.extractRoundMeetings(playoff.round, mdbList);
 
-        this.prepareMeetingsMap(playoff.round);
+        this.prepareMeetingsMap(playoff.round, isAdmin);
 
         this.onewayDaysNo = 1;
         this.shiftOnewayDays(this.onewayDaysNo);

@@ -213,6 +213,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
         this.selectedTourney.selectedTabIndex = 0;
+        this.selectedTourney.selectedResultTabIndex = 0;
         this.roundTabEnabled = false;
         this.playoffTabEnabled = false;
         this.teamTabEnabled = false;
@@ -441,6 +442,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.teamService.selectedTeam = this.selectedTeam;
 
+        this.playerService.addPlayerButton = true;
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
      
@@ -911,7 +913,12 @@ export class TourneyDetailView extends AbstractDetailView {
     onEliminatoryLevelRowSelect(event) {
         console.log("Entering onEliminatoryLevelRowSelect()");
         console.log(event);
-        this.levelService.onEliminatoryLevelRowSelect(event);
+
+        let redirect: string = LevelService.autoRedirectLV;
+        if(!this.levelService.isStandAlone(this.selectedTourney) ) {
+            redirect = LevelService.manualRedirectLV;
+        }
+        this.levelService.onEliminatoryLevelRowSelect(event, redirect);
     }
 
     onOnewayRoundClick() {
@@ -1045,7 +1052,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         if( this.levelService.isStandAlone(this.selectedTourney) ) {
             if( this.selectedTourney.selectedTabIndex == 2 ) {
-                this.levelService.loadEliminatoryMeetings(() => this.standAloneComplete());
+                this.levelService.loadEliminatoryMeetings(true, () => this.standAloneComplete());
                 return;
             }
         }
@@ -1224,7 +1231,7 @@ export class TourneyDetailView extends AbstractDetailView {
         };
     }
 
-    private gotoListView() {
+    public gotoListView() {
         this.tourneyService.newTourney = false;
         this.router.navigate([REDIRECT_TOURNEY_LV]);
     }

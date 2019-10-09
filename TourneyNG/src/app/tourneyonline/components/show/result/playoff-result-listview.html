@@ -17,31 +17,17 @@
         (onChange)="onChangeTab($event)">
     <p-tabPanel header="Incontri playoff di ANDATA ({{meetingPlayoffService.allDaysNo}} giornate)">
         <p-table [columns]="cols"
-            [value]="meetingRoundService.onewayDays" 
+            [value]="meetingPlayoffService.onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onRowSelect($event)"        
-            [scrollable]="true" 
-            scrollHeight="600px">
-
-            <ng-template pTemplate="caption">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goOnewayLeft()"></button>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        Giornata {{onewayDaysNo}} di {{allDaysNo}}
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goOnewayRight()"></button>
-                    </div>
-                </div>
-            </ng-template>
+            [paginator]="true"
+            [rows]="pageSize">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width: 15mm;">N°</th>
+                    <th>N°</th>
                     <th *ngFor="let col of columns">
                         {{col.header}}
                     </th>
@@ -63,31 +49,17 @@
     <p-tabPanel *ngIf="isRoundTrip" header="Incontri playoff di RITORNO ({{meetingPlayoffService.allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
-            [value]="meetingRoundService.roundtripDays" 
+            [value]="meetingPlayoffService.roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onRowSelect($event)"        
-            [scrollable]="true" 
-            scrollHeight="600px">
-
-            <ng-template pTemplate="caption">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-left" pButton (click)="goRoundtripLeft()"></button>
-                    </div>
-                    <div class="ui-grid-col-3">
-                        Giornata {{roundtripDaysNo}} di {{allDaysNo}}
-                    </div>
-                    <div class="ui-grid-col-3">
-                        <button type="button" icon="fa fa-fw fa-chevron-right" pButton (click)="goRoundtripRight()"></button>
-                    </div>
-                </div>
-            </ng-template>
+            [paginator]="true"
+            [rows]="pageSize">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width: 15mm;">N°</th>
+                    <th>N°</th>
                     <th *ngFor="let col of columns">
                         {{col.header}}
                     </th>

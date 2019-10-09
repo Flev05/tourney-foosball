@@ -12,6 +12,7 @@ import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from './tourney-combobox';
 import { ClientVO } from './client-vo';
+import { NumberValueAccessor } from '@angular/forms/src/directives';
 
 export interface Tourney {
     id?: number;
@@ -22,6 +23,7 @@ export interface Tourney {
 
     wizardModeIndex?: number;
     selectedTabIndex?: number;
+    selectedResultTabIndex?: number;
 
     selectedTeams4PlayoffsCB?: Combobox;
     selectedPlayoffsCB?: Combobox;

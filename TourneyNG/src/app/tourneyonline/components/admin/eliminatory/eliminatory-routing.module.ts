@@ -1,17 +1,17 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
-import {EliminatoryAutoListView} from './eliminatory-autolistview';
-import {EliminatoryManualListView} from './eliminatory-manuallistview';
-import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
-import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
+import {StandaloneEliminatoryListView} from './eliminatory-standalone-listview';
+import {FullEliminatoryListView} from './eliminatory-full-listview';
+import {StandaloneEliminatoryDetailView} from './eliminatory-standalone-detailview';
+import { FullEliminatoryDetailView } from './eliminatory-full-detailview';
 
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: 'levelLv/eliminatoryAutoLv', component: EliminatoryAutoListView },
-			{ path: 'levelLv/eliminatoryManualLv', component: EliminatoryManualListView },
-			{ path: 'levelLv/eliminatoryLv/autodv', component: AutoEliminatoryDetailView },
-			{ path: 'levelLv/eliminatoryLv/manualdv', component: ManualEliminatoryDetailView },
+			{ path: 'levelLv/eliminatoryAutoLv', component: StandaloneEliminatoryListView },
+			{ path: 'levelLv/eliminatoryManualLv', component: FullEliminatoryListView },
+			{ path: 'levelLv/eliminatoryLv/autodv', component: StandaloneEliminatoryDetailView },
+			{ path: 'levelLv/eliminatoryLv/manualdv', component: FullEliminatoryDetailView },
 		])
 	],
 	exports: [

@@ -35,7 +35,8 @@ const updateMeetingUrl = meetingUrl + '/update';
 const deleteMeetingUrl                  = meetingUrl + '/delete';
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
 
-export abstract class MeetingService extends AbstractService {
+@Injectable()
+export  class MeetingService extends AbstractService {
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
 
@@ -177,16 +178,17 @@ export abstract class MeetingService extends AbstractService {
      * Converts the date and time and complete the round trip meetings copying from 
      * its corresponding oneway meeting list
      */
-    public prepareMeetingsMap(round : Round ): void {
+    public prepareMeetingsMap(round : Round, isAdmin: boolean ): void {
         this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
         this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
 
         for( let m of round.onewayMeetings ) {
 
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-
-            if( m.points1 > 0 || m.points2 > 0 ) {
-                m.dateAndTime = m.points1 + " - " + m.points2;
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
+            if(isAdmin) {
+                if( m.points1 > 0 || m.points2 > 0 ) {
+                    m.dateAndTime = m.points1 + " - " + m.points2;
+                }
             }
 
             let key = m.day;
@@ -202,11 +204,13 @@ export abstract class MeetingService extends AbstractService {
 
         for( let m of round.roundtripMeetings ) {
 
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-            if( m.points1 > 0 || m.points2 > 0 ) {
-                m.dateAndTime = m.points1 + " - " + m.points2;
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
+            if(isAdmin) {
+                if( m.points1 > 0 || m.points2 > 0 ) {
+                    m.dateAndTime = m.points1 + " - " + m.points2;
+                }
             }
-
+            
             let key = m.day;
             console.log( key + "° Giornata di ritorno");
             if(!this.roundtripMeetingDaysMap.has(key)) {
@@ -351,28 +355,6 @@ export abstract class MeetingService extends AbstractService {
 
         obs.subscribe();
     }
-     
-    // deleteEliminatoryMeetingsByTourneyId (tourneyId: number ): void {
-    //     const url = deleteEliminatoryMeetingsByTourneyIdUrl + "/" + tourneyId;
-
-    //     let obs = this.http.delete<Meeting>(url).pipe(
-    //         tap(_ => this.log('deleting MeetingDb: ' + url)),
-    //         catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
-    //     );
-
-    //     obs.subscribe();
-    // }
-
-    // deleteMeetingsByTourneyAndEliminatoryIds(tourneyId: number, eliminatoryId : number) {
-    //     const url = deleteMeetingsByTourneyAndEliminatoryIdsUrl + "/" + tourneyId + "/" + eliminatoryId;
-
-    //     let obs = this.http.delete<Meeting>(url).pipe(
-    //         tap(_ => this.log('deleting MeetingDb: ' + url)),
-    //         catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
-    //     );
-
-    //     obs.subscribe();
-    // }
 
     protected handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
@@ -405,7 +387,7 @@ export abstract class MeetingService extends AbstractService {
         });
     }
 
-    protected newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
+    public newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
         let m = this.createMeeting(t1, t2, null, null, day, d);
         return m;
     }

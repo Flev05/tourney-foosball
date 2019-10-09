@@ -12,9 +12,9 @@ import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
-    templateUrl: './eliminatory-autolistview.html'
+    templateUrl: './eliminatory-standalone-listview.html'
 })
-export class EliminatoryAutoListView extends AbstractListView {
+export class StandaloneEliminatoryListView extends AbstractListView {
 
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows: EliminatoryVO[];

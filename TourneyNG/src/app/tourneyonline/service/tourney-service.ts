@@ -99,8 +99,17 @@ export class TourneyService extends AbstractService {
         { field: 'won',         header: 'V'},
         { field: 'lost',        header: 'P'},
         { field: 'balanced',    header: 'N'},
-        { field: 'goalsDone',   header: 'Gf:Gs'},
+        { field: 'goalsDone',   header: 'Gf'},
+        { field: 'goalsConceded',   header: 'Gs'},
         { field: 'goalsDiff',   header: 'D'},
+    ];
+
+    resultCols: TableCols[] = [
+        { field: 'dateAndTime', header: 'Data/Ora' },
+        { field: 'teamName1',   header: 'In casa' },
+        { field: 'teamName2',   header: 'Trasferta' },
+        { field: 'points1',     header: 'Pt.1' },
+        { field: 'points2',     header: 'Pt.2' }
     ];
     
     private tvo: TourneyVO;
@@ -159,7 +168,7 @@ export class TourneyService extends AbstractService {
             this.playoffsCombobox.push({label: "", value: 0});
             for(let i=0; i<this.selectedTourney.playoffs.length; i++) {
                 let r=this.selectedTourney.playoffs[i];
-                this.playoffsCombobox.push({label: r.round.name, value: r.id});
+                this.playoffsCombobox.push({label: r.round.name, value: r.round.id});
             }
         }
 
@@ -491,7 +500,13 @@ export class TourneyService extends AbstractService {
             let t1 = m.team1;
             let t2 = m.team2;
             let key1 = t1.teamName;
+            if(key1 == "Riposo") {
+                continue;
+            }
             let key2 = t2.teamName;
+            if(key2 == "Riposo") {
+                continue;
+            }
 
             if(!classificationMap.has(key1)) {
                 let c = this.newClassification(t1, 0);
@@ -552,7 +567,7 @@ export class TourneyService extends AbstractService {
         return classificationList;
     }
 
-    private sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+    public sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
         let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
 
             if (c1.points > c2.points) {
@@ -629,9 +644,8 @@ export class TourneyService extends AbstractService {
                 rows[row].won = c.won;    
                 rows[row].lost = c.lost;    
                 rows[row].balanced = c.balanced;    
-                rows[row].goalsDone = c.goalsDone + ":" + c.goalsConceded;
-                rows[row].goalsConceded = c.goalsConceded;    
                 rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
+                rows[row].goalsConceded = c.goalsConceded;    
 
                 let len = round.onewayMeetings.length;
 

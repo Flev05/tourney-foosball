@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { CountryService } from 'app/tourneyonline/service/country-service';
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
@@ -155,20 +154,24 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
+        let observer = null;
         if( this.selectedMeetingDb.roundId != null ) {
-            this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
+            observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
         }
         if( this.selectedMeetingDb.playoffId != null ) {
-            this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
+            observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
-            this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
+            observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
+        }
+        if(observer != null) {            
+            observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());            
         }
  
         this.updateNextLevel();
 
-        const observer = this.tourneyService.saveTourney(this.selectedTourney, this.saveTourneyErrorHandler("Turney save operation"));
-        observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
+        // const observer = this.tourneyService.saveTourney(this.selectedTourney, this.saveTourneyErrorHandler("Turney save operation"));
+        // observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());
     }
 
     private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {

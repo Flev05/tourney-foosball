@@ -26,10 +26,10 @@ import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { SliderModule } from 'app/components/slider/slider';
 import { CalendarModule } from 'app/components/calendar/calendar';
-import {EliminatoryAutoListView} from './eliminatory-autolistview';
-import {EliminatoryManualListView} from './eliminatory-manuallistview';
-import {AutoEliminatoryDetailView} from './eliminatory-autodetailview';
-import { ManualEliminatoryDetailView } from './eliminatory-manualdetailview';
+import {StandaloneEliminatoryListView} from './eliminatory-standalone-listview';
+import {FullEliminatoryListView} from './eliminatory-full-listview';
+import {StandaloneEliminatoryDetailView} from './eliminatory-standalone-detailview';
+import { FullEliminatoryDetailView } from './eliminatory-full-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { LevelService } from './level-service';
 
@@ -62,10 +62,10 @@ import { LevelService } from './level-service';
         ,MessagesModule
         ,MessageModule
     ],
-	declarations: [EliminatoryAutoListView
-        ,EliminatoryManualListView
-        ,AutoEliminatoryDetailView        
-        ,ManualEliminatoryDetailView        
+	declarations: [StandaloneEliminatoryListView
+        ,FullEliminatoryListView
+        ,StandaloneEliminatoryDetailView        
+        ,FullEliminatoryDetailView        
     ]
     ,providers: [DateFormatPipe, LevelService]
 })

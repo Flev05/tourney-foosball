@@ -127,7 +127,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         For each eliminatory level configureted in selected tourney, loads their corresponding meetings,
         for both the one way and round trip meetings
      */
-    loadEliminatoryMeetings( complete: () => void ): void {
+    loadEliminatoryMeetings( processTree: boolean, complete: () => void ): void {
         this.meetingMap = new Map<number, MeetingDb[]>();
         this.eliminatoryRoundMap = new Map<number, Round>();
 
@@ -139,10 +139,14 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             return;
         }
 
+        this.isAutomatic = false;
         this.elHttpCounter = 0;
         for (let l=0; l<this.eliminatoryLevels.length; l++) {
             let el: EliminatoryLevel = this.eliminatoryLevels[l];
             this.elHttpCounter += el.eliminatories.length;
+            if( el.isTopLevel ) {
+                this.isAutomatic = el.isAutoGen=="true" ? true : false;
+            }
         }
         
         this.eliminatoryLevelRows = [];
@@ -158,12 +162,12 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             for (let e of el.eliminatories) {
                 this.eliminatoryRoundMap.set(e.id, e.round);
                 let abs = this.meetingService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
-                abs.subscribe(mdbs => this.addToMeetingMap(complete, mdbs), e => this.onError(e));
+                abs.subscribe(mdbs => this.addToMeetingMap(processTree, complete, mdbs), e => this.onError(e));
             }
         }
     }
     
-    private addToMeetingMap(complete: () => void,  mdbs: MeetingDb[]): void {
+    private addToMeetingMap(processTree: boolean, complete: () => void,  mdbs: MeetingDb[]): void {
         console.log("Entering addToMeetingMap(mdbs.length=" + mdbs.length + ")");
         if( mdbs.length == 0 ) {
             return;
@@ -199,7 +203,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             round.roundtripMeetings = this.sortMeetings(roundtripMeetings);
         }
 
-        this.processEliminationTree();
+        if(processTree) {
+            this.processEliminationTree();
+        }
         
         complete();
     }    
@@ -311,7 +317,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         ];
 
         if(this.isTopLevel) {
-            if( this.isAutomatic) {
+            if( this.isAutomatic ) {
                 this.eliminatoryCols.push({ field: 'position1', header: 'I° Squadra'});
                 this.eliminatoryCols.push({ field: 'position2', header: 'II° Squadra'});
             } else {
@@ -380,13 +386,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     getPosition2(e: Eliminatory): string {
 
         let rule = e.rule2.fromRound.relativePosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
+        let pos = e.rule2.fromRound.position.value + "°";
         if( e.rule2.fromRound.position.value == 0 ) {
             rule = "";
+            pos  = "";
         }
 
-        let pos2 = this.isAutomatic 
-            ? rule 
-            : e.rule2.fromRound.position.value + "°";
+        let pos2 = this.isAutomatic ? rule : pos;
 
         return pos2;
     }

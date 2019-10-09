@@ -15,11 +15,12 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
+import { LevelService } from './level-service';
 
 @Component({
-    templateUrl: './eliminatory-manualdetailview.html',
+    templateUrl: './eliminatory-full-detailview.html',
 })
-export class ManualEliminatoryDetailView extends AbstractDetailView {
+export class FullEliminatoryDetailView extends AbstractDetailView {
     
     msgs: Message[] = [];
 
@@ -57,6 +58,7 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected countryService: CountryService,
+        protected levelService: LevelService,
     ) { 
         super(tourneyService, location);
     }
@@ -72,8 +74,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
 
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay;
-        this.isPlayoff = this.selectedTourney.playoffs.length > 0 ? true : false;
+        this.isOneway   = this.selectedEliminatoryLevel.direction == Direction.OneWay;
+        this.isPlayoff  = this.selectedTourney.playoffs.length > 0 ? true : false;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.positions = this.tourneyService.positionsCombobox;
@@ -114,8 +116,8 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
                 this.availableTeams.push(cb);
             }
     
-            team1CB = {label:this.m1.team1.teamName, value: this.m1.team1.id};
-            team2CB = {label:this.m1.team2.teamName, value: this.m1.team2.id};
+            team1CB = {label: this.m1.team1.teamName, value: this.m1.team1.id};
+            team2CB = {label: this.m1.team2.teamName, value: this.m1.team2.id};
         }
 
         this.isDoubleSelection = false;
@@ -158,6 +160,10 @@ export class ManualEliminatoryDetailView extends AbstractDetailView {
     
     private onLoadAllCountriesComplete(): void {
         this.countries = this.countryService.countries;
+    }
+
+    isRulesEnabled(): boolean {
+        return !this.levelService.isAutomatic && this.isTopLevel;
     }
 
     done(): void {

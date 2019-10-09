@@ -14,9 +14,9 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
-    templateUrl: './eliminatory-autodetailview.html',
+    templateUrl: './eliminatory-standalone-detailview.html',
 })
-export class AutoEliminatoryDetailView extends AbstractDetailView {
+export class StandaloneEliminatoryDetailView extends AbstractDetailView {
     
     eliminatoryFormGroup: FormGroup;
     toggleable: boolean = false;

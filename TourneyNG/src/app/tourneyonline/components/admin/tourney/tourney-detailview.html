@@ -257,6 +257,15 @@
     </p-accordionTab>
 </p-accordion>
 </div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" 
+        type="button" 
+        icon="fa fa-arrow-left" 
+        pButton (click)="gotoListView()" 
+        label="Elenco Tornei">
+    </button>
+</div>   
  
 <p-tabView [activeIndex]="selectedTourney.selectedTabIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Generalità">

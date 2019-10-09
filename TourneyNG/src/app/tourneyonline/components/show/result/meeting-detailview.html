@@ -12,8 +12,7 @@
 </p-accordionTab>
 </p-accordion>
 
-<h4><span>Risultati Torneo: {{selectedTourney.tourneyName}}</span></h4>
-<h4><span>Data: {{selectedMeeting.datetime | date: 'dd/MM/y HH:mm'}}</span></h4>
+<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -38,7 +37,7 @@
     <ng-template pTemplate="header">
         <tr>
             <th>Partita</th>
-            <th>{{selectedMeeting.team1.teamName}} {{selectedMeeting.pointes1}} - {{selectedMeeting.pointes2}} {{selectedMeeting.team2.teamName}} </th>
+            <th>{{selectedMeeting.team1.teamName}} {{selectedMeeting.pointes1}} - {{selectedMeeting.pointes2}} {{selectedMeeting.team2.teamName}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})</th>
         </tr>
     </ng-template>
 

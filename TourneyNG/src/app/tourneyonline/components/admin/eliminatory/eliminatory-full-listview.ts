@@ -12,9 +12,9 @@ import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 
 @Component({
-    templateUrl: './eliminatory-manuallistview.html'
+    templateUrl: './eliminatory-full-listview.html'
 })
-export class EliminatoryManualListView extends AbstractListView {
+export class FullEliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows:  EliminatoryVO[];
     eliminatoryCols: TableCols[];
@@ -42,14 +42,7 @@ export class EliminatoryManualListView extends AbstractListView {
         this.eliminatoryCols = this.levelService.eliminatoryCols;
         this.isOneway  = this.levelService.isOneway;
     }
-
-    isEnabledGen() {
-        if( this.levelService.isTopLevel && !this.containsPlayoff() ) {
-            return true;
-        }
-        return false;
-    }
-
+ 
     getPosition1(e: Eliminatory): string {
         let position1 = e.rule1.fromRound.position.value > 0 ? e.rule1.fromRound.position.label : e.rule1.fromPlayoff.position.label;
         return position1;

@@ -70,7 +70,7 @@ export class MeetingListView extends AbstractListView {
 
     private onCompleteLoad(): void {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList, true);
         this.pageSize = this.meetingRoundService.onewayDays.length;
     }
   

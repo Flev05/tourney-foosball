@@ -80,23 +80,24 @@ export class TabResultListView extends AbstractListView {
 
         this.eliminatoryCount  = 0;
         if(super.containsEliminatory()) {
-            this.levelService.ngOnInit();
             this.incompleteEliminatoryConfiguration = true;
-            this.levelService.loadEliminatoryMeetings(() => this.loadComplete());
+            this.levelService.ngOnInit();
+            this.levelService.loadEliminatoryMeetings(false, () => this.loadComplete());
         }
     }
 
     private loadComplete():  void {
-        // this.levelService.prepareGui();
-        this.incompleteEliminatoryConfiguration = false;
+        console.log("Entering loadComplete()");
+        this.levelService.prepareGui();
         this.eliminatoryCount = this.levelService.eliminatoryLevelRows.length;
+        this.incompleteEliminatoryConfiguration = false;
     }
 
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
 
-        this.selectedTourney.selectedTabIndex = index;
+        this.selectedTourney.selectedResultTabIndex = index;
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {
@@ -215,13 +216,9 @@ export class TabResultListView extends AbstractListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
 
-        this.levelService.onEliminatoryLevelRowSelect(event);
+        this.levelService.onEliminatoryLevelRowSelect(event, REDIRECT_ELIMINATORY);
         
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
-
-        this.router.navigate([REDIRECT_PLAYOFF_DV]);
-
-        this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 
     goBack(): void {        

@@ -38,11 +38,10 @@ export class MeetingListView extends AbstractRuleListView {
     ngOnInit() {
         super.ngOnInit();
         
-
         this.meetingsCols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
-            { field: 'ruleName1',    header: 'In Casa' },
-            { field: 'ruleName2',    header: 'Trasferta' }
+            { field: 'ruleName1',   header: 'In Casa' },
+            { field: 'ruleName2',   header: 'Trasferta' }
         ];
 
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
@@ -64,7 +63,7 @@ export class MeetingListView extends AbstractRuleListView {
     
     private onCompleteLoad(): void {
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
-        this.meetingPlayoffService.onCompleteLoad(this.selectedPlayoff, this.mdbList);
+        this.meetingPlayoffService.onCompleteLoad(this.selectedPlayoff, this.mdbList, true);
         this.pageSize = this.meetingPlayoffService.onewayDays.length;
          
     }

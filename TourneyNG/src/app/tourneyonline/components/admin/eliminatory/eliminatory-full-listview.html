@@ -10,14 +10,28 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
     <p>
-        Vista di dettaglio Eliminazione diretta manuale.
+        Vista di dettaglio Eliminazione diretta.
     </p>   
     <p> 
-        In questa vista dovete completare le seguenti operazioni:
+        In questa vista dovete specificare le regole per il passaggio del turno alle eliminazioni dirette pescando 
+        le squadre dai gironi all'italiana o, se esistono, dai playoff.
     </p> 
+    <p>
+        La vista permette la generazione delle regole in modo automatico o manuale.
+    </p>    
+    <p>
+        Il modo automatico viene applicato di default ai playoff, se esistono, altrimenti ai gironi all'italiana.
+    </p>
+    <p>
+        Il modo manuale invece permette una configurazione mista con possibilità di pescare squadre dai
+        sia dai gironi all'italiana che, se esitono, dai playoff.                
+    </p>
+    <p>
+        In definitiva dovete eseguire le seguenti operazioni:
+    </p>
     <ul>
         <li>1) Selezionare i turni previsti</li>
-        <li>2) Selezionare la generazione dele regole in manuale o automatica</li>
+        <li>2) Selezionare la generazione delle regole in manuale o in automatico</li>
         <li>3) Completare i livelli</li>
     </ul>
 
@@ -28,7 +42,7 @@
         poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
     </p>
 
-    <h4>2) Selezionare la generazione dele regole in manuale o automatica</h4>
+    <h4>2) Selezionare la generazione dele regole in manuale o in automatico</h4>
     <p>
         Dovete specificare scegliere se far generare le regole di accoppiamento in automatico al programma
         oppure volete copilarle da soli. L'opzione vale solo se il torneo non prevede gironi di playoff nel
@@ -90,7 +104,7 @@
     </div>
 </div>        
 
-<div *ngIf="isEnabledGen()" class="ui-grid-row">
+<div class="ui-grid-row">
     <div class="ui-grid-col-2">
         Generazione:
     </div>

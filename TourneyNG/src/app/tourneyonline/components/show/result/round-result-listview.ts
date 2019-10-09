@@ -12,15 +12,18 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Team } from 'app/tourneyonline/domain/team';
-import { TeamDetailView } from '../../admin/team/team-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
+
+const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 
 @Component({
     templateUrl: './round-result-listview.html'
 })
 export class RoundResultListView extends AbstractListView {
     static redirect: string = "result/lv/meetingLv/dv";
-    cols: TableCols[] ;
+    cols: TableCols[];
     
     selectedRow: Meeting;
 
@@ -52,10 +55,12 @@ export class RoundResultListView extends AbstractListView {
 
     constructor( protected tourneyService: TourneyService
         , private meetingRoundService: MeetingRoundService
+        , private meetingService: MeetingService
         , protected router: Router
         , protected location: Location
         , protected dfp: DateFormatPipe
         , private teamService: TeamService
+        , private playerService: PlayerService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
@@ -63,18 +68,14 @@ export class RoundResultListView extends AbstractListView {
     ngOnInit() {
         
         super.ngOnInit();
+        this.cols = this.tourneyService.resultCols;
+
         this.selectedRound = this.tourneyService.selectedRound;
         
         this.classificationCols = this.tourneyService.classificationCols;
 
-        this.roundTeams = this.selectedRound.teams;
+        this.roundTeams = this.selectedTourney.teams;
 
-        this.cols = [
-            { field: 'dateAndTime', header: 'Data/Ora' },
-            { field: 'teamName1',   header: 'In casa' },
-            { field: 'teamName2',   header: 'Trasferta' }
-        ];
-        
         this.selectedRound = this.tourneyService.selectedRound;
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
@@ -83,28 +84,17 @@ export class RoundResultListView extends AbstractListView {
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.selectedRound.selectedTabIndex = index;
+        this.tourneyService.selectedRoundTabIndex = index;
     }
 
     private onCompleteLoad(): void {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList, false);
         this.pageSize = this.meetingRoundService.onewayDays.length;
-    }
-
-    public onResultCompleteLoad() {
-        this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
-        this.incompleteRoundConfiguration = false;
-
-        if(this.selectedRound.onewayMeetings.length == 0) {
-            this.incompleteRoundConfiguration = true;
-            return;
-        }
 
         this.prepareRoundGuiClassification();
     }
-   
+
     /**
      * Prepares the classification relatid to the selected round
      */
@@ -114,64 +104,25 @@ export class RoundResultListView extends AbstractListView {
 
         this.classificationRows = this.tourneyService.prepareRoundsGui([this.selectedRound]);
     }
-
-    goOnewayLeft() {
-        console.log("goOnewayLeft()");
-        this.onewayDaysNo--;
-        if(this.onewayDaysNo < 1) {
-            this.onewayDaysNo = 1;
-        }
-        console.log("daysKey=" + this.onewayDaysNo);
-        this.meetingRoundService.shiftOnewayDay(this.onewayDaysNo);
-    }
-
-    goOnewayRight() {
-        console.log("goOnewayLeft()");
-        let M = this.onewayMeetingDaysMap.size;
-        this.onewayDaysNo++;
-        console.log("daysKey=" + this.onewayDaysNo);
-        if(this.onewayDaysNo > M) {
-            this.onewayDaysNo = M;
-        }
-        this.meetingRoundService.shiftOnewayDay(this.onewayDaysNo);
-    }
-
-    goRoundtripLeft() {
-        console.log("goRoundtripLeft()");
-        this.roundtripDaysNo--;
-        if(this.roundtripDaysNo < 1) {
-            this.roundtripDaysNo = 1;
-        }
-        console.log("daysKey=" + this.roundtripDaysNo);
-        this.meetingRoundService.shiftRoundtripDay(this.roundtripDaysNo);
-    }
-
-    goRoundtripRight() {
-        console.log("goRoundtripLeft()");
-        let M = this.roundtripMeetingDaysMap.size;
-        this.roundtripDaysNo++;
-        console.log("daysKey=" + this.roundtripDaysNo);
-        if(this.roundtripDaysNo > M) {
-            this.roundtripDaysNo = M;
-        }
-        this.meetingRoundService.shiftRoundtripDay(this.roundtripDaysNo);
-    }
-
+  
     onRowSelect(event) {
         console.log(event.data);
 
         this.meetingRoundService.selectedMeeting = this.selectedRow;
+        this.meetingService.selectedMeeting = this.selectedRow;
+        this.meetingService = this.meetingRoundService;
 
         this.gotoDetailView();
     }
-
+    
     onTeamRowSelect(event) {
         console.log("Entering onTeamRowSelect()");
         console.log(event.data);
 
         this.teamService.selectedTeam = event.data;
 
-        this.router.navigate([TeamDetailView.redirect]);
+        this.playerService.addPlayerButton = false;
+        this.router.navigate([REDIRECT_TEAM_DV]);
     }
 }
 

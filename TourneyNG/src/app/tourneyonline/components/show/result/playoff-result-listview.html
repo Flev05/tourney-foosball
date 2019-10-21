@@ -3,21 +3,13 @@
 <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
 <h4><span>Incontri: {{meetingsNoMsg}}</span></h4>
 
-<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button> 
 
-<div *ngIf="!atLeastOneMatchForEachRound"  style="margin-top:30px">
-    <p-message 
-        severity="error" 
-        text="Attenzione! Bisogna giocare almeno una partita per ciascuno dei gironi precedenti!">
-    </p-message>
-</div>     
-
-<p-tabView *ngIf="atLeastOneMatchForEachRound"
-        [activeIndex]="tourneyService.selectedPlayoffTabIndex" 
+<p-tabView [activeIndex]="tourneyService.selectedPlayoffTabIndex" 
         (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Incontri playoff di ANDATA ({{meetingPlayoffService.allDaysNo}} giornate)">
+    <p-tabPanel header="Incontri playoff di ANDATA ({{allDaysNo}} giornate)">
         <p-table [columns]="cols"
-            [value]="meetingPlayoffService.onewayMeetings" 
+            [value]="selectedPlayoff.round.onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -46,10 +38,10 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="Incontri playoff di RITORNO ({{meetingPlayoffService.allDaysNo}} giornate)">
+    <p-tabPanel *ngIf="isRoundTrip" header="Incontri playoff di RITORNO ({{allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
-            [value]="meetingPlayoffService.roundtripMeetings" 
+            [value]="selectedPlayoff.round.roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  

@@ -71,7 +71,7 @@ export class MeetingPlayoffService extends MeetingService {
         playoff.round.onewayMeetings = [];
         playoff.round.roundtripMeetings = [];
 
-        this.preparePlayoffRules(playoff);
+        this.preparePlayoffMeetingRules(playoff);
 
         this.onewayDaysNo = 1;
         this.shiftOnewayDays(this.onewayDaysNo);
@@ -106,7 +106,7 @@ export class MeetingPlayoffService extends MeetingService {
         }
     }
 
-    private preparePlayoffRules(playoff: Playoff) {
+    private preparePlayoffMeetingRules(playoff: Playoff) {
         let rules: PlayoffRule[] = [...playoff.playoffRules];
         
         if( rules.length % 2 > 0 ) {
@@ -252,8 +252,8 @@ export class MeetingPlayoffService extends MeetingService {
 
                 if( rtm == undefined ) {
                     rtm = this.newMeeting(pr2, pr1, key, Direction.RoundTrip);
-                    rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
+                rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
 
                 if( !this.roundtripMeetingDaysMap.has(key) ) {
                     let emptyList: Meeting[] = [];

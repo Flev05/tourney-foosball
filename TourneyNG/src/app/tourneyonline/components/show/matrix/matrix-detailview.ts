@@ -113,7 +113,7 @@ export class MatrixDetailView extends AbstractDetailView {
 
     private prepareMatrix() {
         this.matrix = {
-            id: this.tourneyService.getSequenceNumber(),
+            id: null, // this.tourneyService.getSequenceNumber(),
             rows: []
         };
 
@@ -197,7 +197,7 @@ export class MatrixDetailView extends AbstractDetailView {
         }
 
         let cell: Cell = {
-              id: this.tourneyService.getSequenceNumber()
+              id: null // this.tourneyService.getSequenceNumber()
             , field: field
             , style: style
             , points: { label: "", value: 0, row: row, col: col }

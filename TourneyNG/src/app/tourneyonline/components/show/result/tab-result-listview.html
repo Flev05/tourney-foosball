@@ -59,14 +59,7 @@
     </p-tabPanel>
 
     <p-tabPanel header="Playoff({{playoffCount}})" *ngIf="containsPlayoff()">    
-        <div *ngIf="incompletePlayoffConfiguration" style="margin-top:30px">
-            <p-message 
-                severity="error" 
-                text="Attenzione! Le regole del passaggio di turno ai playoff non sono complete!">
-            </p-message>
-        </div>     
-
-        <p-table *ngIf="!incompletePlayoffConfiguration" [columns]="playoffCols"
+        <p-table [columns]="playoffCols"
             [value]="playoffRows"
             [responsive]="true"
             selectionMode="single" 

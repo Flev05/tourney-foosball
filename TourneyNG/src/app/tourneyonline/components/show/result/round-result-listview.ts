@@ -74,7 +74,7 @@ export class RoundResultListView extends AbstractListView {
         
         this.classificationCols = this.tourneyService.classificationCols;
 
-        this.roundTeams = this.selectedTourney.teams;
+        this.roundTeams = this.selectedRound.teams;
 
         this.selectedRound = this.tourneyService.selectedRound;
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);

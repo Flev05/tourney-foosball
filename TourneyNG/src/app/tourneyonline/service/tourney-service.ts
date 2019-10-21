@@ -61,8 +61,6 @@ export class TourneyService extends AbstractService {
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
 
-    selectedTeams:  Team[];
-
     newTourney : boolean = false;
     newRound : boolean = false;
     
@@ -191,38 +189,6 @@ export class TourneyService extends AbstractService {
         return teamsNo;
     }
 
-    public prepareLevelCombobox(teamsNo: number) : Array<Combobox> {
-
-        this.selectedTeams = [];
-        for(let i=0; i<teamsNo; i++) {
-            let t = this.selectedTourney.teams[i];
-            this.selectedTeams.push(t);
-        }
-
-        let levelNo = Math.ceil(Math.log2(teamsNo));
-        let levelsCombobox = new Array<Combobox>();
-        for (let l = levelNo; l > 0 ; l--) {
-            let lev = "";
-            if (l >= 5) {
-                lev = Math.pow(2, l-1) + "-esimi di finale";
-            }
-            if (l == 4) {
-                lev = "Ottavi di finale";
-            }
-            if (l == 3) {
-                lev = "Quarti di finale";
-            }
-            if (l == 2) {
-                lev = "Semi finale";
-            }
-            if (l == 1) {
-                lev = "Finalissima 1° e 2° posto";
-            }
-            let si: Combobox = { label: lev, value: l };
-            levelsCombobox.push(si);
-        }
-        return levelsCombobox;
-    }
 
     power2Padding(length: number): number {
         let levelNo = Math.ceil(Math.log2(length));
@@ -231,7 +197,7 @@ export class TourneyService extends AbstractService {
         return min;
     }
 
-    getSequenceNumber() {
+    public getSequenceNumber() {
         return this.sequenceNumber++;
     }
 
@@ -476,9 +442,12 @@ export class TourneyService extends AbstractService {
         return false;
     }
 
+    /**
+     * Creates a new Classification in function of the received parameters
+     */
     newClassification(t: Team, initialPoints: number): Classification {
         return {
-            id: this.getSequenceNumber(),
+            id: null,
             team: t,
             points: initialPoints,
             played: 0,
@@ -492,14 +461,18 @@ export class TourneyService extends AbstractService {
         };
     }
 
-    createClassification(meetings: Meeting[]): Classification[] {
+    /**
+     * Pprepares the teams classification in function of the list of all of the meteengs for each team 
+     * @param meetings the list of the meetings
+     */
+    public createClassification(meetings: Meeting[]): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of meetings) {
-
             let t1 = m.team1;
             let t2 = m.team2;
             let key1 = t1.teamName;
+
             if(key1 == "Riposo") {
                 continue;
             }
@@ -512,7 +485,7 @@ export class TourneyService extends AbstractService {
                 let c = this.newClassification(t1, 0);
                 classificationMap.set(key1, c);
             }
-            let c1 = classificationMap.get(key1);            
+            let c1: Classification = classificationMap.get(key1);            
  
             if(!classificationMap.has(key2)) {
                 let c2 = this.newClassification(t2, 0);
@@ -523,7 +496,7 @@ export class TourneyService extends AbstractService {
                 continue;
             }
             
-            let c2 = classificationMap.get(key2);
+            let c2: Classification = classificationMap.get(key2);
 
             c1.played++;
             c2.played++;
@@ -555,7 +528,7 @@ export class TourneyService extends AbstractService {
         }
 
         let classificationList: Classification[] = [];
-        for( let c of classificationMap.values()) {
+        for( let c of classificationMap.values() ) {
             if(c.team.teamName == "") {
                 continue;
             }

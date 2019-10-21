@@ -111,7 +111,7 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         if(this.isStandalone) {
             this.availableTeams = [{label:"", value: 0}];
             
-            for(let t of this.tourneyService.selectedTeams) {
+            for(let t of this.levelService.selectedTeams) {
                 let cb = {label: t.teamName, value: t.id};
                 this.availableTeams.push(cb);
             }
@@ -248,7 +248,7 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
 
     private getTeam(teamName: Combobox) : Team {
 
-        for(let t of this.tourneyService.selectedTeams) {
+        for(let t of this.levelService.selectedTeams) {
             if(t.teamName == teamName.label) {
                 return t;
             }

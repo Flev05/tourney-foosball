@@ -25,7 +25,8 @@ export class LevelService extends AbstractEliminatoryListView {
 
     static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
     static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
-    meetingList: MeetingDb[];
+    private meetingList: MeetingDb[];
+    public selectedTeams:  Team[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -72,7 +73,7 @@ export class LevelService extends AbstractEliminatoryListView {
     private prepareEliminationTree(teamsNo: number): void {
         console.log("Entering prepareEliminationTree("+teamsNo+")");
 
-        let levelsCombobox: Combobox[] =  this.tourneyService.prepareLevelCombobox(teamsNo);
+        let levelsCombobox: Combobox[] =  this.prepareLevelCombobox(teamsNo);
         let selectedLevel = levelsCombobox[0].value;
         let maxCurrentLevel : number = 0;
 
@@ -141,6 +142,38 @@ export class LevelService extends AbstractEliminatoryListView {
         }
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
     }    
+
+    private prepareLevelCombobox(teamsNo: number) : Array<Combobox> {
+        this.selectedTeams = [];
+        for(let i=0; i<teamsNo; i++) {
+            let t = this.selectedTourney.teams[i];
+            this.selectedTeams.push(t);
+        }
+
+        let levelNo = Math.ceil(Math.log2(teamsNo));
+        let levelsCombobox = new Array<Combobox>();
+        for (let l = levelNo; l > 0 ; l--) {
+            let lev = "";
+            if (l >= 5) {
+                lev = Math.pow(2, l-1) + "-esimi di finale";
+            }
+            if (l == 4) {
+                lev = "Ottavi di finale";
+            }
+            if (l == 3) {
+                lev = "Quarti di finale";
+            }
+            if (l == 2) {
+                lev = "Semi finale";
+            }
+            if (l == 1) {
+                lev = "Finalissima 1° e 2° posto";
+            }
+            let si: Combobox = { label: lev, value: l };
+            levelsCombobox.push(si);
+        }
+        return levelsCombobox;
+    }
 
     /**
      * Resets the received level by clearing the teams and all configurated meetings
@@ -407,8 +440,8 @@ export class LevelService extends AbstractEliminatoryListView {
         let t2: Team = this.newDummyTeam();
 
         let e: Eliminatory = {
-            id: 0,
-            round:{id: 0
+            id: this.tourneyService.getSequenceNumber(),
+            round:{id: this.tourneyService.getSequenceNumber()
                 , name: "" + index
                 , type: RoundType.E
                 , teams:[t1, t2]
@@ -417,14 +450,14 @@ export class LevelService extends AbstractEliminatoryListView {
                 , roundtripMeetings: []
             },
             rule1: {
-                id: 0,
-                fromRound: { id: 0
+                id: this.tourneyService.getSequenceNumber(),
+                fromRound: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
                     , isAutomatic:true
                 },
-                fromPlayoff: { id: 0
+                fromPlayoff: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
@@ -432,14 +465,14 @@ export class LevelService extends AbstractEliminatoryListView {
                 }
             },
             rule2: {
-                id: 0,
-                fromRound: { id: 0
+                id: this.tourneyService.getSequenceNumber(),
+                fromRound: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0
                     , isAutomatic:true
                 },
-                fromPlayoff: { id: 0
+                fromPlayoff: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
                     , relativePosition: 0

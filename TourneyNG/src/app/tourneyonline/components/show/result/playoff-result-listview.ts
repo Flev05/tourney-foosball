@@ -49,14 +49,10 @@ export class PlayoffResultListView extends AbstractRuleListView {
     
     mdbList: MeetingDb[];
    
-    atLeastOneMatchForEachRound: boolean = true;
     classificationCols: any[];
     playoffClassification: any[];
 
-    teamsCols : TableCols[] = [
-        { field: 'ruleName',   header: 'Regola' },
-        { field: 'teamName',   header: 'Squadra' },
-    ];
+    teamsCols = TeamService.cols;
 
     playoffTeams: Team[];
     pageSize: number = 10;
@@ -81,7 +77,6 @@ export class PlayoffResultListView extends AbstractRuleListView {
         this.classificationCols = this.tourneyService.classificationCols;
         this.cols = this.tourneyService.resultCols;
 
-        this.atLeastOneMatchForEachRound = true;
         const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
@@ -106,12 +101,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
         }
 
         this.refreshTeams();
-        if(!this.atLeastOneMatchForEachRound) {
-            return;
-        }
-
         this.prepareMeetingMaps();
-
         this.preparePlayoffClassification();
 
         this.onewayDaysNo = 1;
@@ -140,9 +130,8 @@ export class PlayoffResultListView extends AbstractRuleListView {
     private refreshTeams(): void {
         this.selectedPlayoff.round.teams = [];
 
-        this.atLeastOneMatchForEachRound = true;
         for( let rule of this.selectedPlayoff.playoffRules ) {
-            let position: number = rule.fromRound.position.value;
+            let position:  number = rule.fromRound.position.value;
             let roundName: string = rule.fromRound.round.label;
 
             let round = this.selectedTourney.rounds.find( r => r.name == roundName );
@@ -153,11 +142,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
                     let team = c.team;
                     team.ruleName = rule.fromRound.position.label + " " + roundName;
                     this.selectedPlayoff.round.teams.push(team);
-                } else {
-                    this.atLeastOneMatchForEachRound = false;
                 }
-            } else {
-                this.atLeastOneMatchForEachRound = false;
             }
         }
         this.playoffTeams = this.selectedPlayoff.round.teams;
@@ -165,14 +150,15 @@ export class PlayoffResultListView extends AbstractRuleListView {
 
     /**
      * Converts the date and time and complete the round trip meetings copying from 
-     * its corresponding oneway meeting list
+     * its corresponding oneway meeting list needed to paginate the meetings on daily base
      */
     private prepareMeetingMaps(): void {
         this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
 
-        this.onewayMeetings = [];
-        for( let m of this.selectedPlayoff.round.onewayMeetings ) {
+        this.selectedPlayoff.round.teams = [];
 
+        for( let m of this.selectedPlayoff.round.onewayMeetings ) {
+             
             this.resolveRules(this.selectedPlayoff.round, m);
 
             let key = m.day;
@@ -218,7 +204,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
      * Called for each meeting, it resolves the playoff rule of the meeting to its corresponding 
      * qualified team came from the rounds of the tourney
      * 
-     * @param m the method containg the rules to resolve with
+     * @param m the method containing the rules to resolve with
      */
     private resolveRules(playoff: Round, m: Meeting): void {
         m.dateAndTime = this.dfp.transform(m.datetime, false);
@@ -251,6 +237,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
             if( round.classification.length > 0 ) {
                 let c: Classification = round.classification[position-1];
                 let team = c.team;
+                console.log("Resolved Team is " + team);
                 return team;
             }
         }        

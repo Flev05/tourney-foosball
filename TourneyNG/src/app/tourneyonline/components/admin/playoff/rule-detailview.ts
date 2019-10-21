@@ -58,9 +58,9 @@ export class RuleDetailView extends AbstractDetailView {
 
     private newPlayoffConfig(): PlayoffRule {
         return {
-            id: this.tourneyService.getSequenceNumber(),
+            id: null, // this.tourneyService.getSequenceNumber(),
             fromRound: {
-                id: this.tourneyService.getSequenceNumber(),
+                id: null, // this.tourneyService.getSequenceNumber(),
                 position: { label: 1 + "°", value: 1 },
                 round: { label: "", value: 0 }
                 , relativePosition: 0

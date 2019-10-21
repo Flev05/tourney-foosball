@@ -76,6 +76,24 @@ public class MeetingRESTService extends AbstractRESTService {
         return meetingVoList;
     }
 
+    @POST
+    @Path("/loadByPlayoffIds/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<MeetingVO> loadByPlayoffIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
+
+        logger.debug(logId() + "[GET: loadByPlayoffIds(" + tourneyId + ")]");
+
+        List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffIds(tourneyId, playoffs);
+
+        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+                .collect(Collectors.toList());
+
+        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
+                + ", playoffId " + "]");
+
+        return meetingVoList;
+    }
+
     @GET
     @Path("/loadByEliminatoryId/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -252,26 +270,6 @@ public class MeetingRESTService extends AbstractRESTService {
 
         return builder.build();
     }
-
-    /**
-     * Removes the meetings related to the received tourney and eliminatory ids.
-     */
-    // @DELETE
-    // @Path("/deleteMeetingsByTourneyAndEliminatoryIds/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response deleteMeetingsByTourneyAndEliminatoryIds(@PathParam("tourneyId") Integer tourneyId,
-    // @PathParam("eliminatoryId") Integer eliminatoryId) {
-    //
-    // logger.debug(logId() + "[DELETE: deleteMeetingsByTourneyAndEliminatoryIds(" + tourneyId + ", " + eliminatoryId
-    // + ")]");
-    //
-    // meetingDao.deleteMeetingsByTourneyAndEliminatoryIds(tourneyId, eliminatoryId);
-    //
-    // Response.ResponseBuilder builder = Response.ok();
-    //
-    // return builder.build();
-    // }
 
     /**
      * Removes the meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a map of

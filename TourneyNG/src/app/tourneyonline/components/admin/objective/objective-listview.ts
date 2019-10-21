@@ -74,20 +74,20 @@ export class ObjectiveListView extends AbstractListView {
 
     private newObjective(): ObjectiveConfig {
         let obj : ObjectiveConfig = {
-            id: this.tourneyService.getSequenceNumber()
-            , fromRound:   { id: this.tourneyService.getSequenceNumber()
+            id: null // this.tourneyService.getSequenceNumber()
+            , fromRound:   { id: null // this.tourneyService.getSequenceNumber()
                 , position: { label: "1°", value: 0 }
                 , round: { label: "", value: 0 } 
                 , relativePosition: 0
                 , isAutomatic:true
             }
-            , fromPlayoff: { id: this.tourneyService.getSequenceNumber()
+            , fromPlayoff: { id: null //this.tourneyService.getSequenceNumber()
                 , position: { label: "1°", value: 0 }
                 , round: { label: "", value: 0 } 
                 , relativePosition: 0
                 , isAutomatic:true
             }
-            , fromEliminatory: { id: this.tourneyService.getSequenceNumber()
+            , fromEliminatory: { id: null // this.tourneyService.getSequenceNumber()
                 , position: { label: "1°", value: 0 }
                 , round: { label: "", value: 0 } 
                 , relativePosition: 0

@@ -13,12 +13,16 @@ import { AbstractListView } from '../../common/abstract-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
- 
+import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Team } from 'app/tourneyonline/domain/team';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
-const REDIRECT_TOURNEY_LV   = 'showtourney/';
-const REDIRECT_ROUND_DV     = 'result/lv/round';
-const REDIRECT_PLAYOFF_DV   = 'result/lv/playoff';
-const REDIRECT_ELIMINATORY  = 'result/lv/eliminatoryLv/dv';
+const REDIRECT_TOURNEY_LV        = 'showtourney/';
+const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
+const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
+const REDIRECT_ELIMINATORY       = 'result/lv/eliminatoryLv/dv';
 
 @Component({
     templateUrl: './tab-result-listview.html'
@@ -35,16 +39,14 @@ export class TabResultListView extends AbstractListView {
     playoffRows: Playoff[];
     playoffCount: number;
     selectedPlayoff: Playoff;
-
-    incompletePlayoffConfiguration: boolean;
-    incompleteEliminatoryConfiguration: boolean;
-
+    mdbList: MeetingDb[];
     selectedTabIndex: number = 0;
     eliminatoryCount: number;
 
     constructor(
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,
+        private meetingPlayoffService: MeetingPlayoffService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe,
@@ -67,30 +69,9 @@ export class TabResultListView extends AbstractListView {
 
         this.playoffCount = 0;
         if(super.containsPlayoff()) {
-            this.incompletePlayoffConfiguration = false;
             this.playoffRows = this.selectedTourney.playoffs;
             this.playoffCount = this.playoffRows.length;
-            for(let p of this.playoffRows) {
-                p.playoffName = p.round.name;
-                if( p.playoffRules.length == 0 ) {
-                    this.incompletePlayoffConfiguration = true;
-                }
-            }
         }
-
-        this.eliminatoryCount  = 0;
-        if(super.containsEliminatory()) {
-            this.incompleteEliminatoryConfiguration = true;
-            this.levelService.ngOnInit();
-            this.levelService.loadEliminatoryMeetings(false, () => this.loadComplete());
-        }
-    }
-
-    private loadComplete():  void {
-        console.log("Entering loadComplete()");
-        this.levelService.prepareGui();
-        this.eliminatoryCount = this.levelService.eliminatoryLevelRows.length;
-        this.incompleteEliminatoryConfiguration = false;
     }
 
     onChangeTab(e) {
@@ -198,7 +179,7 @@ export class TabResultListView extends AbstractListView {
             , playoffId: null
             , eliminatoryId: null
         };     
-        this.router.navigate([REDIRECT_ROUND_DV]);
+        this.router.navigate([REDIRECT_ROUND_RESULT_LV]);
     }
 
     onPlayoffRowSelect(event) {
@@ -210,7 +191,7 @@ export class TabResultListView extends AbstractListView {
             , playoffId: this.selectedPlayoff.id
             , eliminatoryId: null
         };     
-        this.router.navigate([REDIRECT_PLAYOFF_DV]);
+        this.router.navigate([REDIRECT_PLAYOFF_RESULT_LV]);
     }
     
     onEliminatoryRowSelect(event) {

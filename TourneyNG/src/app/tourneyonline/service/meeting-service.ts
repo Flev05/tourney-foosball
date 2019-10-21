@@ -25,6 +25,7 @@ const httpOptions = {
 const meetingUrl = 'api/meetings';  
 const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';  
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
+const loadMeetingByPlayoffIdsUrl = meetingUrl + '/loadByPlayoffIds'; 
 const loadMeetingByEliminatoryIdUrl = meetingUrl + '/loadByEliminatoryId';  
 const loadAllEliminatoryMeetingsUrl = meetingUrl + '/loadAllEliminatoryMeetingsBy';  
 const loadEliminatoryMeetingByIdListUrl = meetingUrl + "/loadEliminatoryMeetingByIdList";
@@ -121,6 +122,24 @@ export  class MeetingService extends AbstractService {
             catchError(this.handleError<MeetingDb[]>('loadPlayoffMeetingDb url=' + url))
         );
 
+        return obs;
+    }
+    
+    /** 
+     * Loads all the meetings of the receìved tourney id
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadPlayoffMeetings(tourneyId: number, playoffIds: Array<number> ) : Observable<MeetingDb[]> {
+
+        let url = loadMeetingByPlayoffIdsUrl + "/" + tourneyId ;
+
+        console.log("Url=" + url);
+
+        let obs = this.http.post<MeetingDb[]>(url, playoffIds, httpOptions).pipe(
+            tap((m: MeetingDb[]) => this.log('loadPlayoffMeetings, url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
+        );
+        return obs;
         return obs;
     }
 

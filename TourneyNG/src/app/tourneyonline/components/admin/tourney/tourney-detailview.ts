@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType,  RoundType } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType } from '../../../domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -39,7 +39,8 @@ const REDIRECT_TOURNEY_LV   = 'admintourney/';
 })
 export class TourneyDetailView extends AbstractDetailView {
     static redirect = 'admintourney/dv';
-    
+    private FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
+
     blockedDocument: boolean = false;
 
     disciplineOptions : Combobox[];
@@ -91,6 +92,7 @@ export class TourneyDetailView extends AbstractDetailView {
     nextButtonIcon: string = "fa fa-arrow-right";
     maxBoundaryTabIndex: number;
     rewind: boolean;
+    isPlayoffNumChanged: boolean = false;
 
     constructor(
         protected location: Location,
@@ -148,7 +150,8 @@ export class TourneyDetailView extends AbstractDetailView {
         if (this.teamService.isTeamsChanged) {
             this.teamService.isTeamsChanged = false;
             this.turnOnWizardMode(2);
-            this.resetMeetings();
+            this.resetComboBoxes();
+            this.makeButtonLabel();
         }
     }
 
@@ -228,27 +231,26 @@ export class TourneyDetailView extends AbstractDetailView {
         this.resetComboBoxes();
     }
 
-    private resetMeetings(): void {
-        
-        this.resetComboBoxes();
-
-        if( this.isRoundTabEnabled() ) {
-            this.resetRoundMeetings();
-        }
-        if( this.isPlayoffTabEnabled() ) {
-            this.resetPlayoffMeetings();
-        }
-        if( this.isEliminatoryTabEnabled() ) {
-            this.resetEliminatoryMeetings();
-        }   
-        this.makeButtonLabel();
-    }
+    // private resetMeetings(): void {
+    //     this.resetComboBoxes();
+    //     this.makeButtonLabel();
+    //     if( this.isRoundTabEnabled() ) {
+    //         this.resetRoundMeetings();
+    //     }
+    //     if( this.isPlayoffTabEnabled() ) {
+    //         this.resetPlayoffMeetings();
+    //     }
+    //     if( this.isEliminatoryTabEnabled() ) {
+    //         this.resetEliminatoryMeetings();
+    //     }   
+    //     this.makeButtonLabel();
+    // }
 
     private resetComboBoxes() {
-        this.selectedTourney.selectedTeams4PlayoffsCB = { label: "", value: 0 };
-        this.selectedTourney.selectedPlayoffsCB = { label: "", value: 0 };
-        this.selectedTourney.selectedRoundsNumCB = { label: "", value: 0 };
-        this.selectedTourney.selectedEliminatoryTeamsCB = { label: "", value: 0 };
+        this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedPlayoffsCB = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedRoundsNumCB = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.FIRST_COMBO_ITEM;
     }
 
     private prepareTabsGui( ): void {
@@ -367,8 +369,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
         
         this.roundsCombobox = [];
-        let firstRow: Combobox =  { label: "Seleziona", value: 0 };
-        this.roundsCombobox.push(firstRow);
+        this.roundsCombobox.push(this.FIRST_COMBO_ITEM);
 
         let R: number = Math.floor(this.selectedTourney.teams.length/2);
         for (let r=1; r<=R; r++ ) {
@@ -398,8 +399,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
 
         this.playoffsCombobox = [];
-        let firstRow: Combobox =  { label: "Seleziona", value: 0 };
-        this.playoffsCombobox.push(firstRow);
+        this.playoffsCombobox.push(this.FIRST_COMBO_ITEM);
 
         let R: number = Math.floor(N * this.selectedTourney.rounds.length / 2);
         for (let r=1; r<=R; r++ ) {
@@ -497,6 +497,10 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.discipline.id = cb.value;
     }
 
+    /**
+     * Processes the change on the number of rounds for the Rounding phase
+     * @param cb the selected item in the combo box
+     */
     onRoundNumChange(cb: Combobox) {
         console.log(cb);
 
@@ -508,8 +512,25 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.blockDocument();
-
         this.selectedTourney.selectedRoundsNumCB = cb;
+
+        if( this.containsPlayoff() ) {
+            this.playoffsCombobox = [];
+            let firstRow: Combobox =  this.FIRST_COMBO_ITEM;
+            this.playoffsCombobox.push(firstRow);
+    
+            let P = Math.floor( this.selectedTourney.teams.length / 2 );
+            for (let r=1; r <= P; r++ ) {
+                let cb: Combobox = { label: "" + r, value: r };
+                this.playoffsCombobox.push(cb);
+            }
+        }
+
+        this.cleanRoundMeetings(true);
+        this.cleanPlayoffMeetings(true);
+        this.cleanEliminatoryMeetings(true);
+        let tvo: TourneyVO = this.prepareTourneyVOForRound(true);
+        this.tourneyService.updateTourneyDeleteAllMeetings(tvo);
        
         let T: number = this.selectedTourney.teams.length;
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
@@ -524,10 +545,10 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.roundRows = this.selectedTourney.rounds;
 
-        this.selectedTourney.selectedPlayoffsCB       = {label: "", value: 0};
-        this.selectedTourney.selectedTeams4PlayoffsCB = {label: "", value: 0};
+        this.selectedTourney.selectedPlayoffsCB       = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
 
-        this.selectedTourney.selectedEliminatoryTeamsCB = {label: "", value: 0};
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.FIRST_COMBO_ITEM;
         
         this.saveRoundMeetings();
         this.turnOnWizardMode(3);
@@ -649,10 +670,8 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private prepareEmptyRound(i: number): Round {
-        let roundId: number = this.tourneyService.getSequenceNumber();
-
         let r: Round = {
-            id: roundId,
+            id: this.tourneyService.getSequenceNumber(),
             name: "Girone." + (1 + i),
             type: RoundType.R,
             teams: [],
@@ -665,43 +684,72 @@ export class TourneyDetailView extends AbstractDetailView {
         return r;
     }
 
+    /**
+     * Processes the change on the number rounds for the playoff phase
+     * @param cb the selected item in the combo box
+     */
+    onPlayoffNumChange(cb: Combobox) {
+        console.log(cb);
+
+        if(this.selectedTourney.selectedPlayoffsCB != this.FIRST_COMBO_ITEM) {
+            let popup = 'ATTENZIONE! Se si cambia il numero di Playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
+            if(!confirm(popup)) {
+                return;
+            } 
+        }
+        this.blockDocument();
+        this.selectedTourney.selectedPlayoffsCB = cb;
+        this.turnOnWizardMode(4);
+
+        let allRoundTeams = 0;
+        for( let r of this.selectedTourney.rounds) {
+            allRoundTeams += r.teams.length;
+        }
+
+        let maxTeamsPerPlayoff = allRoundTeams / this.selectedTourney.selectedPlayoffsCB.value;
+
+        this.team4playoffsCombobox = [];
+        this.team4playoffsCombobox.push(this.FIRST_COMBO_ITEM);
+        for (let t=2; t<=maxTeamsPerPlayoff; t++) {
+            let cb: Combobox = { label: "" + t, value: t };
+            this.team4playoffsCombobox.push(cb);
+        } 
+
+        this.cleanPlayoffMeetings(true);
+
+        this.isPlayoffNumChanged = true;
+        this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
+    }
+
+    /**
+     * Processes the change on the number of teams for each playoff round
+     * @param cb the selected item in the combo box
+     */
     onPlayoffs4TeamsChange(cb: Combobox) {
         console.log(cb);
+        if(!this.isPlayoffNumChanged && this.selectedTourney.selectedTeams4PlayoffsCB != this.FIRST_COMBO_ITEM) {
+            let popup = 'ATTENZIONE! Se si cambia il numero di squadre per girene di playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
+            if(!confirm(popup)) {
+                return;
+            } 
+        }
+        this.isPlayoffNumChanged = false;
         this.selectedTourney.selectedTeams4PlayoffsCB = cb;
 
         let T: number = this.selectedTourney.selectedTeams4PlayoffsCB.value;
 
-        this.playoffsCombobox = [];
-        let firstRow: Combobox =  { label: "Seleziona", value: 0 };
-        this.playoffsCombobox.push(firstRow);
+        this.selectedTourney.selectedEliminatoryTeamsCB = {label: "", value: 0};
 
-        let P = Math.floor( T * this.selectedTourney.rounds.length / 2 );
+        this.cleanPlayoffMeetings(true);
+        this.cleanEliminatoryMeetings(true);
 
-        if( P >= this.selectedTourney.selectedPlayoffsCB.value ) {
-            for (let r=1; r <= P; r++ ) {
-                let cb: Combobox = { label: "" + r, value: r };
-                this.playoffsCombobox.push(cb);
-            }         
-        }
- 
-        this.turnOnWizardMode(4);
-        this.selectedTourney.selectedPlayoffsCB = firstRow;
-    }
-
-    onPlayoffNumChange(cb: Combobox) {
-        console.log(cb);
-
-        this.blockDocument();
-
-        this.preparePlayoffRules(cb);
+        this.preparePlayoffRules();
 
         for(let p of this.selectedTourney.playoffs ) {
             this.meetingPlayoffService.createPlayoffMeeting(this.selectedTourney, p);
-        }
-
-        this.selectedTourney.selectedEliminatoryTeamsCB = {label: "", value: 0};
-
+        }    
         this.updatePlayoffMeetings();
+
         this.turnOnWizardMode(4);
     }
 
@@ -721,9 +769,8 @@ export class TourneyDetailView extends AbstractDetailView {
      * 
      * @param cb the selected combo box
      */
-    private preparePlayoffRules(cb: Combobox) {
-        this.selectedTourney.selectedPlayoffsCB = cb;
-        let N = this.selectedTourney.rounds.length * this.selectedTourney.selectedTeams4PlayoffsCB.value;
+    private preparePlayoffRules() {
+        let N = this.selectedTourney.selectedPlayoffsCB.value * this.selectedTourney.selectedTeams4PlayoffsCB.value;
 
         let p: Playoff = this.createPlayoff(1);
 
@@ -812,8 +859,9 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private resetPlayoffMeetings() {
-        let tvo: TourneyVO = this.prepareTourneyVOForPlayoff(true);
-        // this.tourneyService.updateTourneyDeletePlayoffMeetings(tvo);
+        this.meetingPlayoffService.deletePlayoffMeetingsByTourneyId(this.selectedTourney.id);
+
+        this.cleanPlayoffMeetings(true);
     }
 
     private prepareTourneyVOForPlayoff(cleanPlayoffs: boolean) {
@@ -841,16 +889,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.cleanEliminatoryMeetings(cleanPlayoffs);
         }
     }
-
-    private resetEliminatoryMeetings() {        
-        // this.meetingRoundService.deleteEliminatoryMeetingsByTourneyId(this.selectedTourney.id);
-        this.selectedTourney.selectedEliminatoryTeamsCB = { label: "", value: 0 };
-
-        // let tvo : TourneyVO = this.prepareTourneyVOForEliminatory(true);
-        this.cleanEliminatoryMeetings(true);
-        // this.tourneyService.updateTourneyDeleteEliminatoryMeetings(tvo);
-    }
-    
+ 
     private prepareTourneyVOForEliminatory(cleanEliminatory : boolean ): TourneyVO {
         this.cleanEliminatoryMeetings(cleanEliminatory);
 

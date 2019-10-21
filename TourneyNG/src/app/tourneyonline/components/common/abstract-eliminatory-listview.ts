@@ -199,7 +199,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
 
             let round = this.eliminatoryRoundMap.get(eid);
-            round.onewayMeetings = this.sortMeetings(onewayMeetings);
+            round.onewayMeetings    = this.sortMeetings(onewayMeetings);
             round.roundtripMeetings = this.sortMeetings(roundtripMeetings);
         }
 

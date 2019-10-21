@@ -1034,7 +1034,7 @@
         <div *ngIf="!playoffTabEnabled" style="margin-top:30px">
             <p-message 
                 severity="error" 
-                text="Attenzione! Deve essere configurato almento un girone all'italiana!">
+                text="Attenzione! Completare la scheda del girone all'italiana ed avanzare con il bottone Avanti!">
             </p-message>
         </div>     
 
@@ -1068,16 +1068,15 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    Squadre:
+                    Gironi:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di squadre, qualificate nei {{selectedTourney.selectedRoundsNumCB.value}} gironi all'italiana, che passeranno il turno ai playoff">
-                    <p-dropdown id="teamsRoundId" 
-                        [options]="team4playoffsCombobox" 
-                        [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
+                        pTooltip="Scegliere il numero di gironi per la fase dei playoff">
+                    <p-dropdown id="playoffId" 
+                        [options]="playoffsCombobox" 
+                        [(ngModel)]="selectedTourney.selectedPlayoffsCB"  
                         optionLabel="label"
-                        (onChange)="onPlayoffs4TeamsChange($event.value)" 
-                        placeholder="Seleziona"
+                        (onChange)="onPlayoffNumChange($event.value)" 
                         [autoWidth]="false">
                     </p-dropdown>
                 </div>
@@ -1085,15 +1084,16 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    Gironi:
+                    Squadre:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
-                        pTooltip="Scegliere il numero di gironi della fase di playoff">
-                    <p-dropdown id="playoffId" 
-                        [options]="playoffsCombobox" 
-                        [(ngModel)]="selectedTourney.selectedPlayoffsCB"  
+                        pTooltip="Scegliere il numero di squadre per ciascun girone di playoff">
+                    <p-dropdown id="teamsRoundId" 
+                        [options]="team4playoffsCombobox" 
+                        [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
                         optionLabel="label"
-                        (onChange)="onPlayoffNumChange($event.value)" 
+                        (onChange)="onPlayoffs4TeamsChange($event.value)" 
+                        placeholder="Seleziona"
                         [autoWidth]="false">
                     </p-dropdown>
                 </div>

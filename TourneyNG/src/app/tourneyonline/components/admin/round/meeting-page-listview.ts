@@ -11,7 +11,7 @@ import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
-    templateUrl: './meeting-listview.html'
+    templateUrl: './meeting-page-listview.html'
 })
 export class MeetingListView extends AbstractListView {
     @Input() showCurrentPageReport: boolean = true;
@@ -28,6 +28,9 @@ export class MeetingListView extends AbstractListView {
     isRoundTrip: boolean;
     mdbList: MeetingDb[];
     pageSize: number = 10;
+    allDaysNo: number;
+    onewayMeetings: Meeting[];
+    roundtripMeetings: Meeting[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -70,8 +73,16 @@ export class MeetingListView extends AbstractListView {
 
     private onCompleteLoad(): void {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList, true);
-        this.pageSize = this.meetingRoundService.onewayDays.length;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+
+        this.pageSize = this.selectedRound.pageSize;
+        this.allDaysNo = this.selectedRound.daysNo;
+        this.onewayMeetings = this.selectedRound.onewayMeetings;
+        this.roundtripMeetings = this.selectedRound.roundtripMeetings;
+
+        console.log("[Meetings " + this.onewayMeetings.length + "]");
+        console.log("[Days     " + this.allDaysNo + "]");
+        console.log("[PageSize " + this.pageSize + "]");
     }
   
     onRowSelect(event) {

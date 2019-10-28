@@ -59,15 +59,11 @@ export  class MeetingService extends AbstractService {
     
     onewayMeetingDaysMap: Map<number, Meeting[]>;
     onewayDays: any[];
-
+    
     roundtripMeetingDaysMap: Map<number, Meeting[]>;
     roundtripDays: any[];
 
-    allDaysNo: number;
     mdbList: MeetingDb[];
-
-    onewayMeetings: Meeting[] = [];
-    roundtripMeetings: Meeting[] = [];
     
     constructor( protected http: HttpClient, protected router: Router, protected dateFormatPipe: DateFormatPipe) 
     { 
@@ -88,6 +84,9 @@ export  class MeetingService extends AbstractService {
                 round.roundtripMeetings.push(m);
             }
         }
+
+        round.onewayMeetings    = MeetingService.sortMeetings(round.onewayMeetings);
+        round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }
 
     /** 
@@ -139,7 +138,6 @@ export  class MeetingService extends AbstractService {
             tap((m: MeetingDb[]) => this.log('loadPlayoffMeetings, url=' + url)),
             catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
         );
-        return obs;
         return obs;
     }
 
@@ -193,7 +191,7 @@ export  class MeetingService extends AbstractService {
         return obs;
     }
 
-     /**
+    /**
      * Converts the date and time and complete the round trip meetings copying from 
      * its corresponding oneway meeting list
      */
@@ -204,11 +202,11 @@ export  class MeetingService extends AbstractService {
         for( let m of round.onewayMeetings ) {
 
             m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
-            if(isAdmin) {
-                if( m.points1 > 0 || m.points2 > 0 ) {
-                    m.dateAndTime = m.points1 + " - " + m.points2;
-                }
-            }
+            // if(isAdmin) {
+            //     if( m.points1 > 0 || m.points2 > 0 ) {
+            //         m.dateAndTime = m.points1 + " - " + m.points2;
+            //     }
+            // }
 
             let key = m.day;
             // console.log( key + "° Giornata di andata");
@@ -224,11 +222,11 @@ export  class MeetingService extends AbstractService {
         for( let m of round.roundtripMeetings ) {
 
             m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
-            if(isAdmin) {
-                if( m.points1 > 0 || m.points2 > 0 ) {
-                    m.dateAndTime = m.points1 + " - " + m.points2;
-                }
-            }
+            // if(isAdmin) {
+            //     if( m.points1 > 0 || m.points2 > 0 ) {
+            //         m.dateAndTime = m.points1 + " - " + m.points2;
+            //     }
+            // }
             
             let key = m.day;
             console.log( key + "° Giornata di ritorno");
@@ -394,12 +392,24 @@ export  class MeetingService extends AbstractService {
         console.log('TourneyService: ' + message);
     }
 
-    protected sortMeetings(meetings: any[]): any[] {
+    /**
+     * Sorts the incoming meeting array by the day number and date of each meeting.
+     * When the day is the same, the sorting is by the date of the meeting in the same day
+     * 
+     * @param meetings the array of the meetings to sort
+     */
+    public static sortMeetings(meetings: Meeting[]): Meeting[] {
         return meetings.sort((m1, m2) => {
-            if (m1.dateAndTime > m2.dateAndTime) {
+            if( m1.day > m2.day )  {
                 return 1;
             }
-            if (m1.dateAndTime < m2.dateAndTime) {
+            if( m1.day < m2.day )  {
+                return -1;
+            }
+            if (m1.datetime > m2.datetime) {
+                return 1;
+            }
+            if (m1.datetime < m2.datetime) {
                 return -1;
             }
             return 0;

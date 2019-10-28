@@ -199,8 +199,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
 
             let round = this.eliminatoryRoundMap.get(eid);
-            round.onewayMeetings    = this.sortMeetings(onewayMeetings);
-            round.roundtripMeetings = this.sortMeetings(roundtripMeetings);
+            round.onewayMeetings    = MeetingService.sortMeetings(onewayMeetings);
+            round.roundtripMeetings = MeetingService.sortMeetings(roundtripMeetings);
         }
 
         if(processTree) {
@@ -442,17 +442,5 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         }
 
         return rows;
-    }
-
-    protected sortMeetings(rows: any[]): any[] {
-        return rows.sort((m1, m2) => {
-            if (m1.dateAndTime > m2.dateAndTime) {
-                return -1;
-            }
-            if (m1.dateAndTime < m2.dateAndTime) {
-                return 1;
-            }
-            return 0;
-        });
     }
 }

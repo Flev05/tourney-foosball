@@ -114,6 +114,9 @@ static newRound(roundNo : number): Round {
       id: BASE_ROUND_ID + roundNo
     , name: "GIRONE." + roundNo
     , type: RoundType.R
+    ,direction: Direction.OneWay
+    ,pageSize: 1
+    ,daysNo: 1
     , teams: []
     , onewayMeetings: []
     , roundtripMeetings: []

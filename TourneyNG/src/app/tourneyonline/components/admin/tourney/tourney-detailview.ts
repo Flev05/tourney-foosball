@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction } from '../../../domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -230,21 +230,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.resetComboBoxes();
     }
-
-    // private resetMeetings(): void {
-    //     this.resetComboBoxes();
-    //     this.makeButtonLabel();
-    //     if( this.isRoundTabEnabled() ) {
-    //         this.resetRoundMeetings();
-    //     }
-    //     if( this.isPlayoffTabEnabled() ) {
-    //         this.resetPlayoffMeetings();
-    //     }
-    //     if( this.isEliminatoryTabEnabled() ) {
-    //         this.resetEliminatoryMeetings();
-    //     }   
-    //     this.makeButtonLabel();
-    // }
 
     private resetComboBoxes() {
         this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
@@ -674,6 +659,9 @@ export class TourneyDetailView extends AbstractDetailView {
             id: this.tourneyService.getSequenceNumber(),
             name: "Girone." + (1 + i),
             type: RoundType.R,
+            direction: Direction.OneWay,
+            pageSize: 1,
+            daysNo: 1,
             teams: [],
             onewayMeetings: [],
             roundtripMeetings: [],
@@ -931,6 +919,9 @@ export class TourneyDetailView extends AbstractDetailView {
           , round:{id: this.tourneyService.getSequenceNumber()
               , name: "Playoff."+ (1 + i)
               , type: RoundType.P
+              , direction: Direction.OneWay
+              , pageSize: 1
+              , daysNo: 1
               , teams:[]
               , onewayMeetings: []
               , roundtripMeetings: []
@@ -945,7 +936,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let posCB:     Combobox    = { label: "" + pos + "°", value: pos };
         let roundCB:   Combobox    = { label: round.name, value: round.id };
         let fromRound: FromRound   = { id: round.id, isAutomatic:true, position: posCB, round: roundCB, relativePosition: posCB.value };
-        let pr:        PlayoffRule = { id: pos, fromRound: fromRound };
+        let pr:        PlayoffRule = { id: pos, fromRound: fromRound, ruleName:"" };
         return pr;
     }    
     

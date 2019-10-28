@@ -15,7 +15,7 @@ import {PaginatorModule} from 'primeng/paginator';
 
 import {RoundRoutingModule} from './round-routing.module';
 import {RoundListView} from './round-listview';
-import { MeetingListView } from './meeting-listview';
+import { MeetingListView } from './meeting-page-listview';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { MeetingDetailView } from './meeting-detailview';

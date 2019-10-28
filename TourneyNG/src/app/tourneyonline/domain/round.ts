@@ -11,7 +11,10 @@ export interface Round {
     name: string;
     type: RoundType;
 
-    direction?: Direction;
+    pageSize: number;
+    daysNo: number;
+    direction: Direction;
+
     teams?:  Team[];
     onewayMeetings?: Meeting[];
     roundtripMeetings?: Meeting[];

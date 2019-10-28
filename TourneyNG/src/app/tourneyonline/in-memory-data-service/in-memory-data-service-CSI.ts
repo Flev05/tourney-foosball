@@ -120,6 +120,9 @@ export class InMemoryDataServiceCSI  {
     ]  
     , rounds:[{
         id:1, name: "Girone A", type: RoundType.R
+        ,direction: Direction.OneWay
+        ,pageSize: 1
+        ,daysNo: 1
         ,teams:[
             {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
           ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
@@ -130,6 +133,9 @@ export class InMemoryDataServiceCSI  {
       }
       ,{
         id:2, name: "Girone B", type: RoundType.R
+        ,direction: Direction.OneWay
+        ,pageSize: 1
+        ,daysNo: 1
         ,teams:[
           {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
           ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
@@ -142,17 +148,24 @@ export class InMemoryDataServiceCSI  {
     ,playoffs: [
       {id:1, round:{
           id:1, name: "Playoff Girone A", type: RoundType.P
-          ,teams:[]
+          ,direction: Direction.OneWay
+          ,pageSize: 1
+          ,daysNo: 1
+            ,teams:[]
           ,onewayMeetings:[]
           ,roundtripMeetings:[]
           ,classification:[]
         }
         ,playoffRules:[
-             {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1}
-             , relativePosition: 0
-             , isAutomatic:true
+             {id:1
+              , ruleName:""
+              , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1}
+              , relativePosition: 0
+              , isAutomatic:true
             }}
-            ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2}
+            ,{id:2
+              , ruleName:""
+              , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2}
             , relativePosition: 0
             , isAutomatic:true
           }}
@@ -160,17 +173,24 @@ export class InMemoryDataServiceCSI  {
       }
       ,{id:2, round:{
           id:2, name: "Playoff Girone B", type: RoundType.P
-          ,teams:[]
+          ,direction: Direction.OneWay
+          ,pageSize: 1
+          ,daysNo: 1
+            ,teams:[]
           ,onewayMeetings:[]
           ,roundtripMeetings:[]
           ,classification:[]
       }
       ,playoffRules:[
-          {id:1, fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2}
+          {id:1
+            , ruleName:""
+            , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2}
           , relativePosition: 0
           , isAutomatic:true
         }}
-          ,{id:2, fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1}
+          ,{id:2
+            , ruleName:""            
+            , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1}
           , relativePosition: 0
           , isAutomatic:true
         }}

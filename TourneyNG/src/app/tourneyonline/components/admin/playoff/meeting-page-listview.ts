@@ -11,7 +11,7 @@ import { AbstractRuleListView } from '../../common/abstract-rule-listview';
 import { MeetingPlayoffService } from './meeting-playoff-service';
 
 @Component({
-    templateUrl: './meeting-listview.html'
+    templateUrl: './meeting-page-listview.html'
 })
 export class MeetingListView extends AbstractRuleListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
@@ -25,6 +25,9 @@ export class MeetingListView extends AbstractRuleListView {
     mdbList: MeetingDb[];
 
     pageSize: number = 10;
+    onewayMeetings: Meeting[];
+    roundtripMeetings: Meeting[];
+    allDaysNo: number;
     
     constructor(
         protected tourneyService: TourneyService,
@@ -63,9 +66,16 @@ export class MeetingListView extends AbstractRuleListView {
     
     private onCompleteLoad(): void {
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
-        this.meetingPlayoffService.onCompleteLoad(this.selectedPlayoff, this.mdbList, true);
-        this.pageSize = this.meetingPlayoffService.onewayDays.length;
-         
+        this.meetingPlayoffService.onCompleteLoad(this.selectedPlayoff, this.mdbList);
+
+        this.allDaysNo = this.selectedPlayoff.round.daysNo;
+        this.pageSize  = this.selectedPlayoff.round.pageSize;
+        this.onewayMeetings    = this.selectedPlayoff.round.onewayMeetings;
+        this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings;
+
+        console.log("[Meetings " + this.onewayMeetings.length + "]");
+        console.log("[Days     " + this.allDaysNo + "]");
+        console.log("[PageSize " + this.pageSize + "]");
     }
 
     onRowSelect(event) {

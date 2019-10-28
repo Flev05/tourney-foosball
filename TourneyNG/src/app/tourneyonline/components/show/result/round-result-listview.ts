@@ -52,6 +52,8 @@ export class RoundResultListView extends AbstractListView {
     teamsCols = TeamService.cols;
     roundTeams: Team[];
     pageSize: number = 10;
+    onewayMeetings: Meeting[];
+    roundtripMeetings: Meeting[];
 
     constructor( protected tourneyService: TourneyService
         , private meetingRoundService: MeetingRoundService
@@ -89,8 +91,16 @@ export class RoundResultListView extends AbstractListView {
 
     private onCompleteLoad(): void {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList, false);
-        this.pageSize = this.meetingRoundService.onewayDays.length;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+
+        this.pageSize = this.selectedRound.pageSize;
+        this.allDaysNo = this.selectedRound.daysNo;
+        this.onewayMeetings = this.selectedRound.onewayMeetings;
+        this.roundtripMeetings = this.selectedRound.roundtripMeetings;
+
+        console.log("[Meetings " + this.onewayMeetings.length + "]");
+        console.log("[Days     " + this.allDaysNo + "]");
+        console.log("[PageSize " + this.pageSize + "]");
 
         this.prepareRoundGuiClassification();
     }

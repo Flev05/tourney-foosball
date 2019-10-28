@@ -17,8 +17,6 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedRound: Round;
     selectedMeeting: Meeting;
     
-    dateAndTime: Date;
-
     constructor( protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingRoundService: MeetingRoundService,

@@ -15,9 +15,9 @@
 <p-tabView [activeIndex]="tourneyService.selectedRoundTabIndex"         
         (onChange)="onChangeTab($event)">
  
-    <p-tabPanel header="Incontri girone di ANDATA ({{meetingRoundService.allDaysNo}} giornate)">
+    <p-tabPanel header="Incontri girone di ANDATA ({{allDaysNo}} giornate)">
         <p-table [columns]="cols"
-            [value]="meetingRoundService.onewayMeetings" 
+            [value]="onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -46,10 +46,10 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="Incontri girone di RITORNO ({{meetingRoundService.allDaysNo}} giornate)">
+    <p-tabPanel *ngIf="isRoundTrip" header="Incontri girone di RITORNO ({{allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
-            [value]="meetingRoundService.roundtripMeetings" 
+            [value]="roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  

@@ -3,7 +3,7 @@ import {RouterModule} from '@angular/router'
 import { RuleListView } from './rule-listview';
 import { RuleDetailView } from './rule-detailview';
 import { MeetingRuleDetailView } from './meeting-rule-detailview';
-import { MeetingListView } from './meeting-listview';
+import { MeetingListView } from './meeting-page-listview';
 
 @NgModule({
 	imports: [

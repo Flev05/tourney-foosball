@@ -444,6 +444,9 @@ export class LevelService extends AbstractEliminatoryListView {
             round:{id: this.tourneyService.getSequenceNumber()
                 , name: "" + index
                 , type: RoundType.E
+                , pageSize: 1
+                , daysNo: 1
+                , direction: Direction.OneWay
                 , teams:[t1, t2]
                 , classification: []
                 , onewayMeetings: []

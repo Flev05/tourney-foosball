@@ -1,7 +1,7 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
 import {RoundListView} from './round-listview';
-import { MeetingListView } from './meeting-listview';
+import { MeetingListView } from './meeting-page-listview';
 import { MeetingDetailView } from './meeting-detailview';
 
 @NgModule({

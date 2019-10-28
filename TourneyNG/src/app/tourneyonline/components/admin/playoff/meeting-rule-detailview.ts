@@ -23,8 +23,6 @@ export class MeetingRuleDetailView extends AbstractDetailView {
     selectedPlayoff: Playoff;
     selectedMeeting: Meeting;
     
-    dateAndTime: Date;
-
     constructor(protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingPlayoffService: MeetingPlayoffService,

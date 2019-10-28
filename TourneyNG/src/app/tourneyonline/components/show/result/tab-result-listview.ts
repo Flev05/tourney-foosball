@@ -14,10 +14,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { Team } from 'app/tourneyonline/domain/team';
-import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
 const REDIRECT_TOURNEY_LV        = 'showtourney/';
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
@@ -71,6 +68,8 @@ export class TabResultListView extends AbstractListView {
         if(super.containsPlayoff()) {
             this.playoffRows = this.selectedTourney.playoffs;
             this.playoffCount = this.playoffRows.length;
+
+            // this.meetingPlayoffService.loadAllPlayoffMeeting();
         }
     }
 

@@ -61,52 +61,44 @@ export class MeetingRoundService extends MeetingService {
         this.roundtripDaysNo = 1;
         this.shiftRoundtripDay(this.roundtripDaysNo);
 
-        this.allDaysNo = this.onewayMeetingDaysMap.size;
+        let allDaysNo = this.onewayMeetingDaysMap.size;
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
 
         if (this.selectedTourney.isOnewayRound == "true") {
-            this.meetingsNoMsg = "" + meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
+            this.meetingsNoMsg = "" + meetingsNo + " in " + allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
     }
 
-    public onCompleteLoad(round: Round, mdbList: MeetingDb[], isAdmin: boolean) {
+    public onCompleteLoad(round: Round, mdbList: MeetingDb[]) {
 
         this.mdbList = mdbList;
         
         this.extractRoundMeetings(round, mdbList);
 
-        this.prepareMeetingsMap(round, isAdmin);
+        this.makeTeamName(round.onewayMeetings);
+        this.makeTeamName(round.roundtripMeetings);
 
-        this.onewayDaysNo = 1;
-        this.shiftOnewayDay(this.onewayDaysNo);
-
-        this.roundtripDaysNo = 1;
-        this.shiftRoundtripDay(this.roundtripDaysNo);
-
-        this.allDaysNo = this.onewayMeetingDaysMap.size;
+        let allDaysNo = round.daysNo;
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
 
         if (this.selectedTourney.isOnewayRound == "true") {
-            this.meetingsNoMsg = "" + meetingsNo + " in " + this.allDaysNo + " giornate (Solo Andata)";
+            this.meetingsNoMsg = "" + meetingsNo + " in " + allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
-
-        this.completeAllMeetings();
     }
 
-    private completeAllMeetings() {
-        this.onewayMeetings = [];
-        this.roundtripMeetings = [];
-        for (let day = 1; day <= this.allDaysNo; day++) {
-            this.onewayMeetings = this.onewayMeetings.concat(this.shiftOnewayDay(day));
-            this.roundtripMeetings = this.roundtripMeetings.concat(this.shiftRoundtripDay(day));
+    private makeTeamName(meetings: Meeting[]) {
+        for(let m of meetings) {
+            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            m.teamName1 = m.team1.teamName;
+            m.teamName2 = m.team2.teamName;
         }
     }
 
@@ -128,6 +120,11 @@ export class MeetingRoundService extends MeetingService {
         this.applyBergerAlgorithm(round, teams);
 
         this.completeMeetings(round);
+
+        round.pageSize = round.onewayMeetings.length / round.daysNo
+        console.log("[Meetings " + round.onewayMeetings.length + "]");
+        console.log("[Days     " + round.daysNo + "]");
+        console.log("[PageSize " + round.pageSize + "]");
     }
 
     /**
@@ -135,7 +132,7 @@ export class MeetingRoundService extends MeetingService {
      */
     private applyBergerAlgorithm(round: Round, teams: Team[]): void {
         let teamsNo = teams.length;
-        let giornate = teamsNo - 1;
+        round.daysNo = teamsNo - 1;
 
         /* crea gli array per le due liste in casa e fuori */
         let home : Array<Team>  = new Array<Team>(teamsNo / 2);
@@ -148,7 +145,7 @@ export class MeetingRoundService extends MeetingService {
 
         this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
 
-        for (let i = 0; i < giornate; i++) {
+        for (let i = 0; i < round.daysNo; i++) {
             /* stampa le partite di questa giornata */
             let key: number = i + 1;
             console.log( key + "° Giornata");
@@ -190,7 +187,7 @@ export class MeetingRoundService extends MeetingService {
                 }
             }
 
-            meetingList = this.sortMeetings(meetingList);
+            meetingList = MeetingService.sortMeetings(meetingList);
 
             // Ruota gli elementi delle liste, tenendo fisso il primo elemento
             // Salva l'elemento fisso
@@ -251,21 +248,9 @@ export class MeetingRoundService extends MeetingService {
         round.roundtripMeetings = [];
         for (let key of this.roundtripMeetingDaysMap.keys()) {
             let dayList = this.roundtripMeetingDaysMap.get(key);
-            dayList = this.sortMeetings(dayList);
+            dayList = MeetingService.sortMeetings(dayList);
             round.roundtripMeetings = round.roundtripMeetings.concat(dayList);
         }
-    }
-    
-    protected sortMeetings(meetings: any[]): any[] {
-        return meetings.sort((m1, m2) => {
-            if (m1.dateAndTime > m2.dateAndTime) {
-                return 1;
-            }
-            if (m1.dateAndTime < m2.dateAndTime) {
-                return -1;
-            }
-            return 0;
-        });
     }
 
     public newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
@@ -315,48 +300,6 @@ export class MeetingRoundService extends MeetingService {
             d.teamName2 = d.team2.teamName;
         }
         return this.roundtripDays;
-    }
-
-    goOnewayLeft() {
-        console.log("goOnewayLeft()");
-        this.onewayDaysNo--;
-        if(this.onewayDaysNo < 1) {
-            this.onewayDaysNo = 1;
-        }
-        console.log("daysKey=" + this.onewayDaysNo);
-        this.shiftOnewayDay(this.onewayDaysNo);
-    }
-
-    goOnewayRight() {
-        console.log("goOnewayLeft()");
-        let M = this.onewayMeetingDaysMap.size;
-        this.onewayDaysNo++;
-        console.log("daysKey=" + this.onewayDaysNo);
-        if(this.onewayDaysNo > M) {
-            this.onewayDaysNo = M;
-        }
-        this.shiftOnewayDay(this.onewayDaysNo);
-    }
-
-    goRoundtripLeft() {
-        console.log("goRoundtripLeft()");
-        this.roundtripDaysNo--;
-        if(this.roundtripDaysNo < 1) {
-            this.roundtripDaysNo = 1;
-        }
-        console.log("daysKey=" + this.roundtripDaysNo);
-        this.shiftRoundtripDay(this.roundtripDaysNo);
-    }
-
-    goRoundtripRight() {
-        console.log("goRoundtripLeft()");
-        let M = this.roundtripMeetingDaysMap.size;
-        this.roundtripDaysNo++;
-        console.log("daysKey=" + this.roundtripDaysNo);
-        if(this.roundtripDaysNo > M) {
-            this.roundtripDaysNo = M;
-        }
-        this.shiftRoundtripDay(this.roundtripDaysNo);
     }
 
     saveEliminatoryMeetings(st : Tourney) {

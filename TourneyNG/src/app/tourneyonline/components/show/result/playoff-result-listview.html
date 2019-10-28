@@ -9,7 +9,7 @@
         (onChange)="onChangeTab($event)">
     <p-tabPanel header="Incontri playoff di ANDATA ({{allDaysNo}} giornate)">
         <p-table [columns]="cols"
-            [value]="selectedPlayoff.round.onewayMeetings" 
+            [value]="onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -41,7 +41,7 @@
     <p-tabPanel *ngIf="isRoundTrip" header="Incontri playoff di RITORNO ({{allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
-            [value]="selectedPlayoff.round.roundtripMeetings" 
+            [value]="roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  

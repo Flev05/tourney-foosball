@@ -1,19 +1,17 @@
 <div class="content-section introduction">
     <div>
-        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
-        <h4><span>Girone Playoff: {{selectedPlayoff.round.name}}</span></h4>
-        <h4><span>Incontri: {{meetingPlayoffService.meetingsNoMsg}}</span></h4>
+        <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
+        <h3><span>Girone: {{selectedRound.name}}</span></h3>
+        <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>
     </div>
 </div>
     
 <div class="content-section documentation">
 <p-accordion>
-    <p-accordionTab header="Istruzioni">   
+    <p-accordionTab header="Introduzione">     
     <p> 
-        Vista elenco degli incontri di playoff in termini di regole di passaggio di turno
-        dai gironi all'italiana ai gironi di playoff.
+        Vista elenco degli incontri del torneo da cui accedere agli incontri corrispondenti.
     </p>
-
     <p>
         Selezionare l'incontro di interesse per accedere alla vista di dettaglio dell'incontro corrispondente.
     </p>
@@ -27,19 +25,24 @@
 
 <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Fatto"></button>
 
-<p-tabView [activeIndex]="selectedPlayoff.selectedTabIndex"
-        (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Incontri playoff di ANDATA ({{meetingPlayoffService.allDaysNo}} giornate)">
+<div style="margin-top:30px">
+    <p-message *ngIf="!atLeast2teams" severity="error" text="Attenzione! C'è almeno un girone vuoto, inserire almeno 2 squadre per ciascuno girone"></p-message>
+</div>     
 
-        <p-table [columns]="meetingsCols"
-            [value]="meetingPlayoffService.onewayMeetings" 
+<p-tabView *ngIf="atLeast2teams" 
+        [activeIndex]="selectedRound.selectedTabIndex"
+        (onChange)="onChangeTab($event)">
+
+    <p-tabPanel header="Incontri girone di ANDATA ({{allDaysNo}} giornate)">
+        <p-table [columns]="cols"
+            [value]="onewayMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
-            (onRowSelect)="onRowSelect($event)"        
-            [paginator]="true" 
+            (onRowSelect)="onRowSelect($event)"
+            [paginator]="true"
             [rows]="pageSize">
- 
+
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th style="width: 15mm;">N°</th>
@@ -61,10 +64,10 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="meetingPlayoffService.isRoundTrip" header="Incontri playoff di RITORNO ({{meetingPlayoffService.allDaysNo}} giornate)">
+    <p-tabPanel *ngIf="isRoundTrip" header="Incontri girone di RITORNO ({{allDaysNo}} giornate)">
         <p-table 
-            [columns]="meetingsCols"
-            [value]="meetingPlayoffService.roundtripMeetings" 
+            [columns]="cols"
+            [value]="roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
@@ -93,3 +96,4 @@
         </p-table>
     </p-tabPanel>    
 </p-tabView>
+        

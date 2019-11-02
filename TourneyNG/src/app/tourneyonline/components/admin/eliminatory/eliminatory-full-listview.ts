@@ -78,6 +78,7 @@ export class FullEliminatoryListView extends AbstractListView {
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
     }
+    
     onAutoGenClick() {
         console.log("Entering onAutoGenClick()");
         let isAuto = this.isAutoGen == "true" ? true : false;

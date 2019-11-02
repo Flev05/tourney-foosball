@@ -17,6 +17,7 @@ import { Match } from '../domain/match';
 import { AbstractService } from '../components/common/abstract-service';
 import { Round } from '../domain/round';
 import { DateFormatPipe } from '../components/common/date-format-pipe';
+import { Playoff } from '../domain/playoff';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -71,7 +72,7 @@ export  class MeetingService extends AbstractService {
         console.log("Constructor of MeetingService");
     }
 
-    public extractRoundMeetings(round : Round, mdbList: MeetingDb[] ) {
+    public extractRoundMeetings(round: Round, mdbList: MeetingDb[] ) {
         round.onewayMeetings = [];
         round.roundtripMeetings = [];
         for (let mdb of mdbList) {
@@ -89,6 +90,28 @@ export  class MeetingService extends AbstractService {
         round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }
 
+    
+    public extractPlayoffMeetings(playoff: Playoff, mdbList: MeetingDb[] ) {
+        let round = playoff.round;
+        round.onewayMeetings = [];
+        round.roundtripMeetings = [];
+        for (let mdb of mdbList) {
+            if(playoff.id != mdb.playoffId) {
+                continue;
+            }
+            let m: Meeting = JSON.parse(mdb.json);
+            m.id = mdb.id;
+            if (m.direction == Direction.OneWay) {
+                round.onewayMeetings.push(m);
+            }
+            else {
+                round.roundtripMeetings.push(m);
+            }
+        }
+
+        round.onewayMeetings    = MeetingService.sortMeetings(round.onewayMeetings);
+        round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
+    }
     /** 
      * Loads all the meetings of the receìved tourney and round
      *  GET meetings by params. Will 404 if meetings not found 
@@ -451,6 +474,7 @@ export  class MeetingService extends AbstractService {
         let m : Meeting = {
             id: null,
             name: name,
+            isDummy: pr1.isDummy || pr2.isDummy,
             direction: d,
             datetime: this.selectedTourney.datetime,
             address:  this.selectedTourney.address,

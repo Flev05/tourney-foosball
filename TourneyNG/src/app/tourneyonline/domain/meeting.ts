@@ -7,6 +7,7 @@ import { MeetingStatus, Direction } from './enumerations';
 export interface Meeting
 {
     id?             : number;
+    isDummy?        : boolean;
     name?           : string;
     direction?      : Direction
     datetime?       : Date;

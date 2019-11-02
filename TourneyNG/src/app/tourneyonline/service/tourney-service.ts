@@ -635,4 +635,38 @@ export class TourneyService extends AbstractService {
 
         return rows;
     }
+    
+    /**
+     * Creates a matrix of best classification of the teams received in the rounds parameter.
+     * The matrix contains in the first row the best first classification teams, in the seconds
+     * row the second best classification team and so on.
+     * 
+     * The matrix has to accessed by 2 indexes:
+     * - the band position to select the row
+     * - tne position to select the team in the row
+     * 
+     * @param rounds the rounds containing the teams to make the matrix
+     */
+    public createRoundMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
+        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
+
+        for( let i=0; i<rounds[0].classification.length; i++ ) {
+            let bestClassifications: Array<Classification> = new Array<Classification>();
+            for(let r of rounds) {
+                if( i >= r.classification.length ) {
+                    break;
+                }
+                bestClassifications.push(r.classification[i]);    
+            }
+            bestClassifications = this.sortDesc(bestClassifications);
+            
+            let row: Array<Classification> = new Array<Classification>();
+            roundMatrix.push(row);
+
+            for(let c of bestClassifications) {
+                row.push(c);
+            }
+        }
+        return roundMatrix;
+    }
 }

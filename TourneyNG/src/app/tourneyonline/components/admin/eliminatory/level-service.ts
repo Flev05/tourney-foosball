@@ -342,13 +342,13 @@ export class LevelService extends AbstractEliminatoryListView {
 
             let r: Combobox = {label: "", value: 0}; 
             let p: Combobox = {label: "", value: 0}; 
-            let fr : FromRound = {id:0, isAutomatic: this.isAutomatic, round: r, position: p, relativePosition: 0};
+            let fr : FromRound = {id:0, isAutomatic: this.isAutomatic, round: r, position: p, bandPosition: 0};
             if( i < selectedTeamsNo ) {
                 let round: Round;
                 round = rounds[mod];
                 r = {label: round.name, value: position};
                 p = {label: "", value: position};
-                fr = {id:0, isAutomatic: this.isAutomatic, round: r, position: p, relativePosition: 0};
+                fr = {id:0, isAutomatic: this.isAutomatic, round: r, position: p, bandPosition: 0};
             }
             padTeamList.push(fr);
         }
@@ -383,12 +383,12 @@ export class LevelService extends AbstractEliminatoryListView {
             e.rule2.fromRound.position   = {label: label, value: down.position.value};            
             e.rule2.fromPlayoff.position = {label: label, value: down.position.value};            
 
-            e.rule1.fromRound.relativePosition = 0;
-            e.rule2.fromRound.relativePosition = 0;
+            e.rule1.fromRound.bandPosition = 0;
+            e.rule2.fromRound.bandPosition = 0;
             if(this.isAutomatic) {
-                e.rule1.fromRound.relativePosition = i % R + 1;
+                e.rule1.fromRound.bandPosition = i % R + 1;
                 if( e.rule2.fromRound.position.value > 0 )  {
-                    e.rule2.fromRound.relativePosition = lastIndex % R + 1;
+                    e.rule2.fromRound.bandPosition = lastIndex % R + 1;
                 }    
             }
 
@@ -457,13 +457,13 @@ export class LevelService extends AbstractEliminatoryListView {
                 fromRound: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
-                    , relativePosition: 0
+                    , bandPosition: 0
                     , isAutomatic:true
                 },
                 fromPlayoff: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
-                    , relativePosition: 0
+                    , bandPosition: 0
                     , isAutomatic:true
                 }
             },
@@ -472,13 +472,13 @@ export class LevelService extends AbstractEliminatoryListView {
                 fromRound: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
-                    , relativePosition: 0
+                    , bandPosition: 0
                     , isAutomatic:true
                 },
                 fromPlayoff: { id: null
                     , position: { label: "", value: 0 }
                     , round: { label: "", value: 0 } 
-                    , relativePosition: 0
+                    , bandPosition: 0
                     , isAutomatic:true
                 }
             }

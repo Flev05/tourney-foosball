@@ -78,6 +78,11 @@ export class RoundResultListView extends AbstractListView {
 
         this.roundTeams = this.selectedRound.teams;
 
+        this.isRoundTrip = true;
+        if (this.selectedTourney.isOnewayRound == "true") {
+            this.isRoundTrip = false;
+        }
+
         this.selectedRound = this.tourneyService.selectedRound;
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());

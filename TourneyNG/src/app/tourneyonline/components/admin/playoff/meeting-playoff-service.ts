@@ -11,12 +11,16 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { FromRound } from 'app/tourneyonline/domain/from-round';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {
 
 
     constructor(protected http: HttpClient
+        , protected tourneyService: TourneyService
         , protected router: Router
         , protected dateFormatPipe: DateFormatPipe
         ) 
@@ -41,7 +45,7 @@ export class MeetingPlayoffService extends MeetingService {
 
         this.mdbList = mdbList;
         
-        this.extractRoundMeetings(playoff.round, mdbList);
+        this.extractPlayoffMeetings(playoff, mdbList);
 
         this.prepareRuleName(playoff.round.onewayMeetings);
         this.prepareRuleName(playoff.round.roundtripMeetings);
@@ -110,28 +114,30 @@ export class MeetingPlayoffService extends MeetingService {
     }
 
     private preparePlayoffMeetingRules(playoff: Playoff) {
-        let rules: PlayoffRule[] = [...playoff.playoffRules];
-        
-        if( rules.length % 2 > 0 ) {
-            let dummyRule: PlayoffRule = this.cloneObject(rules[0]);
-            dummyRule.fromRound.position.label = "0";
-            dummyRule.fromRound.position.value = 0;
-            dummyRule.fromRound.round.label = "Riposo";
-            dummyRule.fromRound.round.value = 0;
-            dummyRule.id = null;
-
-            rules.push(dummyRule);
-        }
+        let rules: PlayoffRule[]  = playoff.playoffRules;      
 
         this.applyPlayoffBergerAlgorithm(playoff, rules);
 
         this.completePlayoffMeetings(playoff);
     }
 
+    private prepareDummyRule(isAutoGen : boolean): PlayoffRule {
+        let posCB:     Combobox    = { label: "" + 0 + "°", value: 0 };
+        let roundCB:   Combobox    = { label: "Riposo", value: 0 };
+        let fromRound: FromRound   = { id: this.tourneyService.getSequenceNumber(), isAutomatic: isAutoGen, position: posCB, round: roundCB, bandPosition: posCB.value };
+        let pr:        PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: "Riposo", isDummy: true };
+        return pr;
+    } 
+    
     /**
      * Prepares the meetings of the rules using the Berger algorithm
      */
     private applyPlayoffBergerAlgorithm(playoff: Playoff, rules: PlayoffRule[]): void {
+        if( rules.length % 2 > 0 ) {
+            let isAutoGen = this.selectedTourney.isPlayoffAutoGen == "true" ? true : false;
+            let dummyRule: PlayoffRule = this.prepareDummyRule(isAutoGen);
+            rules.push(dummyRule);
+        }
         let rulesNo = rules.length;
         let giornate = rulesNo - 1;
 
@@ -164,7 +170,7 @@ export class MeetingPlayoffService extends MeetingService {
                     let pr2: PlayoffRule = away[j];
                     let rule1: string = this.makeRule(pr1);
                     let rule2: string = this.makeRule(pr2);
-                    console.log( (j + 1) + " " + rule2 + " - " + rule1);
+                    console.log( (j + 1) + ") " + rule2 + " - " + rule1);
 
                     let mfound = playoff.round.onewayMeetings.find( m => this.isEquals(m, pr2, pr1));
 
@@ -180,7 +186,7 @@ export class MeetingPlayoffService extends MeetingService {
                     let pr2: PlayoffRule = away[j];
                     let rule1: string = this.makeRule(pr1);
                     let rule2: string = this.makeRule(pr2);
-                    console.log( (j + 1) + " " + rule1 + " - " + rule2);
+                    console.log( (j + 1) + ") " + rule1 + " - " + rule2);
 
                     let mfound = playoff.round.onewayMeetings.find( m => this.isEquals(m, pr1, pr2));
 

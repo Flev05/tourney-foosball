@@ -13,6 +13,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {

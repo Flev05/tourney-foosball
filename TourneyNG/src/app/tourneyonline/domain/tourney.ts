@@ -65,6 +65,7 @@ export interface Tourney {
     teams?: Team[];
     rounds?: Round[];
     playoffs?: Playoff[];
+    isPlayoffAutoGen?: string;
     eliminatoryLevels?: Array<EliminatoryLevel>;
 }
  

@@ -18,10 +18,6 @@ export class RuleListView extends AbstractListView {
     static redirectToMeeting: string = "adminplayoff/lv/meetingLv";
 
     playoffRules: PlayoffRule[];
-    playoffCols: TableCols[] = [
-        { field: 'position', header: 'Classificata' },
-        { field: 'round',    header: 'Girone' },
-    ];
 
     selectedPlayoff: Playoff;
  
@@ -33,6 +29,9 @@ export class RuleListView extends AbstractListView {
 
     positions: Combobox[];
     rounds: Combobox[];
+
+    isAutoGen: boolean;
+    playoffCols: TableCols[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -55,6 +54,18 @@ export class RuleListView extends AbstractListView {
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds    = this.tourneyService.roundsCombobox;
+
+        this.isAutoGen = this.selectedTourney.isPlayoffAutoGen == "true" ? true : false;
+        if(this.isAutoGen) {
+            this.playoffCols  = [
+                { field: 'ruleName',    header: 'Regola' },
+            ];
+        } else {
+            this.playoffCols  = [
+                { field: 'position', header: 'Classificata' },
+                { field: 'round',    header: 'Girone' },
+            ];
+        }
     }
 
     goMeeting() {

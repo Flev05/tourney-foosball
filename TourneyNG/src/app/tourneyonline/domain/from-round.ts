@@ -4,6 +4,6 @@ export class FromRound {
     id: number;
     isAutomatic: boolean
     position: Combobox;
-    relativePosition: number;
+    bandPosition: number;
     round: Combobox;
 }

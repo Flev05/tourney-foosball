@@ -56,6 +56,8 @@ export class MeetingListView extends AbstractRuleListView {
 
         const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+
+        this.onCompleteLoad();
     }
    
     onChangeTab(e) {

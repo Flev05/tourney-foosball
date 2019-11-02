@@ -377,7 +377,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     getPosition1(e: Eliminatory): string {
 
         let pos1 = this.isAutomatic 
-            ? e.rule1.fromRound.relativePosition + "° delle " + e.rule1.fromRound.position.value + "°" 
+            ? e.rule1.fromRound.bandPosition + "° delle " + e.rule1.fromRound.position.value + "°" 
             : e.rule1.fromRound.position.value + "°";
 
         return pos1;
@@ -385,7 +385,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     
     getPosition2(e: Eliminatory): string {
 
-        let rule = e.rule2.fromRound.relativePosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
+        let rule = e.rule2.fromRound.bandPosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
         let pos = e.rule2.fromRound.position.value + "°";
         if( e.rule2.fromRound.position.value == 0 ) {
             rule = "";

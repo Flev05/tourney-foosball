@@ -130,31 +130,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         rounds = this.paddingRounds(rounds);
 
-        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
+        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(rounds);
 
-        for( let i=0; i<rounds[0].classification.length; i++ ) {
-            let bestClassifications: Array<Classification> = new Array<Classification>();
-            for(let r of rounds) {
-                if( i >= r.classification.length ) {
-                    break;
-                }
-                bestClassifications.push(r.classification[i]);    
-            }
-            bestClassifications = this.tourneyService.sortDesc(bestClassifications);
-            
-            let row: Array<Classification> = new Array<Classification>();
-            roundMatrix.push(row);
-
-            for(let c of bestClassifications) {
-                row.push(c);
-            }
-        }
-
-        let col1  = e.rule1.fromRound.relativePosition;
+        let col1  = e.rule1.fromRound.bandPosition;
         let row1  = e.rule1.fromRound.position.value;
         let team1 = roundMatrix[row1-1][col1-1].team;
 
-        let col2  = e.rule1.fromRound.relativePosition;
+        let col2  = e.rule1.fromRound.bandPosition;
         let row2  = e.rule1.fromRound.position.value;
         let team2 = roundMatrix[row2-1][col2-1].team;
 

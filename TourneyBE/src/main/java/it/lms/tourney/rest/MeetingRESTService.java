@@ -57,6 +57,24 @@ public class MeetingRESTService extends AbstractRESTService {
         return meetingVoList;
     }
 
+    @POST
+    @Path("/loadByRoundIds/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<MeetingVO> loadByRoundIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> roundIds) {
+
+        logger.debug(logId() + "[GET: loadByRoundIds(" + tourneyId + ")]");
+
+        List<Meeting> meetingList = meetingDao.findMeetingsByRoundIds(tourneyId, roundIds);
+
+        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+                .collect(Collectors.toList());
+
+        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds "
+                + "]");
+
+        return meetingVoList;
+    }
+
     @GET
     @Path("/loadByPlayoffId/{tourneyId:[0-9][0-9]*}/{playoffId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)

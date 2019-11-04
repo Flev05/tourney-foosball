@@ -128,7 +128,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.initiDisciplineCombobox();
 
         this.initUndefined();
-        
 
         this.selectedTourney.datetime = new Date(this.selectedTourney.datetime);
         this.atLeastTwoTeams = this.selectedTourney.teams.length >= 2 ? true : false;

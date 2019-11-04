@@ -18,6 +18,8 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
+import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 
 const REDIRECT_TOURNEY_LV        = 'showtourney/';
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
@@ -43,9 +45,13 @@ export class TabResultListView extends AbstractListView {
     selectedTabIndex: number = 0;
     eliminatoryCount: number;
 
+    eliminatoryLevelCols: TableCols[];
+    eliminatoryLevelRows: EliminatoryLevelVO[];
+
     constructor(
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,
+        private meetingRoundService: MeetingRoundService,
         private meetingPlayoffService: MeetingPlayoffService,
         protected router: Router,
         protected location: Location,
@@ -61,10 +67,27 @@ export class TabResultListView extends AbstractListView {
         this.tourneyService.selectedEliminatoryLevelIndex = -1;
         this.tourneyService.selectedEliminatoryIndex = -1;
 
+        this.selectedTourney = this.tourneyService.selectedTourney;
+
         this.roundCount = 0;
         if(super.containsRound()) {
             this.roundRows = this.selectedTourney.rounds;
             this.roundCount = this.roundRows.length;
+
+            let roundIds: number[] = [];
+            for(let round of this.selectedTourney.rounds) {
+                roundIds.push(round.id);
+            }
+            const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds);
+            subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onRoundCompleteLoad());            
+        }
+    }
+    
+    private onRoundCompleteLoad(): void {
+        for(let round of this.selectedTourney.rounds) { 
+            this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
+            let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
+            round.classification = this.tourneyService.createClassification(allMeetings);
         }
 
         this.playoffCount = 0;
@@ -79,7 +102,22 @@ export class TabResultListView extends AbstractListView {
             
             const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
             subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onPlayoffCompleteLoad());
+        } else {
+            this.prepareEliminatoryLevels();
         }
+    }
+
+    private prepareEliminatoryLevels() {
+        if( !this.containsEliminatory() ) {
+            return;
+        }
+            
+        this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+        this.levelService.ngOnInit();
+        this.levelService.prepareEliminatoryLevelsGui();
+        this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
+        this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
+        this.eliminatoryCount = this.eliminatoryLevelRows.length;
     }
 
     private onPlayoffCompleteLoad() {
@@ -97,8 +135,9 @@ export class TabResultListView extends AbstractListView {
             let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);
             playoff.round.classification = this.tourneyService.createClassification(allMeetings);
         }
+        this.prepareEliminatoryLevels();
     }
-
+ 
     /**
      * Called every time at meeting reload in the automatic mode configuration,
      * resolves the playoff rules to their corresponding 
@@ -385,8 +424,6 @@ export class TabResultListView extends AbstractListView {
         console.log("Entering onEliminatoryRowSelect()");
 
         this.levelService.onEliminatoryLevelRowSelect(event, REDIRECT_ELIMINATORY);
-        
-        this.tourneyService.selectedPlayoff = this.selectedPlayoff;
     }
 
     goBack(): void {        

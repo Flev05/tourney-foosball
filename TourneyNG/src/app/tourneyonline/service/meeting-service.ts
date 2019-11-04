@@ -25,6 +25,8 @@ const httpOptions = {
  
 const meetingUrl = 'api/meetings';  
 const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';  
+const loadMeetingByRoundIdsUrl  = meetingUrl + '/loadByRoundIds';
+
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
 const loadMeetingByPlayoffIdsUrl = meetingUrl + '/loadByPlayoffIds'; 
 const loadMeetingByEliminatoryIdUrl = meetingUrl + '/loadByEliminatoryId';  
@@ -90,7 +92,6 @@ export  class MeetingService extends AbstractService {
         round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }
 
-    
     public extractPlayoffMeetings(playoff: Playoff, mdbList: MeetingDb[] ) {
         let round = playoff.round;
         round.onewayMeetings = [];
@@ -128,7 +129,23 @@ export  class MeetingService extends AbstractService {
 
         return obs;
     }
+    
+    /** 
+     * Loads all the meetings of the receìved tourney id
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadRoundMeetings(tourneyId: number, roundsIds: Array<number> ) : Observable<MeetingDb[]> {
 
+        let url = loadMeetingByRoundIdsUrl + "/" + tourneyId ;
+
+        console.log("Url=" + url);
+
+        let obs = this.http.post<MeetingDb[]>(url, roundsIds, httpOptions).pipe(
+            tap((m: MeetingDb[]) => this.log('loadRoundMeetings, url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
+        );
+        return obs;
+    }
     /** 
      * Loads all the meetings of the receìved tourney and playoff ids
      *  GET meetings by params. Will 404 if meetings not found 
@@ -474,7 +491,7 @@ export  class MeetingService extends AbstractService {
         let m : Meeting = {
             id: null,
             name: name,
-            isDummy: pr1.isDummy || pr2.isDummy,
+            isDummy: pr1 == null ? false : pr1.isDummy || pr2 == null ? false :  pr2.isDummy,
             direction: d,
             datetime: this.selectedTourney.datetime,
             address:  this.selectedTourney.address,

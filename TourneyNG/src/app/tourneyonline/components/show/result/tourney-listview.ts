@@ -43,7 +43,6 @@ export class ResultTourneyListView extends AbstractTourneyListView {
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
         console.log(event.data);
-        
         this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView());
     }
 }

@@ -121,11 +121,11 @@ export class MeetingPlayoffService extends MeetingService {
         this.completePlayoffMeetings(playoff);
     }
 
-    private prepareDummyRule(isAutoGen : boolean): PlayoffRule {
+    private prepareSkipingRule(isAutoGen : boolean): PlayoffRule {
         let posCB:     Combobox    = { label: "" + 0 + "°", value: 0 };
-        let roundCB:   Combobox    = { label: "Riposo", value: 0 };
+        let roundCB:   Combobox    = { label: this.SKIPING_TEAM , value: 0 };
         let fromRound: FromRound   = { id: this.tourneyService.getSequenceNumber(), isAutomatic: isAutoGen, position: posCB, round: roundCB, bandPosition: posCB.value };
-        let pr:        PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: "Riposo", isDummy: true };
+        let pr:        PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: this.SKIPING_TEAM, isDummy: true };
         return pr;
     } 
     
@@ -135,7 +135,7 @@ export class MeetingPlayoffService extends MeetingService {
     private applyPlayoffBergerAlgorithm(playoff: Playoff, rules: PlayoffRule[]): void {
         if( rules.length % 2 > 0 ) {
             let isAutoGen = this.selectedTourney.isPlayoffAutoGen == "true" ? true : false;
-            let dummyRule: PlayoffRule = this.prepareDummyRule(isAutoGen);
+            let dummyRule: PlayoffRule = this.prepareSkipingRule(isAutoGen);
             rules.push(dummyRule);
         }
         let rulesNo = rules.length;
@@ -175,7 +175,8 @@ export class MeetingPlayoffService extends MeetingService {
                     let mfound = playoff.round.onewayMeetings.find( m => this.isEquals(m, pr2, pr1));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(pr2, pr1, key, Direction.OneWay);
+                        let skip = pr1.ruleName == this.SKIPING_TEAM || pr2.ruleName == this.SKIPING_TEAM;
+                        mfound = this.newPlayoffMeeting(pr2, pr1, key, Direction.OneWay, skip);
                     }
 
                     meetingList.push(mfound);
@@ -191,7 +192,8 @@ export class MeetingPlayoffService extends MeetingService {
                     let mfound = playoff.round.onewayMeetings.find( m => this.isEquals(m, pr1, pr2));
 
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(pr1, pr2, key, Direction.OneWay);
+                        let skip = pr1.ruleName == this.SKIPING_TEAM || pr2.ruleName == this.SKIPING_TEAM;
+                        mfound = this.newPlayoffMeeting(pr1, pr2, key, Direction.OneWay, skip);
                     }
                     meetingList.push(mfound);
                 }
@@ -260,7 +262,7 @@ export class MeetingPlayoffService extends MeetingService {
                 let rtm = playoff.round.roundtripMeetings.find( i => this.isEquals(i, pr2, pr1));
 
                 if( rtm == undefined ) {
-                    rtm = this.newMeeting(pr2, pr1, key, Direction.RoundTrip);
+                    rtm = this.newPlayoffMeeting(pr2, pr1, key, Direction.RoundTrip, m.isSkiping);
                 }
                 rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
 
@@ -282,8 +284,8 @@ export class MeetingPlayoffService extends MeetingService {
         }
     }
 
-    newMeeting(pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
-        let m: Meeting = this.createMeeting(null, null, pr1, pr2, day, d);
+    private newPlayoffMeeting(pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction, isSkiping: boolean): Meeting {
+        let m: Meeting = this.createMeeting(null, null, pr1, pr2, day, d, isSkiping);
         return m;
     }
 

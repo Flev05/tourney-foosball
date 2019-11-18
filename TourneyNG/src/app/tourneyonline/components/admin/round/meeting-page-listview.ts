@@ -54,7 +54,7 @@ export class MeetingListView extends AbstractListView {
             { field: 'teamName2',   header: 'Trasferta' }
         ];
         
-        this.atLeast2teams = this.selectedRound.teams.length >= 2 ? true : false;
+        this.atLeast2teams = this.selectedRound.teamNames.length >= 2 ? true : false;
         if(!this.atLeast2teams) {
             return;
         }

@@ -37,6 +37,10 @@
             [scrollable]="true" 
             scrollHeight="500px">
 
+            <ng-template pTemplate="caption">
+                {{selectedTourney.tourneyName}}
+            </ng-template>
+
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th style="width: 15mm;">N°</th>
@@ -67,6 +71,10 @@
             (onRowSelect)="onPlayoffRowSelect($event)"
             [scrollable]="true" 
             scrollHeight="500px">
+
+            <ng-template pTemplate="caption">
+                {{selectedTourney.tourneyName}}
+            </ng-template>
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -102,6 +110,10 @@
                 selectionMode="single" 
                 [(selection)]="selectedRow" 
                 (onRowSelect)="onEliminatoryRowSelect($event)">
+                
+            <ng-template pTemplate="caption">
+                {{selectedTourney.tourneyName}}
+            </ng-template>
 
             <ng-template pTemplate="header" let-columns>
                 <tr>

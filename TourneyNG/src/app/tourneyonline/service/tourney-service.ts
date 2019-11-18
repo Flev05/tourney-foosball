@@ -1,5 +1,3 @@
-
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,6 +22,7 @@ import { Classification } from '../domain/classification';
 import { MeetingStatus } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
 import { AbstractService } from '../components/common/abstract-service';
+import { ClientVO } from '../domain/client-vo';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -139,11 +138,8 @@ export class TourneyService extends AbstractService {
         } else {
             teamsNo = 0;
             for( let r of this.selectedTourney.rounds ){
-                teamsNo += r.teams.length;
+                teamsNo += r.teamNames.length;
             }
-            if(this.selectedTourney.rounds.length > min) {
-                min = this.selectedTourney.rounds.length;
-            } 
         }
 
         let max: number = this.selectedTourney.teams.length;
@@ -188,7 +184,6 @@ export class TourneyService extends AbstractService {
 
         return teamsNo;
     }
-
 
     power2Padding(length: number): number {
         let levelNo = Math.ceil(Math.log2(length));
@@ -445,10 +440,10 @@ export class TourneyService extends AbstractService {
     /**
      * Creates a new Classification in function of the received parameters
      */
-    newClassification(t: Team, initialPoints: number): Classification {
+    newClassification(teamName: string, initialPoints: number): Classification {
         return {
             id: null,
-            team: t,
+            teamName: teamName,
             points: initialPoints,
             played: 0,
             won: 0,
@@ -469,17 +464,13 @@ export class TourneyService extends AbstractService {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
         for(let m of meetings) {
-            let t1 = m.team1;
-            let t2 = m.team2;
-            let key1 = t1.teamName;
-
-            if(key1 == "Riposo") {
+            if( m.isSkiping ) {
                 continue;
             }
-            let key2 = t2.teamName;
-            if(key2 == "Riposo") {
-                continue;
-            }
+            let t1 = m.teamName1;
+            let t2 = m.teamName2;
+            let key1 = t1;
+            let key2 = t2;
 
             if(!classificationMap.has(key1)) {
                 let c = this.newClassification(t1, 0);
@@ -529,7 +520,7 @@ export class TourneyService extends AbstractService {
 
         let classificationList: Classification[] = [];
         for( let c of classificationMap.values() ) {
-            if(c.team.teamName == "") {
+            if(c.teamName == "" || c.teamName == null) {
                 continue;
             }
             classificationList.push(c);            
@@ -571,7 +562,7 @@ export class TourneyService extends AbstractService {
                 return 1;
             }
 
-            return c1.team.teamName > c2.team.teamName ? 1 : -1;
+            return c1.teamName > c2.teamName ? 1 : -1;
         });
 
         return sortedClassification;
@@ -611,7 +602,7 @@ export class TourneyService extends AbstractService {
 
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
-                rows[row].teamName = c.team.teamName;    
+                rows[row].teamName = c.teamName;    
                 rows[row].points = c.points;    
                 rows[row].played = c.played;    
                 rows[row].won = c.won;    
@@ -636,10 +627,21 @@ export class TourneyService extends AbstractService {
         return rows;
     }
     
+    public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
+        let tvo: TourneyVO = {
+            id:  t.id,
+            tourneyName: t.tourneyName,
+            country: t.country,
+            clientVO: c,
+            json: JSON.stringify(t)
+        };
+        return tvo;
+    }
+
     /**
      * Creates a matrix of best classification of the teams received in the rounds parameter.
      * The matrix contains in the first row the best first classification teams, in the seconds
-     * row the second best classification team and so on.
+     * row the second best classification teams and so on.
      * 
      * The matrix has to accessed by 2 indexes:
      * - the band position to select the row
@@ -653,9 +655,8 @@ export class TourneyService extends AbstractService {
         for( let i=0; i<rounds[0].classification.length; i++ ) {
             let bestClassifications: Array<Classification> = new Array<Classification>();
             for(let r of rounds) {
-                if( i >= r.classification.length ) {
-                    break;
-                }
+                r.classification = this.sortDesc(r.classification);
+
                 bestClassifications.push(r.classification[i]);    
             }
             bestClassifications = this.sortDesc(bestClassifications);

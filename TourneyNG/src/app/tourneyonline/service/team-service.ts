@@ -11,6 +11,7 @@ import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { TeamVO } from '../domain/team-vo';
 import { LoginService } from './login-service';
+import { Tourney } from '../domain/tourney';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -25,7 +26,6 @@ const deleteTeamUrl = teamUrl +'/delete';
 
 @Injectable()
 export class TeamService {
-
     selectedTeam : Team;
     newTeam : boolean = false;
 
@@ -144,5 +144,33 @@ export class TeamService {
     /** Log a TeamService message with the MessageService */
     private log(message: string) {
         console.log('TeamService: ' + message);
+    }
+
+    static getTeamIdByName(t: Tourney, teamName: string): number {
+        let team: Team = TeamService.getTeamByName(t, teamName);
+        if( team != null ) {
+            return team.id;
+        }
+        return 0;
+    }
+
+    static getTeamByName(t: Tourney, teamName: string): Team {
+        let team: Team = t.teams.find(x => x.teamName == teamName);
+        if( team != undefined ) {
+            return team
+        }
+        return null;
+    }
+
+    static getTeamsByNames(st: Tourney, teamNames: string[]): Team[] {
+        let teams: Team[] = [];
+        
+        for(let t of st.teams ) {
+            let foundTeam = teamNames.find( x => x == t.teamName);
+            if( foundTeam != undefined ) {
+                teams.push(t);
+            }
+        }
+        return teams;
     }
 }

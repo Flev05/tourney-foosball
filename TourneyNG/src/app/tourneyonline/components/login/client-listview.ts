@@ -26,7 +26,7 @@ export class ClientLoginListView extends AbstractListView {
 
     constructor(
         protected tourneyService: TourneyService,
-        private   loginService  : LoginService,
+        public loginService  : LoginService,
         protected clientService : ClientService,
         protected router        : Router,
         protected location      : Location

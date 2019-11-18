@@ -16,6 +16,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './eliminatory-full-detailview.html',
@@ -116,8 +117,10 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
                 this.availableTeams.push(cb);
             }
     
-            team1CB = {label: this.m1.team1.teamName, value: this.m1.team1.id};
-            team2CB = {label: this.m1.team2.teamName, value: this.m1.team2.id};
+            let tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName1);
+            team1CB = {label: this.m1.teamName1, value: tid};
+            tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName2);
+            team2CB = {label: this.m1.teamName2, value: tid};
         }
 
         this.isDoubleSelection = false;
@@ -211,10 +214,10 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         if(this.isStandalone) {
             let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
             let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
-            this.m1.team1 = this.getTeam(team1CB);
-            this.m1.team2 = this.getTeam(team2CB);
+            this.m1.teamName1 = this.getTeam(team1CB).teamName;
+            this.m1.teamName2 = this.getTeam(team2CB).teamName;
 
-            this.m1.name = this.m1.team2.teamName + " - " + this.m1.team1.teamName;
+            this.m1.name = this.m1.teamName2 + " - " + this.m1.teamName1;
         }
 
         let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);

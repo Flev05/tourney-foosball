@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <h2>Risultati Eliminazioni Dirette</h2>
+        <h2>Fase Eliminazioni Dirette</h2>
         <span>Vista elenco per inserire i risultati delle Eliminazioni Dirette</span>
     </div>
 </div>    
@@ -14,12 +14,15 @@
         La vista contiente l'elenco di tutti gli incontri previsti per il livello di eliminazione diretta selezionato.
     </p>
     <p> 
-        Selezionate il livello di eliminazione diretta (esempio: 16°, ottavi, quarti di finale, ecc.)
-        per accedere agli incontri e inserire i risultati dell'incontro previsto.        
+        Selezionate l'incontro di eliminazione diretta da gestire (esempio: 1° Eliminatoria, 2° Eliminatoria, ecc.)
+        per accedere alla vista dove inserire i risultati dell'incontro.        
     </p> 
     <p>
         Attenzione! Se la parte destra della riga è vuota, significa che la squadra di sinistra passa automaticamente
-        al turno successivo senza ulteriore spareggio.
+        al turno successivo, senza ulteriore spareggio, calcolato automaticamente dal sistema. 
+    </p>
+    <p>
+        Non c'è bisogno quindi di inserire alcun risultato.
     </p>
 </p-accordionTab>
 </p-accordion>
@@ -29,7 +32,8 @@
 <h3><span>Livello: {{selectedEliminatoryLevel.name}}</span></h3>
 
 <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-<button *ngIf="!incompleteConfiguration" type="button" icon="fa fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button>
+
+<!-- <button *ngIf="!incompleteConfiguration" type="button" icon="fa fa-arrow-right" pButton (click)="goAhead()" label="Avanti"></button> -->
 
 <div *ngIf="incompleteConfiguration" style="margin-top:3px">
     <p-message severity="error" text="{{incompleteMessage}}">
@@ -45,8 +49,9 @@
         (onRowSelect)="onEliminatoryRowSelect($event)">
 
     <ng-template pTemplate="caption">
+        {{selectedEliminatoryLevel.name}}
     </ng-template>
-        
+
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns">

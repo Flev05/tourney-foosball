@@ -229,7 +229,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyService.selectedTourney = this.selectedTourney;    
         this.teamService.isTeamsChanged = false;
         this.selectedTourney.wizardModeIndex = 0;
-
+        this.selectedTourney.isPlayoffAutoGen = "true";
         this.resetComboBoxes();
     }
 
@@ -377,8 +377,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let N = this.selectedTourney.teams.length;
         for(let r of this.selectedTourney.rounds) {
-            if( r.teams.length < N ) {
-                N = r.teams.length;
+            if( r.teamNames.length < N ) {
+                N = r.teamNames.length;
             }
         }
 
@@ -415,10 +415,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onChangeTab(e) {
         let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
-
         this.selectedTourney.selectedTabIndex = index; 
-
         this.enableTabsFlags();
     }
 
@@ -524,7 +521,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let T: number = this.selectedTourney.teams.length;
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
 
-        let randomTeams: Team[] = this.prepareTourneyTeams(T);
+        let randomTeams: string[] = this.prepareTourneyTeams(T);
         
         this.prepareTourneyRounds(R, randomTeams);
 
@@ -549,7 +546,7 @@ export class TourneyDetailView extends AbstractDetailView {
      * The received team list is spawn on the number of received rounds so each round contains
      * at most the same number of teams.
      */
-    private prepareTourneyRounds(roundCount: number, randomTeams: Team[]) {
+    private prepareTourneyRounds(roundCount: number, randomTeams: string[]) {
         this.selectedTourney.rounds = [];
 
         for (let i = 0; i < roundCount; i++) {
@@ -561,7 +558,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let r = i % roundCount;
             let round = this.selectedTourney.rounds[r]; 
             let rt = randomTeams[i];
-            round.teams.push(rt);
+            round.teamNames.push(rt);
         }
 
         for (let r of this.selectedTourney.rounds) {
@@ -579,16 +576,16 @@ export class TourneyDetailView extends AbstractDetailView {
      * @param T the number of teams to prepare
      * @returns the list of team list
      */
-    private prepareTourneyTeams(T : number) : Team[]  {
-        let randomTeams: Team[] = [];
+    private prepareTourneyTeams(T : number) : string[]  {
+        let randomTeams: string[] = [];
         
         if( this.selectedTourney.teamsWeightEnabled == "false" ) {
-            return  this.selectedTourney.teams;         
+            return  this.selectedTourney.teams.map(x=>x.teamName);         
         } 
 
         for(let t=0; t<T; t++) {
             let team: Team = this.selectedTourney.teams[t];
-            randomTeams.push(team);
+            randomTeams.push(team.teamName);
         }
         randomTeams.sort((t1, t2) =>{
             let rand = Math.random();
@@ -600,24 +597,10 @@ export class TourneyDetailView extends AbstractDetailView {
 
         return randomTeams;
     }
-
-    /**
-     * Resets the round. playoff and eliminatory meeetings
-     */
-    private resetRoundMeetings( ) {
-        let tvo: TourneyVO = this.prepareTourneyVOForRound(true);
-        this.tourneyService.updateTourneyDeleteRoundMeetings(tvo);
-    }
  
     private prepareTourneyVOForRound(cleanRounds: boolean) {
         this.cleanRoundMeetings(cleanRounds);
-        let tvo: TourneyVO = {
-            id: this.selectedTourney.id,
-            tourneyName: this.selectedTourney.tourneyName,
-            country: this.selectedTourney.country,
-            clientVO: this.clientService.selectedClient,
-            json: JSON.stringify(this.selectedTourney)
-        };
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         return tvo;
     }
 
@@ -666,7 +649,7 @@ export class TourneyDetailView extends AbstractDetailView {
             direction: Direction.OneWay,
             pageSize: 1,
             daysNo: 1,
-            teams: [],
+            teamNames: [],
             onewayMeetings: [],
             roundtripMeetings: [],
             classification: [],
@@ -711,7 +694,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private getMaxTeamsPerPlayoff(): number {
         let allRoundTeams = 0;
         for (let r of this.selectedTourney.rounds) {
-            allRoundTeams += r.teams.length;
+            allRoundTeams += r.teamNames.length;
         }
         let maxTeamsPerPlayoff = allRoundTeams / this.selectedTourney.selectedPlayoffsCB.value;
         return maxTeamsPerPlayoff;
@@ -1026,7 +1009,7 @@ export class TourneyDetailView extends AbstractDetailView {
               , direction: Direction.OneWay
               , pageSize: 1
               , daysNo: 1
-              , teams:[]
+              , teamNames:[]
               , onewayMeetings: []
               , roundtripMeetings: []
               , classification: []
@@ -1281,13 +1264,8 @@ export class TourneyDetailView extends AbstractDetailView {
             tmp.wizardModeIndex = tmp.selectedTabIndex;
         }
         
-        let tvo: TourneyVO = {
-            id: this.selectedTourney.id,
-            tourneyName: this.selectedTourney.tourneyName,
-            country: this.selectedTourney.country,
-            clientVO: this.clientService.selectedClient,
-            json: JSON.stringify(tmp)
-        };
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(tmp, this.clientService.selectedClient);
+
         return tvo;
     }
 
@@ -1297,15 +1275,11 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.clearTourneyMeetings();
 
-        let tvo: TourneyVO = {
-            id: this.selectedTourney.id,
-            tourneyName: this.selectedTourney.tourneyName,
-            country: this.selectedTourney.country,
-            clientVO: this.clientService.selectedClient,
-            json: JSON.stringify(this.selectedTourney)
-        };
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+
         return tvo;
     }
+
 
     /**
      * Clears tourney local meetings array before create che JSON string to save on the Back End

@@ -10,7 +10,6 @@ import { Meeting } from '../domain/meeting';
 import { Router } from '@angular/router';
 import { MeetingDb } from '../domain/meeting-db';
 import { Tourney } from '../domain/tourney';
-import { Team } from '../domain/team';
 import { Direction, MeetingStatus } from '../domain/enumerations';
 import { PlayoffRule } from '../domain/playoff-rule';
 import { Match } from '../domain/match';
@@ -18,6 +17,7 @@ import { AbstractService } from '../components/common/abstract-service';
 import { Round } from '../domain/round';
 import { DateFormatPipe } from '../components/common/date-format-pipe';
 import { Playoff } from '../domain/playoff';
+import { undistributeHeight } from 'fullcalendar/src/util/misc';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -41,6 +41,7 @@ const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsBy
 
 @Injectable()
 export  class MeetingService extends AbstractService {
+    protected SKIPING_TEAM = "(Riposo)";
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
 
@@ -78,6 +79,9 @@ export  class MeetingService extends AbstractService {
         round.onewayMeetings = [];
         round.roundtripMeetings = [];
         for (let mdb of mdbList) {
+            if( mdb.roundId != round.id) {
+                continue;
+            }
             let m: Meeting = JSON.parse(mdb.json);
             m.id = mdb.id;
             if (m.direction == Direction.OneWay) {
@@ -102,6 +106,9 @@ export  class MeetingService extends AbstractService {
             }
             let m: Meeting = JSON.parse(mdb.json);
             m.id = mdb.id;
+            if(m.direction == undefined) {
+                continue;
+            }
             if (m.direction == Direction.OneWay) {
                 round.onewayMeetings.push(m);
             }
@@ -242,14 +249,8 @@ export  class MeetingService extends AbstractService {
         for( let m of round.onewayMeetings ) {
 
             m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
-            // if(isAdmin) {
-            //     if( m.points1 > 0 || m.points2 > 0 ) {
-            //         m.dateAndTime = m.points1 + " - " + m.points2;
-            //     }
-            // }
 
             let key = m.day;
-            // console.log( key + "° Giornata di andata");
             if(!this.onewayMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
                 this.onewayMeetingDaysMap.set(key, emptyList);
@@ -262,14 +263,8 @@ export  class MeetingService extends AbstractService {
         for( let m of round.roundtripMeetings ) {
 
             m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
-            // if(isAdmin) {
-            //     if( m.points1 > 0 || m.points2 > 0 ) {
-            //         m.dateAndTime = m.points1 + " - " + m.points2;
-            //     }
-            // }
             
             let key = m.day;
-            console.log( key + "° Giornata di ritorno");
             if(!this.roundtripMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
                 this.roundtripMeetingDaysMap.set(key, emptyList);
@@ -456,12 +451,12 @@ export  class MeetingService extends AbstractService {
         });
     }
 
-    public newMeeting(t1: Team, t2: Team, day: number, d: Direction): Meeting {
-        let m = this.createMeeting(t1, t2, null, null, day, d);
+    public newMeeting(t1: string, t2: string, day: number, d: Direction, skiping: boolean): Meeting {
+        let m = this.createMeeting(t1, t2, null, null, day, d, skiping);
         return m;
     }
     
-    createMeeting(t1: Team, t2: Team, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction): Meeting {
+    createMeeting(t1: string, t2: string, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction, skiping: boolean): Meeting {
         let matches = new Array<Match>();
 
         for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
@@ -476,13 +471,13 @@ export  class MeetingService extends AbstractService {
 
         let name = "";
         if(t1!=null) {
-            name = t1.teamName;
+            name = t1;
             if(t2!=null) {
-                name += " - " + t2.teamName; 
+                name += " - " + t2; 
             }
         } else {
             if(t2!=null) {
-                name = t2.teamName; 
+                name = t2; 
             }
         }
 
@@ -491,16 +486,17 @@ export  class MeetingService extends AbstractService {
         let m : Meeting = {
             id: null,
             name: name,
-            isDummy: pr1 == null ? false : pr1.isDummy || pr2 == null ? false :  pr2.isDummy,
+            isDummy: pr1 == null ? true : pr1.isDummy || pr2 == null ? true :  pr2.isDummy,
+            isSkiping: skiping,
             direction: d,
             datetime: this.selectedTourney.datetime,
             address:  this.selectedTourney.address,
             country:  this.selectedTourney.country,
             day: day,
-            team1: t1,
-            team2: t2,
-            points1: 0,
-            points2: 0,
+            teamName1: t1,
+            teamName2: t2,
+            points1: skiping ? -1 : 0,
+            points2: skiping ? -1 : 0,
             rule1: pr1,
             rule2: pr2,
             ruleName: ruleName,

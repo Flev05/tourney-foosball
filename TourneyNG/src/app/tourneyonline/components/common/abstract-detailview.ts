@@ -20,9 +20,9 @@ export abstract class AbstractDetailView extends AbstractView {
 
     protected initClassification(r : Round) {
         r.classification = [];
-        for(let t of r.teams) {
-            let c : Classification = {id: null // this.tourneyService.getSequenceNumber()
-                , team: t
+        for(let t of r.teamNames) {
+            let c : Classification = {id: this.tourneyService.getSequenceNumber()
+                , teamName: t
                 , points: 0
                 , played: 0
                 , won: 0

@@ -1,4 +1,3 @@
-import { Team } from './team';
 import { Country } from './country';
 import { Match } from './match';
 import { PlayoffRule } from './playoff-rule';
@@ -8,15 +7,14 @@ export interface Meeting
 {
     id?             : number;
     isDummy?        : boolean;
+    isSkiping?      : boolean;
     name?           : string;
     direction?      : Direction
     datetime?       : Date;
     dateAndTime?    : string;
     address?        : string;
     country?        : Country;
-    team1?          : Team;
     teamName1?      : string;
-    team2?          : Team;
     teamName2?      : string;
     day?            : number;
     status?         : MeetingStatus;

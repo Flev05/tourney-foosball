@@ -10,7 +10,7 @@ export interface Cell
     style       : string;
 
     points      : CellCombobox;
-    team1Id     : number;
-    team2Id     : number;
+    teamName1   : string;
+    teamName2   : string;
     options     : CellCombobox[];
 }

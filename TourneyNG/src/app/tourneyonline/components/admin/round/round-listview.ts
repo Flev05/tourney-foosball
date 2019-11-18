@@ -42,7 +42,8 @@ export class RoundListView extends AbstractListView {
         this.selectedRound = this.tourneyService.selectedRound;
 
         this.teams = [];
-        for (let t of this.selectedRound.teams ) {
+        for (let tn of this.selectedRound.teamNames ) {
+            let t: Team = TeamService.getTeamByName(this.selectedTourney, tn);
             this.teams.push(t);
         } 
     }

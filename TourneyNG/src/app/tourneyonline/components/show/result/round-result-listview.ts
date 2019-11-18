@@ -55,7 +55,7 @@ export class RoundResultListView extends AbstractListView {
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
 
-    constructor( protected tourneyService: TourneyService
+    constructor( public tourneyService: TourneyService
         , private meetingRoundService: MeetingRoundService
         , private meetingService: MeetingService
         , protected router: Router
@@ -76,14 +76,14 @@ export class RoundResultListView extends AbstractListView {
         
         this.classificationCols = this.tourneyService.classificationCols;
 
-        this.roundTeams = this.selectedRound.teams;
+        this.selectedRound = this.tourneyService.selectedRound;
+        this.roundTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedRound.teamNames);
 
         this.isRoundTrip = true;
         if (this.selectedTourney.isOnewayRound == "true") {
             this.isRoundTrip = false;
         }
 
-        this.selectedRound = this.tourneyService.selectedRound;
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
     }
@@ -127,6 +127,10 @@ export class RoundResultListView extends AbstractListView {
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingRoundService;
 
+        if( this.selectedRow.isSkiping ) {
+            return;
+        }
+
         this.gotoDetailView();
     }
     
@@ -135,6 +139,10 @@ export class RoundResultListView extends AbstractListView {
         console.log(event.data);
 
         this.teamService.selectedTeam = event.data;
+
+        let teamName = this.teamService.selectedTeam.teamName;
+        let team = TeamService.getTeamByName(this.selectedTourney, teamName);
+        this.teamService.selectedTeam.players = team.players;
 
         this.playerService.addPlayerButton = false;
         this.router.navigate([REDIRECT_TEAM_DV]);

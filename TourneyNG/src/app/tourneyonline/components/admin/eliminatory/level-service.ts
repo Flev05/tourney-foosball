@@ -186,7 +186,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         for (let e of el.eliminatories) {
             // this.meetingService.deleteMeetingsByTourneyAndEliminatoryIds(this.selectedTourney.id, e.id);
-            e.round.teams = [];
+            e.round.teamNames = [];
             e.round.onewayMeetings = [];
             e.round.roundtripMeetings = [];
         }
@@ -228,12 +228,12 @@ export class LevelService extends AbstractEliminatoryListView {
             let t2: Team = descTeam[i];
             
             let e: Eliminatory = topLevelEliminatories[i];
-            e.round.teams = [t1, t2];
+            e.round.teamNames = [t1.teamName, t2.teamName];
             
-            let m1: Meeting = this.meetingService.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
+            let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, false);
             e.round.onewayMeetings = [m1];
             
-            let m2: Meeting = this.meetingService.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
+            let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, false);
             e.round.roundtripMeetings = [m2];
         }
     } 
@@ -248,15 +248,15 @@ export class LevelService extends AbstractEliminatoryListView {
     private isSomeTeamsChanged(topLevel : EliminatoryLevel): boolean {
         for( let team of this.selectedTourney.teams ) {
             for( let el of topLevel.eliminatories ) {
-                if(el.round.teams.find(t => t.teamName == team.teamName) == undefined)  {
+                if(el.round.teamNames.find(t => t == team.teamName) == undefined)  {
                     return true;
                 }
             }
         }
         
         for( let el of topLevel.eliminatories ) {
-            for( let team of el.round.teams ) {
-                if(this.selectedTourney.teams.find(t => t.teamName == team.teamName) == undefined)  {
+            for( let team of el.round.teamNames ) {
+                if(this.selectedTourney.teams.find(t => t == team) == undefined)  {
                     return true;
                 }
             }
@@ -447,7 +447,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 , pageSize: 1
                 , daysNo: 1
                 , direction: Direction.OneWay
-                , teams:[t1, t2]
+                , teamNames:[t1.teamName, t2.teamName]
                 , classification: []
                 , onewayMeetings: []
                 , roundtripMeetings: []
@@ -484,8 +484,8 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         };
 
-        let m1: Meeting = this.meetingService.createMeeting(t1, t2, null, null, 1, Direction.OneWay);
-        let m2: Meeting = this.meetingService.createMeeting(t2, t1, null, null, 2, Direction.RoundTrip);
+        let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, false);
+        let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, false);
 
         e.round.onewayMeetings.push(m1);
         e.round.roundtripMeetings.push(m2);

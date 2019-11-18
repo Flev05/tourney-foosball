@@ -91,6 +91,7 @@ export class TabResultListView extends AbstractListView {
         }
 
         this.playoffCount = 0;
+        this.mdbList = [];
         if(super.containsPlayoff()) {
             this.playoffRows = this.selectedTourney.playoffs;
             this.playoffCount = this.playoffRows.length;
@@ -145,7 +146,7 @@ export class TabResultListView extends AbstractListView {
      */
     private resolveAutomaticTeams(playoff: Playoff) {
         let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(this.selectedTourney.rounds);
-        playoff.round.teams = [];
+        playoff.round.teamNames = [];
 
         for(let r=0; r<playoff.playoffRules.length; r++) {
             const pr: PlayoffRule = playoff.playoffRules[r];
@@ -154,9 +155,11 @@ export class TabResultListView extends AbstractListView {
             }
             let row  = pr.fromRound.bandPosition;
             let col  = pr.fromRound.position.value;
-            let team = roundMatrix[row-1][col-1].team;
+            let teamName = roundMatrix[row-1][col-1].teamName;
 
-            playoff.round.teams.push(team);
+            console.log(playoff.playoffName + "(" + pr.ruleName + ")=" + teamName);
+
+            playoff.round.teamNames.push(teamName);
         }
     }
 
@@ -183,31 +186,25 @@ export class TabResultListView extends AbstractListView {
      */
     private resolveAutomaticRules( m: Meeting, rounds: Round[]): void {
         m.dateAndTime = this.dfp.transform(m.datetime, false);
-        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(this.selectedTourney.rounds);
+        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(rounds);
 
-        let t1: Team = null;
-        if( m.isDummy ) {
-            t1 = {id: this.tourneyService.getSequenceNumber(), teamName: m.rule1.fromRound.round.label, isDummy:true, ruleName: m.rule1.ruleName };
-        } else {
-            let row  = m.rule1.fromRound.bandPosition;
-            let col  = m.rule1.fromRound.position.value;
-            t1 = roundMatrix[row-1][col-1].team;
-        }
-        m.team1 = t1;
-        m.teamName1 = m.team1.teamName;
+        let row = m.rule1.fromRound.bandPosition;
+        let col = m.rule1.fromRound.position.value;
         m.ruleName1 = m.rule1.ruleName;
-
-        let t2: Team = null;
-        if( m.isDummy ) {
-            t2 = {id: this.tourneyService.getSequenceNumber(), teamName: m.rule2.fromRound.round.label, isDummy:true, ruleName: m.rule2.ruleName };
+        if( m.isDummy && row == 0 ) {
+            m.teamName1 = m.rule1.fromRound.round.label;
         } else {
-            let row  = m.rule2.fromRound.bandPosition;
-            let col  = m.rule2.fromRound.position.value;
-            t2 = roundMatrix[row-1][col-1].team;
+            m.teamName1 = roundMatrix[row-1][col-1].teamName;
         }
-        m.team2 = t2;
-        m.teamName2 = m.team2.teamName;
+
+        row = m.rule2.fromRound.bandPosition;
+        col = m.rule2.fromRound.position.value;
         m.ruleName2 = m.rule2.ruleName;
+        if( m.isDummy && row == 0 ) {
+            m.teamName2 =  m.rule2.fromRound.round.label;
+        } else {
+            m.teamName2 = roundMatrix[row-1][col-1].teamName;
+        }
     }
 
     /**
@@ -215,7 +212,7 @@ export class TabResultListView extends AbstractListView {
      * qualified teams from the tourney rounds
      */
     private resolveManualTeams(playoff : Playoff): void {
-        playoff.round.teams = [];
+        playoff.round.teamNames = [];
 
         for( let rule of playoff.playoffRules ) {
             let position:  number = rule.fromRound.position.value;
@@ -226,9 +223,8 @@ export class TabResultListView extends AbstractListView {
                 if( round.classification.length > 0 ) {
                     let c: Classification = round.classification[position-1];
     
-                    let team = c.team;
-                    team.ruleName = rule.fromRound.position.label + " " + roundName;
-                    playoff.round.teams.push(team);
+                    let teamName = rule.fromRound.position.label + " " + c.teamName;
+                    playoff.round.teamNames.push(teamName);
                 }
             }
         }
@@ -257,24 +253,22 @@ export class TabResultListView extends AbstractListView {
     private resolveManualRules( m: Meeting, rounds: Round[]): void {
         m.dateAndTime = this.dfp.transform(m.datetime, false);
 
-        let t1: Team = null;
+        let teamName: string = null;
         if( m.isDummy ) {
-            t1 = {id: this.tourneyService.getSequenceNumber(), teamName:m.rule1.fromRound.round.label, isDummy:true, ruleName: m.rule1.ruleName };
+            teamName =  m.rule1.fromRound.round.label;
         } else {
-            t1 = this.findTeam(m.rule1, rounds);
+            teamName = this.findTeam(m.rule1, rounds);
         }
-        m.team1 = t1;
-        m.teamName1 = m.team1.teamName;
+        m.teamName1 = teamName;
         m.ruleName1 = m.rule1.ruleName;
 
-        let t2: Team = null;
         if( m.isDummy ) {
-            t2 = {id: this.tourneyService.getSequenceNumber(), teamName:m.rule2.fromRound.round.label, isDummy:true, ruleName: m.rule2.ruleName };
+        let t2: Team = null
+            teamName =  m.rule2.fromRound.round.label;
         } else {
-            t2 = this.findTeam(m.rule2, rounds);
+            teamName = this.findTeam(m.rule2, rounds);
         }
-        m.team2 = t2;
-        m.teamName2 = m.team2.teamName;
+        m.teamName2 = teamName;
         m.ruleName2 = m.rule2.ruleName;
     }
 
@@ -283,7 +277,7 @@ export class TabResultListView extends AbstractListView {
      * 
      * @param rule the playoff rule to associate to the qualified team
      */
-    private findTeam(rule: PlayoffRule, rounds: Round[]): Team {
+    private findTeam(rule: PlayoffRule, rounds: Round[]): string {
 
         let position:  number = rule.fromRound.position.value;
         let roundName: string = rule.fromRound.round.label;
@@ -292,9 +286,9 @@ export class TabResultListView extends AbstractListView {
         if( round != undefined ) {
             if( round.classification.length > 0 ) {
                 let c: Classification = round.classification[position-1];
-                let team = c.team;
-                console.log("Resolved Team is " + team);
-                return team;
+                let teamName = c.teamName;
+                console.log("Resolved Team is [" + teamName + "]");
+                return teamName;
             }
         }        
         return null;
@@ -302,8 +296,6 @@ export class TabResultListView extends AbstractListView {
 
     onChangeTab(e) {
         let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
-
         this.selectedTourney.selectedResultTabIndex = index;
     }
 
@@ -369,8 +361,8 @@ export class TabResultListView extends AbstractListView {
                 rows[row].playoffId = p.id;
             }
             rows[row].roundName = round.name;
-            rows[row].teamName1 = m.team1.teamName;
-            rows[row].teamName2 = m.team2.teamName;
+            rows[row].teamName1 = m.teamName1;
+            rows[row].teamName2 = m.teamName2;
             rows[row].points1 = m.points1;
             rows[row].points2 = m.points2;
 

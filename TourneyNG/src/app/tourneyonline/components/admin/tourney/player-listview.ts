@@ -28,7 +28,7 @@ export class PlayerListView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         private   teamService: TeamService,
-        private   playerService: PlayerService,
+        public playerService: PlayerService,
         private   router: Router
     ) { 
         super(tourneyService, location);
@@ -48,14 +48,14 @@ export class PlayerListView extends AbstractDetailView {
             this.teamService.newTeam = false;
         }
 
-        let alreadyInTeam: Player[] = [];
-        for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-            let t = this.selectedTourney.teams[i];
-            let p = t.players;
-            for(let j=0; j<p.length; j++ ) {
-                alreadyInTeam.push(p[j]);
-            }
-        }
+        // let alreadyInTeam: Player[] = [];
+        // for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
+        //     let t = this.selectedTourney.teams[i];
+        //     let p = t.players;
+        //     for(let j=0; j<p.length; j++ ) {
+        //         alreadyInTeam.push(p[j]);
+        //     }
+        // }
         
         this.playerLabel = this.selectedTeam.players.length == 0 ? "Aggiungi Giocatori" : "Gestisci Giocatori";
     }

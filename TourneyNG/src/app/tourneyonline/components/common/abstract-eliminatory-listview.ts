@@ -291,8 +291,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             let evo: EliminatoryVO = {eliminatory:e
                 , rowNumber: i+1
-                , teamName1: e.round.onewayMeetings[0].team1.teamName
-                , teamName2: e.round.onewayMeetings[0].team2.teamName
+                , teamName1: e.round.onewayMeetings[0].teamName1
+                , teamName2: e.round.onewayMeetings[0].teamName2
                 , onewayDatetime: onewayDatetime
                 , roundtripDatetime: roundtripDatetime
                 , position1: "0"
@@ -424,8 +424,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
-                rows[row].teamName1 = m.team1.teamName;    
-                rows[row].teamName2 = m.team2.teamName;    
+                rows[row].teamName1 = m.teamName1;    
+                rows[row].teamName2 = m.teamName2;    
 
                 rows[row].dateAndTime = this.dateFormatPipe.transform(m.datetime);    
 

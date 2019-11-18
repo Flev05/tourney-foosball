@@ -27,6 +27,7 @@ export class PlayerDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected clientService: ClientService,
+        protected countryService: CountryService,
         private   playerService: PlayerService
     ) { 
         super(tourneyService, location);
@@ -36,7 +37,7 @@ export class PlayerDetailView extends AbstractDetailView {
         console.log("PlayerDetailView.ngOnInit() ");
 
         super.ngOnInit();
-
+        this.countries = this.countryService.countries;
         this.selectedPlayer = this.playerService.selectedPlayer;
         this.playerAlreadyExists = false;
 

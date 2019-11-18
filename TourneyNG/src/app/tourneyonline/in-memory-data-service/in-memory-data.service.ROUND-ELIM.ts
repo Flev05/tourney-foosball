@@ -5,6 +5,7 @@ import { TeamsPool } from './teams-pool';
 import { Meeting } from '../domain/meeting';
 import { Tourney } from '../domain/tourney';
 import { MeetingDb } from '../domain/meeting-db';
+import { TeamService } from '../service/team-service';
 
 const tourneyId = 3;
 const ROUND_NUM = 4;
@@ -86,7 +87,7 @@ static prepareDefaultRounds(teams : Team[], roundNo: number ) : Round[] {
       let r: Round = rounds[i];
       for(let j=0; j<ROUND_NUM; j++ ) {
         let t : Team = teams[i*ROUND_NUM + j];
-        r.teams.push(t);
+        r.teamNames.push(t.teamName);
       }
     }
     if(N % ROUND_NUM > 0) {
@@ -95,7 +96,7 @@ static prepareDefaultRounds(teams : Team[], roundNo: number ) : Round[] {
 
       for(let i=roundNo * ROUND_NUM; i<N; i++ ) {
         let t : Team = teams[i];
-        r.teams.push(t);
+        r.teamNames.push(t.teamName);
       }
     }
 
@@ -117,7 +118,7 @@ static newRound(roundNo : number): Round {
     ,direction: Direction.OneWay
     ,pageSize: 1
     ,daysNo: 1
-    , teams: []
+    , teamNames: []
     , onewayMeetings: []
     , roundtripMeetings: []
     , classification: []
@@ -127,7 +128,7 @@ static newRound(roundNo : number): Round {
 
 static prepareDefaultMeeting(r : Round  )  {
 
-    let teams = r.teams;
+    let teams = InMemoryDataServiceRoundElim.teams;
     for(let i=0; i<teams.length; i++) {
 
       let t1 = teams[i];
@@ -142,8 +143,8 @@ static prepareDefaultMeeting(r : Round  )  {
           , address: t1.address
           , country: t1.country
           , status: MeetingStatus.ToPlay
-          , team1: t1
-          , team2: t2
+          , teamName1: t1.teamName
+          , teamName2: t2.teamName
           , points1: 0
           , points2: 0
           , matches: []

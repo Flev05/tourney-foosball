@@ -25,7 +25,6 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     incompleteConfiguration: boolean;
     incompleteMessage: string;
     cols: TableCols[] ;
-    eliminatoryRows: any[];
 
     constructor(
         protected tourneyService: TourneyService,
@@ -62,7 +61,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             this.incompleteConfiguration = true;
             this.incompleteMessage = "Attenzione! Non è stato giocato alcun incontro del livello precedente!";
             for(let e of this.tourneyService.selectedEliminatoryLevel.eliminatories) {
-                if(e.round.teams[0].teamName != "" || e.round.teams[1].teamName != "") {
+                if(e.round.teamNames[0] != "" || e.round.teamNames[1] != "") {
                     this.incompleteConfiguration = false;
                     break;
                 }
@@ -134,14 +133,14 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
         let col1  = e.rule1.fromRound.bandPosition;
         let row1  = e.rule1.fromRound.position.value;
-        let team1 = roundMatrix[row1-1][col1-1].team;
+        let team1 = roundMatrix[row1-1][col1-1].teamName;
 
         let col2  = e.rule1.fromRound.bandPosition;
         let row2  = e.rule1.fromRound.position.value;
-        let team2 = roundMatrix[row2-1][col2-1].team;
+        let team2 = roundMatrix[row2-1][col2-1].teamName;
 
-        let onewayMeeting:    Meeting = this.meetingService.newMeeting(team1, team2, 1, Direction.OneWay);
-        let roundtripMeeting: Meeting = this.meetingService.newMeeting(team2, team1, 1, Direction.RoundTrip);
+        let onewayMeeting:    Meeting = this.meetingService.newMeeting(team1, team2, 1, Direction.OneWay, false);
+        let roundtripMeeting: Meeting = this.meetingService.newMeeting(team2, team1, 1, Direction.RoundTrip, false);
 
         e.round.onewayMeetings =    [onewayMeeting];
         e.round.roundtripMeetings = [roundtripMeeting];
@@ -180,7 +179,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let roundName = fr1.round.label;
             for(let r of this.selectedTourney.rounds) {
                 if(r.name == roundName) {
-                    m1.team1 = r.classification[pr1-1].team;
+                    let teamName = r.classification[pr1-1].teamName;
+                    m1.teamName1 = teamName;
                     break;
                 }
             }
@@ -188,7 +188,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let roundName = fp1.round.label;
             for(let p of this.selectedTourney.playoffs) {
                 if(p.round.name == roundName) {
-                    m1.team1 = p.round.classification[pp1-1].team;
+                    let teamName = p.round.classification[pp1-1].teamName;
+                    m1.teamName1 = teamName;
                     break;
                 }
             }
@@ -198,7 +199,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let roundName = fr2.round.label;
             for(let r of this.selectedTourney.rounds) {
                 if(r.name == roundName) {
-                    m1.team2 = r.classification[pr2-1].team;
+                    let teamName = r.classification[pr2-1].teamName;
+                    m1.teamName1 = teamName;
                     break;
                 }
             }
@@ -206,16 +208,17 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let roundName = fp2.round.label;
             for(let p of this.selectedTourney.playoffs) {
                 if(p.round.name == roundName) {
-                    m1.team2 = p.round.classification[pp2-1].team;
+                    let teamName = p.round.classification[pp2-1].teamName;
+                    m1.teamName2 = teamName;
                     break;
                 }
             }
         }
 
-        e.round.teams[0] = m1.team1;
-        e.round.teams[1] = m1.team2;
-        m2.team1 = m1.team2;
-        m2.team2 = m1.team1;
+        e.round.teamNames[0] = m1.teamName1;
+        e.round.teamNames[1] = m1.teamName2;
+        m2.teamName1 = m1.teamName2;
+        m2.teamName2 = m1.teamName1;
     }
 
     private paddingRounds(rounds: Round[]): Round[] {
@@ -231,7 +234,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
 
             if( r.classification.length < max ) {
                 for( let j=r.classification.length; j < max; j++ )  {
-                    let dc = this.tourneyService.newClassification(this.newDummyTeam(), -1);
+                    let dc = this.tourneyService.newClassification(this.newDummyTeam().teamName, -1);
                     newRounds[i].classification.push(dc);
                 }
             }
@@ -246,7 +249,7 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
      * @param level the current level
      */
     private updateDefaultNextLevel(e: Eliminatory, level: number) {
-        if (e.round.teams[0].teamName != "" && e.round.teams[1].teamName == "") {
+        if (e.round.teamNames[0] != "" && e.round.teamNames[1]  == "") {
             const els = this.selectedTourney.eliminatoryLevels;
 
             let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
@@ -258,11 +261,11 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let nm = nr.onewayMeetings[0];
 
             if (level % 2 == 0) {
-                nm.team1 = e.round.teams[0];
-                nr.teams[0] = e.round.teams[0];
+                nm.teamName1 = e.round.teamNames[0];
+                nr.teamNames[0] = e.round.teamNames[0];
             } else {
-                nm.team2 = e.round.teams[0];
-                nr.teams[1] = e.round.teams[0];
+                nm.teamName2 = e.round.teamNames[0];
+                nr.teamNames[1] = e.round.teamNames[0];
             }
             
             // this.meetingService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
@@ -287,8 +290,8 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         row.eliminatoryId = e.id;    
         
         row.roundName = round.name  + "° Eliminatoria";
-        row.teamName1 = m.team1.teamName;
-        row.teamName2 = m.team2.teamName;
+        row.teamName1 = m.teamName1;
+        row.teamName2 = m.teamName2;
         row.points1 = m.points1;
         row.points2 = m.points2;
 

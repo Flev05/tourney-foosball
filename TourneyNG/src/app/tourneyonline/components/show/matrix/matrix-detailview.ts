@@ -77,7 +77,7 @@ export class MatrixDetailView extends AbstractDetailView {
         this.matrix = this.selectedRound.matrix;
 
         if(this.selectedRound.classification.length==0) {
-            for(let t of this.selectedRound.teams) {
+            for(let t of this.selectedRound.teamNames) {
                 let cl: Classification = this.tourneyService.newClassification(t, 0);
                 this.selectedRound.classification.push(cl);
             }        
@@ -100,7 +100,7 @@ export class MatrixDetailView extends AbstractDetailView {
         cols.push(col);
 
         var letter: String = "A";
-        for (let i = 0; i < this.selectedRound.teams.length; i++) {
+        for (let i = 0; i < this.selectedRound.teamNames.length; i++) {
             let col = { field: 'points', header: letter, style: 'style0' };
             cols.push(col);
             letter = this.getNextLetter(letter);
@@ -118,21 +118,21 @@ export class MatrixDetailView extends AbstractDetailView {
         };
 
         let letter: String = "A";
-        for (let i = 0; i < this.selectedRound.teams.length; i++) {
+        for (let i = 0; i < this.selectedRound.teamNames.length; i++) {
             let cells = new Array<Cell>();
             let row = {
                 id: i,
                 cells: cells
             };
             this.matrix.rows.push(row);
-            let c1 = this.selectedRound.teams[i];
-            let c: Cell = this.newCell(null, null, c1.teamName, 'style0', false, false, 0, 0);
+            let c1 = this.selectedRound.teamNames[i];
+            let c: Cell = this.newCell(null, null, c1, 'style0', false, false, 0, 0);
             cells.push(c);
             c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0);
             cells.push(c);
             letter = this.getNextLetter(letter);
-            for (let j = 0; j < this.selectedRound.teams.length; j++) {
-                let c2 = this.selectedRound.teams[j];
+            for (let j = 0; j < this.selectedRound.teamNames.length; j++) {
+                let c2 = this.selectedRound.teamNames[j];
                 if (i == j) {
                     c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0);
                 }
@@ -186,10 +186,10 @@ export class MatrixDetailView extends AbstractDetailView {
         this.matrix.rows[c-2].cells[r+2].isVisited = true;
     }
     
-    private newCell(t1: Team, t2: Team, field: string, style: string, isEditable: boolean, isTotal: boolean, row: number, col: number): Cell {
+    private newCell(teamName1: string, teamName2: string, field: string, style: string, isEditable: boolean, isTotal: boolean, row: number, col: number): Cell {
 
         let options: CellCombobox[] = [];
-        if(t1 != null && t2 != null) {            
+        if(teamName1 != null && teamName2 != null) {            
             for(let i=0; i<=this.selectedTourney.matchWinnerScores; i++) {
                 let cb: CellCombobox = {label: "" + i, value: i, row: row, col: col};
                 options.push(cb);
@@ -204,8 +204,8 @@ export class MatrixDetailView extends AbstractDetailView {
             , isEditable: isEditable
             , isTotal: isTotal
             , isVisited: false
-            , team1Id: t1 == null? 0: t1.id
-            , team2Id: t2 == null? 0: t2.id
+            , teamName1: teamName1 == null ? "" : teamName1
+            , teamName2: teamName2 == null ? "" : teamName2
             , options: options
         };
 
@@ -298,7 +298,7 @@ export class MatrixDetailView extends AbstractDetailView {
             rows.push(c);
             rows[row].rowNumber = ++r;    
             rows[row].roundName = this.selectedRound.name;    
-            rows[row].teamName = c.team.teamName;    
+            rows[row].teamName = c.teamName;    
             rows[row].points = c.points;    
             rows[row].played = c.played;    
             rows[row].won = c.won;    
@@ -313,10 +313,10 @@ export class MatrixDetailView extends AbstractDetailView {
 
     private updateMeeting(c: Cell): any {
         for(let m of this.selectedRound.onewayMeetings) {
-            if(m.team1.id == c.team1Id) {
+            if(m.teamName1  == c.teamName1) {
                 m.points1 = c.points.value;
             }
-            if(m.team2.id == c.team2Id) {
+            if(m.teamName2 == c.teamName2) {
                 m.points2 = c.points.value;
             }
         }

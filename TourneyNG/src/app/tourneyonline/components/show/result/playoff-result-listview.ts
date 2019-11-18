@@ -54,8 +54,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
 
-    constructor(
-          protected tourneyService: TourneyService
+    constructor( public tourneyService: TourneyService
         , private meetingPlayoffService: MeetingPlayoffService
         , private meetingService: MeetingService
         , protected router: Router
@@ -76,7 +75,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
         this.classificationCols = this.tourneyService.classificationCols;
         this.cols = this.tourneyService.resultCols;
 
-        this.playoffTeams = this.selectedPlayoff.round.teams;
+        this.playoffTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedPlayoff.round.teamNames);
 
         this.allDaysNo = this.selectedPlayoff.round.daysNo;
         this.pageSize  = this.selectedPlayoff.round.pageSize;
@@ -116,6 +115,10 @@ export class PlayoffResultListView extends AbstractRuleListView {
         this.meetingPlayoffService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingPlayoffService;
+
+        if( this.selectedRow.isDummy) {
+            return;
+        }
 
         this.gotoDetailView();
     }

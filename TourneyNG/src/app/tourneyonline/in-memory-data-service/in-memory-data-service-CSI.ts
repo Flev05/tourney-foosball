@@ -123,9 +123,9 @@ export class InMemoryDataServiceCSI  {
         ,direction: Direction.OneWay
         ,pageSize: 1
         ,daysNo: 1
-        ,teams:[
-            {id:6,teamName:"ORATORIO ZIBIDO B", address:"VIA BINASCO / LARGO GARIBALDI 20080 ZIBIDO SAN GIACOMO MI"}
-          ,{id:3,teamName:"AIROLDI ORIGGIO BIANCA", address:"VIA ZANZOTTERA 32 20153 MILANO MI"}
+        ,teamNames:[
+            "ORATORIO ZIBIDO B"
+          ,"AIROLDI ORIGGIO BIANCA"
         ]
         ,onewayMeetings:[]
         ,roundtripMeetings:[]
@@ -136,9 +136,9 @@ export class InMemoryDataServiceCSI  {
         ,direction: Direction.OneWay
         ,pageSize: 1
         ,daysNo: 1
-        ,teams:[
-          {id:4,teamName:"SOLAROSPORT", address:"VIA S.PAOLO, 6 20020 SOLARO MI"}
-          ,{id:1,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110 - 20010 Pregnana Milanese (MI)"}
+        ,teamNames:[
+          "SOLAROSPORT"
+          ,"AURORA PREGNANA BLU"
         ]
         ,onewayMeetings:[]
         ,roundtripMeetings:[]
@@ -151,7 +151,7 @@ export class InMemoryDataServiceCSI  {
           ,direction: Direction.OneWay
           ,pageSize: 1
           ,daysNo: 1
-            ,teams:[]
+            ,teamNames:[]
           ,onewayMeetings:[]
           ,roundtripMeetings:[]
           ,classification:[]
@@ -178,7 +178,7 @@ export class InMemoryDataServiceCSI  {
           ,direction: Direction.OneWay
           ,pageSize: 1
           ,daysNo: 1
-            ,teams:[]
+            ,teamNames:[]
           ,onewayMeetings:[]
           ,roundtripMeetings:[]
           ,classification:[]

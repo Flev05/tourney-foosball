@@ -510,4 +510,10 @@ export  class MeetingService extends AbstractService {
     protected makeRuleName(pr1: PlayoffRule, pr2: PlayoffRule): string {
         return "";
     }
+   
+    public saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(mdb);
+        m.id = mdb.id;
+    }
 }

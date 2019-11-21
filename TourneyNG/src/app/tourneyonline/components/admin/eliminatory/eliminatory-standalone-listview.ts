@@ -20,7 +20,7 @@ export class StandaloneEliminatoryListView extends AbstractListView {
     eliminatoryRows: EliminatoryVO[];
     eliminatoryCols: TableCols[];
     isOneway: string;
-
+    isAutoGen: string;
     
     constructor(
         protected tourneyService: TourneyService,
@@ -36,11 +36,12 @@ export class StandaloneEliminatoryListView extends AbstractListView {
         super.ngOnInit();
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
         this.levelService.ngOnInit();
+        this.isAutoGen  = this.selectedEliminatoryLevel.isAutoGen == undefined ? "true" : this.selectedEliminatoryLevel.isAutoGen;
+        this.levelService.isAutomatic = this.isAutoGen == "true" ? true : false;
         this.levelService.prepareGui();
         this.eliminatoryRows = this.levelService.eliminatoryRows;
-        this.eliminatoryCols = this.levelService.eliminatoryLevelCols;
+        this.eliminatoryCols = this.levelService.eliminatoryCols;
         this.isOneway  = this.levelService.isOneway;
-
     }
     
     getPosition1(e: Eliminatory): string {

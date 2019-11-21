@@ -57,7 +57,7 @@ export class CalendarTabListView extends AbstractEliminatoryListView {
     }
     
     protected processEliminationTree(): void {
-        super.processEliminationTree();
+        // super.processEliminationTree();
         
         for(let el of this.selectedTourney.eliminatoryLevels) {
             let allRounds: Array<Round> = new Array<Round>();

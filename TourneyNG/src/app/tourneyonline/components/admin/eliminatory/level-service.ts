@@ -42,26 +42,32 @@ export class LevelService extends AbstractEliminatoryListView {
     ngOnInit() {
         super.ngOnInit();
     }
- 
+    
+    // private prepareStandaloneEliminatory(teamNo: number): void {
+
+    //     this.selectedTourney.selectedEliminatoryTeamsCB.value = teamNo;
+    //     this.processEliminatoryTeams(teamNo);
+    // }
+
     /**
      * @Override
      * Specializes the corresponding method of the base class because of the asynchrnous behabiour of the
      * http REST call to the BE to load the meetings from the database.
      */
-    processEliminationTree(): void {
+    // processEliminationTree(): void {
 
-        let teamNo: number  = this.selectedTourney.teams.length;
-        if( !this.isStandAlone(this.selectedTourney)  ) {
-            teamNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
-            if(teamNo == 0) {
-                return;
-            }
-        } else {
-            this.selectedTourney.selectedEliminatoryTeamsCB.value = teamNo;
-        }
-
-        this.processEliminatoryTeams(teamNo);
-    }
+    //     let teamNo: number  = this.selectedTourney.teams.length;
+    //     if( !this.isStandAlone(this.selectedTourney)  ) {
+    //         teamNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
+    //         if(teamNo == 0) {
+    //             return;
+    //         }
+    //     } else {
+    //         this.selectedTourney.selectedEliminatoryTeamsCB.value = teamNo;
+    //     }
+        
+    //     this.processEliminatoryTeams(teamNo);
+    // }
 
     /**
      * Prepares elimination tree of the desired levels in function of the user selected 
@@ -185,7 +191,6 @@ export class LevelService extends AbstractEliminatoryListView {
         console.log("Entering cleanExTopLevel()");
 
         for (let e of el.eliminatories) {
-            // this.meetingService.deleteMeetingsByTourneyAndEliminatoryIds(this.selectedTourney.id, e.id);
             e.round.teamNames = [];
             e.round.onewayMeetings = [];
             e.round.roundtripMeetings = [];
@@ -243,7 +248,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * list inside the receives eliminatories
      * 
      * @param topLevel the level to check
-     * @returns true if bo the team list are the same, false otherwise
+     * @returns true if both the team list are the same, false otherwise
      */
     private isSomeTeamsChanged(topLevel : EliminatoryLevel): boolean {
         for( let team of this.selectedTourney.teams ) {
@@ -551,7 +556,8 @@ export class LevelService extends AbstractEliminatoryListView {
     private processEliminatoryTeams(teamCount: number): void {
         this.prepareEliminationTree(teamCount);
 
-        if( !this.isStandAlone(this.selectedTourney) ) {
+        if( this.isStandAlone(this.selectedTourney) ) {
+        } else {
             this.prepareAutomaticEliminatoryRules(teamCount, true);
         }
 

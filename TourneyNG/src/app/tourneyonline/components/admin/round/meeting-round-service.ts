@@ -319,10 +319,4 @@ export class MeetingRoundService extends MeetingService {
         m.id = mdb.id;
         e.id = mdb.eliminatoryId;
     }
-    
-    public saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {
-        console.log("saveMeetingNext()");
-        console.log(mdb);
-        m.id = mdb.id;
-    }
 }

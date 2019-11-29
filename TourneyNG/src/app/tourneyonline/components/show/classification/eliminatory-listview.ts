@@ -27,7 +27,7 @@ export class ClassificationEliminatoryListView extends AbstractEliminatoryListVi
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
+        this.tourneyService.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.prepareClassificationGui();
     }
@@ -36,7 +36,7 @@ export class ClassificationEliminatoryListView extends AbstractEliminatoryListVi
         
         let allRounds: Array<Round> = new Array<Round>();
 
-        let el = this.selectedEliminatoryLevel;
+        let el = this.tourneyService.selectedEliminatoryLevel;
 
         for(let e of el.eliminatories) {
             allRounds.push(e.round);

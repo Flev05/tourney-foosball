@@ -100,14 +100,28 @@ export class RoundResultListView extends AbstractListView {
 
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;
-        this.onewayMeetings = this.selectedRound.onewayMeetings;
-        this.roundtripMeetings = this.selectedRound.roundtripMeetings;
 
-        console.log("[Meetings " + this.onewayMeetings.length + "]");
-        console.log("[Days     " + this.allDaysNo + "]");
-        console.log("[PageSize " + this.pageSize + "]");
+        this.onewayMeetings = this.selectedRound.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms));
+        this.roundtripMeetings = this.selectedRound.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
+
+        console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
+        console.log("[RoundtripMeetings " + this.roundtripMeetings.length + "]");
+        console.log("[Days              " + this.allDaysNo + "]");
+        console.log("[PageSize          " + this.pageSize + "]");
 
         this.prepareRoundGuiClassification();
+    }
+
+    private mapCallback (m: Meeting, index: number, array: Meeting[]): Meeting {
+        if(m.isSkiping) {
+            m.points1 = 0;
+            m.points2 = 0;
+        }
+        return m;
+    } 
+    
+    private filterCallback (m: Meeting, index: number, array: Meeting[]): boolean   {
+        return true;
     }
 
     /**
@@ -122,14 +136,13 @@ export class RoundResultListView extends AbstractListView {
   
     onRowSelect(event) {
         console.log(event.data);
+        if( this.selectedRow.isSkiping ) {
+            return;
+        }
 
         this.meetingRoundService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingRoundService;
-
-        if( this.selectedRow.isSkiping ) {
-            return;
-        }
 
         this.gotoDetailView();
     }

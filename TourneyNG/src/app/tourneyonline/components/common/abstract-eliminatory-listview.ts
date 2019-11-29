@@ -32,15 +32,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     msgs: Message[] = [];
    
-    selectedEliminatoryLevel: EliminatoryLevel;
     eliminatoryLevels: Array<EliminatoryLevel>;
     
-    selectedEliminatory: Eliminatory;
     eliminatories: Eliminatory[];
 
     isPlayoff: boolean;
 
-    isTopLevel: boolean;
+    // isTopLevel: boolean;
     isAutomatic: boolean;
 
     isOneway: string;
@@ -81,12 +79,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.meetingService.selectedTourney = this.tourneyService.selectedTourney;
         this.tourneyService.prepareEliminatoriesComboBoxes();
  
-        if(this.tourneyService.selectedEliminatoryLevel!=undefined) {
-            this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
-            this.eliminatories = this.selectedEliminatoryLevel.eliminatories;
-            this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false" ;
-            this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
-        }
+        this.isOneway   = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
 
         this.isPlayoff = this.containsPlayoff();
         
@@ -121,107 +114,17 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
          ];
          return cols;
      }
-
-    /**
-        For each eliminatory level configureted in selected tourney, loads their corresponding meetings,
-        for both the one way and round trip meetings
-     */
-    // loadEliminatoryMeetings( processTree: boolean, complete: () => void ): void {
-    //     this.meetingMap = new Map<number, MeetingDb[]>();
-    //     this.eliminatoryRoundMap = new Map<number, Round>();
-
-    //     this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-    //     this.eliminatoryLevelCols = this.prepareELCols();
-    //     if(this.eliminatoryLevels==undefined || this.eliminatoryLevels.length == 0) {    
-    //         this.processEliminationTree();
-    //         complete();
-    //         return;
-    //     }
-
-    //     this.isAutomatic = false;
-    //     this.elHttpCounter = 0;
-    //     for (let l=0; l<this.eliminatoryLevels.length; l++) {
-    //         let el: EliminatoryLevel = this.eliminatoryLevels[l];
-    //         this.elHttpCounter += el.eliminatories.length;
-    //         if( el.isTopLevel ) {
-    //             this.isAutomatic = el.isAutoGen=="true" ? true : false;
-    //         }
-    //     }
-        
-    //     this.eliminatoryLevelRows = [];
-    //     for (let rowNumber=0; rowNumber<this.eliminatoryLevels.length; rowNumber++) {
-
-    //         let el: EliminatoryLevel = this.eliminatoryLevels[rowNumber];
-
-    //         let level = el.level == -1 ? 2 : this.pow2(el.level);
-            
-    //         const elvo = { eliminatoryLevel: el, rowNumber: rowNumber + 1, level: level, name: el.name };
-    //         this.eliminatoryLevelRows.push(elvo);
-
-    //         for (let e of el.eliminatories) {
-    //             this.eliminatoryRoundMap.set(e.id, e.round);
-    //             let abs = this.meetingService.loadEliminatoryMeeting(this.selectedTourney.id, e.id);
-    //             abs.subscribe(mdbs => this.addToMeetingMap(processTree, complete, mdbs), e => this.onError(e));
-    //         }
-    //     }
-    // }
-    
-    // private addToMeetingMap(processTree: boolean, complete: () => void,  mdbs: MeetingDb[]): void {
-    //     console.log("Entering addToMeetingMap(mdbs.length=" + mdbs.length + ")");
-    //     if( mdbs.length == 0 ) {
-    //         return;
-    //     }
-
-    //     this.elHttpCounter--;
-    //     let elid = mdbs[0].eliminatoryId;
-    //     this.meetingMap.set(elid, mdbs);
-    
-    //     if(this.elHttpCounter > 0) {
-    //         return;
-    //     }
-
-    //     for(let key of this.eliminatoryRoundMap.keys()) {
-    //         let eid: number = +key;
-    //         let meetingsDb: MeetingDb[] = this.meetingMap.get(eid);
-    //         console.log("meetingMap.get(" + key + ")=" );
-    //         console.log(meetingsDb);
-    //         let onewayMeetings: Array<Meeting> = new Array<Meeting>();
-    //         let roundtripMeetings: Array<Meeting> = new Array<Meeting>();
-    //         for(let mdb of meetingsDb) {
-    //             let m: Meeting = JSON.parse(mdb.json);
-    //             m.id = mdb.id;
-    //             if( m.direction == Direction.OneWay ) {
-    //                 onewayMeetings.push(m);
-    //             } else {
-    //                 roundtripMeetings.push(m);
-    //             }
-    //         }
-
-    //         let round = this.eliminatoryRoundMap.get(eid);
-    //         round.onewayMeetings    = MeetingService.sortMeetings(onewayMeetings);
-    //         round.roundtripMeetings = MeetingService.sortMeetings(roundtripMeetings);
-    //     }
-
-    //     if(processTree) {
-    //         this.processEliminationTree();
-    //     }
-        
-    //     complete();
-    // }    
-
-    // protected processEliminationTree(): void {
-    // }
-    
+ 
     onOnewayClick() {
         console.log("Entering onOnewayClick()");
-        this.selectedEliminatoryLevel.direction=Direction.OneWay;
+        this.tourneyService.selectedEliminatoryLevel.direction=Direction.OneWay;
         this.isOneway = "true";
         this.prepareGui();
     }
 
     onRoundtripClick() {
         console.log("Entering onRoundtripClick()");
-        this.selectedEliminatoryLevel.direction=Direction.RoundTrip;
+        this.tourneyService.selectedEliminatoryLevel.direction=Direction.RoundTrip;
         this.isOneway = "false";
         this.prepareGui();
     }
@@ -271,17 +174,20 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryCols = [
         ];
 
-        if(this.isTopLevel) {
+        let isTopLevel = this.tourneyService.selectedEliminatoryLevel.isTopLevel;
+        if(isTopLevel) {
             this.eliminatoryCols.push({ field: 'teamName1', header: 'Team 1'});
             this.eliminatoryCols.push({ field: 'teamName2', header: 'Team 2'});
         }
 
         this.eliminatoryCols.push({ field: 'onewayDatetime', header: 'Andata' });
-        if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
+        if(this.tourneyService.selectedEliminatoryLevel.direction != Direction.OneWay) {
             this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
         
         this.eliminatoryRows = [];
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+
         for(let i=0;i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
@@ -315,7 +221,8 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             { field: 'onewayDatetime', header: 'Andata'}
         ];
 
-        if(this.isTopLevel) {
+        let isTopLevel = this.tourneyService.selectedEliminatoryLevel.isTopLevel;
+        if(isTopLevel) {
             if( this.isAutomatic ) {
                 this.eliminatoryCols.push({ field: 'position1', header: 'I° Squadra'});
                 this.eliminatoryCols.push({ field: 'position2', header: 'II° Squadra'});
@@ -336,11 +243,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             }
         }
 
-        if(this.selectedEliminatoryLevel.direction != Direction.OneWay) {
+        if(this.tourneyService.selectedEliminatoryLevel.direction != Direction.OneWay) {
             this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
         }
 
         this.eliminatoryRows = [];
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+
         for(let i=0; i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 

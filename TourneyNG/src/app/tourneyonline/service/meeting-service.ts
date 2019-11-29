@@ -18,6 +18,8 @@ import { Round } from '../domain/round';
 import { DateFormatPipe } from '../components/common/date-format-pipe';
 import { Playoff } from '../domain/playoff';
 import { undistributeHeight } from 'fullcalendar/src/util/misc';
+import { Classification } from '../domain/classification';
+import { TourneyService } from './tourney-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -69,7 +71,9 @@ export  class MeetingService extends AbstractService {
 
     mdbList: MeetingDb[];
     
-    constructor( protected http: HttpClient, protected router: Router, protected dateFormatPipe: DateFormatPipe) 
+    constructor( protected http: HttpClient
+        , protected router: Router
+        , protected dateFormatPipe: DateFormatPipe) 
     { 
         super();
         console.log("Constructor of MeetingService");
@@ -120,6 +124,7 @@ export  class MeetingService extends AbstractService {
         round.onewayMeetings    = MeetingService.sortMeetings(round.onewayMeetings);
         round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }
+    
     /** 
      * Loads all the meetings of the receìved tourney and round
      *  GET meetings by params. Will 404 if meetings not found 
@@ -490,6 +495,7 @@ export  class MeetingService extends AbstractService {
             isSkiping: skiping,
             direction: d,
             datetime: this.selectedTourney.datetime,
+            dateAndTime: this.dateFormatPipe.transform(this.selectedTourney.datetime),
             address:  this.selectedTourney.address,
             country:  this.selectedTourney.country,
             day: day,
@@ -515,5 +521,108 @@ export  class MeetingService extends AbstractService {
         console.log("saveMeetingNext()");
         console.log(mdb);
         m.id = mdb.id;
+    }
+    
+    public sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+
+            if (c1.points > c2.points) {
+                return -1;
+            }
+            if (c1.points < c2.points) {
+                return 1;
+            }
+        
+            if( c1.goalsDiff > c2.goalsDiff ) {
+                return -1;
+            }
+            if( c1.goalsDiff < c2.goalsDiff ) {
+                return 1;
+            }
+
+            if( c1.goalsDone > c2.goalsDone ) {
+                return -1;
+            }
+            if( c1.goalsDone < c2.goalsDone ) {
+                return 1;
+            }
+
+            if( c1.goalsConceded < c2.goalsConceded ) {
+                return -1;
+            }
+            if( c1.goalsConceded > c2.goalsConceded ) {
+                return 1;
+            }
+
+            return c1.teamName > c2.teamName ? 1 : -1;
+        });
+
+        return sortedClassification;
+    } 
+
+    /**
+     * Creates a matrix of best classification of the teams received in the rounds parameter.
+     * The matrix contains in the first row the best first classification teams, in the seconds
+     * row the second best classification teams and so on.
+     * 
+     * The matrix has to accessed by 2 indexes:
+     * - the band position to select the row
+     * - tne position to select the team in the row
+     * 
+     * @param rounds the rounds containing the teams to make the matrix
+     */
+    public createRoundMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
+        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
+
+        for( let i=0; i<rounds[0].classification.length; i++ ) {
+            let bestClassifications: Array<Classification> = new Array<Classification>();
+            for(let r of rounds) {
+                r.classification = this.sortDesc(r.classification);
+
+                bestClassifications.push(r.classification[i]);    
+            }
+            bestClassifications = this.sortDesc(bestClassifications);
+            
+            let row: Array<Classification> = new Array<Classification>();
+            roundMatrix.push(row);
+
+            for(let c of bestClassifications) {
+                row.push(c);
+            }
+        }
+        return roundMatrix;
+    }
+
+    /**
+     * Resolves, for the automatic playoff mode, the team names of the received meeting and round list applying the rule in the same meeting
+     * 
+     * @param m the meeting the name to resolve with
+     * @param rounds the list of the rounds from which take the round names
+     */
+    public resolveAutomaticRules( m: Meeting, rounds: Round[] ): void {
+        m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
+        let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(rounds);
+
+        let row = m.rule1.fromRound.bandPosition;
+        let col = m.rule1.fromRound.position.value;
+        m.ruleName1 = m.rule1.ruleName;
+        if( row <= 0 ) {
+            m.teamName1 = m.rule1.fromRound.round.label;
+        } else if( m.isDummy ) {
+            m.teamName1 = m.rule1.fromRound.round.label;
+        } else {
+            m.teamName1 = roundMatrix[row-1][col-1].teamName;
+        }
+
+        row = m.rule2.fromRound.bandPosition;
+        col = m.rule2.fromRound.position.value;
+        m.ruleName2 = m.rule2.ruleName;
+        if( row <= 0 ) {
+            m.teamName2 =  m.rule2.fromRound.round.label;
+        } else if( m.isDummy ) {
+            m.teamName2 =  m.rule2.fromRound.round.label;
+        } else {
+            m.teamName2 = roundMatrix[row-1][col-1].teamName;
+        }
     }
 }

@@ -2,12 +2,16 @@
     <p-accordionTab header="Istruzioni">                        
     <h4>Istruzioni</h4>
     <p> 
-        La vista permette l'inserimento del risultato finale dell'incontro selezionato.
+        La vista permette l'inserimento dei risultati man mano che si verificano fino a quello finale.
         Per ciascuna partita inserite il punteggio azionando opportunamente i bottoni + (più) e - (meno)
-        per aumentare e dimunire il punteggio rispettivamente.
+        per aumentare o dimunire il punteggio rispettivamente.
     </p> 
     <p>
-        A cose fatte, salvare il tutto con il bottone Salva.
+        A cose fatte, salvare il tutto con il bottone Salva. 
+    </p> 
+    <p>
+        Il punteggio così salvato sarà immmediatamente riflesso nella classifica e nelle faormazioni
+        delle fasi successive se previste come plaoff ed eliminazioni dirette.
     </p>
 </p-accordionTab>
 </p-accordion>
@@ -16,66 +20,64 @@
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-    <button class="ui-button-success" type="button" pButton icon="pi pi-save" (click)="save()" label="Salva"></button>
 </div>       
 
-<div *ngIf="alreadyPassed" style="margin-top:30px">
-    <p-message  
-        severity="success" 
-        text="{{teamPassedMessage}}">
-    </p-message>
-</div>     
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p-table [value]="matches">
 
-<p-table *ngIf="!alreadyPassed" [value]="matches">
-    <ng-template pTemplate="colgroup">
-        <colgroup>
-            <col style="width: 20mm;">
-            <col style="width: 100%;">
-        </colgroup>
-    </ng-template>
+        <ng-template pTemplate="colgroup">
+            <colgroup>
+                <col style="width: 20mm;">
+                <col style="width: 100%;">
+            </colgroup>
+        </ng-template>
 
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Partita</th>
-            <th>{{selectedMeeting.teamName1}} {{selectedMeeting.pointes1}} - {{selectedMeeting.pointes2}} {{selectedMeeting.teamName2}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})</th>
-        </tr>
-    </ng-template>
+        <ng-template pTemplate="caption" >
+            <div style="text-align: center">
+                <button class="ui-button-success" label="Salva" pButton icon="fa fa-save" type="button" (click)="save()"></button>
+            </div>
+        </ng-template>       
+        
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Partita</th>
+                <th>{{selectedMeeting.teamName1}} {{selectedMeeting.pointes1}} - {{selectedMeeting.pointes2}} {{selectedMeeting.teamName2}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})</th>
+            </tr>
+        </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-        <tr>
-            <td>{{rowIndex + 1}}</td>
-
-            <td>
-                <table>
-                    <tr>
-                        <td style="width: 10mm; text-align: center;">
-                            <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
-                        </td>
-                        <td style="width: 10mm; text-align: center;">
-                            <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
-                        </td>
-                        <td style="width: 10mm; text-align: center;">
-                            <button pButton type="button" icon="fa fa fa-plus" (click)="plus1(rowData)"></button>
-                        </td>            
-                    </tr>
-                    <tr>
-                        <td style="width: 10mm; text-align: center;">
-                            <button pButton type="button" icon="fa fa-minus" (click)="minus2(rowData)"></button>
-                        </td>
-                        <td style="width: 10mm; text-align: center;">
-                            <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
-                        </td>
-                        <td style="width: 10mm; text-align: center;">
-                            <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)"></button>
-                        </td>            
-                    </tr>
-                </table>
-            </td>
-
-        </tr>
-    </ng-template>        
-</p-table>
-
-<div *ngIf="!alreadyPassed" style="text-align:left">
-    <button class="ui-button-success" type="button" pButton icon="pi pi-save" (click)="save()" label="Salva"></button>
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr>
+                <td>{{rowIndex + 1}}</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td style="width: 10mm; text-align: center;">
+                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
+                            </td>
+                            <td style="width: 10mm; text-align: center;">
+                                <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
+                            </td>
+                            <td style="width: 10mm; text-align: center;">
+                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus1(rowData)"></button>
+                            </td>            
+                        </tr>
+                        <tr>
+                            <td style="width: 10mm; text-align: center;">
+                                <button pButton type="button" icon="fa fa-minus" (click)="minus2(rowData)"></button>
+                            </td>
+                            <td style="width: 10mm; text-align: center;">
+                                <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
+                            </td>
+                            <td style="width: 10mm; text-align: center;">
+                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)"></button>
+                            </td>            
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <button class="ui-button-success" label="Salva" pButton icon="fa fa-save" type="button" (click)="save()"></button>
+        </ng-template>
+    </p-table>
 </div>

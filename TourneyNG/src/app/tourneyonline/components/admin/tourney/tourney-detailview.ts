@@ -26,6 +26,7 @@ import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
@@ -943,17 +944,11 @@ export class TourneyDetailView extends AbstractDetailView {
         this.cleanPlayoffMeetings(true);
     }
 
-    private prepareTourneyVOForPlayoff(cleanPlayoffs: boolean) {
-        this.cleanPlayoffMeetings(cleanPlayoffs);
-        let tvo: TourneyVO = {
-            id: this.selectedTourney.id,
-            tourneyName: this.selectedTourney.tourneyName,
-            country: this.selectedTourney.country,
-            clientVO: this.clientService.selectedClient,
-            json: JSON.stringify(this.selectedTourney)
-        };
-        return tvo;
-    }
+    // private prepareTourneyVOForPlayoff(cleanPlayoffs: boolean): TourneyVO {
+    //     this.cleanPlayoffMeetings(cleanPlayoffs);
+    //     let tvo: TourneyVO = this.tourneyService.convertTourneyToVo(this.selectedTourney);
+    //     return tvo;
+    // }
 
     private cleanPlayoffMeetings(cleanPlayoffs: boolean) {
         for (let p of this.selectedTourney.playoffs) {
@@ -1039,9 +1034,15 @@ export class TourneyDetailView extends AbstractDetailView {
         if(!this.levelService.isStandAlone(this.selectedTourney) ) {
             redirect = LevelService.manualRedirectLV;
         }
-        this.levelService.onEliminatoryLevelRowSelect(event, redirect);
+        this.levelService.onEliminatoryLevelRowSelect(event, () => this.doRedirect(redirect));
     }
 
+    private doRedirect(redirect: string): void {
+        if( redirect != null ) {
+            this.router.navigate([redirect]);
+        }
+    }
+    
     onOnewayRoundClick() {
         console.log("Entering onOnewayRoundClick()");
         this.selectedTourney.isOnewayRound = "true";
@@ -1141,7 +1142,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let tvo: TourneyVO = this.prepareTourneyVO();
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.saveComplete());
+        if( !this.onSaveTourneyError ) {
+            subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.saveComplete());
+        }
     }
 
     private saveComplete(): void {
@@ -1186,28 +1189,28 @@ export class TourneyDetailView extends AbstractDetailView {
         subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(this.rewind));
     }
 
-    private standAloneComplete():  void {
-        this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
-        this.saveEliminatoryMeetings();
-        let tvo: TourneyVO = this.cloneTourneyVO(this.rewind);
-        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(this.rewind));
-    }
+    // private standAloneComplete():  void {
+    //     this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
+    //     this.saveEliminatoryMeetings();
+    //     let tvo: TourneyVO = this.cloneTourneyVO(this.rewind);
+    //     const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+    //     subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(this.rewind));
+    // }
 
-    private saveEliminatoryMeetings() {
-        for (let el of this.selectedTourney.eliminatoryLevels) {
-            for( let elim of el.eliminatories ) {
-                for (let m of elim.round.onewayMeetings) {
-                    let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
-                    observer.subscribe(n => this.meetingService.saveMeetingNext(n, m));
-                }
-                for (let m of elim.round.roundtripMeetings) {
-                    let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
-                    observer.subscribe(n => this.meetingService.saveMeetingNext(n, m));
-                }
-            }
-        }
-    }
+    // private saveEliminatoryMeetings() {
+    //     for (let el of this.selectedTourney.eliminatoryLevels) {
+    //         for( let elim of el.eliminatories ) {
+    //             for (let m of elim.round.onewayMeetings) {
+    //                 let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
+    //                 observer.subscribe(n => this.meetingService.saveMeetingNext(n, m));
+    //             }
+    //             for (let m of elim.round.roundtripMeetings) {
+    //                 let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
+    //                 observer.subscribe(n => this.meetingService.saveMeetingNext(n, m));
+    //             }
+    //         }
+    //     }
+    // }
 
     private saveTourneyNext(tvo: TourneyVO): void {
         console.log("saveTourneyNext()");
@@ -1235,23 +1238,11 @@ export class TourneyDetailView extends AbstractDetailView {
     }
  
     private updatePlayoffMeetings() {
-
-        let playoffsMeetings : MeetingDb [] = [];
-        for (let p of this.selectedTourney.playoffs) {
-            for (let m of p.round.onewayMeetings) {
-                let mdb = this.meetingRoundService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                playoffsMeetings.push(mdb);
-            }
-            for (let m of p.round.roundtripMeetings) {
-                let mdb = this.meetingRoundService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
-                playoffsMeetings.push(mdb);
-            }
-        }
-
-        let tvo: TourneyVO = this.prepareTourneyVOForPlayoff(false);
-        tvo.mdbs = playoffsMeetings;
-        const subscriber = this.tourneyService.updateTourneyAndPlayoffs(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.unBlockDocument() );
+        this.tourneyService.updateTourneyAndPlayoffs(this.selectedTourney, () => this.onUpdateTourneyAndPlayoffsComplete());
+    }
+    
+    private onUpdateTourneyAndPlayoffsComplete( ): void {
+        this.unBlockDocument();
     }
 
     private cloneTourneyVO(rewind : boolean) : TourneyVO {

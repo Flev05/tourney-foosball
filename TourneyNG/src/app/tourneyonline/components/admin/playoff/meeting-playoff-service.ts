@@ -14,10 +14,12 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { FromRound } from 'app/tourneyonline/domain/from-round';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { Round } from 'app/tourneyonline/domain/round';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {
-
 
     constructor(protected http: HttpClient
         , protected tourneyService: TourneyService
@@ -337,5 +339,131 @@ export class MeetingPlayoffService extends MeetingService {
         }
         console.log("daysKey=" + this.onewayDaysNo);
         this.shiftOnewayDays(this.onewayDaysNo);
+    }
+
+    /**
+     * Called every time at meeting reload in the automatic mode configuration,
+     * resolves the playoff rules to their corresponding 
+     * qualified teams from the tourney rounds
+     */
+    public resolveAutomaticTeams(playoff: Playoff) {
+        let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(this.selectedTourney.rounds);
+        playoff.round.teamNames = [];
+
+        for(let r=0; r<playoff.playoffRules.length; r++) {
+            const pr: PlayoffRule = playoff.playoffRules[r];
+            if( pr.isDummy ) {
+                continue;
+            }
+            let row  = pr.fromRound.bandPosition;
+            let col  = pr.fromRound.position.value;
+            let teamName = roundMatrix[row-1][col-1].teamName;
+
+            console.log(playoff.playoffName + "(" + pr.ruleName + ")=" + teamName);
+
+            playoff.round.teamNames.push(teamName);
+        }
+    }
+
+    /**
+     * Called every time at meeting reload in the automatic mode configuration,
+     * resolves the team names in the both oneway and rountrip meeting list applying
+     * the corresponding rule present in the meeting
+     */
+    public resolveAutomaticMeetings(playoff: Playoff, rounds: Round[]) {
+        for( let m of playoff.round.onewayMeetings ) {
+            this.resolveAutomaticRules( m, rounds);
+        }
+
+        for( let m of playoff.round.roundtripMeetings ) {
+            this.resolveAutomaticRules( m, rounds);
+        }
+    }
+
+
+    /**
+     * Called every time at meeting reload, it resolves the playoff rules to their corresponding 
+     * qualified teams from the tourney rounds
+     */
+    public resolveManualTeams(playoff : Playoff): void {
+        playoff.round.teamNames = [];
+
+        for( let rule of playoff.playoffRules ) {
+            let position:  number = rule.fromRound.position.value;
+            let roundName: string = rule.fromRound.round.label;
+
+            let round = this.selectedTourney.rounds.find( r => r.name == roundName );
+            if( round != undefined ) {
+                if( round.classification.length > 0 ) {
+                    let c: Classification = round.classification[position-1];
+    
+                    let teamName = rule.fromRound.position.label + " " + c.teamName;
+                    playoff.round.teamNames.push(teamName);
+                }
+            }
+        }
+    }
+
+    /**
+     * Resolves the team names in the both oneway and rountrip meeting list applying
+     * the the corresponding rule present in the meeting
+     */
+    public resolveManualMeetings(playoff : Playoff, rounds: Round[]): void {
+        for( let m of playoff.round.onewayMeetings ) {
+            this.resolveManualRules( m, rounds);
+        }
+
+        for( let m of playoff.round.roundtripMeetings ) {
+            this.resolveManualRules( m, rounds);
+        }
+    }
+
+    /**
+     * Resolves the team names of the received meeting and round list applying the rule in the same meeting
+     * 
+     * @param m the meeting the name to resolve with
+     * @param rounds the list of the rounds from which take the round names
+     */
+    private resolveManualRules( m: Meeting, rounds: Round[]): void {
+        m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
+
+        let teamName: string = null;
+        if( m.isDummy ) {
+            teamName =  m.rule1.fromRound.round.label;
+        } else {
+            teamName = this.findTeam(m.rule1, rounds);
+        }
+        m.teamName1 = teamName;
+        m.ruleName1 = m.rule1.ruleName;
+
+        if( m.isDummy ) {
+            teamName =  m.rule2.fromRound.round.label;
+        } else {
+            teamName = this.findTeam(m.rule2, rounds);
+        }
+        m.teamName2 = teamName;
+        m.ruleName2 = m.rule2.ruleName;
+    }
+    
+    /**
+     * Finds the team corresponding to the received rule
+     * 
+     * @param rule the playoff rule to associate to the qualified team
+     */
+    private findTeam(rule: PlayoffRule, rounds: Round[]): string {
+
+        let position:  number = rule.fromRound.position.value;
+        let roundName: string = rule.fromRound.round.label;
+
+        let round = rounds.find( r => r.name == roundName );
+        if( round != undefined ) {
+            if( round.classification.length > 0 ) {
+                let c: Classification = round.classification[position-1];
+                let teamName = c.teamName;
+                console.log("Resolved Team is [" + teamName + "]");
+                return teamName;
+            }
+        }        
+        return null;
     }
 }

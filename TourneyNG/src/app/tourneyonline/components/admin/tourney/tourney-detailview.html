@@ -807,7 +807,7 @@
                     [scrollable]="true" 
                     scrollHeight="500px">
 
-                <ng-template pTemplate="caption" let-rowData>
+                <ng-template pTemplate="caption">
                     <div style="text-align:left">
                         <button label="{{teamLabel}}"
                             [disabled]="notAllowedPhases()" 
@@ -1338,32 +1338,33 @@
                     </tr>
                 </ng-template>
             </p-table>
+        </div>
 
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                <div class="ui-grid-row">
-                    <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
-                        <button pButton type="button" 
-                            class="ui-button-success"   
-                            icon="fa fa-arrow-left" 
-                            label="Indietro" 
-                            (click)="prevTab()">
-                        </button>
-                    </div>
-                    
-                    <div class="ui-grid-col-2">
-                        <button pButton type="button"
-                            class="ui-button-success" 
-                            icon="{{nextButtonIcon}}" 
-                            iconPos="right"
-                            label="{{nextButtonLabel}}" 
-                            (click)="nextTab()"
-                            [disabled]="eliminatoryButtonDisabled()">
-                        </button>
-                    </div>
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
+                    <button pButton type="button" 
+                        class="ui-button-success"   
+                        icon="fa fa-arrow-left" 
+                        label="Indietro" 
+                        (click)="prevTab()">
+                    </button>
+                </div>
+                
+                <div class="ui-grid-col-2">
+                    <button pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="eliminatoryButtonDisabled()">
+                    </button>
                 </div>
             </div>
-        </div>
-    </p-tabPanel>            
+        </div>            
+
+    </p-tabPanel>   
 </p-tabView>
 
 <div *ngIf="badRequest" style="margin-top:30px">

@@ -28,7 +28,7 @@ export class CalendarEliminatoryListView extends AbstractEliminatoryListView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
+        this.tourneyService.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         // this.prepareClassificationGui();
     }

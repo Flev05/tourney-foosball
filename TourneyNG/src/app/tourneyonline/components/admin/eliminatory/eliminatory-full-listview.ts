@@ -18,7 +18,6 @@ export class FullEliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows:  EliminatoryVO[];
     eliminatoryCols: TableCols[];
-    isOneway: string;
     isAutoGen: string;
 
     constructor(
@@ -28,7 +27,7 @@ export class FullEliminatoryListView extends AbstractListView {
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(LevelService.manualRedirectDV, tourneyService,   router, location);
+        super(LevelService.manualRedirectDV, tourneyService,  router, location);
     }
 
     ngOnInit() {
@@ -40,7 +39,6 @@ export class FullEliminatoryListView extends AbstractListView {
         this.levelService.prepareGui();
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
-        this.isOneway  = this.levelService.isOneway;
     }
  
     getPosition1(e: Eliminatory): string {
@@ -58,23 +56,23 @@ export class FullEliminatoryListView extends AbstractListView {
         console.log(event);
 
         this.tourneyService.selectedEliminatory = event.data.eliminatory;
+        if(this.tourneyService.selectedEliminatory.isSkiping) {
+            return;
+        }
+
         this.levelService.eliminatorySelectedRow = event.data;
 
         this.router.navigate([LevelService.manualRedirectDV]);
     }
 
     onOnewayClick() {
-        console.log("Entering onOnewayClick()");
         this.levelService.onOnewayClick();
-        this.isOneway = this.levelService.isOneway;
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
     }
 
     onRoundtripClick() {
-        console.log("Entering onRoundtripClick()");
         this.levelService.onRoundtripClick();
-        this.isOneway = this.levelService.isOneway;
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
     }

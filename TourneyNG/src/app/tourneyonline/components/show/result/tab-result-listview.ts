@@ -15,9 +15,6 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Team } from 'app/tourneyonline/domain/team';
-import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 
@@ -47,6 +44,7 @@ export class TabResultListView extends AbstractListView {
 
     eliminatoryLevelCols: TableCols[];
     eliminatoryLevelRows: EliminatoryLevelVO[];
+    selctedEliminatoryLevel: EliminatoryLevelVO;
 
     constructor(
         public tourneyService: TourneyService,
@@ -68,6 +66,7 @@ export class TabResultListView extends AbstractListView {
         this.tourneyService.selectedEliminatoryIndex = -1;
 
         this.selectedTourney = this.tourneyService.selectedTourney;
+        this.meetingPlayoffService.selectedTourney = this.selectedTourney;
 
         this.roundCount = 0;
         if(super.containsRound()) {
@@ -126,11 +125,11 @@ export class TabResultListView extends AbstractListView {
             this.meetingPlayoffService.extractPlayoffMeetings(playoff, this.mdbList);
     
             if( this.selectedTourney.isPlayoffAutoGen == "true") {
-                this.resolveAutomaticTeams(playoff);
-                this.resolveAutomaticMeetings(playoff, this.selectedTourney.rounds);
+                this.meetingPlayoffService.resolveAutomaticTeams(playoff);
+                this.meetingPlayoffService.resolveAutomaticMeetings(playoff, this.selectedTourney.rounds);
             } else {
-                this.resolveManualTeams(playoff);
-                this.resolveManualMeetings(playoff, this.selectedTourney.rounds);
+                this.meetingPlayoffService.resolveManualTeams(playoff);
+                this.meetingPlayoffService.resolveManualMeetings(playoff, this.selectedTourney.rounds);
             }
     
             let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);
@@ -138,161 +137,7 @@ export class TabResultListView extends AbstractListView {
         }
         this.prepareEliminatoryLevels();
     }
- 
-    /**
-     * Called every time at meeting reload in the automatic mode configuration,
-     * resolves the playoff rules to their corresponding 
-     * qualified teams from the tourney rounds
-     */
-    private resolveAutomaticTeams(playoff: Playoff) {
-        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(this.selectedTourney.rounds);
-        playoff.round.teamNames = [];
 
-        for(let r=0; r<playoff.playoffRules.length; r++) {
-            const pr: PlayoffRule = playoff.playoffRules[r];
-            if( pr.isDummy ) {
-                continue;
-            }
-            let row  = pr.fromRound.bandPosition;
-            let col  = pr.fromRound.position.value;
-            let teamName = roundMatrix[row-1][col-1].teamName;
-
-            console.log(playoff.playoffName + "(" + pr.ruleName + ")=" + teamName);
-
-            playoff.round.teamNames.push(teamName);
-        }
-    }
-
-    /**
-     * Called every time at meeting reload in the automatic mode configuration,
-     * resolves the team names in the both oneway and rountrip meeting list applying
-     * the corresponding rule present in the meeting
-     */
-    private resolveAutomaticMeetings(playoff: Playoff, rounds: Round[]) {
-        for( let m of playoff.round.onewayMeetings ) {
-            this.resolveAutomaticRules( m, rounds);
-        }
-
-        for( let m of playoff.round.roundtripMeetings ) {
-            this.resolveAutomaticRules( m, rounds);
-        }
-    }
-
-    /**
-     * Resolves, for the automatic playoff mode, the team names of the received meeting and round list applying the rule in the same meeting
-     * 
-     * @param m the meeting the name to resolve with
-     * @param rounds the list of the rounds from which take the round names
-     */
-    private resolveAutomaticRules( m: Meeting, rounds: Round[]): void {
-        m.dateAndTime = this.dfp.transform(m.datetime, false);
-        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(rounds);
-
-        let row = m.rule1.fromRound.bandPosition;
-        let col = m.rule1.fromRound.position.value;
-        m.ruleName1 = m.rule1.ruleName;
-        if( m.isDummy && row == 0 ) {
-            m.teamName1 = m.rule1.fromRound.round.label;
-        } else {
-            m.teamName1 = roundMatrix[row-1][col-1].teamName;
-        }
-
-        row = m.rule2.fromRound.bandPosition;
-        col = m.rule2.fromRound.position.value;
-        m.ruleName2 = m.rule2.ruleName;
-        if( m.isDummy && row == 0 ) {
-            m.teamName2 =  m.rule2.fromRound.round.label;
-        } else {
-            m.teamName2 = roundMatrix[row-1][col-1].teamName;
-        }
-    }
-
-    /**
-     * Called every time at meeting reload, it resolves the playoff rules to their corresponding 
-     * qualified teams from the tourney rounds
-     */
-    private resolveManualTeams(playoff : Playoff): void {
-        playoff.round.teamNames = [];
-
-        for( let rule of playoff.playoffRules ) {
-            let position:  number = rule.fromRound.position.value;
-            let roundName: string = rule.fromRound.round.label;
-
-            let round = this.selectedTourney.rounds.find( r => r.name == roundName );
-            if( round != undefined ) {
-                if( round.classification.length > 0 ) {
-                    let c: Classification = round.classification[position-1];
-    
-                    let teamName = rule.fromRound.position.label + " " + c.teamName;
-                    playoff.round.teamNames.push(teamName);
-                }
-            }
-        }
-    }
-
-    /**
-     * Resolves the team names in the both oneway and rountrip meeting list applying
-     * the the corresponding rule present in the meeting
-     */
-    private resolveManualMeetings(playoff : Playoff, rounds: Round[]): void {
-        for( let m of playoff.round.onewayMeetings ) {
-            this.resolveManualRules( m, rounds);
-        }
-
-        for( let m of playoff.round.roundtripMeetings ) {
-            this.resolveManualRules( m, rounds);
-        }
-    }
-    
-    /**
-     * Resolves the team names of the received meeting and round list applying the rule in the same meeting
-     * 
-     * @param m the meeting the name to resolve with
-     * @param rounds the list of the rounds from which take the round names
-     */
-    private resolveManualRules( m: Meeting, rounds: Round[]): void {
-        m.dateAndTime = this.dfp.transform(m.datetime, false);
-
-        let teamName: string = null;
-        if( m.isDummy ) {
-            teamName =  m.rule1.fromRound.round.label;
-        } else {
-            teamName = this.findTeam(m.rule1, rounds);
-        }
-        m.teamName1 = teamName;
-        m.ruleName1 = m.rule1.ruleName;
-
-        if( m.isDummy ) {
-        let t2: Team = null
-            teamName =  m.rule2.fromRound.round.label;
-        } else {
-            teamName = this.findTeam(m.rule2, rounds);
-        }
-        m.teamName2 = teamName;
-        m.ruleName2 = m.rule2.ruleName;
-    }
-
-    /**
-     * Finds the team corresponding to the received rule
-     * 
-     * @param rule the playoff rule to associate to the qualified team
-     */
-    private findTeam(rule: PlayoffRule, rounds: Round[]): string {
-
-        let position:  number = rule.fromRound.position.value;
-        let roundName: string = rule.fromRound.round.label;
-
-        let round = rounds.find( r => r.name == roundName );
-        if( round != undefined ) {
-            if( round.classification.length > 0 ) {
-                let c: Classification = round.classification[position-1];
-                let teamName = c.teamName;
-                console.log("Resolved Team is [" + teamName + "]");
-                return teamName;
-            }
-        }        
-        return null;
-    }
 
     onChangeTab(e) {
         let index=e.index;
@@ -414,8 +259,21 @@ export class TabResultListView extends AbstractListView {
     
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
+        this.meetingService.selectedMeetingDb = {
+            id: null
+          , tourneyId: this.selectedTourney.id
+          , roundId: null
+          , playoffId: null
+          , eliminatoryId: this.selctedEliminatoryLevel.eliminatoryLevel.id
+        };     
+        
+        let indexOf = this.eliminatoryLevelRows.indexOf( this.selctedEliminatoryLevel );
+        this.tourneyService.selectedEliminatoryLevelIndex  = indexOf;
 
-        this.levelService.onEliminatoryLevelRowSelect(event, REDIRECT_ELIMINATORY);
+        this.tourneyService.selectedEliminatoryLevel = this.selctedEliminatoryLevel.eliminatoryLevel;
+         
+        this.router.navigate([REDIRECT_ELIMINATORY]);
+        // this.levelService.onEliminatoryLevelRowSelect(event, REDIRECT_ELIMINATORY);
     }
 
     goBack(): void {        

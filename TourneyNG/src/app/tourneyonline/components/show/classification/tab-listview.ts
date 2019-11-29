@@ -72,12 +72,11 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
       
-        this.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
-        this.tourneyService.selectedEliminatoryLevel = this.selectedEliminatoryLevel;
+        this.tourneyService.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
         
         for(let l=0; l<this.selectedTourney.eliminatoryLevels.length; l++) {
             let el = this.selectedTourney.eliminatoryLevels[l];
-            if(el.id == this.selectedEliminatoryLevel.id) {
+            if(el.id == this.tourneyService.selectedEliminatoryLevel.id) {
                 this.tourneyService.selectedEliminatoryLevelIndex = l;
                 this.tourneyService.selectedEliminatoryIndex = -1;
                 break;

@@ -15,6 +15,7 @@ import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { LevelService } from '../../admin/eliminatory/level-service';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 
@@ -62,6 +63,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
         , protected dfp: DateFormatPipe
         , private teamService: TeamService
         , private playerService: PlayerService
+        , private levelService: LevelService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, router, location);
     }
@@ -74,17 +76,37 @@ export class PlayoffResultListView extends AbstractRuleListView {
      
         this.classificationCols = this.tourneyService.classificationCols;
         this.cols = this.tourneyService.resultCols;
-
         this.playoffTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedPlayoff.round.teamNames);
+
+        let playoffIds: number[] = [];
+        for(let p of this.selectedTourney.playoffs) {
+            playoffIds.push(p.id);
+        }
+        
+        const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
+        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onPlayoffCompleteLoad());
+    }
+
+    private onPlayoffCompleteLoad() {
+        this.meetingPlayoffService.extractPlayoffMeetings(this.selectedPlayoff, this.mdbList);
+
+        if( this.selectedTourney.isPlayoffAutoGen == "true") {
+            this.meetingPlayoffService.resolveAutomaticTeams(this.selectedPlayoff);
+            this.meetingPlayoffService.resolveAutomaticMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
+        } else {
+            this.meetingPlayoffService.resolveManualTeams(this.selectedPlayoff);
+            this.meetingPlayoffService.resolveManualMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
+        }
 
         this.allDaysNo = this.selectedPlayoff.round.daysNo;
         this.pageSize  = this.selectedPlayoff.round.pageSize;
-        this.onewayMeetings    = this.selectedPlayoff.round.onewayMeetings;
-        this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings;
+        this.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
+        this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
 
-        console.log("[Meetings " + this.onewayMeetings.length + "]");
-        console.log("[Days     " + this.allDaysNo + "]");
-        console.log("[PageSize " + this.pageSize + "]");
+        console.log("[OnewayMeetings   " + this.onewayMeetings.length + "]");
+        console.log("[RoundtriMeetings " + this.roundtripMeetings.length + "]");
+        console.log("[Days             " + this.allDaysNo + "]");
+        console.log("[PageSize         " + this.pageSize + "]");
 
         if (this.selectedTourney.isOnewayPlayoff == "true") {
             this.meetingsNoMsg = "" + this.onewayMeetings.length + " in " + this.allDaysNo + " giornate (Solo Andata)";
@@ -92,33 +114,62 @@ export class PlayoffResultListView extends AbstractRuleListView {
             this.isRoundTrip = true;
             this.meetingsNoMsg = "" + this.onewayMeetings.length * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
-        
+
         this.preparePlayoffClassification(this.selectedPlayoff);
+        this.prepareEliminatoryLevels();
+
+        this.updateSelectedPlayoff();
+    }
+
+    private updateSelectedPlayoff() {
+        this.tourneyService.updateTourneyCleanPalyoffMeetings(this.selectedTourney, () => {});
+    }
+
+    private prepareEliminatoryLevels() {
+        if( !this.containsEliminatory() ) {
+            return;
+        }
+            
+        this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+        this.levelService.ngOnInit();
+        this.levelService.prepareEliminatoryLevelsGui();
+    }
+
+    private mapCallback(m: Meeting, index: number, ms: Meeting[]): Meeting {
+        if(m.isSkiping) {
+            m.points1 = 0;
+            m.points2 = 0;
+        }
+        return m;
+    }
+
+    private filterCallback(m: Meeting, index: number, ms: Meeting[]): boolean {
+        return true;
     }
 
     /**
      * Prepares the classification relatid to the selected playoff
      */
     private preparePlayoffClassification(playoff : Playoff): void {
+        let allMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.selectedPlayoff.round.roundtripMeetings);
+        this.selectedPlayoff.round.classification = this.tourneyService.createClassification(allMeetings);
         this.playoffClassification = this.tourneyService.prepareRoundsGui([playoff.round]);
     }
 
     onChangeTab(e) {
         let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
         this.tourneyService.selectedPlayoffTabIndex = index;
     }
   
     onRowSelect(event) {
         console.log(event.data);
+        if( this.selectedRow.isSkiping) {
+            return;
+        }
 
         this.meetingPlayoffService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingPlayoffService;
-
-        if( this.selectedRow.isDummy) {
-            return;
-        }
 
         this.gotoDetailView();
     }

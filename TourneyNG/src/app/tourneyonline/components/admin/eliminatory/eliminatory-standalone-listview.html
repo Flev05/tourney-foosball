@@ -2,7 +2,7 @@
     <div>
         <span class="feature-title">Eliminazioni Dirette</span>
         <h2><span>Torneo: {{selectedTourney.tourneyName}}</span></h2>
-        <h3><span>{{selectedEliminatoryLevel.name}}</span></h3>
+        <h3><span>{{tourneyService.selectedEliminatoryLevel.name}}</span></h3>
     </div>
 </div>   
 
@@ -64,13 +64,13 @@
         <p-radioButton name="isOnewayGroupname" 
             label="Solo andata" 
             value="true" 
-            [(ngModel)]="isOneway"
+            [(ngModel)]="levelService.isOneway"
             (onClick)="onOnewayClick()">
         </p-radioButton>
         <p-radioButton name="isOnewayGroupname" 
             label="Andata e ritorno" 
             value="false" 
-            [(ngModel)]="isOneway"
+            [(ngModel)]="levelService.isOneway"
             (onClick)="onRoundtripClick()">
         </p-radioButton>
     </div>

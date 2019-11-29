@@ -14,6 +14,8 @@ import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { LevelService } from '../../admin/eliminatory/level-service';
+import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -21,57 +23,59 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 export class EliminatoryListView extends AbstractEliminatoryListView {
     static autoRedirect: string = 'result/lv/meetingLv/dv';
     
-    selectedMeetingRow: any;
-    incompleteConfiguration: boolean;
-    incompleteMessage: string;
     cols: TableCols[] ;
+    pageSize: number = 10;
+    classificationCols: TableCols[];
+    eliminatoryClassification: any[];
+
+    selectedRow: Meeting;
+    onewayMeetings: Meeting[];
+    roundtripMeetings: Meeting[];
 
     constructor(
         protected tourneyService: TourneyService,
         protected meetingService: MeetingService,
+        protected levelService: LevelService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
     ) {
-        super(EliminatoryListView.autoRedirect, tourneyService, meetingService, router, location, dfp);
+        super(MeetingDetailView.meetingDvRedirect, tourneyService, meetingService, router, location, dfp);
     }
 
     ngOnInit() {
         super.ngOnInit();
+        this.classificationCols = this.tourneyService.classificationCols;
 
-        this.incompleteMessage = "Attenzione! Le regole per il passaggio del turno alle eliminazioni dirette non sono complete!";
-        this.incompleteConfiguration = this.selectedTourney.wizardModeIndex != -1;
-        this.resolveRules();
+        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onLoadComplete());
     }
-    
-    private resolveRules(): void {
+ 
+    onChangeTab(e) {
+        let index=e.index;
+        this.tourneyService.selectedEliminatoryTabIndex = index;
+    }
+
+    private onLoadComplete(): void {
         this.cols = this.tourneyService.resultCols;
 
-        this.incompleteConfiguration = false;
-        if(this.isTopLevel) {
-            if( this.isStandAlone(this.selectedTourney) ) {
-                for(let level=0; level<this.eliminatories.length; level++) {
-                    let e = this.eliminatories[level];
-                    this.updateDefaultNextLevel(e, level);
-                }
-            } else {
-                this.resolveNotStadaloneRules();
+        if( this.isStandAlone(this.selectedTourney) ) {
+            for(let level=0; level<this.eliminatories.length; level++) {
+                let e = this.eliminatories[level];
+                // this.updateDefaultNextLevel(e, level);
             }
         } else {
-            this.incompleteConfiguration = true;
-            this.incompleteMessage = "Attenzione! Non è stato giocato alcun incontro del livello precedente!";
-            for(let e of this.tourneyService.selectedEliminatoryLevel.eliminatories) {
-                if(e.round.teamNames[0] != "" || e.round.teamNames[1] != "") {
-                    this.incompleteConfiguration = false;
-                    break;
+            for( let el of this.selectedTourney.eliminatoryLevels) {
+                if( el.isTopLevel ) {
+                    this.resolveNotStadaloneRules( el );
+                } else {
+                    this.updateDefaultNextLevel( el );
                 }
-            }
-            if(this.incompleteConfiguration) {
-                return;
             }
         }
 
         this.eliminatoryRows = [];
+        this.onewayMeetings  = [];
+
         for(let level=0; level<this.eliminatories.length; level++) {
             let e = this.eliminatories[level];
             let classificationMap: Map<string, Classification> = new Map<string, Classification>();
@@ -79,12 +83,109 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
             let m: Meeting = e.round.onewayMeetings[0];
             let row = this.prepareEliminationMeetingGui(e, m, classificationMap);
             this.eliminatoryRows = this.eliminatoryRows.concat(row);
-            if(this.selectedEliminatoryLevel.direction == Direction.RoundTrip) {
+            
+            
+            if(this.tourneyService.selectedEliminatoryLevel.direction == Direction.RoundTrip) {
                 m = e.round.roundtripMeetings[0];
                 row = this.prepareEliminationMeetingGui(e, m, classificationMap);
                 this.eliminatoryRows.push(row);
             }
+
+            if(this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay) {
+                this.onewayMeetings.push(m);
+            }
+            if(this.tourneyService.selectedEliminatoryLevel.direction == Direction.RoundTrip) {
+                this.roundtripMeetings.push(m);
+            }
+            this.eliminatoryClassification = this.tourneyService.prepareRoundsGui([e.round]);
         }
+    }
+
+    /**
+     * Fills the next eliminatory level, up to the final level, in function of the results in the current
+     * meeting of the current level. If the match is in balance, no fill will take place in the next level
+     * and all remain as is.
+     */
+    private updateLevelFromPrevious(): void {
+        if(this.tourneyService.selectedEliminatoryLevelIndex < 0 || this.tourneyService.selectedEliminatoryIndex < 0) {
+            return;
+        }
+
+        const els = this.selectedTourney.eliminatoryLevels;
+        if(this.tourneyService.selectedEliminatoryLevelIndex >= els.length-2) {
+            return;
+        }
+
+        let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
+        let  l: Eliminatory = el.eliminatories[this.tourneyService.selectedEliminatoryIndex];
+
+        let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
+        let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+
+        let nextEliminatoryIndex: number = Math.floor(this.tourneyService.selectedEliminatoryIndex / 2);
+        let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+
+        for(let i=0; i<l.round.onewayMeetings.length; i++) {
+            let m = l.round.onewayMeetings[i];
+            // if(m.id == this.selectedMeeting.id) {
+            //     l.round.onewayMeetings[i] = this.selectedMeeting;
+            // }
+        }
+
+        const onewayLevelMeeting:    Meeting = l.round.onewayMeetings[0];
+        const roundtripLevelMeeting: Meeting = l.round.onewayMeetings[1];
+
+        let points1 = onewayLevelMeeting.points1 + roundtripLevelMeeting.points2;
+        let points2 = onewayLevelMeeting.points2 + roundtripLevelMeeting.points1;
+        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
+            points1 = onewayLevelMeeting.matches[0].score1 + roundtripLevelMeeting.matches[0].score2;
+            points2 = onewayLevelMeeting.matches[0].score2 + roundtripLevelMeeting.matches[0].score1;
+        }
+        if(points1 == points2) {
+            let offHome1: number = 0;
+            let offHome2: number = 0;
+            for(let i=0; i<onewayLevelMeeting.matches.length; i++) {
+                let ma = onewayLevelMeeting.matches[i];
+                offHome2 += ma.score2;
+            }
+            for(let i=0; i<roundtripLevelMeeting.matches.length; i++) {
+                let ma = roundtripLevelMeeting.matches[i];
+                offHome1 += ma.score2;
+            }
+            if(offHome1 > offHome2) {
+                points1++;
+            }
+            if(offHome2 > offHome1) {
+                points2++;
+            }
+        }
+ 
+        let nextMeeting: Meeting = nextEliminatory.round.onewayMeetings[0];
+        if(points1 > points2) {
+            if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
+                nextEliminatory.round.teamNames[0] = onewayLevelMeeting.teamName1;
+                nextMeeting.teamName1 = onewayLevelMeeting.teamName1;
+            } else {
+                nextMeeting.teamName2 = onewayLevelMeeting.teamName1;
+                nextEliminatory.round.teamNames[1] = onewayLevelMeeting.teamName1;
+            }
+        }
+
+        if(points2 > points1) {
+            if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
+                nextEliminatory.round.teamNames[0] = onewayLevelMeeting.teamName2;
+                nextMeeting.teamName1 = onewayLevelMeeting.teamName2;
+            } else {
+                nextEliminatory.round.teamNames[1] = onewayLevelMeeting.teamName2;
+                nextMeeting.teamName2 = onewayLevelMeeting.teamName2;
+            }
+        }
+
+        // let mdb = this.meetingService.completeEliminatoryMeetingDb(nextMeeting
+        //     , this.selectedTourney.id
+        //     , nextEliminatory.id
+        // );        
+        // this.meetingService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
     }
 
     /**
@@ -92,23 +193,27 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
      * For a given position > 0, verify the round and, if doesn't exist, verify the playoff.
      * One of them must contains a valued name, otherwise the configuration was not completed
      */
-    private resolveNotStadaloneRules(): void {
-        this.incompleteConfiguration = false;
+    private resolveNotStadaloneRules(el : EliminatoryLevel ): void {
+        let rounds: Array<Round> = new Array<Round>();
+        if( this.isPlayoff ) {
+            rounds = this.selectedTourney.playoffs.map((p) => {return p.round;});
+            // for(let p of this.selectedTourney.playoffs) {
+            //     rounds.push(p.round);
+            // }
+        } else {
+            rounds = [...this.selectedTourney.rounds];
+        }
 
-        for(let level=0; level<this.eliminatories.length; level++) {
-            let e = this.eliminatories[level];
-
+        for(let e of el.eliminatories ) {
             if(e.rule1.fromRound.isAutomatic) {
-                this.resolveAutomatic(e);
+                this.resolveTolevelAutomatic(e, rounds);
             } else {
-                this.resolveManual(e);
+                this.resolveToplevelManual(e);
             }
 
             if(this.tourneyService.selectedEliminatoryLevelIndex >= 2) {
                 continue;
             }
-
-            this.updateDefaultNextLevel(e, level);
         }
     }
 
@@ -117,33 +222,14 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
      * In function of the classification reached in the previous rounds or playoffs, the method
      * finds the teams that gained the right for the direct eliminations
      */
-    private resolveAutomatic(e: Eliminatory) {
-        let rounds: Array<Round> = new Array<Round>();
-        if( this.isPlayoff ) {
-            for(let p of this.selectedTourney.playoffs) {
-                rounds.push(p.round);
-            }
-        } else {
-            rounds = [...this.selectedTourney.rounds];
+    private resolveTolevelAutomatic( e: Eliminatory, rounds: Array<Round> ) {
+
+        for( let m of e.round.onewayMeetings ) {
+            this.meetingService.resolveAutomaticRules(m, rounds);
         }
-
-        rounds = this.paddingRounds(rounds);
-
-        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createRoundMatrix(rounds);
-
-        let col1  = e.rule1.fromRound.bandPosition;
-        let row1  = e.rule1.fromRound.position.value;
-        let team1 = roundMatrix[row1-1][col1-1].teamName;
-
-        let col2  = e.rule1.fromRound.bandPosition;
-        let row2  = e.rule1.fromRound.position.value;
-        let team2 = roundMatrix[row2-1][col2-1].teamName;
-
-        let onewayMeeting:    Meeting = this.meetingService.newMeeting(team1, team2, 1, Direction.OneWay, false);
-        let roundtripMeeting: Meeting = this.meetingService.newMeeting(team2, team1, 1, Direction.RoundTrip, false);
-
-        e.round.onewayMeetings =    [onewayMeeting];
-        e.round.roundtripMeetings = [roundtripMeeting];
+        for( let m of e.round.roundtripMeetings ) {
+            this.meetingService.resolveAutomaticRules(m, rounds);
+        }
     }
 
     /**
@@ -151,14 +237,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
      * In function of the classification reached in the previous rounds or playoffs, the method
      * finds the teams that gained the right for the direct eliminations
      */
-    private resolveManual(e: Eliminatory) {
+    private resolveToplevelManual(e: Eliminatory) {
         let fr1 = e.rule1.fromRound;
         let fp1 = e.rule1.fromPlayoff;
                    
         let pr1 = fr1.position.value;
         let pp1 = fp1.position.value;
         if( (pr1 <= 0 && pp1 <= 0) || (fr1.round.value <= 0 && fp1.round.value <= 0)) {
-            this.incompleteConfiguration = true;
             return;
         }
 
@@ -168,7 +253,6 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
         let pp2 = fp2.position.value;
 
         if( (pr2 <= 0 && pp2 <= 0) || (fr2.round.value <= 0 && fp2.round.value <= 0)) {
-            this.incompleteConfiguration = true;
             return;
         }
 
@@ -245,30 +329,34 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     /**
      * Updates the next lower level in function of the default position found in received current level
      * 
-     * @param e the current eliminatory object
+     * @param el the current eliminatory object
      * @param level the current level
      */
-    private updateDefaultNextLevel(e: Eliminatory, level: number) {
-        if (e.round.teamNames[0] != "" && e.round.teamNames[1]  == "") {
-            const els = this.selectedTourney.eliminatoryLevels;
+    private updateDefaultNextLevel(el: EliminatoryLevel) {
+        for(let level=0; level<el.eliminatories.length; level++) {
+            let e = this.eliminatories[level];
 
-            let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
-            let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
-            let nextEliminatoryIndex: number = Math.floor(level / 2);
-            let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
-            
-            let nr = nextEliminatory.round;
-            let nm = nr.onewayMeetings[0];
-
-            if (level % 2 == 0) {
-                nm.teamName1 = e.round.teamNames[0];
-                nr.teamNames[0] = e.round.teamNames[0];
-            } else {
-                nm.teamName2 = e.round.teamNames[0];
-                nr.teamNames[1] = e.round.teamNames[0];
+            if (e.round.teamNames[0] != "" && e.round.teamNames[1]  == "") {
+                const els = this.selectedTourney.eliminatoryLevels;
+    
+                let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
+                let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
+                let nextEliminatoryIndex: number = Math.floor(level / 2);
+                let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
+                
+                let nr = nextEliminatory.round;
+                let nm = nr.onewayMeetings[0];
+    
+                if (level % 2 == 0) {
+                    nm.teamName1 = e.round.teamNames[0];
+                    nr.teamNames[0] = e.round.teamNames[0];
+                } else {
+                    nm.teamName2 = e.round.teamNames[0];
+                    nr.teamNames[1] = e.round.teamNames[0];
+                }
+                
+                // this.meetingService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
             }
-            
-            // this.meetingService.completeEliminatoryMeetingDb(nm, this.selectedTourney.id,nextEliminatory.id);
         }
     }
 
@@ -322,25 +410,13 @@ export class EliminatoryListView extends AbstractEliminatoryListView {
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
 
-        this.tourneyService.selectedRound = this.selectedMeetingRow.round;
-
-        let m: Meeting = this.selectedMeetingRow.round.meetings[this.selectedMeetingRow.meetingIndex];
-
-        let mdb = this.meetingService.completeEliminatoryMeetingDb(m
-            , this.selectedTourney.id
-            , this.selectedMeetingRow.eliminatoryId
-        );
-        this.meetingService.selectedMeetingDb = mdb;
-
-        for(let level=0; level<this.eliminatories.length; level++) {
-            let e = this.eliminatories[level];
-            if(e.id == this.selectedMeetingRow.eliminatoryId) {
-                this.tourneyService.selectedEliminatoryIndex = level;
-                break;
-            }
+        this.meetingService.selectedMeeting = this.selectedRow;
+        
+        if( this.selectedRow.isSkiping ) {
+            return;
         }
 
-        this.router.navigate([MeetingDetailView.meetingDvRedirect]);
+        this.gotoDetailView();
     }
 }
 

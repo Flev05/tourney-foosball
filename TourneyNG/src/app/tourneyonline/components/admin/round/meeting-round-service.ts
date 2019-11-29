@@ -12,15 +12,17 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
 
     constructor(protected http: HttpClient
         , protected router: Router
+        , protected tourneyService: TourneyService
         , protected dateFormatPipe: DateFormatPipe ) 
     { 
-        super(  http, router, dateFormatPipe );
+        super( http, router, dateFormatPipe );
         console.log("Constructor of MeetingRoundService");
     }
     

@@ -44,7 +44,6 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
     isOneway: boolean;
     isPlayoff: boolean;
     isTopLevel: boolean;
-    isStandalone: boolean;
     availableTeams: Combobox[];
     isDoubleSelection: boolean;
 
@@ -83,7 +82,6 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         this.rounds = this.tourneyService.roundsCombobox;
 
         this.playoffs = this.tourneyService.playoffsCombobox;
-        this.isStandalone = this.tourneyService.isStandalone;
 
         this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
         this.m1.datetime = new Date(this.m1.datetime);
@@ -109,19 +107,19 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
 
         let team1CB = {label:"", value: 0};
         let team2CB = {label:"", value: 0};
-        if(this.isStandalone) {
-            this.availableTeams = [{label:"", value: 0}];
+        // if(this.isStandalone) {
+        //     this.availableTeams = [{label:"", value: 0}];
             
-            for(let t of this.levelService.selectedTeams) {
-                let cb = {label: t.teamName, value: t.id};
-                this.availableTeams.push(cb);
-            }
+        //     for(let t of this.levelService.selectedTeams) {
+        //         let cb = {label: t.teamName, value: t.id};
+        //         this.availableTeams.push(cb);
+        //     }
     
-            let tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName1);
-            team1CB = {label: this.m1.teamName1, value: tid};
-            tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName2);
-            team2CB = {label: this.m1.teamName2, value: tid};
-        }
+        //     let tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName1);
+        //     team1CB = {label: this.m1.teamName1, value: tid};
+        //     tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName2);
+        //     team2CB = {label: this.m1.teamName2, value: tid};
+        // }
 
         this.isDoubleSelection = false;
 
@@ -186,7 +184,7 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         let p1: Combobox = this.eliminatoryFormGroup.get('position1').value;
         let p2: Combobox = this.eliminatoryFormGroup.get('position2').value;
 
-        let r1: Combobox  = this.eliminatoryFormGroup.get('round1').value;
+        let r1:  Combobox = this.eliminatoryFormGroup.get('round1').value;
         let po1: Combobox = this.eliminatoryFormGroup.get('playoff1').value;
         this.isDoubleSelection = false;
         if(this.isPlayoff && r1.value > 0 && po1.value > 0) {
@@ -195,10 +193,10 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         }
 
         this.selectedEliminatory.rule1.fromRound.position = p1;
-        this.selectedEliminatory.rule1.fromRound.round   = r1;
-        this.selectedEliminatory.rule1.fromPlayoff.round = po1;
+        this.selectedEliminatory.rule1.fromRound.round    = r1;
+        this.selectedEliminatory.rule1.fromPlayoff.round  = po1;
 
-        let r2: Combobox  = this.eliminatoryFormGroup.get('round2').value;
+        let r2:  Combobox = this.eliminatoryFormGroup.get('round2').value;
         let po2: Combobox = this.eliminatoryFormGroup.get('playoff2').value;
        
         this.isDoubleSelection = false;
@@ -208,17 +206,18 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         }
         
         this.selectedEliminatory.rule2.fromRound.position = p2;
-        this.selectedEliminatory.rule2.fromRound.round   = r2;
-        this.selectedEliminatory.rule2.fromPlayoff.round = po2;
+        this.selectedEliminatory.rule2.fromRound.round    = r2;
+        this.selectedEliminatory.rule2.fromPlayoff.round  = po2;
+        this.m1.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
+        this.m1.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
-        if(this.isStandalone) {
-            let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
-            let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
-            this.m1.teamName1 = this.getTeam(team1CB).teamName;
-            this.m1.teamName2 = this.getTeam(team2CB).teamName;
-
-            this.m1.name = this.m1.teamName2 + " - " + this.m1.teamName1;
-        }
+        // if(this.isStandalone) {
+        //     let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
+        //     let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
+        //     this.m1.teamName1 = this.getTeam(team1CB).teamName;
+        //     this.m1.teamName2 = this.getTeam(team2CB).teamName;
+        //     this.m1.name = this.m1.teamName2 + " - " + this.m1.teamName1;
+        // }
 
         let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
         observer.subscribe( n => this.saveMeetingNext(n, this.m1));
@@ -231,6 +230,9 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
             }
             this.m2.address = this.eliminatoryFormGroup.get('address2').value;
             this.m2.country = this.eliminatoryFormGroup.get('country2').value;
+
+            this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
+            this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
             let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
             observer.subscribe( n => this.saveMeetingNext(n, this.m2));    

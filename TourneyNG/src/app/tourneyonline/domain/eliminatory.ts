@@ -6,6 +6,8 @@ export class Eliminatory  {
 
     round: Round;
 
+    isSkiping: boolean;
+
     rule1: EliminatoryRule;
     rule2: EliminatoryRule;
 }

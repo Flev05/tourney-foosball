@@ -30,7 +30,6 @@ export class MeetingDetailView extends AbstractDetailView {
 
     matches: Match[];
 
-    alreadyPassed: boolean = false;
     teamPassedMessage: string;
 
     constructor(
@@ -48,12 +47,9 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
         this.selectedMeeting  = this.meetingService.selectedMeeting;   
 
-        this.alreadyPassed = false;
-
         if(this.selectedMeeting.teamName1 == "" || this.selectedMeeting.teamName2 == "") {
             let teamPassed = this.selectedMeeting.teamName1 != "" ? 
                 this.selectedMeeting.teamName1 : this.selectedMeeting.teamName2;
-            this.alreadyPassed = true;
 
             if(this.tourneyService.selectedEliminatoryLevel.isTopLevel) {
                 this.teamPassedMessage = "Attenzione! La Squadra: " + teamPassed + " passa automaticamente al turno successivo!";
@@ -78,7 +74,7 @@ export class MeetingDetailView extends AbstractDetailView {
         }
         this.matches = [...this.selectedMeeting.matches];
     }
-
+    
     minus1(m: Match) {
         let ii = m.id;
         this.matches[ii].score1--;
@@ -162,15 +158,15 @@ export class MeetingDetailView extends AbstractDetailView {
         let copy = null;
         if( this.selectedMeetingDb.roundId != null ) {
             copy = this.cleanRoundMeeting(this.selectedTourney);
-            observer = this.meetingService.saveRoundMeetingDb(copy, this.selectedTourney.id, this.selectedMeetingDb.roundId);
+            observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
         }
         if( this.selectedMeetingDb.playoffId != null ) {
             copy = this.cleanPlayoffMeeting(this.selectedTourney);
-            observer = this.meetingService.savePlayoffMeetingDb(copy, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
+            observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
             copy = this.cleanEliminatoryMeeting(this.selectedTourney);
-            observer = this.meetingService.saveEliminatoryMeetingDb(copy, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
+            observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
         }
         if(observer != null) {            
             observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onSaveMeetingComplete(copy) );            
@@ -179,7 +175,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
     private onSaveMeetingComplete(copy : Tourney): void {
  
-        this.updateNextLevel();
+        // this.updateNextLevel();
 
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(copy, this.clientService.selectedClient);
 
@@ -188,8 +184,7 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     private cleanRoundMeeting(t: Tourney): Tourney  {
-        let copy = this.cloneObject(t);
-        for(let r of copy.rounds) {
+        for(let r of t.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
         }
@@ -197,8 +192,7 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     private cleanPlayoffMeeting(t:  Tourney): Tourney {
-        let copy = this.cloneObject(t);
-        for(let p of copy.playoffs) {
+        for(let p of t.playoffs) {
             p.round.onewayMeetings = [];
             p.round.roundtripMeetings = [];
         }
@@ -226,92 +220,7 @@ export class MeetingDetailView extends AbstractDetailView {
         };
     }
 
-    /**
-     * Fills the next eliminatory level, up to the final level, in function of the results in the current
-     * meeting of the current level. If the match is in balance, no fill will take place in the next level
-     * and all remain as is.
-     */
-    private updateNextLevel(): void {
-        if(this.tourneyService.selectedEliminatoryLevelIndex < 0 || this.tourneyService.selectedEliminatoryIndex < 0) {
-            return;
-        }
-
-        const els = this.selectedTourney.eliminatoryLevels;
-        if(this.tourneyService.selectedEliminatoryLevelIndex >= els.length-2) {
-            return;
-        }
-
-        let el: EliminatoryLevel = els[this.tourneyService.selectedEliminatoryLevelIndex];
-        let  l: Eliminatory = el.eliminatories[this.tourneyService.selectedEliminatoryIndex];
-
-        let nextEliminatoryLevelIndex = this.tourneyService.selectedEliminatoryLevelIndex + 1;
-        let nextEliminatoryLevel: EliminatoryLevel = els[nextEliminatoryLevelIndex];
-
-        let nextEliminatoryIndex: number = Math.floor(this.tourneyService.selectedEliminatoryIndex / 2);
-        let nextEliminatory: Eliminatory = nextEliminatoryLevel.eliminatories[nextEliminatoryIndex];
-
-        for(let i=0; i<l.round.onewayMeetings.length; i++) {
-            let m = l.round.onewayMeetings[i];
-            if(m.id == this.selectedMeeting.id) {
-                l.round.onewayMeetings[i] = this.selectedMeeting;
-            }
-        }
-
-        const onewayLevelMeeting:    Meeting = l.round.onewayMeetings[0];
-        const roundtripLevelMeeting: Meeting = l.round.onewayMeetings[1];
-
-        let points1 = onewayLevelMeeting.points1 + roundtripLevelMeeting.points2;
-        let points2 = onewayLevelMeeting.points2 + roundtripLevelMeeting.points1;
-        if(this.selectedTourney.maxMatchesPerMeeting == 1) {
-            points1 = onewayLevelMeeting.matches[0].score1 + roundtripLevelMeeting.matches[0].score2;
-            points2 = onewayLevelMeeting.matches[0].score2 + roundtripLevelMeeting.matches[0].score1;
-        }
-        if(points1 == points2) {
-            let offHome1: number = 0;
-            let offHome2: number = 0;
-            for(let i=0; i<onewayLevelMeeting.matches.length; i++) {
-                let ma = onewayLevelMeeting.matches[i];
-                offHome2 += ma.score2;
-            }
-            for(let i=0; i<roundtripLevelMeeting.matches.length; i++) {
-                let ma = roundtripLevelMeeting.matches[i];
-                offHome1 += ma.score2;
-            }
-            if(offHome1 > offHome2) {
-                points1++;
-            }
-            if(offHome2 > offHome1) {
-                points2++;
-            }
-        }
- 
-        let nextMeeting: Meeting = nextEliminatory.round.onewayMeetings[0];
-        if(points1 > points2) {
-            if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
-                nextEliminatory.round.teamNames[0] = onewayLevelMeeting.teamName1;
-                nextMeeting.teamName1 = onewayLevelMeeting.teamName1;
-            } else {
-                nextMeeting.teamName2 = onewayLevelMeeting.teamName1;
-                nextEliminatory.round.teamNames[1] = onewayLevelMeeting.teamName1;
-            }
-        }
-
-        if(points2 > points1) {
-            if(this.tourneyService.selectedEliminatoryIndex % 2 == 0) {
-                nextEliminatory.round.teamNames[0] = onewayLevelMeeting.teamName2;
-                nextMeeting.teamName1 = onewayLevelMeeting.teamName2;
-            } else {
-                nextEliminatory.round.teamNames[1] = onewayLevelMeeting.teamName2;
-                nextMeeting.teamName2 = onewayLevelMeeting.teamName2;
-            }
-        }
-        let mdb = this.meetingService.completeEliminatoryMeetingDb(nextMeeting
-            , this.selectedTourney.id
-            , nextEliminatory.id
-        );        
-        this.meetingService.updateMeetingMdb(mdb).subscribe(n => this.next(n), e => this.onError(e));
-    }
-
+    
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

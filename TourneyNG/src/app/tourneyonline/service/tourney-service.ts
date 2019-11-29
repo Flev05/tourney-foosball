@@ -23,6 +23,7 @@ import { MeetingStatus } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
 import { AbstractService } from '../components/common/abstract-service';
 import { ClientVO } from '../domain/client-vo';
+import { MeetingDb } from '../domain/meeting-db';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -46,6 +47,7 @@ const classificationLabel = "°";
 
 @Injectable()
 export class TourneyService extends AbstractService {
+    
     tourneys: Tourney[];
 
     positionsCombobox: Combobox[];
@@ -76,6 +78,7 @@ export class TourneyService extends AbstractService {
     newRule: boolean;
     selectedRoundTabIndex: number = 0;
     selectedPlayoffTabIndex: number = 0;
+    selectedEliminatoryTabIndex: number = 0;
     isStandalone: boolean;
     selectedEliminatoryLevelIndex: number;
     selectedEliminatoryIndex: number;
@@ -110,6 +113,10 @@ export class TourneyService extends AbstractService {
     ];
     
     private tvo: TourneyVO;
+
+    private onSaveTourneyError: boolean;
+    private onewayPlayoffMap: Map<string, Meeting[]>;
+    private roundtripPlayoffMap: Map<string, Meeting[]>;
 
     constructor(private http: HttpClient
         , private loginService: LoginService
@@ -296,12 +303,148 @@ export class TourneyService extends AbstractService {
         return this.updateTourney(tvo, selector);
     }
 
-    updateTourneyAndPlayoffs(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
-        let url = updateTourneyPlayoffsUrl;
-        return this.http.put(url, tvo, httpOptions).pipe(
-            tap(_ => this.log('updated TourneyDb url=' + url)),
-            catchError(selector)
+    public convertTourneyToVo( t : Tourney ): TourneyVO {
+        return {
+            id: t.id,
+            tourneyName: t.tourneyName,
+            country: t.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(t)
+        };
+    }
+     
+    /**
+     * Save the tourney without saving its playoff meetings!
+     * 
+     * Before to update the received tourney, saves the roundtrip and oneway playoff meetings in the local variables, clean both
+     * the oneway and roundtrip meetings, save the toruney and, when the method returns, restorea the saved meetings in 
+     * the original tourney.
+     * 
+     * @param t the tourney to save 
+     * @param complete the callback method do invoke when the save will finish
+     */
+    public updateTourneyCleanPalyoffMeetings(t: Tourney, complete: () => void ) : void
+    {
+        this.onewayPlayoffMap = new Map<string, Meeting[]>();
+        this.roundtripPlayoffMap = new Map<string, Meeting[]>();
+ 
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, this.clientService.selectedClient);
+
+        this.onSaveTourneyError = false;
+
+        let url = updateTourneyUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
         );
+
+        if(!this.onSaveTourneyError) {
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t, complete ) );
+        }
+    }
+
+    /**
+     * Save the meetengs and the tourney in one trasaction!
+     * 
+     * Before to update the received tourney, saves the roundtrip and oneway playoff meetings in the local variables, clean both
+     * the oneway and roundtrip meetings, save the toruney and meetings on the DB and, when the method returns, restores the saved meetings in 
+     * the original tourney.
+     * 
+     * @param t the tourney to save 
+     * @param complete the callback method do invoke when the save will finish
+     */
+    public updateTourneyAndPlayoffs(t: Tourney, complete: () => void ) : void
+    {
+        this.onewayPlayoffMap = new Map<string, Meeting[]>();
+        this.roundtripPlayoffMap = new Map<string, Meeting[]>();
+ 
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, this.clientService.selectedClient);
+
+        this.onSaveTourneyError = false;
+
+        let url = updateTourneyPlayoffsUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+
+        if(!this.onSaveTourneyError) {
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t, complete ) );
+        }
+    }
+
+    private  preparePlayoffTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
+        let playoffsMeetings : MeetingDb [] = [];
+        for (let p of t.playoffs) {
+            for (let m of p.round.onewayMeetings) {
+                let mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                playoffsMeetings.push(mdb);
+            }
+            for (let m of p.round.roundtripMeetings) {
+                let mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                playoffsMeetings.push(mdb);
+            }
+        }
+        for (let p of t.playoffs) {
+            this.onewayPlayoffMap.set(p.playoffName, p.round.onewayMeetings);
+            p.round.onewayMeetings = [];            
+            this.roundtripPlayoffMap.set(p.playoffName, p.round.roundtripMeetings);
+            p.round.roundtripMeetings = [];
+        }
+        let tvo: TourneyVO = {
+            id:  t.id,
+            tourneyName: t.tourneyName,
+            country: t.country,
+            clientVO: c,
+            json: JSON.stringify(t)
+        };
+        tvo.mdbs = playoffsMeetings;
+
+        return tvo;
+    }
+
+    /**
+     * Restores in the tourney the previous saved meetings
+     * 
+     * @param t the tourney the meetings to restore 
+     * @param complete the callback to call whene the restore will finish
+     */
+    private restoreOnComplete(t: Tourney, complete: () => void): void {
+
+        for (let p of t.playoffs) {
+            p.round.onewayMeetings = this.onewayPlayoffMap.get(p.playoffName);            
+            p.round.roundtripMeetings = this.roundtripPlayoffMap.get(p.playoffName);
+        }
+
+        complete();
+    }
+    
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onSaveTourneyError = true;
+ 
+            return of(result as T);
+        };
+    }
+
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSaveTourneyError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
     }
 
     updateTourneyAndRounds(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
@@ -526,47 +669,10 @@ export class TourneyService extends AbstractService {
             classificationList.push(c);            
         }
 
-        classificationList = this.sortDesc(classificationList);
+        classificationList = this.meetingService.sortDesc(classificationList);
 
         return classificationList;
     }
-
-    public sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
-        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
-
-            if (c1.points > c2.points) {
-                return -1;
-            }
-            if (c1.points < c2.points) {
-                return 1;
-            }
-        
-            if( c1.goalsDiff > c2.goalsDiff ) {
-                return -1;
-            }
-            if( c1.goalsDiff < c2.goalsDiff ) {
-                return 1;
-            }
-
-            if( c1.goalsDone > c2.goalsDone ) {
-                return -1;
-            }
-            if( c1.goalsDone < c2.goalsDone ) {
-                return 1;
-            }
-
-            if( c1.goalsConceded < c2.goalsConceded ) {
-                return -1;
-            }
-            if( c1.goalsConceded > c2.goalsConceded ) {
-                return 1;
-            }
-
-            return c1.teamName > c2.teamName ? 1 : -1;
-        });
-
-        return sortedClassification;
-    } 
 
     /**
         <th>Team</th>
@@ -626,6 +732,7 @@ export class TourneyService extends AbstractService {
 
         return rows;
     }
+
     
     public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
         let tvo: TourneyVO = {
@@ -638,36 +745,5 @@ export class TourneyService extends AbstractService {
         return tvo;
     }
 
-    /**
-     * Creates a matrix of best classification of the teams received in the rounds parameter.
-     * The matrix contains in the first row the best first classification teams, in the seconds
-     * row the second best classification teams and so on.
-     * 
-     * The matrix has to accessed by 2 indexes:
-     * - the band position to select the row
-     * - tne position to select the team in the row
-     * 
-     * @param rounds the rounds containing the teams to make the matrix
-     */
-    public createRoundMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
-        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
 
-        for( let i=0; i<rounds[0].classification.length; i++ ) {
-            let bestClassifications: Array<Classification> = new Array<Classification>();
-            for(let r of rounds) {
-                r.classification = this.sortDesc(r.classification);
-
-                bestClassifications.push(r.classification[i]);    
-            }
-            bestClassifications = this.sortDesc(bestClassifications);
-            
-            let row: Array<Classification> = new Array<Classification>();
-            roundMatrix.push(row);
-
-            for(let c of bestClassifications) {
-                row.push(c);
-            }
-        }
-        return roundMatrix;
-    }
 }

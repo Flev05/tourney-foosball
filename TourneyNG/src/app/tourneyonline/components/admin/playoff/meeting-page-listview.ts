@@ -56,8 +56,6 @@ export class MeetingListView extends AbstractRuleListView {
 
         const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
-
-        this.onCompleteLoad();
     }
    
     onChangeTab(e) {
@@ -75,9 +73,10 @@ export class MeetingListView extends AbstractRuleListView {
         this.onewayMeetings    = this.selectedPlayoff.round.onewayMeetings;
         this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings;
 
-        console.log("[Meetings " + this.onewayMeetings.length + "]");
-        console.log("[Days     " + this.allDaysNo + "]");
-        console.log("[PageSize " + this.pageSize + "]");
+        console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
+        console.log("[RoundtripMeetings " + this.roundtripMeetings.length + "]");
+        console.log("[Days              " + this.allDaysNo + "]");
+        console.log("[PageSize          " + this.pageSize + "]");
     }
 
     onRowSelect(event) {

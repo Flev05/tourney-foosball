@@ -36,13 +36,17 @@ const REDIRECT_PLAYOFF_DV   = 'admintourney/dv/playoff';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
+const PLYOFF_CHANGE_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di Playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
+const PLYOFF_CHANGE_TEAMS_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di squadre per girone di playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
+const PLYOFF_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
+const ELIM_DIR_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione delle eliminazioni dirette, si perdono tutte le impostazioni preesistenti. Confermi?';
+
 @Component({
     templateUrl: './tourney-detailview.html',
 })
 export class TourneyDetailView extends AbstractDetailView {
     static redirect = 'admintourney/dv';
-    private FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
-
+    
     blockedDocument: boolean = false;
 
     disciplineOptions : Combobox[];
@@ -97,6 +101,7 @@ export class TourneyDetailView extends AbstractDetailView {
     isPlayoffNumChanged: boolean = false;
 
     isPlayoffAutoGen: string;
+    isEliminatoryAutoGen: string;
 
     constructor(
         protected location: Location,
@@ -233,14 +238,15 @@ export class TourneyDetailView extends AbstractDetailView {
         this.teamService.isTeamsChanged = false;
         this.selectedTourney.wizardModeIndex = 0;
         this.selectedTourney.isPlayoffAutoGen = "true";
+        this.selectedTourney.isEliminatoryAutoGen = "true";
         this.resetComboBoxes();
     }
 
     private resetComboBoxes() {
-        this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedPlayoffsCB = this.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedRoundsNumCB = this.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedTeams4PlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedPlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedRoundsNumCB = this.tourneyService.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
     }
 
     private prepareTabsGui( ): void {
@@ -255,7 +261,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         if( this.isEliminatoryTabEnabled() ) {
-            this.levelService.ngOnInit();
+            this.isEliminatoryAutoGen  = this.selectedTourney.isEliminatoryAutoGen == undefined ? "true" : this.selectedTourney.isEliminatoryAutoGen;
             this.levelService.prepareEliminatoryLevelsGui();
             this.prepareEliminatoryCombobox();
         }
@@ -359,7 +365,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
         
         this.roundsCombobox = [];
-        this.roundsCombobox.push(this.FIRST_COMBO_ITEM);
+        this.roundsCombobox.push(this.tourneyService.FIRST_COMBO_ITEM);
 
         let R: number = Math.floor(this.selectedTourney.teams.length/2);
         for (let r=1; r<=R; r++ ) {
@@ -391,7 +397,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
 
         this.playoffsCombobox = [];
-        this.playoffsCombobox.push(this.FIRST_COMBO_ITEM);
+        this.playoffsCombobox.push(this.tourneyService.FIRST_COMBO_ITEM);
 
         let R: number = Math.floor(N * this.selectedTourney.rounds.length / 2);
         for (let r=1; r<=R; r++ ) {
@@ -408,8 +414,9 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareEliminatoryCombobox() {
         console.log("Entering prepareEliminatoryCombobox()");
 
-        this.eliminatoryTeamsCombobox = this.tourneyService.eliminatoryTeamsCombobox;
- 
+        let teamNo = this.selectedTourney.teams.length;
+        this.eliminatoryTeamsCombobox = this.tourneyService.prepareEliminatoriesComboBoxes(teamNo);
+        
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         if(this.selectedTourney.selectedEliminatoryTeamsCB.value >= 0 ) {
             this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
@@ -460,6 +467,9 @@ export class TourneyDetailView extends AbstractDetailView {
     }
     
     private doEliminatoryTeamNumChange(teamsNo: number) {
+        this.isEliminatoryAutoGen  = this.selectedTourney.isEliminatoryAutoGen == undefined ? "true" : this.selectedTourney.isEliminatoryAutoGen;
+        this.levelService.isAutomatic = this.isEliminatoryAutoGen == "true" ? true : false;
+
         this.eliminatoryLevelRows = this.levelService.onEliminatoryTeamNumChange(teamsNo);
         let mdbs: MeetingDb[] = [];
         for (let el of this.levelService.eliminatoryLevels) {
@@ -478,6 +488,32 @@ export class TourneyDetailView extends AbstractDetailView {
         tvo.mdbs = mdbs;
         const subscriber = this.tourneyService.updateTourneyAndEliminatories(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.unBlockDocument());
+        this.turnOnWizardMode(this.maxBoundaryTabIndex);
+    }
+    
+    onEliminatoryAutoGenClick() {
+        console.log("Entering onEliminatoryAutoGenClick()");
+        if(!confirm(ELIM_DIR_CHANGE_GEN_MODE_POPUP)) {
+            return;
+        }
+        this.prepareEliminatoryCombobox();
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+
+        this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen;
+        this.cleanEliminatoryMeetings(true);
+        this.turnOnWizardMode(this.maxBoundaryTabIndex);
+    }
+
+    onEliminaotoryManualGenClick() {
+        console.log("Entering onEliminaotoryManualGenClick()");
+        if(!confirm(ELIM_DIR_CHANGE_GEN_MODE_POPUP)) {
+            return;
+        } 
+        this.prepareEliminatoryCombobox();
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+
+        this.cleanEliminatoryMeetings(true);
+        this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen;
         this.turnOnWizardMode(this.maxBoundaryTabIndex);
     }
 
@@ -507,7 +543,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         if( this.containsPlayoff() ) {
             this.playoffsCombobox = [];
-            let firstRow: Combobox =  this.FIRST_COMBO_ITEM;
+            let firstRow: Combobox =  this.tourneyService.FIRST_COMBO_ITEM;
             this.playoffsCombobox.push(firstRow);
     
             let P = Math.floor( this.selectedTourney.teams.length / 2 );
@@ -536,10 +572,12 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.roundRows = this.selectedTourney.rounds;
 
-        this.selectedTourney.selectedPlayoffsCB       = this.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedPlayoffsCB       = this.tourneyService.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedTeams4PlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
 
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.FIRST_COMBO_ITEM;
+        let eliminatoryTeamNo: number = this.selectedTourney.teams.length;
+        this.eliminatoryTeamsCombobox = this.tourneyService.prepareEliminatoriesComboBoxes(eliminatoryTeamNo);
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
         
         this.saveRoundMeetings();
         this.turnOnWizardMode(3);
@@ -671,9 +709,8 @@ export class TourneyDetailView extends AbstractDetailView {
     onPlayoffNumChange(cb: Combobox) {
         console.log(cb);
 
-        if(this.selectedTourney.selectedPlayoffsCB != this.FIRST_COMBO_ITEM) {
-            let popup = 'ATTENZIONE! Se si cambia il numero di Playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
-            if(!confirm(popup)) {
+        if(this.selectedTourney.selectedPlayoffsCB != this.tourneyService.FIRST_COMBO_ITEM) {
+            if(!confirm(PLYOFF_CHANGE_NUM_POPUP)) {
                 return;
             } 
         }
@@ -684,7 +721,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let maxTeamsPerPlayoff = this.getMaxTeamsPerPlayoff();
 
         this.team4playoffsCombobox = [];
-        this.team4playoffsCombobox.push(this.FIRST_COMBO_ITEM);
+        this.team4playoffsCombobox.push(this.tourneyService.FIRST_COMBO_ITEM);
         for (let t=2; t<=maxTeamsPerPlayoff; t++) {
             let cb: Combobox = { label: "" + t, value: t };
             this.team4playoffsCombobox.push(cb);
@@ -693,7 +730,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.cleanPlayoffMeetings(true);
 
         this.isPlayoffNumChanged = true;
-        this.selectedTourney.selectedTeams4PlayoffsCB = this.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedTeams4PlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
     }
 
     private getMaxTeamsPerPlayoff(): number {
@@ -711,9 +748,8 @@ export class TourneyDetailView extends AbstractDetailView {
      */
     onPlayoffs4TeamsChange(cb: Combobox) {
         console.log(cb);
-        if(!this.isPlayoffNumChanged && this.selectedTourney.selectedTeams4PlayoffsCB != this.FIRST_COMBO_ITEM) {
-            let popup = 'ATTENZIONE! Se si cambia il numero di squadre per girone di playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
-            if(!confirm(popup)) {
+        if(!this.isPlayoffNumChanged && this.selectedTourney.selectedTeams4PlayoffsCB != this.tourneyService.FIRST_COMBO_ITEM) {
+            if(!confirm(PLYOFF_CHANGE_TEAMS_NUM_POPUP)) {
                 return;
             } 
         }
@@ -721,8 +757,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.selectedTeams4PlayoffsCB = cb;
 
         let T: number = this.selectedTourney.selectedTeams4PlayoffsCB.value;
-
-        this.selectedTourney.selectedEliminatoryTeamsCB = {label: "", value: 0};
 
         this.cleanPlayoffMeetings(true);
         this.cleanEliminatoryMeetings(true);
@@ -736,6 +770,9 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.saveGeneratedMeetings();
+
+        this.eliminatoryTeamsCombobox = this.tourneyService.prepareEliminatoriesComboBoxes(N);
+        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
     }
 
     private saveGeneratedMeetings() {
@@ -821,6 +858,10 @@ export class TourneyDetailView extends AbstractDetailView {
     
     onAutoGenClick() {
         console.log("Entering onAutoGenClick()");
+        if(!confirm(PLYOFF_CHANGE_GEN_MODE_POPUP)) {
+            return;
+        } 
+    
         this.selectedTourney.isPlayoffAutoGen = this.isPlayoffAutoGen;
         let N = this.selectedTourney.selectedPlayoffsCB.value * this.selectedTourney.selectedTeams4PlayoffsCB.value;
         this.prepareAutomaticPlayoffRules(N);
@@ -829,6 +870,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onManualGenClick() {
         console.log("Entering onManualGenClick()");
+        if(!confirm(PLYOFF_CHANGE_GEN_MODE_POPUP)) {
+            return;
+        } 
         this.selectedTourney.isPlayoffAutoGen = this.isPlayoffAutoGen;
         let N = this.selectedTourney.selectedPlayoffsCB.value * this.selectedTourney.selectedTeams4PlayoffsCB.value;
         this.prepareManualPlayoffRules(N);
@@ -943,13 +987,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.cleanPlayoffMeetings(true);
     }
-
-    // private prepareTourneyVOForPlayoff(cleanPlayoffs: boolean): TourneyVO {
-    //     this.cleanPlayoffMeetings(cleanPlayoffs);
-    //     let tvo: TourneyVO = this.tourneyService.convertTourneyToVo(this.selectedTourney);
-    //     return tvo;
-    // }
-
+ 
     private cleanPlayoffMeetings(cleanPlayoffs: boolean) {
         for (let p of this.selectedTourney.playoffs) {
             p.round.onewayMeetings = [];
@@ -1188,30 +1226,7 @@ export class TourneyDetailView extends AbstractDetailView {
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(this.rewind));
     }
-
-    // private standAloneComplete():  void {
-    //     this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
-    //     this.saveEliminatoryMeetings();
-    //     let tvo: TourneyVO = this.cloneTourneyVO(this.rewind);
-    //     const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-    //     subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(this.rewind));
-    // }
-
-    // private saveEliminatoryMeetings() {
-    //     for (let el of this.selectedTourney.eliminatoryLevels) {
-    //         for( let elim of el.eliminatories ) {
-    //             for (let m of elim.round.onewayMeetings) {
-    //                 let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
-    //                 observer.subscribe(n => this.meetingService.saveMeetingNext(n, m));
-    //             }
-    //             for (let m of elim.round.roundtripMeetings) {
-    //                 let observer = this.meetingService.saveEliminatoryMeetingDb(m, this.selectedTourney.id, elim.id);
-    //                 observer.subscribe(n => this.meetingService.saveMeetingNext(n, m));
-    //             }
-    //         }
-    //     }
-    // }
-
+ 
     private saveTourneyNext(tvo: TourneyVO): void {
         console.log("saveTourneyNext()");
         console.log(tvo);
@@ -1275,7 +1290,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
         return tvo;
     }
-
 
     /**
      * Clears tourney local meetings array before create che JSON string to save on the Back End

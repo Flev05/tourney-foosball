@@ -55,7 +55,7 @@ export class ObjectiveListView extends AbstractListView {
     }
 
     protected updateRowGroupMetaData() {
-        this.tourneyService.prepareEliminatoriesComboBoxes();
+        // this.tourneyService.prepareEliminatoriesComboBoxes();
 
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;

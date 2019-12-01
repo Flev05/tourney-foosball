@@ -37,8 +37,6 @@ export class RuleDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.tourneyService.prepareEliminatoriesComboBoxes();
-
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
 
@@ -58,11 +56,11 @@ export class RuleDetailView extends AbstractDetailView {
 
     private newPlayoffConfig(): PlayoffRule {
         return {
-            id: null // this.tourneyService.getSequenceNumber(),
+            id:  this.tourneyService.getSequenceNumber()
             , ruleName:""
             , isDummy: false
             , fromRound: {
-                id: null // this.tourneyService.getSequenceNumber(),
+                id: this.tourneyService.getSequenceNumber()
                 ,position: { label: 1 + "°", value: 1 }
                 ,round: { label: "", value: 0 }
                 , bandPosition: 0

@@ -16,7 +16,6 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { FromRound } from 'app/tourneyonline/domain/from-round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Team } from 'app/tourneyonline/domain/team';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {
@@ -124,7 +123,7 @@ export class MeetingPlayoffService extends MeetingService {
     }
 
     private prepareSkipingRule(isAutoGen : boolean): PlayoffRule {
-        let posCB:     Combobox    = { label: "" + 0 + "°", value: 0 };
+        let posCB:     Combobox    = { label: "", value: 0 };
         let roundCB:   Combobox    = { label: this.SKIPING_TEAM , value: 0 };
         let fromRound: FromRound   = { id: this.tourneyService.getSequenceNumber(), isAutomatic: isAutoGen, position: posCB, round: roundCB, bandPosition: posCB.value };
         let pr:        PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: this.SKIPING_TEAM, isDummy: true };

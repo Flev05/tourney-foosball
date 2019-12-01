@@ -43,8 +43,6 @@ export class RuleListView extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-
-        this.tourneyService.prepareEliminatoriesComboBoxes();
         
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         this.playoffRules = this.selectedPlayoff.playoffRules;

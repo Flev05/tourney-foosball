@@ -911,25 +911,19 @@
                     Turni:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right"
-                        pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
-                    <div class="ui-g radiobuttons">
-                        <div class="ui-g-12">
-                            <p-radioButton name="isOnewayRoundGroupname" 
-                                label="Solo andata" 
-                                value="true" 
-                                [(ngModel)]="selectedTourney.isOnewayRound"
-                                (onClick)="onOnewayRoundClick()">
-                            </p-radioButton>
-                        </div>
-                        <div class="ui-g-12">
-                            <p-radioButton name="isOnewayRoundGroupname" 
-                                label="Andata e ritorno" 
-                                value="false" 
-                                [(ngModel)]="selectedTourney.isOnewayRound"
-                                (onClick)="onRoundtripRoundClick()">
-                            </p-radioButton>
-                        </div>
-                    </div>
+                    pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
+                    <p-radioButton name="isOnewayRoundGroupname" 
+                        label="Solo andata" 
+                        value="true" 
+                        [(ngModel)]="selectedTourney.isOnewayRound"
+                        (onClick)="onOnewayRoundClick()">
+                    </p-radioButton>
+                    <p-radioButton name="isOnewayRoundGroupname" 
+                        label="Andata e ritorno" 
+                        value="false" 
+                        [(ngModel)]="selectedTourney.isOnewayRound"
+                        (onClick)="onRoundtripRoundClick()">
+                    </p-radioButton>
                 </div>
             </div>
 
@@ -1041,7 +1035,7 @@
         <div *ngIf="playoffTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    Playoff:
+                    Turni:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right"
                     pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
@@ -1297,6 +1291,27 @@
         </div>     
 
         <div *ngIf="eliminatoryTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+            <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Generazione:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
+                    <p-radioButton name="isGenEliGroupname" 
+                        label="Automatico" 
+                        value="true" 
+                        [(ngModel)]="isEliminatoryAutoGen"
+                        (onClick)="onEliminatoryAutoGenClick()">
+                    </p-radioButton>
+                    <p-radioButton name="isGenEliGroupname" 
+                        label="Manuale" 
+                        value="false" 
+                        [(ngModel)]="isEliminatoryAutoGen"
+                        (onClick)="onEliminaotoryManualGenClick()">
+                    </p-radioButton>
+                </div>
+            </div>   
             
             <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
                 <div class="ui-grid-col-2">

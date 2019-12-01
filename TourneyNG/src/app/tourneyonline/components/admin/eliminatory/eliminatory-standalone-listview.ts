@@ -19,11 +19,10 @@ export class StandaloneEliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows: EliminatoryVO[];
     eliminatoryCols: TableCols[];
-    isAutoGen: string;
     
     constructor(
-        protected tourneyService: TourneyService,
-        protected levelService: LevelService,
+        public tourneyService: TourneyService,
+        public levelService: LevelService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
@@ -34,9 +33,6 @@ export class StandaloneEliminatoryListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
-        this.levelService.ngOnInit();
-        this.isAutoGen  = this.selectedEliminatoryLevel.isAutoGen == undefined ? "true" : this.selectedEliminatoryLevel.isAutoGen;
-        this.levelService.isAutomatic = this.isAutoGen == "true" ? true : false;
         this.levelService.prepareGui();
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;

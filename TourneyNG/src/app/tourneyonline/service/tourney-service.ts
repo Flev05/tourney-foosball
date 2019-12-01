@@ -47,12 +47,12 @@ const classificationLabel = "°";
 
 @Injectable()
 export class TourneyService extends AbstractService {
-    
+    public FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
+
     tourneys: Tourney[];
 
     positionsCombobox: Combobox[];
     roundsCombobox: Combobox[];
-    eliminatoryTeamsCombobox: Combobox[];
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
@@ -93,15 +93,19 @@ export class TourneyService extends AbstractService {
     redirect: string;
 
     classificationCols: TableCols[] = [
-        { field: 'teamName',    header: 'Team'},
-        { field: 'points',      header: 'Pt.'},
-        { field: 'played',      header: 'G'},
-        { field: 'won',         header: 'V'},
-        { field: 'lost',        header: 'P'},
-        { field: 'balanced',    header: 'N'},
-        { field: 'goalsDone',   header: 'Gf'},
-        { field: 'goalsConceded',   header: 'Gs'},
-        { field: 'goalsDiff',   header: 'D'},
+        { field: 'teamName',      header: 'Team'},
+        { field: 'points',        header: 'Pt.'},
+        { field: 'played',        header: 'G'},
+        { field: 'won',           header: 'V'},
+        { field: 'lost',          header: 'P'},
+        { field: 'balanced',      header: 'N'},
+        { field: 'goalsDone',     header: 'Gf'},
+        { field: 'goalsConceded', header: 'Gs'},
+        { field: 'goalsDiff',     header: 'D'},
+    ];
+
+    eliminatoryClassificationCols: TableCols[] = [
+        { field: 'roundName',   header: 'Elim.'}
     ];
 
     resultCols: TableCols[] = [
@@ -126,9 +130,28 @@ export class TourneyService extends AbstractService {
         super();
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
+        this.eliminatoryClassificationCols = this.eliminatoryClassificationCols.concat(this.classificationCols);
+    }
+    
+    prepareEliminatoriesComboBoxes(teamsNo : number): Combobox[] {
+        if(this.selectedEliminatoryLevel==undefined) {
+            this.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
+        }
+
+        let min: number = 2;
+    
+        let eliminatoryTeamsCombobox: Combobox[] = [];
+
+        eliminatoryTeamsCombobox.push(this.FIRST_COMBO_ITEM);
+        
+        for(let i=min; i<=teamsNo; i++) {
+            eliminatoryTeamsCombobox.push({label: "" + i, value: i});
+        }
+
+        return eliminatoryTeamsCombobox;
     }
 
-    prepareEliminatoriesComboBoxes(): number {
+    prepareDefaultComboBoxes(): number {
         if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return;
         }
@@ -151,9 +174,12 @@ export class TourneyService extends AbstractService {
 
         let max: number = this.selectedTourney.teams.length;
     
-        this.eliminatoryTeamsCombobox = [];
+        let eliminatoryTeamsCombobox: Combobox[] = [];
+
+        eliminatoryTeamsCombobox.push(this.FIRST_COMBO_ITEM);
+        
         for(let i=min; i<=max; i++) {
-            this.eliminatoryTeamsCombobox.push({label: "" + i, value: i});
+            eliminatoryTeamsCombobox.push({label: "" + i, value: i});
         }
         
         this.roundsCombobox = [];
@@ -186,7 +212,7 @@ export class TourneyService extends AbstractService {
         }
 
         if(this.selectedTourney.selectedEliminatoryTeamsCB == undefined) {
-            this.selectedTourney.selectedEliminatoryTeamsCB = this.eliminatoryTeamsCombobox[0];
+            this.selectedTourney.selectedEliminatoryTeamsCB = eliminatoryTeamsCombobox[0];
         }
 
         return teamsNo;
@@ -675,23 +701,7 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-        <th>Team</th>
-        <th>Pt.</th>
-        <th>G</th>
-        <th>V</th>
-        <th>P</th>
-        <th>N</th>
-        <th>Gf:Gs</th>
-        <th>D</th>
-        <td>{{rowIndex + 1}}</td>
-        <td>{{rowData.team.teamName}}</td>
-        <td>{{rowData.points}}</td>
-        <td>{{rowData.played}}</td>
-        <td>{{rowData.won}}</td>
-        <td>{{rowData.lost}}</td>
-        <td>{{rowData.balanced}}</td>
-        <td>{{rowData.goalsDone}}:{{rowData.goalsConceded}}</td>
-        <td>{{rowData.goalsDiff}}</td>       
+     *   Prepares the classification rows for Round, Playoff  and Eliminatoryformat  
      */
      prepareRoundsGui(rounds: Round[]): any[] {
 
@@ -732,8 +742,49 @@ export class TourneyService extends AbstractService {
 
         return rows;
     }
-
     
+    /**
+     *  Prepares the classification rows for Eliminatory format  
+     */
+    prepareEliminatoryRoundsGui(rounds: Round[]): any[] {
+
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            let r = 0;
+            for (let c of round.classification) {
+
+                rows.push(c);
+
+                rows[row].rowNumber = ++r;    
+                rows[row].roundName = round.name;    
+                rows[row].teamName = c.teamName;    
+                rows[row].points = c.points;    
+                rows[row].played = c.played;    
+                rows[row].won = c.won;    
+                rows[row].lost = c.lost;    
+                rows[row].balanced = c.balanced;    
+                rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
+                rows[row].goalsConceded = c.goalsConceded;    
+
+                let len = round.onewayMeetings.length;
+
+                let currentKey = round.name;  
+                if(!classificationMap.has(currentKey)) {
+                    classificationMap.set(currentKey, c);
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+
+        return rows;
+    }
     public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
         let tvo: TourneyVO = {
             id:  t.id,

@@ -7,7 +7,7 @@
 
 <p-tabView [activeIndex]="tourneyService.selectedPlayoffTabIndex" 
         (onChange)="onChangeTab($event)">
-    <p-tabPanel header="ANDATA">
+    <p-tabPanel header="Andata">
         <p-table [columns]="cols"
             [value]="onewayMeetings" 
             [responsive]="true"
@@ -42,7 +42,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="RITORNO">
+    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
         <p-table 
             [columns]="cols"
             [value]="roundtripMeetings" 

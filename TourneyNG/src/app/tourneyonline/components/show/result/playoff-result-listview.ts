@@ -131,7 +131,6 @@ export class PlayoffResultListView extends AbstractRuleListView {
         }
             
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.levelService.ngOnInit();
         this.levelService.prepareEliminatoryLevelsGui();
     }
 
@@ -152,6 +151,7 @@ export class PlayoffResultListView extends AbstractRuleListView {
      */
     private preparePlayoffClassification(playoff : Playoff): void {
         let allMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.selectedPlayoff.round.roundtripMeetings);
+        allMeetings.forEach( m => m.containerId = playoff.id);
         this.selectedPlayoff.round.classification = this.tourneyService.createClassification(allMeetings);
         this.playoffClassification = this.tourneyService.prepareRoundsGui([playoff.round]);
     }

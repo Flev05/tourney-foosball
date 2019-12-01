@@ -80,9 +80,6 @@ export class RoundResultListView extends AbstractListView {
         this.roundTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedRound.teamNames);
 
         this.isRoundTrip = true;
-        if (this.selectedTourney.isOnewayRound == "true") {
-            this.isRoundTrip = false;
-        }
 
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
         subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
@@ -102,12 +99,22 @@ export class RoundResultListView extends AbstractListView {
         this.allDaysNo = this.selectedRound.daysNo;
 
         this.onewayMeetings = this.selectedRound.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms));
+        this.onewayMeetings.forEach(m => m.containerId = this.selectedRound.id);
         this.roundtripMeetings = this.selectedRound.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
+        this.roundtripMeetings.forEach(m => m.containerId = this.selectedRound.id);
 
         console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
         console.log("[RoundtripMeetings " + this.roundtripMeetings.length + "]");
         console.log("[Days              " + this.allDaysNo + "]");
         console.log("[PageSize          " + this.pageSize + "]");
+
+        if (this.selectedTourney.isOnewayRound == "true") {
+            this.isRoundTrip = false;
+            this.meetingsNoMsg = "" + this.onewayMeetings.length + " in " + this.allDaysNo + " giornate (Solo Andata)";
+        } else {
+            this.isRoundTrip = true;
+            this.meetingsNoMsg = "" + this.onewayMeetings.length * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+        }
 
         this.prepareRoundGuiClassification();
     }

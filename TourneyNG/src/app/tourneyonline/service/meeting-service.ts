@@ -17,9 +17,7 @@ import { AbstractService } from '../components/common/abstract-service';
 import { Round } from '../domain/round';
 import { DateFormatPipe } from '../components/common/date-format-pipe';
 import { Playoff } from '../domain/playoff';
-import { undistributeHeight } from 'fullcalendar/src/util/misc';
 import { Classification } from '../domain/classification';
-import { TourneyService } from './tourney-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -606,9 +604,8 @@ export  class MeetingService extends AbstractService {
         let row = m.rule1.fromRound.bandPosition;
         let col = m.rule1.fromRound.position.value;
         m.ruleName1 = m.rule1.ruleName;
-        if( row <= 0 ) {
-            m.teamName1 = m.rule1.fromRound.round.label;
-        } else if( m.isDummy ) {
+
+        if( m.rule1.isDummy ) {
             m.teamName1 = m.rule1.fromRound.round.label;
         } else {
             m.teamName1 = roundMatrix[row-1][col-1].teamName;
@@ -617,12 +614,12 @@ export  class MeetingService extends AbstractService {
         row = m.rule2.fromRound.bandPosition;
         col = m.rule2.fromRound.position.value;
         m.ruleName2 = m.rule2.ruleName;
-        if( row <= 0 ) {
-            m.teamName2 =  m.rule2.fromRound.round.label;
-        } else if( m.isDummy ) {
+        
+        if( m.rule2.isDummy ) {
             m.teamName2 =  m.rule2.fromRound.round.label;
         } else {
             m.teamName2 = roundMatrix[row-1][col-1].teamName;
         }
+        m.name = m.teamName1 + " - " + m.teamName2;
     }
 }

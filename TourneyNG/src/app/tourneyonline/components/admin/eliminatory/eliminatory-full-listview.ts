@@ -18,11 +18,10 @@ export class FullEliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows:  EliminatoryVO[];
     eliminatoryCols: TableCols[];
-    isAutoGen: string;
 
     constructor(
-        protected tourneyService: TourneyService,
-        protected levelService: LevelService,
+        public tourneyService: TourneyService,
+        public levelService: LevelService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe
@@ -33,9 +32,8 @@ export class FullEliminatoryListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
-        this.levelService.ngOnInit();
-        this.isAutoGen  = this.selectedEliminatoryLevel.isAutoGen == undefined ? "true" : this.selectedEliminatoryLevel.isAutoGen;
-        this.levelService.isAutomatic = this.isAutoGen == "true" ? true : false;
+        // this.levelService.ngOnInit();
+
         this.levelService.prepareGui();
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
@@ -76,23 +74,6 @@ export class FullEliminatoryListView extends AbstractListView {
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
     }
-    
-    onAutoGenClick() {
-        console.log("Entering onAutoGenClick()");
-        let isAuto = this.isAutoGen == "true" ? true : false;
-        this.selectedEliminatoryLevel.isAutoGen = this.isAutoGen;
-        let teamNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
-        this.levelService.prepareAutomaticEliminatoryRules(teamNo, isAuto);
-        this.ngOnInit();
-    }
 
-    onManualGenClick() {
-        console.log("Entering onManualGenClick()");
-        let isAuto = this.isAutoGen == "false" ? false : true;
-        this.selectedEliminatoryLevel.isAutoGen = this.isAutoGen;
-        let teamNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
-        this.levelService.prepareAutomaticEliminatoryRules(teamNo, isAuto);
-        this.ngOnInit();
-    }
 }
 

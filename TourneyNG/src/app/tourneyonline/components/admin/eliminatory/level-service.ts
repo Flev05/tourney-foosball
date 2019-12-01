@@ -338,7 +338,7 @@ export class LevelService extends AbstractEliminatoryListView {
         }
 
         const topLevel = this.eliminatoryLevels[0];
-        let topLevelEliminatories = topLevel.eliminatories;
+        let topLevelEliminatories: Array<Eliminatory> = topLevel.eliminatories;
         let lastIndex = power2; 
         
         for(let i=0; i<topLevelEliminatories.length; i++) {
@@ -352,13 +352,6 @@ export class LevelService extends AbstractEliminatoryListView {
             e.rule1.fromPlayoff.position = {label: label, value: up.position.value};
 
             let round1 = rounds.find(r => r.name == up.round.label);
-            // if(this.containsPlayoff()) {
-            //     e.rule1.fromPlayoff.round = {label: up.round.label, value: round1.id};
-            //     e.rule1.fromRound.round   = {label: "", value: 0};
-            // } else {
-            //     e.rule1.fromRound.round   = {label: up.round.label, value: round1.id};
-            //     e.rule1.fromPlayoff.round = {label: "", value: 0};
-            // }
 
             let down = padTeamList[--lastIndex];
 
@@ -384,16 +377,14 @@ export class LevelService extends AbstractEliminatoryListView {
                     if( e.rule2.fromPlayoff.position.value > 0 )  {
                         e.rule2.fromPlayoff.bandPosition = lastIndex % R + 1;
                     }    
-                    for( let elim of topLevel.eliminatories ) {
-                        for( let m of elim.round.onewayMeetings ) {
-                            m.rule1.fromRound = elim.rule1.fromPlayoff;
-                            m.rule2.fromRound = elim.rule2.fromPlayoff;
-                        }
-                        for( let m of elim.round.roundtripMeetings ) {
-                            m.rule1.fromRound = elim.rule1.fromPlayoff;
-                            m.rule2.fromRound = elim.rule2.fromPlayoff;
-                        }
-                    }
+                }
+                for( let m of e.round.onewayMeetings ) {
+                    m.rule1.fromRound = e.rule1.fromPlayoff;
+                    m.rule2.fromRound = e.rule2.fromPlayoff;
+                }
+                for( let m of e.round.roundtripMeetings ) {
+                    m.rule1.fromRound = e.rule1.fromPlayoff;
+                    m.rule2.fromRound = e.rule2.fromPlayoff;
                 }
             } else {
                 e.rule1.fromRound.round   = {label: up.round.label, value: round1.id};
@@ -406,15 +397,13 @@ export class LevelService extends AbstractEliminatoryListView {
                         e.rule2.fromRound.bandPosition = lastIndex % R + 1;
                     }   
                 }
-                for( let elim of topLevel.eliminatories ) {
-                    for( let m of elim.round.onewayMeetings ) {
-                        m.rule1.fromRound = elim.rule1.fromRound;
-                        m.rule2.fromRound = elim.rule2.fromRound;
-                    }
-                    for( let m of elim.round.roundtripMeetings ) {
-                        m.rule1.fromRound = elim.rule1.fromRound;
-                        m.rule2.fromRound = elim.rule2.fromRound;
-                    }
+                for( let m of e.round.onewayMeetings ) {
+                    m.rule1.fromRound = e.rule1.fromRound;
+                    m.rule2.fromRound = e.rule2.fromRound;
+                }
+                for( let m of e.round.roundtripMeetings ) {
+                    m.rule1.fromRound = e.rule1.fromRound;
+                    m.rule2.fromRound = e.rule2.fromRound;
                 }
             }
         }
@@ -424,6 +413,7 @@ export class LevelService extends AbstractEliminatoryListView {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
         let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, -1);
         el.level = 1;
+        el.isOptional = true;
         this.eliminatoryLevels.push(el);
     }
  
@@ -444,6 +434,7 @@ export class LevelService extends AbstractEliminatoryListView {
             , isTopLevel: top == 0 ? true : false
             , direction: Direction.OneWay
             , eliminatories: els
+            , isOptional: false
         };
 
         return el;
@@ -453,22 +444,39 @@ export class LevelService extends AbstractEliminatoryListView {
         let t1: Team = this.newDummyTeam();
         let t2: Team = this.newDummyTeam();
         
-        let fr : FromRound = {id: null
+        let fr1 : FromRound = {id: null
             , position: { label: "", value: 0 }
             , round: { label: "", value: 0 } 
             , bandPosition: 0
             , isAutomatic: true
         };
-
+        let fr2 : FromRound = {id: null
+            , position: { label: "", value: 0 }
+            , round: { label: "", value: 0 } 
+            , bandPosition: 0
+            , isAutomatic: true
+        };
+        let pfr1 : FromRound = {id: null
+            , position: { label: "", value: 0 }
+            , round: { label: "", value: 0 } 
+            , bandPosition: 0
+            , isAutomatic: true
+        };
+        let pfr2 : FromRound = {id: null
+            , position: { label: "", value: 0 }
+            , round: { label: "", value: 0 } 
+            , bandPosition: 0
+            , isAutomatic: true
+        };
         let pr1 : PlayoffRule = {
             id: 0,
-            fromRound:  fr,
+            fromRound:  fr1,
             ruleName: "",
             isDummy: false
         }
         let pr2 : PlayoffRule = {
             id: 0,
-            fromRound:  fr,
+            fromRound:  fr2,
             ruleName: "",
             isDummy: false
         }
@@ -489,13 +497,13 @@ export class LevelService extends AbstractEliminatoryListView {
             },
             rule1: {
                 id: this.tourneyService.getSequenceNumber(),
-                fromRound: fr,
-                fromPlayoff: fr
+                fromRound: fr1,
+                fromPlayoff: pfr1
             },
             rule2: {
                 id: this.tourneyService.getSequenceNumber(),
-                fromRound: fr,
-                fromPlayoff: fr
+                fromRound: fr2,
+                fromPlayoff: pfr2
             }
         };
 
@@ -512,14 +520,12 @@ export class LevelService extends AbstractEliminatoryListView {
         console.log("Entering onEliminatoryLevelRowSelect()");
         this.eliminatoryLevelSelectedRow = event.data;
 
-        this.tourneyService.eliminatoryTeamsCombobox = this.eliminatoryTeamsCombobox;
-        this.tourneyService.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
-        this.tourneyService.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;
-
-        this.loadEliminatoryMeetingByIdList(this.tourneyService.selectedEliminatoryLevel, complete);
+        this.loadEliminatoryMeetingByIdList(this.eliminatoryLevelSelectedRow.eliminatoryLevel, complete);
     }
 
     public loadEliminatoryMeetingByIdList(el: EliminatoryLevel, complete?: () => void) {
+        this.tourneyService.selectedEliminatoryLevel = el;
+
         let idList: number [] = [];
         for (let e of el.eliminatories) {
             idList.push(e.id);
@@ -590,11 +596,8 @@ export class LevelService extends AbstractEliminatoryListView {
                 let found : boolean = false;
                 for( let  mdb of this.meetingList) {
                     let m : Meeting = JSON.parse(mdb.json);
-                    
                     if( mdb.eliminatoryId == e.id ) {
-      
                         found = true;
-    
                         m.id = mdb.id;
                         if( m.direction == Direction.OneWay ) {
                             e.round.onewayMeetings.push(m);
@@ -610,7 +613,7 @@ export class LevelService extends AbstractEliminatoryListView {
         }
         complete();
     }
-
+ 
     onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
         this.cleanEliminatoryMeetings();        
         this.processEliminatoryTeams(teamNo);
@@ -642,6 +645,7 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     public prepareEliminatoryLevelsGui(): void  {
+        this.ngOnInit();
         this.eliminatoryLevelCols = super.prepareELCols();
         
         this.eliminatoryLevelRows = [];

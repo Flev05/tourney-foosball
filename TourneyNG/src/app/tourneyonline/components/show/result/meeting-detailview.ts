@@ -169,7 +169,8 @@ export class MeetingDetailView extends AbstractDetailView {
             observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
         }
         if(observer != null) {            
-            observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onSaveMeetingComplete(copy) );            
+            observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete() );            
+            // observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onSaveMeetingComplete(copy) );            
         }
     }
 

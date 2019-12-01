@@ -39,7 +39,7 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
     constructor(
         private fb: FormBuilder,
         protected location: Location,
-        protected tourneyService: TourneyService,
+        public tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected countryService: CountryService,
     ) { 

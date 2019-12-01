@@ -15,7 +15,7 @@ export class ClassificationEliminatoryListView extends AbstractEliminatoryListVi
     static autoRedirect: string = 'classification/lv/dv';
     
     constructor(
-        protected tourneyService: TourneyService,
+        public tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected router: Router,
         protected location: Location,

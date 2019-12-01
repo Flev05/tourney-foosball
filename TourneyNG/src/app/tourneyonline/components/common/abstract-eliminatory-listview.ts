@@ -38,14 +38,13 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     isPlayoff: boolean;
 
-    // isTopLevel: boolean;
     isAutomatic: boolean;
 
     isOneway: string;
     private isStandalone: boolean;
 
     selectedLevelCombobox: Combobox;
-    eliminatoryTeamsCombobox: Combobox[];
+    // eliminatoryTeamsCombobox: Combobox[];
   
     elHttpCounter: number;
     eliminatoryRoundMap: Map<number, Round>;
@@ -77,14 +76,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         this.meetingService.selectedTourney = this.tourneyService.selectedTourney;
-        this.tourneyService.prepareEliminatoriesComboBoxes();
- 
-        this.isOneway   = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
+
+        this.isAutomatic   = this.tourneyService.selectedTourney.isEliminatoryAutoGen=="true" ? true : false;
 
         this.isPlayoff = this.containsPlayoff();
-        
-        this.eliminatoryTeamsCombobox = this.tourneyService.eliminatoryTeamsCombobox;
-  
+          
         this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
  
         if (this.isStandAlone(this.selectedTourney)) {
@@ -100,6 +96,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     public prepareGui(): void {
+        this.ngOnInit();
+
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+        this.isOneway      = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
         if (this.isStandalone) {
             this.prepareStandaloneGui();
         } else {
@@ -283,25 +283,38 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     }
 
     getPosition1(e: Eliminatory): string {
-
-        let pos1 = this.isAutomatic 
-            ? e.rule1.fromRound.bandPosition + "° delle " + e.rule1.fromRound.position.value + "°" 
-            : e.rule1.fromRound.position.value + "°";
-
+        let pos1 = "";
+        if(this.containsPlayoff()) {
+            pos1 = this.isAutomatic 
+                ? e.rule1.fromPlayoff.bandPosition + "° delle " + e.rule1.fromPlayoff.position.value + "°" 
+                : e.rule1.fromPlayoff.position.value + "°";
+        } else {
+            pos1 = this.isAutomatic 
+                ? e.rule1.fromRound.bandPosition + "° delle " + e.rule1.fromRound.position.value + "°" 
+                : e.rule1.fromRound.position.value + "°";
+        }   
         return pos1;
     }
     
     getPosition2(e: Eliminatory): string {
-
-        let rule = e.rule2.fromRound.bandPosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
-        let pos = e.rule2.fromRound.position.value + "°";
-        if( e.rule2.fromRound.position.value == 0 ) {
-            rule = "";
-            pos  = "";
+        let pos2 = "";
+        if(this.containsPlayoff()) {
+            let rule = e.rule2.fromPlayoff.bandPosition + "° delle " + e.rule2.fromPlayoff.position.value + "°" ;
+            let pos = e.rule2.fromPlayoff.position.value + "°";
+            if( e.rule2.fromPlayoff.position.value == 0 ) {
+                rule = "";
+                pos  = "";
+            }
+            pos2 = this.isAutomatic ? rule : pos;
+        } else {
+            let rule = e.rule2.fromRound.bandPosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
+            let pos = e.rule2.fromRound.position.value + "°";
+            if( e.rule2.fromRound.position.value == 0 ) {
+                rule = "";
+                pos  = "";
+            }
+            pos2 = this.isAutomatic ? rule : pos;
         }
-
-        let pos2 = this.isAutomatic ? rule : pos;
-
         return pos2;
     }
 

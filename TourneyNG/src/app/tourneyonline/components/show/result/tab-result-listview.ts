@@ -79,6 +79,8 @@ export class TabResultListView extends AbstractListView {
             }
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds);
             subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onRoundCompleteLoad());            
+        } else {
+            this.prepareEliminatoryLevels();
         }
     }
     
@@ -113,7 +115,6 @@ export class TabResultListView extends AbstractListView {
         }
             
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.levelService.ngOnInit();
         this.levelService.prepareEliminatoryLevelsGui();
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
@@ -137,7 +138,6 @@ export class TabResultListView extends AbstractListView {
         }
         this.prepareEliminatoryLevels();
     }
-
 
     onChangeTab(e) {
         let index=e.index;
@@ -273,7 +273,6 @@ export class TabResultListView extends AbstractListView {
         this.tourneyService.selectedEliminatoryLevel = this.selctedEliminatoryLevel.eliminatoryLevel;
          
         this.router.navigate([REDIRECT_ELIMINATORY]);
-        // this.levelService.onEliminatoryLevelRowSelect(event, REDIRECT_ELIMINATORY);
     }
 
     goBack(): void {        

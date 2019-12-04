@@ -82,6 +82,7 @@ export class TourneyService extends AbstractService {
     isStandalone: boolean;
     selectedEliminatoryLevelIndex: number;
     selectedEliminatoryIndex: number;
+    selectedRoundTeamIndex: number = null;
  
     static roundCols: TableCols[] = [
         { field: 'name',   header: 'Girone' },

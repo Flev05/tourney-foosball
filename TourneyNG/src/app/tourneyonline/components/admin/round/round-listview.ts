@@ -44,7 +44,8 @@ export class RoundListView extends AbstractListView {
         this.teams = [];
         for (let tn of this.selectedRound.teamNames ) {
             let t: Team = TeamService.getTeamByName(this.selectedTourney, tn);
-            this.teams.push(t);
+            let clone: Team = this.cloneObject(t);
+            this.teams.push(clone);
         } 
     }
  
@@ -60,6 +61,7 @@ export class RoundListView extends AbstractListView {
         console.log(event.data);
 
         this.teamService.selectedTeam = this.selectedTeam;
+        this.tourneyService.selectedRoundTeamIndex = this.selectedRound.teamNames.indexOf(this.selectedTeam.teamName);
         this.gotoDetailView();
     }
 }

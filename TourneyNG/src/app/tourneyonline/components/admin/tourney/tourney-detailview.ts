@@ -26,7 +26,6 @@ import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';

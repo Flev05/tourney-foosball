@@ -66,7 +66,21 @@ export class TeamDetailView extends AbstractDetailView {
 
         this.teamAlreadyExists = false;
         this.onSaveTeamError = false;
+        if(this.tourneyService.selectedTourney != undefined) {
+            let team = this.tourneyService.selectedTourney.teams.find( t => t.id == tvo.id );
+            if( team != undefined) {
+                team.teamName = this.selectedTeam.teamName;
+                team.address = this.selectedTeam.address
+                team.country = this.selectedTeam.country
+            }
+        }
 
+        if(this.tourneyService.selectedRoundTeamIndex != null) {
+            let index : number = this.tourneyService.selectedRoundTeamIndex;
+            this.tourneyService.selectedRound.teamNames[index] = this.selectedTeam.teamName;
+        }
+        this.tourneyService.selectedRoundTeamIndex = null;
+        
         const subscriber = this.teamService.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
     } 

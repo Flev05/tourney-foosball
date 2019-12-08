@@ -1,0 +1,17 @@
+- Spostare la box Incontro a livello di singola fase
+- default casuale anzicchè teste di serie
+- a fronte della selezione teste di serie, visualizzare il messaggio per l'ordinamento delle squadre
+- numerare le sqadre nelle 2 boxes
+- tasto di SAVE sotto per salvare le squadre
+- Eliminazioni dirette, rimuove il tasto INDIETRO in fase di creazione
+- Label Numero Gironi al posto di Gironi nella TAB Gironi
+- Nei meetings, inserire l'indirizzo di andata quello della squadra di casa
+- Generalità, label Nome Campionato/Torneo
+- FIX: modifica nome della squadra da Gironi con tasto di Indietro/Salva si rompe
+- FIX: modifica nome e salva su DB
+- Eliminatorie dirette, se un solo girone, modificare 1° delle 16° con 16° and so on
+- Riportare lo stesso algoritmo dello standalone nelle eliminazioni dirette con gironi e playoff
+- Evolutiva: l'utente follower deve poter seguire la propria squadra nel girone dove si trova
+- Meeting: incolonnare le squadre a sinistra e destra come in casa e in trasferta
+- Controllo sul numero dei gol massimo
+- Visualizzare Noleggio solo se no login

@@ -86,7 +86,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
      */
     public List<Team> findPlayersBySessionId(String sessionId) {
 
-        logger.debug(logId() + "Entering findTeamsByClientId()");
+        logger.debug(logId() + "Entering findPlayersBySessionId()");
 
         CriteriaBuilder cb = getCb();
 

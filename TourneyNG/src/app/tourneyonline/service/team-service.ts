@@ -34,7 +34,7 @@ export class TeamService {
         { field: 'address',    header: 'Indirizzo' },
     ];
     teamPool: Team[] = [];
-    teamPoolVO: TeamVO[] = [];
+    // teamPoolVO: TeamVO[] = [];
     isTeamsChanged: any;
     
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
@@ -53,21 +53,18 @@ export class TeamService {
             catchError(this.handleError('loadAllTeams', []))
         );
 
-        observer.subscribe(t => this.teamPoolVO = t, e => this.onError(e), () => complete != null ? complete() : this.onLoadTeamsComplete());
+        observer.subscribe(t => this.teamNext(t, complete), e => this.onError(e));
     }
-
-    private onLoadTeamsComplete(): any {
-        console.log("Entering onLoadTeamsComplete()");
+    
+    private teamNext(teamsVo: TeamVO[], complete?: () => void): void {
         this.teamPool = [];
-
-        for( let pvo of this.teamPoolVO ) {
-            let ppo: TeamVO = JSON.parse(pvo.json);
+        for( let pvo of teamsVo ) {
+            let ppo: Team = JSON.parse(pvo.json);
             ppo.id = pvo.id;
-            ppo.teamName = pvo.teamName;
-            ppo.country = pvo.country;
-            ppo.clientId = pvo.clientId;
-
             this.teamPool.push(ppo);
+        }
+        if( complete != null ) {
+            complete();
         }
     }
 

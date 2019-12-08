@@ -54,6 +54,8 @@ public class TeamRESTService extends AbstractRESTService {
 
         List<Team> teamList = teamDao.findTeamsByClientId(clientId);
 
+        // teamList.forEach(t -> logger.debug(t.getJson()));
+
         return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
     }
 
@@ -67,6 +69,8 @@ public class TeamRESTService extends AbstractRESTService {
         String sessionId = super.getSessionId();
 
         List<Team> teamList = teamDao.findPlayersBySessionId(sessionId);
+
+        // teamList.forEach(t -> logger.debug(t));
 
         return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
     }

@@ -17,7 +17,7 @@ export class TeamListView extends AbstractListView {
 
     cols: TableCols[] = TeamService.cols;
     selectedTeam: Team;
-    teams: Team[];
+    teams: Team[] = [];
     deleteTeam: Team;
     onDeleteTeamError: boolean;
 
@@ -33,14 +33,18 @@ export class TeamListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.teamService.loadAllTeams();
-
+        this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
+    }
+    
+    private onLoadTeamsComplete(): any {
+        console.log("Entering onLoadTeamsComplete()");
         this.teams = this.teamService.teamPool;
     }
 
     onRowSelect(event) {
         console.log(event.data);
 
+        this.teamService.newTeam = false;
         this.teamService.selectedTeam = this.selectedTeam;
         this.gotoDetailView();
     }
@@ -51,13 +55,20 @@ export class TeamListView extends AbstractListView {
 
         this.deleteTeam = team;
         
-        if(confirm(popup)) {            
+        if(confirm(popup)) {
             let index: number = this.teams.indexOf(team);
             if(index > -1) {
                 const observer = this.teamService.deleteTeam(team, this.deleteTeamErrorHandler("Team player operation"));
                 observer.subscribe(n => this.next(n), e => this.subscribeErrorHandler(e), () => this.onDeleteComplete());
             }
         }
+    }
+
+    create() {
+        this.selectedTeam={id:null, teamName: ""};
+        this.teamService.selectedTeam = this.selectedTeam;
+        this.teamService.newTeam = true;
+        this.gotoDetailView();
     }
 
     private deleteTeamErrorHandler<T> (operation = 'operation', result?: T) {
@@ -71,6 +82,7 @@ export class TeamListView extends AbstractListView {
             return of(result as T);
         };
     }
+
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {

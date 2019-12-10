@@ -79,10 +79,8 @@ export class TourneyService extends AbstractService {
     selectedRoundTabIndex: number = 0;
     selectedPlayoffTabIndex: number = 0;
     selectedEliminatoryTabIndex: number = 0;
-    isStandalone: boolean;
     selectedEliminatoryLevelIndex: number;
     selectedEliminatoryIndex: number;
-    selectedRoundTeamIndex: number = null;
  
     static roundCols: TableCols[] = [
         { field: 'name',   header: 'Girone' },
@@ -339,7 +337,26 @@ export class TourneyService extends AbstractService {
             json: JSON.stringify(t)
         };
     }
-     
+     /**
+     * Save the tourney after cleaning the internal list of meetings and calendars
+     *  
+     * @param t the tourney to save 
+     * @param complete the callback method do invoke when the save will finish
+     */
+    public updateTourneyWithCleanAll(tvo : TourneyVO, complete: () => void ) : void
+    {
+        this.onSaveTourneyError = false;
+
+        let url = updateTourneyUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+
+        subscriber.subscribe( () => complete() );
+    }
+
     /**
      * Save the tourney without saving its playoff meetings!
      * 
@@ -786,6 +803,7 @@ export class TourneyService extends AbstractService {
 
         return rows;
     }
+
     public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
         let tvo: TourneyVO = {
             id:  t.id,
@@ -797,5 +815,24 @@ export class TourneyService extends AbstractService {
         return tvo;
     }
 
+    /**
+     * Clears tourney local meetings array before create che JSON string to save on the Back End
+     */
+    public clearTourneyMeetings(tourney: Tourney) {
 
+        for (let r of tourney.rounds) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+        }
+        for (let p of tourney.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        for (let el of tourney.eliminatoryLevels) {
+            for (let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+    }
 }

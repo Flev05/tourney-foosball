@@ -259,12 +259,7 @@
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button class="ui-button-success" 
-        type="button" 
-        icon="fa fa-arrow-left" 
-        pButton (click)="gotoListView()" 
-        label="Elenco Tornei">
-    </button>
+    <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="gotoListView()" label="Elenco Tornei"></button>
 </div>   
  
 <p-tabView [activeIndex]="selectedTourney.selectedTabIndex" (onChange)="onChangeTab($event)">
@@ -1355,7 +1350,7 @@
             </p-table>
         </div>
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="eliminatoryTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
                 <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
                     <button pButton type="button" 

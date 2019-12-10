@@ -44,7 +44,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     private isStandalone: boolean;
 
     selectedLevelCombobox: Combobox;
-    // eliminatoryTeamsCombobox: Combobox[];
   
     elHttpCounter: number;
     eliminatoryRoundMap: Map<number, Round>;
@@ -88,7 +87,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         } else {
             this.isStandalone = false;
         }
-        this.tourneyService.isStandalone = this.isStandalone;
     }
 
     public isStandAlone(tourney : Tourney ): boolean {

@@ -28,7 +28,7 @@ import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { CalendarModule } from 'app/components/calendar/calendar';
-import { PlayerListView } from './player-listview';
+import { TeamPlayerListView } from './team-player-listview';
 import { PickListModule } from 'app/components/picklist/picklist';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { TeamPickList } from './team-picklist';
@@ -81,7 +81,7 @@ import {BlockUIModule} from 'primeng/blockui';
         TourneyListView
         ,NewTourneyDetailView
         ,TourneyDetailView
-        ,PlayerListView
+        ,TeamPlayerListView
         ,TeamPickList
         ,PlayerPickList
     ]

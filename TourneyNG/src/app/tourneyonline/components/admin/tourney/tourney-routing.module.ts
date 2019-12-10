@@ -2,7 +2,7 @@ import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
-import { PlayerListView } from './player-listview';
+import { TeamPlayerListView } from './team-player-listview';
 import { TeamPickList } from './team-picklist';
 import { RoundListView } from '../round/round-listview';
 import { RuleListView } from '../playoff/rule-listview';
@@ -17,7 +17,7 @@ import { NewTourneyDetailView } from './new-tourney-detailview';
 			{ path: '',   			component: TourneyListView },
 			{ path: 'dv',   		component: TourneyDetailView },
 			{ path: 'newdv',   		component: NewTourneyDetailView },
-			{ path: 'dv/team',		component: PlayerListView },
+			{ path: 'dv/team',		component: TeamPlayerListView },
 			{ path: 'dv/addteam',	component: TeamPickList },	
 			{ path: 'dv/updateteam',component: TeamDetailView },
 			{ path: 'dv/round',		component: RoundListView },	

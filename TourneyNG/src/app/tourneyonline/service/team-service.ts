@@ -12,6 +12,7 @@ import { TableCols } from '../domain/table-cols';
 import { TeamVO } from '../domain/team-vo';
 import { LoginService } from './login-service';
 import { Tourney } from '../domain/tourney';
+import { ɵangular_packages_platform_browser_dynamic_platform_browser_dynamic_a } from '@angular/platform-browser-dynamic';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -26,17 +27,21 @@ const deleteTeamUrl = teamUrl +'/delete';
 
 @Injectable()
 export class TeamService {
+
     selectedTeam : Team;
     newTeam : boolean = false;
+    readOnly: boolean = false;
 
     static cols: TableCols[] = [
         { field: 'teamName',   header: 'Nome' },
         { field: 'address',    header: 'Indirizzo' },
     ];
     teamPool: Team[] = [];
-    // teamPoolVO: TeamVO[] = [];
     isTeamsChanged: any;
-    
+    onSaveTeamError: boolean;
+    badRequest: boolean;
+    teamAlreadyExists: boolean = false;
+
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }
@@ -169,5 +174,137 @@ export class TeamService {
             }
         }
         return teams;
+    }
+
+    isTeamNameAlreadyExists(newTeam: Team) : boolean  {
+
+        let found = this.teamPool.find( t => this.whereClause(t, newTeam) );
+        return found == undefined ? false : true;
+    }
+    
+    private whereClause(t: Team, newTeam: Team): boolean {
+        if( newTeam.id == null ) {
+            return t.teamName == newTeam.teamName;
+        }
+        return t.id != newTeam.id && t.teamName == newTeam.teamName;
+    }
+
+    private isTourneyTeamAlreadyExists(tourney: Tourney, newTeam: Team) : boolean  {
+        let found = tourney.teams.find( t => this.whereClause(t, newTeam) );
+        return found == undefined ? false : true;
+    }
+
+    saveTourneyTeam(tourney: Tourney, savePoolTeam: boolean, st: Team, complete?: () => void) {     
+        this.selectedTeam = st;
+        if( this.isTeamAlreadyExists(tourney) ) {
+            return;
+        }
+
+        this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
+
+        let tvo : TeamVO = {
+            id: this.selectedTeam.id
+          , teamName: this.selectedTeam.teamName
+          , country: this.selectedTeam.country
+          , clientId: this.selectedTeam.clientId
+          , json: JSON.stringify(this.selectedTeam)
+        };
+
+        this.updateInternalTeams(tourney);
+
+        this.onSaveTeamError = false;
+        if( savePoolTeam ) {
+            const subscriber = this.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+            subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
+        } else {
+            if( tourney.teams.find( t => t.teamName == this.selectedTeam.teamName) != undefined ) {
+                const subscriber = this.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+                subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));    
+            } else {
+                complete();
+            }
+        }
+    } 
+
+    private isTeamAlreadyExists(tourney: Tourney): boolean {
+        this.teamAlreadyExists = false;
+        if( this.isTeamNameAlreadyExists(this.selectedTeam) ) {
+            this.teamAlreadyExists = true;
+            return true;
+        }
+        if(tourney != undefined ) {
+            if( this.isTourneyTeamAlreadyExists(tourney, this.selectedTeam) ) {
+                this.teamAlreadyExists = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private updateInternalTeams(tourney: Tourney) {
+        if(tourney != undefined) {
+            if(this.newTeam) {
+                tourney.teams.push(this.selectedTeam);
+            }
+            let team = tourney.teams.find( t => t.id == this.selectedTeam.id );
+            if( team != undefined) {
+                team.teamName = this.selectedTeam.teamName;
+                team.address = this.selectedTeam.address
+                team.country = this.selectedTeam.country
+            }
+        }
+    }
+
+    private newTeamNext(tvo: TeamVO) {
+        console.log("newTeamNext()");
+        console.log(tvo);
+        this.selectedTeam.id = tvo.id;
+    }
+    
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSaveTeamError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+
+    private saveTeamErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTeamErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onSaveTeamError = true;
+
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "TeamAlreadyExists" ) {
+                this.teamAlreadyExists = true;
+                return of(result as T);
+            }
+      
+            return of(result as T);
+        };
+    }
+    
+    private onSaveComplete(complete?: () => void) {
+        console.log("Entering onSaveComplete()");
+        if( !this.onSaveTeamError ) {
+            if(this.newTeam) {
+                this.teamPool.push(this.selectedTeam);
+            }
+        }
+        this.newTeam = false;
+        this.isTeamsChanged = true;
+        complete();
     }
 }

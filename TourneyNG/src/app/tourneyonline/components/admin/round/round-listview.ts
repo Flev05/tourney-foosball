@@ -40,6 +40,7 @@ export class RoundListView extends AbstractListView {
         super.ngOnInit();
         
         this.selectedRound = this.tourneyService.selectedRound;
+        this.teamService.readOnly = false;
 
         this.teams = [];
         for (let tn of this.selectedRound.teamNames ) {
@@ -61,7 +62,7 @@ export class RoundListView extends AbstractListView {
         console.log(event.data);
 
         this.teamService.selectedTeam = this.selectedTeam;
-        this.tourneyService.selectedRoundTeamIndex = this.selectedRound.teamNames.indexOf(this.selectedTeam.teamName);
+        this.teamService.readOnly = true;
         this.gotoDetailView();
     }
 }

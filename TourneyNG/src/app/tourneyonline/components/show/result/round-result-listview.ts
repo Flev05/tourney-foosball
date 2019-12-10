@@ -164,7 +164,6 @@ export class RoundResultListView extends AbstractListView {
         let team = TeamService.getTeamByName(this.selectedTourney, teamName);
         this.teamService.selectedTeam.players = team.players;
 
-        this.playerService.addPlayerButton = false;
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
 }

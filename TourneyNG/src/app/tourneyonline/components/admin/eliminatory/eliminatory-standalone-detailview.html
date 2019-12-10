@@ -37,7 +37,7 @@
 
 <form [formGroup]="eliminatoryFormGroup" >
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Fatto"></button>
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Indietro"></button>
     </div>                  
 
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -45,29 +45,17 @@
         <div *ngIf="isTopLevel && isStandalone">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-4">
-                    {{m1.teamName1}}
+                    {{m1.teamName1}} Vs {{m1.teamName2}}
                 </div>
-            </div>
-            <h4>Vs</h4>   
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-4">
-                    {{m1.teamName2}}
-                </div>
-            </div>                      
+            </div>                    
         </div>
 
         <div *ngIf="isTopLevel && !isStandalone">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-4">
-                    {{selectedEliminatory.rule1.fromRound.position.label}} - {{selectedEliminatory.rule1.fromRound.round.label}}
+                    {{selectedEliminatory.rule1.fromRound.position.label}} - {{selectedEliminatory.rule1.fromRound.round.label}} Vs {{selectedEliminatory.rule2.fromRound.position.label}} - {{selectedEliminatory.rule2.fromRound.round.label}}
                 </div>
             </div>
-            <h4>Vs</h4>   
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-4">
-                    {{selectedEliminatory.rule2.fromRound.position.label}} - {{selectedEliminatory.rule2.fromRound.round.label}}
-                </div>
-            </div>                      
         </div>
                 
         <h4>Andata</h4>

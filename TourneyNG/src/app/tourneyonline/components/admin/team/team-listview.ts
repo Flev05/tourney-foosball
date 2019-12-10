@@ -10,6 +10,8 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from './team-detailview';
 import { Observable, of } from 'rxjs';
 
+const REDIRECT_TOURNEY_LV   = 'admintourney/';
+
 @Component({
     templateUrl: './team-listview.html'
 })
@@ -37,8 +39,12 @@ export class TeamListView extends AbstractListView {
     }
     
     private onLoadTeamsComplete(): any {
-        console.log("Entering onLoadTeamsComplete()");
-        this.teams = this.teamService.teamPool;
+        this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+        console.log("Loaded [" + this.teams.length + "] pool teams");
+    }
+    
+    public gotoListView() {
+        this.router.navigate([REDIRECT_TOURNEY_LV]);
     }
 
     onRowSelect(event) {
@@ -65,7 +71,7 @@ export class TeamListView extends AbstractListView {
     }
 
     create() {
-        this.selectedTeam={id:null, teamName: ""};
+        this.selectedTeam={id: null, teamName: ""};
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = true;
         this.gotoDetailView();
@@ -82,7 +88,6 @@ export class TeamListView extends AbstractListView {
             return of(result as T);
         };
     }
-
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {

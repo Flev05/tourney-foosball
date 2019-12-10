@@ -180,7 +180,6 @@ export class PlayoffResultListView extends AbstractRuleListView {
 
         this.teamService.selectedTeam = event.data;
 
-        this.playerService.addPlayerButton = false;
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
 }

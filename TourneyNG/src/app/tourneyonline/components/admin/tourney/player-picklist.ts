@@ -47,10 +47,7 @@ export class PlayerPickList extends AbstractListView {
         this.selectedTeam = this.teamService.selectedTeam;
         this.isPlayersChanged = false;
 
-        this.targetPlayers = [];
-        for(let p of this.selectedTeam.players) {
-            this.targetPlayers.push(p.playerName);
-        }
+        this.targetPlayers  = this.selectedTeam.players.map( p => p.playerName );
 
         let usedPlayers: Array<Player> = new Array<Player>();
         for(let t of this.selectedTourney.teams) {
@@ -100,12 +97,27 @@ export class PlayerPickList extends AbstractListView {
         if(!this.isPlayersChanged) {
             return;
         }
-        this.selectedTeam.players = [];
+        let tourneyTeam: Team = this.selectedTourney.teams.find( t => t.teamName == this.selectedTeam.teamName );
+        if( tourneyTeam == undefined ) {
+            console.error("No team found in the tourney teams with team name [" + this.selectedTeam.teamName + "]");
+            return;
+        }
+
+        let index = this.selectedTourney.teams.indexOf(tourneyTeam);
+        if( index == -1 ) {
+            console.error("Unable to find the tourney teams with team name [" + this.selectedTeam.teamName + "]");
+            return;
+        }
+
+        tourneyTeam.players = [];
         for (let pn of this.targetPlayers) {
             let p: Player = this.playerService.playerPool.find(x => x.playerName == pn);
-            this.selectedTeam.players.push(p);
+            tourneyTeam.players.push(p);
         }
  
+        this.selectedTourney.teams[index] = tourneyTeam;
+        this.teamService.selectedTeam = tourneyTeam;
+
         let tvo: TourneyVO = {
             id: this.selectedTourney.id,
             tourneyName: this.selectedTourney.tourneyName,

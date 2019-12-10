@@ -9,27 +9,32 @@ import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractDetailView } from '../../common/abstract-detailview';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TeamDetailView } from '../team/team-detailview';
 
 const REDIRECT_PLAYER_PL = "admintourney/dv/playerpl";
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
 const REDIRECT_TEAM_DV   = "admintourney/dv/updateteam";
 
 @Component({
-    templateUrl: './player-listview.html',
+    templateUrl: './team-player-listview.html',
 })
-export class PlayerListView extends AbstractDetailView {
+export class TeamPlayerListView extends AbstractDetailView {
 
     selectedTeam: Team;
     selectedPlayer: Player;
     playerCols: TableCols[];
     playerLabel: string;
+    previousTeamName: string;
 
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
         private   teamService: TeamService,
-        public playerService: PlayerService,
-        private   router: Router
+        public    playerService: PlayerService,
+        private   router: Router,
+        private   clientService: ClientService
     ) { 
         super(tourneyService, location);
     }
@@ -47,24 +52,34 @@ export class PlayerListView extends AbstractDetailView {
             this.selectedTeam.players = [];
             this.teamService.newTeam = false;
         }
+        this.previousTeamName = this.selectedTeam.teamName;
+        this.teamService.teamAlreadyExists = false;
 
-        // let alreadyInTeam: Player[] = [];
-        // for(let i=0; i<this.selectedTourney.teams.length; i++ ) {
-        //     let t = this.selectedTourney.teams[i];
-        //     let p = t.players;
-        //     for(let j=0; j<p.length; j++ ) {
-        //         alreadyInTeam.push(p[j]);
-        //     }
-        // }
-        
         this.playerLabel = this.selectedTeam.players.length == 0 ? "Aggiungi Giocatori" : "Gestisci Giocatori";
     }
- 
-    updateTeamList() {
 
+    saveTourneyTeam() {     
+        if( this.previousTeamName != this.selectedTeam.teamName ) {
+            if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
+                return;
+            }
+            this.teamService.saveTourneyTeam(this.selectedTourney, false, this.selectedTeam, () => this.saveTeamOnComplete());
+        }
+    } 
+
+    private saveTeamOnComplete(): void {
+        this.tourneyService.clearTourneyMeetings(this.selectedTourney);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        this.tourneyService.updateTourneyWithCleanAll(tvo, () => this.onSaveTourneyComplete());
+    }
+
+    private onSaveTourneyComplete(): void {
+        this.selectedTourney.rounds = [];
+        super.goBack();
+    }
+    
+    goToPickList() {
         this.playerService.loadAllPlayers( () => this.onComplete() ) ;
-
-        this.router.navigate([REDIRECT_PLAYER_PL]);
     }
 
     private onComplete(): any {
@@ -83,6 +98,7 @@ export class PlayerListView extends AbstractDetailView {
 
         this.selectedTeam.players = this.playerService.playerPool;   
         this.playerLabel = this.selectedTeam.players.length == 0 ? "Aggiungi Giocatori" : "Gestisci Giocatori";
+        this.router.navigate([REDIRECT_PLAYER_PL]);
     }
 
     updateTeamDetails() {

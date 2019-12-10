@@ -54,25 +54,41 @@
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Nome:
+        <div class="ui-grid-col-3">
+            Nome*:
         </div>
-        <div class="ui-grid-col-5">
-            {{selectedTeam.teamName}}
+        <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
+            <input pInputText type="text" [(ngModel)]="selectedTeam.teamName"/>
         </div>
     </div>
         
     <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+        <div class="ui-grid-col-3">
             Via:
         </div>
-        <div class="ui-grid-col-5">
-            {{selectedTeam.address}}
+        <div class="ui-grid-col-5" pTooltip="Inserire la via della squadra.">
+            <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
         </div>
     </div>
 
     <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+        <div class="ui-grid-col-3">
+            <label for="country-id">Comune:</label>
+        </div>
+        <div class="ui-grid-col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedTeam.country" 
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
             Indirizzo:
         </div>
         <div class="ui-grid-col-8">
@@ -113,14 +129,11 @@
         </ng-template>  
     </p-table>
 
-    <div *ngIf="playerService.addPlayerButton" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-3">
-                <button pButton type="button" 
-                    icon="fa fa-user-plus" 
-                    label="{{playerLabel}}" 
-                    (click)="updateTeamList()">
-                </button>
+                <button pButton type="button" icon="fa fa-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
+                <button pButton class="ui-button-success"  (click)="saveTourneyTeam()" icon="fa fa-save" label="Salva"></button>            
             </div>
         </div>
     </div>

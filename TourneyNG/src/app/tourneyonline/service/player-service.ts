@@ -31,7 +31,6 @@ export class PlayerService {
     playerPoolVO: PlayerVO[];
     selectedPlayer : Player;
     newPlayer : boolean = false;
-    addPlayerButton: boolean = true;
     
     static cols: TableCols[]  = [
         { field: 'playerName',   header: 'Nome' },
@@ -57,21 +56,22 @@ export class PlayerService {
             catchError(this.handleError('loadAllPlayers', []))
         );
 
-        observer.subscribe(p => this.playerPoolVO = p, e => this.onError(e), () => complete != null ? complete() : this.onLoadPlayersComplete());
+        observer.subscribe(p => this.playerPoolVO = p, e => this.onError(e), () => complete != null ? complete() : this.onLoadPlayersComplete(complete));
     }
 
-    private onLoadPlayersComplete(): any {
+    private onLoadPlayersComplete(complete?: () => void ): any {
         console.log("Entering onLoadPlayersComplete()");
         this.playerPool = [];
-
         for( let pvo of this.playerPoolVO ) {
             let ppo: Player = JSON.parse(pvo.json);
             ppo.id = pvo.id;
             ppo.country = pvo.country;
             ppo.clientId = pvo.clientId;
             ppo.playerName = pvo.playerName;
-
             this.playerPool.push(ppo);
+        }
+        if( complete != null ) {
+            complete();
         }
     }
 

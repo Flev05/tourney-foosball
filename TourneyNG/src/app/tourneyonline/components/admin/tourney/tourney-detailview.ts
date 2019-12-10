@@ -435,9 +435,8 @@ export class TourneyDetailView extends AbstractDetailView {
     onTeamRowSelect(event) {
         console.log(event.data);
 
-        this.teamService.selectedTeam = this.selectedTeam;
+        this.teamService.selectedTeam = this.cloneObject(this.selectedTeam);
 
-        this.playerService.addPlayerButton = true;
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
      
@@ -1263,7 +1262,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyAlreadyExists = false;
         this.onSaveTourneyError = false;
 
-        this.clearTourneyMeetings();
+        if( !this.isInWizardMode() ) {
+            this.tourneyService.clearTourneyMeetings(this.selectedTourney);
+        }
 
         let tmp = this.cloneObject(this.selectedTourney);
         if( rewind ) {
@@ -1283,34 +1284,12 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyAlreadyExists = false;
         this.onSaveTourneyError = false;
 
-        this.clearTourneyMeetings();
-
+        if( !this.isInWizardMode() ) {
+            this.tourneyService.clearTourneyMeetings(this.selectedTourney);
+        }
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
 
         return tvo;
-    }
-
-    /**
-     * Clears tourney local meetings array before create che JSON string to save on the Back End
-     */
-    private clearTourneyMeetings() {
-        if( this.isInWizardMode() ) {
-            return;
-        }
-        for (let r of this.selectedTourney.rounds) {
-            r.onewayMeetings = [];
-            r.roundtripMeetings = [];
-        }
-        for (let p of this.selectedTourney.playoffs) {
-            p.round.onewayMeetings = [];
-            p.round.roundtripMeetings = [];
-        }
-        for (let el of this.selectedTourney.eliminatoryLevels) {
-            for (let e of el.eliminatories) {
-                e.round.onewayMeetings = [];
-                e.round.roundtripMeetings = [];
-            }
-        }
     }
 
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {

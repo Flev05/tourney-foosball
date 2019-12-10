@@ -35,12 +35,12 @@ export class TourneyListView extends AbstractTourneyListView {
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
         , protected countryService: CountryService
-        , private clientService : ClientService
-        , private loginService : LoginService
+        , private   clientService : ClientService
+        , private   loginService : LoginService
         , protected playerService : PlayerService
         , protected teamService : TeamService
-        , public router: Router
-        , public loc: Location
+        , public    router: Router
+        , public    loc: Location
         , protected dfp: DateFormatPipe
         , protected disciplineService: DisciplineService ) 
     { 
@@ -110,9 +110,10 @@ export class TourneyListView extends AbstractTourneyListView {
         for( let team of this.selectedTourney.teams ) {
             let teamFound = this.teamService.teamPool.find( t => t.teamName == team.teamName );
             if( teamFound != undefined ) {
-                team = this.copyTeam(team, teamFound);
+                team = this.cloneObject(this.copyTeam(team, teamFound));
             }
         }
+        this.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
     }
     
     private onLoadPlayerComplete(): void {

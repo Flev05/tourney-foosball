@@ -12,6 +12,7 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
+import { LevelService } from './level-service';
 
 @Component({
     templateUrl: './eliminatory-standalone-detailview.html',
@@ -42,6 +43,7 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected countryService: CountryService,
+        protected levelService: LevelService,
     ) { 
         super(tourneyService, location);
     }
@@ -61,7 +63,7 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
 
         this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
 
-        this.isStandalone = this.tourneyService.isStandalone;
+        this.isStandalone = this.levelService.isStandAlone(this.selectedTourney);
 
         if(this.m1.country!=undefined) {
             this.fullAddress1 = this.m1.address + " - " 

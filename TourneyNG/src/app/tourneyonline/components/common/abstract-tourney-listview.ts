@@ -72,9 +72,6 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         }
 
         this.tourneys = this.filter(this.tourneys);
-        if( this.tourneys.length > 0 ) {
-            // this.selectedTourney = this.tourneys[0];
-        }
 
         let emptyCountry = {
             id : 0,

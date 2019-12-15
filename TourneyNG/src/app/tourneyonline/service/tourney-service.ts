@@ -33,7 +33,9 @@ const tourneyUrl = 'api/tourneys';
 const loadTourneyByClientIdUrl  = tourneyUrl + '/loadByClientId';  
 const loadTourneyBySessionIdUrl = tourneyUrl + '/loadBySessionId';  
 const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';  
+
 const insertTourneyUrl = tourneyUrl + '/insert';
+
 const updateTourneyUrl = tourneyUrl + '/update';
 const updateTourneyDeleteRoundMeetingsUrl = tourneyUrl + '/updateTourneyDeleteRoundMeetings';
 const updateTourneyDeleteAllMeetingsUrl = tourneyUrl + "/updateTourneyDeleteAllMeetings";
@@ -101,6 +103,14 @@ export class TourneyService extends AbstractService {
         { field: 'goalsDone',     header: 'Gf'},
         { field: 'goalsConceded', header: 'Gs'},
         { field: 'goalsDiff',     header: 'D'},
+    ];
+
+    classificationReducedCols: TableCols[] = [
+        { field: 'teamName',      header: 'Team'},
+        { field: 'points',        header: 'Pt.'},
+        { field: 'played',        header: 'G'},
+        { field: 'won',           header: 'V'},
+        { field: 'lost',          header: 'P'},
     ];
 
     eliminatoryClassificationCols: TableCols[] = [

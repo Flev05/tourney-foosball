@@ -32,7 +32,6 @@ export class FullEliminatoryListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
-        // this.levelService.ngOnInit();
 
         this.levelService.prepareGui();
         this.eliminatoryRows = this.levelService.eliminatoryRows;

@@ -96,14 +96,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Eliminazioni Dirette({{eliminatoryCount}})" *ngIf="containsEliminatory()" >    
-        <div *ngIf="incompleteEliminatoryConfiguration"  style="margin-top:30px">
-            <p-message 
-                severity="error" 
-                text="Attenzione! Le regole del passaggio di turno alle eliminazioni dirette non sono complete!">
-            </p-message>
-        </div>     
-                    
+    <p-tabPanel header="Eliminazioni Dirette({{eliminatoryCount}})" *ngIf="containsEliminatory()" >   
         <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryLevelRows" 
                 [responsive]="true"

@@ -42,18 +42,7 @@ export class PlayerListView extends AbstractListView {
 
     private onComplete(): any {
         console.log("Entering onComplete()");
-        this.playerService.playerPool = [];
-
-        for( let pvo of this.playerService.playerPoolVO ) {
-            let ppo: Player = JSON.parse(pvo.json);
-            ppo.id = pvo.id;
-            ppo.country = pvo.country;
-            ppo.clientId = pvo.clientId;
-            ppo.playerName = pvo.playerName;
-
-            this.playerService.playerPool.push(ppo);
-        }
-
+        
         this.rows = this.players = this.playerService.playerPool;    
     }
 

@@ -9,11 +9,11 @@ import { Matrix } from 'app/tourneyonline/domain/matrix';
 import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { CountryService } from 'app/tourneyonline/service/country-service';
-import { Team } from 'app/tourneyonline/domain/team';
 import { Router } from '@angular/router';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Observable, of } from 'rxjs';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Component({
     templateUrl: './matrix-detailview.html',
@@ -63,6 +63,7 @@ export class MatrixDetailView extends AbstractDetailView {
         protected location: Location,
         protected tourneyService: TourneyService,
         protected router: Router,
+        private clientService: ClientService
     ) { 
         super(tourneyService, location);
     }
@@ -251,7 +252,8 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.classificationRows = this.prepareClassificationGui();
 
-        this.tourneyService.saveTourney(this.selectedTourney, this.saveTourneyErrorHandler('Create Tourney operation')).subscribe(n => this.next(n));
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation')).subscribe(n => this.next(n));
     }
 
     private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {

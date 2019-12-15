@@ -242,10 +242,17 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private resetComboBoxes() {
-        this.selectedTourney.selectedTeams4PlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedPlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedRoundsNumCB = this.tourneyService.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedTeams4PlayoffsCB = cb;
+
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedPlayoffsCB = cb;
+
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedRoundsNumCB = cb;
+
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedEliminatoryTeamsCB = cb;
     }
 
     private prepareTabsGui( ): void {
@@ -364,7 +371,8 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
         
         this.roundsCombobox = [];
-        this.roundsCombobox.push(this.tourneyService.FIRST_COMBO_ITEM);
+        let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.roundsCombobox.push(cb);
 
         let R: number = Math.floor(this.selectedTourney.teams.length/2);
         for (let r=1; r<=R; r++ ) {
@@ -396,7 +404,8 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
 
         this.playoffsCombobox = [];
-        this.playoffsCombobox.push(this.tourneyService.FIRST_COMBO_ITEM);
+        let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.playoffsCombobox.push(cb);
 
         let R: number = Math.floor(N * this.selectedTourney.rounds.length / 2);
         for (let r=1; r<=R; r++ ) {
@@ -495,7 +504,8 @@ export class TourneyDetailView extends AbstractDetailView {
             return;
         }
         this.prepareEliminatoryCombobox();
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedEliminatoryTeamsCB = cb;
 
         this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen;
         this.cleanEliminatoryMeetings(true);
@@ -508,7 +518,8 @@ export class TourneyDetailView extends AbstractDetailView {
             return;
         } 
         this.prepareEliminatoryCombobox();
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        let cb: Combobox= { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedEliminatoryTeamsCB = cb;
 
         this.cleanEliminatoryMeetings(true);
         this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen;
@@ -541,7 +552,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         if( this.containsPlayoff() ) {
             this.playoffsCombobox = [];
-            let firstRow: Combobox =  this.tourneyService.FIRST_COMBO_ITEM;
+            let firstRow: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
             this.playoffsCombobox.push(firstRow);
     
             let P = Math.floor( this.selectedTourney.teams.length / 2 );
@@ -570,12 +581,17 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.roundRows = this.selectedTourney.rounds;
 
-        this.selectedTourney.selectedPlayoffsCB       = this.tourneyService.FIRST_COMBO_ITEM;
-        this.selectedTourney.selectedTeams4PlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedPlayoffsCB       = cb;
+        
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedTeams4PlayoffsCB = cb;
 
         let eliminatoryTeamNo: number = this.selectedTourney.teams.length;
         this.eliminatoryTeamsCombobox = this.tourneyService.prepareEliminatoriesComboBoxes(eliminatoryTeamNo);
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedEliminatoryTeamsCB = cb;
         
         this.saveRoundMeetings();
         this.turnOnWizardMode(3);
@@ -719,7 +735,8 @@ export class TourneyDetailView extends AbstractDetailView {
         let maxTeamsPerPlayoff = this.getMaxTeamsPerPlayoff();
 
         this.team4playoffsCombobox = [];
-        this.team4playoffsCombobox.push(this.tourneyService.FIRST_COMBO_ITEM);
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.team4playoffsCombobox.push(cb);
         for (let t=2; t<=maxTeamsPerPlayoff; t++) {
             let cb: Combobox = { label: "" + t, value: t };
             this.team4playoffsCombobox.push(cb);
@@ -728,7 +745,9 @@ export class TourneyDetailView extends AbstractDetailView {
         this.cleanPlayoffMeetings(true);
 
         this.isPlayoffNumChanged = true;
-        this.selectedTourney.selectedTeams4PlayoffsCB = this.tourneyService.FIRST_COMBO_ITEM;
+
+        cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+        this.selectedTourney.selectedTeams4PlayoffsCB = cb;
     }
 
     private getMaxTeamsPerPlayoff(): number {
@@ -770,7 +789,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.saveGeneratedMeetings();
 
         this.eliminatoryTeamsCombobox = this.tourneyService.prepareEliminatoriesComboBoxes(N);
-        this.selectedTourney.selectedEliminatoryTeamsCB = this.tourneyService.FIRST_COMBO_ITEM;
+        this.selectedTourney.selectedEliminatoryTeamsCB = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
     }
 
     private saveGeneratedMeetings() {

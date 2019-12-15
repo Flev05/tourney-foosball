@@ -2,7 +2,6 @@
     <div>
         <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
         <h3><span>Girone: {{selectedRound.name}}</span></h3>
-        <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>
     </div>
 </div>
     
@@ -33,7 +32,7 @@
         [activeIndex]="selectedRound.selectedTabIndex"
         (onChange)="onChangeTab($event)">
 
-    <p-tabPanel header="Incontri girone di ANDATA ({{allDaysNo}} giornate)">
+    <p-tabPanel header="ANDATA ({{allDaysNo}} giornate)">
         <p-table [columns]="cols"
             [value]="onewayMeetings" 
             [responsive]="true"
@@ -42,6 +41,10 @@
             (onRowSelect)="onRowSelect($event)"
             [paginator]="true"
             [rows]="pageSize">
+
+            <ng-template pTemplate="caption">  
+                <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>
+            </ng-template>
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -64,7 +67,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="isRoundTrip" header="Incontri girone di RITORNO ({{allDaysNo}} giornate)">
+    <p-tabPanel *ngIf="isRoundTrip" header="RITORNO ({{allDaysNo}} giornate)">
         <p-table 
             [columns]="cols"
             [value]="roundtripMeetings" 
@@ -74,7 +77,11 @@
             (onRowSelect)="onRowSelect($event)"        
             [paginator]="true"
             [rows]="pageSize">
-
+            
+            <ng-template pTemplate="caption">  
+                <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>
+            </ng-template>
+            
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th style="width: 15mm;">N°</th>

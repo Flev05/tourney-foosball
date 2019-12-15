@@ -109,6 +109,12 @@
         [scrollable]="true" 
         scrollHeight="500px">
     
+        <ng-template pTemplate="caption" let-rowData>
+            <div style="text-align:left">
+                <button pButton type="button" icon="fa fa-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
+            </div>
+        </ng-template>      
+
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th style="width: 15mm;">N°</th>
@@ -127,16 +133,12 @@
                 </td>
             </tr>
         </ng-template>  
-    </p-table>
 
-    <div style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                <button pButton type="button" icon="fa fa-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
-                <button pButton class="ui-button-success"  (click)="saveTourneyTeam()" icon="fa fa-save" label="Salva"></button>            
-            </div>
-        </div>
-    </div>
+        <ng-template pTemplate="summary" let-rowData>
+            <button pButton class="ui-button-success"  (click)="saveTourneyTeam()" icon="fa fa-save" label="Salva"></button>            
+        </ng-template>      
+
+    </p-table>
 </div>
 
  

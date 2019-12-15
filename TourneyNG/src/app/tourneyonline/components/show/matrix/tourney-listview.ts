@@ -29,26 +29,13 @@ export class MatrixTourneyListView extends AbstractTourneyListView {
         super(redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, location, dfp);
     }
 
-    ngOnInit() {
-        super.ngOnInit();
-    }
-
     protected filter(tourneys: Tourney[]): Tourney[] {
-        return this.purgeEliminatory(tourneys);
-    }
-
-    protected onComplete(): any {
-        super.onLoadAllTourneysComplete();
-
-        if( this.tourneyService.selectedTourney != undefined ) {
-            this.router.navigate([this.redirect]);
-        }
+        return tourneys;
     }
 
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
         console.log(event.data);
-        
         this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView());
     }
 }

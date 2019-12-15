@@ -96,15 +96,20 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     public prepareGui(): void {
         this.ngOnInit();
 
+        this.prepareEliminatoryGui();
+    }
+    
+    protected prepareEliminatoryGui() {
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
-        this.isOneway      = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
+        this.isOneway = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
         if (this.isStandalone) {
             this.prepareStandaloneGui();
-        } else {
+        }
+        else {
             this.prepareNotStandaloneGui();
         }
     }
-    
+
     protected prepareELCols(): TableCols[] {
         let cols = [
             { field: 'name',        header: 'Livello' },

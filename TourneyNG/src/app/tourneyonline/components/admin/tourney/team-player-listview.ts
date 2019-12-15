@@ -63,8 +63,8 @@ export class TeamPlayerListView extends AbstractDetailView {
             if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
                 return;
             }
-            this.teamService.saveTourneyTeam(this.selectedTourney, false, this.selectedTeam, () => this.saveTeamOnComplete());
         }
+        this.teamService.saveTourneyTeam(this.selectedTourney, false, this.selectedTeam, () => this.saveTeamOnComplete());
     } 
 
     private saveTeamOnComplete(): void {
@@ -84,19 +84,7 @@ export class TeamPlayerListView extends AbstractDetailView {
 
     private onComplete(): any {
         console.log("Entering onComplete()");
-        this.playerService.playerPool = [];
 
-        for( let pvo of this.playerService.playerPoolVO ) {
-            let ppo: Player = JSON.parse(pvo.json);
-            ppo.id = pvo.id;
-            ppo.country = pvo.country;
-            ppo.clientId = pvo.clientId;
-            ppo.playerName = pvo.playerName;
-
-            this.playerService.playerPool.push(ppo);
-        }
-
-        this.selectedTeam.players = this.playerService.playerPool;   
         this.playerLabel = this.selectedTeam.players.length == 0 ? "Aggiungi Giocatori" : "Gestisci Giocatori";
         this.router.navigate([REDIRECT_PLAYER_PL]);
     }

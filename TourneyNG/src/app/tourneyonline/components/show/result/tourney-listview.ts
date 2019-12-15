@@ -32,14 +32,6 @@ export class ResultTourneyListView extends AbstractTourneyListView {
         return tourneys;
     }
 
-    protected onComplete(): any {
-        super.onLoadAllTourneysComplete();
-
-        if( this.tourneyService.selectedTourney != undefined ) {
-            this.router.navigate([this.redirect]);
-        }
-    }
-
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
         console.log(event.data);

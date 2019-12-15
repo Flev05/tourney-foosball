@@ -28,7 +28,6 @@ const httpOptions = {
 @Injectable()
 export class PlayerService {
     playerPool: Player[];
-    playerPoolVO: PlayerVO[];
     selectedPlayer : Player;
     newPlayer : boolean = false;
     
@@ -50,19 +49,19 @@ export class PlayerService {
             url = loadPlayerByClientIdUrl + "/" + this.clientService.selectedClient.id;
         }
 
-        let observer : Observable<Player[]> =  this.http.get<Player[]>(url)
+        let observer : Observable<PlayerVO[]> =  this.http.get<PlayerVO[]>(url)
         .pipe(
             tap(_ => this.log(`fetched all players`)),
             catchError(this.handleError('loadAllPlayers', []))
         );
 
-        observer.subscribe(p => this.playerPoolVO = p, e => this.onError(e), () => complete != null ? complete() : this.onLoadPlayersComplete(complete));
+        observer.subscribe(p => this.loadPlayerNext(p, complete), e => this.onError(e) );
     }
 
-    private onLoadPlayersComplete(complete?: () => void ): any {
+    private loadPlayerNext(players : PlayerVO[], complete: () => void ): any {
         console.log("Entering onLoadPlayersComplete()");
         this.playerPool = [];
-        for( let pvo of this.playerPoolVO ) {
+        for( let pvo of players ) {
             let ppo: Player = JSON.parse(pvo.json);
             ppo.id = pvo.id;
             ppo.country = pvo.country;

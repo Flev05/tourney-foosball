@@ -26,8 +26,14 @@ import { CalendarModule } from 'app/components/calendar/calendar';
 
 import {MatrixTourneyListView } from './tourney-listview';
 import { MatrixDetailView } from './matrix-detailview';
-import { MatrixListView } from './matrix-listview';
+import { TabMatrixListView } from './tab-matrix-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { EliminatoryListView } from './eliminatory-listview';
+import { LevelService } from '../../admin/eliminatory/level-service';
+import { RoundMatrixListView } from './round-matrix-listview';
+import { PlayoffMatrixListView } from './playoff-matrix-listview';
+import { MessagesModule } from 'app/components/messages/messages';
+import { MessageModule } from 'app/components/message/message';
 
 @NgModule({
 	imports: [
@@ -53,16 +59,20 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
-        ,MatrixRoutingModule
         ,AccordionModule
         ,PickListModule
+        ,MessagesModule
+        ,MessageModule
+        ,MatrixRoutingModule
     ],
 	declarations: [
 		MatrixTourneyListView
-        ,MatrixListView
-        ,MatrixListView
+        ,TabMatrixListView
         ,MatrixDetailView
+        ,RoundMatrixListView
+        ,PlayoffMatrixListView
+        ,EliminatoryListView
     ]
-    ,providers: [DateFormatPipe] 
+    ,providers: [DateFormatPipe, LevelService] 
 })
 export class MatrixModule {}

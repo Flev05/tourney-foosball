@@ -24,7 +24,7 @@ export class TeamDetailView extends AbstractDetailView {
         protected tourneyService: TourneyService,
         protected clientService: ClientService,
         protected countryService: CountryService,
-        private   teamService: TeamService
+        public teamService: TeamService
     ) { 
         super(tourneyService, location);
     }

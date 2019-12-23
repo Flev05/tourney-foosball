@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool } from '../../../domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -710,7 +710,7 @@ export class TourneyDetailView extends AbstractDetailView {
             onewayMeetings: [],
             roundtripMeetings: [],
             classification: [],
-            matrix: null,
+            onewayMatrix: null,
         };
         
         return r;
@@ -833,6 +833,7 @@ export class TourneyDetailView extends AbstractDetailView {
                     , position: posCB
                     , round: relPosCB
                     , bandPosition: relPosCB.value 
+                    , isDummy: false
                 };
                 
                 const ruleName = fromRound.position.value + "° delle " + fromRound.bandPosition + "°";
@@ -1076,7 +1077,12 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareFromRound(pos: number, round: Round): PlayoffRule {
         let posCB:     Combobox    = { label: "" + pos + "°", value: pos };
         let roundCB:   Combobox    = { label: round.name, value: round.id };
-        let fromRound: FromRound   = { id: round.id, isAutomatic:true, position: posCB, round: roundCB, bandPosition: posCB.value };
+        let fromRound: FromRound   = { id: round.id
+            , isAutomatic:true
+            , isDummy: false
+            , position: posCB
+            , round: roundCB
+            , bandPosition: posCB.value };
         let pr:        PlayoffRule = { id: pos, fromRound: fromRound, ruleName: "", isDummy: false  };
         return pr;
     }    
@@ -1137,6 +1143,14 @@ export class TourneyDetailView extends AbstractDetailView {
     }
     onBestOfClick() {
         this.selectedTourney.isAllMatches = "false";
+    }
+
+    onCompleteClick() {
+        this.selectedTourney.resultTool = EResultTool.C;
+    }
+
+    onReducedClick() {
+        this.selectedTourney.resultTool = EResultTool.R;
     }
 
     onRoundPhaseChange(event) {

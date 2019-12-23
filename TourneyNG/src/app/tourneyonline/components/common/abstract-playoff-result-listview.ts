@@ -147,7 +147,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     private preparePlayoffClassification(playoff : Playoff): void {
         let allMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.selectedPlayoff.round.roundtripMeetings);
         allMeetings.forEach( m => m.containerId = playoff.id);
-        this.selectedPlayoff.round.classification = this.tourneyService.createClassification(allMeetings);
+        this.selectedPlayoff.round.classification = this.tourneyService.createClassification(playoff.round, allMeetings);
         this.playoffClassification = this.tourneyService.prepareRoundsGui([playoff.round]);
     }
 

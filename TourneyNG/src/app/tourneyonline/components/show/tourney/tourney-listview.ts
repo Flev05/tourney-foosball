@@ -10,8 +10,10 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
+import { EResultTool } from 'app/tourneyonline/domain/enumerations';
 
-const redirect = '/result/lv';
+const REDUCED_LV  = '/matrix/lv';
+const COMPLETE_LV = '/result/lv';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -26,7 +28,7 @@ export class TourneyListView extends AbstractTourneyListView {
         , protected dfp: DateFormatPipe
         , protected disciplineService: DisciplineService) 
     { 
-        super(redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, location, dfp);
+        super(COMPLETE_LV, tourneyService, countryService, playerService, teamService, disciplineService, router, location, dfp);
     }
 
     ngOnInit() {
@@ -41,6 +43,14 @@ export class TourneyListView extends AbstractTourneyListView {
         console.log("Entering onRowSelect()");
         console.log(event.data);
         
-        this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView());
+        this.tourneyService.loadTourneyById(event.data.id, () => this.onTourneyLoadComplete());
+    }
+
+    private onTourneyLoadComplete(): void {
+        if( this.tourneyService.selectedTourney.resultTool == EResultTool.C ) {
+            this.router.navigate([COMPLETE_LV]);
+        } else {
+            this.router.navigate([REDUCED_LV]);
+        }
     }
 }

@@ -42,7 +42,7 @@
         <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
     
-    <p-table [columns]="cols" [value]="matrix.rows">
+    <p-table [columns]="cols" [value]="onewayMatrix.rows">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">

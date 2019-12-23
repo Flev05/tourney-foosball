@@ -81,8 +81,8 @@ export class TourneyService extends AbstractService {
     selectedRoundTabIndex: number = 0;
     selectedPlayoffTabIndex: number = 0;
     selectedEliminatoryTabIndex: number = 0;
-    selectedEliminatoryLevelIndex: number;
-    selectedEliminatoryIndex: number;
+    selectedEliminatoryLevelIndex: number = 0;
+    selectedEliminatoryIndex: number = 0;
  
     static roundCols: TableCols[] = [
         { field: 'name',   header: 'Girone' },
@@ -139,7 +139,6 @@ export class TourneyService extends AbstractService {
         super();
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
-        this.eliminatoryClassificationCols = this.eliminatoryClassificationCols.concat(this.classificationCols);
     }
     
     prepareEliminatoriesComboBoxes(teamsNo : number): Combobox[] {
@@ -657,39 +656,35 @@ export class TourneyService extends AbstractService {
      * Pprepares the teams classification in function of the list of all of the meteengs for each team 
      * @param meetings the list of the meetings
      */
-    public createClassification(meetings: Meeting[]): Classification[] {
+    public createClassification(round: Round, meetings: Meeting[]): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
 
+        for( let t of round.teamNames) {
+            let c = this.newClassification(t, 0);
+            classificationMap.set(t, c);
+        }
+
         for(let m of meetings) {
-            if( m.isSkiping ) {
-                continue;
-            }
             let t1 = m.teamName1;
             let t2 = m.teamName2;
+
             let key1 = t1;
             let key2 = t2;
 
-            if(!classificationMap.has(key1)) {
-                let c = this.newClassification(t1, 0);
-                classificationMap.set(key1, c);
-            }
             let c1: Classification = classificationMap.get(key1);            
- 
-            if(!classificationMap.has(key2)) {
-                let c2 = this.newClassification(t2, 0);
-                classificationMap.set(key2, c2);
-            }
-            
-            if(m.status == MeetingStatus.ToPlay) {
-                continue;
-            }
-            
             let c2: Classification = classificationMap.get(key2);
 
-            c1.played++;
-            c2.played++;
+            if( c1 == null || c2 == null ) {
+                if( c1 == null ) {
+                    c2.points = this.selectedTourney.pointsNeededToWin;
+                }
+                if( c2 == null ) {
+                    c1.points = this.selectedTourney.pointsNeededToWin;
+                }
+                continue;
+            }
 
-            c1.points += m.points1;
+            c1.points += m.points1;            
             c2.points += m.points2;
 
             if (m.points1 > m.points2) {
@@ -700,16 +695,25 @@ export class TourneyService extends AbstractService {
                 c2.won++;
                 c1.lost++;
             }
-            if (m.points1 == m.points2) {
-                c1.balanced++;
-                c2.balanced++;
-            }
-            for (let ma of m.matches) {
-                c1.goalsDone += ma.score1;
-                c1.goalsConceded += ma.score2;
 
-                c2.goalsDone += ma.score2;
-                c2.goalsConceded += ma.score1;
+            if (m.isPlayed) {
+                c1.played++;
+                c2.played++;
+                if (m.points1 == m.points2) {
+                    c1.balanced++;
+                    c2.balanced++;
+                }
+            }
+            
+            for (let ma of m.matches) {
+                if( c1 != null ){
+                    c1.goalsDone += ma.score1;
+                    c1.goalsConceded += ma.score2;
+                }
+                if( c2 != null ) {
+                    c2.goalsDone += ma.score2;
+                    c2.goalsConceded += ma.score1;
+                }
             }
             c1.goalsDiff = c1.goalsDone - c1.goalsConceded;        
             c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        
@@ -717,9 +721,6 @@ export class TourneyService extends AbstractService {
 
         let classificationList: Classification[] = [];
         for( let c of classificationMap.values() ) {
-            if(c.teamName == "" || c.teamName == null) {
-                continue;
-            }
             classificationList.push(c);            
         }
 
@@ -747,7 +748,7 @@ export class TourneyService extends AbstractService {
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.teamName;    
-                rows[row].points = c.points;    
+                rows[row].points = c.points < 0 ? 0 : c.points;    
                 rows[row].played = c.played;    
                 rows[row].won = c.won;    
                 rows[row].lost = c.lost;    
@@ -790,7 +791,7 @@ export class TourneyService extends AbstractService {
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.teamName;    
-                rows[row].points = c.points;    
+                rows[row].points = c.points < 0 ? 0 : c.points;   
                 rows[row].played = c.played;    
                 rows[row].won = c.won;    
                 rows[row].lost = c.lost;    

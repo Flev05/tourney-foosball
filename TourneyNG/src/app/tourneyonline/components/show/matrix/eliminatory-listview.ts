@@ -7,7 +7,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { MatrixDetailView } from './matrix-detailview';
-import { ResultEliminatoryListView } from '../../common/result-eliminatory-listview';
+import { ResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
 
 @Component({
     templateUrl: './eliminatory-listview.html'
@@ -27,7 +27,7 @@ export class EliminatoryListView extends ResultEliminatoryListView {
     ngOnInit() {
         super.ngOnInit();
         this.prepareEliminatoryGui();
-        this.classificationCols = this.tourneyService.classificationReducedCols;
+        this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationReducedCols);
     }
     
     onEliminatoryRowSelect(event) {

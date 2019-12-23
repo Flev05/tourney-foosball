@@ -459,7 +459,7 @@ export  class MeetingService extends AbstractService {
         return m;
     }
     
-    createMeeting(t1: string, t2: string, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction, skiping: boolean): Meeting {
+    public createMeeting(t1: string, t2: string, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction, skiping: boolean): Meeting {
         let matches = new Array<Match>();
 
         for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
@@ -491,6 +491,7 @@ export  class MeetingService extends AbstractService {
             name: name,
             isDummy: pr1 == null ? true : pr1.isDummy || pr2 == null ? true :  pr2.isDummy,
             isSkiping: skiping,
+            isPlayed: false,
             direction: d,
             datetime: this.selectedTourney.datetime,
             dateAndTime: this.dateFormatPipe.transform(this.selectedTourney.datetime),

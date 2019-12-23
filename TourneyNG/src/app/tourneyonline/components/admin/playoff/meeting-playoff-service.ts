@@ -125,7 +125,12 @@ export class MeetingPlayoffService extends MeetingService {
     private prepareSkipingRule(isAutoGen : boolean): PlayoffRule {
         let posCB:     Combobox    = { label: "", value: 0 };
         let roundCB:   Combobox    = { label: this.SKIPING_TEAM , value: 0 };
-        let fromRound: FromRound   = { id: this.tourneyService.getSequenceNumber(), isAutomatic: isAutoGen, position: posCB, round: roundCB, bandPosition: posCB.value };
+        let fromRound: FromRound   = { id: this.tourneyService.getSequenceNumber()
+            , isAutomatic: isAutoGen
+            ,isDummy: false
+            , position: posCB
+            , round: roundCB
+            , bandPosition: posCB.value };
         let pr:        PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: this.SKIPING_TEAM, isDummy: true };
         return pr;
     } 

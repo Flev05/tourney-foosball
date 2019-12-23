@@ -593,6 +593,75 @@
                     </div>
                 </div>
             </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Inserimento Risultati:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Scegliere se inserire il risultato finale di ciascun incontro o solo i punti conquistati">
+                    <div class="ui-g radiobuttons">
+                        <div class="ui-g-12">
+                            <p-radioButton name="resultToolGroupname" 
+                                label="Risultato Finale" 
+                                value="Complete" 
+                                [(ngModel)]="selectedTourney.resultTool"
+                                (onClick)="onCompleteClick()">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-g-12">
+                            <p-radioButton name="resultToolGroupname" 
+                                label="Punti Conquistati" 
+                                value="Reduced" 
+                                [(ngModel)]="selectedTourney.resultTool"
+                                (onClick)="onReducedClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Partite:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.maxMatchesPerMeeting" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Numero di partite in ciascun incontro"
+                            (onChange)="onSpinnerChange($event)">
+                        </p-spinner>
+                    </div>          
+                </div>
+            </div>
+    
+            <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && allMatchesEnabled">
+                <div class="ui-grid-col-3">
+                    Fine Incontro:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{bestOffWinner}} partite">
+                    <div class="ui-g radiobuttons">
+                        <div class="ui-g-12">                                
+                            <p-radioButton name="allMatchesGroupname" 
+                                label="Tutte le partite" 
+                                value="true" 
+                                [(ngModel)]="selectedTourney.isAllMatches"
+                                (onClick)="onAllMatchesClick()">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-g-12">
+                            <p-radioButton name="allMatchesGroupname" 
+                                label="Al Meglio delle {{bestOffWinner}} partite" 
+                                value="false" 
+                                [(ngModel)]="selectedTourney.isAllMatches"
+                                (onClick)="onBestOfClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                </div>        
+            </div>
         </p-fieldset>
             
         <p-fieldset legend="Punteggi">
@@ -686,49 +755,6 @@
             </div>
         </p-fieldset>
 
-        <p-fieldset legend="Incontro">
-            <div class="ui-grid-row" >
-                <div class="ui-grid-col-3">
-                    Partite:
-                </div>
-                <div class="ui-grid-col-3">
-                    <p-spinner [(ngModel)]="selectedTourney.maxMatchesPerMeeting" tooltipPosition="right"
-                        [min]="1"
-                        pTooltip="Numero di partite in ciascun incontro"
-                        (onChange)="onSpinnerChange($event)">
-                    </p-spinner>
-                </div>          
-            </div>
-
-            <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && allMatchesEnabled">
-                <div class="ui-grid-col-3">
-                    Fine Incontro:
-                </div>
-
-                <div class="ui-grid-col-3" tooltipPosition="right"
-                        pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{bestOffWinner}} partite">
-                    <div class="ui-g radiobuttons">
-                        <div class="ui-g-12">                                
-                            <p-radioButton name="allMatchesGroupname" 
-                                label="Tutte le partite" 
-                                value="true" 
-                                [(ngModel)]="selectedTourney.isAllMatches"
-                                (onClick)="onAllMatchesClick()">
-                            </p-radioButton>
-                        </div>
-                        <div class="ui-g-12">
-                            <p-radioButton name="allMatchesGroupname" 
-                                label="Al Meglio delle {{bestOffWinner}} partite" 
-                                value="false" 
-                                [(ngModel)]="selectedTourney.isAllMatches"
-                                (onClick)="onBestOfClick()">
-                            </p-radioButton>
-                        </div>
-                    </div>
-                </div>        
-            </div>
-
-        </p-fieldset>
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div class="ui-grid-row">
@@ -936,7 +962,7 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    Gironi:
+                    Numero Gironi:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di gironi che compongono il torneo">
@@ -1095,7 +1121,7 @@
 
             <div class="ui-grid-row">
                 <div class="ui-grid-col-2">
-                    Gironi:
+                    Numero Playoff:
                 </div>
                 <div class="ui-grid-col-3" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di gironi per la fase dei playoff">

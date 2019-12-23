@@ -65,6 +65,7 @@ export class RuleDetailView extends AbstractDetailView {
                 ,round: { label: "", value: 0 }
                 , bandPosition: 0
                 , isAutomatic: true
+                ,isDummy: false
             }
         };
     }

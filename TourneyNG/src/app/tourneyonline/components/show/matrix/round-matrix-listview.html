@@ -27,74 +27,85 @@
 </div>     
 
 <p-tabView [activeIndex]="tourneyService.selectedRoundTabIndex"         
-        (onChange)="onChangeTab($event)">
- 
-    <p-tabPanel header="Andata">
-        <p-table [columns]="cols"
-            [value]="onewayMeetings" 
-            [responsive]="true"
-            selectionMode="single" 
-            [(selection)]="selectedRow"  
-            (onRowSelect)="onRowSelect($event)"
-            [paginator]="true"
-            [rows]="pageSize">
+        (onChange)="onChangeTab($event)"> 
 
-            <ng-template pTemplate="caption">
-                {{selectedRound.name}} ({{allDaysNo}} giornate)
-            </ng-template>
-            
+    <p-tabPanel header="Andata">
+        <p-table [columns]="cols" [value]="onewayMatrix.rows">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width: 15mm;">N°</th>
                     <th *ngFor="let col of columns">
-                        {{col.header}}
+                        {{col.header}}                                
                     </th>
                 </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="rowData">
-                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                    <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
-                        {{rowData[col.field]}}
-                    </td>
+            </ng-template>                                     
+        
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData" >
+                    <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
+                        <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
+                            <ng-template pTemplate="input" >
+                                <p-dropdown [options]="rowData.cells[i].options" 
+                                    [(ngModel)]="rowData.cells[i].points" 
+                                    optionLabel="label"
+                                    [style]="{'width':'100%'}"
+                                    placeholder="Punti"
+                                    (onChange)="onOnewayPointChange($event.value)">                                
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{rowData.cells[i].points.label}}
+                            </ng-template>                        
+                        </p-cellEditor>
+                        
+                        <label *ngIf="!rowData.cells[i].isEditable">
+                            {{rowData.cells[i].field}}
+                        </label>
+    
+                        <label *ngIf="rowData.cells[i].isTotal">
+                            {{rowData.cells[i].points.value}}
+                        </label>
+                    </td>            
                 </tr>
             </ng-template>
-        </p-table>
+        </p-table> 
     </p-tabPanel>
 
     <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
-        <p-table 
-            [columns]="cols"
-            [value]="roundtripMeetings" 
-            [responsive]="true"
-            selectionMode="single" 
-            [(selection)]="selectedRow"  
-            (onRowSelect)="onRowSelect($event)"        
-            [paginator]="true"
-            [rows]="pageSize">
-
-            <ng-template pTemplate="caption">
-                {{selectedRound.name}}({{allDaysNo}} giornate)
-            </ng-template>
-
+        <p-table [columns]="cols" [value]="roundtripMatrix.rows">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th style="width: 15mm;">N°</th>
                     <th *ngFor="let col of columns">
-                        {{col.header}}
+                        {{col.header}}                                
                     </th>
                 </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="rowData">
-                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                    <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
-                        {{rowData[col.field]}}
-                    </td>
+            </ng-template>                                     
+        
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData" >
+                    <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
+                        <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
+                            <ng-template pTemplate="input" >
+                                <p-dropdown [options]="rowData.cells[i].options" 
+                                    [(ngModel)]="rowData.cells[i].points" 
+                                    optionLabel="label"
+                                    [style]="{'width':'100%'}"
+                                    placeholder="Punti"
+                                    (onChange)="onRoundtripPointChange($event.value)">                                
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{rowData.cells[i].points.label}}
+                            </ng-template>                        
+                        </p-cellEditor>
+                        
+                        <label *ngIf="!rowData.cells[i].isEditable">
+                            {{rowData.cells[i].field}}
+                        </label>
+    
+                        <label *ngIf="rowData.cells[i].isTotal">
+                            {{rowData.cells[i].points.value}}
+                        </label>
+                    </td>            
                 </tr>
             </ng-template>
         </p-table>

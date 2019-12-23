@@ -66,8 +66,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         super.ngOnInit();
         this.cols = this.tourneyService.resultCols;
 
-        this.selectedRound = this.tourneyService.selectedRound;
-        
         this.classificationCols = this.tourneyService.classificationCols;
 
         this.selectedRound = this.tourneyService.selectedRound;
@@ -94,7 +92,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         this.onewayMeetings = this.selectedRound.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms));
         this.onewayMeetings.forEach(m => m.containerId = this.selectedRound.id);
-        this.roundtripMeetings = this.selectedRound.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
+        this.roundtripMeetings = this.selectedRound.roundtripMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
         this.roundtripMeetings.forEach(m => m.containerId = this.selectedRound.id);
 
         console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
@@ -115,8 +113,16 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
     private mapCallback (m: Meeting, index: number, array: Meeting[]): Meeting {
         if(m.isSkiping) {
-            m.points1 = 0;
-            m.points2 = 0;
+            if( m.teamName1 == "" ) {
+                m.points1 = 0;
+            } else {
+                m.points1 = this.selectedTourney.pointsNeededToWin;
+            }
+            if( m.teamName2 == "" ) {
+                m.points2 = 0;
+            } else {
+                m.points2 = this.selectedTourney.pointsNeededToWin;
+            }
         }
         return m;
     } 
@@ -130,7 +136,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
      */
     private prepareRoundGuiClassification(): void {
         let allMeetings = this.selectedRound.onewayMeetings.concat(this.selectedRound.roundtripMeetings);
-        this.selectedRound.classification = this.tourneyService.createClassification(allMeetings);
+        this.selectedRound.classification = this.tourneyService.createClassification(this.selectedRound, allMeetings);
 
         this.classificationRows = this.tourneyService.prepareRoundsGui([this.selectedRound]);
     }

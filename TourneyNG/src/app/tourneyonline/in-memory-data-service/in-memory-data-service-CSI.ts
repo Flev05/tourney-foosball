@@ -163,6 +163,7 @@ export class InMemoryDataServiceCSI  {
               , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1}
               , bandPosition: 0
               , isAutomatic:true
+              ,isDummy: false
             }}
             ,{id:2
               , ruleName:""
@@ -170,6 +171,7 @@ export class InMemoryDataServiceCSI  {
               , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2}
             , bandPosition: 0
             , isAutomatic:true
+            ,isDummy: false
           }}
           ]
       }
@@ -190,6 +192,7 @@ export class InMemoryDataServiceCSI  {
             , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2}
           , bandPosition: 0
           , isAutomatic:true
+          ,isDummy: false
         }}
           ,{id:2
             , ruleName:""            
@@ -197,6 +200,7 @@ export class InMemoryDataServiceCSI  {
             , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1}
           , bandPosition: 0
           , isAutomatic:true
+          ,isDummy: false
         }}
         ]
       }

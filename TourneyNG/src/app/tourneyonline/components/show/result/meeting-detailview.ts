@@ -102,6 +102,7 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     save() {
+        this.selectedMeeting.isPlayed = true;
         this.selectedMeeting.matches = this.matches;
         this.selectedMeeting.points1 = 0;
         this.selectedMeeting.points2 = 0;

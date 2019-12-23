@@ -15,9 +15,11 @@ export interface Round {
     direction: Direction;
 
     teamNames: string[];
+
     onewayMeetings?: Meeting[];
     roundtripMeetings?: Meeting[];
+    onewayMatrix?: Matrix;
+    roundtripMatrix?: Matrix;
 
     classification?: Classification[];
-    matrix?: Matrix;
 }

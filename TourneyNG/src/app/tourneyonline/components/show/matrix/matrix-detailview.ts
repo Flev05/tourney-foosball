@@ -46,18 +46,11 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 export class MatrixDetailView extends AbstractDetailView {
     static matrixDvRedirect: string = "matrix/lv/dv";
     
-    msgs: Message[] = [];
-
     selectedRound: Round;
-    
-    fullAddress: string;
-
+ 
     roundName: string;
-
     cols: any[];
-    matrix: Matrix;
-    classificationRows: any[];
-    classificationCols: TableCols[];
+    onewayMatrix: Matrix;
 
     constructor(
         protected location: Location,
@@ -75,20 +68,20 @@ export class MatrixDetailView extends AbstractDetailView {
 
         this.selectedRound = this.tourneyService.selectedRound;
         this.roundName = this.selectedRound.name;
-        this.matrix = this.selectedRound.matrix;
+        this.onewayMatrix = this.selectedRound.onewayMatrix;
 
-        if(this.selectedRound.classification.length==0) {
-            for(let t of this.selectedRound.teamNames) {
-                let cl: Classification = this.tourneyService.newClassification(t, 0);
-                this.selectedRound.classification.push(cl);
-            }        
-        }
-        this.classificationRows = this.prepareClassificationGui();
+        // if(this.selectedRound.classification.length==0) {
+        //     for(let t of this.selectedRound.teamNames) {
+        //         let cl: Classification = this.tourneyService.newClassification(t, 0);
+        //         this.selectedRound.classification.push(cl);
+        //     }        
+        // }
+        // this.classificationRows = this.prepareClassificationGui();
 
         this.cols = this.prepareCols(this.cols);
         
-        // Create matrix
-        if(this.matrix == null ) {
+        // Create onewayMatrix
+        if(this.onewayMatrix == null ) {
             this.prepareMatrix();            
         }
     }
@@ -113,7 +106,7 @@ export class MatrixDetailView extends AbstractDetailView {
     }
 
     private prepareMatrix() {
-        this.matrix = {
+        this.onewayMatrix = {
             id: null, // this.tourneyService.getSequenceNumber(),
             rows: []
         };
@@ -125,7 +118,7 @@ export class MatrixDetailView extends AbstractDetailView {
                 id: i,
                 cells: cells
             };
-            this.matrix.rows.push(row);
+            this.onewayMatrix.rows.push(row);
             let c1 = this.selectedRound.teamNames[i];
             let c: Cell = this.newCell(null, null, c1, 'style0', false, false, 0, 0);
             cells.push(c);
@@ -160,31 +153,31 @@ export class MatrixDetailView extends AbstractDetailView {
         let c = cb.row + 2;
         let r = cb.col;
 
-        if(!this.matrix.rows[r].cells[c].isVisited) {
+        if(!this.onewayMatrix.rows[r].cells[c].isVisited) {
             this.selectedRound.classification[cb.row].played++;
             this.selectedRound.classification[cb.col].played++;
         }
 
         if(cb.value == this.selectedTourney.matchWinnerScores) {
-            this.matrix.rows[r].cells[c].points.value = 0;
-            this.matrix.rows[r].cells[c].points.label = "0";
+            this.onewayMatrix.rows[r].cells[c].points.value = 0;
+            this.onewayMatrix.rows[r].cells[c].points.label = "0";
         }
         if(cb.value == 0) {
-            this.matrix.rows[r].cells[c].points.value = this.selectedTourney.matchWinnerScores;
-            this.matrix.rows[r].cells[c].points.label = "" + this.selectedTourney.matchWinnerScores;
+            this.onewayMatrix.rows[r].cells[c].points.value = this.selectedTourney.matchWinnerScores;
+            this.onewayMatrix.rows[r].cells[c].points.label = "" + this.selectedTourney.matchWinnerScores;
         }
 
         if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakWin) {
-            this.matrix.rows[r].cells[c].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
-            this.matrix.rows[r].cells[c].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+            this.onewayMatrix.rows[r].cells[c].points.value = this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+            this.onewayMatrix.rows[r].cells[c].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
         }
         if(cb.value == this.selectedTourney.pointsGoldenGoalTieBreakDefeat) {
-            this.matrix.rows[r].cells[c].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
-            this.matrix.rows[r].cells[c].points.value = this.selectedTourney.pointsGoldenGoalTieBreakWin;
+            this.onewayMatrix.rows[r].cells[c].points.label = "" + this.selectedTourney.pointsGoldenGoalTieBreakWin;
+            this.onewayMatrix.rows[r].cells[c].points.value = this.selectedTourney.pointsGoldenGoalTieBreakWin;
         }
 
-        this.matrix.rows[r].cells[c].isVisited = true;
-        this.matrix.rows[c-2].cells[r+2].isVisited = true;
+        this.onewayMatrix.rows[r].cells[c].isVisited = true;
+        this.onewayMatrix.rows[c-2].cells[r+2].isVisited = true;
     }
     
     private newCell(teamName1: string, teamName2: string, field: string, style: string, isEditable: boolean, isTotal: boolean, row: number, col: number): Cell {
@@ -220,8 +213,8 @@ export class MatrixDetailView extends AbstractDetailView {
     }
  
     private save() {
-        for(let i=0; i<this.matrix.rows.length; i++) {
-            let r = this.matrix.rows[i];
+        for(let i=0; i<this.onewayMatrix.rows.length; i++) {
+            let r = this.onewayMatrix.rows[i];
             let sum: number = 0;
             let sumWon: number = 0;
             let sumLost: number = 0;
@@ -248,9 +241,9 @@ export class MatrixDetailView extends AbstractDetailView {
             this.selectedRound.classification[i].lost = sumLost;
         }
 
-        this.selectedRound.matrix = this.matrix;
+        this.selectedRound.onewayMatrix = this.onewayMatrix;
 
-        this.classificationRows = this.prepareClassificationGui();
+        // this.classificationRows = this.prepareClassificationGui();
 
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation')).subscribe(n => this.next(n));
@@ -266,52 +259,52 @@ export class MatrixDetailView extends AbstractDetailView {
         };
     }
     
-    private prepareClassificationGui(): any[] {
-        this.classificationCols = [
-            { field: 'rowNumber',   header: 'N°'},
-            { field: 'teamName',    header: 'Team'},
-            { field: 'points',      header: 'Pt.'},
-            { field: 'played',      header: 'G'},
-            { field: 'won',         header: 'V'},
-            { field: 'lost',        header: 'P'},
-            { field: 'balanced',    header: 'N'},
-        ];
+    // private prepareClassificationGui(): any[] {
+    //     this.classificationCols = [
+    //         { field: 'rowNumber',   header: 'N°'},
+    //         { field: 'teamName',    header: 'Team'},
+    //         { field: 'points',      header: 'Pt.'},
+    //         { field: 'played',      header: 'G'},
+    //         { field: 'won',         header: 'V'},
+    //         { field: 'lost',        header: 'P'},
+    //         { field: 'balanced',    header: 'N'},
+    //     ];
 
-        let sortedClassification = [...this.selectedRound.classification];
+    //     let sortedClassification = [...this.selectedRound.classification];
 
-        sortedClassification.sort((c1, c2) => {
+    //     sortedClassification.sort((c1, c2) => {
 
-            if (c1.points > c2.points) {
-                return -1;
-            }
-            if (c1.points < c2.points) {
-                return 1;
-            }
+    //         if (c1.points > c2.points) {
+    //             return -1;
+    //         }
+    //         if (c1.points < c2.points) {
+    //             return 1;
+    //         }
 
-            return 0;
-        });
+    //         return 0;
+    //     });
 
-        let row : number = 0;
-        let rows: any[] = [];
+    //     let row : number = 0;
+    //     let rows: any[] = [];
 
-        let r = 0;
-        for (let c of sortedClassification) {
+    //     let r = 0;
+    //     for (let c of sortedClassification) {
             
-            rows.push(c);
-            rows[row].rowNumber = ++r;    
-            rows[row].roundName = this.selectedRound.name;    
-            rows[row].teamName = c.teamName;    
-            rows[row].points = c.points;    
-            rows[row].played = c.played;    
-            rows[row].won = c.won;    
-            rows[row].lost = c.lost;    
-            rows[row].balanced = c.balanced;    
+    //         rows.push(c);
+    //         rows[row].rowNumber = ++r;    
+    //         rows[row].roundName = this.selectedRound.name;    
+    //         rows[row].teamName = c.teamName;    
+    //         rows[row].points = c.points;    
+    //         rows[row].played = c.played;    
+    //         rows[row].won = c.won;    
+    //         rows[row].lost = c.lost;    
+    //         rows[row].balanced = c.balanced;    
 
-            row++;                
-        }
+    //         row++;                
+    //     }
 
-        return rows;
-    }
+    //     return rows;
+    // }
 
     private updateMeeting(c: Cell): any {
         for(let m of this.selectedRound.onewayMeetings) {
@@ -325,10 +318,6 @@ export class MatrixDetailView extends AbstractDetailView {
     }
  
     onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        msgerr = 'Modifica matrix fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        console.log('Modifica matrix fallita');
     }
 }

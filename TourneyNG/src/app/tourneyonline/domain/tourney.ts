@@ -6,7 +6,7 @@ import { Team } from './team';
 
 import { Discipline } from './discipline';
 
-import { TourneyType, TeamSortType } from './enumerations';
+import { TourneyType, TeamSortType, EResultTool } from './enumerations';
 import { Final } from './final';
 import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
@@ -19,6 +19,7 @@ export interface Tourney {
     tourneyName? : string;
     isDaily?: string;
     datetime? : Date;
+    resultTool?: EResultTool;
 
     wizardModeIndex?: number;
     selectedTabIndex?: number;

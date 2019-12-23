@@ -56,7 +56,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
-                    <th style="width: 15mm;">N°</th>
+                    <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                     <td *ngFor="let col of columns">
                         <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}
@@ -67,16 +67,17 @@
     </p-tabPanel>
 
     <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
-        <p-table 
-            [columns]="cols"
+        <p-table [columns]="cols"
             [value]="roundtripMeetings" 
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onEliminatoryRowSelect($event)">
+            
             <ng-template pTemplate="caption">
                 {{tourneyService.selectedEliminatoryLevel.name}}
             </ng-template>
+
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th style="width: 15mm;">N°</th>
@@ -101,13 +102,22 @@
     <p-tabPanel header="Classifica">    
         <p-table [columns]="classificationCols"
             [value]="eliminatoryClassification"
-            [responsive]="true">        
+            [responsive]="true">      
+              
             <ng-template pTemplate="caption">
                 {{tourneyService.selectedEliminatoryLevel.name}}
             </ng-template>
-    
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="rowData">
+                <tr>
                     <td *ngFor="let col of columns">
                         <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}

@@ -34,6 +34,7 @@ import { RoundMatrixListView } from './round-matrix-listview';
 import { PlayoffMatrixListView } from './playoff-matrix-listview';
 import { MessagesModule } from 'app/components/messages/messages';
 import { MessageModule } from 'app/components/message/message';
+import { MatrixService } from './matrix-service';
 
 @NgModule({
 	imports: [
@@ -73,6 +74,6 @@ import { MessageModule } from 'app/components/message/message';
         ,PlayoffMatrixListView
         ,EliminatoryListView
     ]
-    ,providers: [DateFormatPipe, LevelService] 
+    ,providers: [DateFormatPipe, LevelService, MatrixService] 
 })
 export class MatrixModule {}

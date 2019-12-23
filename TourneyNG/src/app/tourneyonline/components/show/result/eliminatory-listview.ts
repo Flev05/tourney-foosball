@@ -6,7 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MeetingDetailView } from './meeting-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
-import { ResultEliminatoryListView } from '../../common/result-eliminatory-listview';
+import { ResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
@@ -22,6 +22,11 @@ export class EliminatoryListView extends ResultEliminatoryListView {
         public dfp: DateFormatPipe
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, meetingService, levelService, router, location, dfp)
+    }
+    
+    ngOnInit() {
+        super.ngOnInit();
+        this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
     }
 }
 

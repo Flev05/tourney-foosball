@@ -212,11 +212,12 @@ export class LevelService extends AbstractEliminatoryListView {
             let e: Eliminatory = topLevelEliminatories[i];
             e.round.teamNames = [t1.teamName, t2.teamName];
             
-            let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, false);
+            let isSkiping = t1.isDummy || t2.isDummy;
+            let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, isSkiping);
             e.round.onewayMeetings = [m1];
             e.isSkiping = e.isSkiping || m1.isSkiping;
             
-            let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, false);
+            let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, isSkiping);
             e.round.roundtripMeetings = [m2];
             e.isSkiping = e.isSkiping || m2.isSkiping;
         }
@@ -295,7 +296,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * Next, iterates on the eliminatories list and updates the meetings with the first against the last 
      * team in the pad list
      */
-    public prepareAutomaticEliminatoryRules(selectedTeamsNo: number, automatic : boolean): void {
+    private prepareAutomaticEliminatoryRules(selectedTeamsNo: number, automatic : boolean): void {
         console.log("Entering prepareAutomaticEliminatoryRules()");
         if( this.selectedTourney.rounds.length == 0) {
             return;
@@ -310,9 +311,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let rounds : Array<Round> = new Array<Round>();
         if(this.containsPlayoff()) {
-            for(let p of this.selectedTourney.playoffs ) {
-                rounds.push(p.round);
-            }
+            rounds = this.selectedTourney.playoffs.map((p) => {return p.round;});
         } else {
             rounds = [...this.selectedTourney.rounds];
         }
@@ -326,13 +325,14 @@ export class LevelService extends AbstractEliminatoryListView {
 
             let r: Combobox = {label: "", value: 0}; 
             let p: Combobox = {label: "", value: 0}; 
-            let fr : FromRound = {id:0, isAutomatic: this.isAutomatic, round: r, position: p, bandPosition: 0};
+            let fr : FromRound = {id: 0, isAutomatic: this.isAutomatic, isDummy: true, round: r, position: p, bandPosition: 0};
             if( i < selectedTeamsNo ) {
-                let round: Round;
-                round = rounds[mod];
+                let round: Round = rounds[mod];
                 r = {label: round.name, value: position};
                 p = {label: "", value: position};
-                fr = {id:0, isAutomatic: this.isAutomatic, round: r, position: p, bandPosition: 0};
+                fr.round = r;
+                fr.position = p;
+                fr.isDummy = false;
             }
             padTeamList.push(fr);
         }
@@ -354,6 +354,7 @@ export class LevelService extends AbstractEliminatoryListView {
             let round1 = rounds.find(r => r.name == up.round.label);
 
             let down = padTeamList[--lastIndex];
+            e.isSkiping = up.isDummy || down.isDummy;
 
             label = down.position.value == 0 ? "" : down.position.value  + "°";
             
@@ -449,24 +450,28 @@ export class LevelService extends AbstractEliminatoryListView {
             , round: { label: "", value: 0 } 
             , bandPosition: 0
             , isAutomatic: true
+            , isDummy: false
         };
         let fr2 : FromRound = {id: null
             , position: { label: "", value: 0 }
             , round: { label: "", value: 0 } 
             , bandPosition: 0
             , isAutomatic: true
+            , isDummy: false
         };
         let pfr1 : FromRound = {id: null
             , position: { label: "", value: 0 }
             , round: { label: "", value: 0 } 
             , bandPosition: 0
             , isAutomatic: true
+            , isDummy: false
         };
         let pfr2 : FromRound = {id: null
             , position: { label: "", value: 0 }
             , round: { label: "", value: 0 } 
             , bandPosition: 0
             , isAutomatic: true
+            , isDummy: false
         };
         let pr1 : PlayoffRule = {
             id: 0,

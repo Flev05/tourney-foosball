@@ -709,8 +709,7 @@ export class TourneyDetailView extends AbstractDetailView {
             teamNames: [],
             onewayMeetings: [],
             roundtripMeetings: [],
-            classification: [],
-            onewayMatrix: null,
+            classification: []
         };
         
         return r;

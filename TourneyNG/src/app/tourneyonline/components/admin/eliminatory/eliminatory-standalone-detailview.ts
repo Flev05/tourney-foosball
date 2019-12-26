@@ -108,19 +108,17 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
         let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
         observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m1));
         
-        if(!this.isOneway) {
-            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
-            if(this.m2.datetime < this.m1.datetime) {
-                this.m2.datetime = this.m1.datetime;
-            }
-            this.m2.address = this.eliminatoryFormGroup.get('address2').value;
-            this.m2.country = this.eliminatoryFormGroup.get('country2').value;
-
-            let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
-            observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m2));    
+        this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+        this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+        if(this.m2.datetime < this.m1.datetime) {
+            this.m2.datetime = this.m1.datetime;
         }
+        this.m2.address = this.eliminatoryFormGroup.get('address2').value;
+        this.m2.country = this.eliminatoryFormGroup.get('country2').value;
 
+        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
+        observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m2));    
+  
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
     }
  

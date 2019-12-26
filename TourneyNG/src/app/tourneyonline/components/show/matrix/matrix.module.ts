@@ -25,7 +25,7 @@ import { SliderModule } from 'app/components/slider/slider';
 import { CalendarModule } from 'app/components/calendar/calendar';
 
 import {MatrixTourneyListView } from './tourney-listview';
-import { MatrixDetailView } from './matrix-detailview';
+import { MatrixDetailView } from './eliminatory-matrix-view';
 import { TabMatrixListView } from './tab-matrix-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { EliminatoryListView } from './eliminatory-listview';

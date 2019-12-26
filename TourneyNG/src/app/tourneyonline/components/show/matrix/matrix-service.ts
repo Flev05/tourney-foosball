@@ -3,12 +3,12 @@ import {  Injectable } from '@angular/core';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
 import { Cell } from 'app/tourneyonline/domain/cell';
-import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Observable, of } from 'rxjs';
-import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Injectable()
 export class MatrixService   {
@@ -19,28 +19,26 @@ export class MatrixService   {
     round: Round;
     tourney: Tourney;
 
-    constructor( public tourneyService: TourneyService, private clientService: ClientService) 
+    selectedMeeting: Meeting;
+
+    constructor( public tourneyService: TourneyService
+        , protected meetingService: MeetingService) 
     {}
 
-    ngOnInit(tourney:Tourney, round: Round) {
+    ngOnInit(tourney: Tourney, round: Round) {
 
         this.tourney = tourney;
         this.round = round;
 
         this.roundName = this.round.name;
-        this.onewayMatrix = this.round.onewayMatrix;
-        this.roundtripMatrix = this.round.roundtripMatrix;
 
-        this.cols = this.prepareCols(this.cols);
+        this.cols = this.prepareCols();
         
-        // Create onewayMatrix
-        if(this.onewayMatrix == null ) {
-            this.onewayMatrix = this.prepareMatrix(this.onewayMatrix);            
-            this.roundtripMatrix = this.prepareMatrix(this.roundtripMatrix);            
-        }
+        this.onewayMatrix    = this.prepareMatrix(this.round.onewayMeetings);
+        this.roundtripMatrix = this.prepareMatrix(this.round.roundtripMeetings);
     }
 
-    private prepareCols([]): any[]  {
+    private prepareCols(): any[]  {
         let cols = [];
         let col = { field: 'teamName', header: 'Squadre', style: 'style0' };
         cols.push(col);
@@ -59,9 +57,9 @@ export class MatrixService   {
         return cols;
     }
 
-    private prepareMatrix( matrix: Matrix): Matrix {
-        matrix = {
-            id: null, // this.tourneyService.getSequenceNumber(),
+    private prepareMatrix(meetings: Meeting[]): Matrix {
+        let matrix: Matrix = {
+            id: this.tourneyService.getSequenceNumber(),
             rows: []
         };
 
@@ -73,77 +71,182 @@ export class MatrixService   {
                 cells: cells
             };
             matrix.rows.push(row);
-            let c1 = this.round.teamNames[i];
-            let c: Cell = this.newCell(null, null, c1, 'style0', false, false, 0, 0);
+            let tn1 = this.round.teamNames[i];
+            let c: Cell = this.newCell(null, null, tn1, 'style0', false, false, 0, 0, 0);
             cells.push(c);
-            c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0);
+            c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0, 0);
             cells.push(c);
             letter = this.getNextLetter(letter);
+            let sum : number = 0;
             for (let j = 0; j < this.round.teamNames.length; j++) {
-                let c2 = this.round.teamNames[j];
+                let tn2 = this.round.teamNames[j];
+                let points = 0;
                 if (i == j) {
-                    c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0);
+                    c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0, 0);
                 }
                 else {
-                    c = this.newCell(c1, c2, "", 'style0', true, false, i, j);
+                    let m1: Meeting = meetings.find( m => m.teamName1 == tn1 && m.teamName2 == tn2 );
+                    if( m1 != undefined ) {
+                        points = m1.points1;
+                    } else {
+                        let m2: Meeting = meetings.find( m => m.teamName1 == tn2 && m.teamName2 == tn1 );
+                        points = m2.points2;
+                    }
+                    c = this.newCell(tn1, tn2, "", 'style0', true, false, i, j, points);
                 }
                 cells.push(c);
+                sum += points;
             }
-            c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0);
+            c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0, 0);
+            c.points = {label: "" + sum, value: sum, row: 0, col: 0};
             cells.push(c);
         }    
         return matrix;     
     }
-
-    onOnewayPointChange(cb: CellCombobox) {
+ 
+    onOnewayRoundPointChange(cb: CellCombobox, roundId: number) {
         console.log( cb );
-
         this.alignSimmetricCell(cb, this.onewayMatrix);
-
-        this.save(this.onewayMatrix);
+        this.prepareMeeting(cb, this.onewayMatrix, this.round.onewayMeetings);
+        this.saveRoundMeeting(roundId);
     }
 
-    onRoundtripPointChange(cb: CellCombobox) {
+    onRoundtripRoundPointChange(cb: CellCombobox, roundId: number) {
         console.log( cb );
-
         this.alignSimmetricCell(cb, this.roundtripMatrix);
-
-        this.save(this.roundtripMatrix);
+        this.prepareMeeting(cb, this.roundtripMatrix, this.round.roundtripMeetings);
+        this.saveRoundMeeting(roundId);
     }
 
+    onOnewayPlayoffPointChange(cb: CellCombobox, playoffId: number) {
+        console.log( cb );
+        this.alignSimmetricCell(cb, this.onewayMatrix);
+        this.prepareMeeting(cb, this.onewayMatrix, this.round.onewayMeetings);
+        this.savePlayoffMeeting(playoffId);
+    }
+
+    onRoundtripPlayoffPointChange(cb: CellCombobox, playoffId: number) {
+        console.log( cb );
+        this.alignSimmetricCell(cb, this.roundtripMatrix);
+        this.prepareMeeting(cb, this.roundtripMatrix, this.round.roundtripMeetings);
+        this.savePlayoffMeeting(playoffId);
+    }
+
+    onOnewayEliminatoryPointChange(cb: CellCombobox, eliminatoryId: number) {
+        console.log( cb );
+        this.alignSimmetricCell(cb, this.onewayMatrix);
+        this.prepareMeeting(cb, this.onewayMatrix, this.round.onewayMeetings);
+        this.saveEliminatoryMeeting(eliminatoryId);
+    }
+
+    onRoundtripEliminatoryPointChange(cb: CellCombobox, eliminatoryId: number) {
+        console.log( cb );
+        this.alignSimmetricCell(cb, this.roundtripMatrix);
+        this.prepareMeeting(cb, this.roundtripMatrix, this.round.roundtripMeetings);
+        this.saveEliminatoryMeeting(eliminatoryId);
+    }
+
+    /**
+     * Align the specular cell respect the clicked one tht will be chenaged automantically by the GUI
+     * 
+     * @param cb the combo box selected
+     * @param matrix the matrix to align
+     */
     private alignSimmetricCell(cb: CellCombobox, matrix: Matrix){
         
-        let c = cb.row + 2;
-        let r = cb.col;
+        let row = cb.col;
+        let col = cb.row + 2;
 
-        if(!matrix.rows[r].cells[c].isVisited) {
-            this.round.classification[cb.row].played++;
-            this.round.classification[cb.col].played++;
-        }
-
+        const cell: Cell = matrix.rows[row].cells[col];
         if(cb.value == this.tourney.matchWinnerScores) {
-            matrix.rows[r].cells[c].points.value = 0;
-            matrix.rows[r].cells[c].points.label = "0";
+            cell.points.value = 0;
+            cell.points.label = "0";
         }
         if(cb.value == 0) {
-            matrix.rows[r].cells[c].points.value = this.tourney.matchWinnerScores;
-            matrix.rows[r].cells[c].points.label = "" + this.tourney.matchWinnerScores;
+            cell.points.value = this.tourney.matchWinnerScores;
+            cell.points.label = "" + this.tourney.matchWinnerScores;
         }
 
         if(cb.value == this.tourney.pointsGoldenGoalTieBreakWin) {
-            matrix.rows[r].cells[c].points.value = this.tourney.pointsGoldenGoalTieBreakDefeat;
-            matrix.rows[r].cells[c].points.label = "" + this.tourney.pointsGoldenGoalTieBreakDefeat;
+            cell.points.value = this.tourney.pointsGoldenGoalTieBreakDefeat;
+            cell.points.label = "" + this.tourney.pointsGoldenGoalTieBreakDefeat;
         }
         if(cb.value == this.tourney.pointsGoldenGoalTieBreakDefeat) {
-            matrix.rows[r].cells[c].points.label = "" + this.tourney.pointsGoldenGoalTieBreakWin;
-            matrix.rows[r].cells[c].points.value = this.tourney.pointsGoldenGoalTieBreakWin;
+            cell.points.label = "" + this.tourney.pointsGoldenGoalTieBreakWin;
+            cell.points.value = this.tourney.pointsGoldenGoalTieBreakWin;
         }
 
-        matrix.rows[r].cells[c].isVisited = true;
-        matrix.rows[c-2].cells[r+2].isVisited = true;
+        cell.isVisited = true;
+        matrix.rows[col-2].cells[row].isVisited = true;
     }
-    
-    private newCell(teamName1: string, teamName2: string, field: string, style: string, isEditable: boolean, isTotal: boolean, row: number, col: number): Cell {
+
+    /**
+     * Prepares the meeting to save in the DB in function of the selected point in the combo box of the cell
+     * 
+     * @param cb the selected combo box
+     * @param matrix the matrix of the result
+     * @param meetings the list of meetings
+     */
+    private prepareMeeting(cb: CellCombobox, matrix: Matrix, meetings: Meeting[]) {
+        let selectedRow = cb.row;
+        let selectedCol = cb.col+2;
+        let len = matrix.rows[0].cells.length;
+
+        let sum: number = 0;
+        for( let c = 2; c < len-1; c++ ) {
+            sum += matrix.rows[selectedRow].cells[c].points.value;
+        }
+        matrix.rows[selectedRow].cells[len-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
+        let c1 = matrix.rows[selectedRow].cells[selectedCol];
+        c1.style = 'totalStyle';
+        
+        sum = 0;
+        selectedRow = selectedCol-2;
+        for( let c = 2; c < len-1; c++ ) {
+            sum += matrix.rows[selectedRow].cells[c].points.value;
+        }
+        matrix.rows[selectedRow].cells[len-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
+        selectedCol = cb.row+2;
+        let c2 = matrix.rows[selectedRow].cells[selectedCol];
+        c2.style = 'totalStyle';
+
+        this.selectedMeeting = meetings.find( m => m.teamName1 == c1.teamName1 && m.teamName2 == c1.teamName2 );
+        if( this.selectedMeeting == undefined ) {
+            this.selectedMeeting = meetings.find( m => m.teamName1 == c1.teamName2 && m.teamName2 == c1.teamName1 );
+            this.selectedMeeting.points1 = c2.points.value;
+            this.selectedMeeting.points2 = c1.points.value;
+        } else {
+            this.selectedMeeting.points1 = c1.points.value;
+            this.selectedMeeting.points2 = c2.points.value;
+        }
+        this.selectedMeeting.isPlayed = true;
+    }
+
+    private saveRoundMeeting( roundId: number): void {
+        let observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.tourney.id, roundId);
+        observer.subscribe(n => this.next(n), e => this.saveTourneyErrorHandler(e));            
+    }
+
+    private savePlayoffMeeting(playoffId: number): void {
+        let observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.tourney.id, playoffId);
+        observer.subscribe(n => this.next(n), e => this.saveTourneyErrorHandler(e));            
+    }
+
+    private saveEliminatoryMeeting(eliminatoryId: number): void {
+        let observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.tourney.id, eliminatoryId);
+        observer.subscribe(n => this.next(n), e => this.saveTourneyErrorHandler(e));            
+    }
+
+    private newCell(teamName1: string
+        , teamName2: string
+        , field: string
+        , style: string
+        , isEditable: boolean
+        , isTotal: boolean
+        , row: number
+        , col: number
+        , points: number): Cell 
+    {
 
         let options: CellCombobox[] = [];
         if(teamName1 != null && teamName2 != null) {            
@@ -157,7 +260,7 @@ export class MatrixService   {
               id: null // this.tourneyService.getSequenceNumber()
             , field: field
             , style: style
-            , points: { label: "", value: 0, row: row, col: col }
+            , points: { label: "" + points, value: points, row: row, col: col }
             , isEditable: isEditable
             , isTotal: isTotal
             , isVisited: false
@@ -174,43 +277,6 @@ export class MatrixService   {
         code++;
         return String.fromCharCode(code);
     }
- 
-    private save(matrix: Matrix) {
-        for(let i=0; i<matrix.rows.length; i++) {
-            let r = matrix.rows[i];
-            let sum: number = 0;
-            let sumWon: number = 0;
-            let sumLost: number = 0;
-            for(let j=2; j<r.cells.length-1; j++) {
-                let c: Cell = r.cells[j];
-                sum += c.points.value;
-                if((c.isVisited && c.points.value==0) 
-                    || c.points.value == this.tourney.pointsGoldenGoalTieBreakDefeat) 
-                {
-                    sumLost++;
-                }
-                if(c.points.value==this.tourney.matchWinnerScores || c.points.value == this.tourney.pointsGoldenGoalTieBreakWin) {
-                    sumWon++;
-                }
-                if(c.points.label!="") {
-                    c.style = 'totalStyle';
-                }
-
-                this.updateMeeting(c);
-            }
-            r.cells[r.cells.length-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
-            this.round.classification[i].points = sum;
-            this.round.classification[i].won = sumWon;
-            this.round.classification[i].lost = sumLost;
-        }
-
-        this.round.onewayMatrix = matrix;
-
-        // this.classificationRows = this.prepareClassificationGui();
-
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourney, this.clientService.selectedClient);
-        this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation')).subscribe(n => this.next(n));
-    }
 
     private next(n: any) {
         console.log(n);
@@ -221,20 +287,9 @@ export class MatrixService   {
             console.log("Entering saveTourneyErrorHandler()");
             console.log(`${operation} failed!`);
             console.error(res); // log to console instead
-            
             return of(result as T);
         };
     }
 
-    private updateMeeting(c: Cell): any {
-        for(let m of this.round.onewayMeetings) {
-            if(m.teamName1  == c.teamName1) {
-                m.points1 = c.points.value;
-            }
-            if(m.teamName2 == c.teamName2) {
-                m.points2 = c.points.value;
-            }
-        }
-    }
 }
 

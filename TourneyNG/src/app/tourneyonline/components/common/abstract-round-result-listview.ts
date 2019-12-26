@@ -5,7 +5,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { AbstractListView } from './abstract-listview';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Round } from 'app/tourneyonline/domain/round';
@@ -74,16 +73,20 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.isRoundTrip = true;
 
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+        subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
     }
 
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
         this.tourneyService.selectedRoundTabIndex = index;
+        if( index == 2 ) {
+            this.ngOnInit();
+        }
     }
 
-    private onCompleteLoad(): void {
+    private onCompleteLoad(mdbList: MeetingDb[]): void {
+        this.mdbList = mdbList;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
         this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
 

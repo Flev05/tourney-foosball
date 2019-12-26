@@ -40,8 +40,7 @@ export abstract class ResultEliminatoryListView extends AbstractEliminatoryListV
         super.ngOnInit();
         this.classificationCols = this.tourneyService.classificationCols;
         
-        this.isRoundTrip = this.isOneway == "true" ? false : true;
-        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onLoadComplete());
+        this.isRoundTrip = this.isOneway == "true" ? false : true;   
     }
     
     onChangeTab(e) {
@@ -49,7 +48,7 @@ export abstract class ResultEliminatoryListView extends AbstractEliminatoryListV
         this.tourneyService.selectedEliminatoryTabIndex = index;
     }
 
-    private onLoadComplete(): void {
+    protected onLoadComplete(): void {
         this.cols = this.tourneyService.resultCols;
 
         for( let l=0; l < this.selectedTourney.eliminatoryLevels.length; l++ ) {

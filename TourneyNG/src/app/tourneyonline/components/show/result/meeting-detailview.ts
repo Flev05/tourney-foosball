@@ -7,14 +7,8 @@ import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract
 import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { Observable, of } from 'rxjs';
-import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
-import { ClientService } from 'app/tourneyonline/service/client-service';
-import { Tourney } from 'app/tourneyonline/domain/tourney';
 
 @Component({
     templateUrl: './meeting-detailview.html'
@@ -35,8 +29,7 @@ export class MeetingDetailView extends AbstractDetailView {
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected meetingService: MeetingService,
-        private clientService: ClientService
+        protected meetingService: MeetingService
     ) { 
         super(tourneyService, location);
     }
@@ -81,11 +74,16 @@ export class MeetingDetailView extends AbstractDetailView {
         if(this.matches[ii].score1 < 0) {
             this.matches[ii].score1=0;
         }
+        this.save();
     }
 
     plus1(m: Match) {
         let ii = m.id;
         this.matches[ii].score1++;
+        if(this.matches[ii].score1 > this.selectedTourney.pointsNeededToWin) {
+            this.matches[ii].score1 = this.selectedTourney.pointsNeededToWin;
+        }
+        this.save();
     }
 
     minus2(m: Match) {
@@ -94,14 +92,19 @@ export class MeetingDetailView extends AbstractDetailView {
         if(this.matches[ii].score2 < 0) {
             this.matches[ii].score2=0;
         }
+        this.save();
     }
 
     plus2(m: Match) {
         let ii = m.id;
         this.matches[ii].score2++;
+        if(this.matches[ii].score2 > this.selectedTourney.pointsNeededToWin) {
+            this.matches[ii].score2 = this.selectedTourney.pointsNeededToWin;
+        }
+        this.save();
     }
 
-    save() {
+    private save() {
         this.selectedMeeting.isPlayed = true;
         this.selectedMeeting.matches = this.matches;
         this.selectedMeeting.points1 = 0;
@@ -156,83 +159,29 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
         let observer = null;
-        let copy = null;
         if( this.selectedMeetingDb.roundId != null ) {
-            copy = this.cleanRoundMeeting(this.selectedTourney);
+            this.tourneyService.cleanRoundMeeting(this.selectedTourney);
             observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId);
         }
         if( this.selectedMeetingDb.playoffId != null ) {
-            copy = this.cleanPlayoffMeeting(this.selectedTourney);
+            this.tourneyService.cleanPlayoffMeeting(this.selectedTourney);
             observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId);
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
-            copy = this.cleanEliminatoryMeeting(this.selectedTourney);
+            this.tourneyService.cleanEliminatoryMeeting(this.selectedTourney);
             observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
         }
         if(observer != null) {            
-            observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete() );            
-            // observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onSaveMeetingComplete(copy) );            
+            observer.subscribe(n => this.next(n), e => this.onError(e) );            
         }
     }
 
-    private onSaveMeetingComplete(copy : Tourney): void {
- 
-        // this.updateNextLevel();
-
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(copy, this.clientService.selectedClient);
-
-        let observer = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler("Turney save operation"));
-        observer.subscribe(n => this.next(n), e => this.onError(e), ()=>this.onComplete());   
-    }
-
-    private cleanRoundMeeting(t: Tourney): Tourney  {
-        for(let r of t.rounds) {
-            r.onewayMeetings = [];
-            r.roundtripMeetings = [];
-        }
-        return t;
-    }
-
-    private cleanPlayoffMeeting(t:  Tourney): Tourney {
-        for(let p of t.playoffs) {
-            p.round.onewayMeetings = [];
-            p.round.roundtripMeetings = [];
-        }
-        return t;
-    }
-
-    private cleanEliminatoryMeeting(t: Tourney): Tourney{
-        let copy = this.cloneObject(t);
-        for(let el of copy.eliminatoryLevels) {
-            for( let e of el.eliminatories) {
-                e.round.onewayMeetings = [];
-                e.round.roundtripMeetings = [];
-            }
-        }
-        return t;
-    }
-
-    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T) {
-        return (res: any): Observable<T> => {
-            console.log("Entering saveTourneyErrorHandler()");
-            console.log(`${operation} failed!`);
-            console.error(res); // log to console instead
-            
-            return of(result as T);
-        };
-    }
-
-    
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;
 
         msgerr = 'Modifica result fallita';
         this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
-    }
-
-    onComplete(): void {
-        this.location.back();
     }
 }
 

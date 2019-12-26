@@ -1,4 +1,3 @@
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -79,10 +78,12 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         }
         
         const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
-        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onPlayoffCompleteLoad());
+        subsbr.subscribe(t => this.onPlayoffCompleteLoad(t), e => this.onError(e));
     }
 
-    private onPlayoffCompleteLoad() {
+    private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
+        this.mdbList = mdbList;
+
         this.meetingPlayoffService.extractPlayoffMeetings(this.selectedPlayoff, this.mdbList);
 
         if( this.selectedTourney.isPlayoffAutoGen == "true") {
@@ -154,6 +155,9 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     onChangeTab(e) {
         let index=e.index;
         this.tourneyService.selectedPlayoffTabIndex = index;
+        if( index == 2 ) {
+            this.ngOnInit();
+        }
     }
   
     onRowSelect(event) {

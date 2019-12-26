@@ -1,6 +1,6 @@
 import {NgModule}     from '@angular/core';
 import {RouterModule} from '@angular/router'
-import {MatrixDetailView} from './matrix-detailview';
+import {MatrixDetailView} from './eliminatory-matrix-view';
 import { TabMatrixListView } from './tab-matrix-listview';
 import { MatrixTourneyListView } from './tourney-listview';
 import { EliminatoryListView } from './eliminatory-listview';

@@ -486,10 +486,11 @@ export class LevelService extends AbstractEliminatoryListView {
             isDummy: false
         }
         
+        let elid = this.tourneyService.getSequenceNumber();
         let e: Eliminatory = {
-            id: this.tourneyService.getSequenceNumber()
+            id: elid
             , isSkiping: false
-            , round:{id: this.tourneyService.getSequenceNumber()
+            , round:{id: elid
                 , name: "" + index
                 , type: RoundType.E
                 , pageSize: 1
@@ -580,7 +581,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
         let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList);
-        abs.subscribe(mdbs => this.meetingList = mdbs, e => this.onError(e), () => this.onLoadAllMetingListComplete(elList, complete));
+        abs.subscribe(mdbs => this.onLoadAllMetingListComplete(mdbs, elList, complete), e => this.onError(e));
     }
 
     /**
@@ -589,13 +590,14 @@ export class LevelService extends AbstractEliminatoryListView {
      * @param elList the list of the eliminatory levels
      * @param complete callback methodo called when the load will finish
      */
-    private onLoadAllMetingListComplete(elList: EliminatoryLevel[], complete: () => void): void {
+    private onLoadAllMetingListComplete(meetingList: MeetingDb[], elList: EliminatoryLevel[], complete: () => void): void {
         for( let el of elList) {
             for (let e of el.eliminatories) {
                 e.round.onewayMeetings = [];
                 e.round.roundtripMeetings = [];
             }
         }
+        this.meetingList = meetingList;
         for( let el of elList) {
             for (let e of el.eliminatories) {
                 let found : boolean = false;

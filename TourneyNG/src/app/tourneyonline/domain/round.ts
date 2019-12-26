@@ -18,8 +18,6 @@ export interface Round {
 
     onewayMeetings?: Meeting[];
     roundtripMeetings?: Meeting[];
-    onewayMatrix?: Matrix;
-    roundtripMatrix?: Matrix;
 
     classification?: Classification[];
 }

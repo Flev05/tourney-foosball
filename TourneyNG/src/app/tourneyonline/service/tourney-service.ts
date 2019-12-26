@@ -846,4 +846,32 @@ export class TourneyService extends AbstractService {
             }
         }
     }
+
+    public cleanRoundMeeting(t: Tourney): Tourney  {
+        for(let r of t.rounds) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+        }
+        return t;
+    }
+
+    public cleanPlayoffMeeting(t:  Tourney): Tourney {
+        for(let p of t.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        return t;
+    }
+
+    public cleanEliminatoryMeeting(t: Tourney): Tourney{
+        let copy = this.cloneObject(t);
+        for(let el of copy.eliminatoryLevels) {
+            for( let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        return t;
+    }
+
 }

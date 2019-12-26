@@ -7,77 +7,83 @@
         per aumentare o dimunire il punteggio rispettivamente.
     </p> 
     <p>
-        A cose fatte, salvare il tutto con il bottone Salva. 
-    </p> 
-    <p>
-        Il punteggio così salvato sarà immmediatamente riflesso nella classifica e nelle faormazioni
+        Il punteggio, salvato automaticamente ad ogni variazione, sarà immmediatamente riflesso nella classifica e nelle faormazioni
         delle fasi successive se previste come plaoff ed eliminazioni dirette.
     </p>
 </p-accordionTab>
 </p-accordion>
-
-<h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <p-table [value]="matches">
 
+    <p-table [value]="matches">
         <ng-template pTemplate="colgroup">
             <colgroup>
-                <col style="width: 20mm;">
-                <col style="width: 100%;">
+                <col style="width: 17mm; font-weight: bold;">
+                <col style="width: 15mm; ">
+                <col style="width: 100%; font-size: x-large;">
+                <col style="width: 100%; font-size: x-large;">
+                <col style="width: 15mm;">
             </colgroup>
         </ng-template>
 
         <ng-template pTemplate="caption" >
             <div style="text-align: center">
-                <button class="ui-button-success" label="Salva" pButton icon="fa fa-save" type="button" (click)="save()"></button>
+                {{selectedTourney.tourneyName}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})
             </div>
         </ng-template>       
         
         <ng-template pTemplate="header">
             <tr>
-                <th>Partita</th>
-                <th>{{selectedMeeting.teamName1}} {{selectedMeeting.pointes1}} - {{selectedMeeting.pointes2}} {{selectedMeeting.teamName2}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})</th>
+                <th><span style="font-weight: bold;">Partita</span></th>
+                <th> -/+ </th>
+                <th style="font-size: x-large;">{{selectedMeeting.teamName1}}</th>
+                <th style="font-size: x-large;">{{selectedMeeting.teamName2}}</th>
+                <th> -/+ </th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr>
-                <td>{{rowIndex + 1}}</td>
-                <td>
+                <td><span style="font-weight: bold;">{{rowIndex + 1}}</span></td>
+                <td style="width: 10mm; text-align: center;">
                     <table>
                         <tr>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
+                            <td>
+                                <button pButton type="button" icon="fa fa-plus"  (click)="plus1(rowData)"></button>
                             </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <span style="font-size: large; font-weight: bold;">{{rowData.score1}}</span>
-                            </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus1(rowData)"></button>
-                            </td>            
                         </tr>
                         <tr>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa-minus" (click)="minus2(rowData)"></button>
+                            <td>
+                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
                             </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <span style="font-size: large; font-weight: bold;">{{rowData.score2}}</span>
-                            </td>
-                            <td style="width: 10mm; text-align: center;">
-                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)"></button>
-                            </td>            
                         </tr>
                     </table>
                 </td>
+                <td style="text-align: center;">
+                    <span style="font-size: 700%; font-weight: bold;">{{rowData.score1}}</span>
+                </td>
+                <td style="text-align: center;">
+                    <span style="font-size: 700%; font-weight: bold;">{{rowData.score2}}</span>
+                </td>    
+                <td style="text-align: center;">
+                    <table>
+                        <tr>
+                            <td>
+                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)"></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button pButton type="button" icon="fa fa-minus"   (click)="minus2(rowData)"></button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>            
             </tr>
-        </ng-template>
-        <ng-template pTemplate="summary">
-            <button class="ui-button-success" label="Salva" pButton icon="fa fa-save" type="button" (click)="save()"></button>
         </ng-template>
     </p-table>
 </div>

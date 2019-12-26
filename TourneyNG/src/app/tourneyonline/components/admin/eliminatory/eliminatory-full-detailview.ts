@@ -16,7 +16,6 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
-import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './eliminatory-full-detailview.html',
@@ -107,19 +106,6 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
 
         let team1CB = {label:"", value: 0};
         let team2CB = {label:"", value: 0};
-        // if(this.isStandalone) {
-        //     this.availableTeams = [{label:"", value: 0}];
-            
-        //     for(let t of this.levelService.selectedTeams) {
-        //         let cb = {label: t.teamName, value: t.id};
-        //         this.availableTeams.push(cb);
-        //     }
-    
-        //     let tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName1);
-        //     team1CB = {label: this.m1.teamName1, value: tid};
-        //     tid = TeamService.getTeamIdByName(this.selectedTourney, this.m1.teamName2);
-        //     team2CB = {label: this.m1.teamName2, value: tid};
-        // }
 
         this.isDoubleSelection = false;
 
@@ -211,32 +197,22 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         this.m1.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
         this.m1.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
-        // if(this.isStandalone) {
-        //     let team1CB: Combobox= this.eliminatoryFormGroup.get('team1').value;
-        //     let team2CB: Combobox = this.eliminatoryFormGroup.get('team2').value;
-        //     this.m1.teamName1 = this.getTeam(team1CB).teamName;
-        //     this.m1.teamName2 = this.getTeam(team2CB).teamName;
-        //     this.m1.name = this.m1.teamName2 + " - " + this.m1.teamName1;
-        // }
-
         let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
         observer.subscribe( n => this.saveMeetingNext(n, this.m1));
 
-        if(!this.isOneway) {
-            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
-            if(this.m2.datetime < this.m1.datetime) {
-                this.m2.datetime = this.m1.datetime;
-            }
-            this.m2.address = this.eliminatoryFormGroup.get('address2').value;
-            this.m2.country = this.eliminatoryFormGroup.get('country2').value;
-
-            this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
-            this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
-
-            let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
-            observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
+        this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+        this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
+        if(this.m2.datetime < this.m1.datetime) {
+            this.m2.datetime = this.m1.datetime;
         }
+        this.m2.address = this.eliminatoryFormGroup.get('address2').value;
+        this.m2.country = this.eliminatoryFormGroup.get('country2').value;
+
+        this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
+        this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
+
+        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
+        observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
 
         return true;
     }
@@ -251,20 +227,6 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         return this.isDoubleSelection;
     }
 
-    private getTeam(teamName: Combobox) : Team {
-
-        for(let t of this.levelService.selectedTeams) {
-            if(t.teamName == teamName.label) {
-                return t;
-            }
-        }
-
-        let empty: Team = {
-            id:0, teamName: ""
-        };
-        return empty;
-    }
-    
     onError(n:any) {
         this.msgs = [];
         let msgerr : string;

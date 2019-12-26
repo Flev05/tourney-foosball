@@ -191,7 +191,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.eliminatoryRows = [];
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
 
-        for(let i=0;i<this.eliminatories.length; i++) {
+        for(let i=0; i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
             let onewayDatetime    = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);

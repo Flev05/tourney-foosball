@@ -122,7 +122,6 @@ static newRound(roundNo : number): Round {
     , onewayMeetings: []
     , roundtripMeetings: []
     , classification: []
-    , onewayMatrix: null
   };
 }
 

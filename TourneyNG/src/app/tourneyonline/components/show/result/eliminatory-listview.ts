@@ -26,6 +26,11 @@ export class EliminatoryListView extends ResultEliminatoryListView {
     
     ngOnInit() {
         super.ngOnInit();
+        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete());
+    }
+
+    private onEliminatoryLoadComplete(): void {
+        super.onLoadComplete();
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
     }
 }

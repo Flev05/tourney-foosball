@@ -95,8 +95,10 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         this.onewayMeetings = this.selectedRound.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms));
         this.onewayMeetings.forEach(m => m.containerId = this.selectedRound.id);
+        this.onewayMeetings.sort((m1,m2) => this.sortMeeting(m1,m2))
         this.roundtripMeetings = this.selectedRound.roundtripMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
         this.roundtripMeetings.forEach(m => m.containerId = this.selectedRound.id);
+        this.roundtripMeetings.sort((m1,m2) => this.sortMeeting(m1,m2))
 
         console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
         console.log("[RoundtripMeetings " + this.roundtripMeetings.length + "]");
@@ -112,6 +114,34 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
 
         this.prepareRoundGuiClassification();
+    }
+
+    private sortMeeting(m1: Meeting, m2: Meeting): number {
+        if( m1.day > m2.day ) {
+            return 1;
+        }
+        if( m1.day < m2.day ) {
+            return -1;
+        }
+        if( m1.datetime > m2.datetime ) {
+            return 1;
+        }
+        if( m1.datetime < m2.datetime ) {
+            return -1;
+        }
+        if( m1.teamName1 > m2.teamName1 ) {
+            return 1;
+        }
+        if( m1.teamName1 < m2.teamName1 ) {
+            return -1;
+        }
+        if( m1.teamName2 > m2.teamName2 ) {
+            return 1;
+        }
+        if( m1.teamName2 < m2.teamName2 ) {
+            return -1;
+        }
+        return 0;
     }
 
     private mapCallback (m: Meeting, index: number, array: Meeting[]): Meeting {

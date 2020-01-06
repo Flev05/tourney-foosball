@@ -880,6 +880,6 @@ export class TourneyService extends AbstractService {
 
     public makeClassificationName(sc: Classification, roundName: string): void {
         this.selectedClassificationRow =  sc;
-        this.classificationName = "Torneo [" + this.selectedTourney.tourneyName + "] Girone [" + roundName + "] Squadra [" +sc.teamName + "]";
+        this.classificationName = "Torneo [" + this.selectedTourney.tourneyName + "] Girone [" + roundName + "]";
     }
 }

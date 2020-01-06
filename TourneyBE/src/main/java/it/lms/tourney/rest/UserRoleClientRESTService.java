@@ -34,7 +34,7 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 
 /**
- * JAX-RS to produces a RESTful service to read/write by DAOs.
+ * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/urc")
 @Stateless

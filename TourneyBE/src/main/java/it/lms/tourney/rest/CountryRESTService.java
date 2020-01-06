@@ -22,7 +22,7 @@ import it.lms.tourney.dao.CountryDao;
 import it.lms.tourney.po.Country;
 
 /**
- * JAX-RS to produces a RESTful service to read/write by DAOs.
+ * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/countries")
 @Stateless

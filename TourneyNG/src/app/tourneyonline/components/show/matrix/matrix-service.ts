@@ -21,6 +21,9 @@ export class MatrixService   {
 
     selectedMeeting: Meeting;
 
+    legendCols: any[];
+    legendRows: any[];
+
     constructor( public tourneyService: TourneyService
         , protected meetingService: MeetingService) 
     {}
@@ -40,20 +43,25 @@ export class MatrixService   {
 
     private prepareCols(): any[]  {
         let cols = [];
-        let col = { field: 'teamName', header: 'Squadre', style: 'style0' };
-        cols.push(col);
-        col = { field: 'littleName', header: '+', style: 'style1' };
+        this.legendCols = [];
+        
+        let col = { field: 'littleName', header: '+', style: 'style1' };
         cols.push(col);
 
         var letter: String = "A";
         for (let i = 0; i < this.round.teamNames.length; i++) {
             let col = { field: 'points', header: letter, style: 'style0' };
-            cols.push(col);
+            cols.push(col);    
             letter = this.getNextLetter(letter);
         }
         col = { field: 'total', header: 'Tot', style: 'style1' };
         cols.push(col);
         
+        col = { field: 'alias', header: 'Alias', style: 'style1'};
+        this.legendCols.push(col);
+        col = { field: 'teamName', header: 'Squadre', style: 'style1'};
+        this.legendCols.push(col);
+
         return cols;
     }
 
@@ -62,6 +70,7 @@ export class MatrixService   {
             id: this.tourneyService.getSequenceNumber(),
             rows: []
         };
+        this.legendRows = [];
 
         let letter: String = "A";
         for (let i = 0; i < this.round.teamNames.length; i++) {
@@ -72,9 +81,11 @@ export class MatrixService   {
             };
             matrix.rows.push(row);
             let tn1 = this.round.teamNames[i];
-            let c: Cell = this.newCell(null, null, tn1, 'style0', false, false, 0, 0, 0);
-            cells.push(c);
-            c = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0, 0);
+            
+            let r = {teamName: tn1, alias: letter};
+            this.legendRows.push(r);
+
+            let c: Cell = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0, 0);
             cells.push(c);
             letter = this.getNextLetter(letter);
             let sum : number = 0;
@@ -155,7 +166,7 @@ export class MatrixService   {
     private alignSimmetricCell(cb: CellCombobox, matrix: Matrix){
         
         let row = cb.col;
-        let col = cb.row + 2;
+        let col = cb.row + 1;
 
         const cell: Cell = matrix.rows[row].cells[col];
         if(cb.value == this.tourney.matchWinnerScores) {
@@ -177,7 +188,7 @@ export class MatrixService   {
         }
 
         cell.isVisited = true;
-        matrix.rows[col-2].cells[row].isVisited = true;
+        matrix.rows[col-1].cells[row].isVisited = true;
     }
 
     /**
@@ -189,11 +200,11 @@ export class MatrixService   {
      */
     private prepareMeeting(cb: CellCombobox, matrix: Matrix, meetings: Meeting[]) {
         let selectedRow = cb.row;
-        let selectedCol = cb.col+2;
+        let selectedCol = cb.col+1;
         let len = matrix.rows[0].cells.length;
 
         let sum: number = 0;
-        for( let c = 2; c < len-1; c++ ) {
+        for( let c = 1; c < len-1; c++ ) {
             sum += matrix.rows[selectedRow].cells[c].points.value;
         }
         matrix.rows[selectedRow].cells[len-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
@@ -201,12 +212,12 @@ export class MatrixService   {
         c1.style = 'totalStyle';
         
         sum = 0;
-        selectedRow = selectedCol-2;
-        for( let c = 2; c < len-1; c++ ) {
+        selectedRow = selectedCol-1;
+        for( let c = 1; c < len-1; c++ ) {
             sum += matrix.rows[selectedRow].cells[c].points.value;
         }
         matrix.rows[selectedRow].cells[len-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
-        selectedCol = cb.row+2;
+        selectedCol = cb.row+1;
         let c2 = matrix.rows[selectedRow].cells[selectedCol];
         c2.style = 'totalStyle';
 

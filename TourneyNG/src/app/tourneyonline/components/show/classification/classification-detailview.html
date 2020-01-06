@@ -1,0 +1,93 @@
+<div>
+    <span>Dettaglio Classifica</span>
+    <p>{{selectedClassificationName}}</p>
+</div>
+ 
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
+ 
+<div class="ui-grid-pad ui-fluid" style="margin: 10px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Squadra:
+        </div>
+        <div class="ui-grid-col-2">                             
+            {{selectedClassificationRow.teamName}}
+        </div>
+    </div>
+ 
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Punti:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.points}}
+        </div>
+    </div>             
+ 
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Giocate:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.played}}
+        </div>
+    </div>     
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Vinte:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.won}}
+        </div>
+    </div>     
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Perse:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.lost}}
+        </div>
+    </div>     
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Pareggiate:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.balanced}}
+        </div>
+    </div>     
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Goal Fatti:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.goalsDone}}
+        </div>
+    </div>     
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Goal Subiti:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.goalsConceded}}
+        </div>
+    </div>     
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Differenza Reti:
+        </div>
+        <div class="ui-grid-col-2">
+            {{selectedClassificationRow.goalsDiff}}
+        </div>
+    </div>     
+</div>
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
+
+
+ 
+
+ 

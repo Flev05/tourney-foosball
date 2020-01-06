@@ -28,7 +28,7 @@ import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.po.Client;
 
 /**
- * JAX-RS to produces a RESTful service to read/write by DAOs.
+ * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/clients")
 @Stateless
@@ -52,17 +52,13 @@ public class ClientRESTService extends AbstractRESTService {
         logger.debug(logId() + "GET: loadByUserId()");
 
         List<ClientVO> clientVoList = new ArrayList<>();
-
         if (userDao.isDeveloperUser(userId)) {
-
             List<Client> clientList = clientDao.findAllClients();
             for (Client cpo : clientList) {
                 clientVoList.add(converter.convertClientPoVo(cpo));
             }
-        }
-
-        if (userDao.isOwnerUser(userId)) {
-            List<Client> urcList = clientDao.findOwnerClients(userId);
+        } else {
+            List<Client> urcList = clientDao.findClientsByUser(userId);
             clientVoList.addAll(prepareClientVoList(urcList));
         }
 

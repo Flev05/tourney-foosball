@@ -15,7 +15,7 @@
         </p>
 
         <p style="features-description">
-            Tourney Online è pensato per gestire qualsiasi tipo di torneo a squadre o individuale:
+            Tourney Online è stato pensato e creato per gestire qualsiasi tipo di torneo a squadre o individuale:
             dal calcio, al tennis, al volley, al basket, al calcio balilla, ecc.
         </p>
 
@@ -42,7 +42,7 @@
                 <p>
                     Gestione dei playoff del torneo. 
                     Potete prevedere gironi di playoff in cascata ai gironi all'italiana,
-                    configurabili in funzione dei risultati conseguiti delle fasi a gironi precedenti.
+                    configurabili in funzione dei risultati conseguiti nella fase a gironi precedente.
                 </p>
             </div>
             <div class="ui-g-12 ui-md-4">
@@ -53,6 +53,14 @@
                     Possono essere creati fasi ad eliminazione diretta autonome, senza gironi di qualificazione
                     o dipendenti dai risultati conseguiti nei gironi di qualificazione e playoff precedenti</p>
             </div>
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-mobile.svg" />
+                <span class="feature-name">Tempo Reale</span>
+                <p>Consultazione in tempo reale. Puoi seguire e far seguire da Computer o Smart Phone 
+                    i risultati e le classifiche delle gare in corso
+                    <a [routerLink]="['/realtime']">Leggi tutto...</a>
+                </p>
+            </div>    
 
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-community.svg" />
@@ -62,25 +70,15 @@
                     <a [routerLink]="['/demo']">Leggi tutto...</a>
                 </p>
             </div>            
-
             <div class="ui-g-12 ui-md-4">
                 <img src="assets/showcase/images/home/icon-component.svg" />
                 <span class="feature-name">Noleggio</span>
                 <p>
                     Versione a Noleggio. Permette la gestione persistente del torneo.
-                    Il sistema salva su un proprio database i tuoi tornei che puoi riprendere quando vuoi.                
+                    Il sistema salva su un proprio database i tuoi tornei che puoi riprendere o solo rivedere quando vuoi.                
                     <a [routerLink]="['/lease']">Leggi tutto...</a>
                 </p>
-            </div>            
-
-            <div class="ui-g-12 ui-md-4">
-                <img src="assets/showcase/images/home/icon-mobile.svg" />
-                <span class="feature-name">Tempo Reale</span>
-                <p>Consultazione in tempo reale. Puoi seguire e far seguire da Computer o Smart Phone 
-                    i risultati e le classifiche delle gare in corso
-                    <a [routerLink]="['/realtime']">Leggi tutto...</a>
-                </p>
-            </div>            
+            </div>
         </div>
     </div>
 
@@ -90,5 +88,4 @@
             Sito ufficiale Calcio Balilla Pregnana Milanese
         </p>
     </div>
-
 </div>

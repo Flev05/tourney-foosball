@@ -23,7 +23,7 @@
     </div>
      
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
-        <p *ngIf="loginService.isUserLogged">Utente: {{loginService.userLogged.username}}</p>
+        <p *ngIf="loginService.isUserLogged">Utente [{{loginService.userLogged.username}}]</p>
 
         <div *ngIf="clientsCBEnabled()" class="ui-grid-row">
             <div class="ui-grid-col-3">
@@ -38,7 +38,7 @@
             </div>
         </div>           
 
-        <div class="layout-menu">
+        <div *ngIf="!loginService.isUserLogged" class="layout-menu">
            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
                     (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
                 <img src="assets/showcase/images/icons/menu-active.svg" class="layout-menu-icon-active"/>
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <div *ngIf="loginService.isUserLogged" class="layout-menu">
+        <div *ngIf="loginService.isSuperUser()" class="layout-menu">
             <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
@@ -66,7 +66,7 @@
             </div>
         </div>
     
-        <div class="layout-menu">
+        <div *ngIf="loginService.isUserAllowed()" class="layout-menu" >
             <a id="manager-id" #managermenutitle [class.active-menuitem]="managermenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
                 <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>

@@ -35,7 +35,6 @@
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onEliminatoryRowSelect($event)">
-
             <ng-template pTemplate="caption">
                 {{tourneyService.selectedEliminatoryLevel.name}}
             </ng-template>
@@ -56,7 +55,7 @@
                     </td>
                 </tr>
             </ng-template>
-        </p-table>
+        </p-table>        
     </p-tabPanel>
 
     <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
@@ -88,29 +87,29 @@
                     </td>
                 </tr>
             </ng-template>
-        </p-table>
+        </p-table>        
     </p-tabPanel> 
     
     <p-tabPanel header="Classifica">    
-        <p-table [columns]="classificationCols"
-            [value]="eliminatoryClassification"
-            [responsive]="true">        
+        <p-table [columns]="classificationCols" [value]="eliminatoryClassification">
+
             <ng-template pTemplate="caption">
                 {{tourneyService.selectedEliminatoryLevel.name}}
             </ng-template>
             
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    <th class="position">P°</th>
+                    <th *ngFor="let col of columns" [ngClass]="col.style">
                         {{col.header}}
                     </th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="rowData">
+                <tr>
+                    <td style="text-align: center;">{{rowIndex+1}}</td>
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}
                     </td>
                 </tr>

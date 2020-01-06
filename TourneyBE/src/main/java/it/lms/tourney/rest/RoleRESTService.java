@@ -19,7 +19,7 @@ import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.po.Role;
 
 /**
- * JAX-RS to produces a RESTful service to read/write by DAOs.
+ * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/roles")
 @Stateless

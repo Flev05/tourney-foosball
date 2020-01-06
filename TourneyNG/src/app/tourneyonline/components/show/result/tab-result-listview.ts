@@ -10,8 +10,9 @@ import { LevelService } from '../../admin/eliminatory/level-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
+import { TourneyListView } from '../../admin/tourney/tourney-listview';
+import { TourneyResultListView } from '../tourney/tourney-listview';
 
-const REDIRECT_TOURNEY_LV        = 'showtourney/';
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
 const REDIRECT_ELIMINATORY       = 'result/lv/eliminatoryLv/dv';
@@ -92,7 +93,7 @@ export class TabResultListView extends AbstractTabResultListView {
     }
 
     goBack(): void {        
-        this.router.navigate([REDIRECT_TOURNEY_LV]);
+        this.router.navigate([TourneyResultListView.REDIRECT_TOURNEY_LV]);
     }
 }
 

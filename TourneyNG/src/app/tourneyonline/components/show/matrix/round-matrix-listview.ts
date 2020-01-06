@@ -14,13 +14,16 @@ import { MatrixService } from './matrix-service';
 
 @Component({
     templateUrl: './round-matrix-listview.html',
-    styleUrls: ['./matrix-view.css']
+    styleUrls: ['./matrix-view.css','../classification/classification-view.css']
 })
 export class RoundMatrixListView extends AbstractRoundResultListView {
     roundName: string;
     cols: any[];
     onewayMatrix: Matrix;
     roundtripMatrix: Matrix;
+
+    legendCols: any[];
+    legendRows: any[];
 
     constructor( public tourneyService: TourneyService
         , protected meetingRoundService: MeetingRoundService
@@ -53,6 +56,9 @@ export class RoundMatrixListView extends AbstractRoundResultListView {
         this.roundtripMatrix = this.matrixService.roundtripMatrix;
 
         this.cols =  this.matrixService.cols;
+
+        this.legendCols = this.matrixService.legendCols;
+        this.legendRows = this.matrixService.legendRows;
     }
  
     onOnewayPointChange(cb: CellCombobox) {

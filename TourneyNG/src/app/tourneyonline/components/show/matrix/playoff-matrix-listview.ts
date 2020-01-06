@@ -8,21 +8,22 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { AbstractPlayoffResultListView } from '../../common/abstract-playoff-result-listview';
-import { MatrixDetailView } from './eliminatory-matrix-view';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
 import { MatrixService } from './matrix-service';
 import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
     templateUrl: './playoff-matrix-listview.html',
-    styleUrls: ['./matrix-view.css']
+    styleUrls: ['./matrix-view.css','../classification/classification-view.css']
 })
 export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
     roundName: string;
     cols: any[];
     onewayMatrix: Matrix;
     roundtripMatrix: Matrix;
-    
+    legendCols: any[];
+    legendRows: any[];
+
     constructor( public tourneyService: TourneyService
         , protected meetingPlayoffService: MeetingPlayoffService
         , protected meetingService: MeetingService
@@ -54,6 +55,8 @@ export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
         this.roundtripMatrix = this.matrixService.roundtripMatrix;
 
         this.cols =  this.matrixService.cols;
+        this.legendCols = this.matrixService.legendCols;
+        this.legendRows = this.matrixService.legendRows;
      }
  
     onOnewayPointChange(cb: CellCombobox) {

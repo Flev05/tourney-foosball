@@ -24,9 +24,8 @@ import it.lms.tourney.dao.MeetingDao;
 import it.lms.tourney.po.Meeting;
 
 /**
- * JAX-RS to produces a RESTful service to read/write by DAOs.
+ * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
-// The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
 @Path("/meetings")
 public class MeetingRESTService extends AbstractRESTService {

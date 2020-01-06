@@ -5,6 +5,12 @@ import java.security.Principal;
 
 import it.lms.tourney.cdi.AbstractLogger;
 
+/**
+ * Abstract class for common data and operation for any REST service
+ * 
+ * @author luciano martino
+ *
+ */
 public abstract class AbstractRESTService extends AbstractLogger {
 
     protected String getUserAgent() {

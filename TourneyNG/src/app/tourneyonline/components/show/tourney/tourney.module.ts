@@ -24,7 +24,7 @@ import { SliderModule } from 'app/components/slider/slider';
 
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TourneyRoutingModule } from './tourney-routing.module';
-import { TourneyListView } from './tourney-listview';
+import { TourneyResultListView } from './tourney-listview';
 import { TourneyDetailView } from './tourney-detailview';
 
 @NgModule({
@@ -55,7 +55,7 @@ import { TourneyDetailView } from './tourney-detailview';
         ,PickListModule
     ],
 	declarations: [
-		TourneyListView
+		TourneyResultListView
         ,TourneyDetailView
     ]
     ,providers: [DateFormatPipe] 

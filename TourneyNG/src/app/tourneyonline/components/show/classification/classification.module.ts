@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
-import {OrderListModule} from 'primeng/orderlist';
+import { OrderListModule } from 'primeng/orderlist';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ClassificationTabListView } from './tab-listview';
@@ -17,11 +17,12 @@ import { ButtonModule } from 'app/components/button/button';
 import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 
-import {ClassificationRoutingModule} from './classification-routing.module';
-import {ClassificationTourneyListView} from './tourney-listview';
-import {AccordionModule} from 'primeng/accordion';
+import { ClassificationRoutingModule } from './classification-routing.module';
+import { ClassificationTourneyListView } from './tourney-listview';
+import { AccordionModule } from 'primeng/accordion';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { ClassificationEliminatoryListView } from './eliminatory-listview';
+import { ClassificationDetailView } from './classification-detailview';
 
 @NgModule({
         imports: [
@@ -49,6 +50,7 @@ import { ClassificationEliminatoryListView } from './eliminatory-listview';
                 ClassificationTourneyListView
                 ,ClassificationTabListView
                 ,ClassificationEliminatoryListView
+                ,ClassificationDetailView
         ]
         ,providers: [DateFormatPipe]        
 })

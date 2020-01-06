@@ -8,11 +8,17 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { ResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { ClassificationDetailView } from '../classification/classification-detailview';
 
 @Component({
-    templateUrl: './eliminatory-listview.html'
+    templateUrl: './eliminatory-listview.html',
+    styleUrls: ['../classification/classification-view.css']
+    
 })
 export class EliminatoryListView extends ResultEliminatoryListView {
+    selectedClassificationRow: Classification;
+
     constructor(
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,
@@ -32,6 +38,12 @@ export class EliminatoryListView extends ResultEliminatoryListView {
     private onEliminatoryLoadComplete(): void {
         super.onLoadComplete();
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
+    }
+
+    onClassifcationRowSelect(event) {
+        console.log(event.data);
+        this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.tourneyService.selectedEliminatoryLevel.name);
+        this.router.navigate([ClassificationDetailView.redirect]);
     }
 }
 

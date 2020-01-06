@@ -126,7 +126,7 @@ export class TourneyDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.countries = this.countryService.countries;
-
+        
         if (this.tourneyService.newTourney) {
             this.initNewTourney();
         }
@@ -238,6 +238,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.wizardModeIndex = 0;
         this.selectedTourney.isPlayoffAutoGen = "true";
         this.selectedTourney.isEliminatoryAutoGen = "true";
+        this.selectedTourney.resultTool = EResultTool.R;
         this.resetComboBoxes();
     }
 

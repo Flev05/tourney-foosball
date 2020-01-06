@@ -28,12 +28,12 @@ export class UrcDetailView extends AbstractDetailView {
 
     clientRoleCols:  TableCols[] = [
         { field: 'clientName', header: 'Cliente' },
-        { field: 'role',   header: 'Ruolo' }
+        { field: 'role',       header: 'Ruolo' }
     ];
 
     roleOptions: Combobox[];
 
-    clientRoleRows :     {id: number, businessName: string, selectedRole: Combobox}[];
+    clientRoleRows         : {id: number, businessName: string, selectedRole: Combobox}[];
     selectedClientRoleRows : {id: number, businessName: string, selectedRole: Combobox}[];
 
     roles : RoleVO[];
@@ -50,14 +50,17 @@ export class UrcDetailView extends AbstractDetailView {
     isRetypePasswordFailed: boolean;
     defaultRole: { label: string; value: number; };
 
+    username: string = "";
+
     constructor(
-        private logginService: LoginService,
-        private userService: UserService,
-        private roleService: RoleService,
-        protected location: Location,
         protected tourneyService: TourneyService,
+        protected userService: UserService,
+        protected logginService: LoginService,
+        protected roleService: RoleService,
+        protected location: Location,
         protected clientService: ClientService,
         protected urcService: UrcService,
+        protected countryService: CountryService,
     ) {
         super(tourneyService, location);
     }
@@ -65,7 +68,11 @@ export class UrcDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
+        this.countries = this.countryService.countries;
+
         let loggedUserId = this.logginService.userLogged.id;
+        this.username = this.logginService.userLogged.username;
+
         this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.roles = rs, e => this.onError(e), () => this.onCompleteLoadRoles());
 
         const subscriber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));

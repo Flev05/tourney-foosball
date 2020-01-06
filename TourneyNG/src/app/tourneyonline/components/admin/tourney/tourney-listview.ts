@@ -32,6 +32,8 @@ export class TourneyListView extends AbstractTourneyListView {
     clientsCBEnabled: boolean;
     onDeleteTourneyError: boolean;
 
+    username: string = "";
+
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
         , protected countryService: CountryService
@@ -57,6 +59,7 @@ export class TourneyListView extends AbstractTourneyListView {
         this.clientOptions = this.clientService.clientOptions;
 
         this.clientsCBEnabled = this.loginService.isUserLogged && this.clientOptions.length > 1 ? true : false;
+        this.username = this.loginService == undefined ? "" : this.loginService.userLogged.username;
 
         this.tourneyFormGroup = this.fb.group({
             'selectedClientOption': new FormControl(this.clientService.selectedClientOption),

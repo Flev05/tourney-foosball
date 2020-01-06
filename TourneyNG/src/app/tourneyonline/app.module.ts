@@ -64,7 +64,6 @@ if (environment.inMemoryDataService) {
     , DateFormatModule
     , DropdownModule
     , SidebarModule
-    // , forDevelopEnvOnly
   ],
   providers: [
        { provide: LocationStrategy, useClass: HashLocationStrategy }

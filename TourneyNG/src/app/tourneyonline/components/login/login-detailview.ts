@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
+import { Validators,FormControl,FormGroup,FormBuilder } from '@angular/forms';
 import { Login } from 'app/tourneyonline/domain/login';
 import { Message } from 'app/components/common/api';
 import { LoginService } from 'app/tourneyonline/service/login-service';
-import {Md5} from "md5-typescript";
+import { Md5 } from "md5-typescript";
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 
 const redirect : string = "/login/lv";
-const redirectToTourney = '/admintourney';
+const redirectToAdminTourney = '/admintourney';
+const redirectToShowTourney  = '/showtourney';
 
 @Component({
     templateUrl: './login-detailview.html',
@@ -66,30 +67,11 @@ export class LoginDetailView implements OnInit {
         this.loginFailed = false;
 
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
-        subscr.subscribe(uvo=> this.next(uvo), e => this.onError(e), () => this.onComplete());  
+        subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
     }
 
-    private handleLoginError<Login> (operation: string, result?: Login) {
-  
-        return (error: any): Observable<Login> => {                      
-            console.error("Entering Observable<Login>"); // log to console instead
-
-            this.loginService.isUserLogged=false;
-            this.loginFailed = true;
-
-            // TODO: send the error to remote logging infrastructure
-            console.error(error); // log to console instead
-      
-            // TODO: better job of transforming error for user consumption
-            console.error(`${operation} failed: ${error.message}`);
-      
-            // Let the app keep running by returning an empty result.
-            return of(result as Login);
-        };
-    }
-    
-    next(uvo: Login) {
-        console.log("Entering next()"); // log to console instead
+    private onNext(uvo: Login) {
+        console.log("Entering LoginDetailView.onNext()"); // log to console instead
         console.log(uvo);
 
         if( uvo != undefined ) {
@@ -98,16 +80,10 @@ export class LoginDetailView implements OnInit {
             this.loginService.isUserLogged = false;
             this.loginFailed = true;
         }
+        this.onComplete();
     }
 
-    onError(e:any) {
-        console.error("Entering LoginDetailView.onError()");
-        console.error(e);
-        this.loginService.isUserLogged = false;
-        this.loginFailed = true;
-    }
-
-    onComplete() {
+    private onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
         
         if(!this.loginService.isUserLogged)  {
@@ -127,16 +103,44 @@ export class LoginDetailView implements OnInit {
         const subsrciber = this.clientService.loadAllClients(loggedUserId, this.handleLoginError('loadAllClients()'));
         subsrciber.subscribe(clients => this.processClientNext(clients), e => this.onError(e));
     }
-    
+
     private processClientNext(clients: ClientVO[]): void {
         if( clients.length == 1 ) {
             this.clientService.setSelectClients(clients);
-            
-            this.router.navigate([redirectToTourney]);
+            if( this.loginService.isOperatorOrFollower() ) {
+                this.router.navigate([redirectToShowTourney]);
+            } else {
+                this.router.navigate([redirectToAdminTourney]);
+            }
             return;
         }
 
         console.log("navigate to=" + redirect);
         this.router.navigate([redirect]);
+    }
+
+    private onError(e:any) {
+        console.error("Entering LoginDetailView.onError()");
+        console.error(e);
+        this.loginService.isUserLogged = false;
+        this.loginFailed = true;
+    }
+
+    private handleLoginError<Login> (operation: string, result?: Login) {
+        return (error: any): Observable<Login> => {                      
+            console.error("Entering Observable<Login>"); // log to console instead
+
+            this.loginService.isUserLogged=false;
+            this.loginFailed = true;
+
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+      
+            // TODO: better job of transforming error for user consumption
+            console.error(`${operation} failed: ${error.message}`);
+      
+            // Let the app keep running by returning an empty result.
+            return of(result as Login);
+        };
     }
 }

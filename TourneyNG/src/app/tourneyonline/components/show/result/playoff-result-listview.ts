@@ -9,11 +9,15 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { AbstractPlayoffResultListView } from '../../common/abstract-playoff-result-listview';
+import { ClassificationDetailView } from '../classification/classification-detailview';
+import { Classification } from 'app/tourneyonline/domain/classification';
 
 @Component({
-    templateUrl: './playoff-result-listview.html'
+    templateUrl: './playoff-result-listview.html',
+    styleUrls: ['../classification/classification-view.css']
 })
 export class PlayoffResultListView extends AbstractPlayoffResultListView {
+    selectedClassificationRow: Classification;
 
     constructor( public tourneyService: TourneyService
         , protected meetingPlayoffService: MeetingPlayoffService
@@ -37,5 +41,12 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
     ngOnInit() {
         super.ngOnInit();
      }
+
+     onClassifcationRowSelect(event) {
+        console.log(event.data);
+        this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedPlayoff.round.name);
+        this.router.navigate([ClassificationDetailView.redirect]);
+    }
+
 }
 

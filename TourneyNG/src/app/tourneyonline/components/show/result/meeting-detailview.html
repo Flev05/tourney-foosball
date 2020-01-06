@@ -18,11 +18,10 @@
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
     <p-table [value]="matches">
         <ng-template pTemplate="colgroup">
             <colgroup>
-                <col style="width: 17mm; font-weight: bold;">
+                <col style="width: 10mm; font-weight: bold;">
                 <col style="width: 15mm; ">
                 <col style="width: 100%; font-size: x-large;">
                 <col style="width: 100%; font-size: x-large;">
@@ -38,11 +37,11 @@
         
         <ng-template pTemplate="header">
             <tr>
-                <th><span style="font-weight: bold;">Partita</span></th>
-                <th> -/+ </th>
+                <th><span style="font-weight: bold;">N°</span></th>
+                <th>+/-</th>
                 <th style="font-size: x-large;">{{selectedMeeting.teamName1}}</th>
                 <th style="font-size: x-large;">{{selectedMeeting.teamName2}}</th>
-                <th> -/+ </th>
+                <th>+/-</th>
             </tr>
         </ng-template>
 
@@ -82,7 +81,7 @@
                             </td>
                         </tr>
                     </table>
-                </td>            
+                </td>
             </tr>
         </ng-template>
     </p-table>

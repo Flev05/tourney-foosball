@@ -83,9 +83,10 @@ export class TourneyService extends AbstractService {
     selectedEliminatoryTabIndex: number = 0;
     selectedEliminatoryLevelIndex: number = 0;
     selectedEliminatoryIndex: number = 0;
- 
+    selectedClassificationRow: Classification;
+
     static roundCols: TableCols[] = [
-        { field: 'name',   header: 'Girone' },
+        { field: 'name',        header: 'Girone' },
     ];
 
     static playoffCols: TableCols[] = [
@@ -94,27 +95,25 @@ export class TourneyService extends AbstractService {
     redirect: string;
 
     classificationCols: TableCols[] = [
-        { field: 'teamName',      header: 'Team'},
-        { field: 'points',        header: 'Pt.'},
-        { field: 'played',        header: 'G'},
-        { field: 'won',           header: 'V'},
-        { field: 'lost',          header: 'P'},
-        { field: 'balanced',      header: 'N'},
-        { field: 'goalsDone',     header: 'Gf'},
-        { field: 'goalsConceded', header: 'Gs'},
-        { field: 'goalsDiff',     header: 'D'},
+        { field: 'teamName',      header: 'Team', style: 'team'},
+        { field: 'points',        header: 'Pt.',  style: 'points'},
+        { field: 'played',        header: 'G',    style: 'points'},
+        // { field: 'won',           header: 'V'},
+        // { field: 'lost',          header: 'P'},
+        // { field: 'balanced',      header: 'N'},
+        // { field: 'goalsDone',     header: 'Gf'},
+        // { field: 'goalsConceded', header: 'Gs'},
+        // { field: 'goalsDiff',     header: 'D'},
     ];
 
     classificationReducedCols: TableCols[] = [
-        { field: 'teamName',      header: 'Team'},
-        { field: 'points',        header: 'Pt.'},
-        { field: 'played',        header: 'G'},
-        { field: 'won',           header: 'V'},
-        { field: 'lost',          header: 'P'},
+        { field: 'teamName',      header: 'Team', style: 'team'},
+        { field: 'points',        header: 'Pt.',  style: 'points'},
+        { field: 'played',        header: 'G',    style: 'points'},
     ];
 
     eliminatoryClassificationCols: TableCols[] = [
-        { field: 'roundName',   header: 'Elim.'}
+        { field: 'roundName',   header: 'E°',  style: 'position'}
     ];
 
     resultCols: TableCols[] = [
@@ -130,6 +129,7 @@ export class TourneyService extends AbstractService {
     private onSaveTourneyError: boolean;
     private onewayPlayoffMap: Map<string, Meeting[]>;
     private roundtripPlayoffMap: Map<string, Meeting[]>;
+    classificationName: string;
 
     constructor(private http: HttpClient
         , private loginService: LoginService
@@ -874,4 +874,12 @@ export class TourneyService extends AbstractService {
         return t;
     }
 
+    public getClassificationName(): string {
+        return this.classificationName;
+    }
+
+    public makeClassificationName(sc: Classification, roundName: string): void {
+        this.selectedClassificationRow =  sc;
+        this.classificationName = "Torneo [" + this.selectedTourney.tourneyName + "] Girone [" + roundName + "] Squadra [" +sc.teamName + "]";
+    }
 }

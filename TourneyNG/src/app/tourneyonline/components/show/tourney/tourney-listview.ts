@@ -18,7 +18,9 @@ const COMPLETE_LV = '/result/lv';
 @Component({
     templateUrl: './tourney-listview.html'
 })
-export class TourneyListView extends AbstractTourneyListView {
+export class TourneyResultListView extends AbstractTourneyListView {
+    public static REDIRECT_TOURNEY_LV  = 'showtourney/';
+
     constructor(protected tourneyService: TourneyService
         , protected countryService: CountryService
         , protected playerService : PlayerService

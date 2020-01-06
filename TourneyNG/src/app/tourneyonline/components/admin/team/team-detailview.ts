@@ -46,6 +46,10 @@ export class TeamDetailView extends AbstractDetailView {
     }
 
     saveTourneyTeam() {     
+        if(this.teamService.newTeam) {
+            this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
+            return;
+        }
         if( this.previousTeamName != this.selectedTeam.teamName ) {
             if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
                 return;

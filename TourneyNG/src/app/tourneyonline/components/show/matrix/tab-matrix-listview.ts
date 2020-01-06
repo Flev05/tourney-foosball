@@ -2,15 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { MatrixDetailView } from './eliminatory-matrix-view';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
+import { TourneyResultListView } from '../tourney/tourney-listview';
 
-const REDIRECT_MATRIX_LV         = 'matrix/';
 const REDIRECT_ROUND_MATRIX_LV   = 'matrix/lv/roundLv/dv';
 const REDIRECT_PLAYOFF_MATRIX_LV = 'matrix/lv/playoffLv/dv';
 const REDIRECT_ELIMINATORY       = 'matrix/lv/eliminatoryLv/dv';
@@ -90,7 +89,7 @@ export class TabMatrixListView extends AbstractTabResultListView {
     }
 
     goBack(): void {        
-        this.router.navigate([REDIRECT_MATRIX_LV]);
+        this.router.navigate([TourneyResultListView.REDIRECT_TOURNEY_LV]);
     }
 }
 

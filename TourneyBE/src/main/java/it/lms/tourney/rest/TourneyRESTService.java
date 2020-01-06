@@ -32,7 +32,7 @@ import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Tourney;
 
 /**
- * JAX-RS to produces a RESTful service to read/write by DAOs.
+ * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/tourneys")
 @Stateless

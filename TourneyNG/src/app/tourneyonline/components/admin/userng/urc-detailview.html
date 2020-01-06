@@ -2,6 +2,7 @@
     <div>
         <span class="feature-title">Vista di dettaglio Utente</span>
         <span>Creare o modificare l'utente selezionato</span>
+        <p>Utente [{{username}}]</p>
     </div>
 </div>
 
@@ -23,7 +24,7 @@
         <p>
             Un utente può fare tutto ciò che può fare un altro utente con
             privilegio minore o uguale al proprio. Per esempio l'utente proprietario, può fare 
-            tutto ciò che fa un utente Amministatore, Operatore e Follower ma un operatore non 
+            tutto ciò che fa un utente Amministatore, Operatore e Follower ma un utente Operatore non 
             può fare quello che fa un utente Proprietaro o Amministratore.
         </p>
         <p>
@@ -32,13 +33,13 @@
 
         <h4>Sviluppatore</h4>
         <p>
-            L'utente Sviluppatore è l'utente con il massimo dei privilegi, è quello che può fare qualsiasi cosa senza alcuna restrizione.
-            Può creare altri utenti sviluppatori e nuovi clienti.
+            L'utente Sviluppatore è l'unico utente con il massimo dei privilegi, è quello che può fare qualsiasi cosa senza alcuna restrizione.
+            Può creare sia altri utenti sviluppatori che nuovi clienti.
         </p>
         <h4>Proprietario</h4>
         <p>
-            L'utente Proprietario viene subito dopo lo sviluppatore, può creare qualsiasi tipo di utente tranne quello sviluppatore
-            e non può creare un nuovo cliente ma solo modificare quelli in suo possesso.
+            L'utente Proprietario viene subito dopo lo sviluppatore nella scala dei privilegi: può creare qualsiasi tipo di utente ma non quello sviluppatore
+            ne può creare un nuovo cliente, può solo modificare i clienti già in suo possesso.
         </p>
         <h4>Amministratore</h4>
         <p>
@@ -48,14 +49,16 @@
         </p>
         <h4>Operatore</h4>
         <p>
-            Viene creato dall'utente amministratore per seguire seguire un torneo o un girone del torneo.
+            Viene creato dall'utente Amministratore per seguire un torneo o un girone del torneo.
             Non può apportare alcuna modifica alla struttura del torneo ma solo inserire i risultati
-            man mano che maturano in modo da essere propagati agli altri utenti in tempo reale.
+            man mano che maturano durante la partita in modo da essere propagati agli altri utenti in tempo reale.
         </p>
         <h4>Follower</h4>
         <p>
             Si tratta di un utente con il minimo dei privilegi, può solo consultare il calendario, i risultati e la classifica
             ma non può apportare alcuna modifica ne al sistema ne all'evoluzione del tormeo.
+            Viene creato contestualmente al momento della creazione del torneo, il creatore deve inserire un nome univoco a livello di sistema
+            in modo che il follower possa seguire solo il torneo creato, in genere il nome può coincidere con il nome del torneo se non già usato.
         </p>
     </p-accordionTab>
 </p-accordion>    

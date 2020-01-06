@@ -7,19 +7,23 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
 import { ResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
+import { MatrixService } from './matrix-service';
 
 const matrixDvRedirect: string = "matrix/lv/dv";
 @Component({
-    templateUrl: './eliminatory-listview.html'
+    templateUrl: './eliminatory-listview.html',
+    styleUrls: ['../classification/classification-view.css']
 })
 export class EliminatoryListView extends ResultEliminatoryListView {
+
     constructor(
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected levelService: LevelService,
         protected router: Router,
         protected location: Location,
-        public dfp: DateFormatPipe
+        public dfp: DateFormatPipe,
+        private matrixService: MatrixService
     ) {
         super(matrixDvRedirect, tourneyService, meetingService, levelService, router, location, dfp)
     } 

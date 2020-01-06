@@ -9,6 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 const redirect = '/users/urcdv';
 
@@ -24,13 +25,16 @@ export class UrcListView extends AbstractListView {
 
     onLoadUrcError: boolean;
     onDeleteError: boolean;
+    username: string = "";
 
     constructor(        
             protected tourneyService: TourneyService
           , public urcService: UrcService
-          , private loginService: LoginService
+          , protected loginService: LoginService
           , public router: Router
-          , protected location: Location) 
+          , protected location: Location
+          , protected countryService: CountryService,
+          ) 
     {        
         super(redirect, tourneyService, router, location);
         console.log("UrcListView.constructor()");
@@ -38,6 +42,8 @@ export class UrcListView extends AbstractListView {
 
     ngOnInit() {
         console.log("UrcListView.ngOnInit()");
+
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
 
         this.urcService.newUser = false;
 
@@ -51,9 +57,14 @@ export class UrcListView extends AbstractListView {
         this.onLoadUrcError = false;
 
         let loggedUserId = this.loginService.userLogged.id;
+        this.username = this.loginService.userLogged.username;
 
         let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadClientsErrorHandler('loadUrc()'));
         ucrsub.subscribe(cs => this.urcList = cs, e => this.onError(e), () => this.onComplete());
+    }
+    
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
     }
 
     private onComplete(): void {

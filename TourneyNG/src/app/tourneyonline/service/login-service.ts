@@ -27,19 +27,39 @@ export class LoginService {
     }
 
     isDeveloper(): boolean {
-        return this.userLogged && this.roleService.isDeveloper();
+        return this.isUserLogged && this.roleService.isDeveloper();
     }
 
     isOwnerNotDeveloper(): boolean {
-        return this.userLogged && this.roleService.isOwner() && !this.roleService.isDeveloper();
+        return this.isUserLogged && this.roleService.isOwner() && !this.roleService.isDeveloper();
     }
 
     isOwner(): boolean {
-        return this.userLogged && this.roleService.isOwner();
+        return this.isUserLogged && this.roleService.isOwner();
     }
 
     isAdmin(): boolean {
-        return this.userLogged && this.roleService.isAdmin();
+        return this.isUserLogged && this.roleService.isAdmin();
+    }
+
+    isOperator(): boolean {
+        return this.isUserLogged && this.roleService.isOperator();
+    }
+
+    isFollower(): boolean {
+        return this.isUserLogged && this.roleService.isFollower();
+    }
+
+    isOperatorOrFollower(): boolean {
+        return this.isOperator() || this.isFollower();
+    }
+
+    isSuperUser(): boolean {
+        return this.isUserLogged && (this.isDeveloper() || this.isOwner() || this.isAdmin());
+    }
+
+    isUserAllowed(): boolean {
+        return !this.isUserLogged || !this.isOperatorOrFollower() ;
     }
 
     setUserLogged(uvo: Login): void {

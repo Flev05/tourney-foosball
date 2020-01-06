@@ -54,7 +54,7 @@ export class RoleService {
 
     isAdmin(): boolean {
         for(let r of this.selectedRoles) {
-            if(r.name==Roles.Admin || this.isOwner() ) {
+            if(r.name==Roles.Admin) {
                 return true;
             }
         }
@@ -63,7 +63,16 @@ export class RoleService {
 
     isOperator(): boolean {
         for(let r of this.selectedRoles) {
-            if(r.name==Roles.Operator && this.isAdmin() ) {
+            if(r.name==Roles.Operator) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isFollower(): boolean {
+        for(let r of this.selectedRoles) {
+            if(r.name==Roles.Follower) {
                 return true;
             }
         }

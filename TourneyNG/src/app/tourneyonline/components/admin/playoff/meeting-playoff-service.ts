@@ -19,7 +19,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {
-
+    
     constructor(protected http: HttpClient
         , protected tourneyService: TourneyService
         , protected router: Router

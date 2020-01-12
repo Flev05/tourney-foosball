@@ -1,34 +1,12 @@
-<div class="content-section introduction">
-    <div>
-        <span class="feature-title">Tornei</span>
-        <span>Vista elenco tornei per calendari, risultati e classifiche</span>
-    </div>
-</div>
-
-<div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">
-            
-    <p>
-        Selezionare il torneo di vostro interesse ed accedere alla corrispondente vista dei calendari, risultati e classifiche.
-    </p>    
-    <p>
-        Se non vedete nessun torneo significa che non ne avete ancora creato uno :-)
-    </p>
-    </p-accordionTab>
-</p-accordion>    
-</div>
-
 <p-table [columns]="cols" 
     [value]="rows" 
-    [responsive]="true"
     selectionMode="single" 
     [(selection)]="selectedRow" 
     (onRowSelect)="onRowSelect($event)" >
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th style="width: 15mm;">N°</th>
+            <th style="width: 10mm;">N°</th>
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
@@ -39,7 +17,6 @@
         <tr [pSelectableRow]="rowData">
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td *ngFor="let col of columns">
-                <span class="ui-column-title">{{col.header}}</span>
                 {{rowData[col.field]}}
             </td>
         </tr>

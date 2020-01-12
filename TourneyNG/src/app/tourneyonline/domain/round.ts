@@ -1,7 +1,6 @@
 import { Classification } from './classification';
 import { Meeting } from './meeting';
 import { RoundType, Direction } from './enumerations';
-import { Matrix } from './matrix';
 
 export interface Round {
     id: number;
@@ -12,6 +11,9 @@ export interface Round {
 
     pageSize: number;
     daysNo: number;
+    onewayCurrentDay: number;
+    roundtripCurrentDay: number;
+
     direction: Direction;
 
     teamNames: string[];

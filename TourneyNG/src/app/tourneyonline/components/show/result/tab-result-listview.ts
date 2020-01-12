@@ -12,6 +12,7 @@ import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
 import { TourneyListView } from '../../admin/tourney/tourney-listview';
 import { TourneyResultListView } from '../tourney/tourney-listview';
+import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
@@ -88,7 +89,6 @@ export class TabResultListView extends AbstractTabResultListView {
         this.tourneyService.selectedEliminatoryLevelIndex  = indexOf;
 
         this.tourneyService.selectedEliminatoryLevel = this.selctedEliminatoryLevel.eliminatoryLevel;
-         
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 

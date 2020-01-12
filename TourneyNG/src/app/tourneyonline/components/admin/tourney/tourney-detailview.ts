@@ -201,7 +201,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isDaily = "true";
         this.selectedTourney.address = "";
         this.selectedTourney.tourneyType = TourneyType.Score;
-        this.selectedTourney.matchBalanceScores = 0;
+        this.selectedTourney.matchBalanceScores = 1;
         this.selectedTourney.matchWinnerScores = 3;
         this.selectedTourney.access = AccessMode.PU;
         this.selectedTourney.objectives = [];
@@ -702,6 +702,8 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareEmptyRound(i: number): Round {
         let r: Round = {
             id: this.tourneyService.getSequenceNumber(),
+            onewayCurrentDay: 1,
+            roundtripCurrentDay: 1,
             name: "Girone." + (1 + i),
             type: RoundType.R,
             direction: Direction.OneWay,
@@ -1060,6 +1062,8 @@ export class TourneyDetailView extends AbstractDetailView {
             id: this.tourneyService.getSequenceNumber()
           , round:{id: this.tourneyService.getSequenceNumber()
               , name: "Playoff."+ (1 + i)
+              , onewayCurrentDay: 1
+              , roundtripCurrentDay: 1
               , type: RoundType.P
               , direction: Direction.OneWay
               , pageSize: 1

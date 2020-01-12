@@ -492,6 +492,8 @@ export class LevelService extends AbstractEliminatoryListView {
             , isSkiping: false
             , round:{id: elid
                 , name: "" + index
+                , onewayCurrentDay: 1
+                , roundtripCurrentDay: 1
                 , type: RoundType.E
                 , pageSize: 1
                 , daysNo: 1

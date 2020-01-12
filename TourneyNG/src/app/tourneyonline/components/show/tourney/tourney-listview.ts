@@ -11,6 +11,7 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { EResultTool } from 'app/tourneyonline/domain/enumerations';
+import { LevelService } from '../../admin/eliminatory/level-service';
 
 const REDUCED_LV  = '/matrix/lv';
 const COMPLETE_LV = '/result/lv';

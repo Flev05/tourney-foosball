@@ -68,7 +68,8 @@ export  class MeetingService extends AbstractService {
     roundtripDays: any[];
 
     mdbList: MeetingDb[];
-    
+    currentDay: number;
+
     constructor( protected http: HttpClient
         , protected router: Router
         , protected dateFormatPipe: DateFormatPipe) 
@@ -623,4 +624,33 @@ export  class MeetingService extends AbstractService {
         }
         m.name = m.teamName1 + " - " + m.teamName2;
     }
+    
+    public sortMeeting(m1: Meeting, m2: Meeting): number {
+        if( m1.day > m2.day ) {
+            return 1;
+        }
+        if( m1.day < m2.day ) {
+            return -1;
+        }
+        if( m1.datetime > m2.datetime ) {
+            return 1;
+        }
+        if( m1.datetime < m2.datetime ) {
+            return -1;
+        }
+        if( m1.teamName1 > m2.teamName1 ) {
+            return 1;
+        }
+        if( m1.teamName1 < m2.teamName1 ) {
+            return -1;
+        }
+        if( m1.teamName2 > m2.teamName2 ) {
+            return 1;
+        }
+        if( m1.teamName2 < m2.teamName2 ) {
+            return -1;
+        }
+        return 0;
+    }
+
 }

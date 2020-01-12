@@ -90,15 +90,16 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
         this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
 
+        this.meetingRoundService.prepareMeetingsMap(this.selectedRound, false);
+
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;
 
-        this.onewayMeetings = this.selectedRound.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms));
-        this.onewayMeetings.forEach(m => m.containerId = this.selectedRound.id);
-        this.onewayMeetings.sort((m1,m2) => this.sortMeeting(m1,m2))
-        this.roundtripMeetings = this.selectedRound.roundtripMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
-        this.roundtripMeetings.forEach(m => m.containerId = this.selectedRound.id);
-        this.roundtripMeetings.sort((m1,m2) => this.sortMeeting(m1,m2))
+        let key = this.selectedRound.onewayCurrentDay;
+        this.setOnewayCurrentDay(key);
+
+        key = this.selectedRound.roundtripCurrentDay;
+        this.setRoundtripCurrentDay(key);
 
         console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
         console.log("[RoundtripMeetings " + this.roundtripMeetings.length + "]");
@@ -116,34 +117,28 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.prepareRoundGuiClassification();
     }
 
-    private sortMeeting(m1: Meeting, m2: Meeting): number {
-        if( m1.day > m2.day ) {
-            return 1;
-        }
-        if( m1.day < m2.day ) {
-            return -1;
-        }
-        if( m1.datetime > m2.datetime ) {
-            return 1;
-        }
-        if( m1.datetime < m2.datetime ) {
-            return -1;
-        }
-        if( m1.teamName1 > m2.teamName1 ) {
-            return 1;
-        }
-        if( m1.teamName1 < m2.teamName1 ) {
-            return -1;
-        }
-        if( m1.teamName2 > m2.teamName2 ) {
-            return 1;
-        }
-        if( m1.teamName2 < m2.teamName2 ) {
-            return -1;
-        }
-        return 0;
+    protected setOnewayCurrentDay(key: number) {
+        this.meetingService.currentDay = key;
+        this.onewayMeetingDaysMap = this.meetingRoundService.onewayMeetingDaysMap;
+        this.onewayMeetings = this.onewayMeetingDaysMap.get(key);
+        this.onewayMeetings = this.onewayMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
+        this.onewayMeetings.forEach(m => m.containerId = this.selectedRound.id);
+        this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+        this.selectedRound.onewayCurrentDay = key;
+        return key;
     }
 
+    protected setRoundtripCurrentDay(key: number) {
+        this.meetingService.currentDay = this.allDaysNo + key;
+        this.roundtripMeetingDaysMap = this.meetingRoundService.roundtripMeetingDaysMap;
+        this.roundtripMeetings = this.roundtripMeetingDaysMap.get(key);
+        this.roundtripMeetings = this.roundtripMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
+        this.roundtripMeetings.forEach(m => m.containerId = this.selectedRound.id);
+        this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+        this.selectedRound.roundtripCurrentDay = key;
+    }
+
+  
     private mapCallback (m: Meeting, index: number, array: Meeting[]): Meeting {
         if(m.isSkiping) {
             if( m.teamName1 == "" ) {
@@ -159,10 +154,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
         return m;
     } 
-    
-    private filterCallback (m: Meeting, index: number, array: Meeting[]): boolean   {
-        return true;
-    }
 
     /**
      * Prepares the classification relatid to the selected round
@@ -183,6 +174,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.meetingRoundService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingRoundService;
+        this.tourneyService.selectedRoundName = this.selectedRound.name;
 
         this.gotoDetailView();
     }

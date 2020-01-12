@@ -43,6 +43,7 @@ export class EliminatoryListView extends ResultEliminatoryListView {
     onClassifcationRowSelect(event) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.tourneyService.selectedEliminatoryLevel.name);
+
         this.router.navigate([ClassificationDetailView.redirect]);
     }
 }

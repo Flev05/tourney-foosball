@@ -1,25 +1,32 @@
-<div>
-    <h2>{{selectedClassificationName}}</h2>
-    <h3>Dettaglio Classifica</h3>
-</div>
- 
+
+
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-</div>                  
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+        </div>
+        <div class="ui-grid-col-8">
+            <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
+        </div>
+        <div class="ui-grid-col-8">
+            <span style="font-weight: bold;">{{selectedClassificationName}}</span>
+        </div>
+    </div>
+</div>     
  
 <div class="ui-grid-pad ui-fluid" style="margin: 10px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Squadra:
+            <span style="font-weight: bold;">Squadra:</span>
         </div>
-        <div class="ui-grid-col-3">                             
-            {{selectedClassificationRow.teamName}}
+        <div class="ui-grid-col-5">                             
+            <span style="font-weight: bold;">{{selectedClassificationRow.teamName}}</span>
         </div>
     </div>
  
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Punti:
+            <span style="font-weight: bold;">Punti:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.points}}
@@ -28,7 +35,7 @@
  
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Giocate:
+            <span style="font-weight: bold;">Giocate:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.played}}
@@ -36,7 +43,7 @@
     </div>     
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Vinte:
+            <span style="font-weight: bold;">Vinte:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.won}}
@@ -44,7 +51,7 @@
     </div>     
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Perse:
+            <span style="font-weight: bold;">Perse:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.lost}}
@@ -52,7 +59,7 @@
     </div>     
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Pareggiate:
+            <span style="font-weight: bold;">Pareggiate:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.balanced}}
@@ -60,7 +67,7 @@
     </div>     
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Goal Fatti:
+            <span style="font-weight: bold;">Goal Fatti:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.goalsDone}}
@@ -68,7 +75,7 @@
     </div>     
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Goal Subiti:
+            <span style="font-weight: bold;">Goal Subiti:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.goalsConceded}}
@@ -76,7 +83,7 @@
     </div>     
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Differenza Reti:
+            <span style="font-weight: bold;"> Differenza Reti:</span>
         </div>
         <div class="ui-grid-col-3">
             {{selectedClassificationRow.goalsDiff}}
@@ -84,7 +91,7 @@
     </div>     
 </div>
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
 </div>                  
 
 

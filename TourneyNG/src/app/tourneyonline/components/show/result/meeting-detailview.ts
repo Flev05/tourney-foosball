@@ -25,6 +25,9 @@ export class MeetingDetailView extends AbstractDetailView {
     matches: Match[];
 
     teamPassedMessage: string;
+    currentDay: number;
+    isSavedNewResult: boolean;
+    roundName: string;
 
     constructor(
         protected location: Location,
@@ -39,6 +42,10 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
         this.selectedMeeting  = this.meetingService.selectedMeeting;   
+
+        this.roundName = this.tourneyService.selectedRoundName;
+        this.currentDay = this.meetingService.currentDay;
+        this.isSavedNewResult = false;
 
         if(this.selectedMeeting.teamName1 == "" || this.selectedMeeting.teamName2 == "") {
             let teamPassed = this.selectedMeeting.teamName1 != "" ? 
@@ -158,6 +165,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
+        this.isSavedNewResult = true;
         let observer = null;
         if( this.selectedMeetingDb.roundId != null ) {
             this.tourneyService.cleanRoundMeeting(this.selectedTourney);
@@ -173,6 +181,14 @@ export class MeetingDetailView extends AbstractDetailView {
         }
         if(observer != null) {            
             observer.subscribe(n => this.next(n), e => this.onError(e) );            
+        }
+    }
+
+    goBack(): void {
+        if(this.isSavedNewResult) {
+            this.tourneyService.updateTourneyWithCleanAll(this.selectedTourney, () => super.goBack());
+        } else {
+            super.goBack();
         }
     }
 

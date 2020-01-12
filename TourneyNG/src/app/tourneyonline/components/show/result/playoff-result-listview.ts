@@ -18,6 +18,8 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 })
 export class PlayoffResultListView extends AbstractPlayoffResultListView {
     selectedClassificationRow: Classification;
+    onewayCurrentDay: number = 1;
+    roundtripCurrentDay: number = 1;
 
     constructor( public tourneyService: TourneyService
         , protected meetingPlayoffService: MeetingPlayoffService
@@ -40,9 +42,41 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
 
     ngOnInit() {
         super.ngOnInit();
+        this.onewayCurrentDay = this.selectedPlayoff.round.onewayCurrentDay;
+        this.roundtripCurrentDay = this.selectedPlayoff.round.roundtripCurrentDay;
      }
 
-     onClassifcationRowSelect(event) {
+     prevOnewayDay() : void {
+        this.onewayCurrentDay--;
+        if( this.onewayCurrentDay < 1 ) {
+            this.onewayCurrentDay = 1;
+        }
+        this.setOnewayCurrentDay(this.onewayCurrentDay);
+    }
+    nextOnewayDay() : void {
+        this.onewayCurrentDay++;
+        if( this.onewayCurrentDay > this.selectedPlayoff.round.daysNo  ) {
+            this.onewayCurrentDay = this.selectedPlayoff.round.daysNo;
+        }
+        this.setOnewayCurrentDay(this.onewayCurrentDay);
+    }
+
+    prevRoundtripDay() : void {
+        this.roundtripCurrentDay--;
+        if( this.roundtripCurrentDay < 1 ) {
+            this.roundtripCurrentDay = 1;
+        }
+        this.setRoundtripCurrentDay(this.roundtripCurrentDay);
+    }
+    nextRoundtripDay() : void {
+        this.roundtripCurrentDay++;
+        if( this.roundtripCurrentDay > this.selectedPlayoff.round.daysNo  ) {
+            this.roundtripCurrentDay = this.selectedPlayoff.round.daysNo;
+        }
+        this.setRoundtripCurrentDay(this.roundtripCurrentDay);
+    }
+     
+    onClassifcationRowSelect(event) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedPlayoff.round.name);
         this.router.navigate([ClassificationDetailView.redirect]);

@@ -120,6 +120,8 @@ export class InMemoryDataServiceCSI  {
     ]  
     , rounds:[{
         id:1, name: "Girone A", type: RoundType.R
+        , onewayCurrentDay: 1
+        , roundtripCurrentDay: 1
         ,direction: Direction.OneWay
         ,pageSize: 1
         ,daysNo: 1
@@ -134,6 +136,8 @@ export class InMemoryDataServiceCSI  {
       ,{
         id:2, name: "Girone B", type: RoundType.R
         ,direction: Direction.OneWay
+        , onewayCurrentDay: 1
+        , roundtripCurrentDay: 1
         ,pageSize: 1
         ,daysNo: 1
         ,teamNames:[
@@ -149,6 +153,8 @@ export class InMemoryDataServiceCSI  {
       {id:1, round:{
           id:1, name: "Playoff Girone A", type: RoundType.P
           ,direction: Direction.OneWay
+          , onewayCurrentDay: 1
+          , roundtripCurrentDay: 1
           ,pageSize: 1
           ,daysNo: 1
             ,teamNames:[]
@@ -178,6 +184,8 @@ export class InMemoryDataServiceCSI  {
       ,{id:2, round:{
           id:2, name: "Playoff Girone B", type: RoundType.P
           ,direction: Direction.OneWay
+          , onewayCurrentDay: 1
+          , roundtripCurrentDay: 1
           ,pageSize: 1
           ,daysNo: 1
             ,teamNames:[]

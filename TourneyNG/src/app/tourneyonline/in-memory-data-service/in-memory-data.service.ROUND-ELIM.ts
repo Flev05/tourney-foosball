@@ -114,6 +114,8 @@ static newRound(roundNo : number): Round {
   return {
       id: BASE_ROUND_ID + roundNo
     , name: "GIRONE." + roundNo
+    , onewayCurrentDay: 1
+    , roundtripCurrentDay: 1
     , type: RoundType.R
     ,direction: Direction.OneWay
     ,pageSize: 1

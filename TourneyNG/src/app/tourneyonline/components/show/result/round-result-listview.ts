@@ -18,6 +18,8 @@ import { ClassificationDetailView } from '../classification/classification-detai
 })
 export class RoundResultListView extends AbstractRoundResultListView {
     selectedClassificationRow: Classification;
+    onewayCurrentDay: number = 1;
+    roundtripCurrentDay: number = 1;
     
     constructor( public tourneyService: TourneyService
         , protected meetingRoundService: MeetingRoundService
@@ -40,6 +42,38 @@ export class RoundResultListView extends AbstractRoundResultListView {
 
     ngOnInit() {
         super.ngOnInit();
+        this.onewayCurrentDay = this.selectedRound.onewayCurrentDay;
+        this.roundtripCurrentDay = this.selectedRound.roundtripCurrentDay;
+    }
+
+    prevOnewayDay() : void {
+        this.onewayCurrentDay--;
+        if( this.onewayCurrentDay < 1 ) {
+            this.onewayCurrentDay = 1;
+        }
+        this.setOnewayCurrentDay(this.onewayCurrentDay);
+    }
+    nextOnewayDay() : void {
+        this.onewayCurrentDay++;
+        if( this.onewayCurrentDay > this.selectedRound.daysNo  ) {
+            this.onewayCurrentDay = this.selectedRound.daysNo;
+        }
+        this.setOnewayCurrentDay(this.onewayCurrentDay);
+    }
+
+    prevRoundtripDay() : void {
+        this.roundtripCurrentDay--;
+        if( this.roundtripCurrentDay < 1 ) {
+            this.roundtripCurrentDay = 1;
+        }
+        this.setRoundtripCurrentDay(this.roundtripCurrentDay);
+    }
+    nextRoundtripDay() : void {
+        this.roundtripCurrentDay++;
+        if( this.roundtripCurrentDay > this.selectedRound.daysNo  ) {
+            this.roundtripCurrentDay = this.selectedRound.daysNo;
+        }
+        this.setRoundtripCurrentDay(this.roundtripCurrentDay);
     }
 
     onClassifcationRowSelect(event) {

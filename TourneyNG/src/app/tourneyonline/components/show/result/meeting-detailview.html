@@ -14,40 +14,33 @@
 </p-accordion>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+        </div>
+        <div class="ui-grid-col-8">
+            <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
+        </div>
+        <div class="ui-grid-col-8">
+            <span style="font-weight: bold;">{{selectedMeeting.datetime | date: 'dd/MM/y'}}</span>
+        </div>
+    </div>
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <p-table [value]="matches">
-        <ng-template pTemplate="colgroup">
-            <colgroup>
-                <col style="width: 10mm; font-weight: bold;">
-                <col style="width: 15mm; ">
-                <col style="width: 100%; font-size: x-large;">
-                <col style="width: 100%; font-size: x-large;">
-                <col style="width: 15mm;">
-            </colgroup>
-        </ng-template>
-
-        <ng-template pTemplate="caption" >
-            <div style="text-align: center">
-                {{selectedTourney.tourneyName}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})
-            </div>
-        </ng-template>       
-        
+    <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>
-                <th><span style="font-weight: bold;">N°</span></th>
-                <th>+/-</th>
-                <th style="font-size: x-large;">{{selectedMeeting.teamName1}}</th>
-                <th style="font-size: x-large;">{{selectedMeeting.teamName2}}</th>
-                <th>+/-</th>
+                <th colspan="4" style="text-align: center"><span>{{roundName}} - {{currentDay}}° Giornata</span></th>
+            </tr>
+            <tr>
+                <th colspan="2" style="width: 100%; font-size: large;">{{selectedMeeting.teamName1}}</th>
+                <th colspan="2" style="width: 100%; font-size: large;">{{selectedMeeting.teamName2}}</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr>
-                <td><span style="font-weight: bold;">{{rowIndex + 1}}</span></td>
                 <td style="width: 10mm; text-align: center;">
                     <table>
                         <tr>

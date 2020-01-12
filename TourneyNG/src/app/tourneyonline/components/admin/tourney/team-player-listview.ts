@@ -68,9 +68,7 @@ export class TeamPlayerListView extends AbstractDetailView {
     } 
 
     private saveTeamOnComplete(): void {
-        this.tourneyService.clearTourneyMeetings(this.selectedTourney);
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
-        this.tourneyService.updateTourneyWithCleanAll(tvo, () => this.onSaveTourneyComplete());
+        this.tourneyService.updateTourneyWithCleanAll(this.selectedTourney, () => this.onSaveTourneyComplete());
     }
 
     private onSaveTourneyComplete(): void {

@@ -1,45 +1,23 @@
-<div class="content-section introduction">
-    <div>
-        <h2>Calendario, risultati e classifiche </h2>
-        <span>Vista dei calendari, risultati e classifiche del torneo</span>
-    </div>
-</div>
-
-<div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">  
-    <p>
-        Vista schede dei calendari, risultati e classifiche di gironi, playoff e eliminatorie.
-    </p>
-    
-    <p>
-        Selezionare la scheda (click sul nome della scheda) per visualizzare calendari, risultati e classifiche 
-        dei gironi in essa contenute.
-    </p>
-    </p-accordionTab>
-</p-accordion>        
-</div>
-
-<h3>Torneo: {{selectedTourney.tourneyName}}</h3>
-
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-</div>
-
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+        </div>
+        <div class="ui-grid-col-5">
+            <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
+        </div>
+        <div class="ui-grid-col-5">
+            <span style="font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</span>
+        </div>
+    </div>
+</div>     
 <p-tabView [activeIndex]="selectedTourney.selectedResultTabIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi({{roundCount}})" *ngIf="containsRound()" >    
         <p-table [columns]="roundCols"
             [value]="roundRows"
-            [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRound"
-            (onRowSelect)="onRoundRowSelect($event)"
-            [scrollable]="true" 
-            scrollHeight="500px">
-
-            <ng-template pTemplate="caption">
-                {{selectedTourney.tourneyName}}
-            </ng-template>
+            (onRowSelect)="onRoundRowSelect($event)" >
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -52,7 +30,6 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}
                     </td>
                 </tr>
@@ -63,16 +40,9 @@
     <p-tabPanel header="Playoff({{playoffCount}})" *ngIf="containsPlayoff()">    
         <p-table [columns]="playoffCols"
             [value]="playoffRows"
-            [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedPlayoff"
-            (onRowSelect)="onPlayoffRowSelect($event)"
-            [scrollable]="true" 
-            scrollHeight="500px">
-
-            <ng-template pTemplate="caption">
-                {{selectedTourney.tourneyName}}
-            </ng-template>
+            (onRowSelect)="onPlayoffRowSelect($event)">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -95,14 +65,9 @@
     <p-tabPanel header="Eliminazioni Dirette({{eliminatoryCount}})" *ngIf="containsEliminatory()" >   
         <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryLevelRows" 
-                [responsive]="true"
                 selectionMode="single" 
                 [(selection)]="selctedEliminatoryLevel" 
                 (onRowSelect)="onEliminatoryRowSelect($event)">
-                
-            <ng-template pTemplate="caption">
-                {{selectedTourney.tourneyName}}
-            </ng-template>
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -115,7 +80,6 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
                         {{rowData[col.field]}}
                     </td>
                 </tr>

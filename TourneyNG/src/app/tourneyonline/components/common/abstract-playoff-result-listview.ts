@@ -27,6 +27,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     
     onewayDays: any[];
 
+    onewayMeetingDaysMap: Map<number, Meeting[]>;
     roundtripMeetingDaysMap: Map<number, Meeting[]>;
     roundtripDays: any[];
 
@@ -45,6 +46,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     pageSize: number = 10;
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
+    currentDay: number;
 
     constructor( 
          protected redirect: string
@@ -94,10 +96,18 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
             this.meetingPlayoffService.resolveManualMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
         }
 
+        this.meetingPlayoffService.prepareMeetingsMap(this.selectedPlayoff.round, false);
+
         this.allDaysNo = this.selectedPlayoff.round.daysNo;
         this.pageSize  = this.selectedPlayoff.round.pageSize;
         this.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
         this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
+
+        let key = this.selectedPlayoff.round.onewayCurrentDay;
+        this.setOnewayCurrentDay(key);
+
+        key = this.selectedPlayoff.round.roundtripCurrentDay;
+        this.setRoundtripCurrentDay(key);
 
         console.log("[OnewayMeetings   " + this.onewayMeetings.length + "]");
         console.log("[RoundtriMeetings " + this.roundtripMeetings.length + "]");
@@ -116,7 +126,26 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
 
         this.updateSelectedPlayoff();
     }
+    protected setOnewayCurrentDay(key: number) {
+        this.meetingService.currentDay = key;
+        this.onewayMeetingDaysMap = this.meetingPlayoffService.onewayMeetingDaysMap;
+        this.onewayMeetings = this.onewayMeetingDaysMap.get(key);
+        this.onewayMeetings = this.onewayMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
+        this.onewayMeetings.forEach(m => m.containerId = this.selectedPlayoff.round.id);
+        this.onewayMeetings.sort((m1, m2) => this.meetingPlayoffService.sortMeeting(m1, m2));
+        this.selectedPlayoff.round.onewayCurrentDay = key;
+        return key;
+    }
 
+    protected setRoundtripCurrentDay(key: number) {
+        this.meetingService.currentDay = this.allDaysNo + key;
+        this.roundtripMeetingDaysMap = this.meetingPlayoffService.roundtripMeetingDaysMap;
+        this.roundtripMeetings = this.roundtripMeetingDaysMap.get(key);
+        this.roundtripMeetings = this.roundtripMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
+        this.roundtripMeetings.forEach(m => m.containerId = this.selectedPlayoff.round.id);
+        this.roundtripMeetings.sort((m1, m2) => this.meetingPlayoffService.sortMeeting(m1, m2));
+        this.selectedPlayoff.round.roundtripCurrentDay = key;
+    }
     private updateSelectedPlayoff() {
         this.tourneyService.updateTourneyCleanPalyoffMeetings(this.selectedTourney, () => {});
     }
@@ -154,10 +183,10 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
 
     onChangeTab(e) {
         let index=e.index;
-        this.tourneyService.selectedPlayoffTabIndex = index;
         if( index == 2 ) {
             this.ngOnInit();
         }
+        this.tourneyService.selectedPlayoffTabIndex = index;
     }
   
     onRowSelect(event) {
@@ -170,6 +199,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingPlayoffService;
 
+        this.tourneyService.selectedRoundName = this.selectedPlayoff.round.name;
         this.gotoDetailView();
     }
 }

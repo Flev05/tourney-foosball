@@ -361,6 +361,8 @@ export abstract class ResultEliminatoryListView extends AbstractEliminatoryListV
             return;
         }
         this.meetingService.selectedMeetingDb.eliminatoryId = this.selectedRow.containerId;
+        this.tourneyService.selectedRoundName = this.tourneyService.selectedEliminatoryLevel.name;
+        this.meetingService.currentDay = this.tourneyService.selectedEliminatoryTabIndex == 0 ? 1 : 2;
 
         this.gotoDetailView();
     }

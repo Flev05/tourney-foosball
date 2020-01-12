@@ -117,11 +117,10 @@ export class TourneyService extends AbstractService {
     ];
 
     resultCols: TableCols[] = [
-        { field: 'dateAndTime', header: 'Data/Ora' },
         { field: 'teamName1',   header: 'In casa' },
-        { field: 'teamName2',   header: 'Trasferta' },
         { field: 'points1',     header: 'Pt.1' },
-        { field: 'points2',     header: 'Pt.2' }
+        { field: 'points2',     header: 'Pt.2' },
+        { field: 'teamName2',   header: 'Trasferta' },
     ];
     
     private tvo: TourneyVO;
@@ -130,6 +129,7 @@ export class TourneyService extends AbstractService {
     private onewayPlayoffMap: Map<string, Meeting[]>;
     private roundtripPlayoffMap: Map<string, Meeting[]>;
     classificationName: string;
+    selectedRoundName: string;
 
     constructor(private http: HttpClient
         , private loginService: LoginService
@@ -352,9 +352,12 @@ export class TourneyService extends AbstractService {
      * @param t the tourney to save 
      * @param complete the callback method do invoke when the save will finish
      */
-    public updateTourneyWithCleanAll(tvo : TourneyVO, complete: () => void ) : void
+    public updateTourneyWithCleanAll(t : Tourney, complete: () => void ) : void
     {
         this.onSaveTourneyError = false;
+
+        this.clearTourneyMeetings(t);
+        let tvo : TourneyVO = this.prepareTourneyVO(t, this.clientService.selectedClient);
 
         let url = updateTourneyUrl;
         console.log("Invoking put method on URL: [" + url + "]");
@@ -398,7 +401,7 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Save the meetengs and the tourney in one trasaction!
+     * Save the meetings and the tourney in one trasaction!
      * 
      * Before to update the received tourney, saves the roundtrip and oneway playoff meetings in the local variables, clean both
      * the oneway and roundtrip meetings, save the toruney and meetings on the DB and, when the method returns, restores the saved meetings in 
@@ -880,6 +883,6 @@ export class TourneyService extends AbstractService {
 
     public makeClassificationName(sc: Classification, roundName: string): void {
         this.selectedClassificationRow =  sc;
-        this.classificationName = "Torneo [" + this.selectedTourney.tourneyName + "] Girone [" + roundName + "]";
+        this.classificationName = roundName ;
     }
 }

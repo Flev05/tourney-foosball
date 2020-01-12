@@ -17,7 +17,6 @@
 
 <p-table [columns]="cols" 
     [value]="rows" 
-    [responsive]="true"
     selectionMode="single" 
     [(selection)]="selectedRow" 
     (onRowSelect)="onRowSelect($event)" >
@@ -33,7 +32,6 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
             <td *ngFor="let col of columns">
-                <span class="ui-column-title">{{col.header}}</span>
                 {{rowData[col.field]}}
             </td>
         </tr>

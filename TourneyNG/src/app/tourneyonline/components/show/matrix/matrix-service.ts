@@ -9,6 +9,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 
 @Injectable()
 export class MatrixService   {
@@ -230,7 +231,7 @@ export class MatrixService   {
             this.selectedMeeting.points1 = c1.points.value;
             this.selectedMeeting.points2 = c2.points.value;
         }
-        this.selectedMeeting.isPlayed = true;
+        this.selectedMeeting.status = MeetingStatus.ToPlay;
     }
 
     private saveRoundMeeting( roundId: number): void {

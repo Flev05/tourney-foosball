@@ -53,6 +53,7 @@ export class TabResultListView extends AbstractTabResultListView {
         console.log(event.data);
 
         this.tourneyService.selectedRound = this.selectedRound;
+        this.meetingService.selectedRound = this.selectedRound;
 
         this.meetingService.selectedMeetingDb = {id: null
             , tourneyId: this.selectedTourney.id
@@ -65,6 +66,8 @@ export class TabResultListView extends AbstractTabResultListView {
 
     onPlayoffRowSelect(event) {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
+        this.meetingService.selectedRound = this.selectedPlayoff.round;
+
         this.meetingService.selectedMeetingDb = {
               id: null
             , tourneyId: this.selectedTourney.id

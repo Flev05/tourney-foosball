@@ -41,6 +41,7 @@ import { PlayerPickList } from './player-picklist';
 import { TeamModule } from '../team/team.module';
 import { NewTourneyDetailView } from './new-tourney-detailview';
 import {BlockUIModule} from 'primeng/blockui';
+import { OperatorDetailView } from './operator-detailview';
 
 @NgModule({
 	imports: [
@@ -84,6 +85,7 @@ import {BlockUIModule} from 'primeng/blockui';
         ,TeamPlayerListView
         ,TeamPickList
         ,PlayerPickList
+        ,OperatorDetailView
     ]
     ,providers: [DateFormatPipe, LevelService]
 })

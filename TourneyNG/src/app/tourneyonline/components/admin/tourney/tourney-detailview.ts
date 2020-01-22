@@ -26,19 +26,27 @@ import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 
-const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
-const REDIRECT_ADD_TEAM_DV  = 'admintourney/dv/addteam';
+const REDIRECT_TOURNEY_LV   = 'admintourney';
 
-const REDIRECT_ROUND_DV     = 'admintourney/dv/round';
-const REDIRECT_PLAYOFF_DV   = 'admintourney/dv/playoff';
+const REDIRECT_TEAM_DV      = REDIRECT_TOURNEY_LV + '/dv/team';
+const REDIRECT_ADD_TEAM_DV  = REDIRECT_TOURNEY_LV + '/dv/addteam';
 
-const REDIRECT_TOURNEY_LV   = 'admintourney/';
+const REDIRECT_ROUND_DV     = REDIRECT_TOURNEY_LV + '/dv/round';
+const REDIRECT_PLAYOFF_DV   = REDIRECT_TOURNEY_LV + '/dv/playoff';
+
+const REDIRECT_USER_DV      = REDIRECT_TOURNEY_LV + "/dv/operatordv"
 
 const PLYOFF_CHANGE_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di Playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
 const PLYOFF_CHANGE_TEAMS_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di squadre per girone di playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
 const PLYOFF_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
 const ELIM_DIR_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione delle eliminazioni dirette, si perdono tutte le impostazioni preesistenti. Confermi?';
+
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -102,10 +110,22 @@ export class TourneyDetailView extends AbstractDetailView {
     isPlayoffAutoGen: string;
     isEliminatoryAutoGen: string;
 
+    operatorCols:  TableCols[] = [
+        { field: 'username', header: 'Username' },
+        { field: 'firstname', header: 'Nome' },
+        { field: 'lastname', header: 'Cognome' },
+    ];
+
+    selectedOperatorRows : UserVO[];
+    operatorRows: UserVO[];
+    urcList: UserRoleClientVO[];
+
     constructor(
         protected location: Location,
         public tourneyService: TourneyService,
         protected countryService: CountryService,
+        private loginService: LoginService,
+        private userService: UserService,
         protected clientService: ClientService,
         protected playerService: PlayerService,
         protected teamService: TeamService,
@@ -114,6 +134,7 @@ export class TourneyDetailView extends AbstractDetailView {
         protected meetingPlayoffService: MeetingPlayoffService,
         protected levelService: LevelService,
         private disciplineService: DisciplineService,
+        private urcService: UrcService,
         private router: Router 
     ) { 
         super(tourneyService, location);
@@ -124,6 +145,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.blockDocument();
 
         super.ngOnInit();
+        this.loadOperators();
 
         this.countries = this.countryService.countries;
         
@@ -150,7 +172,54 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.prepareTabsGui();
     }
- 
+
+    newOperator() {
+        this.urcService.newUser = true;
+        this.urcService.selectedUrc = this.urcList.find( urc => urc.userVo.id == this.loginService.userLogged.id );
+        this.urcService.urcList = this.urcList;
+        this.router.navigate([REDIRECT_USER_DV]);
+    }
+
+    onOperatorRowSelect(event) {
+        console.log("Entering onOperatorRowSelect()");
+        console.log(event);
+
+        let urcId = event.data.id;
+
+        this.urcService.selectedUrc = this.urcList.find( urc => urc.userVo.id == urcId );
+        this.urcService.urcList = this.urcList;
+
+        this.urcService.newUser = false;
+        this.router.navigate([REDIRECT_USER_DV]);
+    }
+
+    private onComplete(cs: UserRoleClientVO[]): void {
+        this.urcList = cs;
+    }
+
+    private loadOperators() {
+        let loggedUserId = this.loginService.userLogged.id;
+        let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadUsersErrorHandler('loadUrc()'));
+        ucrsub.subscribe(cs => this.onComplete(cs), e => this.onError(e) );
+
+        let selectedClientId = this.clientService.selectedClient.id;
+        const subscriber = this.userService.loadOperatorsByClient(selectedClientId, this.loadUsersErrorHandler('loadAllOperators()'));
+        subscriber.subscribe(cs => this.onLoadNext(cs), e => this.onError(e) );
+    }
+    
+    private onLoadNext(cs: UserVO[]): void {
+        this.operatorRows = cs;
+        this.selectedOperatorRows = cs;
+    }
+
+    private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {      
+            console.log(`${operation} failed`);
+            console.error(error);     
+            return of(result as T);
+        };
+    }
+
     private blockDocument() {
         this.blockedDocument = false;
     }

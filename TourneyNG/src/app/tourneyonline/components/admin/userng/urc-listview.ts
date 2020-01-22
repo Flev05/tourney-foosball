@@ -48,6 +48,7 @@ export class UrcListView extends AbstractListView {
         this.urcService.newUser = false;
 
         this.cols = [
+            { field: 'username',   header: 'Username' },
             { field: 'firstname',   header: 'Nome' },
             { field: 'lastname',    header: 'Cognome' },
             { field: 'phoneNumber', header: 'Telefono' },
@@ -75,6 +76,7 @@ export class UrcListView extends AbstractListView {
             let row = {id: urcvo.id
                 , firstname: urcvo.userVo.firstname
                 , lastname: urcvo.userVo.lastname
+                , username: urcvo.userVo.username
                 , phoneNumber: urcvo.userVo.phoneNumber
                 , client: urcvo.clientVO.businessName
             }
@@ -113,12 +115,12 @@ export class UrcListView extends AbstractListView {
         this.gotoDetailView();
     }
 
-    doDelete(urcvo: UserRoleClientVO) {
+    doDelete(urcvo: any) {
         console.log(urcvo);
         let urcId = urcvo.id;
         this.urcService.selectedUrc = this.urcList.find( urc => urc.id == urcId );
        
-        let name =  urcvo.userVo.username + "/" + urcvo.clientVO.businessName;
+        let name =  urcvo.username + "/" + urcvo.client;
         let popup = 'Sicuro di voler rimuovere la relazione Utente/Cliente: [' + name + "]?";
 
         this.onDeleteError = false;
@@ -146,6 +148,7 @@ export class UrcListView extends AbstractListView {
 
         if(index > -1 ) {
             this.urcList.splice(index, 1);
+            this.rows.splice(index, 1);
         }
     }
 

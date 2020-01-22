@@ -13,6 +13,7 @@ import { AbstractRuleListView } from './abstract-rule-listview';
 import { MeetingPlayoffService } from '../admin/playoff/meeting-playoff-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
  
 export abstract class AbstractPlayoffResultListView extends AbstractRuleListView {
     cols: TableCols[] ;
@@ -21,7 +22,6 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
 
     selectedPlayoff: Playoff;
     
-    meetingsNoMsg: string;
     onewayDaysNo: number;
     roundtripDaysNo: number;
     
@@ -32,6 +32,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     roundtripDays: any[];
 
     isRoundTrip: boolean;
+    roundDaysNo: number;
     allDaysNo: number;
     daysNoMsg: string;
     
@@ -79,26 +80,32 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
             playoffIds.push(p.id);
         }
         
-        const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
-        subsbr.subscribe(t => this.onPlayoffCompleteLoad(t), e => this.onError(e));
+        this.meetingService.goBackFromMeeting = false;
+        this.onPlayoffCompleteLoad();
+
+        // if( this.meetingService.goBackFromMeeting ) {
+        //     this.onPlayoffCompleteLoad(this.meetingPlayoffService.mdbList);
+        //     this.meetingService.goBackFromMeeting = false;
+        // } else {
+        //     const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
+        //     subsbr.subscribe(t => this.onPlayoffCompleteLoad(t), e => this.onError(e));
+        // }
     }
 
-    private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
-        this.mdbList = mdbList;
+    private onPlayoffCompleteLoad() {
+        this.mdbList = this.meetingPlayoffService.mdbList;
 
-        this.meetingPlayoffService.extractPlayoffMeetings(this.selectedPlayoff, this.mdbList);
-
-        if( this.selectedTourney.isPlayoffAutoGen == "true") {
-            this.meetingPlayoffService.resolveAutomaticTeams(this.selectedPlayoff);
-            this.meetingPlayoffService.resolveAutomaticMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
-        } else {
-            this.meetingPlayoffService.resolveManualTeams(this.selectedPlayoff);
-            this.meetingPlayoffService.resolveManualMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
-        }
-
+        // this.meetingPlayoffService.extractPlayoffMeetings(this.selectedPlayoff, this.mdbList);
+        // if( this.selectedTourney.isPlayoffAutoGen == "true") {
+        //     this.meetingPlayoffService.resolveAutomaticTeams(this.selectedPlayoff);
+        //     this.meetingPlayoffService.resolveAutomaticMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
+        // } else {
+        //     this.meetingPlayoffService.resolveManualTeams(this.selectedPlayoff);
+        //     this.meetingPlayoffService.resolveManualMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
+        // }
         this.meetingPlayoffService.prepareMeetingsMap(this.selectedPlayoff.round, false);
 
-        this.allDaysNo = this.selectedPlayoff.round.daysNo;
+        this.roundDaysNo = this.selectedPlayoff.round.daysNo;
         this.pageSize  = this.selectedPlayoff.round.pageSize;
         this.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
         this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
@@ -111,39 +118,39 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
 
         console.log("[OnewayMeetings   " + this.onewayMeetings.length + "]");
         console.log("[RoundtriMeetings " + this.roundtripMeetings.length + "]");
-        console.log("[Days             " + this.allDaysNo + "]");
+        console.log("[Days             " + this.roundDaysNo + "]");
         console.log("[PageSize         " + this.pageSize + "]");
 
         if (this.selectedTourney.isOnewayPlayoff == "true") {
-            this.meetingsNoMsg = "" + this.onewayMeetings.length + " in " + this.allDaysNo + " giornate (Solo Andata)";
+            this.allDaysNo = this.roundDaysNo;
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = "" + this.onewayMeetings.length * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+            this.allDaysNo = 2 * this.roundDaysNo;
         }
+        this.meetingService.allDaysNo = this.allDaysNo;
 
         this.preparePlayoffClassification(this.selectedPlayoff);
         this.prepareEliminatoryLevels();
 
         this.updateSelectedPlayoff();
     }
+
     protected setOnewayCurrentDay(key: number) {
-        this.meetingService.currentDay = key;
         this.onewayMeetingDaysMap = this.meetingPlayoffService.onewayMeetingDaysMap;
         this.onewayMeetings = this.onewayMeetingDaysMap.get(key);
         this.onewayMeetings = this.onewayMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
         this.onewayMeetings.forEach(m => m.containerId = this.selectedPlayoff.round.id);
-        this.onewayMeetings.sort((m1, m2) => this.meetingPlayoffService.sortMeeting(m1, m2));
+        this.onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
         this.selectedPlayoff.round.onewayCurrentDay = key;
         return key;
     }
 
     protected setRoundtripCurrentDay(key: number) {
-        this.meetingService.currentDay = this.allDaysNo + key;
         this.roundtripMeetingDaysMap = this.meetingPlayoffService.roundtripMeetingDaysMap;
         this.roundtripMeetings = this.roundtripMeetingDaysMap.get(key);
         this.roundtripMeetings = this.roundtripMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
         this.roundtripMeetings.forEach(m => m.containerId = this.selectedPlayoff.round.id);
-        this.roundtripMeetings.sort((m1, m2) => this.meetingPlayoffService.sortMeeting(m1, m2));
+        this.roundtripMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
         this.selectedPlayoff.round.roundtripCurrentDay = key;
     }
     private updateSelectedPlayoff() {
@@ -187,6 +194,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
             this.ngOnInit();
         }
         this.tourneyService.selectedPlayoffTabIndex = index;
+        this.currentDay = this.selectedPlayoff.round.roundtripCurrentDay;
     }
   
     onRowSelect(event) {
@@ -198,8 +206,18 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingPlayoffService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingPlayoffService;
+        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        
+        this.meetingService.selectedRound = this.selectedPlayoff.round;
+        this.meetingService.selectedRound.name = this.selectedPlayoff.round.name;
+        this.meetingService.selectedRound.direction = this.selectedRow.direction;
 
-        this.tourneyService.selectedRoundName = this.selectedPlayoff.round.name;
+        let currentDay = this.selectedPlayoff.round.onewayCurrentDay;
+        if( this.selectedPlayoff.round.direction == Direction.RoundTrip) {
+            currentDay =  this.selectedPlayoff.round.daysNo + this.selectedPlayoff.round.roundtripCurrentDay;
+        }
+        this.meetingService.selectedRound.label = this.meetingService.selectedRound.name + " - " + currentDay + "/" + this.allDaysNo;
+
         this.gotoDetailView();
     }
 }

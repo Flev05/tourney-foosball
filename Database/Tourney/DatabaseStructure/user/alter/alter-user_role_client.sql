@@ -26,4 +26,18 @@ ALTER TABLE ONLY user_role_client
   	ON DELETE NO ACTION 
   	DEFERRABLE INITIALLY IMMEDIATE;
   	
+ALTER TABLE ONLY user_role_client_tourney
+    ADD CONSTRAINT user_user_role_client_tourney_id_fk 
+    FOREIGN KEY (tourney_id) REFERENCES tourney(id)
+  	ON UPDATE NO ACTION 
+  	ON DELETE NO ACTION 
+  	DEFERRABLE INITIALLY IMMEDIATE;
+  	
+ALTER TABLE ONLY user_role_client_discipline
+    ADD CONSTRAINT user_user_role_client_discipline_id_fk 
+    FOREIGN KEY (discipline_id) REFERENCES discipline(id)
+  	ON UPDATE NO ACTION 
+  	ON DELETE NO ACTION 
+  	DEFERRABLE INITIALLY IMMEDIATE;
+
 ALTER TABLE user_role_client OWNER TO :SCHEMA_USER_NAME;

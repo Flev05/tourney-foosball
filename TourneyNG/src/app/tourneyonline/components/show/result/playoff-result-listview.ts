@@ -46,7 +46,7 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         this.roundtripCurrentDay = this.selectedPlayoff.round.roundtripCurrentDay;
      }
 
-     prevOnewayDay() : void {
+    prevOnewayDay() : void {
         this.onewayCurrentDay--;
         if( this.onewayCurrentDay < 1 ) {
             this.onewayCurrentDay = 1;

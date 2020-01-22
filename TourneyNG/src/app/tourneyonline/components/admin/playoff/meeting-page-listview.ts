@@ -55,7 +55,7 @@ export class MeetingListView extends AbstractRuleListView {
         }
 
         const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
-        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+        subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
     }
    
     onChangeTab(e) {
@@ -64,7 +64,8 @@ export class MeetingListView extends AbstractRuleListView {
         this.selectedPlayoff.selectedTabIndex = index; 
     }
     
-    private onCompleteLoad(): void {
+    private onCompleteLoad(t: MeetingDb[]): void {
+        this.mdbList = t;
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
         this.meetingPlayoffService.onCompleteLoad(this.selectedPlayoff, this.mdbList);
 

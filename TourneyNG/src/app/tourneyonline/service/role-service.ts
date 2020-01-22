@@ -12,6 +12,7 @@ import { Roles } from '../domain/enumerations';
 
 const roleUrl = 'api/roles';  // URL to web api
 const loadRoleByUserId = roleUrl + "/loadAllRoles";
+const findOperatorRoleByName = roleUrl + "findOperarorRoleByName";
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -93,6 +94,17 @@ export class RoleService {
     loadLowerRoles (loggedUserId : number): Observable<RoleVO[]> {
  
         let url = loadRoleByUserId + "/" + loggedUserId;
+
+        return this.http.get<RoleVO[]>(url, httpOptions)
+        .pipe(
+            tap(_ => this.log(`fetched all Roles`)),
+            catchError(this.handleError('loadAllRoles', []))
+          );
+    }
+
+    findOperarorRoleByName (roleName : Roles): Observable<RoleVO[]> {
+ 
+        let url = findOperatorRoleByName + "/" + roleName;
 
         return this.http.get<RoleVO[]>(url, httpOptions)
         .pipe(

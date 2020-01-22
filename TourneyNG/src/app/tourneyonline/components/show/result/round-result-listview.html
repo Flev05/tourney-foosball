@@ -29,7 +29,7 @@
                     </td>
                     <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
                         <div>{{selectedRound.name}}</div>
-                        <div>{{onewayCurrentDay}}/{{2*allDaysNo}}</div>
+                        <div>{{onewayCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()"></button>
@@ -71,7 +71,7 @@
                     </td>
                     <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
                         <div>{{selectedRound.name}}</div>
-                        <div>{{allDaysNo + roundtripCurrentDay}}/{{2*allDaysNo}}</div>
+                        <div>{{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>

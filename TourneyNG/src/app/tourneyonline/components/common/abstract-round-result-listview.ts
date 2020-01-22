@@ -12,6 +12,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { DateFormatPipe } from './date-format-pipe';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 
@@ -22,7 +23,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
     selectedRound: Round;
     
-    meetingsNoMsg: string;
     onewayDaysNo: number;
     roundtripDaysNo: number;
     
@@ -33,6 +33,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     roundtripDays: any[];
 
     isRoundTrip: boolean;
+    roundDaysNo: number;
     allDaysNo: number;
     daysNoMsg: string;
     
@@ -72,8 +73,9 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         this.isRoundTrip = true;
 
-        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
+        // const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound );
+        this.meetingService.goBackFromMeeting = false;
+        this.onCompleteLoad();
     }
 
     onChangeTab(e) {
@@ -85,15 +87,14 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
     }
 
-    private onCompleteLoad(mdbList: MeetingDb[]): void {
-        this.mdbList = mdbList;
+    private onCompleteLoad(): void {
+        this.mdbList = this.meetingRoundService.mdbList;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
-
+        // this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound, false);
 
         this.pageSize = this.selectedRound.pageSize;
-        this.allDaysNo = this.selectedRound.daysNo;
+        this.roundDaysNo = this.selectedRound.daysNo;
 
         let key = this.selectedRound.onewayCurrentDay;
         this.setOnewayCurrentDay(key);
@@ -103,53 +104,49 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         console.log("[OnewayMeetings    " + this.onewayMeetings.length + "]");
         console.log("[RoundtripMeetings " + this.roundtripMeetings.length + "]");
-        console.log("[Days              " + this.allDaysNo + "]");
+        console.log("[Days              " + this.roundDaysNo + "]");
         console.log("[PageSize          " + this.pageSize + "]");
 
         if (this.selectedTourney.isOnewayRound == "true") {
             this.isRoundTrip = false;
-            this.meetingsNoMsg = "" + this.onewayMeetings.length + " in " + this.allDaysNo + " giornate (Solo Andata)";
+            this.allDaysNo = this.roundDaysNo;
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = "" + this.onewayMeetings.length * 2 + " in " + this.allDaysNo * 2 + " giornate (Andata e Ritorno)";
+            this.allDaysNo = 2 * this.roundDaysNo;
         }
+        this.meetingService.allDaysNo = this.allDaysNo;
 
         this.prepareRoundGuiClassification();
     }
 
     protected setOnewayCurrentDay(key: number) {
-        this.meetingService.currentDay = key;
         this.onewayMeetingDaysMap = this.meetingRoundService.onewayMeetingDaysMap;
         this.onewayMeetings = this.onewayMeetingDaysMap.get(key);
         this.onewayMeetings = this.onewayMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
-        this.onewayMeetings.forEach(m => m.containerId = this.selectedRound.id);
-        this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+        this.onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
         this.selectedRound.onewayCurrentDay = key;
         return key;
     }
 
     protected setRoundtripCurrentDay(key: number) {
-        this.meetingService.currentDay = this.allDaysNo + key;
         this.roundtripMeetingDaysMap = this.meetingRoundService.roundtripMeetingDaysMap;
         this.roundtripMeetings = this.roundtripMeetingDaysMap.get(key);
         this.roundtripMeetings = this.roundtripMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
-        this.roundtripMeetings.forEach(m => m.containerId = this.selectedRound.id);
-        this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+        this.roundtripMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
         this.selectedRound.roundtripCurrentDay = key;
     }
 
-  
     private mapCallback (m: Meeting, index: number, array: Meeting[]): Meeting {
         if(m.isSkiping) {
             if( m.teamName1 == "" ) {
                 m.points1 = 0;
             } else {
-                m.points1 = this.selectedTourney.pointsNeededToWin;
+                m.points1 = 0;
             }
             if( m.teamName2 == "" ) {
                 m.points2 = 0;
             } else {
-                m.points2 = this.selectedTourney.pointsNeededToWin;
+                m.points2 = 0;
             }
         }
         return m;
@@ -170,11 +167,19 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         if( this.selectedRow.isSkiping ) {
             return;
         }
-
         this.meetingRoundService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingRoundService;
-        this.tourneyService.selectedRoundName = this.selectedRound.name;
+
+        this.meetingService.selectedRound = this.selectedRound;
+        this.meetingService.selectedRound.direction = this.selectedRow.direction;
+        this.tourneyService.selectedRound.name = this.selectedRound.name;
+
+        let currentDay = this.selectedRound.onewayCurrentDay;
+        if( this.selectedRound.direction == Direction.RoundTrip) {
+            currentDay =  this.selectedRound.daysNo + this.selectedRound.roundtripCurrentDay;
+        }
+        this.meetingService.selectedRound.label = this.tourneyService.selectedRound.name + " - " + currentDay + "/" + this.allDaysNo;
 
         this.gotoDetailView();
     }

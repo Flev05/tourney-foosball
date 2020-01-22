@@ -25,11 +25,15 @@ import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.DisciplineDao;
 import it.lms.tourney.dao.RoleDao;
+import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Discipline;
 import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 
@@ -51,6 +55,12 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
     @Inject
     private ClientDao         clientDao;
+
+    @Inject
+    private TourneyDao        tourneyDao;
+
+    @Inject
+    private DisciplineDao     disciplineDao;
 
     @Inject
     @ConverterObject
@@ -143,14 +153,26 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
     private void createUrc(UserRoleClientVO urcvo, User upo) {
 
-        Role rpo = roleDao.findById(urcvo.getRoleVo().getId());
-
-        Client cpo = clientDao.findById(urcvo.getClientVO().getId());
+        logger.debug(logId() + "Entering createUrc()");
 
         UserRoleClient urc = new UserRoleClient();
         urc.setUser(upo);
+
+        Role rpo = roleDao.findById(urcvo.getRoleVo().getId());
         urc.setRole(rpo);
+
+        Client cpo = clientDao.findById(urcvo.getClientVO().getId());
         urc.setClient(cpo);
+
+        if (urcvo.getTourneyId() != null) {
+            Tourney tourney = tourneyDao.getById(urcvo.getTourneyId());
+            urc.setTourney(tourney);
+        }
+
+        if (urcvo.getDisciplineId() != null) {
+            Discipline dpo = disciplineDao.getById(urcvo.getDisciplineId());
+            urc.setDiscipline(dpo);
+        }
 
         urcDao.save(urc);
     }

@@ -27,7 +27,7 @@ export enum Direction {
 }
 
 export enum MeetingStatus {
-    ToPlay='P', InProgress='I', Terminated='T'
+    ToPlay='toplay', InProgress='inprogress', Terminated='terminated'
 }
 export enum Roles {
     Developer='DEVELOPER', Owner='OWNER', Admin='ADMIN', Operator='OPERATOR', Follower='FOLLOWER'

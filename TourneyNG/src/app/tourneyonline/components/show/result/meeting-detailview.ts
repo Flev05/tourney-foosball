@@ -4,12 +4,17 @@ import { Location } from '@angular/common';
 import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { TourneyType, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { TourneyType, MeetingStatus, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Match } from 'app/tourneyonline/domain/match';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { MeetingRoundService } from '../../admin/round/meeting-round-service';
+import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
 
+const TO_PLAY_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
 @Component({
     templateUrl: './meeting-detailview.html'
 })
@@ -17,8 +22,6 @@ export class MeetingDetailView extends AbstractDetailView {
     static redirect: string = "";
     static meetingDvRedirect:   string = "result/lv/meetingLv/dv";
     
-    msgs: Message[] = [];
-
     selectedMeetingDb: MeetingDb;
     selectedMeeting: Meeting;
 
@@ -26,13 +29,18 @@ export class MeetingDetailView extends AbstractDetailView {
 
     teamPassedMessage: string;
     currentDay: number;
-    isSavedNewResult: boolean;
     roundName: string;
+    selectedRound: Round;
+    selectedDirection: Direction;
+    allDaysNo: number;
+    meetingLabel: string;
 
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
-        protected meetingService: MeetingService
+        protected meetingService: MeetingService,
+        protected meetingRoundService: MeetingRoundService,
+        protected meetingPlayoffService: MeetingPlayoffService,
     ) { 
         super(tourneyService, location);
     }
@@ -43,9 +51,18 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
         this.selectedMeeting  = this.meetingService.selectedMeeting;   
 
-        this.roundName = this.tourneyService.selectedRoundName;
-        this.currentDay = this.meetingService.currentDay;
-        this.isSavedNewResult = false;
+        this.selectedRound = this.meetingService.selectedRound;
+        this.roundName = this.selectedRound.name;
+        this.selectedDirection = this.selectedRound.direction;
+        this.meetingService.goBackFromMeeting = true;
+        this.meetingLabel = this.meetingService.selectedRound.label;
+
+        this.allDaysNo = this.meetingService.allDaysNo;
+        if( this.selectedRound.direction == Direction.OneWay) {
+            this.currentDay = this.selectedRound.onewayCurrentDay;
+        } else {
+            this.currentDay =  this.selectedRound.daysNo + this.selectedRound.roundtripCurrentDay;
+        }
 
         if(this.selectedMeeting.teamName1 == "" || this.selectedMeeting.teamName2 == "") {
             let teamPassed = this.selectedMeeting.teamName1 != "" ? 
@@ -75,8 +92,46 @@ export class MeetingDetailView extends AbstractDetailView {
         this.matches = [...this.selectedMeeting.matches];
     }
     
+    disableButton() : string {
+        return this.selectedMeeting.status == MeetingStatus.ToPlay || this.selectedMeeting.status == MeetingStatus.Terminated ? "disabled" : "";
+    }
+
+    onToPlayClick() {
+        console.log("Entering onToPlayClick()");
+        console.log(event);
+        if(!confirm(TO_PLAY_POPUP)) {
+            return;
+        }
+
+        this.selectedMeeting.points1 = 0;
+        this.selectedMeeting.points2 = 0;
+        for( let m of this.selectedMeeting.matches ) {
+            m.score1 = 0;
+            m.score2 = 0;
+        }
+        this.save();
+        this.selectedMeeting.status = MeetingStatus.ToPlay;
+    }
+
+    onInProgressClick() {
+        console.log("Entering onInProgressClick()");
+        console.log(event);
+        this.save();
+        this.selectedMeeting.status = MeetingStatus.InProgress;
+    }
+
+    onTerminatedClick() {
+        console.log("Entering onTerminatedClick()");
+        console.log(event);
+        this.save();
+        this.selectedMeeting.status = MeetingStatus.Terminated;
+    }
+
     minus1(m: Match) {
         let ii = m.id;
+        if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
+            return;
+        }
         this.matches[ii].score1--;
         if(this.matches[ii].score1 < 0) {
             this.matches[ii].score1=0;
@@ -84,17 +139,26 @@ export class MeetingDetailView extends AbstractDetailView {
         this.save();
     }
 
-    plus1(m: Match) {
+    plus1(m: Match): void {
         let ii = m.id;
+        if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
+            return;
+        }
         this.matches[ii].score1++;
-        if(this.matches[ii].score1 > this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score1 = this.selectedTourney.pointsNeededToWin;
+            if( this.matches.length == 1 ) {
+                this.selectedMeeting.status = MeetingStatus.Terminated;
+            }
         }
         this.save();
     }
 
-    minus2(m: Match) {
+    minus2(m: Match): void {
         let ii = m.id;
+        if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
+            return;
+        }
         this.matches[ii].score2--;
         if(this.matches[ii].score2 < 0) {
             this.matches[ii].score2=0;
@@ -102,34 +166,33 @@ export class MeetingDetailView extends AbstractDetailView {
         this.save();
     }
 
-    plus2(m: Match) {
+    plus2(m: Match): void {
         let ii = m.id;
+        if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
+            return;
+        }
         this.matches[ii].score2++;
-        if(this.matches[ii].score2 > this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score2 = this.selectedTourney.pointsNeededToWin;
+            if( this.matches.length == 1 ) {
+                this.selectedMeeting.status = MeetingStatus.Terminated;
+            }
         }
         this.save();
     }
 
     private save() {
-        this.selectedMeeting.isPlayed = true;
         this.selectedMeeting.matches = this.matches;
         this.selectedMeeting.points1 = 0;
         this.selectedMeeting.points2 = 0;
-        this.selectedMeeting.status = MeetingStatus.Terminated;
 
         let goals1 = 0;
         let goals2 = 0;
-        let terminated : boolean = true;
 
         for(let i=0; i<this.matches.length; i++) {
             let m = this.matches[i];
             goals1 = m.score1;
             goals2 = m.score2;
-
-            if(m.score1 < this.selectedTourney.pointsNeededToWin && m.score2 < this.selectedTourney.pointsNeededToWin ) {
-                terminated = false;
-            }
 
             if (goals1 > goals2) {
                 if (this.selectedTourney.tourneyType == TourneyType.Score) {
@@ -162,10 +225,7 @@ export class MeetingDetailView extends AbstractDetailView {
                 this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;
             }
         }
-
-        this.selectedMeeting.status = terminated ? MeetingStatus.Terminated : MeetingStatus.InProgress;
        
-        this.isSavedNewResult = true;
         let observer = null;
         if( this.selectedMeetingDb.roundId != null ) {
             this.tourneyService.cleanRoundMeeting(this.selectedTourney);
@@ -180,24 +240,44 @@ export class MeetingDetailView extends AbstractDetailView {
             observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId);
         }
         if(observer != null) {            
-            observer.subscribe(n => this.next(n), e => this.onError(e) );            
+            observer.subscribe(n => this.nextCallback(n), e => this.onError(e) );            
         }
     }
 
-    goBack(): void {
-        if(this.isSavedNewResult) {
-            this.tourneyService.updateTourneyWithCleanAll(this.selectedTourney, () => super.goBack());
+    private nextCallback(n: any) {   
+        if(this.selectedDirection == Direction.OneWay) {
+            if(this.currentDay > this.selectedRound.onewayCurrentDay) {
+                this.selectedRound.onewayCurrentDay = this.currentDay;
+            }
         } else {
-            super.goBack();
+            if(this.currentDay - this.selectedRound.daysNo > this.selectedRound.roundtripCurrentDay) {
+                this.selectedRound.roundtripCurrentDay = this.currentDay - this.selectedRound.daysNo;
+            }
         }
+        this.tourneyService.updateTourneyWithCleanAll(this.selectedTourney, () => this.reloadMeetings());
+    }
+
+    private reloadMeetings(): void {
+        if( this.selectedMeetingDb.roundId != null ) {
+            this.meetingRoundService.reloadRoundMeeting(this.selectedTourney, this.selectedRound, () => {} );
+        } 
+        
+        if( this.selectedMeetingDb.playoffId != null ) {
+            let playoffIds: number[] = [];
+            for(let p of this.selectedTourney.playoffs) {
+                playoffIds.push(p.id);
+            }
+            let p: Playoff = this.selectedTourney.playoffs.find( p => p.id == this.selectedRound.id );
+            this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => {});
+        }
+    }
+
+    goBack() {
+        super.goBack();
     }
 
     onError(n:any) {
-        this.msgs = [];
-        let msgerr : string;
-
-        msgerr = 'Modifica result fallita';
-        this.msgs.push({severity:'error', summary:'Errore', detail: msgerr});
+        console.log('Modifica result fallita');
     }
 }
 

@@ -6,7 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
-import { ResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
+import { AbstractResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
 import { MatrixService } from './matrix-service';
 
 const matrixDvRedirect: string = "matrix/lv/dv";
@@ -14,7 +14,7 @@ const matrixDvRedirect: string = "matrix/lv/dv";
     templateUrl: './eliminatory-listview.html',
     styleUrls: ['../classification/classification-view.css']
 })
-export class EliminatoryListView extends ResultEliminatoryListView {
+export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
     constructor(
         public tourneyService: TourneyService,

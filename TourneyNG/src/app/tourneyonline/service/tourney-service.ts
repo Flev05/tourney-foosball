@@ -129,7 +129,7 @@ export class TourneyService extends AbstractService {
     private onewayPlayoffMap: Map<string, Meeting[]>;
     private roundtripPlayoffMap: Map<string, Meeting[]>;
     classificationName: string;
-    selectedRoundName: string;
+    // selectedRoundName: string;
 
     constructor(private http: HttpClient
         , private loginService: LoginService
@@ -668,6 +668,9 @@ export class TourneyService extends AbstractService {
         }
 
         for(let m of meetings) {
+            if( m.status == MeetingStatus.ToPlay || m.isSkiping ) {
+                continue;
+            }
             let t1 = m.teamName1;
             let t2 = m.teamName2;
 
@@ -677,15 +680,8 @@ export class TourneyService extends AbstractService {
             let c1: Classification = classificationMap.get(key1);            
             let c2: Classification = classificationMap.get(key2);
 
-            if( c1 == null || c2 == null ) {
-                if( c1 == null ) {
-                    c2.points = this.selectedTourney.pointsNeededToWin;
-                }
-                if( c2 == null ) {
-                    c1.points = this.selectedTourney.pointsNeededToWin;
-                }
-                continue;
-            }
+            c1.played++;
+            c2.played++;
 
             c1.points += m.points1;            
             c2.points += m.points2;
@@ -698,25 +694,21 @@ export class TourneyService extends AbstractService {
                 c2.won++;
                 c1.lost++;
             }
-
-            if (m.isPlayed) {
-                c1.played++;
-                c2.played++;
-                if (m.points1 == m.points2) {
-                    c1.balanced++;
-                    c2.balanced++;
-                }
+            if (m.points2 == m.points1) {
+                c1.balanced++;
+                c2.balanced++;
             }
-            
+            if (m.points1 == m.points2) {
+                c1.balanced++;
+                c2.balanced++;
+            }
+
             for (let ma of m.matches) {
-                if( c1 != null ){
-                    c1.goalsDone += ma.score1;
-                    c1.goalsConceded += ma.score2;
-                }
-                if( c2 != null ) {
-                    c2.goalsDone += ma.score2;
-                    c2.goalsConceded += ma.score1;
-                }
+                c1.goalsDone += ma.score1;
+                c1.goalsConceded += ma.score2;
+
+                c2.goalsDone += ma.score2;
+                c2.goalsConceded += ma.score1;
             }
             c1.goalsDiff = c1.goalsDone - c1.goalsConceded;        
             c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        

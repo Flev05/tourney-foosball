@@ -23,6 +23,8 @@ public class UserRoleClient extends AbstractPO implements Serializable {
     private User              user;
     private Role              role;
     private Client            client;
+    private Tourney           tourney;
+    private Discipline        discipline;
 
     @Override
     public String toString() {
@@ -76,4 +78,31 @@ public class UserRoleClient extends AbstractPO implements Serializable {
 
         this.client = client;
     }
+
+    // bi-directional many-to-one association to Tourney
+    @ManyToOne
+    @JoinColumn(name = "tourney_id")
+    public Tourney getTourney() {
+
+        return tourney;
+    }
+
+    public void setTourney(Tourney tourney) {
+
+        this.tourney = tourney;
+    }
+
+    // bi-directional many-to-one association to Discipline
+    @ManyToOne
+    @JoinColumn(name = "discipline_id")
+    public Discipline getDiscipline() {
+
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+
+        this.discipline = discipline;
+    }
+
 }

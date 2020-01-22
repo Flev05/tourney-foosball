@@ -23,6 +23,7 @@ export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
     roundtripMatrix: Matrix;
     legendCols: any[];
     legendRows: any[];
+    meetingsNoMsg: string;
 
     constructor( public tourneyService: TourneyService
         , protected meetingPlayoffService: MeetingPlayoffService
@@ -57,6 +58,7 @@ export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
         this.cols =  this.matrixService.cols;
         this.legendCols = this.matrixService.legendCols;
         this.legendRows = this.matrixService.legendRows;
+        this.meetingsNoMsg = "" + this.selectedPlayoff.round.onewayMeetings.length;
      }
  
     onOnewayPointChange(cb: CellCombobox) {

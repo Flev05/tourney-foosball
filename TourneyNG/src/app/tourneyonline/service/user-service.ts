@@ -38,6 +38,16 @@ export class UserService {
         );
     }
 
+    loadOperatorsByClient (clientId: number, selector: (err: any, caught: Observable<UserVO[]> ) => Observable<UserVO[]>): Observable<UserVO[]> {
+        const url = userUrl + "/findOperatorsByClientId/" + clientId;
+        console.log(url);
+        
+        return this.http.get<UserVO[]>(url).pipe(
+            tap(_ => this.log("fetched all clients by user id: " + clientId))
+          , catchError(selector)
+        );
+    }
+
 
     /** GET hero by id. Will 404 if id not found */
     getUser(id: number): Observable<UserVO> {

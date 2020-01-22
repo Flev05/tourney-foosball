@@ -45,8 +45,8 @@ export class MeetingListView extends AbstractListView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney.id, this.selectedRound.id);
-        subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onCompleteLoad());
+        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound);
+        subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
 
         this.cols = [
             { field: 'dateAndTime', header: 'Data/Ora' },
@@ -71,9 +71,10 @@ export class MeetingListView extends AbstractListView {
         this.selectedRound.selectedTabIndex = index; 
     }
 
-    private onCompleteLoad(): void {
+    private onCompleteLoad(t: MeetingDb[]): void {
+        this.mdbList = t;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList, () => {});
 
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;

@@ -26,9 +26,9 @@
                     <td>
                         <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()"></button>
                     </td>
-                    <td colspan="2" style="width: 205mm;text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}}</div>
-                        <div>{{onewayCurrentDay}}/{{2*allDaysNo}}</div>
+                    <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
+                        <div>{{selectedPlayoff.round.name}}</div>
+                        <div>{{onewayCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()"></button>
@@ -69,8 +69,8 @@
                         <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
                     </td>
                     <td colspan="2" style="width: 25mm; text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}}</div>
-                        <div>{{allDaysNo + roundtripCurrentDay}}/{{2*allDaysNo}}</div>
+                        <div>{{selectedPlayoff.round.name}}</div>
+                        <div>{{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>

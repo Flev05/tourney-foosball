@@ -1463,6 +1463,116 @@
         </div>
 
     </p-tabPanel>   
+
+    <p-tabPanel header="Operatori">  
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">                                
+            <p> 
+                La vista permette di definire gli utenti operatori del torneo. 
+            </p> 
+            <p>
+                L'utente operatore può vedere e modificare i risultati di tutti i tornei che gli sono stati assegnati dagli autori del torneo.
+                Non può invece modificare i dati di configurazione del torneo che restano di pertinenza dell'utente amministratore del torneo
+                o del proprietario del sistema. 
+            </p> 
+
+            <h4>Associare un operatore</h4>
+            <p>
+                Asociare un operatore ad un torneo, significa permettere a quell'operatore di modificare il torneo che si sta creando.
+                La lista Operatori contiene tutti gli utenti operatori già esistenti, creati in precendenza da altri amministratori di tornei
+                o dall'utente proprietario. Selezionare gli operatori di intresse apponendo in segno di spunta alla check box corrispondente.
+            </p>    
+        
+            <h4>Creare un operatore</h4>
+            <p>
+                Se l'utente operatore di vostro interesse non è presente fra quelli della lista Operatori, potere crearne uno nuovo con
+                il bottone Nuovo Operatore.
+            </p>                
+            <p>
+                Nella dialog box sucessiva dovete inserire tutti i dati obbligatori e salvare. L'utente così creato sarà automaticamente 
+                associato al torneo in corso di creazione.
+            </p>
+                    
+            <h5>Rimuovere un operatore</h5>
+            <p>
+                Rimuvere un operatore significa rimuovere l'associazione dell'operatore dal torneo in corso così che non possa più
+                esercitare le funzioni di modifica dei risultati del torneo. L'utente rimmarrà nel sistema a far parte della stessa
+                azienda cui apparteneva pronto per essere riuttilizzato per altri tornei.
+            </p> 
+        </p-accordionTab>
+        </p-accordion>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div style="text-align:left">
+                <button pButton icon="fa fa-plus" 
+                type="button"
+                (click)="newOperator()" 
+                label="Nuovo Operatore" ></button>
+            </div>
+ 
+            <p-table [columns]="operatorCols"
+                [value]="operatorRows" 
+                [(selection)]="selectedOperatorRows" 
+                dataKey="id"
+                selectionMode="single" 
+                (onRowSelect)="onOperatorRowSelect($event)">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th class="checkBoxColSize">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}                                
+                        </th>
+                    </tr>
+                </ng-template>                                     
+            
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData">
+                        <td>
+                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                        </td>
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>            
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">                
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()" >
+                    </button>     
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()" >
+                                </button>     
+                            </div>
+                        </div>
+                    </div>    
+                </ng-template>
+            </p-table> 
+        </div>
+    </p-tabPanel>   
 </p-tabView>
 
 <div *ngIf="badRequest" style="margin-top:30px">

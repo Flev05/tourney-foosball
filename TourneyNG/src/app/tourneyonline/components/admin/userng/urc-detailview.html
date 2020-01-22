@@ -49,7 +49,7 @@
         </p>
         <h4>Operatore</h4>
         <p>
-            Viene creato dall'utente Amministratore per seguire un torneo o un girone del torneo.
+            Viene creato dall'utente Amministratore per modificare i risultati dei gironi del torneo.
             Non può apportare alcuna modifica alla struttura del torneo ma solo inserire i risultati
             man mano che maturano durante la partita in modo da essere propagati agli altri utenti in tempo reale.
         </p>
@@ -97,6 +97,11 @@
                 <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
             </div>
         </div>
+        <div *ngIf="userAlreadyExists">
+            <div class="ui-message ui-messages-error ui-corner-all">
+                <p-message severity="error" text="Esiste già un utente con lo stesso nome, cognome e username. Se non è lo stesso utente, modificare la username"></p-message>
+            </div>
+        </div>
 
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
@@ -113,6 +118,11 @@
             </div>
             <div class="ui-grid-col-6">
                 <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria"/>
+            </div>
+        </div>
+        <div *ngIf="isRetypePasswordFailed">
+            <div class="ui-message ui-messages-error ui-corner-all">
+                <p-message severity="error" text="Le 2 password non coincidono"></p-message>
             </div>
         </div>
 
@@ -217,7 +227,11 @@
         </ng-template>
     </p-table> 
 </p-fieldset>
-    
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>
+     
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button class="ui-button-success" 
         pButton (click)="onSubmit()" 
@@ -227,18 +241,3 @@
     </button>
 </div>
 
-<div *ngIf="badRequest" style="margin-top:30px">
-    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
-</div>   
-<div *ngIf="isRetypePasswordFailed">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="Le 2 password non coincidono"></p-message>
-    </div>
-</div>
-
-<div *ngIf="userAlreadyExists">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="Esiste già un utente con username {{selectedUser.username}}. Scegliere un'altra username e riprovare"></p-message>
-    </div>
-</div>
- 

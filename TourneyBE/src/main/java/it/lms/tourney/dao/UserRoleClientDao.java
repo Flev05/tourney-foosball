@@ -124,6 +124,29 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
+     * Finds all URC in the client list of OPERATOR role type
+     * 
+     * @param loggedUserId the logged user identifier
+     * @return the list of URC
+     */
+    public List<UserRoleClient> findOperatorsUrcByClientId(Integer clientId) {
+
+        logger.debug(logId() + "Entering findOperatorsUrcByClientId()");
+
+        Client c = clientDao.findById(clientId);
+
+        List<Client> clientList = new ArrayList<>();
+        clientList.add(c);
+
+        List<Role.ROLES> roleList = new ArrayList<>();
+        roleList.add(Role.ROLES.OPERATOR);
+
+        List<UserRoleClient> urcList = findUsersBy(clientList, roleList);
+
+        return urcList;
+    }
+
+    /**
      * First finds all URC belonging to the received loggedUserId, so finds all remaining users, if any, of the found
      * clients
      * 

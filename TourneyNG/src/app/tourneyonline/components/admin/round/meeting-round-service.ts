@@ -13,6 +13,7 @@ import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
@@ -26,6 +27,42 @@ export class MeetingRoundService extends MeetingService {
         console.log("Constructor of MeetingRoundService");
     }
     
+    /** 
+     * Loads all the meetings of the receìved tourney and round
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadRoundMeeting(tourney: Tourney, round : Round ) :  Observable<MeetingDb[]> {
+        let url = this.loadMeetingByRoundIdUrl + "/" + tourney.id + "/" + round.id;
+
+        console.log("Url=" + url);
+
+        const subsbr :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
+        subsbr.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
+        );
+
+        return subsbr;
+    }
+
+    /** 
+     * Loads all the meetings of the receìved tourney and round
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    reloadRoundMeeting(tourney: Tourney, round : Round, complete: () => void ) :  Observable<MeetingDb[]> {
+        let url = this.loadMeetingByRoundIdUrl + "/" + tourney.id + "/" + round.id;
+
+        console.log("Url=" + url);
+
+        const subsbr :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
+        subsbr.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
+        );
+
+        subsbr.subscribe(t => this.onCompleteLoad(round, t, complete), e => this.onError(e) );
+
+        return subsbr;
+    }
+
     remakeRoundMeeting( tourney: Tourney, round : Round ) : void {
         this.selectedTourney = tourney;
 
@@ -73,7 +110,7 @@ export class MeetingRoundService extends MeetingService {
         }
     }
 
-    public onCompleteLoad(round: Round, mdbList: MeetingDb[]) {
+    public onCompleteLoad(round: Round, mdbList: MeetingDb[], complete: () => void ) {
 
         this.mdbList = mdbList;
         
@@ -92,6 +129,7 @@ export class MeetingRoundService extends MeetingService {
             this.isRoundTrip = true;
             this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
+        complete();
     }
 
     private makeTeamName(meetings: Meeting[]) {

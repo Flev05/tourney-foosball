@@ -6,7 +6,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MeetingDetailView } from './meeting-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from '../../admin/eliminatory/level-service';
-import { ResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
+import { AbstractResultEliminatoryListView } from '../../common/abstract-result-eliminatory-listview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { ClassificationDetailView } from '../classification/classification-detailview';
@@ -16,7 +16,7 @@ import { ClassificationDetailView } from '../classification/classification-detai
     styleUrls: ['../classification/classification-view.css']
     
 })
-export class EliminatoryListView extends ResultEliminatoryListView {
+export class EliminatoryListView extends AbstractResultEliminatoryListView {
     selectedClassificationRow: Classification;
 
     constructor(
@@ -37,6 +37,7 @@ export class EliminatoryListView extends ResultEliminatoryListView {
 
     private onEliminatoryLoadComplete(): void {
         super.onLoadComplete();
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
     }
 

@@ -9,7 +9,6 @@ export interface Meeting
     containerId?    : number;
     isDummy?        : boolean;
     isSkiping?      : boolean;
-    isPlayed?       : boolean;
     name?           : string;
     direction?      : Direction
     datetime?       : Date;

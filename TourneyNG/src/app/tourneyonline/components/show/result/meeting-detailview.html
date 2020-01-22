@@ -7,8 +7,8 @@
         per aumentare o dimunire il punteggio rispettivamente.
     </p> 
     <p>
-        Il punteggio, salvato automaticamente ad ogni variazione, sarà immmediatamente riflesso nella classifica e nelle faormazioni
-        delle fasi successive se previste come plaoff ed eliminazioni dirette.
+        Il punteggio, salvato automaticamente ad ogni variazione, sarà immmediatamente riflesso nella classifica e nelle formazioni
+        delle fasi successive se previste come playoff ed eliminazioni dirette.
     </p>
 </p-accordionTab>
 </p-accordion>
@@ -28,10 +28,43 @@
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Stato dell'incontro:
+        </div>
+        <div class="ui-grid-col-3">
+            <div class="ui-g radiobuttons">
+                <div class="ui-g-12">
+                    <p-radioButton name="statusGroupname" 
+                        label="Non iniziato" 
+                        value="toplay" 
+                        [(ngModel)]="selectedMeeting.status"
+                        (onClick)="onToPlayClick()">
+                    </p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton name="statusGroupname" 
+                        label="In corso" 
+                        value="inprogress" 
+                        [(ngModel)]="selectedMeeting.status"
+                        (onClick)="onInProgressClick()">
+                    </p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton name="statusGroupname" 
+                        label="Terminato" 
+                        value="terminated" 
+                        [(ngModel)]="selectedMeeting.status"
+                        (onClick)="onTerminatedClick()">
+                    </p-radioButton>
+                </div>
+            </div>
+        </div>
+    </div>
     <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>
-                <th colspan="4" style="text-align: center"><span>{{roundName}} - {{currentDay}}° Giornata</span></th>
+                <th colspan="4" style="text-align: center"><span>{{meetingLabel}}</span></th>
             </tr>
             <tr>
                 <th colspan="2" style="width: 100%; font-size: large;">{{selectedMeeting.teamName1}}</th>
@@ -45,12 +78,12 @@
                     <table>
                         <tr>
                             <td>
-                                <button pButton type="button" icon="fa fa-plus"  (click)="plus1(rowData)"></button>
+                                <button pButton type="button" icon="fa fa-plus"  (click)="plus1(rowData)" [disabled]="disableButton()"></button>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)"></button>
+                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)" [disabled]="disableButton()"></button>
                             </td>
                         </tr>
                     </table>
@@ -65,12 +98,12 @@
                     <table>
                         <tr>
                             <td>
-                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)"></button>
+                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)" [disabled]="disableButton()"></button>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <button pButton type="button" icon="fa fa-minus"   (click)="minus2(rowData)"></button>
+                                <button pButton type="button" icon="fa fa-minus"   (click)="minus2(rowData)" [disabled]="disableButton()"></button>
                             </td>
                         </tr>
                     </table>

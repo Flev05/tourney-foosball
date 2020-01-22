@@ -27,8 +27,8 @@ export class UserListView extends AbstractListView {
 
     constructor(        
           protected tourneyService: TourneyService
-          , private userService: UserService
           , private loginService: LoginService
+          , private userService: UserService
           , public router: Router
         , protected location: Location) 
     {        
@@ -90,7 +90,7 @@ export class UserListView extends AbstractListView {
         console.log(user);
         this.selectedUser = user;
         let name =  user.username;
-        let popup = 'Sicuro di voler rimuovere lo utente: [' + name + "]?";
+        let popup = "Sicuro di voler rimuovere l'utente: [" + name + "]?";
 
         this.onDeleteError = false;
         if(confirm(popup)) {

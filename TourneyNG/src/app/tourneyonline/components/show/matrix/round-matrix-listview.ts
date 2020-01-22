@@ -24,6 +24,7 @@ export class RoundMatrixListView extends AbstractRoundResultListView {
 
     legendCols: any[];
     legendRows: any[];
+    meetingsNoMsg: string;
 
     constructor( public tourneyService: TourneyService
         , protected meetingRoundService: MeetingRoundService
@@ -59,6 +60,8 @@ export class RoundMatrixListView extends AbstractRoundResultListView {
 
         this.legendCols = this.matrixService.legendCols;
         this.legendRows = this.matrixService.legendRows;
+
+        this.meetingsNoMsg = "" + this.selectedRound.onewayMeetings.length;
     }
  
     onOnewayPointChange(cb: CellCombobox) {

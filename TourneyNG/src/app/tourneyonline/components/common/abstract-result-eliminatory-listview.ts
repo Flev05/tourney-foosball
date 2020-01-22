@@ -13,7 +13,7 @@ import { AbstractEliminatoryListView } from './abstract-eliminatory-listview';
 import { LevelService } from '../admin/eliminatory/level-service';
 import { DateFormatPipe } from './date-format-pipe';
 
-export abstract class ResultEliminatoryListView extends AbstractEliminatoryListView {
+export abstract class AbstractResultEliminatoryListView extends AbstractEliminatoryListView {
     cols: TableCols[] ;
     pageSize: number = 10;
     classificationCols: TableCols[];
@@ -361,8 +361,12 @@ export abstract class ResultEliminatoryListView extends AbstractEliminatoryListV
             return;
         }
         this.meetingService.selectedMeetingDb.eliminatoryId = this.selectedRow.containerId;
-        this.tourneyService.selectedRoundName = this.tourneyService.selectedEliminatoryLevel.name;
-        this.meetingService.currentDay = this.tourneyService.selectedEliminatoryTabIndex == 0 ? 1 : 2;
+
+        let el : Eliminatory  = this.eliminatories.find( e => e.id == this.selectedRow.containerId );
+        this.meetingService.selectedRound = el.round;
+
+        let mm = this.tourneyService.selectedEliminatoryTabIndex == 0 ? "Andata" : "Ritorno";
+        this.meetingService.selectedRound.label = this.tourneyService.selectedEliminatoryLevel.name + "(" + this.meetingService.selectedRound.name + ") - " + mm;
 
         this.gotoDetailView();
     }

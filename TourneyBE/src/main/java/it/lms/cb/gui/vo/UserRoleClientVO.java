@@ -8,6 +8,8 @@ public class UserRoleClientVO extends AbstractVO {
     UserVO                    userVo;
     RoleVO                    roleVo;
     ClientVO                  clientVO;
+    Integer                   tourneyId;
+    Integer                   disciplineId;
 
     public UserRoleClientVO() {
 
@@ -50,4 +52,23 @@ public class UserRoleClientVO extends AbstractVO {
         this.clientVO = clientVO;
     }
 
+    public Integer getTourneyId() {
+
+        return tourneyId;
+    }
+
+    public void setTourneyId(Integer tourneyId) {
+
+        this.tourneyId = tourneyId;
+    }
+
+    public Integer getDisciplineId() {
+
+        return disciplineId;
+    }
+
+    public void setDisciplineId(Integer disciplineId) {
+
+        this.disciplineId = disciplineId;
+    }
 }

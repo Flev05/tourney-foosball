@@ -8,4 +8,6 @@ export interface UserRoleClientVO
     userVo?     : UserVO;
     roleVo?     : RoleVO;
     clientVO?   : ClientVO;
+    touneyId?   : number;
+    disciplineId?   : number;
 }

@@ -6,5 +6,7 @@ CREATE TABLE user_role_client
   	, user_id 	integer	NOT NULL	-- the foreign key toward the USER table
 	, role_id 	integer	NOT NULL	-- the foreign key toward the ROLE table
 	, client_id integer	NOT NULL	-- the foreign key toward the CLIENT table
+	, tourney_id integer 			-- the foreign key toward the TOURNEY table, if any
+	, discipline_id integer			-- the foreign key toward the DISCIPLINE table, if any
 );
 

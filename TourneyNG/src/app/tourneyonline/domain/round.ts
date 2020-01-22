@@ -7,6 +7,7 @@ export interface Round {
     
     selectedTabIndex?: number;
     name: string;
+    label?: string;
     type: RoundType;
 
     pageSize: number;

@@ -66,6 +66,23 @@ public class UserRESTService extends AbstractRESTService {
         return distinctElements.stream().map(upo -> converter.convertUserPoVo(upo)).collect(Collectors.toList());
     }
 
+    @GET
+    @Path("/findOperatorsByClientId/{clientId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<UserVO> findOperatorsByClientId(@PathParam("clientId") Integer clientId) {
+
+        logger.debug(logId() + "GET: findOperatorsByClientId(" + clientId + ")");
+
+        List<UserRoleClient> urcList = urcDao.findOperatorsUrcByClientId(clientId);
+
+        List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
+
+        List<User> distinctElements = userList.stream().filter(distinctByKey(upo -> upo.getId()))
+                .collect(Collectors.toList());
+
+        return distinctElements.stream().map(upo -> converter.convertUserPoVo(upo)).collect(Collectors.toList());
+    }
+
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
 
         Map<Object, Boolean> map = new ConcurrentHashMap<>();

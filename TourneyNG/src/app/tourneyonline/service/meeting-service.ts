@@ -24,7 +24,6 @@ const httpOptions = {
 };
  
 const meetingUrl = 'api/meetings';  
-const loadMeetingByRoundIdUrl   = meetingUrl + '/loadByRoundId';  
 const loadMeetingByRoundIdsUrl  = meetingUrl + '/loadByRoundIds';
 
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
@@ -44,6 +43,7 @@ export  class MeetingService extends AbstractService {
     protected SKIPING_TEAM = "(Riposo)";
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
+    protected loadMeetingByRoundIdUrl: string   = meetingUrl + '/loadByRoundId';  
 
     static deleteMeetingUrl: string = deleteMeetingUrl;
 
@@ -67,8 +67,11 @@ export  class MeetingService extends AbstractService {
     roundtripMeetingDaysMap: Map<number, Meeting[]>;
     roundtripDays: any[];
 
+    goBackFromMeeting: boolean = false;
+
+    selectedRound: Round;
+    allDaysNo: number;
     mdbList: MeetingDb[];
-    currentDay: number;
 
     constructor( protected http: HttpClient
         , protected router: Router
@@ -123,23 +126,7 @@ export  class MeetingService extends AbstractService {
         round.onewayMeetings    = MeetingService.sortMeetings(round.onewayMeetings);
         round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }
-    
-    /** 
-     * Loads all the meetings of the receìved tourney and round
-     *  GET meetings by params. Will 404 if meetings not found 
-     */
-    loadRoundMeeting(tourneyId: number, roundId: number) :  Observable<MeetingDb[]> {
-        let url = loadMeetingByRoundIdUrl + "/" + tourneyId + "/" + roundId;
 
-        console.log("Url=" + url);
-
-        const obs :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
-        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
-        );
-
-        return obs;
-    }
     
     /** 
      * Loads all the meetings of the receìved tourney id
@@ -191,6 +178,7 @@ export  class MeetingService extends AbstractService {
         );
         return obs;
     }
+
 
     /** 
      * Loads all the meetings of the receìved tourney and eliminatory ids
@@ -253,6 +241,7 @@ export  class MeetingService extends AbstractService {
         for( let m of round.onewayMeetings ) {
 
             m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
+            m.containerId = round.id;
 
             let key = m.day;
             if(!this.onewayMeetingDaysMap.has(key)) {
@@ -267,7 +256,8 @@ export  class MeetingService extends AbstractService {
         for( let m of round.roundtripMeetings ) {
 
             m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
-            
+            m.containerId = round.id;
+
             let key = m.day;
             if(!this.roundtripMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
@@ -492,7 +482,6 @@ export  class MeetingService extends AbstractService {
             name: name,
             isDummy: pr1 == null ? true : pr1.isDummy || pr2 == null ? true :  pr2.isDummy,
             isSkiping: skiping,
-            isPlayed: false,
             direction: d,
             datetime: this.selectedTourney.datetime,
             dateAndTime: this.dateFormatPipe.transform(this.selectedTourney.datetime),

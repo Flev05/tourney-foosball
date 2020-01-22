@@ -16,6 +16,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { FromRound } from 'app/tourneyonline/domain/from-round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Round } from 'app/tourneyonline/domain/round';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class MeetingPlayoffService extends MeetingService {
@@ -30,6 +31,34 @@ export class MeetingPlayoffService extends MeetingService {
         console.log("Constructor of MeetingPlayoffService");
     }
 
+        /** 
+     * Loads all the meetings of the receìved tourney id
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    reloadPlayoffMeetings(tourneyId: number, p: Playoff, complete: () => void ) : Observable<MeetingDb[]> {
+
+        let obs = super.loadPlayoffMeeting(tourneyId, p.id);
+ 
+        obs.subscribe(t => this.onPlayoffCompleteLoad(t, p, complete), e => this.onError(e));
+        return obs;
+    }
+
+    private onPlayoffCompleteLoad(t: MeetingDb[], p: Playoff, complete: () => void ): void {
+        this.mdbList = t;
+        this.extractPlayoffMeetings(p, this.mdbList);
+
+        if( this.selectedTourney.isPlayoffAutoGen == "true") {
+            this.resolveAutomaticTeams(p);
+            this.resolveAutomaticMeetings(p, this.selectedTourney.rounds);
+        } else {
+            this.resolveManualTeams(p);
+            this.resolveManualMeetings(p, this.selectedTourney.rounds);
+        }
+
+        this.prepareMeetingsMap(p.round, false);
+        complete();
+    }
+    
     createPlayoffMeeting(tourney: Tourney, playoff : Playoff ) : void {
         this.selectedTourney = tourney;
         this.doPlayoffMeeting(playoff);

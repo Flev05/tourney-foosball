@@ -69,13 +69,14 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 roundIds.push(round.id);
             }
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds);
-            subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onRoundCompleteLoad());            
+            subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );            
         } else {
             this.prepareEliminatoryLevels();
         }
     }
     
-    private onRoundCompleteLoad(): void {
+    private onRoundCompleteLoad(t: MeetingDb[]): void {
+        this.mdbList = t;
         for(let round of this.selectedTourney.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);

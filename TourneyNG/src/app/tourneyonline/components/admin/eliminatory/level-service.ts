@@ -430,7 +430,7 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let el : EliminatoryLevel = {
               id: lcb.value
-            , name: lcb.label
+            , name:  lcb.label
             , level: lcb.value
             , isTopLevel: top == 0 ? true : false
             , direction: Direction.OneWay

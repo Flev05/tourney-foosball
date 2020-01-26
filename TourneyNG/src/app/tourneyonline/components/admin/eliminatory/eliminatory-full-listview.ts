@@ -34,6 +34,7 @@ export class FullEliminatoryListView extends AbstractListView {
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
         this.levelService.prepareGui();
+        
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
     }

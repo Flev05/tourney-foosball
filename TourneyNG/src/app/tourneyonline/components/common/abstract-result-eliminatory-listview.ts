@@ -40,7 +40,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         super.ngOnInit();
         this.classificationCols = this.tourneyService.classificationCols;
         
-        this.isRoundTrip = this.isOneway == "true" ? false : true;   
+        this.isRoundTrip = this.isOneway == "true" ? false : true;
     }
     
     onChangeTab(e) {
@@ -86,8 +86,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             this.roundtripMeetings = this.roundtripMeetings.concat(e.round.roundtripMeetings);
             this.eliminatoryClassification = this.eliminatoryClassification.concat(this.tourneyService.prepareRoundsGui([e.round]));
         }
-        console.log("OnewayMeetings.len    [" + this.onewayMeetings.length +"]" )
-        console.log("RoundtripMeetings.len [" + this.roundtripMeetings.length +"]" )
+        console.log("OnewayMeetings.len    [" + this.onewayMeetings.length +"]" );
+        console.log("RoundtripMeetings.len [" + this.roundtripMeetings.length +"]" );
     }
 
     private processSkiping(el: EliminatoryLevel) {

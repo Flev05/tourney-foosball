@@ -694,11 +694,7 @@ export class TourneyService extends AbstractService {
                 c2.won++;
                 c1.lost++;
             }
-            if (m.points2 == m.points1) {
-                c1.balanced++;
-                c2.balanced++;
-            }
-            if (m.points1 == m.points2) {
+            if ( m.points1 == m.points2) {
                 c1.balanced++;
                 c2.balanced++;
             }

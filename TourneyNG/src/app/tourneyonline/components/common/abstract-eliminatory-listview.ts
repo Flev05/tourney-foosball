@@ -101,7 +101,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     
     protected prepareEliminatoryGui() {
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
-        this.isOneway = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
+        this.isOneway =  this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false"
         if (this.isStandalone) {
             this.prepareStandaloneGui();
         }
@@ -288,12 +288,20 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     getPosition1(e: Eliminatory): string {
         let pos1 = "";
         if(this.containsPlayoff()) {
+            let rule = e.rule1.fromPlayoff.bandPosition + "° delle " + e.rule1.fromPlayoff.position.value + "°";
+            if( this.selectedTourney.playoffs.length == 1 ) {
+                rule = e.rule1.fromPlayoff.position.value + "°";
+            }
             pos1 = this.isAutomatic 
-                ? e.rule1.fromPlayoff.bandPosition + "° delle " + e.rule1.fromPlayoff.position.value + "°" 
+                ? rule
                 : e.rule1.fromPlayoff.position.value + "°";
         } else {
+            let rule = e.rule1.fromRound.bandPosition + "° delle " + e.rule1.fromRound.position.value + "°";
+            if( this.selectedTourney.rounds.length == 1 ) {
+                rule = e.rule1.fromRound.position.value + "°";
+            }
             pos1 = this.isAutomatic 
-                ? e.rule1.fromRound.bandPosition + "° delle " + e.rule1.fromRound.position.value + "°" 
+                ? rule
                 : e.rule1.fromRound.position.value + "°";
         }   
         return pos1;
@@ -302,7 +310,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     getPosition2(e: Eliminatory): string {
         let pos2 = "";
         if(this.containsPlayoff()) {
-            let rule = e.rule2.fromPlayoff.bandPosition + "° delle " + e.rule2.fromPlayoff.position.value + "°" ;
+            let rule = e.rule2.fromPlayoff.bandPosition + "° delle " + e.rule2.fromPlayoff.position.value + "°";
+            if( this.selectedTourney.playoffs.length == 1 ) {
+                rule = e.rule2.fromPlayoff.position.value + "°";
+            }
             let pos = e.rule2.fromPlayoff.position.value + "°";
             if( e.rule2.fromPlayoff.position.value == 0 ) {
                 rule = "";
@@ -311,7 +322,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
             pos2 = this.isAutomatic ? rule : pos;
         } else {
             let rule = e.rule2.fromRound.bandPosition + "° delle " + e.rule2.fromRound.position.value + "°" ;
+            if( this.selectedTourney.rounds.length == 1 ) {
+                rule = e.rule2.fromRound.position.value + "°" ;
+            }
             let pos = e.rule2.fromRound.position.value + "°";
+
             if( e.rule2.fromRound.position.value == 0 ) {
                 rule = "";
                 pos  = "";

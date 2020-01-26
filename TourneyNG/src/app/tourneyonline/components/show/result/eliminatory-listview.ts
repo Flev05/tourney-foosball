@@ -10,6 +10,7 @@ import { AbstractResultEliminatoryListView } from '../../common/abstract-result-
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { ClassificationDetailView } from '../classification/classification-detailview';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './eliminatory-listview.html',
@@ -32,6 +33,9 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     
     ngOnInit() {
         super.ngOnInit();
+        this.isOneway = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
+        this.isRoundTrip = this.isOneway == "true" ? false : true;
+
         this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete());
     }
 

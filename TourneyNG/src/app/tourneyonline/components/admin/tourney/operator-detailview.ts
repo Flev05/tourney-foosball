@@ -27,7 +27,7 @@ export class OperatorDetailView extends AbstractUrcDetailView {
         protected roleService: RoleService,
         protected location: Location,
         protected clientService: ClientService,
-        protected urcService: UrcService,
+        public urcService: UrcService,
         protected countryService: CountryService,
     ) {
         super(tourneyService

@@ -140,11 +140,11 @@ export class MeetingDetailView extends AbstractDetailView {
 
     plus1(m: Match): void {
         let ii = m.id;
+        this.matches[ii].status = MeetingStatus.InProgress;
         if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
-        this.matches[ii].status = MeetingStatus.InProgress;
         this.matches[ii].score1++;
         if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score1 = this.selectedTourney.pointsNeededToWin;
@@ -155,7 +155,6 @@ export class MeetingDetailView extends AbstractDetailView {
     minus2(m: Match): void {
         let ii = m.id;
         if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
-            this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
         this.matches[ii].status = MeetingStatus.InProgress;
@@ -168,15 +167,14 @@ export class MeetingDetailView extends AbstractDetailView {
 
     plus2(m: Match): void {
         let ii = m.id;
+        this.matches[ii].status = MeetingStatus.InProgress;
         if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
+            this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
         this.matches[ii].score2++;
         if(this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score2 = this.selectedTourney.pointsNeededToWin;
-            // if( this.matches.length == 1 ) {
-            //     this.selectedMeeting.status = MeetingStatus.Terminated;
-            // }
         }
         this.save();
     }

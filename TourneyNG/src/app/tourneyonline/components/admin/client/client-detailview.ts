@@ -8,6 +8,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from '../../common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './client-detailview.html',
@@ -36,11 +37,14 @@ export class ClientDetailView extends AbstractDetailView {
 
     clientAddress: string;
 
+    loggedUsername: string;
+
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
         private   clientService: ClientService,
+        private   loginService: LoginService,
     ) { 
         super(tourneyService, location);
     }
@@ -52,6 +56,7 @@ export class ClientDetailView extends AbstractDetailView {
         this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
 
         this.clientAddress = "";
+        this.loggedUsername = this.loginService.userLogged.username;
 
         if(this.clientService.newClient) {
             this.selectedClient={

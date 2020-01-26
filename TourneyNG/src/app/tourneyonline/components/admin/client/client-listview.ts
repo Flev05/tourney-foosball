@@ -27,6 +27,7 @@ export class ClientListView extends AbstractListView {
     onLoadClientError: boolean;
     onDeleteError: boolean;
     isUserDeveloper: boolean;
+    loggedUsername: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -46,6 +47,7 @@ export class ClientListView extends AbstractListView {
 
         this.onLoadClientError = false;
         let loggedUserId = this.loginService.userLogged.id;
+        this.loggedUsername = this.loginService.userLogged.username;
 
         const subsrciber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subsrciber.subscribe(cs => this.clients = cs, e => this.onError(e), () => this.onComplete());

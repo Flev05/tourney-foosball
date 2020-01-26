@@ -79,11 +79,8 @@ export class AppComponent implements OnInit{
         
     onClientChange(cb: Combobox) {
         console.log(cb);
-
         const sc = this.clientService.selectedClients.find(c => c.id == cb.value);
-
         this.clientService.setSelectedClient(sc);
-
         this.router.navigate([redirectTourneyListView]);
     }
 

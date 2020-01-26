@@ -13,6 +13,6 @@ export interface UserVO
     email?          : string;
     phoneNumber?    : string;
     description?    : string;
-
+    disabled?       : string;
     country?        : Country;
 }

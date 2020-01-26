@@ -7,6 +7,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect = '/users/resetPasswordDv';
 
@@ -14,33 +15,32 @@ const redirect = '/users/resetPasswordDv';
     templateUrl: './user-reset-password-lv.html'
 })
 export class UserResetPasswordLv extends AbstractListView  {
-
     selectedUser: UserVO;
-
     users: UserVO[];
-
     cols: TableCols[] ;
     onLoadUserError: boolean;
+    loggedUsername: string;
 
     constructor(protected tourneyService: TourneyService
+        , private loginService: LoginService
         , private userService: UserService
         , public router: Router
         , protected location: Location) 
     { 
         super(redirect, tourneyService, router, location);
-        console.log("UserListView.constructor()");
+        console.log("UserResetPasswordLv.constructor()");
     }
 
     ngOnInit() {
-        console.log("UserListView.ngOnInit()");
-
+        console.log("UserResetPasswordLv.ngOnInit()");
+        
         this.onLoadUserError = false;
+        let loggedUserId = this.loginService.userLogged.id;
+        this.loggedUsername = this.loginService.userLogged.username;
 
-        const subscriber = this.userService.loadAllUsers(this.selectedUser.id, this.loadUsersErrorHandler('loadAllUsers()'));
+        const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
         subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
-
         this.userService.newUser = false;
-
         this.cols = [
             { field: 'username',    header: 'username' },
             { field: 'firstname',   header: 'Nome' },
@@ -54,15 +54,13 @@ export class UserResetPasswordLv extends AbstractListView  {
 
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
             this.onLoadUserError = true;
             console.log(`${operation} failed`);
-
             console.error(error); // log to console instead     
-      
             return of(result as T);
         };
     }
+
     create() {
         this.selectedUser={
               username: "<Username"
@@ -82,6 +80,4 @@ export class UserResetPasswordLv extends AbstractListView  {
 
         this.gotoDetailView();
     }
-   
- 
 }

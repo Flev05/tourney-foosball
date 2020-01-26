@@ -13,6 +13,13 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 
 import { GrowlModule } from 'app/components/growl/growl';
 import { PanelModule } from 'app/components/panel/panel';
+import {AccordionModule} from 'primeng/accordion';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { BlockUIModule } from 'primeng/blockui';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+
+import { PickListModule } from 'app/components/picklist/picklist';
 import { DropdownModule } from 'app/components/dropdown/dropdown';
 import { InputTextModule } from 'app/components/inputtext/inputtext';
 import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
@@ -20,17 +27,12 @@ import { ButtonModule } from 'app/components/button/button';
 import { TabViewModule } from 'app/components/tabview/tabview';
 import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
 import { SliderModule } from 'app/components/slider/slider';
-import {AccordionModule} from 'primeng/accordion';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
 
 import {TourneyRoutingModule} from './tourney-routing.module';
 import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { CalendarModule } from 'app/components/calendar/calendar';
 import { TeamPlayerListView } from './team-player-listview';
-import { PickListModule } from 'app/components/picklist/picklist';
-import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { TeamPickList } from './team-picklist';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { RoundModule } from '../round/round.module';
@@ -40,12 +42,11 @@ import { PlayerModule } from '../player/player.module';
 import { PlayerPickList } from './player-picklist';
 import { TeamModule } from '../team/team.module';
 import { NewTourneyDetailView } from './new-tourney-detailview';
-import {BlockUIModule} from 'primeng/blockui';
 import { OperatorDetailView } from './operator-detailview';
 
 @NgModule({
 	imports: [
-		 CommonModule
+         CommonModule
         ,FormsModule
         ,ReactiveFormsModule
         ,GrowlModule

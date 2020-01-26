@@ -8,7 +8,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { RoleVO } from '../domain/role-vo';
 import { Combobox } from '../domain/tourney-combobox';
-import { Roles } from '../domain/enumerations';
+import { ERoles } from '../domain/enumerations';
 
 const roleUrl = 'api/roles';  // URL to web api
 const loadRoleByUserId = roleUrl + "/loadAllRoles";
@@ -24,6 +24,7 @@ export class RoleService {
     selectedRoleOption: Combobox;
     roleOptions: Combobox[];
     selectedRoles: RoleVO[];
+    maxLoggedUserRole: ERoles;
 
     static roleCols = [
         { field: 'rolename',    header: 'Nome ruolo' },
@@ -35,53 +36,64 @@ export class RoleService {
         console.log("Constructor of RoleService");
     }
     
+    public resolve(roleName : string) : ERoles {
+        var asEnum : ERoles= <ERoles>ERoles[roleName];
+        return asEnum;
+    }
+
+    getRoleVO( roleName : string ) : RoleVO {
+        let found = this.selectedRoles.find(r => r.name == roleName);
+        return found;
+    }
+
     isDeveloper(): boolean {
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Developer) {
-                return true;
-            }
-        }
-        return false;
+        return this.maxLoggedUserRole == ERoles.DEVELOPER;
+    }
+
+    isUserDeveloper(roleName : string): boolean {
+        var asEnum : ERoles = this.resolve(roleName);
+        return asEnum == ERoles.DEVELOPER ? true : false;
+    }
+
+    isUserFollower(roleName : string): boolean {
+        var asEnum : ERoles = this.resolve(roleName);
+        return asEnum == ERoles.FOLLOWER ? true : false;
+    }
+
+    isAtLeastOwner(): boolean {
+        return this.maxLoggedUserRole <= ERoles.OWNER;
+    }
+
+    isAtLeastAdmin(): boolean {
+        return this.maxLoggedUserRole <= ERoles.ADMIN;
     }
 
     isOwner(): boolean {
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Owner || this.isDeveloper() ) {
-                return true;
-            }
-        }
-        return false;
+        return this.maxLoggedUserRole == ERoles.OWNER;
     }
 
     isAdmin(): boolean {
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Admin) {
-                return true;
-            }
-        }
-        return false;
+        return this.maxLoggedUserRole == ERoles.ADMIN;
     }
 
     isOperator(): boolean {
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Operator) {
-                return true;
-            }
-        }
-        return false;
+        return this.maxLoggedUserRole == ERoles.OPERATOR;
     }
 
     isFollower(): boolean {
-        for(let r of this.selectedRoles) {
-            if(r.name==Roles.Follower) {
-                return true;
-            }
-        }
-        return false;
+        return this.maxLoggedUserRole == ERoles.FOLLOWER;
     }
 
-    setSelectRoles(roles: RoleVO[]): any {
-        this.selectedRoles = roles;
+    setSelectRoles(roles: RoleVO[]): void {
+        this.selectedRoles = roles.sort((r1,r2) => {
+            if(r1.id < r2.id) {
+                return -1;
+            }
+            if(r1.id > r2.id) {
+                return 1;
+            }
+            return 0;
+        });
         let rvo = roles[0];
         this.selectedRoleOption = {label: rvo.name, value: rvo.id};
 
@@ -89,20 +101,36 @@ export class RoleService {
         for(let r of roles) {
             this.roleOptions.push({label: r.name, value: r.id});
         }
+        this.maxLoggedUserRole = <ERoles>ERoles[this.selectedRoles[0].name];
     }
 
-    loadLowerRoles (loggedUserId : number): Observable<RoleVO[]> {
- 
+    getNoFollowerRoleOptions() : Combobox[] {
+        let opts : Combobox[] = [];
+        for( let cb of this.roleOptions ) {
+            if( this.isUserFollower(cb.label) ) {
+                continue;
+            }
+            opts.push(cb);
+        }
+        return opts;
+    }
+
+    loadLowerRoles (loggedUserId : number, next: (value: RoleVO[]) => void): Observable<RoleVO[]> {
         let url = loadRoleByUserId + "/" + loggedUserId;
 
-        return this.http.get<RoleVO[]>(url, httpOptions)
-        .pipe(
-            tap(_ => this.log(`fetched all Roles`)),
-            catchError(this.handleError('loadAllRoles', []))
-          );
+        let obs = this.http.get<RoleVO[]>(url, httpOptions)
+        .pipe(tap(_ => this.log(`fetched all Roles`)), catchError(this.handleError('loadAllRoles', [])) );
+
+        obs.subscribe(rs => this.next(rs, next));
+        return obs;
     }
 
-    findOperarorRoleByName (roleName : Roles): Observable<RoleVO[]> {
+    private next(rs:  RoleVO[], next: (value: RoleVO[]) => void): void {
+        this.selectedRoles = rs;
+        next(rs);
+    }
+
+    findOperarorRoleByName (roleName : ERoles): Observable<RoleVO[]> {
  
         let url = findOperatorRoleByName + "/" + roleName;
 

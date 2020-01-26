@@ -165,7 +165,7 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private cleanExTopLevel(el: EliminatoryLevel) {
         console.log("Entering cleanExTopLevel()");
-        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+        // this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
 
         for (let e of el.eliminatories) {
             e.round.teamNames = [];

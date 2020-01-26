@@ -9,6 +9,7 @@ import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { AbstractListView } from '../../common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 const redirect = '/users/userdv';
 
@@ -24,13 +25,16 @@ export class UserListView extends AbstractListView {
     cols: TableCols[] ;
     onLoadUserError: boolean;
     onDeleteError: boolean;
+    loggedUsername: string;
 
     constructor(        
-          protected tourneyService: TourneyService
+            protected tourneyService: TourneyService
           , private loginService: LoginService
           , private userService: UserService
           , public router: Router
-        , protected location: Location) 
+          , protected location: Location
+          , protected countryService: CountryService
+        ) 
     {        
         super(redirect, tourneyService, router, location);
         console.log("UserListView.constructor()");
@@ -39,9 +43,12 @@ export class UserListView extends AbstractListView {
     ngOnInit() {
         console.log("UserListView.ngOnInit()");
 
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
+
         this.userService.newUser = false;
 
         this.cols = [
+            { field: 'username',    header: 'Username' },
             { field: 'firstname',   header: 'Nome' },
             { field: 'lastname',    header: 'Cognome' },
             { field: 'email',       header: 'Email' },
@@ -50,12 +57,13 @@ export class UserListView extends AbstractListView {
         this.onLoadUserError = false;
 
         let loggedUserId = this.loginService.userLogged.id;
+        this.loggedUsername = this.loginService.userLogged.username;
         const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
-        subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
+        subscriber.subscribe(cs => this.users = cs, e => this.onError(e));
     }
 
-    private onComplete(): void {
-        console.log("onComplete()");
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
     }
 
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
@@ -72,17 +80,24 @@ export class UserListView extends AbstractListView {
 
     create() {
         this.userService.newUser = true;
+        this.userService.selectedUser = this.userService.selectedUser = {
+            id: null,
+            username: '',
+            firstname: '',
+            lastname: '',
+            address: '',
+            email: '',
+            phoneNumber: '',
+            description: '',
+            country    : {},
+        };
         this.gotoDetailView();
     }
 
     onRowSelect(event) {
         console.log(event.data);
-
         this.userService.selectedUser = this.selectedUser;
         this.userService.newUser = false;
-
-
-
         this.gotoDetailView();
     }
 

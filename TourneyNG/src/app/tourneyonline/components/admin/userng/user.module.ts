@@ -25,41 +25,40 @@ import {UserChangePassword} from './user-changepassword';
 import {UserResetPasswordLv} from './user-reset-password-lv';
 import {UserResetPasswordDv} from './user-reset-password-dv';
 import { UrcListView } from './urc-listview';
-import { UrcDetailView } from './urc-detailview';
 import { UserDetailView } from './user-detailview';
 import { UserListView } from './user-listview';
 
 @NgModule({
 	imports: [
-        CommonModule
-        ,FormsModule
-        ,ReactiveFormsModule
-        ,GrowlModule
-        ,PanelModule
-        ,DropdownModule
-        ,InputTextModule
-        ,InputTextareaModule
-        ,ButtonModule
-        ,TabViewModule
-        ,CodeHighlighterModule
-        ,TableModule
-        ,DialogModule
-        ,SliderModule
-        ,AutoCompleteModule
-        ,RadioButtonModule
-        ,FieldsetModule
-        ,AccordionModule
-        ,MessagesModule
-        ,MessageModule
-		,UserRoutingModule
+                CommonModule
+                ,FormsModule
+                ,ReactiveFormsModule
+                ,GrowlModule
+                ,PanelModule
+                ,DropdownModule
+                ,InputTextModule
+                ,InputTextareaModule
+                ,ButtonModule
+                ,TabViewModule
+                ,CodeHighlighterModule
+                ,TableModule
+                ,DialogModule
+                ,SliderModule
+                ,AutoCompleteModule
+                ,RadioButtonModule
+                ,FieldsetModule
+                ,AccordionModule
+                ,MessagesModule
+                ,MessageModule
+                ,UserRoutingModule
 	],
-	declarations: [UrcListView,
-         UrcDetailView
-         ,UserDetailView
-         ,UserListView
-         ,UserChangePassword
-        ,UserResetPasswordLv
-        ,UserResetPasswordDv
+	declarations: [
+                UrcListView
+                , UserDetailView
+                , UserListView
+                , UserChangePassword
+                , UserResetPasswordLv
+                , UserResetPasswordDv
 	]
 })
 export class UserModule {}

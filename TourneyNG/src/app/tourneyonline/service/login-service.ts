@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
 import { Login } from '../domain/login';
 import { RoleService } from './role-service';
+import { UserService } from './user-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -21,13 +22,24 @@ export class LoginService {
     isUserLogged : boolean = false;
     blockedDocument: boolean;
 
-    constructor(private http: HttpClient, private roleService : RoleService) { 
+    constructor(private http: HttpClient
+        , private userService: UserService
+        , private roleService : RoleService) 
+        { 
         console.log("Constructor of LoginService");
         this.isUserLogged = false;
     }
 
     isDeveloper(): boolean {
         return this.isUserLogged && this.roleService.isDeveloper();
+    }
+    
+    isAtLeastOwner(): boolean {
+        return this.roleService.isAtLeastOwner();
+    }
+
+    isAtLeastAdmin(): boolean {
+        return this.roleService.isAtLeastAdmin();
     }
 
     isOwnerNotDeveloper(): boolean {
@@ -50,21 +62,18 @@ export class LoginService {
         return this.isUserLogged && this.roleService.isFollower();
     }
 
-    isOperatorOrFollower(): boolean {
-        return this.isOperator() || this.isFollower();
-    }
-
     isSuperUser(): boolean {
         return this.isUserLogged && (this.isDeveloper() || this.isOwner() || this.isAdmin());
     }
 
     isUserAllowed(): boolean {
-        return !this.isUserLogged || !this.isOperatorOrFollower() ;
+        return !this.isUserLogged || this.isAtLeastAdmin() ;
     }
 
-    setUserLogged(uvo: Login): void {
-        this.userLogged = uvo;
-        this.roleService.setSelectRoles(uvo.roles);
+    setUserLogged(lvo: Login): void {
+        this.userLogged = lvo;
+        this.userService.selectedUser = lvo;
+        this.roleService.setSelectRoles(lvo.roles);
     }
 
     /** PUT: send the request login to the server */

@@ -1,10 +1,10 @@
 import { Location } from '@angular/common';
-import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { RoleVO } from 'app/tourneyonline/domain/role-vo';
+import { Observable, of } from 'rxjs';
+import { Md5 } from 'md5-typescript';
+
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { RoleService } from 'app/tourneyonline/service/role-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { Observable, of } from 'rxjs';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';
@@ -13,7 +13,8 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 import { LoginService } from 'app/tourneyonline/service/login-service';
-import { Md5 } from 'md5-typescript';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { RoleVO } from 'app/tourneyonline/domain/role-vo';
 import { AbstractDetailView } from './abstract-detailview';
  
 export abstract class AbstractUrcDetailView extends AbstractDetailView {
@@ -21,6 +22,7 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
     roleCols: TableCols[] = RoleService.roleCols;
     selectedUrc: UserRoleClientVO;
     selectedUser: UserVO;
+    display: boolean = false;
 
     clientRoleCols:  TableCols[] = [
         { field: 'clientName', header: 'Cliente' },
@@ -69,7 +71,7 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
         let loggedUserId = this.logginService.userLogged.id;
         this.username = this.logginService.userLogged.username;
 
-        this.roleService.loadLowerRoles(loggedUserId).subscribe(rs => this.onRoleLoadNext(rs), e => this.onError(e), () => this.onCompleteLoadRoles());
+        this.roleService.loadLowerRoles(loggedUserId, rs => this.onRoleLoadNext(rs));
 
         this.loadClients(loggedUserId);
 
@@ -165,7 +167,7 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
             return of(result as T);
         };
     }
-    
+
     enableSaveButton() : string {
         if(this.selectedUrc.userVo == undefined ) {
             return "disabled";
@@ -190,16 +192,16 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
     onSubmit(): void {
  
         if( this.urcService.newUser ) {
-            let foundUrc = this.urcService.urcList.find( urc => urc.userVo.username == this.selectedUser.username
-                 && urc.userVo.firstname == this.selectedUser.firstname
-                 && urc.userVo.lastname == this.selectedUser.lastname);
-            if(foundUrc) {
-                this.userAlreadyExists = true;
-                return;
-            }
+            const subscriber = this.userService.getUserByUsername(this.selectedUser.username);
+            subscriber.subscribe(cs => this.onComplete(cs), e => this.onError(e) );
+            return;
         }
 
-        if( this.currentPassword != this.selectedUser.password ) {
+        this.saveUser(true);
+    }
+    
+    private saveUser(checkPassword: boolean) {
+        if( checkPassword && this.currentPassword != this.selectedUser.password ) {
             if(this.currentPassword != this.retypedPassword ) {
                 this.isRetypePasswordFailed = true;
                 return;
@@ -207,9 +209,8 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
             let md5 = Md5.init(this.currentPassword)
             console.log("MD5(password)=" + md5);
             this.selectedUrc.userVo.password = md5;
+            console.log("MD5(password)=" + this.selectedUrc.userVo.password);
         }
-
-        console.log("MD5(password)=" + this.selectedUrc.userVo.password);
 
         let urcList : UserRoleClientVO[] = [];
 
@@ -219,10 +220,12 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
             let rvo = this.roles.find( r => r.id == row.selectedRole.value);
 
             let urc : UserRoleClientVO = {
-                id        : null,
-                userVo    : this.selectedUrc.userVo,
-                roleVo    : rvo,
-                clientVO  : cvo
+                id           : this.urcService.newUser ? null : this.selectedUrc.id,
+                userVo       : this.selectedUrc.userVo,
+                roleVo       : rvo,
+                clientVO     : cvo,
+                tourneyId    : this.selectedTourney.id,
+                disciplineId : this.selectedTourney.discipline.id
             };
 
             urcList.push(urc);
@@ -234,17 +237,33 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
             subscriber.subscribe(cs => super.next(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         }
     }
+
+    private onComplete(existingUser: UserVO): void {
+        if( existingUser == null ) {
+            this.saveUser(true);
+            return;
+        }
+
+        let msg = "L'utente con username [" + this.selectedUser.username + "] che si sta creando, esiste già con le seguenti credenziali.";
+        msg += "\nNome:     " + this.selectedUser.firstname
+        msg += "\nCognome:  " + this.selectedUser.lastname
+        msg += "\nEmail:    " + this.selectedUser.email
+        msg += "\nTelefono: " + this.selectedUser.phoneNumber
+        msg += "\nSe si tratta della stessa persona, rispondere OK e sarà usato l'utente preesistente."
+        msg += "\nAltrimenti premere Annulla, cambiare la username e sarà salvato il nuovo utente."
+
+        if(confirm(msg)) {
+            this.selectedUrc.userVo = existingUser;
+            this.saveUser(false);
+        }
+    }
     
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
-
             this.onSaveUserError = true;
-
             console.error(error); // log to console instead
-      
             console.log(`${operation} failed: ${error.message}`);
-      
             return of(result as T);
         };
     }
@@ -262,14 +281,11 @@ export abstract class AbstractUrcDetailView extends AbstractDetailView {
             console.log("Entering saveUserErrorHandler()");
             console.log(`${operation} failed!`);
             console.error(res); // log to console instead
-      
             this.onSaveUserError = true;
-
             if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
                 this.badRequest = true;
                 return of(result as T);
             } 
- 
             if( res.error.errorCode == "UserAlreadyExists" ) {
                 this.userAlreadyExists = true;
                 return of(result as T);

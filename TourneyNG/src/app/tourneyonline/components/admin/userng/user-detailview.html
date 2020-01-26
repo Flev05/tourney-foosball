@@ -2,6 +2,7 @@
     <div>
         <span class="feature-title">Vista di dettaglio Utente</span>
         <span>Creare o modificare l'utente selezionato</span>
+        <p>Utente [{{loggedUsername}}]</p>
     </div>
 </div>
 
@@ -56,13 +57,18 @@
             <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
         </div>
     </div>
+    <div *ngIf="userAlreadyExists">
+        <div class="ui-message ui-messages-error ui-corner-all">
+            <p-message severity="error" text="Esiste già un utente con lo stesso nome, cognome e username. Se non è lo stesso utente, modificare la username"></p-message>
+        </div>
+    </div>
 
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             Password*:
         </div>
         <div class="ui-grid-col-6">
-            <input pInputText type="password" placeholder="Obbligatoria - Min(8)"/>
+            <input pInputText type="password" [(ngModel)]="currentPassword" placeholder="Obbligatoria"/>
         </div>
     </div>
 
@@ -71,7 +77,12 @@
             Ripetere Password*:
         </div>
         <div class="ui-grid-col-6">
-            <input pInputText type="password" placeholder="Obbligatoria - Min(8)"/>
+            <input pInputText type="password" [(ngModel)]="retypedPassword" placeholder="Obbligatoria"/>
+        </div>
+    </div>
+    <div *ngIf="isRetypePasswordFailed">
+        <div class="ui-message ui-messages-error ui-corner-all">
+            <p-message severity="error" text="Le 2 password non coincidono"></p-message>
         </div>
     </div>
 
@@ -89,11 +100,11 @@
             Indirizzo:
         </div>
         <div class="ui-grid-col-8">
-            {{selectedUser != undefined && selectedUser.country != undefined ? selectedUser.address  + " " +
+            {{selectedUser != undefined && selectedUser.country != undefined ? selectedUser.address  + " - " +
                 selectedUser.country.zipCode + " " + selectedUser.country.city
                 + " (" + selectedUser.country.provinceCode +")" : ""}}
         </div>
-    </div>    
+    </div>             
 
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
@@ -127,10 +138,23 @@
         <div class="ui-grid-col-5">
             <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
         </div>
-    </div>            
-</div>         
+    </div>   
 
-<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Descrizione:
+        </div>
+        <div class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedUser.description"/>
+        </div>
+    </div>   
+</div>
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+ 
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <button class="ui-button-success" 
         pButton (click)="onSubmit()" 
         icon="pi pi-save" 
@@ -139,13 +163,3 @@
     </button>
 </div>
 
-<div *ngIf="badRequest" style="margin-top:30px">
-    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
-</div>   
-
-<div *ngIf="userAlreadyExists">
-    <div class="ui-message ui-messages-error ui-corner-all">
-        <p-message severity="error" text="Esiste già un utente con username {{selectedUser.username}}. Scegliere un'altra username e riprovare"></p-message>
-    </div>
-</div>
- 

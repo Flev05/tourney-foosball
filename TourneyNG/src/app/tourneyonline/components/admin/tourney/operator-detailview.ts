@@ -8,7 +8,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { AbstractUrcDetailView } from '../../common/abstract-urc-detailview';
-import { Roles } from 'app/tourneyonline/domain/enumerations';
+import { ERoles } from 'app/tourneyonline/domain/enumerations';
 import { RoleVO } from 'app/tourneyonline/domain/role-vo';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
@@ -57,11 +57,13 @@ export class OperatorDetailView extends AbstractUrcDetailView {
     protected onRoleLoadNext(rs: RoleVO[]): void {
         super.onRoleLoadNext(rs);
 
-        this.operatorRole = this.roles.find( r => r.name == Roles.Operator );
+        
+
+        this.operatorRole = this.roles.find( r => {var asEnum : ERoles= <ERoles>ERoles[r.name]; return asEnum == ERoles.OPERATOR} );
 
         this.selectedUrc.roleVo = this.operatorRole;
         this.selectedUrc.clientVO = this.clientService.selectedClient;
-        this.selectedUrc.touneyId = this.selectedTourney.id;
+        this.selectedUrc.tourneyId = this.selectedTourney.id;
         this.selectedUrc.disciplineId = this.selectedTourney.discipline.id;
 
         let cb : Combobox = {label: this.operatorRole.name, value: this.operatorRole.id};

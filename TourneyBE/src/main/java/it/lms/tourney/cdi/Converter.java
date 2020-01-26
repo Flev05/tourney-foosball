@@ -16,11 +16,14 @@ import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.CountryDao;
+import it.lms.tourney.dao.DisciplineDao;
 import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.dao.TourneyDao;
+import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Country;
+import it.lms.tourney.po.Discipline;
 import it.lms.tourney.po.Meeting;
 import it.lms.tourney.po.Player;
 import it.lms.tourney.po.Role;
@@ -46,7 +49,13 @@ public class Converter extends AbstractLogger {
     UserRoleClientDao urcDao;
 
     @Inject
+    UserDao           userDao;
+
+    @Inject
     CountryDao        countryDao;
+
+    @Inject
+    DisciplineDao     disciplineDao;
 
     public RoleVO convertRolePoVo(Role rpo) {
 
@@ -96,6 +105,37 @@ public class Converter extends AbstractLogger {
         urcvo.setClientVO(clientVo);
 
         return urcvo;
+    }
+
+    public UserRoleClient convertUrcVoPo(UserRoleClientVO urcvo) {
+
+        UserRoleClient urc;
+        if (urcvo.getId() == null) {
+            urc = new UserRoleClient();
+        } else {
+            urc = urcDao.findById(urcvo.getId());
+        }
+
+        User upo = userDao.getUserById(urcvo.getUserVo().getId());
+        urc.setUser(upo);
+
+        Client cpo = clientDao.getById(urcvo.getClientVO().getId());
+        urc.setClient(cpo);
+
+        Role rpo = roleDao.getById(urcvo.getRoleVo().getId());
+        urc.setRole(rpo);
+
+        if (urcvo.getTourneyId() != null) {
+            Tourney tpo = tourneyDao.findById(urcvo.getTourneyId());
+            urc.setTourney(tpo);
+        }
+
+        if (urcvo.getDisciplineId() != null) {
+            Discipline dpo = disciplineDao.getById(urcvo.getDisciplineId());
+            urc.setDiscipline(dpo);
+        }
+
+        return urc;
     }
 
     public UserVO convertUserPoVo(User u) {

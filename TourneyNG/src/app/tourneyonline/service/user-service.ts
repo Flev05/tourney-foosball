@@ -8,8 +8,11 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { UserVO } from '../domain/user-vo';
 import { Password } from '../domain/password';
+import { UserRoleClientVO } from '../domain/urc-vo';
 
 const userUrl = 'api/users';                         // URL to Back End api
+const resetPasswordUrl = userUrl + '/resetPassword';
+const changePasswordUrl = userUrl + '/changePassword';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,9 +20,6 @@ const httpOptions = {
 
 @Injectable()
 export class UserService {
-    private changePasswordUrl = 'api/changePassword';    // URL to Back End api
-    private resetPasswordUrl = 'api/resetPassword';      // URL to Back End api
-
     newUser : boolean = false;
     selectedUser: UserVO;
     
@@ -45,6 +45,16 @@ export class UserService {
         return this.http.get<UserVO[]>(url).pipe(
             tap(_ => this.log("fetched all clients by user id: " + clientId))
           , catchError(selector)
+        );
+    }
+
+    getUserByUsername (username: string ): Observable<UserVO> {
+        const url = userUrl + "/getUserByUsername/" + username;
+        console.log(url);
+        
+        return this.http.get<UserVO>(url).pipe(
+            tap(_ => this.log("fetched a User by username: " + username))
+          , catchError(this.handleError<UserVO>('addUser'))
         );
     }
 
@@ -78,7 +88,7 @@ export class UserService {
     }
 
     /** PUT: update the User on the server */
-    private updateUser (user: UserVO, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+    public updateUser (user: UserVO, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
         const url = userUrl + "/update";
         console.log(url);
         
@@ -95,6 +105,18 @@ export class UserService {
         return this.updateUser(user, selector);
     }
 
+        /** POST: add a new User to the server */
+        
+    createUserAndUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
+        let url = userUrl + "/insert";
+        console.log(url);
+
+        return this.http.post<UserRoleClientVO>(url, urc, httpOptions).pipe(
+                tap((urc: UserRoleClientVO) => this.log(`added User w/ url=` + url))
+            , catchError(selector)
+        );
+    }
+
     /** DELETE: delete the User from the server */
     deleteUser (userId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
         const id = userId;
@@ -108,22 +130,22 @@ export class UserService {
     }
 
     /** PUT: changePassword the User on the server */
-    changePassword (userng: Password ): Observable<UserVO> {
-        const username =  userng.username;
-        const url = `${this.changePasswordUrl}`;
+    changePassword( uvo: UserVO ): Observable<UserVO> {
+        const username =  uvo.username;
+        const url = changePasswordUrl;
 
-        return this.http.put(url, userng, httpOptions).pipe(
+        return this.http.put(url, uvo, httpOptions).pipe(
             tap(_ => this.log(`Change password, username=${username}`)),
             catchError(this.handleError<UserVO>('changePassword'))
         );
     }
     
     /** PUT: resetPassword the User on the server */
-    resetPassword (userng: Password ): Observable<UserVO> {
-        const url = `${this.resetPasswordUrl}`;
+    resetPassword( uvo: UserVO ): Observable<UserVO> {
+        const url = resetPasswordUrl;
 
-        return this.http.put(url, userng, httpOptions).pipe(
-            tap(_ => this.log(`Reset password, username=${userng.username}`)),
+        return this.http.put(url, uvo, httpOptions).pipe(
+            tap(_ => this.log(`Reset password, username=${uvo.username}`)),
             catchError(this.handleError<UserVO>('resetPassword'))
         );
     }

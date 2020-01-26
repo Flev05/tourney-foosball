@@ -1,4 +1,5 @@
 import { Player } from './player';
+import { MeetingStatus } from './enumerations';
 
 export interface Match {
     id?       : number;
@@ -6,4 +7,5 @@ export interface Match {
     players2? : Player[];
     score1?   : number;
     score2?   : number;
+    status?   : MeetingStatus;
 }

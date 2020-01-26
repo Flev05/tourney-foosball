@@ -2,7 +2,6 @@
 package it.lms.tourney.rest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
@@ -56,9 +56,13 @@ public class UserRESTService extends AbstractRESTService {
 
         logger.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
 
-        List<UserRoleClient> urcList = urcDao.findUrcByUser(loggedUserId);
-
-        List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
+        List<User> userList;
+        if (userDao.isDeveloperUser(loggedUserId)) {
+            userList = userDao.findAllUsers();
+        } else {
+            List<UserRoleClient> urcList = urcDao.findUrcByUser(loggedUserId);
+            userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
+        }
 
         List<User> distinctElements = userList.stream().filter(distinctByKey(upo -> upo.getId()))
                 .collect(Collectors.toList());
@@ -100,11 +104,25 @@ public class UserRESTService extends AbstractRESTService {
     @GET
     @Path("/find/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User findUserById(@PathParam("id") Integer id) {
+    public UserVO findUserById(@PathParam("id") Integer id) {
 
         logger.debug(logId() + "GET: findUserById(" + id + ")");
 
-        return userDao.getUserById(id);
+        User upo = userDao.getUserById(id);
+        UserVO uvo = converter.convertUserPoVo(upo);
+        return uvo;
+    }
+
+    @GET
+    @Path("/getUserByUsername/{username:[\\w]+}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserVO getUserByUsername(@PathParam("username") String username) {
+
+        logger.debug(logId() + "GET: getUserByUsername(" + username + ")");
+
+        User upo = userDao.getPoBy(username);
+        UserVO uvo = converter.convertUserPoVo(upo);
+        return uvo;
     }
 
     /**
@@ -115,25 +133,21 @@ public class UserRESTService extends AbstractRESTService {
     @Path("/insert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(UserVO uvo) {
+    public Response createUser(UserRoleClientVO urcvo) {
 
+        UserVO uvo = urcvo.getUserVo();
         String username = uvo.getUsername();
         logger.debug(logId() + "POST: createUser(" + username + ")");
 
-        User user = userDao.findUserBy(username);
-        if (user != null) {
-            Map<String, String> responseObj = new HashMap<>();
-
-            responseObj.put("errorCode", "UserAlreadyExists");
-            responseObj.put("message", "User " + uvo.getUsername() + " already exists");
-
-            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-            return builder.build();
+        User upo = userDao.findUserBy(username);
+        if (upo == null) {
+            upo = converter.convertUserVoPo(uvo);
+            userDao.insert(upo);
         }
 
-        User upo = converter.convertUserVoPo(uvo);
-
-        userDao.insert(upo);
+        UserRoleClient urcpo = converter.convertUrcVoPo(urcvo);
+        urcpo.setUser(upo);
+        urcDao.insert(urcpo);
 
         Response.ResponseBuilder builder = Response.ok().entity(uvo);
 
@@ -173,13 +187,62 @@ public class UserRESTService extends AbstractRESTService {
         logger.debug(logId() + "DELETE: deleteUser(" + id + ")");
 
         User upo = userDao.getUserById(id);
-        List<UserRoleClient> urcList = upo.getUrcSet().stream().collect(Collectors.toList());
+
+        List<UserRoleClient> urcList = urcDao.findByUserId(upo.getId());
+
+        // if (!urcList.isEmpty()) {
+        // Map<String, String> responseObj = new HashMap<>();
+        // responseObj.put("errorCode", "UserUsedByOtheObject");
+        // responseObj.put("message",
+        // "Unable to remove user [" + upo.getUsername() + "] because it is used by another object");
+        // Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+        // return builder.build();
+        // }
+        // List<UserRoleClient> urcList = upo.getUrcSet().stream().collect(Collectors.toList());
 
         urcList.stream().forEach(urc -> urcDao.delete(urc));
 
         userDao.delete(upo);
 
         Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
+    /**
+     * Resets the password inserting a default value passed in the incoming user
+     */
+    @PUT
+    @Path("/resetPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPassword(UserVO uvo) {
+
+        logger.debug(logId() + "PUT: resetPassword()");
+
+        User upo = converter.convertUserVoPo(uvo);
+        userDao.update(upo);
+
+        Response.ResponseBuilder builder = Response.ok().entity(uvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Changes the password of the received user by updating the password passed in the incoming parameter
+     */
+    @PUT
+    @Path("/changePassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changePassword(UserVO uvo) {
+
+        logger.debug(logId() + "PUT: changePassword()");
+
+        User upo = converter.convertUserVoPo(uvo);
+        userDao.update(upo);
+
+        Response.ResponseBuilder builder = Response.ok().entity(uvo);
 
         return builder.build();
     }

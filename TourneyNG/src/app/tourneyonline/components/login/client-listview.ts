@@ -9,8 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { AbstractListView } from '../common/abstract-listview';
-
-const redirect = '/admintourney';
+import { LoginDetailView } from './login-detailview';
 
 @Component({
     templateUrl: './client-listview.html'
@@ -23,6 +22,7 @@ export class ClientLoginListView extends AbstractListView {
     cols:  TableCols[] = ClientService.clientCols;
     
     onLoadClientError: boolean;
+    loggedUsername: string;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -31,7 +31,7 @@ export class ClientLoginListView extends AbstractListView {
         protected router        : Router,
         protected location      : Location
     ) {
-        super(redirect, tourneyService, router, location);
+        super("", tourneyService, router, location);
     }
 
     ngOnInit() {
@@ -41,6 +41,7 @@ export class ClientLoginListView extends AbstractListView {
 
         this.onLoadClientError = false;
         let loggedUserId = this.loginService.userLogged.id;
+        this.loggedUsername = this.loginService.userLogged.username;
 
         this.loginService.blockedDocument = true;
 
@@ -91,6 +92,10 @@ export class ClientLoginListView extends AbstractListView {
  
     private gotoListView() {
         this.clientService.newClient = false;
-        this.gotoDetailView();
+        if( this.loginService.isAtLeastAdmin() ) {
+            this.router.navigate([LoginDetailView.redirectToAdminTourney]);
+        } else {
+            this.router.navigate([LoginDetailView.redirectToShowTourney]);
+        }
     }
 }

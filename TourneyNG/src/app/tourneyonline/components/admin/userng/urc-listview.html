@@ -1,8 +1,8 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Utenti e ruoli</span>
-        <span>Creazione e configurazione utenti e ruoli di sistema</span>
-        <p>Utente [{{username}}]</p>
+        <span class="feature-title">Utenti, ruoli e clienti</span>
+        <span>Creazione e configurazione utenti, ruoli e clienti di sistema</span>
+        <p>Utente [{{loggedUsername}}]</p>
     </div>
 </div>
 
@@ -38,37 +38,65 @@
 <div *ngIf="onDeleteError" style="margin-top:30px">
     <p-message severity="error" text="Cancellazione fallita, oggetto ancora in uso"></p-message>
 </div>    
+
+<div *ngIf="therIsOnlyOneDeveloper" style="margin-top:30px">
+    <p-message severity="error" text="Non si può cancellare l'ultimo Developer"></p-message>
+</div>    
             
 <div style="text-align:left">
-    <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Utente"></button>
+    <button type="button" pButton icon="fa fa-plus" (click)="newAssociation()" label="Nuova associazione"></button>
 </div>
 
-<p-table [columns]="cols" 
-    [value]="rows" 
-    [responsive]="true"
-    selectionMode="single" 
-    [(selection)]="urcService.selectedUrc" 
-    (onRowSelect)="onRowSelect($event)">
-
+<p-table [value]="urcRowList" >
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-            <th class="deleteColSize">X</th>
+            <th style="width: 15mm;">N°</th>
+            <th>Utente</th>
+            <th>Ruolo</th>
+            <th>Cliente</th>
+            <th class="deleteColSize">X</th>          
         </tr>
-    </ng-template>
+    </ng-template>                                     
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData">
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
-            </td>
+    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+        <tr>
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td>
+                <p-dropdown [options]="userOptions" 
+                    [(ngModel)]="rowData.userSelect" 
+                    optionLabel="label"
+                    placeholder="Utente"
+                    [autoWidth]="true">
+                </p-dropdown>
+            </td>            
+            <td>
+                <p-dropdown [options]="roleOptions" 
+                    [(ngModel)]="rowData.roleSelect" 
+                    optionLabel="label"
+                    placeholder="Ruolo"
+                    [autoWidth]="true">
+                </p-dropdown>
+            </td>           
+            <td>
+                <p-dropdown [options]="clientOptions" 
+                    [(ngModel)]="rowData.clientSelect" 
+                    optionLabel="label"
+                    placeholder="Cliente"
+                    [autoWidth]="true">
+                </p-dropdown>
+            </td>            
+            <td class="deleteColSize">
                 <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
-            </td>
+            </td> 
         </tr>
     </ng-template>
-</p-table>
+</p-table> 
  
- 
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <button class="ui-button-success" 
+        pButton (click)="onSubmit()" 
+        icon="pi pi-save" 
+        label="Salva" >
+    </button>
+</div>
+

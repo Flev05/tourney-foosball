@@ -36,7 +36,7 @@ export class UrcService {
     }
       
     saveUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
-        let userId = urc.userVo.id;
+        let userId = urc.id;
         if(userId == null) {
             return this.createUrc(urc, selector);
         }
@@ -49,7 +49,7 @@ export class UrcService {
     }
 
     /** POST: add a new User to the server */
-    private createUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
+    public createUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
         let url = userUrl + "/insert";
         console.log(url);
 

@@ -2,6 +2,7 @@
     <div>
         <span class="feature-title">Società e clienti</span>
         <span>Pagina per la creazione e configurazione dei clienti</span>
+        <p>Utente [{{loggedUsername}}]</p>
     </div>
 </div>
 
@@ -53,6 +54,7 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
+            <th style="width: 15mm;">N°</th>
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
@@ -60,8 +62,9 @@
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>

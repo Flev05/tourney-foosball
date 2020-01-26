@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool, ERoles } from '../../../domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -47,6 +47,7 @@ const PLYOFF_CHANGE_TEAMS_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di squ
 const PLYOFF_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
 const ELIM_DIR_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione delle eliminazioni dirette, si perdono tutte le impostazioni preesistenti. Confermi?';
 
+const MIN_ELIMINATORY_TAB_INDEX: number = 2;
 
 @Component({
     templateUrl: './tourney-detailview.html',
@@ -104,7 +105,7 @@ export class TourneyDetailView extends AbstractDetailView {
     nextButtonLabel: string = "Avanti";
     nextButtonIcon: string = "fa fa-arrow-right";
     maxBoundaryTabIndex: number;
-    rewind: boolean;
+    // rewind: boolean;
     isPlayoffNumChanged: boolean = false;
 
     isPlayoffAutoGen: string;
@@ -184,7 +185,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("Entering onOperatorRowSelect()");
         console.log(event);
 
-        let urcId = event.data.id;
+        let urcId = event.id;
 
         this.urcService.selectedUrc = this.urcList.find( urc => urc.userVo.id == urcId );
         this.urcService.urcList = this.urcList;
@@ -210,7 +211,16 @@ export class TourneyDetailView extends AbstractDetailView {
     private onLoadNext(cs: UserVO[]): void {
         this.operatorRows = cs;
         this.selectedOperatorRows = cs;
+
+        // this.operatorRows.forEach( o => this.disableEditButton(o) );
     }
+
+    // private disableEditButton(o: UserVO): void {
+    //     var asEnum : ERoles= <ERoles>ERoles[this.urcService.selectedUrc.roleVo.name];
+    //     if(o.id == this.urcService.selectedUrc.userVo.id && asEnum != ERoles.OPERATOR) {
+    //         o.disabled = "disabled";
+    //     }
+    // }
 
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {      
@@ -426,7 +436,8 @@ export class TourneyDetailView extends AbstractDetailView {
                 lastTabIndex = 4;
             }
         }
-        return lastTabIndex;
+
+        return lastTabIndex + 1;
     }
 
     private prepareRoundsCombobox(): void {
@@ -565,7 +576,7 @@ export class TourneyDetailView extends AbstractDetailView {
         tvo.mdbs = mdbs;
         const subscriber = this.tourneyService.updateTourneyAndEliminatories(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.unBlockDocument());
-        this.turnOnWizardMode(this.maxBoundaryTabIndex);
+        this.turnOnWizardMode(this.maxBoundaryTabIndex+1);
     }
     
     onEliminatoryAutoGenClick() {
@@ -1305,19 +1316,24 @@ export class TourneyDetailView extends AbstractDetailView {
 
     nextTab(): void {
         console.log("Entering nextTab()");
-
         if( !this.isInWizardMode() ) {
             this.doSave();
             return;
         }
-        
-        this.rewind  = false;
+
+        let rewind  = true;
         if( this.selectedTourney.selectedTabIndex >= this.maxBoundaryTabIndex ) {
-            this.rewind = true;
+            this.selectedTourney.selectedTabIndex = 0;
+            this.selectedTourney.wizardModeIndex = -1
+            // this.gotoListView();
+            let tvo: TourneyVO = this.cloneTourneyVO(rewind);
+            const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+            subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(true));
+            return;
         }
 
         if( this.levelService.isStandAlone(this.selectedTourney) ) {
-            if( this.selectedTourney.selectedTabIndex == 2 ) {
+            if( this.selectedTourney.selectedTabIndex >= MIN_ELIMINATORY_TAB_INDEX ) {
                 this.selectedTourney.selectedTabIndex++;
                 let teamNo: number  = this.selectedTourney.teams.length;
                 this.selectedTourney.selectedEliminatoryTeamsCB.value = teamNo;
@@ -1326,9 +1342,9 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        let tvo: TourneyVO = this.cloneTourneyVO(this.rewind);
+        let tvo: TourneyVO = this.cloneTourneyVO(rewind);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(this.rewind));
+        subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(false));
     }
  
     private saveTourneyNext(tvo: TourneyVO): void {
@@ -1339,6 +1355,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private nextSaveComplete(rewind : boolean): void {
         console.log("Entering nextSaveComplete()");
+        
         if( this.onSaveTourneyError ) {
             return;
         }
@@ -1354,6 +1371,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.wizardModeIndex = this.selectedTourney.selectedTabIndex > this.selectedTourney.wizardModeIndex 
             ? this.selectedTourney.wizardModeIndex++ 
             : this.selectedTourney.wizardModeIndex;
+        this.makeButtonLabel();
     }
  
     private updatePlayoffMeetings() {
@@ -1478,6 +1496,10 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         return false;
+    }
+
+    editDisabled(): string {
+        return "";
     }
 
     enableSaveButton() : string {

@@ -10,9 +10,6 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 
 const redirect : string = "/login/lv";
-const redirectToAdminTourney = '/admintourney';
-const redirectToShowTourney  = '/showtourney';
-
 @Component({
     templateUrl: './login-detailview.html',
     styles: [`        
@@ -27,7 +24,9 @@ const redirectToShowTourney  = '/showtourney';
   `]
 })
 export class LoginDetailView implements OnInit {
-
+    public static redirectToAdminTourney = '/admintourney';
+    public static redirectToShowTourney  = '/showtourney';
+    
     formLogin: Login;
 
     msgs: Message[] = [];
@@ -35,6 +34,7 @@ export class LoginDetailView implements OnInit {
     loginformGroup: FormGroup;
 
     loginFailed: boolean;
+    loggedUsername: string;
 
     constructor(
         private fb: FormBuilder,
@@ -47,10 +47,10 @@ export class LoginDetailView implements OnInit {
         this.loginService.blockedDocument = false;
         this.formLogin = {"id": 1, "username": "", "password" : ""};
 
-        const username = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;
+        this.loggedUsername = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;
 
         this.loginformGroup = this.fb.group({
-            'username': new FormControl(username, Validators.required),
+            'username': new FormControl(this.loggedUsername, Validators.required),
             'password': new FormControl("", Validators.required),
         });
     }
@@ -70,12 +70,12 @@ export class LoginDetailView implements OnInit {
         subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
     }
 
-    private onNext(uvo: Login) {
+    private onNext(lvo: Login) {
         console.log("Entering LoginDetailView.onNext()"); // log to console instead
-        console.log(uvo);
+        console.log(lvo);
 
-        if( uvo != undefined ) {
-            this.loginService.setUserLogged(uvo);
+        if( lvo != undefined ) {
+            this.loginService.setUserLogged(lvo);
         } else {
             this.loginService.isUserLogged = false;
             this.loginFailed = true;
@@ -107,10 +107,10 @@ export class LoginDetailView implements OnInit {
     private processClientNext(clients: ClientVO[]): void {
         if( clients.length == 1 ) {
             this.clientService.setSelectClients(clients);
-            if( this.loginService.isOperatorOrFollower() ) {
-                this.router.navigate([redirectToShowTourney]);
+            if( this.loginService.isAtLeastAdmin() ) {
+                this.router.navigate([LoginDetailView.redirectToAdminTourney]);
             } else {
-                this.router.navigate([redirectToAdminTourney]);
+                this.router.navigate([LoginDetailView.redirectToShowTourney]);
             }
             return;
         }

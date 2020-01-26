@@ -2,6 +2,7 @@
     <div>
         <span class="feature-title">Utenti</span>
         <span>Vista elenco utenti di sistema</span>
+        <p>Utente [{{loggedUsername}}]</p>
     </div>
 </div>
 
@@ -31,8 +32,9 @@
             </p>
 
             <h3>Rimuovere un utente esistente</h3>
+            <p>Un utente può essere rimosso solo se non è associato a nessun cliente.</p>
             <p>
-                Se invece fate click sul bottone con la croce rossa, rimuovete l'utente dal sistema. L'operazione vi chiederà converma mediante una box di popup.
+                Per rimuoverlo, fate click sul bottone con la croce rossa e confermata la rimozione nella popup successiva.
             </p>
         </p-accordionTab>
     </p-accordion>    
@@ -58,15 +60,17 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
+            <th style="width: 15mm;">N°</th>
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
-            <th>X</th>
+            <th class="deleteColSize">X</th>          
         </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>

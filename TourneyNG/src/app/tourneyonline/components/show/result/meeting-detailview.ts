@@ -109,14 +109,13 @@ export class MeetingDetailView extends AbstractDetailView {
             m.score1 = 0;
             m.score2 = 0;
         }
-        this.save();
         this.selectedMeeting.status = MeetingStatus.ToPlay;
+        this.save();
     }
 
     onInProgressClick() {
         console.log("Entering onInProgressClick()");
         console.log(event);
-        this.save();
         this.selectedMeeting.status = MeetingStatus.InProgress;
     }
 
@@ -142,14 +141,13 @@ export class MeetingDetailView extends AbstractDetailView {
     plus1(m: Match): void {
         let ii = m.id;
         if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
+            this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
+        this.matches[ii].status = MeetingStatus.InProgress;
         this.matches[ii].score1++;
         if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score1 = this.selectedTourney.pointsNeededToWin;
-            if( this.matches.length == 1 ) {
-                this.selectedMeeting.status = MeetingStatus.Terminated;
-            }
         }
         this.save();
     }
@@ -157,8 +155,10 @@ export class MeetingDetailView extends AbstractDetailView {
     minus2(m: Match): void {
         let ii = m.id;
         if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
+            this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
+        this.matches[ii].status = MeetingStatus.InProgress;
         this.matches[ii].score2--;
         if(this.matches[ii].score2 < 0) {
             this.matches[ii].score2=0;
@@ -174,9 +174,9 @@ export class MeetingDetailView extends AbstractDetailView {
         this.matches[ii].score2++;
         if(this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score2 = this.selectedTourney.pointsNeededToWin;
-            if( this.matches.length == 1 ) {
-                this.selectedMeeting.status = MeetingStatus.Terminated;
-            }
+            // if( this.matches.length == 1 ) {
+            //     this.selectedMeeting.status = MeetingStatus.Terminated;
+            // }
         }
         this.save();
     }
@@ -220,7 +220,7 @@ export class MeetingDetailView extends AbstractDetailView {
                 }
             }
 
-            if (goals1 == goals2) {
+            if (goals1 == goals2 && m.status == MeetingStatus.InProgress) {
                 this.selectedMeeting.points2 += this.selectedTourney.matchBalanceScores;
                 this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;
             }

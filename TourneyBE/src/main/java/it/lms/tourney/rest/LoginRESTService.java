@@ -2,7 +2,9 @@
 package it.lms.tourney.rest;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -143,17 +145,15 @@ public class LoginRESTService extends AbstractRESTService {
 
     private UserVO prepareResponse(User u) {
 
+        Set<RoleVO> roleSet = new HashSet<>();
         UserVO uvo = converter.convertUserPoVo(u);
         for (UserRoleClient urc : u.getUrcSet()) {
-
             Role r = urc.getRole();
-
             RoleVO rvo = converter.convertRolePoVo(r);
-            uvo.getRoles().add(rvo);
+            roleSet.add(rvo);
         }
-
+        uvo.getRoles().addAll(roleSet);
         logger.debug(logId() + uvo);
-
         return uvo;
     }
 }

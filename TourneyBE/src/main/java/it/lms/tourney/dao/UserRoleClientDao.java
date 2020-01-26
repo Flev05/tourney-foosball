@@ -205,31 +205,40 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
-     * Save the received UCR. If the is is null, inserts the new URC else updates the received URC
+     * Inserts the received UCR
      * 
-     * @param bo the BO to save
+     * @param bo the BO to insert
      * @throws DaoException if a problem occurs during the insert operation
      */
-    public void save(UserRoleClient po) {
+    public void insert(UserRoleClient po) {
 
-        logger.debug(logId() + "Entering save(" + po + ")");
+        logger.debug(logId() + "Entering insert(" + po + ")");
 
-        if (po.isNull()) {
-            super.insertPo(po);
-        } else {
-            super.updatePo(po);
-        }
+        super.insertPo(po);
     }
 
     /**
-     * Deleted the user received as parameter
+     * Updates the URC received as parameter
+     * 
+     * @param bo the BO to save
+     * @throws DaoException if a problem occurs during the delete operation
+     */
+    public void update(UserRoleClient po) {
+
+        logger.debug(logId() + "Entering update()");
+
+        super.updatePo(po);
+    }
+
+    /**
+     * Deletes the user received as parameter
      * 
      * @param bo the BO to save
      * @throws DaoException if a problem occurs during the delete operation
      */
     public void delete(UserRoleClient po) {
 
-        logger.debug(logId() + "Entering deletePo()");
+        logger.debug(logId() + "Entering delete()");
 
         super.deletePo(po);
     }

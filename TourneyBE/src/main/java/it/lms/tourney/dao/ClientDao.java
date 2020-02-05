@@ -37,8 +37,10 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
+@Slf4j
 public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
     public ClientDao() {
@@ -59,7 +61,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
      */
     public List<Client> findOwnerClients(Integer loggedUserId) {
 
-        logger.debug(logId() + "Entering findOwnerClients()");
+        log.debug(logId() + "Entering findOwnerClients()");
 
         List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.OWNER);
 
@@ -72,7 +74,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
     public List<UserRoleClient> findClientsByRole(Integer loggedUserId, List<Role.ROLES> roleList) {
 
-        logger.debug(logId() + "Entering findClientsByRole()");
+        log.debug(logId() + "Entering findClientsByRole()");
 
         CriteriaBuilder cb = getCb();
 
@@ -94,7 +96,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -107,7 +109,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
      */
     public List<Client> findClientsByUser(Integer loggedUserId) {
 
-        logger.debug(logId() + "Entering findClientsByUser()");
+        log.debug(logId() + "Entering findClientsByUser()");
 
         CriteriaBuilder cb = getCb();
 
@@ -125,7 +127,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
 
@@ -134,7 +136,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
     public List<Client> findAllClients() {
 
-        logger.debug(logId() + "Entering findByEmail()");
+        log.debug(logId() + "Entering findByEmail()");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
@@ -146,14 +148,14 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<Client> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public Client findByEmail(String email) {
 
-        logger.debug(logId() + "Entering findByEmail(" + email + ")");
+        log.debug(logId() + "Entering findByEmail(" + email + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
@@ -168,7 +170,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<Client> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -178,7 +180,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
     public Client getByBusinssName(String businessName) {
 
-        logger.debug(logId() + "Entering getByBusinssName(" + businessName + ")");
+        log.debug(logId() + "Entering getByBusinssName(" + businessName + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
@@ -193,7 +195,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<Client> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -203,21 +205,21 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
     public void insert(Client client) {
 
-        logger.debug(logId() + "Entering insert(" + client + ")");
+        log.debug(logId() + "Entering insert(" + client + ")");
 
         super.insertPo(client);
     }
 
     public void update(Client client) {
 
-        logger.debug(logId() + "Entering update(" + client + ")");
+        log.debug(logId() + "Entering update(" + client + ")");
 
         super.updatePo(client);
     }
 
     public void delete(Client client) {
 
-        logger.debug(logId() + "Entering delete(" + client + ")");
+        log.debug(logId() + "Entering delete(" + client + ")");
 
         super.deletePo(client);
     }

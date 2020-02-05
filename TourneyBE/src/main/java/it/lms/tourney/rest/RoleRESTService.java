@@ -17,12 +17,14 @@ import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.po.Role;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/roles")
 @Stateless
+@Slf4j
 public class RoleRESTService extends AbstractRESTService {
 
     @Inject
@@ -37,7 +39,7 @@ public class RoleRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<RoleVO> loadAllRoles(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        logger.debug(logId() + "GET: loadAllRoles()");
+        log.debug(logId() + "GET: loadAllRoles()");
 
         List<Role> roleList = roleDao.findRolesLesserThan(loggedUserId);
 

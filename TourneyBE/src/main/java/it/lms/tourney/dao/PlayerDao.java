@@ -33,8 +33,10 @@ import it.lms.tourney.po.Player;
 import it.lms.tourney.po.Player_;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
+import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
+@Slf4j
 public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
     public PlayerDao() {
@@ -55,7 +57,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
      */
     public List<Player> findPlayersByClientId(Integer clientId) {
 
-        logger.debug(logId() + "Entering findPlayersByClientId()");
+        log.debug(logId() + "Entering findPlayersByClientId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -73,7 +75,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
         List<Player> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -86,7 +88,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
      */
     public List<Player> findPlayersBySessionId(String sessionId) {
 
-        logger.debug(logId() + "Entering findPlayersBySessionId()");
+        log.debug(logId() + "Entering findPlayersBySessionId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -104,14 +106,14 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
         List<Player> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public Player getPlayerByClientId(Integer clientId, String playerName) {
 
-        logger.debug(logId() + "Entering getPlayerByClientId(" + playerName + ")");
+        log.debug(logId() + "Entering getPlayerByClientId(" + playerName + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Player> cq = cb.createQuery(Player.class);
@@ -129,7 +131,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
         List<Player> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -139,7 +141,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
     public Player getPlayerBySessionId(String userSession, String playerName) {
 
-        logger.debug(logId() + "Entering getPlayerBySessionId(" + userSession + "," + playerName + ")");
+        log.debug(logId() + "Entering getPlayerBySessionId(" + userSession + "," + playerName + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Player> cq = cb.createQuery(Player.class);
@@ -157,7 +159,7 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
         List<Player> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -167,21 +169,21 @@ public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
     public void insert(Player player) {
 
-        logger.debug(logId() + "Entering insert(" + player + ")");
+        log.debug(logId() + "Entering insert(" + player + ")");
 
         super.insertPo(player);
     }
 
     public void update(Player player) {
 
-        logger.debug(logId() + "Entering update(" + player.getId() + ")");
+        log.debug(logId() + "Entering update(" + player.getId() + ")");
 
         super.updatePo(player);
     }
 
     public void delete(Player player) {
 
-        logger.debug(logId() + "Entering delete(" + player.getId() + ")");
+        log.debug(logId() + "Entering delete(" + player.getId() + ")");
 
         super.deletePo(player);
     }

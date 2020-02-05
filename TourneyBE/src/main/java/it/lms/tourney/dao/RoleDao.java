@@ -1,6 +1,7 @@
 
 package it.lms.tourney.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,9 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
     public RoleDao() throws DaoException {
@@ -30,7 +33,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
     public Role getRoleById(Integer id) {
 
-        logger.debug(logId() + "Entering getRoleById()");
+        log.debug(logId() + "Entering getRoleById()");
 
         Role role = getById(id);
 
@@ -58,7 +61,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
         List<UserRoleClient> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Entity(ies)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         List<Role> roleList = poList.stream().map(urc -> urc.getRole()).collect(Collectors.toList());
 
@@ -74,7 +77,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public List<Role> findAllRoles() {
 
-        logger.debug(logId() + "Entering findAllRoles()");
+        log.debug(logId() + "Entering findAllRoles()");
 
         CriteriaQuery<Role> cq = getCb().createQuery(Role.class);
 
@@ -87,7 +90,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
         List<Role> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Role(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         return poList;
     }
@@ -128,7 +131,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
         List<Role> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Role(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -147,7 +150,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public Role getById(Integer id) {
 
-        logger.debug(logId() + "Entering RoleDao.getById(" + id + ")");
+        log.debug(logId() + "Entering RoleDao.getById(" + id + ")");
 
         Role po = getPoById(id);
 
@@ -163,13 +166,13 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     public void save(Role po) throws DaoException {
 
         if (po.isNull()) {
-            logger.debug(logId() + "Inserting Role: " + po);
+            log.debug(logId() + "Inserting Role: " + po);
 
             insert(po);
             return;
         }
 
-        logger.debug(logId() + "Updating Role: " + po);
+        log.debug(logId() + "Updating Role: " + po);
 
         Role mpo = merge(po);
         updatePo(mpo);
@@ -183,7 +186,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public void insert(Role po) throws DaoException {
 
-        logger.debug(logId() + "Entering insertPo()");
+        log.debug(logId() + "Entering insertPo()");
 
         super.insertPo(po);
     }
@@ -196,7 +199,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public void delete(Role po) throws DaoException {
 
-        logger.debug(logId() + "Entering deletePo()");
+        log.debug(logId() + "Entering deletePo()");
 
         super.deletePo(po);
     }
@@ -209,7 +212,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public ROLES findMaxRole(Integer loggedUserId) {
 
-        logger.debug(logId() + "Entering findMaxRole()");
+        log.debug(logId() + "Entering findMaxRole()");
 
         CriteriaBuilder cb = getCb();
 
@@ -227,7 +230,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         ROLES maxRole = ROLES.FOLLOWER;
         List<Role> roleList = resultList.stream().map(urc -> urc.getRole()).collect(Collectors.toList());
@@ -246,6 +249,33 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
     }
 
     /**
+     * Finds the role list among the roles lesser than the role of the logged user id
+     * 
+     * @param loggedUserId the logged user id
+     * @return the max role of the received user id
+     */
+    public List<Role> findRoleLesserThan(Integer loggedUserId) {
+
+        log.debug(logId() + "Entering findRoleLesserThan()");
+
+        ROLES maxRole = findMaxRole(loggedUserId);
+
+        List<Role> resultList = findAllRoles();
+
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+        List<Role> roleList = new ArrayList<>();
+        for (Role r : resultList) {
+            ROLES er = ROLES.resolve(r.getName());
+            if (er.getValue() <= maxRole.getValue()) {
+                roleList.add(r);
+            }
+        }
+
+        return roleList;
+    }
+
+    /**
      * Finds all the roles where its role is lesser or equals of the role of the received user
      * 
      * @param loggedUserId
@@ -253,7 +283,7 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
      */
     public List<Role> findRolesLesserThan(Integer loggedUserId) {
 
-        logger.debug(logId() + "Entering findRolesLesserThan()");
+        log.debug(logId() + "Entering findRolesLesserThan()");
 
         ROLES maxRole = findMaxRole(loggedUserId);
 

@@ -73,7 +73,7 @@ export class LoginService {
     setUserLogged(lvo: Login): void {
         this.userLogged = lvo;
         this.userService.selectedUser = lvo;
-        this.roleService.setSelectRoles(lvo.roles);
+        this.roleService.setSelectRoles(lvo.roles, lvo.minorRoles);
     }
 
     /** PUT: send the request login to the server */

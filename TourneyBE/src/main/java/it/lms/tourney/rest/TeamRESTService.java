@@ -27,12 +27,14 @@ import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.TeamDao;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Team;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/teams")
 @Stateless
+@Slf4j
 public class TeamRESTService extends AbstractRESTService {
 
     @Inject
@@ -50,7 +52,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TeamVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: loadByClientId(" + clientId + ")");
+        log.debug("{}", logId() + "GET: loadByClientId(" + clientId + ")");
 
         List<Team> teamList = teamDao.findTeamsByClientId(clientId);
 
@@ -64,7 +66,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TeamVO> loadBySessionId() {
 
-        logger.debug(logId() + "GET: loadBySessionId()");
+        log.debug(logId() + "GET: loadBySessionId()");
 
         String sessionId = super.getSessionId();
 
@@ -80,7 +82,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Team lookupTeamById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: lookupTeamById(" + id + ")");
+        log.debug(logId() + "GET: lookupTeamById(" + id + ")");
 
         Team team = teamDao.getById(id);
         if (team == null) {
@@ -99,7 +101,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTeam(TeamVO tvo) {
 
-        logger.debug(logId() + "POST: createTeam(" + tvo + ")");
+        log.debug(logId() + "POST: createTeam(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<>();
         Team foundTeam;
@@ -111,7 +113,7 @@ public class TeamRESTService extends AbstractRESTService {
             String userAgent = super.getUserAgent();
             if (spo == null) {
                 String message = logId() + "User Session doesn't exist, create a new one";
-                logger.error(message);
+                log.error(message);
                 spo = sessionDao.insert(null, sessionId, userAgent);
             } else {
                 spo = sessionDao.update(spo, sessionId, userAgent);
@@ -122,7 +124,7 @@ public class TeamRESTService extends AbstractRESTService {
 
         if (foundTeam != null) {
 
-            logger.error("Team found");
+            log.error("Team found");
             responseObj.put("errorCode", "TeamAlreadyExists");
             responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
 
@@ -134,7 +136,7 @@ public class TeamRESTService extends AbstractRESTService {
 
         tvo = converter.convertTeamPoVo(team);
 
-        logger.debug(tvo);
+        log.debug("{}", tvo);
 
         Response.ResponseBuilder builder = Response.ok().entity(tvo);
 
@@ -159,7 +161,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTeam(TeamVO tvo) {
 
-        logger.debug(logId() + "PUT: updateTeam(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTeam(" + tvo + ")");
         Map<String, String> responseObj = new HashMap<>();
 
         Team foundTeam;
@@ -174,7 +176,7 @@ public class TeamRESTService extends AbstractRESTService {
 
         if (foundTeam != null && !foundTeam.getId().equals(tvo.getId())) {
 
-            logger.error("Team found");
+            log.error("Team found");
             responseObj.put("errorCode", "TeamAlreadyExists");
             responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
 
@@ -201,7 +203,7 @@ public class TeamRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteTeam(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deleteTeam(" + id + ")");
+        log.debug(logId() + "DELETE: deleteTeam(" + id + ")");
 
         Team team = teamDao.getById(id);
         teamDao.delete(team);

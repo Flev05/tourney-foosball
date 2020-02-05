@@ -33,8 +33,10 @@ import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
 import it.lms.tourney.po.Team;
 import it.lms.tourney.po.Team_;
+import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
+@Slf4j
 public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
     public TeamDao() {
@@ -55,7 +57,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
      */
     public List<Team> findTeamsByClientId(Integer clientId) {
 
-        logger.debug(logId() + "Entering findTeamsByClientId()");
+        log.debug(logId() + "Entering findTeamsByClientId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -73,7 +75,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
         List<Team> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -86,7 +88,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
      */
     public List<Team> findPlayersBySessionId(String sessionId) {
 
-        logger.debug(logId() + "Entering findPlayersBySessionId()");
+        log.debug(logId() + "Entering findPlayersBySessionId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -105,14 +107,14 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
         List<Team> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public Team getTeamClientId(Integer clientId, String teamName) {
 
-        logger.debug(logId() + "Entering getTeamClientId(" + teamName + ")");
+        log.debug(logId() + "Entering getTeamClientId(" + teamName + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Team> criteria = cb.createQuery(Team.class);
@@ -131,7 +133,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
         List<Team> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -141,7 +143,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
     public Team getTeamSessionId(String userSession, String teamName) {
 
-        logger.debug(logId() + "Entering getTeamSessionId(" + userSession + ")");
+        log.debug(logId() + "Entering getTeamSessionId(" + userSession + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Team> criteria = cb.createQuery(Team.class);
@@ -160,7 +162,7 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
         List<Team> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -170,21 +172,21 @@ public class TeamDao extends BaseJPACrudDao<Team, Integer> {
 
     public void insert(Team team) {
 
-        logger.debug(logId() + "Entering insert(" + team + ")");
+        log.debug(logId() + "Entering insert(" + team + ")");
 
         super.insertPo(team);
     }
 
     public void update(Team team) {
 
-        logger.debug(logId() + "Entering update(" + team.getId() + ")");
+        log.debug(logId() + "Entering update(" + team.getId() + ")");
 
         super.updatePo(team);
     }
 
     public void delete(Team team) {
 
-        logger.debug(logId() + "Entering delete(" + team.getId() + ")");
+        log.debug(logId() + "Entering delete(" + team.getId() + ")");
 
         super.deletePo(team);
     }

@@ -1,6 +1,7 @@
 
 package it.lms.tourney.cdi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,12 +61,20 @@ public class Converter extends AbstractLogger {
     public RoleVO convertRolePoVo(Role rpo) {
 
         RoleVO rvo = new RoleVO();
-
         rvo.setId(rpo.getId());
         rvo.setDescription(rpo.getDescription());
         rvo.setName(rpo.getName());
-
         return rvo;
+    }
+
+    public List<RoleVO> convertRolePoVoList(List<Role> roleList) {
+
+        List<RoleVO> roleVoLst = new ArrayList<>();
+        for (Role rpo : roleList) {
+            RoleVO rvo = convertRolePoVo(rpo);
+            roleVoLst.add(rvo);
+        }
+        return roleVoLst;
     }
 
     public ClientVO convertClientPoVo(Client cpo) {
@@ -92,7 +101,6 @@ public class Converter extends AbstractLogger {
 
         UserRoleClientVO urcvo = new UserRoleClientVO();
         urcvo.setId(urc.getId());
-        urcvo.setTourneyId(urc.getTourney() == null ? null : urc.getTourney().getId());
         urcvo.setDisciplineId(urc.getDiscipline() == null ? null : urc.getDiscipline().getId());
 
         UserVO userVo = convertUserPoVo(urc.getUser());
@@ -124,11 +132,6 @@ public class Converter extends AbstractLogger {
 
         Role rpo = roleDao.getById(urcvo.getRoleVo().getId());
         urc.setRole(rpo);
-
-        if (urcvo.getTourneyId() != null) {
-            Tourney tpo = tourneyDao.findById(urcvo.getTourneyId());
-            urc.setTourney(tpo);
-        }
 
         if (urcvo.getDisciplineId() != null) {
             Discipline dpo = disciplineDao.getById(urcvo.getDisciplineId());

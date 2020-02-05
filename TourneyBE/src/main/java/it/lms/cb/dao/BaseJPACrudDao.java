@@ -15,11 +15,13 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import it.lms.tourney.cdi.AbstractLogger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * BaseHibernateCrudDao Class. Root(base) class to manage data access using Hibernate to perform CRUD operations on only
  * one entity.
  */
+@Slf4j
 public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends AbstractLogger {
 
     @PersistenceContext
@@ -57,7 +59,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
         makePersistent(entity);
 
-        logger.debug(logId() + "insert successful");
+        log.debug(logId() + "insert successful");
     }
 
     /**
@@ -72,20 +74,20 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         makePersistent(mpo);
 
         entity = mpo;
-        logger.debug(logId() + "update successful");
+        log.debug(logId() + "update successful");
     }
 
     protected PO merge(PO entity) {
 
         PO po = em.merge(entity);
-        logger.debug(logId() + "merge successful");
+        log.debug(logId() + "merge successful");
         return po;
     }
 
     protected void detach(PO entity) {
 
         em.detach(entity);
-        logger.debug(logId() + "detach successful");
+        log.debug(logId() + "detach successful");
     }
 
     protected void deletePo(PO entity) {
@@ -93,7 +95,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
         PO mpo = this.merge(entity);
 
         em.remove(mpo);
-        logger.debug(logId() + "delete successful");
+        log.debug(logId() + "delete successful");
     }
 
     protected void refresh(PO entity) {
@@ -113,7 +115,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         return poList;
     }
@@ -130,7 +132,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         return poList;
     }
@@ -145,7 +147,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
      */
     protected PO getPoByPk(String pk, String name) throws DaoException {
 
-        logger.debug(logId() + "Entering getPoByPk(" + name + ")");
+        log.debug(logId() + "Entering getPoByPk(" + name + ")");
 
         CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
 
@@ -158,7 +160,7 @@ public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends Abstra
 
         List<PO> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " PO(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         PO po = poList.get(0);
         return po;

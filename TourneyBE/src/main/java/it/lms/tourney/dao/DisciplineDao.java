@@ -27,8 +27,10 @@ import javax.persistence.criteria.Root;
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Discipline;
 import it.lms.tourney.po.Discipline_;
+import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
+@Slf4j
 public class DisciplineDao extends BaseJPACrudDao<Discipline, Integer> {
 
     public DisciplineDao() {
@@ -43,7 +45,7 @@ public class DisciplineDao extends BaseJPACrudDao<Discipline, Integer> {
 
     public List<Discipline> findAllDisciplines() {
 
-        logger.debug(logId() + "Entering findAllDisciplines()");
+        log.debug(logId() + "Entering findAllDisciplines()");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Discipline> cq = cb.createQuery(Discipline.class);
@@ -56,28 +58,28 @@ public class DisciplineDao extends BaseJPACrudDao<Discipline, Integer> {
 
         List<Discipline> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public void insert(Discipline discipline) throws Exception {
 
-        logger.debug(logId() + "Entering insert(" + discipline.getName() + ")");
+        log.debug(logId() + "Entering insert(" + discipline.getName() + ")");
 
         super.insertPo(discipline);
     }
 
     public void update(Discipline Discipline) throws Exception {
 
-        logger.debug(logId() + "Entering save(" + Discipline + ")");
+        log.debug(logId() + "Entering save(" + Discipline + ")");
 
         super.updatePo(Discipline);
     }
 
     public void delete(Discipline Discipline) throws Exception {
 
-        logger.debug(logId() + "Entering delete(" + Discipline + ")");
+        log.debug(logId() + "Entering delete(" + Discipline + ")");
 
         super.deletePo(Discipline);
     }

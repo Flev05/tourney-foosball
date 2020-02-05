@@ -30,7 +30,9 @@ import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
 import it.lms.tourney.po.User;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
     public SessionDao() {
@@ -40,7 +42,7 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
     public Session findBySessionId(String sessionId) {
 
-        logger.debug(logId() + "Entering findBySessionId(" + sessionId + ")");
+        log.debug(logId() + "Entering findBySessionId(" + sessionId + ")");
 
         CriteriaBuilder cb = getEm().getCriteriaBuilder();
         CriteriaQuery<Session> criteria = cb.createQuery(Session.class);
@@ -55,7 +57,7 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
         List<Session> poList = cq.getResultList();
         String info = "[Found " + poList.size() + " Session(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -67,7 +69,7 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
     public Session findSessionBy(User u) {
 
-        logger.debug(logId() + "Entering findSessionBy(" + u + ")");
+        log.debug(logId() + "Entering findSessionBy(" + u + ")");
 
         CriteriaBuilder cb = getEm().getCriteriaBuilder();
         CriteriaQuery<Session> criteria = cb.createQuery(Session.class);
@@ -82,7 +84,7 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
         List<Session> poList = cq.getResultList();
         String info = "[Found " + poList.size() + " Session(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -118,14 +120,14 @@ public class SessionDao extends BaseJPACrudDao<Session, Integer> {
 
     public void insert(Session s) {
 
-        logger.debug(logId() + "Entering insert(" + s + ")");
+        log.debug(logId() + "Entering insert(" + s + ")");
 
         insertPo(s);
     }
 
     public void update(Session s) {
 
-        logger.debug(logId() + "Entering save(" + s.getId() + ")");
+        log.debug(logId() + "Entering save(" + s.getId() + ")");
 
         super.updatePo(s);
     }

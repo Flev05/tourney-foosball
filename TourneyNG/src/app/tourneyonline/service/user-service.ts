@@ -5,10 +5,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
-
 import { UserVO } from '../domain/user-vo';
-import { Password } from '../domain/password';
 import { UserRoleClientVO } from '../domain/urc-vo';
+import { OperatorsVO } from '../domain/operators-vo';
 
 const userUrl = 'api/users';                         // URL to Back End api
 const resetPasswordUrl = userUrl + '/resetPassword';
@@ -38,12 +37,12 @@ export class UserService {
         );
     }
 
-    loadOperatorsByClient (clientId: number, selector: (err: any, caught: Observable<UserVO[]> ) => Observable<UserVO[]>): Observable<UserVO[]> {
-        const url = userUrl + "/findOperatorsByClientId/" + clientId;
+    loadOperatorsBy(op: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
+        const url = userUrl + "/loadOperatorsBy/" + op.clientId + "/" + op.tourneyId;
         console.log(url);
         
-        return this.http.get<UserVO[]>(url).pipe(
-            tap(_ => this.log("fetched all clients by user id: " + clientId))
+        return this.http.post<OperatorsVO>(userUrl, op, httpOptions).pipe(
+            tap(_ => this.log("fetched all clients by user id: " + op))
           , catchError(selector)
         );
     }
@@ -57,7 +56,6 @@ export class UserService {
           , catchError(this.handleError<UserVO>('addUser'))
         );
     }
-
 
     /** GET hero by id. Will 404 if id not found */
     getUser(id: number): Observable<UserVO> {
@@ -126,6 +124,39 @@ export class UserService {
         return this.http.delete<UserVO>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted User id=${id}`)),
             catchError(selector)
+        );
+    }
+
+    /** POST: add a new User to the server */
+    createOperator (urc: UserRoleClientVO, tourneyId: number, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO>): Observable<UserRoleClientVO> {
+        let url = userUrl + "/createOperator/" + tourneyId;
+        console.log(url);
+
+        return this.http.post<UserRoleClientVO>(url, urc, httpOptions).pipe(
+            tap((op: UserRoleClientVO) => this.log(`added User w/ id=${op.userVo.username}`))
+            , catchError(selector)
+        );
+    }
+
+    /** Saves the relation betweeen the User and the tourney to the server */
+    attachOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
+        let url = userUrl + "/attachOperators";
+        console.log(url);
+
+        return this.http.post<OperatorsVO>(url, ovo, httpOptions).pipe(
+            tap((op: OperatorsVO) => this.log(`attachOperators for tourney id=${op.tourneyId}`))
+            , catchError(selector)
+        );
+    }
+
+    /** Detach the operator relation between tourney and operatorSS */
+    detachOperator(userId: number,tourneyId: number, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
+        const url = userUrl + "/detachOperator/" + userId + "/" + tourneyId;
+        console.log(url);
+
+        return this.http.get<UserRoleClientVO>(url).pipe(
+            tap((urc: UserRoleClientVO) => this.log(`detachOperator Operator URC.id=` + urc.id))
+            , catchError(selector)
         );
     }
 

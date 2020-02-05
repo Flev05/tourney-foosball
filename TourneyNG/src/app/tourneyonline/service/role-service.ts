@@ -84,7 +84,7 @@ export class RoleService {
         return this.maxLoggedUserRole == ERoles.FOLLOWER;
     }
 
-    setSelectRoles(roles: RoleVO[]): void {
+    setSelectRoles(roles: RoleVO[], minorRoles: RoleVO[]): void {
         this.selectedRoles = roles.sort((r1,r2) => {
             if(r1.id < r2.id) {
                 return -1;
@@ -98,7 +98,7 @@ export class RoleService {
         this.selectedRoleOption = {label: rvo.name, value: rvo.id};
 
         this.roleOptions = [];
-        for(let r of roles) {
+        for(let r of minorRoles) {
             this.roleOptions.push({label: r.name, value: r.id});
         }
         this.maxLoggedUserRole = <ERoles>ERoles[this.selectedRoles[0].name];

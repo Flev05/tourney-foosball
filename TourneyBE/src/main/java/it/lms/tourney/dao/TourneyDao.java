@@ -33,10 +33,12 @@ import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.Tourney_;
+import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 //@Stateless
 //@DaoQualifier
+@Slf4j
 public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
     public TourneyDao() {
@@ -63,7 +65,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
      */
     public List<Tourney> findTourneysByClientId(Integer clientId) {
 
-        logger.debug(logId() + "Entering findTourneysByClientId()");
+        log.debug(logId() + "Entering findTourneysByClientId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -81,7 +83,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -94,7 +96,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
      */
     public List<Tourney> findTourneysBySessionId(String sessionId) {
 
-        logger.debug(logId() + "Entering findTourneysBySessionId()");
+        log.debug(logId() + "Entering findTourneysBySessionId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -112,14 +114,14 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public Tourney getTourneyByClient(Integer clientId, String tourneyName) {
 
-        logger.debug(logId() + "Entering getTourneyByClient()");
+        log.debug(logId() + "Entering getTourneyByClient()");
 
         CriteriaBuilder cb = getCb();
 
@@ -140,7 +142,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         if (resultList.isEmpty()) {
             return null;
@@ -151,7 +153,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
     public Tourney getTourneyBySession(String userSession, String tourneyName) {
 
-        logger.debug(logId() + "Entering getTourneyBySession()");
+        log.debug(logId() + "Entering getTourneyBySession()");
 
         CriteriaBuilder cb = getCb();
 
@@ -172,7 +174,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         if (resultList.isEmpty()) {
             return null;
@@ -183,21 +185,21 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
     public void insert(Tourney t) {
 
-        logger.debug(logId() + "Entering insert(" + t.getJson() + ")");
+        log.debug(logId() + "Entering insert(" + t.getJson() + ")");
 
         super.insertPo(t);
     }
 
     public void update(Tourney t) {
 
-        logger.debug(logId() + "Entering update(" + t.getId() + ")");
+        log.debug(logId() + "Entering update(" + t.getId() + ")");
 
         super.updatePo(t);
     }
 
     public void delete(Tourney t) {
 
-        logger.debug(logId() + "Entering delete(" + t.getId() + ")");
+        log.debug(logId() + "Entering delete(" + t.getId() + ")");
 
         super.deletePo(t);
     }

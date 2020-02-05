@@ -3,5 +3,6 @@ import { RoleVO } from "./role-vo";
 
 export interface Login extends UserVO
 {
-    roles?          : RoleVO[];
+    roles?      : RoleVO[];
+    minorRoles? : RoleVO[];
 }

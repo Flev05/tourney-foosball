@@ -2,12 +2,15 @@
 package it.lms.tourney.po;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -23,8 +26,9 @@ public class UserRoleClient extends AbstractPO implements Serializable {
     private User              user;
     private Role              role;
     private Client            client;
-    private Tourney           tourney;
     private Discipline        discipline;
+
+    private Set<Tourney>      tourneys;
 
     @Override
     public String toString() {
@@ -79,19 +83,6 @@ public class UserRoleClient extends AbstractPO implements Serializable {
         this.client = client;
     }
 
-    // bi-directional many-to-one association to Tourney
-    @ManyToOne
-    @JoinColumn(name = "tourney_id")
-    public Tourney getTourney() {
-
-        return tourney;
-    }
-
-    public void setTourney(Tourney tourney) {
-
-        this.tourney = tourney;
-    }
-
     // bi-directional many-to-one association to Discipline
     @ManyToOne
     @JoinColumn(name = "discipline_id")
@@ -103,6 +94,18 @@ public class UserRoleClient extends AbstractPO implements Serializable {
     public void setDiscipline(Discipline discipline) {
 
         this.discipline = discipline;
+    }
+
+    // bi-directional many-to-many association to UserRoleClient
+    @ManyToMany(mappedBy = "urcs", fetch = FetchType.LAZY)
+    public Set<Tourney> getTourneys() {
+
+        return tourneys;
+    }
+
+    public void setTourneys(Set<Tourney> tourneys) {
+
+        this.tourneys = tourneys;
     }
 
 }

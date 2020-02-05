@@ -32,7 +32,9 @@ import it.lms.tourney.po.Meeting;
 import it.lms.tourney.po.Meeting_;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.Tourney_;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
     public MeetingDao() {
@@ -54,7 +56,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findMeetingsByRoundId(Integer tourneyId, Integer roundId) {
 
-        logger.debug(logId() + "Entering findMeetingsByRoundId()");
+        log.debug(logId() + "Entering findMeetingsByRoundId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -73,7 +75,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -87,7 +89,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findMeetingsByRoundIds(Integer tourneyId, List<Integer> roundIds) {
 
-        logger.debug(logId() + "Entering findMeetingsByRoundIds()");
+        log.debug(logId() + "Entering findMeetingsByRoundIds()");
 
         CriteriaBuilder cb = getCb();
 
@@ -106,7 +108,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -120,7 +122,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findMeetingsByPlayoffId(Integer tourneyId, Integer playoffId) {
 
-        logger.debug(logId() + "Entering findMeetingsByPlayoffId()");
+        log.debug(logId() + "Entering findMeetingsByPlayoffId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -139,7 +141,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -152,7 +154,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findMeetingsByPlayoffIds(Integer tourneyId, List<Integer> playoffs) {
 
-        logger.debug(logId() + "Entering findMeetingsByPlayoffIds()");
+        log.debug(logId() + "Entering findMeetingsByPlayoffIds()");
 
         CriteriaBuilder cb = getCb();
 
@@ -171,7 +173,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -184,7 +186,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findAllEliminatoryMeetingsBy(Integer tourneyId) {
 
-        logger.debug(logId() + "Entering findAllEliminatoryMeetingsBy()");
+        log.debug(logId() + "Entering findAllEliminatoryMeetingsBy()");
 
         CriteriaBuilder cb = getCb();
 
@@ -203,7 +205,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -217,7 +219,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findAllEliminatoryMeetingsByIdList(Integer tourneyId, List<Integer> idList) {
 
-        logger.debug(logId() + "Entering findAllEliminatoryMeetingsByIdList()");
+        log.debug(logId() + "Entering findAllEliminatoryMeetingsByIdList()");
 
         CriteriaBuilder cb = getCb();
 
@@ -236,7 +238,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -250,7 +252,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
      */
     public List<Meeting> findMeetingsByEliminatoryId(Integer tourneyId, Integer eliminatoryId) {
 
-        logger.debug(logId() + "Entering findMeetingsByEliminatoryId()");
+        log.debug(logId() + "Entering findMeetingsByEliminatoryId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -269,28 +271,28 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         List<Meeting> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public void insert(Meeting m) {
 
-        logger.debug(logId() + "Entering insert(" + m.getJson() + ")");
+        log.debug(logId() + "Entering insert(" + m.getJson() + ")");
 
         super.insertPo(m);
     }
 
     public void update(Meeting m) {
 
-        logger.debug(logId() + "Entering update(" + m.getId() + ")");
+        log.debug(logId() + "Entering update(" + m.getId() + ")");
 
         super.updatePo(m);
     }
 
     public void delete(Meeting m) {
 
-        logger.debug(logId() + "Entering delete(" + m.getId() + ")");
+        log.debug(logId() + "Entering delete(" + m.getId() + ")");
 
         super.deletePo(m);
     }
@@ -301,7 +303,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
+        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
     }
 
     public void deleteRoundMeetingsByTourneyId(Integer tourneyId) {
@@ -311,7 +313,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
+        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
     }
 
     public void deleteMeetingsByRoundId(Integer tourneyId, Integer roundId) {
@@ -324,7 +326,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         int deletedCount = query.executeUpdate();
 
-        logger.debug(logId() + "[Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId + " and roundId="
+        log.debug(logId() + "[Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId + " and roundId="
                 + roundId + "]");
     }
 
@@ -335,7 +337,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
     }
 
     public void deleteEliminatoryMeetingsByTourneyId(Integer tourneyId) {
@@ -345,6 +347,6 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
         int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        logger.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
     }
 }

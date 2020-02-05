@@ -2,6 +2,7 @@
 package it.lms.tourney.po;
 
 import javax.annotation.Generated;
+import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -10,8 +11,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class UserRoleClient_ {
 
     public static volatile SingularAttribute<UserRoleClient, Integer> id;
-
     public static volatile SingularAttribute<UserRoleClient, User>    user;
     public static volatile SingularAttribute<UserRoleClient, Role>    role;
     public static volatile SingularAttribute<UserRoleClient, Client>  client;
+
+    public static volatile SetAttribute<UserRoleClient, Tourney>      tourneys;
 }

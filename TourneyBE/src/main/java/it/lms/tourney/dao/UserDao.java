@@ -20,7 +20,9 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public UserDao() throws DaoException {
@@ -30,25 +32,25 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public List<User> findDevUsers() {
 
-        logger.debug(logId() + "Entering findDevUsers()");
+        log.debug(logId() + "Entering findDevUsers()");
         return findUsersByRole(Role.ROLES.DEVELOPER);
     }
 
     public List<User> findOwnerUsers() {
 
-        logger.debug(logId() + "Entering findOwnerUsers()");
+        log.debug(logId() + "Entering findOwnerUsers()");
         return findUsersByRole(Role.ROLES.OWNER);
     }
 
     public List<User> findAdminUsers() {
 
-        logger.debug(logId() + "Entering findAdminUsers()");
+        log.debug(logId() + "Entering findAdminUsers()");
         return findUsersByRole(Role.ROLES.ADMIN);
     }
 
     private List<User> findUsersByRole(Role.ROLES role) {
 
-        logger.debug(logId() + "Entering findUsersByRole()");
+        log.debug(logId() + "Entering findUsersByRole()");
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
@@ -67,7 +69,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         return poList;
     }
@@ -88,7 +90,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -108,7 +110,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      */
     public User findUserBy(String username) {
 
-        logger.debug(logId() + "Entering findUserBy(" + username + ")");
+        log.debug(logId() + "Entering findUserBy(" + username + ")");
 
         User po = getPoBy(username);
 
@@ -117,7 +119,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public User getUserById(Integer userId) {
 
-        logger.debug(logId() + "Entering getUserById(" + userId + ")");
+        log.debug(logId() + "Entering getUserById(" + userId + ")");
 
         User po = super.findById(userId);
 
@@ -157,7 +159,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private boolean isUserBelongingTo(String username, List<String> roles) {
 
-        logger.debug(logId() + "Entering isUserBelongingTo()");
+        log.debug(logId() + "Entering isUserBelongingTo()");
 
         String[] sa = new String[0];
         sa = roles.toArray(sa);
@@ -167,7 +169,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     private boolean isUserBelongingTo(String username, String[] roles) {
 
-        logger.debug(logId() + "Entering isUserBelongingTo()");
+        log.debug(logId() + "Entering isUserBelongingTo()");
 
         List<String> roleList = Arrays.asList(roles);
 
@@ -189,7 +191,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<UserRoleClient> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " Entitys] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return false;
@@ -206,7 +208,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
      */
     public List<User> findAllUsers() {
 
-        logger.debug(logId() + "Entering findAllUsers()");
+        log.debug(logId() + "Entering findAllUsers()");
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
@@ -216,14 +218,14 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         TypedQuery<User> tq = getEm().createQuery(cq);
 
         List<User> poList = tq.getResultList();
-        logger.debug(logId() + "Found " + poList.size() + " User record(s)");
+        log.debug(logId() + "Found " + poList.size() + " User record(s)");
 
         return poList;
     }
 
     public User findUserBy(String username, String md5Password) {
 
-        logger.debug(logId() + "Entering findUserBy(" + username + "," + md5Password + ")");
+        log.debug(logId() + "Entering findUserBy(" + username + "," + md5Password + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<User> cq = cb.createQuery(User.class);
@@ -240,7 +242,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -252,7 +254,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public User findByEmail(String email) {
 
-        logger.debug(logId() + "Entering findByEmail(" + email + ")");
+        log.debug(logId() + "Entering findByEmail(" + email + ")");
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
@@ -266,7 +268,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
         List<User> poList = nq.getResultList();
         String info = "[Found " + poList.size() + " User(s)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return null;
@@ -278,21 +280,21 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
     public void insert(User po) {
 
-        logger.debug(logId() + "Entering insert(" + po + ")");
+        log.debug(logId() + "Entering insert(" + po + ")");
 
         insertPo(po);
     }
 
     public void update(User po) {
 
-        logger.debug(logId() + "Entering update(" + po + ")");
+        log.debug(logId() + "Entering update(" + po + ")");
 
         updatePo(po);
     }
 
     public void delete(User po) {
 
-        logger.debug(logId() + "Entering deletePo(" + po + ")");
+        log.debug(logId() + "Entering deletePo(" + po + ")");
 
         deletePo(po);
     }

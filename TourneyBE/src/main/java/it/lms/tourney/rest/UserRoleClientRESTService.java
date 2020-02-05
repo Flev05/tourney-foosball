@@ -24,12 +24,14 @@ import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.UserRoleClient;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/urc")
 @Stateless
+@Slf4j
 public class UserRoleClientRESTService extends AbstractRESTService {
 
     @Inject
@@ -37,18 +39,6 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
     @Inject
     private UserRoleClientDao urcDao;
-
-    // @Inject
-    // private RoleDao roleDao;
-
-    // @Inject
-    // private ClientDao clientDao;
-
-    // @Inject
-    // private TourneyDao tourneyDao;
-
-    // @Inject
-    // private DisciplineDao disciplineDao;
 
     @Inject
     @ConverterObject
@@ -59,7 +49,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserRoleClientVO> findByUserId(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        logger.debug(logId() + "GET: UserRoleClientRESTService.findByUserId(" + loggedUserId + ")");
+        log.debug(logId() + "GET: UserRoleClientRESTService.findByUserId(" + loggedUserId + ")");
 
         List<UserRoleClient> urcList = new ArrayList<>();
 
@@ -72,7 +62,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         List<UserRoleClientVO> userVoList = urcList.stream().map(upo -> converter.convertUrcPoVo(upo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "URC(s): " + userVoList);
+        log.debug(logId() + "URC(s): " + userVoList);
 
         return userVoList;
     }
@@ -87,32 +77,10 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUrc(UserRoleClientVO urcvo) {
 
-        logger.debug(logId() + "POST: createUrc()");
-
-        // UserVO uvo = urcvo.getUserVo();
-        // String username = uvo.getUsername();
-        // logger.debug(logId() + "POST: createUser(" + username + ")");
-
-        // User upo;
-        // User user = userDao.findUserBy(username);
-        // if (user != null) {
-        // upo = user;
-        // Map<String, String> responseObj = new HashMap<String, String>();
-        //
-        // responseObj.put("errorCode", "UserAlreadyExists");
-        // responseObj.put("message", "User " + uvo.getUsername() + " already exists");
-        //
-        // Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-        // return builder.build();
-        // } else {
-        // upo = converter.convertUserVoPo(uvo);
-        // userDao.insert(upo);
-        // }
+        log.debug(logId() + "POST: createUrc()");
 
         UserRoleClient urcpo = converter.convertUrcVoPo(urcvo);
         urcDao.insert(urcpo);
-
-        // createUrc(urcvo, upo);
 
         Response.ResponseBuilder builder = Response.ok();
 
@@ -129,54 +97,15 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(UserRoleClientVO urcvo) {
 
-        logger.debug(logId() + "PUT: updateUser()");
-
-        // UserVO uvo = deleteOldUrc(urcvo);
+        log.debug(logId() + "PUT: updateUser()");
 
         UserRoleClient urcpo = converter.convertUrcVoPo(urcvo);
         urcDao.update(urcpo);
-
-        // creaeUrc(urcvo, upo);
 
         Response.ResponseBuilder builder = Response.ok();
 
         return builder.build();
     }
-
-    // private void createUrc(UserRoleClientVO urcvo, User upo) {
-    //
-    // logger.debug(logId() + "Entering createUrc()");
-    //
-    // UserRoleClient urc = new UserRoleClient();
-    // urc.setUser(upo);
-    //
-    // Role rpo = roleDao.findById(urcvo.getRoleVo().getId());
-    // urc.setRole(rpo);
-    //
-    // Client cpo = clientDao.findById(urcvo.getClientVO().getId());
-    // urc.setClient(cpo);
-    //
-    // if (urcvo.getTourneyId() != null) {
-    // Tourney tourney = tourneyDao.getById(urcvo.getTourneyId());
-    // urc.setTourney(tourney);
-    // }
-    //
-    // if (urcvo.getDisciplineId() != null) {
-    // Discipline dpo = disciplineDao.getById(urcvo.getDisciplineId());
-    // urc.setDiscipline(dpo);
-    // }
-    //
-    // urcDao.insert(urc);
-    // }
-
-    // private UserVO deleteOldUrc(UserRoleClientVO urcvo) {
-    //
-    // UserVO uvo = urcvo.getUserVo();
-    // List<UserRoleClient> urcList = urcDao.findByUserId(uvo.getId());
-    //
-    // urcList.stream().forEach(urc -> urcDao.delete(urc));
-    // return uvo;
-    // }
 
     /**
      * Removes a the received client from the persistent store. Return a JAX-RS response with either 200 ok, or with a
@@ -188,15 +117,10 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUrc(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deleteUrc(" + id + ")");
+        log.debug(logId() + "DELETE: deleteUrc(" + id + ")");
 
         UserRoleClient urc = urcDao.findById(id);
         urcDao.delete(urc);
-
-        // List<UserRoleClient> lastUrc = urcDao.findByUserId(urc.getUser().getId());
-        // if (lastUrc.isEmpty()) {
-        // userDao.delete(urc.getUser());
-        // }
 
         Response.ResponseBuilder builder = Response.ok();
 

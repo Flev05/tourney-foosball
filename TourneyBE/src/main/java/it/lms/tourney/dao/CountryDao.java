@@ -28,8 +28,10 @@ import javax.persistence.criteria.Root;
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Country_;
+import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
+@Slf4j
 public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
     public CountryDao() {
@@ -44,7 +46,7 @@ public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
     public Country findByCity(String city) {
 
-        logger.debug(logId() + "Entering findByCity(" + city + ")");
+        log.debug(logId() + "Entering findByCity(" + city + ")");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Country> criteria = cb.createQuery(Country.class);
@@ -62,7 +64,7 @@ public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
     public List<Country> findAllOrderedByCity() {
 
-        logger.debug(logId() + "Entering findAllOrderedByCity()");
+        log.debug(logId() + "Entering findAllOrderedByCity()");
 
         CriteriaBuilder cb = getCb();
         CriteriaQuery<Country> cq = cb.createQuery(Country.class);
@@ -75,28 +77,28 @@ public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
         List<Country> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public void insert(Country country) throws Exception {
 
-        logger.debug(logId() + "Entering insert(" + country.getCity() + ")");
+        log.debug(logId() + "Entering insert(" + country.getCity() + ")");
 
         super.insertPo(country);
     }
 
     public void update(Country country) throws Exception {
 
-        logger.debug(logId() + "Entering save(" + country + ")");
+        log.debug(logId() + "Entering save(" + country + ")");
 
         super.updatePo(country);
     }
 
     public void delete(Country country) throws Exception {
 
-        logger.debug(logId() + "Entering delete(" + country + ")");
+        log.debug(logId() + "Entering delete(" + country + ")");
 
         super.deletePo(country);
     }

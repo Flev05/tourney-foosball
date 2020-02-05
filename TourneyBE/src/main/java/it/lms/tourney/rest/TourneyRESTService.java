@@ -30,12 +30,14 @@ import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.po.Meeting;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Tourney;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/tourneys")
 @Stateless
+@Slf4j
 public class TourneyRESTService extends AbstractRESTService {
 
     @Inject
@@ -56,7 +58,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TourneyVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: loadByClientId()");
+        log.debug(logId() + "GET: loadByClientId()");
 
         List<Tourney> tourneyList = tourneyDao.findTourneysByClientId(clientId);
 
@@ -68,7 +70,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public TourneyVO loadTourneyById(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "GET: loadTourneyById(" + tourneyId + ")");
+        log.debug(logId() + "GET: loadTourneyById(" + tourneyId + ")");
 
         Tourney tpo = tourneyDao.getById(tourneyId);
 
@@ -84,7 +86,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TourneyVO> loadBySessionId() {
 
-        logger.debug(logId() + "GET: loadBySessionId()");
+        log.debug(logId() + "GET: loadBySessionId()");
 
         String sessionId = super.getSessionId();
         List<Tourney> tourneyList = tourneyDao.findTourneysBySessionId(sessionId);
@@ -97,7 +99,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Tourney lookupTourneyById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: lookupTourneyById(" + id + ")");
+        log.debug(logId() + "GET: lookupTourneyById(" + id + ")");
 
         Tourney tourney = tourneyDao.getById(id);
         if (tourney == null) {
@@ -116,7 +118,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTourney(TourneyVO tvo) {
 
-        logger.debug(logId() + "POST: createTourney(" + tvo + ")");
+        log.debug(logId() + "POST: createTourney(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<>();
 
@@ -130,7 +132,7 @@ public class TourneyRESTService extends AbstractRESTService {
 
             if (spo == null) {
                 String message = logId() + "User Session doesn't exist, create a new one";
-                logger.error(message);
+                log.error(message);
 
                 spo = sessionDao.insert(null, sessionId, userAgent);
             } else {
@@ -144,7 +146,7 @@ public class TourneyRESTService extends AbstractRESTService {
 
         if (foundTourney != null) {
 
-            logger.error("Tourney found");
+            log.error("Tourney found");
             responseObj.put("errorCode", "TourneyAlreadyExists");
             responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
 
@@ -156,7 +158,7 @@ public class TourneyRESTService extends AbstractRESTService {
 
         tvo = converter.convertTourneyPoVo(tourney);
 
-        logger.debug(tvo);
+        log.debug("{}", tvo);
 
         Response.ResponseBuilder builder = Response.ok().entity(tvo);
 
@@ -180,7 +182,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTourney(TourneyVO tvo) {
 
-        logger.debug(logId() + "PUT: updateTourney(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTourney(" + tvo + ")");
 
         return updateTourney(tvo, EMeetingUpdate.NONE);
     }
@@ -195,7 +197,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTourneyDeleteAllMeetings(TourneyVO tvo) {
 
-        logger.debug(logId() + "PUT: updateTourneyDeleteAllMeetings(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTourneyDeleteAllMeetings(" + tvo + ")");
 
         return updateTourney(tvo, EMeetingUpdate.RESET);
     }
@@ -210,7 +212,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTourneyRounds(TourneyVO tvo) {
 
-        logger.debug(logId() + "PUT: updateTourneyRounds(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTourneyRounds(" + tvo + ")");
 
         return updateTourney(tvo, EMeetingUpdate.ROUND);
     }
@@ -225,7 +227,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTourneyPlayoffs(TourneyVO tvo) {
 
-        logger.debug(logId() + "PUT: updateTourneyPlayoffs(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTourneyPlayoffs(" + tvo + ")");
 
         return updateTourney(tvo, EMeetingUpdate.PLAYOFF);
     }
@@ -240,14 +242,14 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTourneyEliminatories(TourneyVO tvo) {
 
-        logger.debug(logId() + "PUT: updateTourneyEliminatories(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTourneyEliminatories(" + tvo + ")");
 
         return updateTourney(tvo, EMeetingUpdate.ELIMNATORY);
     }
 
     private Response updateTourney(TourneyVO tvo, EMeetingUpdate update) {
 
-        logger.debug(logId() + "PUT: updateTourney(" + tvo + ")");
+        log.debug(logId() + "PUT: updateTourney(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<>();
 
@@ -264,7 +266,7 @@ public class TourneyRESTService extends AbstractRESTService {
         Integer tourneyId = tvo.getId();
         if (foundTourney != null && !foundTourney.getId().equals(tourneyId)) {
 
-            logger.error("Tourney found");
+            log.error("Tourney found");
             responseObj.put("errorCode", "TourneyAlreadyExists");
             responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
 
@@ -318,7 +320,7 @@ public class TourneyRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteTourney(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deleteTourney(" + id + ")");
+        log.debug(logId() + "DELETE: deleteTourney(" + id + ")");
 
         Tourney tourney = tourneyDao.getById(id);
         tourneyDao.delete(tourney);

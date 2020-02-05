@@ -37,14 +37,14 @@ export class UserDetailView extends AbstractDetailView {
     loggedUsername: string;
 
     constructor(
-        private userService: UserService,
+        protected userService: UserService,
         protected location: Location,
         protected tourneyService: TourneyService,
         protected countryService: CountryService,
         protected urcService: UrcService,
-        private roleService: RoleService,
-        private loginService: LoginService,
-        private clientService: ClientService
+        protected roleService: RoleService,
+        protected loginService: LoginService,
+        protected clientService: ClientService
     ) {
         super(tourneyService, location);
     }
@@ -60,12 +60,16 @@ export class UserDetailView extends AbstractDetailView {
         this.loggedUsername = this.loginService.userLogged.username;
         this.roleService.loadLowerRoles(loggedUserId, (rs) => this.onRoleLoadNext(rs));
 
-        this.currentPassword = new String(this.selectedUser.password).toString();
-        this.retypedPassword = new String(this.selectedUser.password).toString();
+        this.setPasswords();
 
         this.isRetypePasswordFailed = false;
     }
         
+    protected setPasswords() {
+        this.currentPassword = new String(this.selectedUser.password).toString();
+        this.retypedPassword = new String(this.selectedUser.password).toString();
+    }
+
     private onRoleLoadNext( rs: RoleVO[] ): void {
         this.roles = rs;
     }
@@ -86,17 +90,6 @@ export class UserDetailView extends AbstractDetailView {
     }
 
     onSubmit(): void {
-        // if( this.currentPassword != this.selectedUser.password ) {
-        //     if(this.currentPassword != this.retypedPassword ) {
-        //         this.isRetypePasswordFailed = true;
-        //         return;
-        //     }
-        //     let md5 = Md5.init(this.currentPassword)
-        //     console.log("MD5(password)=" + md5);
-        //     this.selectedUser.password = md5;
-        //     console.log("MD5(password)=" + this.selectedUser.password);
-        // }
-
         if( this.userService.newUser ) {
             const subscriber = this.userService.getUserByUsername(this.selectedUser.username);
             subscriber.subscribe(cs => this.onVerifyForCreateNext(cs), e => this.onError(e) );
@@ -112,13 +105,7 @@ export class UserDetailView extends AbstractDetailView {
     }
 
     private createNewUser() {
-        let rvo : RoleVO;
-
-        if( this.roleService.isDeveloper()) {
-            rvo = this.roleService.selectedRoles.find( r => {var asEnum : ERoles= <ERoles>ERoles[r.name]; return asEnum == ERoles.DEVELOPER} );
-        } else {
-            rvo = this.roleService.selectedRoles.find( r => {var asEnum : ERoles= <ERoles>ERoles[r.name]; return asEnum == ERoles.OWNER});           
-        }
+        let rvo : RoleVO = this.selectRoleForNewUser();
 
         this.selectedUser.password = Md5.init(UserDetailView.DEFAULT_PASSWORD);
         console.log("MD5(password)=" + this.selectedUser.password);
@@ -132,18 +119,28 @@ export class UserDetailView extends AbstractDetailView {
             disciplineId : null
         };
 
+        const subscriber = this.createUserAndUrc(urc);
+        subscriber.subscribe(cs => this.onSaveComplete(cs), e => this.subscribeErrorHandler(e));
+    }
+
+    protected createUserAndUrc(urc: UserRoleClientVO): Observable<UserRoleClientVO>  {
         const subscriber = this.userService.createUserAndUrc(urc, this.saveUserErrorHandler('Create User operation'));
-        subscriber.subscribe(cs => this.onSaveComplete(cs), e => this.subscribeErrorHandler(e) );
+        return subscriber;
+    }
+
+    protected selectRoleForNewUser(): RoleVO {
+        let rvo : RoleVO ;
+        if (this.roleService.isDeveloper()) {
+            rvo = this.roleService.selectedRoles.find(r => { var asEnum: ERoles = <ERoles>ERoles[r.name]; return asEnum == ERoles.DEVELOPER; });
+        }
+        else {
+            rvo = this.roleService.selectedRoles.find(r => { var asEnum: ERoles = <ERoles>ERoles[r.name]; return asEnum == ERoles.OWNER; });
+        }
+        return rvo;
     }
 
     private createOnlyUrc(existingUser: UserVO) {
-        let rvo : RoleVO = this.roleService.selectedRoles.find( r =>  {var asEnum : ERoles= <ERoles>ERoles[r.name]; return asEnum == ERoles.OWNER} );
-        if( this.roleService.isOwner()) {
-            rvo = this.roleService.selectedRoles.find( r =>  {var asEnum : ERoles= <ERoles>ERoles[r.name]; return asEnum == ERoles.ADMIN} );           
-        }
-        if( this.roleService.isAdmin()) {
-            rvo = this.roleService.selectedRoles.find( r =>  {var asEnum : ERoles= <ERoles>ERoles[r.name]; return asEnum == ERoles.OPERATOR} );           
-        }
+        let rvo: RoleVO = this.selectDefaultRole();
 
         let urc : UserRoleClientVO = {
             id           : null,
@@ -156,6 +153,17 @@ export class UserDetailView extends AbstractDetailView {
 
         const subscriber = this.urcService.createUrc(urc, this.saveUserErrorHandler('Create User operation'));
         subscriber.subscribe(cs => this.onSaveComplete(cs), e => this.subscribeErrorHandler(e) );
+    }
+
+    protected selectDefaultRole(): RoleVO {
+        let rvo: RoleVO = this.roleService.selectedRoles.find(r => { var asEnum: ERoles = <ERoles>ERoles[r.name]; return asEnum == ERoles.OWNER; });
+        if (this.roleService.isOwner()) {
+            rvo = this.roleService.selectedRoles.find(r => { var asEnum: ERoles = <ERoles>ERoles[r.name]; return asEnum == ERoles.ADMIN; });
+        }
+        if (this.roleService.isAdmin()) {
+            rvo = this.roleService.selectedRoles.find(r => { var asEnum: ERoles = <ERoles>ERoles[r.name]; return asEnum == ERoles.OPERATOR; });
+        }
+        return rvo;
     }
 
     private onVerifyForCreateNext(existingUser: UserVO): void {
@@ -203,7 +211,7 @@ export class UserDetailView extends AbstractDetailView {
         subscriber.subscribe(cs => this.onUpdateNext(cs), e => this.subscribeErrorHandler(e) );
     }
 
-    private onUpdateNext(cs: UserVO): void {
+    protected onUpdateNext(cs: UserVO): void {
         this.goBack();
     }
 
@@ -217,7 +225,7 @@ export class UserDetailView extends AbstractDetailView {
         };
     }
 
-    private onSaveComplete( cs : UserRoleClientVO ) {
+    protected onSaveComplete( cs : UserRoleClientVO ) {
         console.log("Entering onSaveComplete()");
         this.selectedUrc = cs;
         this.userService.newUser = false;
@@ -226,7 +234,7 @@ export class UserDetailView extends AbstractDetailView {
         }
     }
 
-    private saveUserErrorHandler<T> (operation = 'operation', result?: T) {
+    protected saveUserErrorHandler<T> (operation = 'operation', result?: T) {
         return (res: any): Observable<T> => {
             console.log("Entering saveUserErrorHandler()");
             console.log(`${operation} failed!`);

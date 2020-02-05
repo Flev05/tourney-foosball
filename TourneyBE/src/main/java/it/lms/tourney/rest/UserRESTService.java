@@ -23,20 +23,30 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.gui.vo.OperatorsVO;
+import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.RoleDao;
+import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
+import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/users")
 @Stateless
+@Slf4j
 public class UserRESTService extends AbstractRESTService {
 
     @Inject
@@ -44,6 +54,15 @@ public class UserRESTService extends AbstractRESTService {
 
     @Inject
     private UserRoleClientDao urcDao;
+
+    @Inject
+    private TourneyDao        tourneyDao;
+
+    @Inject
+    private RoleDao           roleDao;
+
+    @Inject
+    private ClientDao         clientDao;
 
     @Inject
     @ConverterObject
@@ -54,7 +73,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserVO> findByUserId(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        logger.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
+        log.debug(logId() + "GET: findByUserId(" + loggedUserId + ")");
 
         List<User> userList;
         if (userDao.isDeveloperUser(loggedUserId)) {
@@ -75,7 +94,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserVO> findOperatorsByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: findOperatorsByClientId(" + clientId + ")");
+        log.debug(logId() + "GET: findOperatorsByClientId(" + clientId + ")");
 
         List<UserRoleClient> urcList = urcDao.findOperatorsUrcByClientId(clientId);
 
@@ -85,6 +104,34 @@ public class UserRESTService extends AbstractRESTService {
                 .collect(Collectors.toList());
 
         return distinctElements.stream().map(upo -> converter.convertUserPoVo(upo)).collect(Collectors.toList());
+    }
+
+    @GET
+    @Path("/loadOperatorsBy/{clientId:[0-9][0-9]*}/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OperatorsVO> loadOperatorsBy(@PathParam("clientId") Integer clientId,
+            @PathParam("tourneyId") Integer tourneyId) {
+
+        log.debug(logId() + "GET: loadOperatorsBy(" + clientId + "/" + tourneyId + ")");
+
+        List<UserRoleClient> urcList = urcDao.findOperatorsUrcBy(clientId, tourneyId);
+
+        Tourney tpo = tourneyDao.getById(tourneyId);
+
+        List<OperatorsVO> ops = new ArrayList<>();
+        for (UserRoleClient urc : urcList) {
+            OperatorsVO ovo = new OperatorsVO();
+            ops.add(ovo);
+
+            UserVO uvo = converter.convertUserPoVo(urc.getUser());
+            ovo.getAllOperators().add(uvo);
+
+            if (tpo.getUrcs().contains(urc)) {
+                ovo.getSelectedOperators().add(uvo);
+            }
+        }
+
+        return ops;
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
@@ -106,7 +153,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public UserVO findUserById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: findUserById(" + id + ")");
+        log.debug(logId() + "GET: findUserById(" + id + ")");
 
         User upo = userDao.getUserById(id);
         UserVO uvo = converter.convertUserPoVo(upo);
@@ -118,7 +165,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public UserVO getUserByUsername(@PathParam("username") String username) {
 
-        logger.debug(logId() + "GET: getUserByUsername(" + username + ")");
+        log.debug(logId() + "GET: getUserByUsername(" + username + ")");
 
         User upo = userDao.getPoBy(username);
         UserVO uvo = converter.convertUserPoVo(upo);
@@ -137,7 +184,7 @@ public class UserRESTService extends AbstractRESTService {
 
         UserVO uvo = urcvo.getUserVo();
         String username = uvo.getUsername();
-        logger.debug(logId() + "POST: createUser(" + username + ")");
+        log.debug(logId() + "POST: createUser(" + username + ")");
 
         User upo = userDao.findUserBy(username);
         if (upo == null) {
@@ -155,6 +202,99 @@ public class UserRESTService extends AbstractRESTService {
     }
 
     /**
+     * Creates a new operator from the values provided. Performs validation, and will return a JAX-RS response with
+     * either 200 ok, or with a map of fields, and related errors.
+     */
+    @POST
+    @Path("/createOperator/{tourneyId:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createOperator(UserRoleClientVO urcvo, @PathParam("tourneyId") Integer tourneyId) {
+
+        UserVO uvo = urcvo.getUserVo();
+        String username = uvo.getUsername();
+        log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
+
+        User upo = userDao.findUserBy(username);
+        if (upo == null) {
+            upo = converter.convertUserVoPo(uvo);
+            userDao.insert(upo);
+        }
+
+        UserRoleClient urcpo = converter.convertUrcVoPo(urcvo);
+        urcpo.setUser(upo);
+        urcDao.insert(urcpo);
+
+        Tourney tpo = tourneyDao.getById(tourneyId);
+        tpo.getUrcs().add(urcpo);
+        tourneyDao.update(tpo);
+
+        Response.ResponseBuilder builder = Response.ok().entity(urcvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Creates a new operator from the values provided. Performs validation, and will return a JAX-RS response with
+     * either 200 ok, or with a map of fields, and related errors.
+     */
+    @POST
+    @Path("/attachOperators")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response attachOperators(OperatorsVO urcvo) {
+
+        Integer tourneyId = urcvo.getTourneyId();
+        Tourney tpo = tourneyDao.getById(tourneyId);
+
+        tpo.getUrcs().clear();
+
+        for (UserVO uvo : urcvo.getSelectedOperators()) {
+            User upo = userDao.findById(uvo.getId());
+            Role rpo = roleDao.getOperatorRole();
+
+            UserRoleClient urc = new UserRoleClient();
+            urc.setUser(upo);
+            urc.setRole(rpo);
+            Client cpo = clientDao.getById(urcvo.getClientId());
+            urc.setClient(cpo);
+
+            tpo.getUrcs().add(urc);
+        }
+
+        Response.ResponseBuilder builder = Response.ok().entity(urcvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Finds the URC bounded to the incoming tourneyId, get the corresponding client and user , remove the found URC,
+     * verify if there is no more URC for the got client and, if no, remove the got user
+     */
+    @GET
+    @Path("/detachOperator/{userId:[0-9][0-9]*}/{tourneyId:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public TourneyVO detachOperator(@PathParam("userId") Integer userId, @PathParam("tourneyId") Integer tourneyId) {
+
+        Tourney tpo = tourneyDao.getById(tourneyId);
+
+        for (UserRoleClient urc : tpo.getUrcs()) {
+            User user = urc.getUser();
+            if (user.getId().equals(userId)) {
+                urcDao.delete(urc);
+                List<UserRoleClient> urcList = urcDao.findByUserId(user.getId());
+                if (urcList.isEmpty()) {
+                    userDao.delete(user);
+                }
+            }
+        }
+        tourneyDao.update(tpo);
+
+        TourneyVO tvo = converter.convertTourneyPoVo(tpo);
+        return tvo;
+    }
+
+    /**
      * Updates the received user found in the database. Performs validation, and will return a JAX-RS response with
      * either 200 ok, or with a map of fields, and related errors.
      */
@@ -164,7 +304,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(UserVO uvo) {
 
-        logger.debug(logId() + "PUT: updateUser()");
+        log.debug(logId() + "PUT: updateUser()");
 
         User upo = converter.convertUserVoPo(uvo);
         userDao.update(upo);
@@ -184,7 +324,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deleteUser(" + id + ")");
+        log.debug(logId() + "DELETE: deleteUser(" + id + ")");
 
         User upo = userDao.getUserById(id);
 
@@ -218,7 +358,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetPassword(UserVO uvo) {
 
-        logger.debug(logId() + "PUT: resetPassword()");
+        log.debug(logId() + "PUT: resetPassword()");
 
         User upo = converter.convertUserVoPo(uvo);
         userDao.update(upo);
@@ -237,7 +377,7 @@ public class UserRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(UserVO uvo) {
 
-        logger.debug(logId() + "PUT: changePassword()");
+        log.debug(logId() + "PUT: changePassword()");
 
         User upo = converter.convertUserVoPo(uvo);
         userDao.update(upo);

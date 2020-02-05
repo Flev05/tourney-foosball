@@ -4,6 +4,7 @@ package it.lms.tourney.rest;
 import java.security.Principal;
 
 import it.lms.tourney.cdi.AbstractLogger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract class for common data and operation for any REST service
@@ -11,6 +12,7 @@ import it.lms.tourney.cdi.AbstractLogger;
  * @author luciano martino
  *
  */
+@Slf4j
 public abstract class AbstractRESTService extends AbstractLogger {
 
     protected String getUserAgent() {
@@ -22,30 +24,30 @@ public abstract class AbstractRESTService extends AbstractLogger {
     protected void printAuthentication() {
 
         String host = request.getRemoteHost();
-        logger.debug(logId() + "RemoteHost=" + host);
+        log.debug(logId() + "RemoteHost=" + host);
 
         String addr = request.getRemoteAddr();
-        logger.debug(logId() + "RemoteAddr=" + addr);
+        log.debug(logId() + "RemoteAddr=" + addr);
 
         String path = request.getContextPath();
-        logger.debug(logId() + "PATH=" + path);
+        log.debug(logId() + "PATH=" + path);
 
         String uri = request.getRequestURI();
-        logger.debug(logId() + "URI=" + uri);
+        log.debug(logId() + "URI=" + uri);
 
         String url = request.getRequestURI();
-        logger.debug(logId() + "URL=" + url);
+        log.debug(logId() + "URL=" + url);
 
         String authType = request.getAuthType();
-        logger.debug(logId() + "AuthType=" + authType);
+        log.debug(logId() + "AuthType=" + authType);
 
         String remoteUser = request.getRemoteUser();
-        logger.debug(logId() + "RemoteUser=" + remoteUser);
+        log.debug(logId() + "RemoteUser=" + remoteUser);
 
         Principal principal = getPrincipal();
-        logger.debug(logId() + "Principal=" + principal);
+        log.debug(logId() + "Principal=" + principal);
         if (principal != null) {
-            logger.debug(logId() + "Principal.getName()=" + principal.getName());
+            log.debug(logId() + "Principal.getName()=" + principal.getName());
         }
     }
 

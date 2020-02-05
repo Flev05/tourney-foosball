@@ -16,13 +16,18 @@ import javax.persistence.criteria.Root;
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Client_;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.Tourney;
+import it.lms.tourney.po.Tourney_;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
     @Inject
@@ -43,7 +48,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public List<UserRoleClient> findAllUrc() {
 
-        logger.debug(logId() + "Entering findAllUrc()");
+        log.debug(logId() + "Entering findAllUrc()");
 
         CriteriaBuilder cb = getCb();
 
@@ -56,14 +61,14 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
 
     public List<UserRoleClient> findAllUrcNotDev() {
 
-        logger.debug(logId() + "Entering findAllUrcNotDev()");
+        log.debug(logId() + "Entering findAllUrcNotDev()");
 
         CriteriaBuilder cb = getCb();
 
@@ -83,7 +88,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -102,7 +107,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public List<UserRoleClient> findUrcByUser(Integer loggedUserId) {
 
-        logger.debug(logId() + "Entering findOwnerUsers()");
+        log.debug(logId() + "Entering findOwnerUsers()");
 
         List<Client> clientList = clientDao.findClientsByUser(loggedUserId);
 
@@ -131,7 +136,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public List<UserRoleClient> findOperatorsUrcByClientId(Integer clientId) {
 
-        logger.debug(logId() + "Entering findOperatorsUrcByClientId()");
+        log.debug(logId() + "Entering findOperatorsUrcByClientId()");
 
         Client c = clientDao.findById(clientId);
 
@@ -147,6 +152,40 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
+     * Finds all URC in the client list of OPERATOR role type
+     * 
+     * @param loggedUserId the logged user identifier
+     * @return the list of URC
+     */
+    public List<UserRoleClient> findOperatorsUrcBy(Integer clientId, Integer tourneyId) {
+
+        log.debug(logId() + "Entering findOperatorsUrcBy()");
+
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+
+        Root<Tourney> root = cq.from(Tourney.class);
+
+        Join<Tourney, UserRoleClient> tourneyUrcJoin = root.join(Tourney_.urcs);
+        Join<UserRoleClient, Client> clientJoin = tourneyUrcJoin.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = tourneyUrcJoin.join(UserRoleClient_.role);
+
+        Predicate p1 = getCb().equal(root.get(Tourney_.id), tourneyId);
+        Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+
+        cq = cq.select(tourneyUrcJoin);
+        cq = cq.where(p1, p2, p3);
+
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+
+        List<UserRoleClient> urcList = nq.getResultList();
+        String info = "[Found " + urcList.size() + " Entity(ies)] ";
+        log.info(logId() + info);
+
+        return urcList;
+    }
+
+    /**
      * First finds all URC belonging to the received loggedUserId, so finds all remaining users, if any, of the found
      * clients
      * 
@@ -155,7 +194,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     private List<UserRoleClient> findUsersBy(List<Client> clientList, List<Role.ROLES> roleList) {
 
-        logger.debug(logId() + "Entering findUsersBy()");
+        log.debug(logId() + "Entering findUsersBy()");
 
         CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
 
@@ -174,14 +213,14 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         List<UserRoleClient> urcList = nq.getResultList();
         String info = "[Found " + urcList.size() + " Entity(ies)] ";
-        logger.info(logId() + info);
+        log.info(logId() + info);
 
         return urcList;
     }
 
     public List<UserRoleClient> findByUserId(Integer userId) {
 
-        logger.debug(logId() + "Entering findByUserId()");
+        log.debug(logId() + "Entering findByUserId()");
 
         CriteriaBuilder cb = getCb();
 
@@ -199,7 +238,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        logger.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
     }
@@ -212,7 +251,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public void insert(UserRoleClient po) {
 
-        logger.debug(logId() + "Entering insert(" + po + ")");
+        log.debug(logId() + "Entering insert(" + po + ")");
 
         super.insertPo(po);
     }
@@ -225,7 +264,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public void update(UserRoleClient po) {
 
-        logger.debug(logId() + "Entering update()");
+        log.debug(logId() + "Entering update()");
 
         super.updatePo(po);
     }
@@ -238,7 +277,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public void delete(UserRoleClient po) {
 
-        logger.debug(logId() + "Entering delete()");
+        log.debug(logId() + "Entering delete()");
 
         super.deletePo(po);
     }

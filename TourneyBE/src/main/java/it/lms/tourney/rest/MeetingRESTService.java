@@ -22,12 +22,14 @@ import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.MeetingDao;
 import it.lms.tourney.po.Meeting;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Stateless
 @Path("/meetings")
+@Slf4j
 public class MeetingRESTService extends AbstractRESTService {
 
     @Inject
@@ -43,14 +45,14 @@ public class MeetingRESTService extends AbstractRESTService {
     public List<MeetingVO> loadByRoundId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("roundId") Integer roundId) {
 
-        logger.debug(logId() + "[GET: loadByRoundId(" + tourneyId + ", " + roundId + ")]");
+        log.debug(logId() + "[GET: loadByRoundId(" + tourneyId + ", " + roundId + ")]");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByRoundId(tourneyId, roundId);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundId "
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundId "
                 + roundId + "]");
 
         return meetingVoList;
@@ -61,14 +63,14 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<MeetingVO> loadByRoundIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> roundIds) {
 
-        logger.debug(logId() + "[GET: loadByRoundIds(" + tourneyId + ")]");
+        log.debug(logId() + "[GET: loadByRoundIds(" + tourneyId + ")]");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByRoundIds(tourneyId, roundIds);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds "
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds "
                 + "]");
 
         return meetingVoList;
@@ -80,15 +82,15 @@ public class MeetingRESTService extends AbstractRESTService {
     public List<MeetingVO> loadByPlayoffId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("playoffId") Integer playoffId) {
 
-        logger.debug(logId() + "[GET: loadByPlayoffId(" + tourneyId + ", " + playoffId + ")]");
+        log.debug(logId() + "[GET: loadByPlayoffId(" + tourneyId + ", " + playoffId + ")]");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffId(tourneyId, playoffId);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
-                + ", playoffId " + playoffId + "]");
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoffId "
+                + playoffId + "]");
 
         return meetingVoList;
     }
@@ -98,15 +100,15 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<MeetingVO> loadByPlayoffIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
 
-        logger.debug(logId() + "[GET: loadByPlayoffIds(" + tourneyId + ")]");
+        log.debug(logId() + "[GET: loadByPlayoffIds(" + tourneyId + ")]");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffIds(tourneyId, playoffs);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
-                + ", playoffId " + "]");
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoffId "
+                + "]");
 
         return meetingVoList;
     }
@@ -117,14 +119,14 @@ public class MeetingRESTService extends AbstractRESTService {
     public List<MeetingVO> loadByEliminatoryIdId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("eliminatoryId") Integer eliminatoryId) {
 
-        logger.debug(logId() + "[GET: loadByEliminatoryIdId(" + tourneyId + ", " + eliminatoryId + ")]");
+        log.debug(logId() + "[GET: loadByEliminatoryIdId(" + tourneyId + ", " + eliminatoryId + ")]");
 
         List<Meeting> meetingList = meetingDao.findMeetingsByEliminatoryId(tourneyId, eliminatoryId);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
                 + ", eliminatoryId " + eliminatoryId + "]");
 
         return meetingVoList;
@@ -135,14 +137,14 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<MeetingVO> loadAllEliminatoryMeetingsBy(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[GET: loadAllEliminatoryMeetingsBy(" + tourneyId + ")]");
+        log.debug(logId() + "[GET: loadAllEliminatoryMeetingsBy(" + tourneyId + ")]");
 
         List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsBy(tourneyId);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
 
         return meetingVoList;
     }
@@ -152,14 +154,14 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response loadEliminatoryMeetingByIdList(@PathParam("tourneyId") Integer tourneyId, List<Integer> idsList) {
 
-        logger.debug(logId() + "[GET: loadEliminatoryMeetingByIdList(" + tourneyId + ")]");
+        log.debug(logId() + "[GET: loadEliminatoryMeetingByIdList(" + tourneyId + ")]");
 
         List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsByIdList(tourneyId, idsList);
 
         List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
                 .collect(Collectors.toList());
 
-        logger.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
+        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
 
         Response.ResponseBuilder builder = Response.ok().entity(meetingVoList);
 
@@ -176,7 +178,7 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createMeeting(MeetingVO mvo) {
 
-        logger.debug(logId() + "[POST: createMeeting(" + mvo + ")]");
+        log.debug(logId() + "[POST: createMeeting(" + mvo + ")]");
 
         Meeting mpo = converter.convertMeetingVoPo(mvo);
 
@@ -199,7 +201,7 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateMeeting(MeetingVO mvo) {
 
-        logger.debug(logId() + "[PUT: updateMeeting(" + mvo + ")]");
+        log.debug(logId() + "[PUT: updateMeeting(" + mvo + ")]");
 
         Meeting cpo = converter.convertMeetingVoPo(mvo);
 
@@ -220,7 +222,7 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteMeeting(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "[DELETE: deleteMeeting(" + id + ")]");
+        log.debug(logId() + "[DELETE: deleteMeeting(" + id + ")]");
 
         Meeting meeting = meetingDao.getById(id);
         meetingDao.delete(meeting);
@@ -240,7 +242,7 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteRoundMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[DELETE: deleteRoundMeetingsByTourneyId(" + tourneyId + ")]");
+        log.debug(logId() + "[DELETE: deleteRoundMeetingsByTourneyId(" + tourneyId + ")]");
 
         meetingDao.deleteRoundMeetingsByTourneyId(tourneyId);
 
@@ -260,7 +262,7 @@ public class MeetingRESTService extends AbstractRESTService {
     public Response deleteMeetingsByRoundId(@PathParam("tourneyId") Integer tourneyId,
             @PathParam("roundId") Integer roundId) {
 
-        logger.debug(logId() + "[DELETE: deleteMeetingsByRoundId(" + tourneyId + ", " + roundId + ")]");
+        log.debug(logId() + "[DELETE: deleteMeetingsByRoundId(" + tourneyId + ", " + roundId + ")]");
 
         meetingDao.deleteMeetingsByRoundId(tourneyId, roundId);
 
@@ -279,7 +281,7 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletePlayoffMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[DELETE: deletePlayoffMeetingsByTourneyId(" + tourneyId + ")]");
+        log.debug(logId() + "[DELETE: deletePlayoffMeetingsByTourneyId(" + tourneyId + ")]");
 
         meetingDao.deletePlayoffMeetingsByTourneyId(tourneyId);
 
@@ -298,7 +300,7 @@ public class MeetingRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEliminatoryMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-        logger.debug(logId() + "[DELETE: deleteEliminatoryMeetingsByTourneyId(" + tourneyId + ")]");
+        log.debug(logId() + "[DELETE: deleteEliminatoryMeetingsByTourneyId(" + tourneyId + ")]");
 
         meetingDao.deleteEliminatoryMeetingsByTourneyId(tourneyId);
 

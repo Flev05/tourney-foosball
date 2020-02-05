@@ -26,12 +26,14 @@ import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.po.Client;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/clients")
 @Stateless
+@Slf4j
 public class ClientRESTService extends AbstractRESTService {
 
     @Inject
@@ -49,7 +51,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClientVO> loadByUserId(@PathParam("userId") Integer userId) {
 
-        logger.debug(logId() + "GET: loadByUserId()");
+        log.debug(logId() + "GET: loadByUserId()");
 
         List<ClientVO> clientVoList = new ArrayList<>();
         if (userDao.isDeveloperUser(userId)) {
@@ -75,7 +77,7 @@ public class ClientRESTService extends AbstractRESTService {
 
             clientVoList.add(cvo);
 
-            logger.debug(logId() + cvo);
+            log.debug(logId() + cvo);
         }
 
         return clientVoList;
@@ -86,7 +88,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Client lookupClientById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: lookupClientById(" + id + ")");
+        log.debug(logId() + "GET: lookupClientById(" + id + ")");
 
         Client client = clientDao.getById(id);
         if (client == null) {
@@ -105,13 +107,13 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createClient(ClientVO clientVo) {
 
-        logger.debug(logId() + "POST: createClient(" + clientVo + ")");
+        log.debug(logId() + "POST: createClient(" + clientVo + ")");
 
         Map<String, String> responseObj = new HashMap<String, String>();
         Client foundClient = clientDao.getByBusinssName(clientVo.getBusinessName());
         if (foundClient != null) {
 
-            logger.error("Client found");
+            log.error("Client found");
             responseObj.put("errorCode", "ClientAlreadyExists");
             responseObj.put("message", "Client " + clientVo.getBusinessName() + " already exists");
             responseObj.put("email", foundClient.getEmail());
@@ -126,7 +128,7 @@ public class ClientRESTService extends AbstractRESTService {
 
         ClientVO cvo = converter.convertClientPoVo(client);
 
-        logger.debug(cvo);
+        log.debug("{}", cvo);
 
         Response.ResponseBuilder builder = Response.ok().entity(cvo);
 
@@ -151,7 +153,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateClient(ClientVO cvo) {
 
-        logger.debug(logId() + "PUT: updateClient(" + cvo + ")");
+        log.debug(logId() + "PUT: updateClient(" + cvo + ")");
 
         Client cpo = prepareClientPo(cvo);
 
@@ -164,7 +166,7 @@ public class ClientRESTService extends AbstractRESTService {
 
     private Client prepareClientPo(ClientVO cvo) {
 
-        logger.debug(logId() + "Entering prepareClientPo()");
+        log.debug(logId() + "Entering prepareClientPo()");
 
         Client cpo = new Client();
 
@@ -188,7 +190,7 @@ public class ClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteClient(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deleteClient(" + id + ")");
+        log.debug(logId() + "DELETE: deleteClient(" + id + ")");
 
         Client client = clientDao.getById(id);
         clientDao.delete(client);

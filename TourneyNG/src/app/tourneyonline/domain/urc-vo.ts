@@ -1,7 +1,6 @@
 import { UserVO } from "./user-vo";
 import { RoleVO } from "./role-vo";
 import { ClientVO } from "./client-vo";
-import { Combobox } from "./tourney-combobox";
 
 export interface UserRoleClientVO 
 {

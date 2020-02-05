@@ -59,7 +59,17 @@ export class UserListView extends AbstractListView {
         let loggedUserId = this.loginService.userLogged.id;
         this.loggedUsername = this.loginService.userLogged.username;
         const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
-        subscriber.subscribe(cs => this.users = cs, e => this.onError(e));
+        subscriber.subscribe(cs => this.onLoadUserNext(cs), e => this.onError(e));
+    }
+
+    private onLoadUserNext(cs: UserVO[])   {
+        this.users = cs;
+        for( let u of this.users ) {
+            u.disabled="enabled";
+            if( u.id == this.loginService.userLogged.id ) {
+                u.disabled="disabled";
+            }
+        }
     }
 
     private onLoadAllCountriesComplete(): void {
@@ -100,7 +110,7 @@ export class UserListView extends AbstractListView {
         this.userService.newUser = false;
         this.gotoDetailView();
     }
-
+ 
     doDelete(user: UserVO) {
         console.log(user);
         this.selectedUser = user;
@@ -108,6 +118,10 @@ export class UserListView extends AbstractListView {
         let popup = "Sicuro di voler rimuovere l'utente: [" + name + "]?";
 
         this.onDeleteError = false;
+        if( user.id == this.loginService.userLogged.id ) {
+            alert("Non puoi rimuovere te stesso!");
+            return;
+        }
         if(confirm(popup)) {
 
             const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('deleteUser()'));

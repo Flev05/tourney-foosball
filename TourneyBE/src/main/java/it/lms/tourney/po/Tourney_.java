@@ -10,12 +10,13 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Tourney.class)
 public class Tourney_ {
 
-    public static volatile SingularAttribute<Tourney, Session> session;
-    public static volatile SingularAttribute<Tourney, String>  json;
-    public static volatile SingularAttribute<Tourney, String>  tourneyName;
-    public static volatile SingularAttribute<Tourney, Client>  client;
-    public static volatile SingularAttribute<Tourney, Integer> id;
-    public static volatile SingularAttribute<Tourney, Country> country;
+    public static volatile SingularAttribute<Tourney, Session>   session;
+    public static volatile SingularAttribute<Tourney, String>    json;
+    public static volatile SingularAttribute<Tourney, String>    tourneyName;
+    public static volatile SingularAttribute<Tourney, Client>    client;
+    public static volatile SingularAttribute<Tourney, Integer>   id;
+    public static volatile SingularAttribute<Tourney, Country>   country;
 
-    public static volatile SetAttribute<Tourney, Meeting>      meetings;
+    public static volatile SetAttribute<Tourney, Meeting>        meetings;
+    public static volatile SetAttribute<Tourney, UserRoleClient> urcs;
 }

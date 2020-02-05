@@ -27,12 +27,14 @@ import it.lms.tourney.dao.PlayerDao;
 import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.po.Player;
 import it.lms.tourney.po.Session;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/players")
 @Stateless
+@Slf4j
 public class PlayerRESTService extends AbstractRESTService {
 
     @Inject
@@ -50,7 +52,7 @@ public class PlayerRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<PlayerVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        logger.debug(logId() + "GET: loadByClientId(" + clientId + ")");
+        log.debug(logId() + "GET: loadByClientId(" + clientId + ")");
 
         List<Player> playerList = playerDao.findPlayersByClientId(clientId);
 
@@ -62,7 +64,7 @@ public class PlayerRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<PlayerVO> loadBySessionId() {
 
-        logger.debug(logId() + "GET: loadBySessionId()");
+        log.debug(logId() + "GET: loadBySessionId()");
 
         String sessionId = super.getSessionId();
 
@@ -76,7 +78,7 @@ public class PlayerRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Player loadPlayerById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: loadPlayerById(" + id + ")");
+        log.debug(logId() + "GET: loadPlayerById(" + id + ")");
 
         Player player = playerDao.getById(id);
         if (player == null) {
@@ -95,7 +97,7 @@ public class PlayerRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPlayer(PlayerVO tvo) {
 
-        logger.debug(logId() + "POST: createPlayer(" + tvo + ")");
+        log.debug(logId() + "POST: createPlayer(" + tvo + ")");
 
         Map<String, String> responseObj = new HashMap<>();
         Player foundPlayer;
@@ -108,7 +110,7 @@ public class PlayerRESTService extends AbstractRESTService {
 
             if (spo == null) {
                 String message = logId() + "User Session doesn't exist, create a new one";
-                logger.error(message);
+                log.error(message);
 
                 spo = sessionDao.insert(null, sessionId, userAgent);
             } else {
@@ -121,7 +123,7 @@ public class PlayerRESTService extends AbstractRESTService {
 
         if (foundPlayer != null) {
 
-            logger.error("Player found");
+            log.error("Player found");
             responseObj.put("errorCode", "PlayerAlreadyExists");
             responseObj.put("message", "Player " + tvo.getPlayerName() + " already exists");
 
@@ -133,7 +135,7 @@ public class PlayerRESTService extends AbstractRESTService {
 
         tvo = converter.convertPlayerPoVo(player);
 
-        logger.debug(tvo);
+        log.debug("{}", tvo);
 
         Response.ResponseBuilder builder = Response.ok().entity(tvo);
 
@@ -158,7 +160,7 @@ public class PlayerRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updatePlayer(PlayerVO tvo) {
 
-        logger.debug(logId() + "PUT: updatePlayer(" + tvo + ")");
+        log.debug(logId() + "PUT: updatePlayer(" + tvo + ")");
         Map<String, String> responseObj = new HashMap<>();
 
         Player foundPlayer;
@@ -175,7 +177,7 @@ public class PlayerRESTService extends AbstractRESTService {
 
         if (foundPlayer != null && !foundPlayer.getId().equals(tvo.getId())) {
 
-            logger.error("Player found");
+            log.error("Player found");
             responseObj.put("errorCode", "PlayerAlreadyExists");
             responseObj.put("message", "Player " + tvo.getPlayerName() + " already exists");
 
@@ -202,7 +204,7 @@ public class PlayerRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletePlayer(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "DELETE: deletePlayer(" + id + ")");
+        log.debug(logId() + "DELETE: deletePlayer(" + id + ")");
 
         Player player = playerDao.getById(id);
         playerDao.delete(player);

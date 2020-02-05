@@ -20,12 +20,14 @@ import javax.ws.rs.core.Response;
 
 import it.lms.tourney.dao.CountryDao;
 import it.lms.tourney.po.Country;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by HTTP clients.
  */
 @Path("/countries")
 @Stateless
+@Slf4j
 public class CountryRESTService extends AbstractRESTService {
 
     @Inject
@@ -36,7 +38,7 @@ public class CountryRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Country> loadAll() {
 
-        logger.debug(logId() + "GET: loadAll()");
+        log.debug(logId() + "GET: loadAll()");
 
         return countryDao.findAllOrderedByCity();
     }
@@ -46,7 +48,7 @@ public class CountryRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Country lookupCountryById(@PathParam("id") Integer id) {
 
-        logger.debug(logId() + "GET: lookupCountryById(" + id + ")");
+        log.debug(logId() + "GET: lookupCountryById(" + id + ")");
 
         Country country = countryDao.getById(id);
         if (country == null) {
@@ -64,7 +66,7 @@ public class CountryRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCountry(Country country) {
 
-        logger.debug(logId() + "POST: createCountry(" + country.getId() + ")");
+        log.debug(logId() + "POST: createCountry(" + country.getId() + ")");
 
         Response.ResponseBuilder builder = insert(country);
 
@@ -80,7 +82,7 @@ public class CountryRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateCountry(Country country) {
 
-        logger.debug(logId() + "PUT: updateCountry(" + country.getId() + ")");
+        log.debug(logId() + "PUT: updateCountry(" + country.getId() + ")");
 
         Response.ResponseBuilder builder = update(country);
 
@@ -89,7 +91,7 @@ public class CountryRESTService extends AbstractRESTService {
 
     private Response.ResponseBuilder insert(Country country) {
 
-        logger.debug(logId() + "Entering insert()");
+        log.debug(logId() + "Entering insert()");
 
         Response.ResponseBuilder builder;
         try {
@@ -109,7 +111,7 @@ public class CountryRESTService extends AbstractRESTService {
 
     private Response.ResponseBuilder update(Country country) {
 
-        logger.debug(logId() + "Entering update()");
+        log.debug(logId() + "Entering update()");
 
         Response.ResponseBuilder builder;
         try {

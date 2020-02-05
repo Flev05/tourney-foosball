@@ -12,12 +12,14 @@ import javax.ws.rs.core.MediaType;
 
 import it.lms.tourney.dao.DisciplineDao;
 import it.lms.tourney.po.Discipline;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JAX-RS to produces a RESTful service to read/write by DAOs.
  */
 @Path("/disciplines")
 @Stateless
+@Slf4j
 public class DisciplineRESTService extends AbstractRESTService {
 
     @Inject
@@ -28,7 +30,7 @@ public class DisciplineRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Discipline> loadAll() {
 
-        logger.debug(logId() + "GET: loadAll()");
+        log.debug(logId() + "GET: loadAll()");
         List<Discipline> disciplineList = disciplineDao.findAllDisciplines();
 
         return disciplineList;

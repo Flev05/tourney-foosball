@@ -1522,6 +1522,7 @@
                         <th *ngFor="let col of columns">
                             {{col.header}}                                
                         </th>
+                        <th class="deleteColSize">E</th>
                         <th class="deleteColSize">D</th>
                     </tr>
                 </ng-template>                                     
@@ -1535,7 +1536,10 @@
                             {{rowData[col.field]}}
                         </td>            
                         <td>
-                            <button class="ui-button-success" pButton icon="fa fa-edit" (click)="onOperatorRowSelect(rowData)" [disabled]="editDisabled()"></button>
+                            <button class="ui-button-success" pButton icon="fa fa-edit" (click)="editOperator(rowData)"></button>
+                        </td>
+                        <td>
+                            <button class="ui-button-success" pButton icon="fa fa-delete" (click)="detachOperator(rowData)"></button>
                         </td>
                     </tr>
                 </ng-template>

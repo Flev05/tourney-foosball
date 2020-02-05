@@ -30,6 +30,7 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney';
@@ -119,7 +120,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
     selectedOperatorRows : UserVO[];
     operatorRows: UserVO[];
-    urcList: UserRoleClientVO[];
 
     constructor(
         protected location: Location,
@@ -176,43 +176,69 @@ export class TourneyDetailView extends AbstractDetailView {
 
     newOperator() {
         this.urcService.newUser = true;
-        this.urcService.selectedUrc = this.urcList.find( urc => urc.userVo.id == this.loginService.userLogged.id );
-        this.urcService.urcList = this.urcList;
         this.router.navigate([REDIRECT_USER_DV]);
     }
 
-    onOperatorRowSelect(event) {
-        console.log("Entering onOperatorRowSelect()");
+    editOperator(event) {
+        console.log("Entering editOperator()");
         console.log(event);
 
-        let urcId = event.id;
+        let userId = event.id;
 
-        this.urcService.selectedUrc = this.urcList.find( urc => urc.userVo.id == urcId );
-        this.urcService.urcList = this.urcList;
+        this.userService.selectedUser = this.selectedOperatorRows.find( u => u.id == userId );
 
-        this.urcService.newUser = false;
+        this.userService.newUser = false;
         this.router.navigate([REDIRECT_USER_DV]);
     }
 
-    private onComplete(cs: UserRoleClientVO[]): void {
-        this.urcList = cs;
+    detachOperator(uvo: UserVO) {
+        console.log("detachOperator(): " + uvo.username);
+        let popup = "Sicuro di voler rimuovere l'operatore: " + uvo.username + "?";
+
+        if(confirm(popup)) {
+            let op: UserRoleClientVO = {userVo: uvo, clientVO: this.clientService.selectedClient};
+
+            const observer = this.userService.detachOperator(this.clientService.selectedClient.id, 
+                this.selectedTourney.id, this.loadUsersErrorHandler("Delete operator operation"));
+            observer.subscribe(op => this.onDeleteNext(op) );
+        }
     }
 
+    private onDeleteNext(op : UserRoleClientVO): any {
+        let deletedOp = this.operatorRows.find( t => t.username == op.userVo.username );
+        if( deletedOp != undefined ) {
+            let index: number = this.operatorRows.indexOf(deletedOp);
+            if(index > -1) {
+                this.operatorRows.splice(index, 1);
+            }
+        }
+        deletedOp = this.selectedOperatorRows.find( t => t.username == op.userVo.username );
+        if( deletedOp != undefined ) {
+            let index: number = this.selectedOperatorRows.indexOf(deletedOp);
+            if(index > -1) {
+                this.selectedOperatorRows.splice(index, 1);
+            }
+        }
+    }
+ 
     private loadOperators() {
-        let loggedUserId = this.loginService.userLogged.id;
-        let ucrsub = this.urcService.loadUrc(loggedUserId, this.loadUsersErrorHandler('loadUrc()'));
-        ucrsub.subscribe(cs => this.onComplete(cs), e => this.onError(e) );
-
         let selectedClientId = this.clientService.selectedClient.id;
-        const subscriber = this.userService.loadOperatorsByClient(selectedClientId, this.loadUsersErrorHandler('loadAllOperators()'));
+        let op : OperatorsVO = {clientId: selectedClientId, tourneyId: this.selectedTourney.id};
+        const subscriber = this.userService.loadOperatorsBy(op, this.loadUsersErrorHandler('loadAllOperators()'));
+        subscriber.subscribe(cs => this.onLoadNext(cs), e => this.onError(e) );
+    }
+
+    private attachOperators() {
+        let selectedClientId = this.clientService.selectedClient.id;
+        let op : OperatorsVO = {clientId: selectedClientId, tourneyId: this.selectedTourney.id};
+        op.allOperators = this.operatorRows;
+        const subscriber = this.userService.attachOperators(op, this.loadUsersErrorHandler('attachOperators()'));
         subscriber.subscribe(cs => this.onLoadNext(cs), e => this.onError(e) );
     }
     
-    private onLoadNext(cs: UserVO[]): void {
-        this.operatorRows = cs;
-        this.selectedOperatorRows = cs;
-
-        // this.operatorRows.forEach( o => this.disableEditButton(o) );
+    private onLoadNext(op: OperatorsVO): void {
+        this.operatorRows = op.allOperators;
+        this.selectedOperatorRows = op.selectedOperators;
     }
 
     // private disableEditButton(o: UserVO): void {
@@ -1297,6 +1323,7 @@ export class TourneyDetailView extends AbstractDetailView {
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         if( !this.onSaveTourneyError ) {
             subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.saveComplete());
+            this.attachOperators();
         }
     }
 
@@ -1329,6 +1356,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let tvo: TourneyVO = this.cloneTourneyVO(rewind);
             const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
             subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(true));
+            this.attachOperators();
             return;
         }
 

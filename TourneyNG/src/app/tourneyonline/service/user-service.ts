@@ -41,8 +41,8 @@ export class UserService {
         const url = userUrl + "/loadOperatorsBy/" + op.clientId + "/" + op.tourneyId;
         console.log(url);
         
-        return this.http.post<OperatorsVO>(userUrl, op, httpOptions).pipe(
-            tap(_ => this.log("fetched all clients by user id: " + op))
+        return this.http.get<OperatorsVO>(url).pipe(
+            tap(_ => this.log("fetched all operators by client and tourney id: " + op))
           , catchError(selector)
         );
     }
@@ -139,24 +139,24 @@ export class UserService {
     }
 
     /** Saves the relation betweeen the User and the tourney to the server */
-    attachOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
-        let url = userUrl + "/attachOperators";
+    mergeOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
+        let url = userUrl + "/mergeOperators";
         console.log(url);
 
         return this.http.post<OperatorsVO>(url, ovo, httpOptions).pipe(
-            tap((op: OperatorsVO) => this.log(`attachOperators for tourney id=${op.tourneyId}`))
+            tap((op: OperatorsVO) => this.log(`mergeOperators for tourney id=${op.tourneyId}`))
             , catchError(selector)
         );
     }
 
     /** Detach the operator relation between tourney and operatorSS */
-    detachOperator(userId: number,tourneyId: number, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
-        const url = userUrl + "/detachOperator/" + userId + "/" + tourneyId;
+    deleteOperator(userId: number,tourneyId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+        const url = userUrl + "/deleteOperator/" + userId + "/" + tourneyId;
         console.log(url);
 
-        return this.http.get<UserRoleClientVO>(url).pipe(
-            tap((urc: UserRoleClientVO) => this.log(`detachOperator Operator URC.id=` + urc.id))
-            , catchError(selector)
+        return this.http.delete<UserVO>(url, httpOptions).pipe(
+            tap(_ => this.log(`deleted User id=` + url)),
+            catchError(selector)
         );
     }
 

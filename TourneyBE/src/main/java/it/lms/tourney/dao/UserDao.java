@@ -1,6 +1,7 @@
 
 package it.lms.tourney.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.persistence.criteria.Root;
 
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
+import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
@@ -24,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UserDao extends BaseJPACrudDao<User, Integer> {
+
+    private static final String MD5_EMPTY_PASSWORD = "d41d8cd98f00b204e9800998ecf8427e";
 
     public UserDao() throws DaoException {
 
@@ -299,4 +303,57 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         deletePo(po);
     }
 
+    public User findFollowerLike(String followerUseName) {
+
+        log.debug(logId() + "Entering findFollowerLike(" + followerUseName + ")");
+
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<User> root = cq.from(User.class);
+
+        Predicate p = getCb().like(root.get(User_.username), followerUseName);
+
+        cq = cq.select(root);
+        cq = cq.where(p);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        log.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        User po = poList.get(0);
+        return po;
+    }
+
+    /**
+     * Creates a new default follower user for the new tourney and recevied client
+     * 
+     * @param followerUserName the user name for the new follower user
+     * @param cpo the client owner of the tourney
+     * @return the new follower user
+     * @throws NoSuchAlgorithmException if any run time error
+     */
+    public User newFollowerUser(String followerUserName, Client cpo) {
+
+        User upo = new User();
+        upo.setUsername(followerUserName);
+
+        String md5 = MD5_EMPTY_PASSWORD.toUpperCase();
+        upo.setPassword(md5);
+
+        upo.setCountry(cpo.getCountry());
+        upo.setDescription("Follower user");
+        upo.setEmail(cpo.getEmail());
+        upo.setLastname("Follower");
+        upo.setFirstname("Follower");
+        upo.setPhoneNumber(cpo.getPhoneNumber());
+
+        insert(upo);
+        return upo;
+    }
 }

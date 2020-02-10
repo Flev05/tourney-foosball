@@ -12,6 +12,7 @@ import { RoleVO } from 'app/tourneyonline/domain/role-vo';
 import { UserDetailView } from '../userng/user-detailview';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 import { Observable } from 'rxjs';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
 
 const DEFAULT_OPERATOR_PASSWORD: string = "torneionline";
 
@@ -44,10 +45,11 @@ export class OperatorDetailView extends UserDetailView {
 
     ngOnInit() {
         super.ngOnInit();
+        this.selectedTourney = this.tourneyService.selectedTourney;
     }
 
     protected setPasswords() {
-        if( this.urcService.newUser ) {
+        if( this.userService.newUser ) {
             this.currentPassword = new String(DEFAULT_OPERATOR_PASSWORD).toString();
             this.retypedPassword = new String(DEFAULT_OPERATOR_PASSWORD).toString();
         }
@@ -65,5 +67,20 @@ export class OperatorDetailView extends UserDetailView {
     protected createUserAndUrc(urc: UserRoleClientVO): Observable<UserRoleClientVO> {
         const subscriber = this.userService.createOperator(urc, this.selectedTourney.id, this.saveUserErrorHandler('Create Operator operation'));
         return subscriber;
+    }
+ 
+    protected createUrc(urc: UserRoleClientVO) {
+        return this.urcService.insertUrcOperator(urc, this.saveUserErrorHandler('Create User operation'));
+    }
+
+    protected prepareUrcVO(existingUser: UserVO, rvo: RoleVO): UserRoleClientVO {
+        return {
+            id: null,
+            userVo: existingUser,
+            roleVo: rvo,
+            clientVO: this.clientService.selectedClient,
+            tourneyId: this.tourneyService.selectedTourney.id,
+            disciplineId: null
+        };
     }
 }

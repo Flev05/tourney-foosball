@@ -21,8 +21,12 @@ import javax.ws.rs.core.Response;
 import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Tourney;
+import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +40,9 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
     @Inject
     private UserDao           userDao;
+
+    @Inject
+    private TourneyDao        tourneyDao;
 
     @Inject
     private UserRoleClientDao urcDao;
@@ -55,6 +62,7 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         if (userDao.isDeveloperUser(loggedUserId)) {
             urcList = urcDao.findAllUrc();
+            urcList = urcList.stream().filter(urc -> apply(urc)).collect(Collectors.toList());
         } else {
             urcList = urcDao.findUrcByUser(loggedUserId);
         }
@@ -65,6 +73,13 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         log.debug(logId() + "URC(s): " + userVoList);
 
         return userVoList;
+    }
+
+    private boolean apply(UserRoleClient urc) {
+
+        boolean b = !urc.getRole().getName().equals(Role.ROLES.OPERATOR.name())
+                && !urc.getRole().getName().equals(Role.ROLES.FOLLOWER.name());
+        return b;
     }
 
     /**
@@ -81,6 +96,32 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         UserRoleClient urcpo = converter.convertUrcVoPo(urcvo);
         urcDao.insert(urcpo);
+
+        Response.ResponseBuilder builder = Response.ok();
+
+        return builder.build();
+    }
+
+    @POST
+    @Path("/insertUrcOperator")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertUrcOperator(UserRoleClientVO urcvo) {
+
+        log.debug(logId() + "POST: insertUrcOperator()");
+
+        Integer userId = urcvo.getUserVo().getId();
+        User upo = userDao.getUserById(userId);
+        UserRoleClient urcpo = urcDao.getOperator(userId, urcvo.getClientVO().getId());
+        if (urcpo == null) {
+            urcpo = converter.convertUrcVoPo(urcvo);
+            urcpo.setUser(upo);
+            urcDao.insert(urcpo);
+        }
+
+        Tourney tpo = tourneyDao.getById(urcvo.getTourneyId());
+        tpo.getUrcs().add(urcpo);
+        tourneyDao.update(tpo);
 
         Response.ResponseBuilder builder = Response.ok();
 

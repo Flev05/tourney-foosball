@@ -124,8 +124,10 @@ public class Converter extends AbstractLogger {
             urc = urcDao.findById(urcvo.getId());
         }
 
-        User upo = userDao.getUserById(urcvo.getUserVo().getId());
-        urc.setUser(upo);
+        if (urcvo.getUserVo().getId() != null) {
+            User upo = userDao.getUserById(urcvo.getUserVo().getId());
+            urc.setUser(upo);
+        }
 
         Client cpo = clientDao.getById(urcvo.getClientVO().getId());
         urc.setClient(cpo);
@@ -214,29 +216,6 @@ public class Converter extends AbstractLogger {
         tvo.setJson(null);
 
         return tvo;
-    }
-
-    public Tourney convertTourneyVoPo(TourneyVO tvo, Session spo) {
-
-        Tourney tpo = new Tourney();
-
-        if (spo == null) {
-            Client cpo = clientDao.findById(tvo.getClientVO().getId());
-            tpo.setClient(cpo);
-        } else {
-            tpo.setSession(spo);
-        }
-
-        if (tvo.getCountry() != null) {
-            Country country = countryDao.getById(tvo.getCountry().getId());
-            tpo.setCountry(country);
-        }
-
-        tpo.setTourneyName(tvo.getTourneyName());
-        tpo.setId(tvo.getId());
-        tpo.setJson(tvo.getJson());
-
-        return tpo;
     }
 
     public PlayerVO convertPlayerPoVo(Player ppo) {

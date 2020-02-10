@@ -25,10 +25,9 @@ public class OperatorsVO {
 
     public OperatorsVO() {
 
+        log.debug("Entering OperatorVO()");
+
         allOperators = new ArrayList<>();
         selectedOperators = new ArrayList<>();
-
-        log.debug("Entering OperatorVO()");
     }
-
 }

@@ -2,8 +2,10 @@
 package it.lms.tourney.rest;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
@@ -20,16 +22,26 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.WordUtils;
+
 import it.lms.cb.gui.vo.MeetingVO;
 import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.CountryDao;
 import it.lms.tourney.dao.MeetingDao;
 import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.TourneyDao;
+import it.lms.tourney.dao.UserDao;
+import it.lms.tourney.dao.UserRoleClientDao;
+import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Meeting;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Tourney;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,17 +53,29 @@ import lombok.extern.slf4j.Slf4j;
 public class TourneyRESTService extends AbstractRESTService {
 
     @Inject
-    private MeetingDao meetingDao;
+    private MeetingDao        meetingDao;
 
     @Inject
-    private TourneyDao tourneyDao;
+    private TourneyDao        tourneyDao;
 
     @Inject
-    private SessionDao sessionDao;
+    private SessionDao        sessionDao;
+
+    @Inject
+    private UserDao           userDao;
+
+    @Inject
+    private UserRoleClientDao urcDao;
+
+    @Inject
+    private ClientDao         clientDao;
+
+    @Inject
+    private CountryDao        countryDao;
 
     @Inject
     @ConverterObject
-    private Converter  converter;
+    private Converter         converter;
 
     @GET
     @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
@@ -145,7 +169,6 @@ public class TourneyRESTService extends AbstractRESTService {
         }
 
         if (foundTourney != null) {
-
             log.error("Tourney found");
             responseObj.put("errorCode", "TourneyAlreadyExists");
             responseObj.put("message", "Tourney " + tvo.getTourneyName() + " already exists");
@@ -165,11 +188,104 @@ public class TourneyRESTService extends AbstractRESTService {
         return builder.build();
     }
 
+    /**
+     * Also creates a new default URC relation for the the new incoming tourney
+     * 
+     * @param tvo the new tourney to create
+     * @param spo the session
+     * @return the new tourney entity
+     */
     private Tourney newTourney(TourneyVO tvo, Session spo) {
 
-        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
+        Tourney tpo = prepareNewTourney(tvo, spo);
+        if (spo == null) {
+            String followerUserName = normalizeUsername(tvo.getTourneyName());
+            User upo = userDao.findFollowerLike(followerUserName);
+            if (upo != null) {
+                int lastIndex = followerUserName.lastIndexOf('.');
+                if (lastIndex != -1) {
+                    String digitS = followerUserName.substring(lastIndex + 1);
+                    int digit = Integer.valueOf(digitS);
+                    digit++;
+                    String prefix = followerUserName.substring(0, lastIndex);
+                    followerUserName = prefix + "." + digit;
+                } else {
+                    followerUserName = followerUserName + "." + 1;
+                }
+            }
+
+            Integer clientId = tvo.getClientVO().getId();
+            Client cpo = clientDao.getById(clientId);
+            upo = userDao.newFollowerUser(followerUserName, cpo);
+            userDao.insert(upo);
+
+            UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo);
+            urcDao.insert(urcFollower);
+
+            Set<UserRoleClient> urcSet = new HashSet<>();
+            urcSet.add(urcFollower);
+
+            upo.setUrcSet(urcSet);
+            tpo.setUrcs(urcSet);
+        }
         tourneyDao.insert(tpo);
         return tpo;
+    }
+
+    private Tourney prepareNewTourney(TourneyVO tvo, Session spo) {
+
+        Tourney tpo = new Tourney();
+
+        if (spo == null) {
+            Client cpo = clientDao.findById(tvo.getClientVO().getId());
+            tpo.setClient(cpo);
+        } else {
+            tpo.setSession(spo);
+        }
+
+        if (tvo.getCountry() != null) {
+            Country country = countryDao.getById(tvo.getCountry().getId());
+            tpo.setCountry(country);
+        }
+
+        tpo.setTourneyName(tvo.getTourneyName());
+        tpo.setId(tvo.getId());
+        tpo.setJson(tvo.getJson());
+
+        return tpo;
+    }
+
+    private Tourney prepareTourney(TourneyVO tvo, Session spo) {
+
+        Tourney tpo = tourneyDao.findById(tvo.getId());
+
+        if (spo == null) {
+            Client cpo = clientDao.findById(tvo.getClientVO().getId());
+            tpo.setClient(cpo);
+        } else {
+            tpo.setSession(spo);
+        }
+
+        if (tvo.getCountry() != null) {
+            Country country = countryDao.getById(tvo.getCountry().getId());
+            tpo.setCountry(country);
+        }
+
+        tpo.setTourneyName(tvo.getTourneyName());
+        tpo.setJson(tvo.getJson());
+
+        return tpo;
+    }
+
+    private String normalizeUsername(String tourneyName) {
+
+        String[] tokens = tourneyName.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String t : tokens) {
+            t = WordUtils.capitalizeFully(t, new char[] { ' ' }).replaceAll(" ", "");
+            sb.append(t);
+        }
+        return sb.toString();
     }
 
     /**
@@ -291,7 +407,7 @@ public class TourneyRESTService extends AbstractRESTService {
             insertMeetings(tvo);
         }
 
-        Tourney tpo = converter.convertTourneyVoPo(tvo, spo);
+        Tourney tpo = prepareTourney(tvo, spo);
 
         tourneyDao.update(tpo);
 

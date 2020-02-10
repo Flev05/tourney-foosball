@@ -90,17 +90,6 @@ export class UserListView extends AbstractListView {
 
     create() {
         this.userService.newUser = true;
-        this.userService.selectedUser = this.userService.selectedUser = {
-            id: null,
-            username: '',
-            firstname: '',
-            lastname: '',
-            address: '',
-            email: '',
-            phoneNumber: '',
-            description: '',
-            country    : {},
-        };
         this.gotoDetailView();
     }
 

@@ -22,6 +22,7 @@ import { MessageModule } from 'primeng/message';
 import { ClientLoginListView } from './client-listview';
 import { ClientTourneyListView } from './client-tourney-listview';
 import { BlockUIModule } from 'primeng/blockui';
+import { FollowerDetailView } from './follower-detailview';
 
 @NgModule({
 	imports: [
@@ -50,6 +51,7 @@ import { BlockUIModule } from 'primeng/blockui';
                   LoginDetailView
                 , ClientLoginListView
                 , ClientTourneyListView
+                , FollowerDetailView
 	]
 })
 export class LoginModule {}

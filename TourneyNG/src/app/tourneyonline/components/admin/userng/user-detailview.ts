@@ -50,8 +50,20 @@ export class UserDetailView extends AbstractDetailView {
     }
 
     ngOnInit() {
-        this.countryService.loadAllCountries() ;
-        if( !this.userService.newUser ) {
+        this.countryService.loadAllCountries( () => this.onLoadAllCountriesComplete() );
+        if( this.userService.newUser ) {
+            this.userService.selectedUser = {
+                id: null,
+                username: '',
+                firstname: '',
+                lastname: '',
+                address: '',
+                email: '',
+                phoneNumber: '',
+                description: '',
+                country    : {},
+            };
+        } else {
             this.oldUsername = this.userService.selectedUser.username
         }
 
@@ -65,6 +77,10 @@ export class UserDetailView extends AbstractDetailView {
         this.isRetypePasswordFailed = false;
     }
         
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
+    }
+
     protected setPasswords() {
         this.currentPassword = new String(this.selectedUser.password).toString();
         this.retypedPassword = new String(this.selectedUser.password).toString();
@@ -115,7 +131,6 @@ export class UserDetailView extends AbstractDetailView {
             userVo       : this.selectedUser,
             roleVo       : rvo,
             clientVO     : this.clientService.selectedClient,
-            tourneyId    : null,
             disciplineId : null
         };
 
@@ -142,17 +157,25 @@ export class UserDetailView extends AbstractDetailView {
     private createOnlyUrc(existingUser: UserVO) {
         let rvo: RoleVO = this.selectDefaultRole();
 
-        let urc : UserRoleClientVO = {
-            id           : null,
-            userVo       : existingUser,
-            roleVo       : rvo,
-            clientVO     : this.clientService.selectedClient,
-            tourneyId    : null,
-            disciplineId : null
-        };
+        let urc : UserRoleClientVO = this.prepareUrcVO(existingUser, rvo);
 
-        const subscriber = this.urcService.createUrc(urc, this.saveUserErrorHandler('Create User operation'));
+        const subscriber = this.createUrc(urc);
         subscriber.subscribe(cs => this.onSaveComplete(cs), e => this.subscribeErrorHandler(e) );
+    }
+
+    protected createUrc(urc: UserRoleClientVO) {
+        return this.urcService.createUrc(urc, this.saveUserErrorHandler('Create User operation'));
+    }
+
+    protected prepareUrcVO(existingUser: UserVO, rvo: RoleVO): UserRoleClientVO {
+        return {
+            id: null,
+            userVo: existingUser,
+            roleVo: rvo,
+            clientVO: this.clientService.selectedClient,
+            tourneyId: null,
+            disciplineId: null
+        };
     }
 
     protected selectDefaultRole(): RoleVO {

@@ -54,7 +54,18 @@ export class UrcService {
         console.log(url);
 
         return this.http.post<UserRoleClientVO>(url, urc, httpOptions).pipe(
-                tap((urc: UserRoleClientVO) => this.log(`added User w/ url=` + url))
+                tap((urc: UserRoleClientVO) => this.log(`added User w/ url=` + urc))
+            , catchError(selector)
+        );
+    }
+
+    /** POST: add a new User to the server */
+    public insertUrcOperator (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
+        let url = userUrl + "/insertUrcOperator";
+        console.log(url);
+
+        return this.http.post<UserRoleClientVO>(url, urc, httpOptions).pipe(
+                tap((urc: UserRoleClientVO) => this.log(`insertUrcOperator w/ url=` + urc))
             , catchError(selector)
         );
     }

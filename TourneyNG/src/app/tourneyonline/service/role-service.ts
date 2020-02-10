@@ -55,6 +55,11 @@ export class RoleService {
         return asEnum == ERoles.DEVELOPER ? true : false;
     }
 
+    isUserOperator(roleName : string): boolean {
+        var asEnum : ERoles = this.resolve(roleName);
+        return asEnum == ERoles.OPERATOR ? true : false;
+    }
+
     isUserFollower(roleName : string): boolean {
         var asEnum : ERoles = this.resolve(roleName);
         return asEnum == ERoles.FOLLOWER ? true : false;
@@ -107,7 +112,7 @@ export class RoleService {
     getNoFollowerRoleOptions() : Combobox[] {
         let opts : Combobox[] = [];
         for( let cb of this.roleOptions ) {
-            if( this.isUserFollower(cb.label) ) {
+            if( this.isUserOperator(cb.label) || this.isUserFollower(cb.label) ) {
                 continue;
             }
             opts.push(cb);

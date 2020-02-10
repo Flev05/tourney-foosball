@@ -37,10 +37,10 @@ export class LoginDetailView implements OnInit {
     loggedUsername: string;
 
     constructor(
-        private fb: FormBuilder,
-        private router: Router,
-        private loginService: LoginService,
-        private clientService: ClientService,
+        protected fb: FormBuilder,
+        protected router: Router,
+        protected loginService: LoginService,
+        protected clientService: ClientService,
     ) {}
 
     ngOnInit() {

@@ -13,6 +13,7 @@ public class UserRoleClientVO extends AbstractVO {
     UserVO                    userVo;
     RoleVO                    roleVo;
     ClientVO                  clientVO;
+    Integer                   tourneyId;
     Integer                   disciplineId;
 
     public UserRoleClientVO() {

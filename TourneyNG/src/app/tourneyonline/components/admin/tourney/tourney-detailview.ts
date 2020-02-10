@@ -41,7 +41,7 @@ const REDIRECT_ADD_TEAM_DV  = REDIRECT_TOURNEY_LV + '/dv/addteam';
 const REDIRECT_ROUND_DV     = REDIRECT_TOURNEY_LV + '/dv/round';
 const REDIRECT_PLAYOFF_DV   = REDIRECT_TOURNEY_LV + '/dv/playoff';
 
-const REDIRECT_USER_DV      = REDIRECT_TOURNEY_LV + "/dv/operatordv"
+const REDIRECT_OPERATOR_DV  = REDIRECT_TOURNEY_LV + "/dv/operatordv"
 
 const PLYOFF_CHANGE_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di Playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
 const PLYOFF_CHANGE_TEAMS_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di squadre per girone di playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
@@ -175,8 +175,8 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     newOperator() {
-        this.urcService.newUser = true;
-        this.router.navigate([REDIRECT_USER_DV]);
+        this.userService.newUser = true;
+        this.router.navigate([REDIRECT_OPERATOR_DV]);
     }
 
     editOperator(event) {
@@ -188,31 +188,28 @@ export class TourneyDetailView extends AbstractDetailView {
         this.userService.selectedUser = this.selectedOperatorRows.find( u => u.id == userId );
 
         this.userService.newUser = false;
-        this.router.navigate([REDIRECT_USER_DV]);
+        this.router.navigate([REDIRECT_OPERATOR_DV]);
     }
 
-    detachOperator(uvo: UserVO) {
-        console.log("detachOperator(): " + uvo.username);
+    deleteOperator(uvo: UserVO) {
+        console.log("deleteOperator(): " + uvo.username);
         let popup = "Sicuro di voler rimuovere l'operatore: " + uvo.username + "?";
 
         if(confirm(popup)) {
-            let op: UserRoleClientVO = {userVo: uvo, clientVO: this.clientService.selectedClient};
-
-            const observer = this.userService.detachOperator(this.clientService.selectedClient.id, 
-                this.selectedTourney.id, this.loadUsersErrorHandler("Delete operator operation"));
+            const observer = this.userService.deleteOperator(uvo.id, this.selectedTourney.id, this.loadUsersErrorHandler("Delete operator operation"));
             observer.subscribe(op => this.onDeleteNext(op) );
         }
     }
 
-    private onDeleteNext(op : UserRoleClientVO): any {
-        let deletedOp = this.operatorRows.find( t => t.username == op.userVo.username );
+    private onDeleteNext(op : UserVO): any {
+        let deletedOp = this.operatorRows.find( t => t.username == op.username );
         if( deletedOp != undefined ) {
             let index: number = this.operatorRows.indexOf(deletedOp);
             if(index > -1) {
                 this.operatorRows.splice(index, 1);
             }
         }
-        deletedOp = this.selectedOperatorRows.find( t => t.username == op.userVo.username );
+        deletedOp = this.selectedOperatorRows.find( t => t.username == op.username );
         if( deletedOp != undefined ) {
             let index: number = this.selectedOperatorRows.indexOf(deletedOp);
             if(index > -1) {
@@ -228,12 +225,18 @@ export class TourneyDetailView extends AbstractDetailView {
         subscriber.subscribe(cs => this.onLoadNext(cs), e => this.onError(e) );
     }
 
-    private attachOperators() {
+    private mergeOperators() {
         let selectedClientId = this.clientService.selectedClient.id;
         let op : OperatorsVO = {clientId: selectedClientId, tourneyId: this.selectedTourney.id};
         op.allOperators = this.operatorRows;
-        const subscriber = this.userService.attachOperators(op, this.loadUsersErrorHandler('attachOperators()'));
-        subscriber.subscribe(cs => this.onLoadNext(cs), e => this.onError(e) );
+        op.selectedOperators = this.selectedOperatorRows;
+        const subscriber = this.userService.mergeOperators(op, this.loadUsersErrorHandler('mergeOperators()'));
+        subscriber.subscribe(cs => this.onMergeNext(cs), e => this.onError(e) );
+    }
+
+    private onMergeNext(cs: OperatorsVO): void {
+        this.onLoadNext(cs);
+        this.gotoListView();
     }
     
     private onLoadNext(op: OperatorsVO): void {
@@ -1323,7 +1326,7 @@ export class TourneyDetailView extends AbstractDetailView {
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         if( !this.onSaveTourneyError ) {
             subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.saveComplete());
-            this.attachOperators();
+            this.mergeOperators();
         }
     }
 
@@ -1352,11 +1355,11 @@ export class TourneyDetailView extends AbstractDetailView {
         if( this.selectedTourney.selectedTabIndex >= this.maxBoundaryTabIndex ) {
             this.selectedTourney.selectedTabIndex = 0;
             this.selectedTourney.wizardModeIndex = -1
-            // this.gotoListView();
-            let tvo: TourneyVO = this.cloneTourneyVO(rewind);
+
+            let tvo: TourneyVO = this.cloneTourneyVO(true);
             const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
             subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(true));
-            this.attachOperators();
+            this.mergeOperators();
             return;
         }
 

@@ -115,6 +115,11 @@ public class RoleDao extends BaseJPACrudDao<Role, Integer> {
         return getPoByName(Role.ROLES.OPERATOR);
     }
 
+    public Role getFollowerRole() {
+
+        return getPoByName(Role.ROLES.FOLLOWER);
+    }
+
     private Role getPoByName(Role.ROLES role) {
 
         CriteriaQuery<Role> cq = getCb().createQuery(Role.class);

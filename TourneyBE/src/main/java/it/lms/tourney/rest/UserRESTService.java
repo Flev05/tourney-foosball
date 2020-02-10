@@ -2,6 +2,7 @@
 package it.lms.tourney.rest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,18 +25,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import it.lms.cb.gui.vo.OperatorsVO;
-import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
-import it.lms.tourney.dao.ClientDao;
-import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
-import it.lms.tourney.po.Client;
-import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
@@ -57,12 +53,6 @@ public class UserRESTService extends AbstractRESTService {
 
     @Inject
     private TourneyDao        tourneyDao;
-
-    @Inject
-    private RoleDao           roleDao;
-
-    @Inject
-    private ClientDao         clientDao;
 
     @Inject
     @ConverterObject
@@ -90,48 +80,29 @@ public class UserRESTService extends AbstractRESTService {
     }
 
     @GET
-    @Path("/findOperatorsByClientId/{clientId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<UserVO> findOperatorsByClientId(@PathParam("clientId") Integer clientId) {
-
-        log.debug(logId() + "GET: findOperatorsByClientId(" + clientId + ")");
-
-        List<UserRoleClient> urcList = urcDao.findOperatorsUrcByClientId(clientId);
-
-        List<User> userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
-
-        List<User> distinctElements = userList.stream().filter(distinctByKey(upo -> upo.getId()))
-                .collect(Collectors.toList());
-
-        return distinctElements.stream().map(upo -> converter.convertUserPoVo(upo)).collect(Collectors.toList());
-    }
-
-    @GET
     @Path("/loadOperatorsBy/{clientId:[0-9][0-9]*}/{tourneyId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OperatorsVO> loadOperatorsBy(@PathParam("clientId") Integer clientId,
+    public OperatorsVO loadOperatorsBy(@PathParam("clientId") Integer clientId,
             @PathParam("tourneyId") Integer tourneyId) {
 
         log.debug(logId() + "GET: loadOperatorsBy(" + clientId + "/" + tourneyId + ")");
 
+        OperatorsVO ovo = new OperatorsVO();
+        ovo.setClientId(clientId);
+        ovo.setTourneyId(tourneyId);
+
         List<UserRoleClient> urcList = urcDao.findOperatorsUrcBy(clientId, tourneyId);
-
-        Tourney tpo = tourneyDao.getById(tourneyId);
-
-        List<OperatorsVO> ops = new ArrayList<>();
         for (UserRoleClient urc : urcList) {
-            OperatorsVO ovo = new OperatorsVO();
-            ops.add(ovo);
-
             UserVO uvo = converter.convertUserPoVo(urc.getUser());
-            ovo.getAllOperators().add(uvo);
-
-            if (tpo.getUrcs().contains(urc)) {
-                ovo.getSelectedOperators().add(uvo);
-            }
+            ovo.getSelectedOperators().add(uvo);
         }
 
-        return ops;
+        urcList = urcDao.findOperatorsUrcByClientId(clientId);
+        for (UserRoleClient urc : urcList) {
+            UserVO uvo = converter.convertUserPoVo(urc.getUser());
+            ovo.getAllOperators().add(uvo);
+        }
+        return ovo;
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
@@ -168,6 +139,9 @@ public class UserRESTService extends AbstractRESTService {
         log.debug(logId() + "GET: getUserByUsername(" + username + ")");
 
         User upo = userDao.getPoBy(username);
+        if (upo == null) {
+            return null;
+        }
         UserVO uvo = converter.convertUserPoVo(upo);
         return uvo;
     }
@@ -235,32 +209,21 @@ public class UserRESTService extends AbstractRESTService {
     }
 
     /**
-     * Creates a new operator from the values provided. Performs validation, and will return a JAX-RS response with
-     * either 200 ok, or with a map of fields, and related errors.
+     * Creates a new operator from the provided values.
      */
     @POST
-    @Path("/attachOperators")
+    @Path("/mergeOperators")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response attachOperators(OperatorsVO urcvo) {
+    public Response mergeOperators(OperatorsVO urcvo) {
+
+        log.debug(logId() + "POST: mergeOperators(" + urcvo.getClientId() + "/" + urcvo.getTourneyId() + ")");
 
         Integer tourneyId = urcvo.getTourneyId();
         Tourney tpo = tourneyDao.getById(tourneyId);
 
-        tpo.getUrcs().clear();
-
-        for (UserVO uvo : urcvo.getSelectedOperators()) {
-            User upo = userDao.findById(uvo.getId());
-            Role rpo = roleDao.getOperatorRole();
-
-            UserRoleClient urc = new UserRoleClient();
-            urc.setUser(upo);
-            urc.setRole(rpo);
-            Client cpo = clientDao.getById(urcvo.getClientId());
-            urc.setClient(cpo);
-
-            tpo.getUrcs().add(urc);
-        }
+        removeOperators(tpo, urcvo);
+        addOperators(tpo, urcvo);
 
         Response.ResponseBuilder builder = Response.ok().entity(urcvo);
 
@@ -268,30 +231,80 @@ public class UserRESTService extends AbstractRESTService {
     }
 
     /**
+     * Removes the operators in the relation table TOURNEY_URC than are not in the received operator list
+     * 
+     * @param tpo the tourney the operator belongs to
+     * @param urcvo the operators VO
+     */
+    private void removeOperators(Tourney tpo, OperatorsVO urcvo) {
+
+        List<Integer> userSelectIdList = urcvo.getSelectedOperators().stream().map(u -> u.getId())
+                .collect(Collectors.toList());
+
+        Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
+        while (it.hasNext()) {
+            UserRoleClient urc = it.next();
+            Integer userId = urc.getUser().getId();
+            if (!userSelectIdList.contains(userId)) {
+                it.remove();
+            }
+        }
+        tourneyDao.update(tpo);
+    }
+
+    /**
+     * Add the received list of operator to the tourney many to many relation in the TOURNEY_URC table
+     * 
+     * @param tpo the tourney the operator belongs to
+     * @param urcvo the operators VO
+     */
+    private void addOperators(Tourney tpo, OperatorsVO urcvo) {
+
+        for (UserVO uvo : urcvo.getSelectedOperators()) {
+            UserRoleClient urc = urcDao.getOperator(uvo.getId(), urcvo.getClientId());
+            tpo.getUrcs().add(urc);
+        }
+        tourneyDao.update(tpo);
+    }
+
+    /**
      * Finds the URC bounded to the incoming tourneyId, get the corresponding client and user , remove the found URC,
      * verify if there is no more URC for the got client and, if no, remove the got user
      */
-    @GET
-    @Path("/detachOperator/{userId:[0-9][0-9]*}/{tourneyId:[0-9][0-9]*}")
+    @DELETE
+    @Path("/deleteOperator/{userId:[0-9][0-9]*}/{tourneyId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public TourneyVO detachOperator(@PathParam("userId") Integer userId, @PathParam("tourneyId") Integer tourneyId) {
+    public Response deleteOperator(@PathParam("userId") Integer userId, @PathParam("tourneyId") Integer tourneyId) {
+
+        log.debug(logId() + "POST: deleteOperator(" + userId + "/" + tourneyId + ")");
 
         Tourney tpo = tourneyDao.getById(tourneyId);
 
-        for (UserRoleClient urc : tpo.getUrcs()) {
+        Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
+        while (it.hasNext()) {
+            UserRoleClient urc = it.next();
             User user = urc.getUser();
             if (user.getId().equals(userId)) {
-                urcDao.delete(urc);
-                List<UserRoleClient> urcList = urcDao.findByUserId(user.getId());
-                if (urcList.isEmpty()) {
-                    userDao.delete(user);
-                }
+                it.remove();
             }
         }
         tourneyDao.update(tpo);
 
-        TourneyVO tvo = converter.convertTourneyPoVo(tpo);
-        return tvo;
+        UserVO uvo = null;
+        List<UserRoleClient> urcCopy = urcDao.findByUserId(userId);
+        for (UserRoleClient urc : urcCopy) {
+            User user = urc.getUser();
+            urcDao.delete(urc);
+            List<UserRoleClient> urcList = urcDao.findByUserId(user.getId());
+            if (urcList.isEmpty()) {
+                userDao.delete(user);
+                uvo = converter.convertUserPoVo(user);
+            }
+        }
+
+        Response.ResponseBuilder builder = Response.ok().entity(uvo);
+
+        return builder.build();
     }
 
     /**
@@ -329,16 +342,6 @@ public class UserRESTService extends AbstractRESTService {
         User upo = userDao.getUserById(id);
 
         List<UserRoleClient> urcList = urcDao.findByUserId(upo.getId());
-
-        // if (!urcList.isEmpty()) {
-        // Map<String, String> responseObj = new HashMap<>();
-        // responseObj.put("errorCode", "UserUsedByOtheObject");
-        // responseObj.put("message",
-        // "Unable to remove user [" + upo.getUsername() + "] because it is used by another object");
-        // Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-        // return builder.build();
-        // }
-        // List<UserRoleClient> urcList = upo.getUrcSet().stream().collect(Collectors.toList());
 
         urcList.stream().forEach(urc -> urcDao.delete(urc));
 

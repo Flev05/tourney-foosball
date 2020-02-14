@@ -5,15 +5,20 @@ import java.io.Serializable;
 import java.util.List;
 
 import it.lms.tourney.po.Country;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The persistent class for the user database table.
  */
+@Getter
+@Setter
 public class TourneyVO extends AbstractVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String            tourneyName;
+    private String            followerName;
     private ClientVO          clientVO;
     private Country           country;
     private String            json;
@@ -28,55 +33,5 @@ public class TourneyVO extends AbstractVO implements Serializable {
 
         return super.toString() + " TourneyVO [tourneyName=" + tourneyName + ", clientVO=" + clientVO + ", json=" + json
                 + ", country=" + country + "]";
-    }
-
-    public String getTourneyName() {
-
-        return tourneyName;
-    }
-
-    public void setTourneyName(String tourneyName) {
-
-        this.tourneyName = tourneyName;
-    }
-
-    public String getJson() {
-
-        return json;
-    }
-
-    public void setJson(String json) {
-
-        this.json = json;
-    }
-
-    public ClientVO getClientVO() {
-
-        return clientVO;
-    }
-
-    public void setClientVO(ClientVO clientVO) {
-
-        this.clientVO = clientVO;
-    }
-
-    public Country getCountry() {
-
-        return country;
-    }
-
-    public void setCountry(Country country) {
-
-        this.country = country;
-    }
-
-    public List<MeetingVO> getMdbs() {
-
-        return mdbs;
-    }
-
-    public void setMdbs(List<MeetingVO> mdbs) {
-
-        this.mdbs = mdbs;
     }
 }

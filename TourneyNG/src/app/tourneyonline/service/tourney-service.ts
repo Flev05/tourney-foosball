@@ -30,7 +30,7 @@ const httpOptions = {
 };
 
 const tourneyUrl = 'api/tourneys';  
-const loadTourneyByClientIdUrl  = tourneyUrl + '/loadByClientId';  
+const loadTourneyByClientIdUrl  = tourneyUrl + '/loadByClientUserId';  
 const loadTourneyBySessionIdUrl = tourneyUrl + '/loadBySessionId';  
 const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';  
 
@@ -244,7 +244,7 @@ export class TourneyService extends AbstractService {
         let url = loadTourneyBySessionIdUrl;
 
         if(this.loginService.isUserLogged) {
-            url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id
+            url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id + "/" + this.loginService.userLogged.id
         }
         
         return this.http.get<TourneyVO[]>(url).pipe(

@@ -78,13 +78,19 @@ public class TourneyRESTService extends AbstractRESTService {
     private Converter         converter;
 
     @GET
-    @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
+    @Path("/loadByClientUserId/{clientId:[0-9][0-9]*}/{loggedUserId:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<TourneyVO> loadByClientId(@PathParam("clientId") Integer clientId) {
+    public List<TourneyVO> loadByClientUserId(@PathParam("clientId") Integer clientId,
+            @PathParam("loggedUserId") Integer loggedUserId) {
 
-        log.debug(logId() + "GET: loadByClientId()");
+        log.debug(logId() + "GET: loadByClientUserId(" + clientId + "/" + loggedUserId + ")");
 
-        List<Tourney> tourneyList = tourneyDao.findTourneysByClientId(clientId);
+        List<Tourney> tourneyList;
+        if (userDao.isDeveloperUser(loggedUserId) || userDao.isAtLeastAdmin(clientId, loggedUserId)) {
+            tourneyList = tourneyDao.findTourneysByClientId(clientId);
+        } else {
+            tourneyList = tourneyDao.findTourneysLesserThanAdmin(clientId, loggedUserId);
+        }
 
         return tourneyList.stream().map(tpo -> converter.convertLightTourneyPoVo(tpo)).collect(Collectors.toList());
     }
@@ -179,11 +185,12 @@ public class TourneyRESTService extends AbstractRESTService {
 
         Tourney tourney = newTourney(tvo, spo);
 
-        tvo = converter.convertTourneyPoVo(tourney);
+        TourneyVO newtvo = converter.convertTourneyPoVo(tourney);
+        newtvo.setFollowerName(tvo.getFollowerName());
 
-        log.debug("{}", tvo);
+        log.debug("{}", newtvo);
 
-        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+        Response.ResponseBuilder builder = Response.ok().entity(newtvo);
 
         return builder.build();
     }
@@ -217,6 +224,7 @@ public class TourneyRESTService extends AbstractRESTService {
             Integer clientId = tvo.getClientVO().getId();
             Client cpo = clientDao.getById(clientId);
             upo = userDao.newFollowerUser(followerUserName, cpo);
+            tvo.setFollowerName(followerUserName);
             userDao.insert(upo);
 
             UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo);
@@ -282,7 +290,8 @@ public class TourneyRESTService extends AbstractRESTService {
         String[] tokens = tourneyName.split(" ");
         StringBuilder sb = new StringBuilder();
         for (String t : tokens) {
-            t = WordUtils.capitalizeFully(t, new char[] { ' ' }).replaceAll(" ", "");
+            String capitalizeFully = WordUtils.capitalizeFully(t, new char[] { ' ' });
+            t = capitalizeFully.replaceAll("[\\s/%\\]", "");
             sb.append(t);
         }
         return sb.toString();

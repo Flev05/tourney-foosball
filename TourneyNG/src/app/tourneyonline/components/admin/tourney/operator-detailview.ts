@@ -29,7 +29,7 @@ export class OperatorDetailView extends UserDetailView {
         protected roleService: RoleService,
         protected location: Location,
         protected clientService: ClientService,
-        protected urcService: UrcService,
+        public    urcService: UrcService,
         protected countryService: CountryService,
     ) {
         super( userService,

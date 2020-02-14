@@ -10,9 +10,7 @@ import { LevelService } from '../../admin/eliminatory/level-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
-import { TourneyListView } from '../../admin/tourney/tourney-listview';
 import { TourneyResultListView } from '../tourney/tourney-listview';
-import { RoundType } from 'app/tourneyonline/domain/enumerations';
 
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';

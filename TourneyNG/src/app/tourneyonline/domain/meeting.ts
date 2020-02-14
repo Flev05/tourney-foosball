@@ -21,6 +21,8 @@ export interface Meeting
     status?         : MeetingStatus;
     points1?        : number;
     points2?        : number;
+    vpoints1?       : number;
+    vpoints2?       : number;
     matches?        : Match[];
     rule1?          : PlayoffRule;
     ruleName1?      : string;

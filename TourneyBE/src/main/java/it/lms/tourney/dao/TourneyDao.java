@@ -29,15 +29,19 @@ import javax.persistence.criteria.Root;
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Client_;
+import it.lms.tourney.po.Role;
+import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.Tourney_;
+import it.lms.tourney.po.User;
+import it.lms.tourney.po.UserRoleClient;
+import it.lms.tourney.po.UserRoleClient_;
+import it.lms.tourney.po.User_;
 import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
-//@Stateless
-//@DaoQualifier
 @Slf4j
 public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
@@ -83,7 +87,44 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+
+        return resultList;
+    }
+
+    /**
+     * Finds all Tourneys associated to the received client id and logged user id having Operator and Follower roles
+     * 
+     * @param clientId the client identifier
+     * @param loggedUserId the user identifier
+     * @return the list of Tourneys related to the logged user id
+     */
+    public List<Tourney> findTourneysLesserThanAdmin(Integer clientId, Integer loggedUserId) {
+
+        log.debug(logId() + "Entering findTourneysLesserThanAdmin()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+        Root<User> root = cq.from(User.class);
+
+        Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+        Join<UserRoleClient, Tourney> tourneyJoin = urcJoin.join(UserRoleClient_.tourneys);
+        Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+
+        Predicate p1 = cb.equal(root.get(User_.id), loggedUserId);
+        Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = roleJoin.get(Role_.name).in(Role.ROLES.OPERATOR.name(), Role.ROLES.FOLLOWER.name());
+
+        cq = cq.select(tourneyJoin);
+        cq = cq.where(p1, p2, p3);
+
+        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+
+        List<Tourney> resultList = tq.getResultList();
+
+        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
         return resultList;
     }
@@ -114,7 +155,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
         return resultList;
     }
@@ -142,7 +183,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
         if (resultList.isEmpty()) {
             return null;
@@ -174,7 +215,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
         if (resultList.isEmpty()) {
             return null;
@@ -203,5 +244,4 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         super.deletePo(t);
     }
-
 }

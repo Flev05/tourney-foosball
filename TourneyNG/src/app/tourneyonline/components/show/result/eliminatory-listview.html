@@ -21,17 +21,22 @@
             [(selection)]="selectedRow"  
             (onRowSelect)="onEliminatoryRowSelect($event)">
 
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <ng-template pTemplate="body" let-rowData>
                 <tr [pSelectableRow]="rowData">
-                    <td *ngFor="let col of columns">
-                        {{rowData[col.field]}}
+                    <td class="leftTeamName">
+                        {{rowData['teamName1']}}
+                    </td>
+                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
+                        {{rowData['vpoints1']}}
+                    </td>
+                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
+                        {{rowData['vpoints2']}}
+                    </td>
+                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
+                        {{rowData['datetime'] | date: 'dd/MM/y'}}
+                    </td>                    
+                    <td class="rightTeamName">
+                        {{rowData['teamName2']}}
                     </td>
                 </tr>
             </ng-template>
@@ -44,19 +49,23 @@
             selectionMode="single" 
             [(selection)]="selectedRow"  
             (onRowSelect)="onEliminatoryRowSelect($event)">
- 
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr [pSelectableRow]="rowData">
-                    <td *ngFor="let col of columns">
-                        {{rowData[col.field]}}
+                    <td class="leftTeamName">
+                        {{rowData['teamName1']}}
+                    </td>
+                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
+                        {{rowData['vpoints1']}}
+                    </td>
+                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
+                        {{rowData['vpoints2']}}
+                    </td>
+                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
+                        {{rowData['datetime'] | date: 'dd/MM/y'}}
+                    </td>                    
+                    <td class="rightTeamName">
+                        {{rowData['teamName2']}}
                     </td>
                 </tr>
             </ng-template>

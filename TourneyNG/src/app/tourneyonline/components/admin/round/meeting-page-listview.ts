@@ -79,7 +79,9 @@ export class MeetingListView extends AbstractListView {
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;
         this.onewayMeetings = this.selectedRound.onewayMeetings;
+        this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
         this.roundtripMeetings = this.selectedRound.roundtripMeetings;
+        this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
 
         console.log("[Meetings " + this.onewayMeetings.length + "]");
         console.log("[Days     " + this.allDaysNo + "]");

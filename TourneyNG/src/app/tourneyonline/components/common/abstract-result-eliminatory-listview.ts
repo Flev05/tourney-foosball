@@ -101,6 +101,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     m.points1 = this.selectedTourney.matchWinnerScores;
                     m.points2 = 0;
                 }
+                m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
+                m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;        
             }
             for (let m of e.round.roundtripMeetings) {
                 if (m.teamName1 == "") {
@@ -111,6 +113,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     m.points1 = this.selectedTourney.matchWinnerScores;
                     m.points2 = 0;
                 }
+                m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
+                m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
             }
         }
     }
@@ -199,6 +203,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 m.points2 = 0;
             }
         }
+        m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
+        m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
     }
 
     /**
@@ -289,6 +295,11 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             m2.points1 = this.selectedTourney.matchWinnerScores;
             m2.points2 = 0;
         }
+        m1.vpoints1 = m1.matches.length==1 ? m1.matches[0].score1 : m1.points1;
+        m1.vpoints2 = m1.matches.length==1 ? m1.matches[0].score2 : m1.points2;
+
+        m2.vpoints1 = m2.matches.length==1 ? m2.matches[0].score1 : m2.points1;
+        m2.vpoints2 = m2.matches.length==1 ? m2.matches[0].score2 : m2.points2;
     }
 
     /**
@@ -316,6 +327,15 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
             e.round.roundtripMeetings[0].teamName1 = team2;
             e.round.roundtripMeetings[0].teamName2 = team1;
+
+            for (let m of e.round.onewayMeetings) {
+                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+            }
+            for (let m of e.round.roundtripMeetings) {
+                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+            }
             return;
         }
 
@@ -345,6 +365,15 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
             e.round.roundtripMeetings[0].teamName1 = team2;
             e.round.roundtripMeetings[0].teamName2 = team1;
+
+            for (let m of e.round.onewayMeetings) {
+                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+            }
+            for (let m of e.round.roundtripMeetings) {
+                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+            }
         }
     }
     

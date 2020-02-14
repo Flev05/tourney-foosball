@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Client;
+import it.lms.tourney.po.Client_;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
 import it.lms.tourney.po.User;
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserDao extends BaseJPACrudDao<User, Integer> {
 
-    private static final String MD5_EMPTY_PASSWORD = "d41d8cd98f00b204e9800998ecf8427e";
+    private static final String MD5_DEFAULT_PASSWORD = "4A97D80A588D25719C729A43B51AA9FC"; // = torneionline
 
     public UserDao() throws DaoException {
 
@@ -194,13 +195,51 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
         List<UserRoleClient> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " Entitys] ";
+        String info = "[Found " + poList.size() + " User(s)] ";
         log.info(logId() + info);
 
         if (poList.isEmpty()) {
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * Verifies if the received user has ad least the ADMIN role for the recevied client id
+     * 
+     * @param clientId the client owner of the user
+     * @param loggedUserId the logged user id
+     * @return true if the user is at lead ADMIN for the client id
+     */
+    public boolean isAtLeastAdmin(Integer clientId, Integer loggedUserId) {
+
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<User> root = cq.from(User.class);
+
+        Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+        Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+
+        Predicate p1 = getCb().equal(root.get(User_.id), loggedUserId);
+        Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = roleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name(), Role.ROLES.OWNER.name(),
+                Role.ROLES.ADMIN.name());
+
+        Predicate pAndQ = getCb().and(p1, p2, p3);
+        cq = cq.select(root);
+        cq = cq.where(pAndQ);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        log.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return false;
+        }
         return true;
     }
 
@@ -343,11 +382,12 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         User upo = new User();
         upo.setUsername(followerUserName);
 
-        String md5 = MD5_EMPTY_PASSWORD.toUpperCase();
+        String md5 = MD5_DEFAULT_PASSWORD.toUpperCase();
         upo.setPassword(md5);
 
         upo.setCountry(cpo.getCountry());
         upo.setDescription("Follower user");
+        upo.setAddress(cpo.getAddress());
         upo.setEmail(cpo.getEmail());
         upo.setLastname("Follower");
         upo.setFirstname("Follower");
@@ -356,4 +396,5 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         insert(upo);
         return upo;
     }
+
 }

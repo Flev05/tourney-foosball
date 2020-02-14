@@ -228,38 +228,6 @@
 </p-accordion>
 </div>
 
-<!-- <form [formGroup]="tourneyFormGroup" (ngSubmit)="onSearch(tourneyFormGroup.value)">
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-     <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            Da:
-        </div>
-        <div class="ui-grid-col-3">
-            <p-calendar formControlName="fromDate" [locale]="it" dateFormat="dd/mm/yy" [showIcon]="true">
-            </p-calendar>
-        </div>
-    </div>
-
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            A:
-        </div>
-        <div class="ui-grid-col-3">
-            <p-calendar formControlName="toDate" [locale]="it" dateFormat="dd/mm/yy" [showIcon]="true">
-            </p-calendar>
-        </div>
-    </div>
-
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2"></div>
-        <div class="ui-grid-col-6">
-            <button pButton type="submit" icon="fa fa-search" label="Cerca" [disabled]="!tourneyFormGroup.valid"></button>
-        </div>
-        <div class="ui-grid-col-4"></div>
-    </div>
-</div>
-</form> -->
-
 <div *ngIf="onDeleteTourneyError" style="margin-top:30px">
     <p-message severity="error" text="Impossibile rimuovere il torneo, oggetto ancora in uso!"></p-message>
 </div>   

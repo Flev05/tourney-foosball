@@ -70,7 +70,7 @@ export class LoginDetailView implements OnInit {
         subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
     }
 
-    private onNext(lvo: Login) {
+    protected onNext(lvo: Login) {
         console.log("Entering LoginDetailView.onNext()"); // log to console instead
         console.log(lvo);
 
@@ -83,7 +83,7 @@ export class LoginDetailView implements OnInit {
         this.onComplete();
     }
 
-    private onComplete() {
+    protected onComplete() {
         console.log("Entering LoginDetailView.onComplete()" );
         
         if(!this.loginService.isUserLogged)  {
@@ -119,14 +119,14 @@ export class LoginDetailView implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    private onError(e:any) {
+    protected onError(e:any) {
         console.error("Entering LoginDetailView.onError()");
         console.error(e);
         this.loginService.isUserLogged = false;
         this.loginFailed = true;
     }
 
-    private handleLoginError<Login> (operation: string, result?: Login) {
+    protected handleLoginError<Login> (operation: string, result?: Login) {
         return (error: any): Observable<Login> => {                      
             console.error("Entering Observable<Login>"); // log to console instead
 

@@ -82,27 +82,11 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         
         this.meetingService.goBackFromMeeting = false;
         this.onPlayoffCompleteLoad();
-
-        // if( this.meetingService.goBackFromMeeting ) {
-        //     this.onPlayoffCompleteLoad(this.meetingPlayoffService.mdbList);
-        //     this.meetingService.goBackFromMeeting = false;
-        // } else {
-        //     const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
-        //     subsbr.subscribe(t => this.onPlayoffCompleteLoad(t), e => this.onError(e));
-        // }
     }
 
     private onPlayoffCompleteLoad() {
         this.mdbList = this.meetingPlayoffService.mdbList;
 
-        // this.meetingPlayoffService.extractPlayoffMeetings(this.selectedPlayoff, this.mdbList);
-        // if( this.selectedTourney.isPlayoffAutoGen == "true") {
-        //     this.meetingPlayoffService.resolveAutomaticTeams(this.selectedPlayoff);
-        //     this.meetingPlayoffService.resolveAutomaticMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
-        // } else {
-        //     this.meetingPlayoffService.resolveManualTeams(this.selectedPlayoff);
-        //     this.meetingPlayoffService.resolveManualMeetings(this.selectedPlayoff, this.selectedTourney.rounds);
-        // }
         this.meetingPlayoffService.prepareMeetingsMap(this.selectedPlayoff.round, false);
 
         this.roundDaysNo = this.selectedPlayoff.round.daysNo;
@@ -171,6 +155,8 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
             m.points1 = 0;
             m.points2 = 0;
         }
+        m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
+        m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
         return m;
     }
 

@@ -96,7 +96,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
 
         return resultList;
     }
@@ -127,7 +127,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
 
         List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
 
@@ -148,7 +148,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<Client> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
 
         return resultList;
     }
@@ -170,7 +170,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<Client> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
         if (resultList.isEmpty()) {
             return null;
         }
@@ -195,7 +195,7 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
         List<Client> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
         if (resultList.isEmpty()) {
             return null;
         }

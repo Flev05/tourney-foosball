@@ -38,16 +38,19 @@
 
             <ng-template pTemplate="body" let-rowData>
                 <tr [pSelectableRow]="rowData">
-                    <td style="text-align: center;">
+                    <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
                     <td style="text-align: center;">
-                        {{rowData['points1']}}
+                        {{rowData['vpoints1']}}
                     </td>
                     <td style="text-align: center;">
-                        {{rowData['points2']}}
+                        {{rowData['vpoints2']}}
                     </td>
-                    <td style="text-align: center;">
+                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
+                        {{rowData['datetime'] | date: 'dd/MM/y'}}
+                    </td>                    
+                    <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>
                 </tr>
@@ -80,16 +83,19 @@
 
             <ng-template pTemplate="body" let-rowData>
                 <tr [pSelectableRow]="rowData"> 
-                    <td style="text-align: center;">
+                    <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
-                    <td style="text-align: center;">
-                        {{rowData['points1']}}
+                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
+                        {{rowData['vpoints1']}}
                     </td>
-                    <td style="text-align: center;">
-                        {{rowData['points2']}}
+                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
+                        {{rowData['vpoints2']}}
                     </td>
-                    <td style="text-align: center;">
+                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
+                        {{rowData['datetime'] | date: 'dd/MM/y'}}
+                    </td>                    
+                    <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>
                 </tr>

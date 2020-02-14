@@ -73,7 +73,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         this.isRoundTrip = true;
 
-        // const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound );
         this.meetingService.goBackFromMeeting = false;
         this.onCompleteLoad();
     }
@@ -90,7 +89,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     private onCompleteLoad(): void {
         this.mdbList = this.meetingRoundService.mdbList;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        // this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList);
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound, false);
 
         this.pageSize = this.selectedRound.pageSize;
@@ -149,6 +147,8 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
                 m.points2 = 0;
             }
         }
+        m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
+        m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
         return m;
     } 
 

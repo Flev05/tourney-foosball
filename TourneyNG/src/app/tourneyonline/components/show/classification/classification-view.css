@@ -8,3 +8,16 @@
     width: 40%;
     text-align: center;
 }
+
+.leftTeamName {
+    text-align: right; 
+    font-size: 90%;
+}
+.rightTeamName {
+    text-align: left; 
+    font-size: 90%;
+}
+.centralPoints {
+    text-align: center; 
+    font-size: 90%;
+}

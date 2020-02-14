@@ -117,20 +117,18 @@ export class MeetingDetailView extends AbstractDetailView {
         console.log("Entering onInProgressClick()");
         console.log(event);
         this.selectedMeeting.status = MeetingStatus.InProgress;
+        this.save();
     }
 
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
         console.log(event);
-        this.save();
         this.selectedMeeting.status = MeetingStatus.Terminated;
+        this.save();
     }
 
     minus1(m: Match) {
         let ii = m.id;
-        if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
-            return;
-        }
         this.matches[ii].score1--;
         if(this.matches[ii].score1 < 0) {
             this.matches[ii].score1=0;
@@ -141,22 +139,29 @@ export class MeetingDetailView extends AbstractDetailView {
     plus1(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
-        if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
         this.matches[ii].score1++;
         if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score1 = this.selectedTourney.pointsNeededToWin;
+            let all : boolean = true;
+            for( let m of this.matches ) {
+                if( m.score1 < this.selectedTourney.pointsNeededToWin && m.score2 < this.selectedTourney.pointsNeededToWin) {
+                    all = false;
+                    break;
+                }
+            }
+            if( all ) {
+                this.selectedMeeting.status = MeetingStatus.Terminated;
+            }
         }
         this.save();
     }
 
     minus2(m: Match): void {
         let ii = m.id;
-        if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
-            return;
-        }
         this.matches[ii].status = MeetingStatus.InProgress;
         this.matches[ii].score2--;
         if(this.matches[ii].score2 < 0) {
@@ -168,13 +173,23 @@ export class MeetingDetailView extends AbstractDetailView {
     plus2(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
-        if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
         this.matches[ii].score2++;
         if(this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].score2 = this.selectedTourney.pointsNeededToWin;
+            let all : boolean = true;
+            for( let m of this.matches ) {
+                if( m.score1 < this.selectedTourney.pointsNeededToWin && m.score2 < this.selectedTourney.pointsNeededToWin) {
+                    all = false;
+                    break;
+                }
+            }
+            if( all ) {
+                this.selectedMeeting.status = MeetingStatus.Terminated;
+            }
         }
         this.save();
     }
@@ -271,7 +286,7 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     goBack() {
-        super.goBack();
+        this.tourneyService.loadTourneyById(this.selectedTourney.id, () =>  super.goBack());
     }
 
     onError(n:any) {

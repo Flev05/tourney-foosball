@@ -28,10 +28,11 @@
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
+    <div *ngIf="!disableButton()" class="ui-grid-row">
         <div class="ui-grid-col-3">
             Stato dell'incontro:
         </div>
+   
         <div class="ui-grid-col-3">
             <div class="ui-g radiobuttons">
                 <div class="ui-g-12">
@@ -61,6 +62,7 @@
             </div>
         </div>
     </div>
+    
     <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>

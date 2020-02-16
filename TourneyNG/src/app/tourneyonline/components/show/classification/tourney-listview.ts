@@ -34,7 +34,7 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
     }
 
     protected onComplete(): any {
-        super.onLoadAllTourneysComplete();
+        super.onLoadAllTourneysComplete(this.tdbs);
 
         if( this.tourneyService.selectedTourney != undefined ) {
             this.router.navigate([this.redirect]);

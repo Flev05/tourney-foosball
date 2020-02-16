@@ -198,6 +198,10 @@ public class Converter extends AbstractLogger {
         tvo.setId(tpo.getId());
         tvo.setJson(tpo.getJson());
         tvo.setTourneyName(tpo.getTourneyName());
+
+        User fupo = userDao.getFollowerByTourneyID(tpo.getId(), tvo.getClientVO().getId());
+
+        tvo.setFollowerName(fupo == null ? "" : fupo.getUsername());
         tvo.setCountry(tpo.getCountry());
 
         return tvo;

@@ -2,6 +2,7 @@
 package it.lms.tourney.po;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -35,7 +36,7 @@ public class Tourney extends AbstractPO implements Serializable {
 
     private Set<Meeting>        meetings;
 
-    private Set<UserRoleClient> urcs;
+    private Set<UserRoleClient> urcs             = new HashSet<>();
 
     @Override
     public boolean equals(Object obj) {

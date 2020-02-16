@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 
 import { AbstractDetailView } from '../../common/abstract-detailview';
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool, ERoles } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool } from '../../../domain/enumerations';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -26,12 +26,11 @@ import { MeetingPlayoffService } from '../playoff/meeting-playoff-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { LoginService } from 'app/tourneyonline/service/login-service';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
-import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
+import { environment } from 'environments/environment';
+
 
 const REDIRECT_TOURNEY_LV   = 'admintourney';
 
@@ -113,19 +112,20 @@ export class TourneyDetailView extends AbstractDetailView {
     isEliminatoryAutoGen: string;
 
     operatorCols:  TableCols[] = [
-        { field: 'username', header: 'Username' },
+        { field: 'username',  header: 'Username' },
         { field: 'firstname', header: 'Nome' },
-        { field: 'lastname', header: 'Cognome' },
+        { field: 'lastname',  header: 'Cognome' },
     ];
 
     selectedOperatorRows : UserVO[];
     operatorRows: UserVO[];
 
+    followerUrl : string = environment.followerUrl;
+
     constructor(
         protected location: Location,
         public tourneyService: TourneyService,
         protected countryService: CountryService,
-        private loginService: LoginService,
         private userService: UserService,
         protected clientService: ClientService,
         protected playerService: PlayerService,
@@ -135,7 +135,6 @@ export class TourneyDetailView extends AbstractDetailView {
         protected meetingPlayoffService: MeetingPlayoffService,
         protected levelService: LevelService,
         private disciplineService: DisciplineService,
-        private urcService: UrcService,
         private router: Router 
     ) { 
         super(tourneyService, location);
@@ -169,6 +168,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.bestOffWinner = spin;
         this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre (" +this.selectedTourney.teams.length + ")";
 
+        this.followerUrl += this.selectedTourney.followerName;
         this.checkTeamsChanged();
 
         this.prepareTabsGui();
@@ -347,6 +347,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isPlayoffAutoGen = "true";
         this.selectedTourney.isEliminatoryAutoGen = "true";
         this.selectedTourney.resultTool = EResultTool.R;
+        this.selectedTourney.followerName = "";
         this.resetComboBoxes();
     }
 

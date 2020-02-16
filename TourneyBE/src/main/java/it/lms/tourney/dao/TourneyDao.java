@@ -224,6 +224,38 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         return resultList.get(0);
     }
 
+    public Tourney getByFollower(String username) {
+
+        log.debug(logId() + "Entering getByFollower()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+        Root<Tourney> root = cq.from(Tourney.class);
+
+        Join<Tourney, UserRoleClient> urcJoin = root.join(Tourney_.urcs);
+        Join<UserRoleClient, User> userJoin = urcJoin.join(UserRoleClient_.user);
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+
+        Predicate p1 = cb.equal(userJoin.get(User_.username), username);
+        Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.FOLLOWER.name());
+
+        cq = cq.select(root);
+        cq = cq.where(p1, p2);
+
+        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+
+        List<Tourney> resultList = tq.getResultList();
+
+        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+
+        if (resultList.isEmpty()) {
+            return null;
+        }
+
+        return resultList.get(0);
+    }
+
     public void insert(Tourney t) {
 
         log.debug(logId() + "Entering insert(" + t.getJson() + ")");
@@ -244,4 +276,5 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
         super.deletePo(t);
     }
+
 }

@@ -32,6 +32,7 @@ import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
+import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
@@ -244,6 +245,9 @@ public class UserRESTService extends AbstractRESTService {
         Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
         while (it.hasNext()) {
             UserRoleClient urc = it.next();
+            if (!urc.getRole().getName().equals(Role.ROLES.OPERATOR.name())) {
+                continue;
+            }
             Integer userId = urc.getUser().getId();
             if (!userSelectIdList.contains(userId)) {
                 it.remove();

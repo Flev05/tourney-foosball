@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyType, MeetingStatus, Direction } from 'app/tourneyonline/domain/enumerations';
@@ -13,6 +12,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const TO_PLAY_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
 @Component({
@@ -41,6 +41,7 @@ export class MeetingDetailView extends AbstractDetailView {
         protected meetingService: MeetingService,
         protected meetingRoundService: MeetingRoundService,
         protected meetingPlayoffService: MeetingPlayoffService,
+        protected loginService: LoginService,
     ) { 
         super(tourneyService, location);
     }
@@ -93,12 +94,18 @@ export class MeetingDetailView extends AbstractDetailView {
     }
     
     disableButton() : string {
-        return this.selectedMeeting.status == MeetingStatus.ToPlay || this.selectedMeeting.status == MeetingStatus.Terminated ? "disabled" : "";
+        return this.loginService.isFollower() 
+            || this.selectedMeeting.status == MeetingStatus.ToPlay 
+            || this.selectedMeeting.status == MeetingStatus.Terminated 
+            ? "disabled" : "enabled";
     }
 
     onToPlayClick() {
         console.log("Entering onToPlayClick()");
         console.log(event);
+        if( this.loginService.isFollower() ) {
+            return;
+        }
         if(!confirm(TO_PLAY_POPUP)) {
             return;
         }
@@ -116,6 +123,9 @@ export class MeetingDetailView extends AbstractDetailView {
     onInProgressClick() {
         console.log("Entering onInProgressClick()");
         console.log(event);
+        if( this.loginService.isFollower() ) {
+            return;
+        }
         this.selectedMeeting.status = MeetingStatus.InProgress;
         this.save();
     }
@@ -123,6 +133,9 @@ export class MeetingDetailView extends AbstractDetailView {
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
         console.log(event);
+        if( this.loginService.isFollower() ) {
+            return;
+        }
         this.selectedMeeting.status = MeetingStatus.Terminated;
         this.save();
     }
@@ -195,6 +208,10 @@ export class MeetingDetailView extends AbstractDetailView {
     }
 
     private save() {
+        if( this.loginService.isFollower() ) {
+            return;
+        }
+
         this.selectedMeeting.matches = this.matches;
         this.selectedMeeting.points1 = 0;
         this.selectedMeeting.points2 = 0;

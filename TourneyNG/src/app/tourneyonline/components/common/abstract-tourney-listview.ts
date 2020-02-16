@@ -45,7 +45,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             { field: 'location',    header: 'Locazione' }
         ];
 
-        this.tourneyService.loadAllTourneys().subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
+        this.tourneyService.loadAllTourneys().subscribe(t => this.onLoadAllTourneysComplete(t), e => this.onError(e) );
 
         this.playerService.loadAllPlayers(null);
         this.teamService.loadAllTeams(null);
@@ -57,9 +57,10 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         console.log("Entering onError()" + e);
     }
 
-    protected onLoadAllTourneysComplete(): any {
+    protected onLoadAllTourneysComplete(tdbs : TourneyVO[]): any {
         console.log("Entering onLoadAllTourneysComplete()");
 
+        this.tdbs = tdbs;
         this.tourneys = [];
 
         for(let tvo of this.tdbs) {
@@ -70,6 +71,8 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             t.clientVO = tvo.clientVO;
             this.tourneys.push(t);
         }
+
+        this.tourneys = this.tourneyService.sort(this.tourneys);
 
         this.tourneys = this.filter(this.tourneys);
 

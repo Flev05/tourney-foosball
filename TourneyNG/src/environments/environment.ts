@@ -6,5 +6,6 @@
 export const environment = {
   production: false,
   inMemoryDataService: false,
-  serverUri: "http://localhost:8080"
+  serverUri:  "http://localhost:8081",
+  followerUrl: "http://localhost:8081/TourneyBE/#/login/follower/"
 };

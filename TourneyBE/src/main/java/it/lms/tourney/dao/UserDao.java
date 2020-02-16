@@ -4,6 +4,7 @@ package it.lms.tourney.dao;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -19,6 +20,8 @@ import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Client_;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Role_;
+import it.lms.tourney.po.Tourney;
+import it.lms.tourney.po.Tourney_;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
@@ -342,18 +345,57 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         deletePo(po);
     }
 
-    public User findFollowerLike(String followerUseName) {
+    public User getFollowerLike(String followerUseName, Integer clientId) {
 
-        log.debug(logId() + "Entering findFollowerLike(" + followerUseName + ")");
+        log.debug(logId() + "Entering getFollowerLike(" + followerUseName + ")");
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
         Root<User> root = cq.from(User.class);
 
-        Predicate p = getCb().like(root.get(User_.username), followerUseName);
+        Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+        Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
+
+        Predicate p1 = getCb().like(root.get(User_.username), followerUseName);
+        Predicate p2 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.FOLLOWER.name());
+        Predicate p3 = getCb().notEqual(clientJoin.get(Client_.id), clientId);
 
         cq = cq.select(root);
-        cq = cq.where(p);
+        cq = cq.where(p1, p2, p3);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        log.info(logId() + info);
+
+        if (poList.isEmpty()) {
+            return null;
+        }
+
+        User po = poList.get(0);
+        return po;
+    }
+
+    public User getFollowerByTourneyID(Integer tourneyId, Integer clientId) {
+
+        log.debug(logId() + "Entering getFollowerByTourneyID() [{}] [{}]", tourneyId, clientId);
+
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<Tourney> root = cq.from(Tourney.class);
+        Join<Tourney, UserRoleClient> urcJoin = root.join(Tourney_.urcs);
+        Join<UserRoleClient, User> userJoin = urcJoin.join(UserRoleClient_.user);
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+        Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
+
+        Predicate p1 = getCb().equal(root.get(Tourney_.id), tourneyId);
+        Predicate p2 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.FOLLOWER.name());
+        Predicate p3 = getCb().equal(clientJoin.get(Client_.id), clientId);
+
+        cq = cq.select(userJoin);
+        cq = cq.where(p1, p2, p3);
 
         TypedQuery<User> nq = getEm().createQuery(cq);
 
@@ -380,6 +422,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
     public User newFollowerUser(String followerUserName, Client cpo) {
 
         User upo = new User();
+        upo.setUrcSet(new HashSet<>());
         upo.setUsername(followerUserName);
 
         String md5 = MD5_DEFAULT_PASSWORD.toUpperCase();
@@ -389,8 +432,8 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         upo.setDescription("Follower user");
         upo.setAddress(cpo.getAddress());
         upo.setEmail(cpo.getEmail());
-        upo.setLastname("Follower");
-        upo.setFirstname("Follower");
+        upo.setLastname(Role.ROLES.FOLLOWER.name());
+        upo.setFirstname(followerUserName);
         upo.setPhoneNumber(cpo.getPhoneNumber());
 
         insert(upo);

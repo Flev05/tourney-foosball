@@ -33,6 +33,7 @@ const tourneyUrl = 'api/tourneys';
 const loadTourneyByClientIdUrl  = tourneyUrl + '/loadByClientUserId';  
 const loadTourneyBySessionIdUrl = tourneyUrl + '/loadBySessionId';  
 const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';  
+const loadTourneyByUsernameUrl  = tourneyUrl + '/loadTourneyByFollowerName';  
 
 const insertTourneyUrl = tourneyUrl + '/insert';
 
@@ -237,6 +238,19 @@ export class TourneyService extends AbstractService {
         return this.sequenceNumber++;
     }
 
+    sort( tourneys: Tourney[] ): Tourney[] {
+        let sortedTourneys = tourneys.sort((r1,r2) => {
+            if(r1.tourneyName < r2.tourneyName) {
+                return -1;
+            }
+            if(r1.tourneyName > r2.tourneyName) {
+                return 1;
+            }
+            return 0;
+        });
+         
+        return sortedTourneys;
+    }
     /**
      * Loads all tourneys published from the database belonging to the same client
      */
@@ -265,16 +279,33 @@ export class TourneyService extends AbstractService {
             catchError(this.handleError('loadTourneyDb')
             )
         );
-        obs.subscribe(tvo => this.tvo = tvo, e => this.onError(e), () => this.onLoadTourneyByIdComplete(complete));
+        obs.subscribe(tvo => this.onLoadTourneyByIdComplete(tvo, complete), e => this.onError(e) );
     }
 
-    private onLoadTourneyByIdComplete(complete: () => void) {
+    /**
+     * Loads the tourney selected by a given username 
+     */
+    loadTourneyByUsername(username : string, complete: () => void ): void {
+        let url = loadTourneyByUsernameUrl + "/" + username
+        console.log("loadTourneyById(): " + url);
+
+        const obs = this.http.get<TourneyVO>(url).pipe(
+            tap(_ => this.log('fetched tourney from DB by url=' + url)), 
+            catchError(this.handleError('loadTourneyDb')
+            )
+        );
+        obs.subscribe(tvo => this.onLoadTourneyByIdComplete(tvo, complete), e => this.onError(e) );
+    }
+
+    private onLoadTourneyByIdComplete(tvo: TourneyVO, complete: () => void) {
         console.log("TourneyService.onLoadTourneyByIdComplete() ");
 
+        this.tvo = tvo;
         this.selectedTourney = JSON.parse(this.tvo.json);
 
         this.selectedTourney.id = this.tvo.id;
         this.selectedTourney.tourneyName = this.tvo.tourneyName;
+        this.selectedTourney.followerName = this.tvo.followerName;
         this.selectedTourney.country = this.tvo.country;
         this.selectedTourney.clientVO = this.tvo.clientVO;
 
@@ -807,9 +838,11 @@ export class TourneyService extends AbstractService {
     }
 
     public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
+        let followerName : string = t.tourneyName.replace(/[\s\/\\%]/g,"");
         let tvo: TourneyVO = {
             id:  t.id,
             tourneyName: t.tourneyName,
+            followerName: followerName,
             country: t.country,
             clientVO: c,
             json: JSON.stringify(t)

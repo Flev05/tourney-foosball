@@ -2,7 +2,6 @@
 package it.lms.tourney.rest;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,8 +21,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.WordUtils;
-
 import it.lms.cb.gui.vo.MeetingVO;
 import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.tourney.cdi.Converter;
@@ -38,6 +35,7 @@ import it.lms.tourney.dao.UserRoleClientDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Meeting;
+import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
@@ -108,6 +106,22 @@ public class TourneyRESTService extends AbstractRESTService {
         if (tvo == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        return tvo;
+    }
+
+    @GET
+    @Path("/loadTourneyByFollowerName/{followerName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public TourneyVO loadTourneyByFollowerName(@PathParam("followerName") String followerName) {
+
+        log.debug(logId() + "GET: loadTourneyByFollowerName(" + followerName + ")");
+
+        Tourney tpo = tourneyDao.getByFollower(followerName);
+        if (tpo == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        TourneyVO tvo = converter.convertTourneyPoVo(tpo);
         return tvo;
     }
 
@@ -206,38 +220,42 @@ public class TourneyRESTService extends AbstractRESTService {
 
         Tourney tpo = prepareNewTourney(tvo, spo);
         if (spo == null) {
-            String followerUserName = normalizeUsername(tvo.getTourneyName());
-            User upo = userDao.findFollowerLike(followerUserName);
-            if (upo != null) {
-                int lastIndex = followerUserName.lastIndexOf('.');
-                if (lastIndex != -1) {
-                    String digitS = followerUserName.substring(lastIndex + 1);
-                    int digit = Integer.valueOf(digitS);
-                    digit++;
-                    String prefix = followerUserName.substring(0, lastIndex);
-                    followerUserName = prefix + "." + digit;
-                } else {
-                    followerUserName = followerUserName + "." + 1;
-                }
-            }
-
-            Integer clientId = tvo.getClientVO().getId();
-            Client cpo = clientDao.getById(clientId);
-            upo = userDao.newFollowerUser(followerUserName, cpo);
-            tvo.setFollowerName(followerUserName);
-            userDao.insert(upo);
-
-            UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo);
-            urcDao.insert(urcFollower);
-
-            Set<UserRoleClient> urcSet = new HashSet<>();
-            urcSet.add(urcFollower);
-
-            upo.setUrcSet(urcSet);
-            tpo.setUrcs(urcSet);
+            insertFollowerUser(tvo, tpo);
         }
         tourneyDao.insert(tpo);
         return tpo;
+    }
+
+    private void insertFollowerUser(TourneyVO tvo, Tourney tpo) {
+
+        String followerUserName = tvo.getFollowerName();
+        Integer clientId = tvo.getClientVO().getId();
+        User foundUpo = userDao.getFollowerLike(followerUserName, clientId);
+        if (foundUpo != null) {
+            int lastIndex = followerUserName.lastIndexOf('.');
+            if (lastIndex != -1) {
+                String digitS = followerUserName.substring(lastIndex + 1);
+                int digit = Integer.valueOf(digitS);
+                digit++;
+                String prefix = followerUserName.substring(0, lastIndex);
+                followerUserName = prefix + "." + digit;
+            } else {
+                followerUserName = followerUserName + "." + 1;
+            }
+        }
+
+        Client cpo = clientDao.getById(clientId);
+        User upo = userDao.newFollowerUser(followerUserName, cpo);
+        tvo.setFollowerName(followerUserName);
+        userDao.insert(upo);
+
+        UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo);
+        urcDao.insert(urcFollower);
+
+        Set<UserRoleClient> urcSet = tpo.getUrcs();
+        urcSet.add(urcFollower);
+
+        upo.getUrcSet().add(urcFollower);
     }
 
     private Tourney prepareNewTourney(TourneyVO tvo, Session spo) {
@@ -261,40 +279,6 @@ public class TourneyRESTService extends AbstractRESTService {
         tpo.setJson(tvo.getJson());
 
         return tpo;
-    }
-
-    private Tourney prepareTourney(TourneyVO tvo, Session spo) {
-
-        Tourney tpo = tourneyDao.findById(tvo.getId());
-
-        if (spo == null) {
-            Client cpo = clientDao.findById(tvo.getClientVO().getId());
-            tpo.setClient(cpo);
-        } else {
-            tpo.setSession(spo);
-        }
-
-        if (tvo.getCountry() != null) {
-            Country country = countryDao.getById(tvo.getCountry().getId());
-            tpo.setCountry(country);
-        }
-
-        tpo.setTourneyName(tvo.getTourneyName());
-        tpo.setJson(tvo.getJson());
-
-        return tpo;
-    }
-
-    private String normalizeUsername(String tourneyName) {
-
-        String[] tokens = tourneyName.split(" ");
-        StringBuilder sb = new StringBuilder();
-        for (String t : tokens) {
-            String capitalizeFully = WordUtils.capitalizeFully(t, new char[] { ' ' });
-            t = capitalizeFully.replaceAll("[\\s/%\\]", "");
-            sb.append(t);
-        }
-        return sb.toString();
     }
 
     /**
@@ -416,13 +400,68 @@ public class TourneyRESTService extends AbstractRESTService {
             insertMeetings(tvo);
         }
 
-        Tourney tpo = prepareTourney(tvo, spo);
+        Tourney tpo = prepareTourneyForUpdate(tvo, spo);
 
         tourneyDao.update(tpo);
 
         Response.ResponseBuilder builder = Response.ok().entity(tvo);
 
         return builder.build();
+    }
+
+    private Tourney prepareTourneyForUpdate(TourneyVO tvo, Session spo) {
+
+        Tourney tpo = tourneyDao.findById(tvo.getId());
+
+        if (spo != null) {
+            tpo.setSession(spo);
+        } else {
+
+            boolean found = false;
+            for (UserRoleClient urc : tpo.getUrcs()) {
+                Role r = urc.getRole();
+                if (r.getName().equals(Role.ROLES.FOLLOWER.name())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                insertFollowerUser(tvo, tpo);
+            } else if (!tpo.getTourneyName().equals(tvo.getTourneyName())) {
+                User fupo = userDao.getFollowerByTourneyID(tpo.getId(), tvo.getClientVO().getId());
+                if (fupo == null) {
+                    insertFollowerUser(tvo, tpo);
+                } else {
+                    String followerUserName = tvo.getFollowerName();
+                    User upo = userDao.getFollowerLike(followerUserName, tvo.getClientVO().getId());
+                    if (upo != null) {
+                        int lastIndex = followerUserName.lastIndexOf('.');
+                        if (lastIndex != -1) {
+                            String digitS = followerUserName.substring(lastIndex + 1);
+                            int digit = Integer.valueOf(digitS);
+                            digit++;
+                            String prefix = followerUserName.substring(0, lastIndex);
+                            followerUserName = prefix + "." + digit;
+                        } else {
+                            followerUserName = followerUserName + "." + 1;
+                        }
+                    }
+                    fupo.setUsername(followerUserName);
+                    tvo.setFollowerName(followerUserName);
+                }
+            }
+        }
+
+        if (tvo.getCountry() != null) {
+            Country country = countryDao.getById(tvo.getCountry().getId());
+            tpo.setCountry(country);
+        }
+
+        tpo.setTourneyName(tvo.getTourneyName());
+        tpo.setJson(tvo.getJson());
+
+        return tpo;
     }
 
     private void insertMeetings(TourneyVO tvo) {

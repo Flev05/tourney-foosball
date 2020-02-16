@@ -16,52 +16,53 @@ import { ClientVO } from './client-vo';
 export interface Tourney {
     id?: number;
     
-    tourneyName? : string;
-    isDaily?: string;
-    datetime? : Date;
-    resultTool?: EResultTool;
+    tourneyName?    : string;
+    followerName?   : string;
+    isDaily?        : string;
+    datetime?       : Date;
+    resultTool?     : EResultTool;
 
-    wizardModeIndex?: number;
-    selectedTabIndex?: number;
-    selectedResultTabIndex?: number;
+    wizardModeIndex?        : number;
+    selectedTabIndex?       : number;
+    selectedResultTabIndex? : number;
 
-    selectedTeams4PlayoffsCB?: Combobox;
-    selectedPlayoffsCB?: Combobox;
-    selectedRoundsNumCB?: Combobox;
+    selectedTeams4PlayoffsCB?   : Combobox;
+    selectedPlayoffsCB?         : Combobox;
+    selectedRoundsNumCB?        : Combobox;
 
-    address? : string;
-    clientVO? : ClientVO;
-    country? : Country;
+    address?                    : string;
+    clientVO?                   : ClientVO;
+    country?                    : Country;
 
-    isOnewayRound?: string;
-    isOnewayPlayoff?: string;
+    isOnewayRound?              : string;
+    isOnewayPlayoff?            : string;
 
-    access?: string;
-    discipline? : Discipline;
+    access?                     : string;
+    discipline?                 : Discipline;
 
-    tourneyType?: TourneyType;
-    raceDuration?: number;
+    tourneyType?                : TourneyType;
+    raceDuration?               : number;
 
-    phases?: PhaseType[];
+    phases?                     : PhaseType[];
 
-    matchWinnerScores?:  number;
-    matchBalanceScores?: number;
+    matchWinnerScores?          :  number;
+    matchBalanceScores?         : number;
 
-    pointsNeededToWin? : number;
-    pointsGoldenGoalTieBreakWin? : number;
+    pointsNeededToWin?          : number;
+    pointsGoldenGoalTieBreakWin?    : number;
     pointsGoldenGoalTieBreakDefeat? : number;
 
-    maxMatchesPerMeeting?: number;
-    isAllMatches?: string;
-    playersPerTeam?: number;
+    maxMatchesPerMeeting?       : number;
+    isAllMatches?               : string;
+    playersPerTeam?             : number;
 
-    eliminatoryMode?: EliminatoryMode;
-    selectedEliminatoryTeamsCB?: Combobox;
-    teamSortType?: TeamSortType;
+    eliminatoryMode?            : EliminatoryMode;
+    selectedEliminatoryTeamsCB? : Combobox;
+    teamSortType?               : TeamSortType;
 
-    teamsWeightEnabled?: string;
+    teamsWeightEnabled?         : string;
 
-    objectives?: Final[];
+    objectives?                 : Final[];
     teams?: Team[];
     rounds?: Round[];
     playoffs?: Playoff[];

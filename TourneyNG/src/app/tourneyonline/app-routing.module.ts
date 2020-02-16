@@ -25,7 +25,6 @@ import { HomeComponent } from './components/home/home.component';
 
             // Presentation Section
             {path: 'showtourney',    loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
-            {path: 'calendar',       loadChildren: './components/show/calendar/calendar.module#CalendarModule'},
             {path: 'result',         loadChildren: './components/show/result/result.module#ResultModule'},
             {path: 'matrix',         loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
             {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},

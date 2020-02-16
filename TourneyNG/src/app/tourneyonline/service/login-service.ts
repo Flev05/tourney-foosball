@@ -72,6 +72,7 @@ export class LoginService {
 
     setUserLogged(lvo: Login): void {
         this.userLogged = lvo;
+        this.isUserLogged = true;
         this.userService.selectedUser = lvo;
         this.roleService.setSelectRoles(lvo.roles, lvo.minorRoles);
     }

@@ -24,6 +24,7 @@ export class MatrixService   {
 
     legendCols: any[];
     legendRows: any[];
+    onSaveMeetingError: boolean;
 
     constructor( public tourneyService: TourneyService
         , protected meetingService: MeetingService) 
@@ -235,17 +236,28 @@ export class MatrixService   {
     }
 
     private saveRoundMeeting( roundId: number): void {
-        let observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.tourney.id, roundId);
+        this.onSaveMeetingError = false;
+        let observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.tourney.id, roundId, this.subscribeErrorHandler() );
         observer.subscribe(n => this.next(n), e => this.saveTourneyErrorHandler(e));            
     }
 
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+            this.onSaveMeetingError = true;
+            console.error(error); // log to console instead
+            console.log(`${operation} failed: ${error.message}`);
+            return of(result as T);
+        };
+    }
+
     private savePlayoffMeeting(playoffId: number): void {
-        let observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.tourney.id, playoffId);
+        let observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.tourney.id, playoffId, this.subscribeErrorHandler());
         observer.subscribe(n => this.next(n), e => this.saveTourneyErrorHandler(e));            
     }
 
     private saveEliminatoryMeeting(eliminatoryId: number): void {
-        let observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.tourney.id, eliminatoryId);
+        let observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.tourney.id, eliminatoryId, this.subscribeErrorHandler());
         observer.subscribe(n => this.next(n), e => this.saveTourneyErrorHandler(e));            
     }
 

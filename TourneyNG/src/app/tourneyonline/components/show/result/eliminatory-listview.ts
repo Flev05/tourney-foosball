@@ -11,6 +11,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { ClassificationDetailView } from '../classification/classification-detailview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './eliminatory-listview.html',
@@ -26,7 +27,8 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         protected levelService: LevelService,
         protected router: Router,
         protected location: Location,
-        public dfp: DateFormatPipe
+        public dfp: DateFormatPipe,
+        public loginService: LoginService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, meetingService, levelService, router, location, dfp)
     }
@@ -50,6 +52,10 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.tourneyService.selectedEliminatoryLevel.name);
 
         this.router.navigate([ClassificationDetailView.redirect]);
+    }
+
+    refresh(): void {        
+        this.ngOnInit();
     }
 }
 

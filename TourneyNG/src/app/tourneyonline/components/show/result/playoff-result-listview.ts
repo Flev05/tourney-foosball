@@ -11,6 +11,7 @@ import { LevelService } from '../../admin/eliminatory/level-service';
 import { AbstractPlayoffResultListView } from '../../common/abstract-playoff-result-listview';
 import { ClassificationDetailView } from '../classification/classification-detailview';
 import { Classification } from 'app/tourneyonline/domain/classification';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './playoff-result-listview.html',
@@ -28,6 +29,7 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         , protected location: Location
         , protected dfp: DateFormatPipe
         , protected levelService: LevelService
+        , public loginService: LoginService
     ) {
         super(MeetingDetailView.meetingDvRedirect
             , tourneyService
@@ -82,5 +84,8 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         this.router.navigate([ClassificationDetailView.redirect]);
     }
 
+    refresh(): void {        
+        this.ngOnInit();
+    }
 }
 

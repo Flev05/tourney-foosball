@@ -145,13 +145,15 @@ export class TourneyDetailView extends AbstractDetailView {
         this.blockDocument();
 
         super.ngOnInit();
-        this.loadOperators();
 
         this.countries = this.countryService.countries;
         
         if (this.tourneyService.newTourney) {
             this.initNewTourney();
+        } else {
+            this.loadOperators();
         }
+
         this.maxBoundaryTabIndex = this.getLastTabIndex();
 
         this.initiDisciplineCombobox();

@@ -68,7 +68,7 @@ public class UserRESTService extends AbstractRESTService {
 
         List<User> userList;
         if (userDao.isDeveloperUser(loggedUserId)) {
-            userList = userDao.findAllUsers();
+            userList = userDao.findAllUsersAtLeastAdmin();
         } else {
             List<UserRoleClient> urcList = urcDao.findUrcByUser(loggedUserId);
             userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());

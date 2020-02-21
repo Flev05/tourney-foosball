@@ -16,6 +16,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './eliminatory-full-detailview.html',
@@ -50,6 +51,7 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
     m2: Meeting ;
     position1: Combobox;
     position2: Combobox;
+    onSaveMeetingError: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -197,7 +199,7 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         this.m1.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
         this.m1.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
-        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id);
+        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, this.saveMeetingErrorHandler());
         observer.subscribe( n => this.saveMeetingNext(n, this.m1));
 
         this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
@@ -211,10 +213,21 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
         this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
-        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id);
+        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, this.saveMeetingErrorHandler());
         observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
 
         return true;
+    }
+
+    private saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
+        return (res: any): Observable<MeetingDb> => {
+            console.log("Entering saveMeetingErrorHandler()");
+            console.error(res); // log to console instead
+      
+            this.onSaveMeetingError = true;
+
+            return of(result as MeetingDb);
+        };
     }
 
     private saveMeetingNext(n:  MeetingDb, m: Meeting): void {

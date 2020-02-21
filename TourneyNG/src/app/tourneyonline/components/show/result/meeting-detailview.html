@@ -28,7 +28,7 @@
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div *ngIf="!disableButton()" class="ui-grid-row">
+    <div *ngIf="!loginService.isFollower()" class="ui-grid-row">
         <div class="ui-grid-col-3">
             Stato dell'incontro:
         </div>
@@ -63,6 +63,10 @@
         </div>
     </div>
     
+    <div *ngIf="onSaveMeetingError" style="margin-top:30px">
+        <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+    </div>   
+     
     <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>

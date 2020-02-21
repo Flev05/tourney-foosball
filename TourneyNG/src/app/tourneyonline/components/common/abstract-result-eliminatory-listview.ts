@@ -76,7 +76,9 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.roundtripMeetings = [];
         this.eliminatoryClassification = [];
 
-        let sel = this.tourneyService.selectedEliminatoryLevel;
+        // let sel = this.tourneyService.selectedEliminatoryLevel;
+        let sel = this.selectedTourney.eliminatoryLevels.find( l => l.id == this.tourneyService.selectedEliminatoryLevel.id ) ;
+        
         for(let level=0; level < sel.eliminatories.length; level++) {
             let e = sel.eliminatories[level];
             e.round.onewayMeetings.forEach(m => m.containerId = e.id);

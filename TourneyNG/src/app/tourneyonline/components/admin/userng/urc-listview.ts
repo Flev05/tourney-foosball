@@ -14,7 +14,8 @@ import { RoleService } from 'app/tourneyonline/service/role-service';
 import { RoleVO } from 'app/tourneyonline/domain/role-vo';
 import { UserRoleClientRow } from 'app/tourneyonline/domain/urc-row-vo';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { ERoles } from 'app/tourneyonline/domain/enumerations';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 
 const redirect = '/users/urcdv';
 
@@ -45,7 +46,8 @@ export class UrcListView extends AbstractListView {
         , protected loginService: LoginService
         , public router: Router
         , protected location: Location
-        , protected countryService: CountryService) 
+        , protected countryService: CountryService
+        , private clientService: ClientService) 
     {        
         super(redirect, tourneyService, router, location);
         console.log("UrcListView.constructor()");
@@ -184,14 +186,14 @@ export class UrcListView extends AbstractListView {
     }
     
     private prepareClientOptions(): Combobox[] {
-        let options : Combobox[] = [];
-        for( let urc of this.urcList ) {
-            let found = options.find( cb => cb.label == urc.clientVO.businessName );
-            if( !found ) {
-                let cb: Combobox = {label: urc.clientVO.businessName, value: urc.clientVO.id} ;
-                options.push(cb);
-            }
-        }
+        let options : Combobox[] = this.clientService.clientOptions;
+        // for( let c of this.clientService.clientOptions ) {
+        //     let found = options.find( cb => cb.label == c.businessName );
+        //     if( !found ) {
+        //         let cb: Combobox = {label: urc.clientVO.businessName, value: urc.clientVO.id} ;
+        //         options.push(cb);
+        //     }
+        // }
         return options;
     }
     
@@ -208,7 +210,7 @@ export class UrcListView extends AbstractListView {
             let found: UserRoleClientVO = this.urcList.find( 
                 urc => urc.userVo.username == row.userSelect.label
                 && urc.roleVo.name == row.roleSelect.label
-                && urc.clientVO.businessName == row.clientSelect.label);
+                && (urc.clientVO != undefined && urc.clientVO.businessName == row.clientSelect.label));
             if( found ) {
                 console.error("Already exists. Do not save!");
                 continue;
@@ -216,13 +218,13 @@ export class UrcListView extends AbstractListView {
 
             let urcUserVo: UserRoleClientVO = this.urcList.find( urc => urc.userVo.username == row.userSelect.label);
             let roleVo: RoleVO = this.roleService.getRoleVO(row.roleSelect.label);
-            let urcClientVo: UserRoleClientVO = this.urcList.find( urc => urc.clientVO.businessName == row.clientSelect.label);
+            let cvo: ClientVO = this.clientService.selectedClients.find( c => c.businessName == row.clientSelect.label );
 
             let urc : UserRoleClientVO = {
                   id: row.id
                 , userVo: urcUserVo.userVo
                 , roleVo: roleVo
-                , clientVO: urcClientVo.clientVO
+                , clientVO: cvo
             }
 
             const subscriber = this.urcService.saveUrc(urc, this.saveUserErrorHandler('Create User operation'));

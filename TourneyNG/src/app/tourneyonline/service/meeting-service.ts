@@ -269,27 +269,27 @@ export  class MeetingService extends AbstractService {
         }
     }
 
-    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): Observable<MeetingDb> {
+    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number, selector: (err: any) => Observable<MeetingDb>): Observable<MeetingDb> {
         if(m.id == null) {
             return this.addMeetingDb(m, tourneyId, roundId, null, null);
         } else {
-            return this.updateMeetingDb(m, tourneyId, roundId, null, null);
+            return this.updateMeetingDb(m, tourneyId, roundId, null, null, selector);
         }
     }
 
-    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): Observable<MeetingDb> {
+    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number, selector: (err: any) => Observable<MeetingDb>): Observable<MeetingDb> {
         if(m.id == null) {
-            return this.addMeetingDb(m, tourneyId, null, playoffId, null)
+            return this.addMeetingDb(m, tourneyId, null, playoffId, null);
         } else {
-            return this.updateMeetingDb(m, tourneyId, null, playoffId, null)
+            return this.updateMeetingDb(m, tourneyId, null, playoffId, null, selector);
         }
     }
 
-    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): Observable<MeetingDb> {
+    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number, selector: (err: any) => Observable<MeetingDb>): Observable<MeetingDb> {
         if(m.id == null) {
-            return this.addMeetingDb(m, tourneyId, null, null, eliminatoryId)
+            return this.addMeetingDb(m, tourneyId, null, null, eliminatoryId);
         } else {
-            return this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId)
+            return this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId, selector);
         }
     }
 
@@ -345,19 +345,20 @@ export  class MeetingService extends AbstractService {
         return this.prepareMdb(m, tourneyId, 0, 0, eliminatoryId);
     }
 
-    private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number):  Observable<MeetingDb> {
+    private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number
+        , selector?: (err: any, caught: Observable<MeetingDb> ) => Observable<MeetingDb> ):  Observable<MeetingDb> {
         let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-        let obs = this.updateMeetingMdb(mdb);
+        let obs = this.updateMeetingMdb(mdb, selector);
         return obs;
     }
  
     /** PUT: update the MeetingDb on the db server */
-    updateMeetingMdb (mdb: MeetingDb ): Observable<MeetingDb> {
+    updateMeetingMdb (mdb: MeetingDb, selector: (err: any, caught: Observable<MeetingDb> ) => Observable<MeetingDb>  ): Observable<MeetingDb> {
         let url = updateMeetingUrl;
 
         return this.http.put(url, mdb, httpOptions).pipe(
             tap(_ => this.log('updated updateMeetingMdb url=' + url)),
-            catchError(this.handleError<MeetingDb>('updateMeetingMdb'))
+            catchError(selector == null ? this.handleError<Meeting>('deletingMeeting: ' + url) : selector )
         );
     }
 

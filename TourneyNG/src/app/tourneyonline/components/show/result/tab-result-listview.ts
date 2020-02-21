@@ -11,6 +11,7 @@ import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-servi
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
 import { TourneyResultListView } from '../tourney/tourney-listview';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
@@ -29,7 +30,8 @@ export class TabResultListView extends AbstractTabResultListView {
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe,
-        protected levelService: LevelService
+        protected levelService: LevelService,
+        public loginService: LoginService
     ) {
         super(MeetingDetailView.meetingDvRedirect
             , tourneyService
@@ -95,6 +97,10 @@ export class TabResultListView extends AbstractTabResultListView {
 
     goBack(): void {        
         this.router.navigate([TourneyResultListView.REDIRECT_TOURNEY_LV]);
+    }
+
+    refresh(): void {        
+        this.ngOnInit();
     }
 }
 

@@ -246,6 +246,31 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return true;
     }
 
+    public List<User> findAllUsersAtLeastAdmin() {
+
+        CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+        Root<User> root = cq.from(User.class);
+
+        Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+
+        Predicate p1 = roleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name(), Role.ROLES.OWNER.name(),
+                Role.ROLES.ADMIN.name());
+
+        Predicate pAndQ = getCb().and(p1);
+        cq = cq.select(root);
+        cq = cq.where(pAndQ);
+
+        TypedQuery<User> nq = getEm().createQuery(cq);
+
+        List<User> poList = nq.getResultList();
+        String info = "[Found " + poList.size() + " User(s)] ";
+        log.info(logId() + info);
+
+        return poList;
+    }
+
     /**
      * Selects all users having ADMIN and USER role type and role name not SYS admin
      * 

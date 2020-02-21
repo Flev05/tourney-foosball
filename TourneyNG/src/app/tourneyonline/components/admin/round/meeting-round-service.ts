@@ -13,10 +13,11 @@ import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
+    onSaveMeetingError: boolean;
 
     constructor(protected http: HttpClient
         , protected router: Router
@@ -342,15 +343,26 @@ export class MeetingRoundService extends MeetingService {
         for (let el of st.eliminatoryLevels) {
             for (let e of el.eliminatories) {
                 for (let m of e.round.onewayMeetings) {
-                    let observer = this.saveEliminatoryMeetingDb(m, st.id, e.id);
+                    let observer = this.saveEliminatoryMeetingDb(m, st.id, e.id, this.saveMeetingErrorHandler());
                     observer.subscribe(mdb => this.saveEliminatoryMeetingNext(mdb, e, m));
                 }
                 for (let m of e.round.roundtripMeetings) {
-                    let observer = this.saveEliminatoryMeetingDb(m, st.id, e.id);
+                    let observer = this.saveEliminatoryMeetingDb(m, st.id, e.id, this.saveMeetingErrorHandler());
                     observer.subscribe(mdb => this.saveEliminatoryMeetingNext(mdb, e, m));
                 }
             }
         }
+    }
+
+    private saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
+        return (res: any): Observable<MeetingDb> => {
+            console.log("Entering saveMeetingErrorHandler()");
+            console.error(res); // log to console instead
+      
+            this.onSaveMeetingError = true;
+
+            return of(result as MeetingDb);
+        };
     }
 
     private saveEliminatoryMeetingNext(mdb:  MeetingDb, e: Eliminatory, m: Meeting): void {

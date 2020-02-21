@@ -1,4 +1,4 @@
-<div class="ui-dialog-buttonpane ui-helper-clearfix">
+<!-- <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
             <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
@@ -9,8 +9,28 @@
         <div class="ui-grid-col-6">
             <span style="font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</span>
         </div>
+        <div class="ui-grid-col-3">
+            <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+        </div>
     </div>
-</div>     
+</div>      -->
+
+<p-table>
+    <ng-template pTemplate="header">
+        <tr>
+            <td>
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+            </td>
+            <td>
+                <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
+                <p style="text-align: center;font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</p>
+            </td>
+            <td style="text-align: right;">
+                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
 
 <p-tabView [activeIndex]="tourneyService.selectedRoundTabIndex"         
         (onChange)="onChangeTab($event)">

@@ -115,7 +115,7 @@
             </a>
             <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
                 <a (click)="logout($event)">&#9679; Logout</a>
-                <a [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
+                <a *ngIf="!loginService.isFollower()" [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
             </div>
         </div>
     </div>

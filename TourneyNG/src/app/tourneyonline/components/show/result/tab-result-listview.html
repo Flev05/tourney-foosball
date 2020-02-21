@@ -1,7 +1,8 @@
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+            <button *ngIf="!loginService.isFollower()" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+            <button *ngIf="loginService.isFollower()" type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
         </div>
         <div class="ui-grid-col-5">
             <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
@@ -71,16 +72,22 @@
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
+                    <th>
+                        Livello
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        Squadre
                     </th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
-                    <td *ngFor="let col of columns">
-                        {{rowData[col.field]}}
+                    <td>
+                        {{rowData['name']}}
+                    </td>
+                    <td style="width: 20mm; text-align: center;">
+                        {{rowData['level']}}
                     </td>
                 </tr>
             </ng-template>

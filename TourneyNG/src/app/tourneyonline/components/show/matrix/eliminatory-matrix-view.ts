@@ -10,8 +10,8 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MatrixService } from './matrix-service';
 
 @Component({
+    styleUrls: ['./matrix-view.css'],
     templateUrl: './eliminatory-matrix-view.html',
-    styleUrls: ['./matrix-view.css']
 })
 export class MatrixDetailView extends AbstractDetailView {
     selectedRound: Round;

@@ -10,6 +10,7 @@ import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { MeetingPlayoffService } from './meeting-playoff-service';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './meeting-rule-detailview.html',
@@ -22,6 +23,7 @@ export class MeetingRuleDetailView extends AbstractDetailView {
 
     selectedPlayoff: Playoff;
     selectedMeeting: Meeting;
+    onSaveMeetingError: boolean;
     
     constructor(protected location: Location,
         protected tourneyService: TourneyService,
@@ -62,8 +64,19 @@ export class MeetingRuleDetailView extends AbstractDetailView {
             }
         }
  
-        let observer = this.meetingPlayoffService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id);
+        let observer = this.meetingPlayoffService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id, this.saveMeetingErrorHandler());
         observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+    }
+
+    private saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
+        return (res: any): Observable<MeetingDb> => {
+            console.log("Entering saveMeetingErrorHandler()");
+            console.error(res); // log to console instead
+      
+            this.onSaveMeetingError = true;
+
+            return of(result as MeetingDb);
+        };
     }
 
     private saveMeetingNext(n:  MeetingDb, m: Meeting): void {

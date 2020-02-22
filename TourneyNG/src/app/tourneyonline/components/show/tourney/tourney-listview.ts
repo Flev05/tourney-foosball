@@ -12,7 +12,7 @@ import { DisciplineService } from 'app/tourneyonline/service/discipline-service'
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { EResultTool } from 'app/tourneyonline/domain/enumerations';
 
-const REDUCED_LV  = '/matrix/lv';
+const MAXTRIX_LV  = '/matrix/lv';
 const COMPLETE_LV = '/result/lv';
 
 @Component({
@@ -45,14 +45,14 @@ export class TourneyResultListView extends AbstractTourneyListView {
         console.log("Entering onRowSelect()");
         console.log(event.data);
         
-        this.tourneyService.loadTourneyById(event.data.id, () => this.onTourneyLoadComplete());
+        this.tourneyService.loadTourneyById(event.data.id, () => this.onTourneyLoadComplete(), e => this.serverUnreachableHandler(e));
     }
 
     private onTourneyLoadComplete(): void {
         if( this.tourneyService.selectedTourney.resultTool == EResultTool.C ) {
             this.router.navigate([COMPLETE_LV]);
         } else {
-            this.router.navigate([REDUCED_LV]);
+            this.router.navigate([MAXTRIX_LV]);
         }
     }
 }

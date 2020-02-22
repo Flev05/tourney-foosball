@@ -55,6 +55,7 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         }
         this.setOnewayCurrentDay(this.onewayCurrentDay);
     }
+
     nextOnewayDay() : void {
         this.onewayCurrentDay++;
         if( this.onewayCurrentDay > this.selectedPlayoff.round.daysNo  ) {
@@ -82,10 +83,6 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedPlayoff.round.name);
         this.router.navigate([ClassificationDetailView.redirect]);
-    }
-
-    refresh(): void {        
-        this.ngOnInit();
     }
 }
 

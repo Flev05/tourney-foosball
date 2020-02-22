@@ -68,34 +68,34 @@ export class ClientService {
     }
 
     /** GET hero by id. Will 404 if id not found */
-    getClient(clientId: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
+    getClient(clientId: number, error: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
         const url = `${loadClientUrl}/${clientId}`;
         console.log(url);
         return this.http.get<ClientVO>(url).pipe(
             tap(_ => this.log(`fetched Client url=` + url)),
-            catchError(selector)
+            catchError(error)
         );
     }
 
     /** POST: add a new Client to the server */
-    private createClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
+    private createClient (client: ClientVO, error: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO>): Observable<ClientVO> {
         let url = insertClientUrl;
         console.log(url);
 
         return this.http.post<ClientVO>(url, client, httpOptions).pipe(
               tap((client: ClientVO) => this.log(`added Client w/ id=${client.id}`))
-            , catchError(selector)
+            , catchError(error)
         );
     }
 
     /** PUT: update the Client on the server */
-    private updateClient (client: ClientVO, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
+    private updateClient (client: ClientVO, error: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         const url = updateClientUrl;
         console.log(url);
         
         return this.http.put(url, client, httpOptions).pipe(
             tap(_ => this.log(`updated Client id=${client.id}`)),
-            catchError(selector)
+            catchError(error)
         );
     }
     
@@ -107,14 +107,14 @@ export class ClientService {
     }
       
     /** DELETE: delete the Client from the server */
-    deleteClient (clientId: number, selector: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
+    deleteClient (clientId: number, error: (err: any, caught: Observable<ClientVO> ) => Observable<ClientVO> ): Observable<ClientVO> {
         const id = clientId;
         const url = `${deleteClientUrl}/${id}`;
         console.log(url);
 
         return this.http.delete<ClientVO>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Client id=${id}`)),
-            catchError(selector)
+            catchError(error)
         );
     }
       

@@ -54,7 +54,7 @@ export class MeetingListView extends AbstractRuleListView {
             this.isRoundTrip = true;
         }
 
-        const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id);
+        const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id, e => this.serverUnreachableHandler(e));
         subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
     }
    

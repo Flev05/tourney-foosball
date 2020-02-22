@@ -196,5 +196,24 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
+
+    refresh(): void {        
+        let roundIds: number[] = [];
+        for(let round of this.selectedTourney.rounds) {
+            roundIds.push(round.id);
+        }
+        const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
+        subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );   
+    }
+
+    private onRoundCompleteLoad(t: MeetingDb[]): void {
+        this.mdbList = t;
+        // for(let round of this.selectedTourney.rounds) { 
+        //     this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
+        //     let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
+        //     round.classification = this.tourneyService.createClassification(round, allMeetings);
+        // }
+        this.ngOnInit();
+    }
 }
 

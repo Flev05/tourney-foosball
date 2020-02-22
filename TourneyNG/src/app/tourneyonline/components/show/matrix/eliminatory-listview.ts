@@ -30,7 +30,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     
     ngOnInit() {
         super.ngOnInit();
-        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete());
+        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete(), e => this.serverUnreachableHandler(e));
     }
 
     private onEliminatoryLoadComplete(): void {

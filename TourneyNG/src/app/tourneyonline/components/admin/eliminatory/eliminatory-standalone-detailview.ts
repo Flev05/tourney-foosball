@@ -37,7 +37,6 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
     isStandalone: boolean;
     m1: Meeting;
     m2: Meeting;
-    onSaveMeetingError: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -107,7 +106,7 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
         this.m1.address = this.eliminatoryFormGroup.get('address1').value;
         this.m1.country = this.eliminatoryFormGroup.get('country1').value;
 
-        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, this.saveMeetingErrorHandler());
+        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, ee => this.serverUnreachableHandler(ee));
         observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m1));
         
         this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
@@ -118,21 +117,10 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
         this.m2.address = this.eliminatoryFormGroup.get('address2').value;
         this.m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, this.saveMeetingErrorHandler());
+        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, ee => this.serverUnreachableHandler(ee));
         observer.subscribe( mdb => this.saveMeetingNext(mdb, this.m2));    
   
         this.tourneyService.selectedEliminatory = this.selectedEliminatory;
-    }
-
-    private saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
-        return (res: any): Observable<MeetingDb> => {
-            console.log("Entering saveMeetingErrorHandler()");
-            console.error(res); // log to console instead
-      
-            this.onSaveMeetingError = true;
-
-            return of(result as MeetingDb);
-        };
     }
  
     private saveMeetingNext(mdb:  MeetingDb, m: Meeting): void {

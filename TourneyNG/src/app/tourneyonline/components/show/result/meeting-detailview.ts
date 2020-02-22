@@ -13,7 +13,6 @@ import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { LoginService } from 'app/tourneyonline/service/login-service';
-import { Observable, of } from 'rxjs';
 
 const TO_PLAY_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
 @Component({
@@ -35,7 +34,6 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedDirection: Direction;
     allDaysNo: number;
     meetingLabel: string;
-    onSaveMeetingError: boolean;
 
     constructor(
         protected location: Location,
@@ -253,46 +251,26 @@ export class MeetingDetailView extends AbstractDetailView {
         let observer = null;
         if( this.selectedMeetingDb.roundId != null ) {
             this.tourneyService.cleanRoundMeeting(this.selectedTourney);
-            observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId, this.saveMeetingErrorHandler());
+            observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId, e => this.serverUnreachableHandler(e) );
         }
         if( this.selectedMeetingDb.playoffId != null ) {
             this.tourneyService.cleanPlayoffMeeting(this.selectedTourney);
-            observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId, this.saveMeetingErrorHandler());
+            observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId, e => this.serverUnreachableHandler(e) );
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
             this.tourneyService.cleanEliminatoryMeeting(this.selectedTourney);
-            observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId, this.saveMeetingErrorHandler());
+            observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId, e => this.serverUnreachableHandler(e) );
         }
-        this.onSaveMeetingError = false;
+        this.serverUnreachable = false;
         if(observer != null) {            
-            observer.subscribe(n => this.nextCallback(n), e => this.subscribeErrorHandler(e) );            
+            observer.subscribe(n => this.nextCallback(n), e => this.serverUnreachableHandler(e) );            
         }
     }
 
-    private saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
-        return (res: any): Observable<MeetingDb> => {
-            console.log("Entering saveMeetingErrorHandler()");
-            console.error(res); // log to console instead
-      
-            this.onSaveMeetingError = true;
-
-            return of(result as MeetingDb);
-        };
-    }
-    
-    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
-            console.log("Entering subscribeErrorHandler()");
-            this.onSaveMeetingError = true;
-            console.error(error); // log to console instead
-            console.log(`${operation} failed: ${error.message}`);
-            return of(result as T);
-        };
-    }
 
     private nextCallback(n: Meeting) {   
         console.log(n);  
-        if(this.onSaveMeetingError) {
+        if(this.serverUnreachable) {
             return;
         }
         if(this.selectedDirection == Direction.OneWay) {
@@ -318,12 +296,12 @@ export class MeetingDetailView extends AbstractDetailView {
                 playoffIds.push(p.id);
             }
             let p: Playoff = this.selectedTourney.playoffs.find( p => p.id == this.selectedRound.id );
-            this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => {});
+            this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => {}, e => this.serverUnreachableHandler(e) );
         }
     }
 
     goBack() {
-        this.tourneyService.loadTourneyById(this.selectedTourney.id, () =>  super.goBack());
+        this.tourneyService.loadTourneyById(this.selectedTourney.id, () =>  super.goBack(), e => this.serverUnreachableHandler(e));
     }
 
     onError(n:any) {

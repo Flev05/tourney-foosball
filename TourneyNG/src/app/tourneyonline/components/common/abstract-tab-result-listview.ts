@@ -68,7 +68,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             for(let round of this.selectedTourney.rounds) {
                 roundIds.push(round.id);
             }
-            const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds);
+            const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
             subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );            
         } else {
             this.prepareEliminatoryLevels();
@@ -94,8 +94,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 playoffIds.push(p.id);
             }
             
-            const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds);
-            subsbr.subscribe(t => this.mdbList = t, e => this.onError(e), () => this.onPlayoffCompleteLoad());
+            const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds, e => this.serverUnreachableHandler(e));
+            subsbr.subscribe(t => this.onPlayoffCompleteLoad(t), e => this.onError(e));
         } else {
             this.prepareEliminatoryLevels();
         }
@@ -113,7 +113,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.eliminatoryCount = this.eliminatoryLevelRows.length;
     }
 
-    private onPlayoffCompleteLoad() {
+    private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
+        this.mdbList = mdbList;
         for(let playoff of this.selectedTourney.playoffs) { 
             this.meetingPlayoffService.extractPlayoffMeetings(playoff, this.mdbList);
     

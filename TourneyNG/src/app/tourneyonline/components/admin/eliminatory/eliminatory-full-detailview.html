@@ -57,6 +57,9 @@
     </p-accordionTab>
 </p-accordion>
 </div>
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
 
 <form [formGroup]="eliminatoryFormGroup" >
     <div class="ui-dialog-buttonpane ui-helper-clearfix">

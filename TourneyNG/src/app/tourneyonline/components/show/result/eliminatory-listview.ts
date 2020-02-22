@@ -38,7 +38,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.isOneway = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
         this.isRoundTrip = this.isOneway == "true" ? false : true;
 
-        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete());
+        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete(), e => this.serverUnreachableHandler(e));
     }
 
     private onEliminatoryLoadComplete(): void {
@@ -52,10 +52,6 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.tourneyService.selectedEliminatoryLevel.name);
 
         this.router.navigate([ClassificationDetailView.redirect]);
-    }
-
-    refresh(): void {        
-        this.ngOnInit();
     }
 }
 

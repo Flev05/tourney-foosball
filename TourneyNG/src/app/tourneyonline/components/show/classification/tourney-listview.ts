@@ -45,6 +45,6 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
         console.log("Entering onRowSelect()");
         console.log(event.data);
         
-        this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView());
+        this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView(), e => this.serverUnreachableHandler(e));
     }
 }

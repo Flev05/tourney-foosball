@@ -45,7 +45,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             { field: 'location',    header: 'Locazione' }
         ];
 
-        this.tourneyService.loadAllTourneys().subscribe(t => this.onLoadAllTourneysComplete(t), e => this.onError(e) );
+        this.tourneyService.loadAllTourneys(e => this.serverUnreachableHandler(e)).subscribe(t => this.onLoadAllTourneysComplete(t), e => this.serverUnreachableHandler(e) );
 
         this.playerService.loadAllPlayers(null);
         this.teamService.loadAllTeams(null);

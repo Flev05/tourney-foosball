@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 import {  Params, ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { LoginDetailView } from './login-detailview';
@@ -15,16 +16,17 @@ const DEFAULT_PASSWORD = "4A97D80A588D25719C729A43B51AA9FC"; // torneionline
 export class FollowerDetailView extends LoginDetailView {
     
     routeParams: Params;
-
+ 
     constructor(
         protected fb: FormBuilder,
         protected router: Router,
         protected loginService: LoginService,
         protected clientService: ClientService,
         private activatedRoute: ActivatedRoute,
-        protected tourneyService: TourneyService
+        protected tourneyService: TourneyService,
+        protected location: Location
     ) {
-        super(fb,router,loginService,clientService);
+        super(fb,router,loginService,clientService,location);
         this.getRouteParams();
     }
 
@@ -51,10 +53,6 @@ export class FollowerDetailView extends LoginDetailView {
 
     protected onComplete() {
         console.log("Entering FollowerDetailView.onComplete()" );
-        this.tourneyService.loadTourneyByUsername(this.formLogin.username, () => this.gotoDetailView());    
-    }
-
-    private gotoDetailView(): void {
-        this.router.navigate([redirect]);
+        this.tourneyService.loadTourneyByUsername(this.formLogin.username, () => this.gotoDetailView(), e => this.serverUnreachableHandler(e));    
     }
 }

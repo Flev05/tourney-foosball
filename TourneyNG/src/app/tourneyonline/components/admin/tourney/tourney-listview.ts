@@ -82,7 +82,7 @@ export class TourneyListView extends AbstractTourneyListView {
 
         this.tourneyService.newTourney = false;
         
-        this.tourneyService.loadTourneyById(event.data.id, () => this.onLoadTourneyComplete( ));
+        this.tourneyService.loadTourneyById(event.data.id, () => this.onLoadTourneyComplete(), e => this.serverUnreachableHandler(e));
     }
 
     private onLoadTourneyComplete() {

@@ -82,6 +82,9 @@
 </div>
 
 <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
 
 <div class="ui-grid-row">
     <div class="ui-grid-col-2">

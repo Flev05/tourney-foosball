@@ -254,7 +254,7 @@ export class TourneyService extends AbstractService {
     /**
      * Loads all tourneys published from the database belonging to the same client
      */
-    loadAllTourneys(): Observable<TourneyVO[]> {
+    loadAllTourneys(error: (em: any) => any): Observable<TourneyVO[]> {
         let url = loadTourneyBySessionIdUrl;
 
         if(this.loginService.isUserLogged) {
@@ -263,42 +263,42 @@ export class TourneyService extends AbstractService {
         
         return this.http.get<TourneyVO[]>(url).pipe(
             tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
-            catchError(this.handleError('loadTourneyDb', []))
+            catchError(error('loadTourneyDb'))
           );
     }
 
     /**
      * Loads the tourney selected by its id previously loaded from the list view
      */
-    loadTourneyById(tourneyId : number, complete: () => void ): void {
+    loadTourneyById(tourneyId : number, complete: () => void, error: (em: any) => any ): void {
         let url = loadTourneyByIdUrl + "/" + tourneyId
         console.log("loadTourneyById(): " + url);
 
         const obs = this.http.get<TourneyVO>(url).pipe(
             tap(_ => this.log('fetched tourney from DB by url=' + url)), 
-            catchError(this.handleError('loadTourneyDb')
+            catchError(error('loadTourneyDb')
             )
         );
-        obs.subscribe(tvo => this.onLoadTourneyByIdComplete(tvo, complete), e => this.onError(e) );
+        obs.subscribe(tvo => this.onLoadTourneyByIdNext(tvo, complete), e => error(e) );
     }
 
     /**
      * Loads the tourney selected by a given username 
      */
-    loadTourneyByUsername(username : string, complete: () => void ): void {
+    loadTourneyByUsername(username : string, complete: () => void, error: (em: any) => any ): void {
         let url = loadTourneyByUsernameUrl + "/" + username
         console.log("loadTourneyById(): " + url);
 
         const obs = this.http.get<TourneyVO>(url).pipe(
             tap(_ => this.log('fetched tourney from DB by url=' + url)), 
-            catchError(this.handleError('loadTourneyDb')
+            catchError(error('loadTourneyDb')
             )
         );
-        obs.subscribe(tvo => this.onLoadTourneyByIdComplete(tvo, complete), e => this.onError(e) );
+        obs.subscribe(tvo => this.onLoadTourneyByIdNext(tvo, complete), e => error(e) );
     }
 
-    private onLoadTourneyByIdComplete(tvo: TourneyVO, complete: () => void) {
-        console.log("TourneyService.onLoadTourneyByIdComplete() ");
+    private onLoadTourneyByIdNext(tvo: TourneyVO, complete: () => void) {
+        console.log("TourneyService.onLoadTourneyByIdNext() ");
 
         this.tvo = tvo;
         this.selectedTourney = JSON.parse(this.tvo.json);
@@ -312,7 +312,7 @@ export class TourneyService extends AbstractService {
         complete();
     }
 
-    loadTourneys(fromDate: Date, toDate: Date): any {
+    loadTourneys(fromDate: Date, toDate: Date, error: (em: any) => any): any {
         let url = loadTourneyBySessionIdUrl;
 
         if(this.loginService.isUserLogged) {
@@ -322,25 +322,25 @@ export class TourneyService extends AbstractService {
         
         return this.http.get<TourneyVO[]>(url).pipe(
             tap(_ => this.log('fetched selected tourneys from DB, url=' + url)),
-            catchError(this.handleError('loadTourneyDb', []))
+            catchError(error('loadTourneyDb'))
           );
     }
 
-    loadTourneyPlayoff (): Observable<Tourney[]> {
+    loadTourneyPlayoff (error: (em: any) => any): Observable<Tourney[]> {
  
         return this.http.get<Tourney[]>(loadTourneyByClientIdUrl)
         .pipe(
             tap(_ => this.log('fetched all Playoff tourneys')),
-            catchError(this.handleError('loadTourneyPlayoff', []))
+            catchError(error('loadTourneyPlayoff'))
           );
     }
 
-    loadTourneyElimination (): Observable<Tourney[]> {
+    loadTourneyElimination (error: (em: any) => any): Observable<Tourney[]> {
  
         return this.http.get<Tourney[]>(loadTourneyByClientIdUrl)
         .pipe(
             tap(_ => this.log('fetched all Elimination tourneys')),
-            catchError(this.handleError('loadTourneyElimination', []))
+            catchError(error('loadTourneyElimination'))
           );
     }
 

@@ -5,6 +5,7 @@ import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Country } from 'app/tourneyonline/domain/country';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Observable, of } from 'rxjs';
 
 export abstract class AbstractView implements OnInit {
     it: any;
@@ -12,6 +13,7 @@ export abstract class AbstractView implements OnInit {
     countries: Country[];
     filteredCountriesSingle: Country[];
     toggleable: boolean = false;
+    serverUnreachable: boolean = false;
 
     constructor(
          protected tourneyService: TourneyService
@@ -52,6 +54,16 @@ export abstract class AbstractView implements OnInit {
         invalidDate.setDate(today.getDate() - 1);
     }
     
+    protected serverUnreachableHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering serverUnreachableHandler()");
+            this.serverUnreachable = true;
+            console.error(error); // log to console instead
+            console.log(`${operation} failed: ${error.message}`);
+            return of(result as T);
+        };
+    }
+
     protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean {
 
         for(let i=0; i<phases.length; i++ ) {
@@ -71,7 +83,8 @@ export abstract class AbstractView implements OnInit {
     }
 
     containsEliminatory(): boolean {
-        return this.containsPhase(PhaseType.E, this.selectedTourney.phases);
+        let con: boolean = this.containsPhase(PhaseType.E, this.selectedTourney.phases);
+        return con;
     }
 
     next(n:any) {

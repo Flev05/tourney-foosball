@@ -12,8 +12,13 @@
         </div>
     </div>
 </div>     
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
 <p-tabView [activeIndex]="selectedTourney.selectedResultTabIndex" (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Gironi({{roundCount}})" *ngIf="containsRound()" >    
+    <p-tabPanel  *ngIf="containsRound()" header="Gironi({{roundCount}})" >    
         <p-table [columns]="roundCols"
             [value]="roundRows"
             selectionMode="single" 
@@ -38,7 +43,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Playoff({{playoffCount}})" *ngIf="containsPlayoff()">    
+    <p-tabPanel *ngIf="containsPlayoff()" header="Playoff({{playoffCount}})" >    
         <p-table [columns]="playoffCols"
             [value]="playoffRows"
             selectionMode="single" 
@@ -63,7 +68,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel header="Eliminazioni Dirette({{eliminatoryCount}})" *ngIf="containsEliminatory()" >   
+    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette({{eliminatoryCount}})"  >   
         <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryLevelRows" 
                 selectionMode="single" 

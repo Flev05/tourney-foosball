@@ -1211,6 +1211,11 @@ export class TourneyDetailView extends AbstractDetailView {
         if(!this.levelService.isStandAlone(this.selectedTourney) ) {
             redirect = LevelService.manualRedirectLV;
         }
+
+        let indexOf = this.eliminatoryLevelRows.indexOf( event.data );
+        this.tourneyService.selectedEliminatoryLevelIndex  = indexOf;
+
+        this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[indexOf];
         this.levelService.onEliminatoryLevelRowSelect(event, () => this.doRedirect(redirect));
     }
 

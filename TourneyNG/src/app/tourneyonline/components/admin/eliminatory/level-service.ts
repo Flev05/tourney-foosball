@@ -538,8 +538,8 @@ export class LevelService extends AbstractEliminatoryListView {
         for (let e of el.eliminatories) {
             idList.push(e.id);
         }
-        let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList);
-        abs.subscribe(mdbs => this.meetingList = mdbs, e => this.onError(e), () => this.loadMetingListComplete(el, complete));
+        let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList, e => this.serverUnreachableHandler(e) );
+        abs.subscribe(mdbs => this.meetingList = mdbs, e => this.serverUnreachableHandler(e), () => this.loadMetingListComplete(el, complete));
     }
 
     private loadMetingListComplete(el: EliminatoryLevel, complete?: () => void) {
@@ -574,7 +574,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * @param elList the list of the eliminatory levels
      * @param complete callback method called when load will finish
      */
-    public loadAllEliminatoryMeetingByIdList(elList: EliminatoryLevel[], complete?: () => void) {
+    public loadAllEliminatoryMeetingByIdList(elList: EliminatoryLevel[], next: () => void, error: (error: any) => void) {
         let idList: number [] = [];
 
         for( let el of elList) {
@@ -582,8 +582,8 @@ export class LevelService extends AbstractEliminatoryListView {
                 idList.push(e.id);
             }
         }
-        let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList);
-        abs.subscribe(mdbs => this.onLoadAllMetingListComplete(mdbs, elList, complete), e => this.onError(e));
+        let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList, e => error(e) );
+        abs.subscribe(mdbs => this.onLoadAllMetingListNext(mdbs, elList, next), e => error(e));
     }
 
     /**
@@ -592,7 +592,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * @param elList the list of the eliminatory levels
      * @param complete callback methodo called when the load will finish
      */
-    private onLoadAllMetingListComplete(meetingList: MeetingDb[], elList: EliminatoryLevel[], complete: () => void): void {
+    private onLoadAllMetingListNext(meetingList: MeetingDb[], elList: EliminatoryLevel[], next: () => void): void {
         for( let el of elList) {
             for (let e of el.eliminatories) {
                 e.round.onewayMeetings = [];
@@ -620,7 +620,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 }
             }
         }
-        complete();
+        next();
     }
  
     onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {

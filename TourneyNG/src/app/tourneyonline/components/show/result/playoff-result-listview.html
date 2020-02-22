@@ -1,18 +1,3 @@
-<!-- <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
-            <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
-        </div>
-        <div class="ui-grid-col-6">
-            <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
-        </div>
-        <div class="ui-grid-col-6">
-            <span style="font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</span>
-        </div>
-    </div>
-</div>      -->
-
 <p-table>
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -29,6 +14,10 @@
         </tr>
     </ng-template>
 </p-table>
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
 
 <p-tabView [activeIndex]="tourneyService.selectedPlayoffTabIndex" 
         (onChange)="onChangeTab($event)">
@@ -60,15 +49,15 @@
                     <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
-                    <td style="text-align: center;">
+                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
                         {{rowData['vpoints1']}}
                     </td>
-                    <td style="text-align: center;">
+                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
                         {{rowData['vpoints2']}}
                     </td>
                     <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
                         {{rowData['datetime'] | date: 'dd/MM/y'}}
-                    </td>                    
+                    </td>
                     <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>
@@ -113,7 +102,7 @@
                     </td>
                     <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
                         {{rowData['datetime'] | date: 'dd/MM/y'}}
-                    </td>                    
+                    </td>
                     <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>

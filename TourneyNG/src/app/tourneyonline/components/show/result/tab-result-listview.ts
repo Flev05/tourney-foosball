@@ -91,7 +91,7 @@ export class TabResultListView extends AbstractTabResultListView {
         let indexOf = this.eliminatoryLevelRows.indexOf( this.selctedEliminatoryLevel );
         this.tourneyService.selectedEliminatoryLevelIndex  = indexOf;
 
-        this.tourneyService.selectedEliminatoryLevel = this.selctedEliminatoryLevel.eliminatoryLevel;
+        this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[indexOf];
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 

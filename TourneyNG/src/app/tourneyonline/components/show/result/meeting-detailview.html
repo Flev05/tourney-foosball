@@ -63,10 +63,10 @@
         </div>
     </div>
     
-    <div *ngIf="onSaveMeetingError" style="margin-top:30px">
+    <div *ngIf="serverUnreachable" style="margin-top:30px">
         <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
     </div>   
-     
+    
     <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>

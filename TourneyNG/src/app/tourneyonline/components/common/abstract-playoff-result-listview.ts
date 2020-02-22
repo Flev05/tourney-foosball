@@ -206,5 +206,35 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
 
         this.gotoDetailView();
     }
+    
+    refresh(): void {     
+        let playoffIds: number[] = [];
+        for(let p of this.selectedTourney.playoffs) {
+            playoffIds.push(p.id);
+        }
+        
+        const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds, e => this.serverUnreachableHandler(e));
+        subsbr.subscribe(t => this.onPlayoffNext(t), e => this.serverUnreachableHandler(e));
+    }
+
+    private onPlayoffNext(mdbList: MeetingDb[]) {
+
+        this.mdbList = mdbList;
+        // for(let playoff of this.selectedTourney.playoffs) { 
+        //     this.meetingPlayoffService.extractPlayoffMeetings(playoff, this.mdbList);
+    
+        //     if( this.selectedTourney.isPlayoffAutoGen == "true") {
+        //         this.meetingPlayoffService.resolveAutomaticTeams(playoff);
+        //         this.meetingPlayoffService.resolveAutomaticMeetings(playoff, this.selectedTourney.rounds);
+        //     } else {
+        //         this.meetingPlayoffService.resolveManualTeams(playoff);
+        //         this.meetingPlayoffService.resolveManualMeetings(playoff, this.selectedTourney.rounds);
+        //     }
+    
+        //     let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);
+        //     playoff.round.classification = this.tourneyService.createClassification(playoff.round, allMeetings);
+        // }
+        this.ngOnInit();
+    }
 }
 

@@ -43,6 +43,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.isRoundTrip = this.isOneway == "true" ? false : true;
     }
     
+    refresh(): void {        
+        this.ngOnInit();
+    }
+
     onChangeTab(e) {
         let index=e.index;
         this.tourneyService.selectedEliminatoryTabIndex = index;
@@ -52,11 +56,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.cols = this.tourneyService.resultCols;
 
         for( let l=0; l < this.selectedTourney.eliminatoryLevels.length; l++ ) {
-
             let el = this.selectedTourney.eliminatoryLevels[l];
             if( this.isStandAlone(this.selectedTourney) ) {
                 if( el.isTopLevel ) {
-                    this.processSkiping(el);
+                    this.resolveStandaloneTopLevel(el);
                 } else {
                     this.resolveNextLevel(l, el);
                 }
@@ -67,9 +70,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     this.resolveNextLevel(l, el);
                 }
             }
-            for(let elim of el.eliminatories ) {
-                this.updateClassification(elim.round);
-            }
+            this.updateClassification(el);
         }
 
         this.onewayMeetings    = [];
@@ -77,7 +78,9 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.eliminatoryClassification = [];
 
         // let sel = this.tourneyService.selectedEliminatoryLevel;
-        let sel = this.selectedTourney.eliminatoryLevels.find( l => l.id == this.tourneyService.selectedEliminatoryLevel.id ) ;
+        // let sel = this.selectedTourney.eliminatoryLevels.find( l => l.id == this.tourneyService.selectedEliminatoryLevel.id ) ;
+
+        let sel = this.selectedTourney.eliminatoryLevels[this.tourneyService.selectedEliminatoryLevelIndex ];
         
         for(let level=0; level < sel.eliminatories.length; level++) {
             let e = sel.eliminatories[level];
@@ -92,7 +95,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         console.log("RoundtripMeetings.len [" + this.roundtripMeetings.length +"]" );
     }
 
-    private processSkiping(el: EliminatoryLevel) {
+    private resolveStandaloneTopLevel(el: EliminatoryLevel) {
         for (let e of el.eliminatories) {
             for (let m of e.round.onewayMeetings) {
                 if (m.teamName1 == "") {
@@ -124,9 +127,11 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     /**
      * Prepares the classification relatid to the selected eliminaory 
      */
-    private updateClassification(round : Round): void {
-        let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-        round.classification = this.tourneyService.createClassification(round, allMeetings);
+    private updateClassification(el: EliminatoryLevel): void {
+        for( let e of el.eliminatories ) {
+            let allMeetings = e.round.onewayMeetings.concat(e.round.roundtripMeetings);
+            e.round.classification = this.tourneyService.createClassification(e.round, allMeetings);
+        }
     }
 
     /**
@@ -313,8 +318,12 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     private resolveNextLevel(l: number, el: EliminatoryLevel) {
 
         if(el.isOptional) { // for 3° and 4° classification position
-            let semifinalLevel: Eliminatory[] = this.selectedTourney.eliminatoryLevels[l-2].eliminatories;
-
+            let prevIndex: number = l-2;
+            let semifinalLevel: Array<Eliminatory> = new Array<Eliminatory>();
+            for( let e of this.selectedTourney.eliminatoryLevels[prevIndex].eliminatories ) {
+                semifinalLevel.push(e);
+            }
+    
             let prevEliminatory1 : Eliminatory = semifinalLevel[0];
             let team1: string = this.fromClassification(prevEliminatory1, 1);
 
@@ -326,18 +335,19 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
             e.round.onewayMeetings[0].teamName1 = team1;
             e.round.onewayMeetings[0].teamName2 = team2;
+            e.round.onewayMeetings[0].name = team1 + " - " + team2;
 
             e.round.roundtripMeetings[0].teamName1 = team2;
             e.round.roundtripMeetings[0].teamName2 = team1;
+            e.round.roundtripMeetings[0].name = team2 + " - " + team1;
 
-            for (let m of e.round.onewayMeetings) {
-                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
-            }
-            for (let m of e.round.roundtripMeetings) {
-                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
-            }
+            let m = e.round.onewayMeetings[0];
+            m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+            m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+
+            m = e.round.roundtripMeetings[0];
+            m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+            m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
             return;
         }
 
@@ -364,18 +374,19 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
             e.round.onewayMeetings[0].teamName1 = team1;
             e.round.onewayMeetings[0].teamName2 = team2;
+            e.round.onewayMeetings[0].name = team1 + " - " + team2;
 
             e.round.roundtripMeetings[0].teamName1 = team2;
             e.round.roundtripMeetings[0].teamName2 = team1;
+            e.round.roundtripMeetings[0].name = team2 + " - " + team1;
 
-            for (let m of e.round.onewayMeetings) {
-                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
-            }
-            for (let m of e.round.roundtripMeetings) {
-                m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-                m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
-            }
+            let m = e.round.onewayMeetings[0];
+            m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+            m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+
+            m = e.round.roundtripMeetings[0];
+            m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
+            m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
         }
     }
     

@@ -35,11 +35,11 @@ export class MeetingPlayoffService extends MeetingService {
      * Loads all the meetings of the receìved tourney id
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    reloadPlayoffMeetings(tourneyId: number, p: Playoff, complete: () => void ) : Observable<MeetingDb[]> {
+    reloadPlayoffMeetings(tourneyId: number, p: Playoff, complete: () => void, error: (error: any) => any ) : Observable<MeetingDb[]> {
 
-        let obs = super.loadPlayoffMeeting(tourneyId, p.id);
+        let obs = super.loadPlayoffMeeting(tourneyId, p.id, e => error(e));
  
-        obs.subscribe(t => this.onPlayoffCompleteLoad(t, p, complete), e => this.onError(e));
+        obs.subscribe(t => this.onPlayoffCompleteLoad(t, p, complete), e => error(e));
         return obs;
     }
 

@@ -1,20 +1,3 @@
-<!-- <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
-        </div>
-        <div class="ui-grid-col-6">
-            <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
-        </div>        
-        <div class="ui-grid-col-6">
-            <span style="font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</span>
-        </div>
-        <div class="ui-grid-col-3">
-            <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
-        </div>
-    </div>
-</div>      -->
-
 <p-table>
     <ng-template pTemplate="header">
         <tr>
@@ -31,6 +14,10 @@
         </tr>
     </ng-template>
 </p-table>
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
 
 <p-tabView [activeIndex]="tourneyService.selectedRoundTabIndex"         
         (onChange)="onChangeTab($event)">

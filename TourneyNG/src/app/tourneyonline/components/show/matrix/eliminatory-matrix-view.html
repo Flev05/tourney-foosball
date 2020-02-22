@@ -34,6 +34,10 @@
 </p-accordion>        
 </div>
 
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
 <div class="content-section implementation">
     <h3>Torneo [{{selectedTourney.tourneyName}}]</h3> 
     <h4>Eliminatoria [{{selectedRound.name}}]</h4> 

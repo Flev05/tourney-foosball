@@ -25,7 +25,6 @@ export class UserDetailView extends AbstractDetailView {
     selectedUser: UserVO;
     selectedUrc: UserRoleClientVO;
     onSaveUserError: any;
-    badRequest: boolean;
     userAlreadyExists: boolean;
 
     userAddress: string;
@@ -266,7 +265,7 @@ export class UserDetailView extends AbstractDetailView {
             this.onSaveUserError = true;
 
             if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
-                this.badRequest = true;
+                this.serverUnreachable = true;
                 return of(result as T);
             } 
  

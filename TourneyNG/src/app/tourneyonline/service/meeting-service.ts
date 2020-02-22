@@ -132,7 +132,7 @@ export  class MeetingService extends AbstractService {
      * Loads all the meetings of the receìved tourney id
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadRoundMeetings(tourneyId: number, roundsIds: Array<number> ) : Observable<MeetingDb[]> {
+    loadRoundMeetings(tourneyId: number, roundsIds: Array<number>, error: (error: any) => any ) : Observable<MeetingDb[]> {
 
         let url = loadMeetingByRoundIdsUrl + "/" + tourneyId ;
 
@@ -140,7 +140,7 @@ export  class MeetingService extends AbstractService {
 
         let obs = this.http.post<MeetingDb[]>(url, roundsIds, httpOptions).pipe(
             tap((m: MeetingDb[]) => this.log('loadRoundMeetings, url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
+            catchError(error('addMeetingDb, url=' + url))
         );
         return obs;
     }
@@ -148,7 +148,7 @@ export  class MeetingService extends AbstractService {
      * Loads all the meetings of the receìved tourney and playoff ids
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadPlayoffMeeting(tourneyId: number, playoffId: number) : Observable<MeetingDb[]> {
+    loadPlayoffMeeting(tourneyId: number, playoffId: number, error: (error: any) => any) : Observable<MeetingDb[]> {
 
         let url = loadMeetingByPlayoffIdUrl + "/" + tourneyId + "/" + playoffId;
 
@@ -156,7 +156,7 @@ export  class MeetingService extends AbstractService {
 
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadPlayoffMeetingDb url=' + url))
+            catchError(error('loadPlayoffMeetingDb url=' + url))
         );
 
         return obs;
@@ -166,7 +166,7 @@ export  class MeetingService extends AbstractService {
      * Loads all the meetings of the receìved tourney id
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadPlayoffMeetings(tourneyId: number, playoffIds: Array<number> ) : Observable<MeetingDb[]> {
+    loadPlayoffMeetings(tourneyId: number, playoffIds: Array<number>, error: (error: any) => any) : Observable<MeetingDb[]> {
 
         let url = loadMeetingByPlayoffIdsUrl + "/" + tourneyId ;
 
@@ -174,7 +174,7 @@ export  class MeetingService extends AbstractService {
 
         let obs = this.http.post<MeetingDb[]>(url, playoffIds, httpOptions).pipe(
             tap((m: MeetingDb[]) => this.log('loadPlayoffMeetings, url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
+            catchError(error('addMeetingDb, url=' + url))
         );
         return obs;
     }
@@ -184,14 +184,14 @@ export  class MeetingService extends AbstractService {
      * Loads all the meetings of the receìved tourney and eliminatory ids
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadEliminatoryMeeting(tourneyId: number, eliminatoryId: number) : Observable<MeetingDb[]> {
+    loadEliminatoryMeeting(tourneyId: number, eliminatoryId: number, error: (error: any) => any) : Observable<MeetingDb[]> {
         let url = loadMeetingByEliminatoryIdUrl + "/" + tourneyId + "/" + eliminatoryId;
         
         console.log("Url=" + url);
 
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
+            catchError(error('loadEliminatoryMeetingDb url=' + url))
         );
 
         return obs;
@@ -201,14 +201,14 @@ export  class MeetingService extends AbstractService {
      * Loads all the meetings of the receìved tourney  related where eliminatory are not null
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadAllEliminatoryMeeting(tourneyId: number) : Observable<MeetingDb[]> {
+    loadAllEliminatoryMeeting(tourneyId: number, error: (error: any) => any) : Observable<MeetingDb[]> {
         let url = loadAllEliminatoryMeetingsUrl + "/" + tourneyId;
         
         console.log("Url=" + url);
 
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('loadEliminatoryMeetingDb url=' + url))
+            catchError(error('loadEliminatoryMeetingDb url=' + url))
         );
 
         return obs;
@@ -218,14 +218,14 @@ export  class MeetingService extends AbstractService {
      * Loads all the meetings of the receìved tourney id and eliminatory id list
      *  GET meetings by params. Will 404 if meetings not found 
      */
-    loadEliminatoryMeetingByIdList(tourneyId: number, eliminiatoryIdList: number[]) : Observable<MeetingDb[]> {
+    loadEliminatoryMeetingByIdList(tourneyId: number, eliminiatoryIdList: number[], error: (e: any) => any) : Observable<MeetingDb[]> {
         let url = loadEliminatoryMeetingByIdListUrl + "/" + tourneyId;
         
         console.log("Url=" + url);
 
         let obs = this.http.post<MeetingDb[]>(url, eliminiatoryIdList, httpOptions).pipe(
             tap((m: MeetingDb[]) => this.log('added MeetingDb, url=' + url)),
-            catchError(this.handleError<MeetingDb[]>('addMeetingDb, url=' + url))
+            catchError(error('addMeetingDb, url=' + url))
         );
         return obs;
     }
@@ -269,27 +269,27 @@ export  class MeetingService extends AbstractService {
         }
     }
 
-    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number, selector: (err: any) => Observable<MeetingDb>): Observable<MeetingDb> {
+    saveRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number, error: (error: any) => any): Observable<MeetingDb> {
         if(m.id == null) {
             return this.addMeetingDb(m, tourneyId, roundId, null, null);
         } else {
-            return this.updateMeetingDb(m, tourneyId, roundId, null, null, selector);
+            return this.updateMeetingDb(m, tourneyId, roundId, null, null, error);
         }
     }
 
-    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number, selector: (err: any) => Observable<MeetingDb>): Observable<MeetingDb> {
+    savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number, error: (error: any) => any): Observable<MeetingDb> {
         if(m.id == null) {
             return this.addMeetingDb(m, tourneyId, null, playoffId, null);
         } else {
-            return this.updateMeetingDb(m, tourneyId, null, playoffId, null, selector);
+            return this.updateMeetingDb(m, tourneyId, null, playoffId, null, error);
         }
     }
 
-    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number, selector: (err: any) => Observable<MeetingDb>): Observable<MeetingDb> {
+    saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number, error: (error: any) => any): Observable<MeetingDb> {
         if(m.id == null) {
             return this.addMeetingDb(m, tourneyId, null, null, eliminatoryId);
         } else {
-            return this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId, selector);
+            return this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId, error);
         }
     }
 
@@ -346,19 +346,19 @@ export  class MeetingService extends AbstractService {
     }
 
     private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number
-        , selector?: (err: any, caught: Observable<MeetingDb> ) => Observable<MeetingDb> ):  Observable<MeetingDb> {
+        , error: (error: any) => any ):  Observable<MeetingDb> {
         let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
-        let obs = this.updateMeetingMdb(mdb, selector);
+        let obs = this.updateMeetingMdb(mdb, error);
         return obs;
     }
  
     /** PUT: update the MeetingDb on the db server */
-    updateMeetingMdb (mdb: MeetingDb, selector: (err: any, caught: Observable<MeetingDb> ) => Observable<MeetingDb>  ): Observable<MeetingDb> {
+    updateMeetingMdb (mdb: MeetingDb, error: (error: any) => any): Observable<MeetingDb> {
         let url = updateMeetingUrl;
 
         return this.http.put(url, mdb, httpOptions).pipe(
             tap(_ => this.log('updated updateMeetingMdb url=' + url)),
-            catchError(selector == null ? this.handleError<Meeting>('deletingMeeting: ' + url) : selector )
+            catchError(error == null ? this.handleError<Meeting>('deletingMeeting: ' + url) : error )
         );
     }
 
@@ -403,7 +403,7 @@ export  class MeetingService extends AbstractService {
         obs.subscribe();
     }
 
-    protected handleError<T> (operation = 'operation', result?: T) {
+    protected handleError<T> (operation = 'operation', result?: T): any {
         return (error: any): Observable<T> => {
       
           // TODO: send the error to remote logging infrastructure
@@ -515,6 +515,13 @@ export  class MeetingService extends AbstractService {
     
     public sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
         let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+
+            if( c1.teamName == "" && c2.teamName != "") {
+                return 1;
+            }
+            if( c1.teamName != "" && c2.teamName == "") {
+                return -1;
+            }
 
             if (c1.points > c2.points) {
                 return -1;

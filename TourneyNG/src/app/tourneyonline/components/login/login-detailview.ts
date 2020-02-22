@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { Validators,FormControl,FormGroup,FormBuilder } from '@angular/forms';
 import { Login } from 'app/tourneyonline/domain/login';
 import { Message } from 'app/components/common/api';
@@ -8,6 +9,7 @@ import { Md5 } from "md5-typescript";
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { ClientVO } from 'app/tourneyonline/domain/client-vo';
+import { AbstractListView } from '../common/abstract-listview';
 
 const redirect : string = "/login/lv";
 @Component({
@@ -23,7 +25,7 @@ const redirect : string = "/login/lv";
         }
   `]
 })
-export class LoginDetailView implements OnInit {
+export class LoginDetailView extends AbstractListView {
     public static redirectToAdminTourney = '/admintourney';
     public static redirectToShowTourney  = '/showtourney';
     
@@ -41,7 +43,14 @@ export class LoginDetailView implements OnInit {
         protected router: Router,
         protected loginService: LoginService,
         protected clientService: ClientService,
-    ) {}
+        protected location: Location
+    ) {
+
+        super(redirect 
+            ,   null 
+            ,   router 
+            ,   location);
+    }
 
     ngOnInit() {
         this.loginService.blockedDocument = false;
@@ -119,7 +128,7 @@ export class LoginDetailView implements OnInit {
         this.router.navigate([redirect]);
     }
 
-    protected onError(e:any) {
+    public onError(e:any) {
         console.error("Entering LoginDetailView.onError()");
         console.error(e);
         this.loginService.isUserLogged = false;

@@ -136,8 +136,13 @@ export class MeetingPlayoffService extends MeetingService {
             let r1 = m.rule1.fromRound.round.label;
             let p2 = m.rule2.fromRound.position.label;
             let r2 = m.rule2.fromRound.round.label;
-            m.ruleName1 = p1 + " " + r1;
-            m.ruleName2 = p2 + " " + r2;
+
+            let prefix = this.selectedTourney.rounds.length == 1 ? "" : p1 + " delle ";
+            m.ruleName1 = prefix + r1;
+            
+            prefix = this.selectedTourney.rounds.length == 1 ? "" : p2 + " delle ";
+            m.ruleName2 = prefix + r2;
+            
             let rn = m.ruleName1 + " - " + m.ruleName2;
             m.ruleName = rn;
         }
@@ -430,8 +435,8 @@ export class MeetingPlayoffService extends MeetingService {
                 if( round.classification.length > 0 ) {
                     let c: Classification = round.classification[position-1];
     
-                    let teamName = rule.fromRound.position.label + " " + c.teamName;
-                    playoff.round.teamNames.push(teamName);
+                    // let teamName = rule.fromRound.position.label + " " + c.teamName;
+                    playoff.round.teamNames.push(c.teamName);
                 }
             }
         }

@@ -291,11 +291,7 @@ export class MeetingDetailView extends AbstractDetailView {
         } 
         
         if( this.selectedMeetingDb.playoffId != null ) {
-            let playoffIds: number[] = [];
-            for(let p of this.selectedTourney.playoffs) {
-                playoffIds.push(p.id);
-            }
-            let p: Playoff = this.selectedTourney.playoffs.find( p => p.id == this.selectedRound.id );
+            let p: Playoff = this.selectedTourney.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
             this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => {}, e => this.serverUnreachableHandler(e) );
         }
     }

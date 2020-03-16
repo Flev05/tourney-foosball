@@ -28,7 +28,7 @@ import { CalendarModule } from 'app/components/calendar/calendar';
 import {PlayoffRoutingModule} from './playoff-routing.module';
 import { RuleListView } from './rule-listview';
 import { RuleDetailView } from './rule-detailview';
-import { MeetingListView } from './meeting-page-listview';
+import { MeetingPageListView } from './meeting-page-listview';
 import { MeetingRuleDetailView } from './meeting-rule-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 
@@ -64,7 +64,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 	declarations: [
         RuleListView
         ,RuleDetailView
-        ,MeetingListView
+        ,MeetingPageListView
         ,MeetingRuleDetailView
     ]
     ,providers: [DateFormatPipe]

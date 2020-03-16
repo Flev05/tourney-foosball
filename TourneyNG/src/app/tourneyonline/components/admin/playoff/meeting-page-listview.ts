@@ -13,7 +13,7 @@ import { MeetingPlayoffService } from './meeting-playoff-service';
 @Component({
     templateUrl: './meeting-page-listview.html'
 })
-export class MeetingListView extends AbstractRuleListView {
+export class MeetingPageListView extends AbstractRuleListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
     meetingsCols: TableCols[] ;
     selectedRow: Meeting;
@@ -35,7 +35,7 @@ export class MeetingListView extends AbstractRuleListView {
         protected router: Router,
         protected location: Location
     ) {
-        super(MeetingListView.redirect, tourneyService, router, location);
+        super(MeetingPageListView.redirect, tourneyService, router, location);
     }
 
     ngOnInit() {

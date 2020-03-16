@@ -29,7 +29,7 @@
 
 <p-tabView [activeIndex]="selectedPlayoff.selectedTabIndex"
         (onChange)="onChangeTab($event)">
-    <p-tabPanel header="Incontri playoff di ANDATA ({{allDaysNo}} giornate)">
+    <p-tabPanel header="ANDATA ({{allDaysNo}} giornate)">
 
         <p-table [columns]="meetingsCols"
             [value]="onewayMeetings" 
@@ -61,7 +61,7 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="meetingPlayoffService.isRoundTrip" header="Incontri playoff di RITORNO ({{allDaysNo}} giornate)">
+    <p-tabPanel *ngIf="meetingPlayoffService.isRoundTrip" header="RITORNO ({{allDaysNo}} giornate)">
         <p-table 
             [columns]="meetingsCols"
             [value]="roundtripMeetings" 

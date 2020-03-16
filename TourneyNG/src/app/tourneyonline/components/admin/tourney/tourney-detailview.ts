@@ -865,6 +865,9 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private getMaxTeamsPerPlayoff(): number {
+        if( this.selectedTourney.selectedPlayoffsCB.value == 0 ) {
+            return 0;
+        }
         let allRoundTeams = 0;
         for (let r of this.selectedTourney.rounds) {
             allRoundTeams += r.teamNames.length;
@@ -950,8 +953,9 @@ export class TourneyDetailView extends AbstractDetailView {
                     , isDummy: false
                 };
                 
-                const ruleName = fromRound.position.value + "° delle " + fromRound.bandPosition + "°";
-                let pr: PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: ruleName, isDummy: false   };
+                let prefix = this.selectedTourney.rounds.length == 1 ? "" : fromRound.position.value + "° delle ";
+                const ruleName = prefix + fromRound.bandPosition + "°";
+                let pr: PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: ruleName, isDummy: false};
 
                 sortedTeamList.push(pr);
                 teamCounter++;

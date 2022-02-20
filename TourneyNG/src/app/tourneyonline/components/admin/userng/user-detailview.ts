@@ -20,8 +20,6 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
     templateUrl: './user-detailview.html' 
 })
 export class UserDetailView extends AbstractDetailView {
-    public static DEFAULT_PASSWORD = "torneionline";
-
     selectedUser: UserVO;
     selectedUrc: UserRoleClientVO;
     onSaveUserError: any;
@@ -122,7 +120,7 @@ export class UserDetailView extends AbstractDetailView {
     private createNewUser() {
         let rvo : RoleVO = this.selectRoleForNewUser();
 
-        this.selectedUser.password = Md5.init(UserDetailView.DEFAULT_PASSWORD);
+        this.selectedUser.password = Md5.init(this.selectedUser.username);
         console.log("MD5(password)=" + this.selectedUser.password);
 
         let urc : UserRoleClientVO = {

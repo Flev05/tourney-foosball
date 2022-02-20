@@ -8,9 +8,9 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "http://localhost:8081/TourneyBE",
+            "url": "http://localhost:8082/TourneyBE",
             "webRoot": "${workspaceFolder}"
-        },
+        }
         // "configurations": [
         //     {
         //         "type": "chrome",

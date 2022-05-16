@@ -1525,13 +1525,10 @@
                 dataKey="id">
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th class="checkBoxColSize">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
+                        <th class="deleteColSize">E</th>
                         <th *ngFor="let col of columns">
                             {{col.header}}                                
                         </th>
-                        <th class="deleteColSize">E</th>
                         <th class="deleteColSize">D</th>
                     </tr>
                 </ng-template>                                     
@@ -1539,14 +1536,11 @@
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                     <tr>
                         <td>
-                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            <button class="ui-button-success" pButton icon="fa fa-edit" (click)="editOperator(rowData)"></button>
                         </td>
                         <td *ngFor="let col of columns">
                             {{rowData[col.field]}}
                         </td>            
-                        <td>
-                            <button class="ui-button-success" pButton icon="fa fa-edit" (click)="editOperator(rowData)"></button>
-                        </td>
                         <td>
                             <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="deleteOperator(rowData)"></button>
                         </td>

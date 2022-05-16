@@ -36,6 +36,18 @@
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="{{returnLabel}}"></button>
 </div>                  
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <button pButton class="ui-button-success" 
+                icon="fa fa-plus" 
+                type="button" 
+                (click)="newPlayer()" 
+                label="Nuovo Giocatore" >
+            </button>
+        </div>
+    </div>
+</div>
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <p-pickList  [source]="avalilablePlayers" 
@@ -57,17 +69,6 @@
         </ng-template>
     </p-pickList>  
     
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
-                <button pButton class="ui-button-success" 
-                    icon="fa fa-plus" 
-                    type="button" 
-                    (click)="newPlayer()" 
-                    label="Nuovo Giocatore" >
-                </button>
-            </div>
-        </div>
-    </div>
+
 </div>
 

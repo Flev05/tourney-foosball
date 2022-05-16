@@ -11,7 +11,6 @@ import { ERoles } from 'app/tourneyonline/domain/enumerations';
 import { RoleVO } from 'app/tourneyonline/domain/role-vo';
 import { UserDetailView } from '../userng/user-detailview';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
-import { Observable } from 'rxjs';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 
 const DEFAULT_OPERATOR_PASSWORD: string = "torneionline";
@@ -64,12 +63,13 @@ export class OperatorDetailView extends UserDetailView {
         return rvo;
     }
 
-    protected createUserAndUrc(urc: UserRoleClientVO): Observable<UserRoleClientVO> {
+   /*  protected createUserAndUrc(urc: UserRoleClientVO): Observable<UserRoleClientVO> {
         const subscriber = this.userService.createOperator(urc, this.selectedTourney.id, this.saveUserErrorHandler('Create Operator operation'));
         return subscriber;
-    }
+    } */
  
-    protected createUrc(urc: UserRoleClientVO) {
+    protected createUserAndUrc(urc: UserRoleClientVO) {
+        urc.tourneyId = this.selectedTourney.id;
         return this.urcService.insertUrcOperator(urc, this.saveUserErrorHandler('Create User operation'));
     }
 

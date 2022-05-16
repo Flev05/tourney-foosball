@@ -363,9 +363,13 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         updatePo(po);
     }
 
-    public void delete(User po) {
+    public void delete(User po) throws DaoException {
 
-        log.debug(logId() + "Entering deletePo(" + po + ")");
+        log.debug(logId() + "Entering delete(" + po + ")");
+        // UserRoleClientDao dao = new UserRoleClientDao();
+        // for (UserRoleClient urc : po.getUrcSet()) {
+        // dao.delete(urc);
+        // }
 
         deletePo(po);
     }

@@ -109,7 +109,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
         Root<User> root = cq.from(User.class);
 
         Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
-        Join<UserRoleClient, Tourney> tourneyJoin = urcJoin.join(UserRoleClient_.tourneys);
+        Join<UserRoleClient, Tourney> tourneyJoin = urcJoin.join(UserRoleClient_.tourney);
         Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
         Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
 

@@ -128,7 +128,7 @@ export class UserService {
     }
 
     /** POST: add a new User to the server */
-    createOperator (urc: UserRoleClientVO, tourneyId: number, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO>): Observable<UserRoleClientVO> {
+   /*  createOperator (urc: UserRoleClientVO, tourneyId: number, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO>): Observable<UserRoleClientVO> {
         let url = userUrl + "/createOperator/" + tourneyId;
         console.log(url);
 
@@ -136,10 +136,10 @@ export class UserService {
             tap((op: UserRoleClientVO) => this.log(`added User w/ id=${op.userVo.username}`))
             , catchError(selector)
         );
-    }
+    } */
 
     /** Saves the relation betweeen the User and the tourney to the server */
-    mergeOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
+ /*    mergeOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
         let url = userUrl + "/mergeOperators";
         console.log(url);
 
@@ -147,11 +147,11 @@ export class UserService {
             tap((op: OperatorsVO) => this.log(`mergeOperators for tourney id=${op.tourneyId}`))
             , catchError(selector)
         );
-    }
+    } */
 
     /** Detach the operator relation between tourney and operatorSS */
-    deleteOperator(userId: number,tourneyId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
-        const url = userUrl + "/deleteOperator/" + userId + "/" + tourneyId;
+    deleteOperator(userId: number,clientId: number,tourneyId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+        const url = userUrl + "/deleteOperator?userId=" + userId+ "&clientId=" + clientId + "&tourneyId=" + tourneyId;
         console.log(url);
 
         return this.http.delete<UserVO>(url, httpOptions).pipe(

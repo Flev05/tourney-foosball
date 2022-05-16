@@ -198,12 +198,18 @@ export class TourneyDetailView extends AbstractDetailView {
         let popup = "Sicuro di voler rimuovere l'operatore: " + uvo.username + "?";
 
         if(confirm(popup)) {
-            const observer = this.userService.deleteOperator(uvo.id, this.selectedTourney.id, this.loadUsersErrorHandler("Delete operator operation"));
+            const observer = this.userService.deleteOperator(uvo.id
+                , this.clientService.selectedClient.id
+                , this.selectedTourney.id
+                , this.loadUsersErrorHandler("Delete operator operation"));
             observer.subscribe(op => this.onDeleteNext(op) );
         }
     }
 
     private onDeleteNext(op : UserVO): any {
+        if( op == undefined ) {
+            return;
+        }
         let deletedOp = this.operatorRows.find( t => t.username == op.username );
         if( deletedOp != undefined ) {
             let index: number = this.operatorRows.indexOf(deletedOp);
@@ -227,19 +233,19 @@ export class TourneyDetailView extends AbstractDetailView {
         subscriber.subscribe(cs => this.onLoadNext(cs), e => this.onError(e) );
     }
 
-    private mergeOperators() {
+/*     private mergeOperators() {
         let selectedClientId = this.clientService.selectedClient.id;
         let op : OperatorsVO = {clientId: selectedClientId, tourneyId: this.selectedTourney.id};
         op.allOperators = this.operatorRows;
         op.selectedOperators = this.selectedOperatorRows;
         const subscriber = this.userService.mergeOperators(op, this.loadUsersErrorHandler('mergeOperators()'));
         subscriber.subscribe(cs => this.onMergeNext(cs), e => this.onError(e) );
-    }
+    } */
 
-    private onMergeNext(cs: OperatorsVO): void {
+/*     private onMergeNext(cs: OperatorsVO): void {
         this.onLoadNext(cs);
         this.gotoListView();
-    }
+    } */
     
     private onLoadNext(op: OperatorsVO): void {
         this.operatorRows = op.allOperators;
@@ -1336,10 +1342,10 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let tvo: TourneyVO = this.prepareTourneyVO();
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        if( !this.onSaveTourneyError ) {
+/*         if( !this.onSaveTourneyError ) {
             subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => this.saveComplete());
             this.mergeOperators();
-        }
+        } */
     }
 
     private saveComplete(): void {
@@ -1371,7 +1377,7 @@ export class TourneyDetailView extends AbstractDetailView {
             let tvo: TourneyVO = this.cloneTourneyVO(true);
             const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
             subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(true));
-            this.mergeOperators();
+            // this.mergeOperators();
             return;
         }
 

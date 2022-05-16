@@ -15,15 +15,20 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import it.lms.cb.gui.vo.UserRoleClientVO;
+import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
+import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Role;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
@@ -46,6 +51,12 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
     @Inject
     private UserRoleClientDao urcDao;
+
+    @Inject
+    RoleDao                   roleDao;
+
+    @Inject
+    ClientDao                 clientDao;
 
     @Inject
     @ConverterObject
@@ -108,22 +119,43 @@ public class UserRoleClientRESTService extends AbstractRESTService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response insertUrcOperator(UserRoleClientVO urcvo) {
 
-        log.debug(logId() + "POST: insertUrcOperator()");
+        log.debug(logId() + "Entering insertUrcOperator()");
 
-        Integer userId = urcvo.getUserVo().getId();
-        User upo = userDao.getUserById(userId);
-        UserRoleClient urcpo = urcDao.getOperator(userId, urcvo.getClientVO().getId());
-        if (urcpo == null) {
-            urcpo = converter.convertUrcVoPo(urcvo);
-            urcpo.setUser(upo);
-            urcDao.insert(urcpo);
+        Integer tourneyId = urcvo.getTourneyId();
+        Tourney tpo = tourneyDao.getById(tourneyId);
+        if (tpo == null) {
+            log.error("Tourney [{}] not found!", tourneyId);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        Client cpo = clientDao.getById(urcvo.getClientVO().getId());
+        if (cpo == null) {
+            log.error("Client [{}] not found!", urcvo.getClientVO().getId());
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        Tourney tpo = tourneyDao.getById(urcvo.getTourneyId());
-        tpo.getUrcs().add(urcpo);
-        tourneyDao.update(tpo);
+        UserVO uvo = urcvo.getUserVo();
+        String username = uvo.getUsername();
+        log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
 
-        Response.ResponseBuilder builder = Response.ok();
+        User upo = userDao.findUserBy(username);
+        UserRoleClient urcpo;
+        if (upo == null) {
+            upo = converter.convertUserVoPo(uvo);
+            userDao.insert(upo);
+        }
+        urcpo = new UserRoleClient();
+        urcpo.setClient(cpo);
+        urcpo.setUser(upo);
+        urcpo.setTourney(tpo);
+        Role rpo = roleDao.getOperatorRole();
+        urcpo.setRole(rpo);
+        urcDao.insert(urcpo);
+
+        tpo.getUrcs().add(urcpo);
+        upo.getUrcSet().add(urcpo);
+        rpo.getUrcSet().add(urcpo);
+
+        Response.ResponseBuilder builder = Response.ok(urcvo);
 
         return builder.build();
     }
@@ -167,5 +199,4 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         return builder.build();
     }
-
 }

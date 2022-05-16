@@ -15,19 +15,37 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "session")
+@Getter
+@Setter
 public class Session extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer           id;
+
+    @Column(name = "user_session")
     private String            userSession;
+
+    @Column(name = "user_info")
     private String            userInfo;
+
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date              creationDate;
 
+    // bi-directional many-to-one association to User
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User              user;
 
     public Session() {
@@ -39,64 +57,5 @@ public class Session extends AbstractPO implements Serializable {
 
         return super.toString() + " Session [userSession=" + userSession + ", userInfo=" + userInfo + ", creationDate="
                 + creationDate + ", user=" + user + "]";
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
-    }
-
-    @Column(name = "user_session")
-    public String getUserSession() {
-
-        return userSession;
-    }
-
-    public void setUserSession(String userSession) {
-
-        this.userSession = userSession;
-    }
-
-    @Column(name = "user_info")
-    public String getUserInfo() {
-
-        return userInfo;
-    }
-
-    public void setUserInfo(String userInfo) {
-
-        this.userInfo = userInfo;
-    }
-
-    @Column(name = "creation_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date getCreationDate() {
-
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-
-        this.creationDate = creationDate;
-    }
-
-    // bi-directional many-to-one association to User
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    public User getUser() {
-
-        return user;
-    }
-
-    public void setUser(User user) {
-
-        this.user = user;
     }
 }

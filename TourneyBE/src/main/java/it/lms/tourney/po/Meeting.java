@@ -12,21 +12,44 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "meeting")
+@Getter
+@Setter
 public class Meeting extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer           id;
+
+    @Column(name = "json")
     private String            json;
 
+    // bi-directional many-to-one association to Tourney
+    @ManyToOne
+    @JoinColumn(name = "tourney_id")
     private Tourney           tourney;
+
+    @Column(name = "round_id")
     private Integer           roundId;
+
+    @Column(name = "playoff_id")
     private Integer           playoffId;
+
+    @Column(name = "eliminatory_id")
     private Integer           eliminatoryId;
+
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
     private Country           country;
 
     @Override
@@ -59,83 +82,5 @@ public class Meeting extends AbstractPO implements Serializable {
 
         return super.toString() + " Meeting [tourney=" + tourney + ", roundId=" + roundId + ", playoffId=" + playoffId
                 + ", eliminatoryId=" + eliminatoryId + ", country=" + country + "json=" + json + "]";
-    }
-
-    @Override
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    @Column(name = "json")
-    public String getJson() {
-
-        return json;
-    }
-
-    public void setJson(String json) {
-
-        this.json = json;
-    }
-
-    @Column(name = "round_id")
-    public Integer getRoundId() {
-
-        return roundId;
-    }
-
-    public void setRoundId(Integer roundId) {
-
-        this.roundId = roundId;
-    }
-
-    @Column(name = "playoff_id")
-    public Integer getPlayoffId() {
-
-        return playoffId;
-    }
-
-    public void setPlayoffId(Integer playoffId) {
-
-        this.playoffId = playoffId;
-    }
-
-    @Column(name = "eliminatory_id")
-    public Integer getEliminatoryId() {
-
-        return eliminatoryId;
-    }
-
-    public void setEliminatoryId(Integer eliminatoryId) {
-
-        this.eliminatoryId = eliminatoryId;
-    }
-
-    // bi-directional many-to-one association to Tourney
-    @ManyToOne
-    @JoinColumn(name = "tourney_id")
-    public Tourney getTourney() {
-
-        return tourney;
-    }
-
-    public void setTourney(Tourney tourney) {
-
-        this.tourney = tourney;
-    }
-
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    public Country getCountry() {
-
-        return country;
-    }
-
-    public void setCountry(Country country) {
-
-        this.country = country;
     }
 }

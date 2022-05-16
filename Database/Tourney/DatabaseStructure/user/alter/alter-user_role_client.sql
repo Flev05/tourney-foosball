@@ -26,12 +26,11 @@ ALTER TABLE ONLY user_role_client
   	ON DELETE NO ACTION 
   	DEFERRABLE INITIALLY IMMEDIATE;
   	
-  	
-ALTER TABLE ONLY user_role_client_discipline
-    ADD CONSTRAINT user_user_role_client_discipline_id_fk 
-    FOREIGN KEY (discipline_id) REFERENCES discipline(id)
+ALTER TABLE ONLY tourney_urc
+    ADD CONSTRAINT tourney_urc_urc_id_fk 
+    FOREIGN KEY (urc_id) REFERENCES user_role_client(id)
   	ON UPDATE NO ACTION 
   	ON DELETE NO ACTION 
   	DEFERRABLE INITIALLY IMMEDIATE;
-
+  	
 ALTER TABLE user_role_client OWNER TO :SCHEMA_USER_NAME;

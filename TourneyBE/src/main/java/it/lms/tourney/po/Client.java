@@ -18,23 +18,44 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @XmlRootElement
 @Table(name = "client", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Getter
+@Setter
 public class Client extends AbstractPO implements Serializable {
 
     private static final long   serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer             id;
+
+    @Column(name = "business_name")
     private String              businessName;
 
+    @Column(name = "address")
     private String              address;
+
+    @Column(name = "phone_number")
     private String              phoneNumber;
+
+    @Column(name = "email")
     private String              email;
 
+    @Column(name = "site_url")
     private String              siteUrl;
 
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
     private Country             country;
 
+    // bi-directional one-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private Set<UserRoleClient> urcSet;
 
     public Client() {
@@ -54,98 +75,6 @@ public class Client extends AbstractPO implements Serializable {
     @Override
     public int hashCode() {
 
-        return super.getId() + email.hashCode();
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
-    }
-
-    @Column(name = "business_name")
-    public String getBusinessName() {
-
-        return businessName;
-    }
-
-    public void setBusinessName(String businessName) {
-
-        this.businessName = businessName;
-    }
-
-    @Column(name = "address")
-    public String getAddress() {
-
-        return address;
-    }
-
-    public void setAddress(String address) {
-
-        this.address = address;
-    }
-
-    @Column(name = "phone_number")
-    public String getPhoneNumber() {
-
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-
-        this.phoneNumber = phoneNumber;
-    }
-
-    @Column(name = "email")
-    public String getEmail() {
-
-        return email;
-    }
-
-    public void setEmail(String email) {
-
-        this.email = email;
-    }
-
-    @Column(name = "site_url")
-    public String getSiteUrl() {
-
-        return siteUrl;
-    }
-
-    public void setSiteUrl(String url) {
-
-        this.siteUrl = url;
-    }
-
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    public Country getCountry() {
-
-        return country;
-    }
-
-    public void setCountry(Country country) {
-
-        this.country = country;
-    }
-
-    // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
-    public Set<UserRoleClient> getUrcSet() {
-
-        return this.urcSet;
-    }
-
-    public void setUrcSet(Set<UserRoleClient> urcSet) {
-
-        this.urcSet = urcSet;
+        return getId() + email.hashCode();
     }
 }

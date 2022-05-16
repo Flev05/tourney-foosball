@@ -6,29 +6,15 @@
 	version="2.0">
 	
 	<persistence-unit name="TourneyPU" transaction-type="JTA">
-
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
 		<jta-data-source>java:/TourneyDS</jta-data-source>
-		
-		<class>it.lms.tourney.po.Country</class>
-		<class>it.lms.tourney.po.User</class>
-		<class>it.lms.tourney.po.Role</class>
-		<class>it.lms.tourney.po.Client</class>
-		<class>it.lms.tourney.po.UserRoleClient</class>
-		<class>it.lms.tourney.po.Session</class>
-
-		<class>it.lms.tourney.po.Discipline</class>
-		<class>it.lms.tourney.po.Tourney</class>
-		<class>it.lms.tourney.po.Player</class>
-		<class>it.lms.tourney.po.Team</class>
-		<class>it.lms.tourney.po.Meeting</class>
-		
 		<properties>
-            <property name="hibernate.dialect" 		value="org.hibernate.dialect.PostgreSQL9Dialect"/>
-            <property name="hibernate.show_sql" 	value="false"/>
-            <property name="hibernate.format_sql" 	value="true"/>
+            <property name="hibernate.dialect" 			value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="hibernate.show_sql" 		value="false"/>
+			<property name="wildfly.jpa.default-unit" 	value="true" />
+			<property name="hibernate.jdbc.batch_size" 	value="1000" />
+			<property name="hibernate.order_inserts" 	value="true"/>
 		</properties>
-		
 	</persistence-unit>
+
 </persistence>

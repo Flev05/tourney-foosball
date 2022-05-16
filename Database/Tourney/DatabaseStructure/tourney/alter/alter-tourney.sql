@@ -21,6 +21,13 @@ ALTER TABLE ONLY tourney
   	ON DELETE NO ACTION 
   	DEFERRABLE INITIALLY IMMEDIATE;
 
+ALTER TABLE ONLY tourney
+    ADD CONSTRAINT tourney_discipline_id_fk 
+    FOREIGN KEY (discipline_id) REFERENCES discipline(id)
+  	ON UPDATE NO ACTION 
+  	ON DELETE NO ACTION 
+  	DEFERRABLE INITIALLY IMMEDIATE;
+  	
 ALTER TABLE tourney OWNER TO :SCHEMA_USER_NAME;
 
 CREATE UNIQUE INDEX tourney_name_client_id_key_index ON tourney (client_id, tourney_name);

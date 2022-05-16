@@ -12,21 +12,44 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "team")
+@Getter
+@Setter
 public class Team extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String            teamName;
-    private Client            client;
-    private Session           session;
-    private Country           country;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer           id;
 
+    @Column(name = "json")
     private String            json;
+
+    @Column(name = "team_name")
+    private String            teamName;
+
+    // bi-directional many-to-one association to Client
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client            client;
+
+    // bi-directional many-to-one association to Session
+    @ManyToOne
+    @JoinColumn(name = "session_id")
+    private Session           session;
+
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country           country;
 
     @Override
     public boolean equals(Object obj) {
@@ -49,74 +72,5 @@ public class Team extends AbstractPO implements Serializable {
 
         return super.toString() + " Team [teamName=" + teamName + ", client=" + client + ", session=" + session
                 + ", country=" + country + ", json=" + json + "]";
-    }
-
-    @Override
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    @Column(name = "json")
-    public String getJson() {
-
-        return json;
-    }
-
-    public void setJson(String json) {
-
-        this.json = json;
-    }
-
-    @Column(name = "team_name")
-    public String getTeamName() {
-
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-
-        this.teamName = teamName;
-    }
-
-    // bi-directional many-to-one association to Client
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    public Client getClient() {
-
-        return client;
-    }
-
-    public void setClient(Client client) {
-
-        this.client = client;
-    }
-
-    // bi-directional many-to-one association to Session
-    @ManyToOne
-    @JoinColumn(name = "session_id")
-    public Session getSession() {
-
-        return session;
-    }
-
-    public void setSession(Session session) {
-
-        this.session = session;
-    }
-
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    public Country getCountry() {
-
-        return country;
-    }
-
-    public void setCountry(Country country) {
-
-        this.country = country;
     }
 }

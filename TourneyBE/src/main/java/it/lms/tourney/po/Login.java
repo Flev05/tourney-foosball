@@ -3,14 +3,19 @@ package it.lms.tourney.po;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The persistent class for the user database table.
  */
+@Getter
+@Setter
 public class Login extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private Integer           id;
 
     private String            username;
     private String            password;
@@ -23,22 +28,5 @@ public class Login extends AbstractPO implements Serializable {
     public String toString() {
 
         return super.toString() + " Login [username=" + username + ", password=" + password + "]";
-    }
-
-    @Column(name = "username")
-    public String getUsername() {
-
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    @Column(name = "password")
-    public String getPassword() {
-
-        return this.password;
     }
 }

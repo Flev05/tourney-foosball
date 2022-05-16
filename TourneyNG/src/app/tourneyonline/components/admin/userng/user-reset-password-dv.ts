@@ -58,7 +58,7 @@ export class UserResetPasswordDv implements OnInit {
 
         this.formLogin.username = this.userform.get('username').value;
 
-        this.formLogin.password = Md5.init(UserDetailView.DEFAULT_PASSWORD);
+        this.formLogin.password = Md5.init(this.formLogin.username);
         console.log("MD5(password)=" + this.formLogin.password);
 
         this.userService.selectedUser.password = this.formLogin.password;

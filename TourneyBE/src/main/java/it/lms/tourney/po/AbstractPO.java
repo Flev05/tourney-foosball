@@ -3,62 +3,45 @@ package it.lms.tourney.po;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public abstract class AbstractPO implements Serializable {
 
-    private static final long     serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @JsonIgnore
-    private boolean               selected         = false;
+    private boolean           selected         = false;
 
     @JsonIgnore
-    private boolean               enabled          = true;
+    private boolean           enabled          = true;
 
     @JsonIgnore
-    private boolean               selectAll        = false;
-
-    private Integer               id               = 0;
-
-    protected static final String DATE_FORMAT      = "dd/MM/yyyy";
-    protected static final String TIME_FORMAT      = "HH:mm:ss";
-    public static final String    FULL_DATE_FORMAT = DATE_FORMAT + " " + TIME_FORMAT; // "dd/MM/yyyy HH:mm:ss";
-
-    public static final long      DAY_IN_MILLI     = 86400000L;                       // = 24*3600*1000 = one day in
+    private boolean           selectAll        = false;
 
     public AbstractPO() {
 
-        id = 0;
+        setId(0);
     }
+
+    public abstract Integer getId();
+
+    public abstract void setId(Integer id);
 
     @Override
     public String toString() {
 
-        return "id=" + id;
+        return "id=" + getId();
     }
 
     @JsonIgnore
     public boolean isNull() {
 
-        if (id == null || id == 0) {
+        if (getId() == null || getId() == 0) {
             return true;
         }
         return false;
-    }
-
-    @Column(name = "id")
-    public Integer getId() {
-
-        return id;
-    }
-
-    public void setId(Integer id) {
-
-        this.id = id;
     }
 
     @Override
@@ -73,14 +56,14 @@ public abstract class AbstractPO implements Serializable {
         AbstractPO that = (AbstractPO) other;
 
         EqualsBuilder eb = new EqualsBuilder();
-        eb = eb.append(id, that.id);
+        eb = eb.append(getId(), that.getId());
         return eb.isEquals();
     }
 
     @Override
     public int hashCode() {
 
-        return id;
+        return getId();
     }
 
     @JsonIgnore

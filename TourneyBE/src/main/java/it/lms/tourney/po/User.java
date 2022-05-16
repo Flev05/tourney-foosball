@@ -16,28 +16,55 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "user_table")
+@Getter
+@Setter
 public class User extends AbstractPO implements Serializable {
 
     private static final long   serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer             id;
+
+    @Column(name = "username")
     private String              username;
+
+    @Column(name = "password")
     private String              password;
 
+    @Column(name = "firstname")
     private String              firstname;
+
+    @Column(name = "lastname")
     private String              lastname;
 
+    @Column(name = "address")
     private String              address;
+
+    @Column(name = "email")
     private String              email;
+
+    @Column(name = "phone_number")
     private String              phoneNumber;
 
+    @Column(name = "description")
     private String              description;
 
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
     private Country             country;
 
+    // bi-directional one-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<UserRoleClient> urcSet;
 
     public User() {
@@ -52,125 +79,4 @@ public class User extends AbstractPO implements Serializable {
                 + ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
                 + phoneNumber + ", description=" + description + "]";
     }
-
-    @Override
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    @Column(name = "username")
-    public String getUsername() {
-
-        return username;
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    @Column(name = "password")
-    public String getPassword() {
-
-        return password;
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password;
-    }
-
-    @Column(name = "firstname")
-    public String getFirstname() {
-
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-
-        this.firstname = firstname;
-    }
-
-    @Column(name = "lastname")
-    public String getLastname() {
-
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-
-        this.lastname = lastname;
-    }
-
-    @Column(name = "email")
-    public String getEmail() {
-
-        return email;
-    }
-
-    public void setEmail(String email) {
-
-        this.email = email;
-    }
-
-    @Column(name = "address")
-    public String getAddress() {
-
-        return address;
-    }
-
-    public void setAddress(String address) {
-
-        this.address = address;
-    }
-
-    @Column(name = "phone_number")
-    public String getPhoneNumber() {
-
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getDescription() {
-
-        return description;
-    }
-
-    public void setDescription(String description) {
-
-        this.description = description;
-    }
-
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    public Country getCountry() {
-
-        return country;
-    }
-
-    public void setCountry(Country country) {
-
-        this.country = country;
-    }
-
-    // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    public Set<UserRoleClient> getUrcSet() {
-
-        return this.urcSet;
-    }
-
-    public void setUrcSet(Set<UserRoleClient> urcSet) {
-
-        this.urcSet = urcSet;
-    }
-
 }

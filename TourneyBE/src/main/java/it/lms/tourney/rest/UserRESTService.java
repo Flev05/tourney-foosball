@@ -21,14 +21,19 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.dao.DaoException;
 import it.lms.cb.gui.vo.OperatorsVO;
 import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
+import it.lms.tourney.dao.ClientDao;
+import it.lms.tourney.dao.RoleDao;
 import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
@@ -54,6 +59,12 @@ public class UserRESTService extends AbstractRESTService {
 
     @Inject
     private TourneyDao        tourneyDao;
+
+    @Inject
+    ClientDao                 clientDao;
+
+    @Inject
+    RoleDao                   roleDao;
 
     @Inject
     @ConverterObject
@@ -180,33 +191,102 @@ public class UserRESTService extends AbstractRESTService {
      * Creates a new operator from the values provided. Performs validation, and will return a JAX-RS response with
      * either 200 ok, or with a map of fields, and related errors.
      */
-    @POST
-    @Path("/createOperator/{tourneyId:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    // @POST
+    // @Path("/createOperator/{tourneyId:[0-9][0-9]*}")
+    // @Consumes(MediaType.APPLICATION_JSON)
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response createOperator(UserRoleClientVO urcvo, @PathParam("tourneyId") Integer tourneyId) {
+    //
+    // Tourney tpo = tourneyDao.getById(tourneyId);
+    // if (tpo == null) {
+    // log.error("Tourney [{}] not found!", tourneyId);
+    // throw new WebApplicationException(Response.Status.NOT_FOUND);
+    // }
+    // Client cpo = clientDao.getById(urcvo.getClientVO().getId());
+    // if (cpo == null) {
+    // log.error("Client [{}] not found!", urcvo.getClientVO().getId());
+    // throw new WebApplicationException(Response.Status.NOT_FOUND);
+    // }
+    //
+    // UserVO uvo = urcvo.getUserVo();
+    // String username = uvo.getUsername();
+    // log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
+    //
+    // User upo = userDao.findUserBy(username);
+    // UserRoleClient urcpo;
+    // if (upo == null) {
+    // upo = converter.convertUserVoPo(uvo);
+    // userDao.insert(upo);
+    // }
+    // urcpo = new UserRoleClient();
+    // urcpo.setClient(cpo);
+    // urcpo.setUser(upo);
+    // urcpo.setTourney(tpo);
+    // Role rpo = roleDao.getOperatorRole();
+    // urcpo.setRole(rpo);
+    // urcDao.insert(urcpo);
+    //
+    // tpo.getUrcs().add(urcpo);
+    // upo.getUrcSet().add(urcpo);
+    // rpo.getUrcSet().add(urcpo);
+    //
+    // Response.ResponseBuilder builder = Response.ok().entity(urcvo);
+    //
+    // return builder.build();
+    // }
+
+    /**
+     * Finds the URC bounded to the incoming tourneyId, get the corresponding client and user , remove the found URC,
+     * verify if there is no more URC for the got client and, if no, remove the got user
+     */
+    @DELETE
+    @Path("/deleteOperator")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOperator(UserRoleClientVO urcvo, @PathParam("tourneyId") Integer tourneyId) {
+    public Response deleteOperator(@QueryParam("userId") Integer userId, @QueryParam("clientId") Integer clientId,
+            @QueryParam("tourneyId") Integer tourneyId) {
 
-        UserVO uvo = urcvo.getUserVo();
-        String username = uvo.getUsername();
-        log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
+        log.debug(logId() + "deleteOperator(userId={} clientId={} tourneyId={}", userId, clientId, tourneyId);
 
-        User upo = userDao.findUserBy(username);
-        if (upo == null) {
-            upo = converter.convertUserVoPo(uvo);
-            userDao.insert(upo);
+        try {
+            List<UserRoleClient> urcList = urcDao.findUrcBy(userId, clientId, tourneyId);
+            UserVO uvo = null;
+            for (UserRoleClient urc : urcList) {
+                urcDao.delete(urc);
+                uvo = converter.convertUserPoVo(urc.getUser());
+            }
+
+            // Tourney tpo = tourneyDao.getById(tourneyId);
+            // UserVO uvo = null;
+            // Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
+            // while (it.hasNext()) {
+            // UserRoleClient urc = it.next();
+            // User user = urc.getUser();
+            // if (user.getId().equals(userId)) {
+            // it.remove();
+            // userDao.delete(user);
+            // uvo = converter.convertUserPoVo(user);
+            // }
+            // }
+            // tourneyDao.update(tpo);
+
+            // List<UserRoleClient> urcCopy = urcDao.findByUserId(userId);
+            // for (UserRoleClient urc : urcCopy) {
+            // User user = urc.getUser();
+            // urcDao.delete(urc);
+            // List<UserRoleClient> urcList = urcDao.findByUserId(user.getId());
+            // if (urcList.isEmpty()) {
+            // userDao.delete(user);
+            // uvo = converter.convertUserPoVo(user);
+            // }
+            // }
+
+            Response.ResponseBuilder builder = Response.ok().entity(uvo);
+
+            return builder.build();
+        } catch (Exception e) {
+            log.error("Unable to delete the user", e);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-
-        UserRoleClient urcpo = converter.convertUrcVoPo(urcvo);
-        urcpo.setUser(upo);
-        urcDao.insert(urcpo);
-
-        Tourney tpo = tourneyDao.getById(tourneyId);
-        tpo.getUrcs().add(urcpo);
-        tourneyDao.update(tpo);
-
-        Response.ResponseBuilder builder = Response.ok().entity(urcvo);
-
-        return builder.build();
     }
 
     /**
@@ -220,11 +300,11 @@ public class UserRESTService extends AbstractRESTService {
 
         log.debug(logId() + "POST: mergeOperators(" + urcvo.getClientId() + "/" + urcvo.getTourneyId() + ")");
 
-        Integer tourneyId = urcvo.getTourneyId();
-        Tourney tpo = tourneyDao.getById(tourneyId);
+        // Integer tourneyId = urcvo.getTourneyId();
+        // Tourney tpo = tourneyDao.getById(tourneyId);
 
-        removeOperators(tpo, urcvo);
-        addOperators(tpo, urcvo);
+        // removeOperators(tpo, urcvo);
+        // addOperators(tpo, urcvo);
 
         Response.ResponseBuilder builder = Response.ok().entity(urcvo);
 
@@ -272,46 +352,6 @@ public class UserRESTService extends AbstractRESTService {
     }
 
     /**
-     * Finds the URC bounded to the incoming tourneyId, get the corresponding client and user , remove the found URC,
-     * verify if there is no more URC for the got client and, if no, remove the got user
-     */
-    @DELETE
-    @Path("/deleteOperator/{userId:[0-9][0-9]*}/{tourneyId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteOperator(@PathParam("userId") Integer userId, @PathParam("tourneyId") Integer tourneyId) {
-
-        log.debug(logId() + "POST: deleteOperator(" + userId + "/" + tourneyId + ")");
-
-        Tourney tpo = tourneyDao.getById(tourneyId);
-
-        Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
-        while (it.hasNext()) {
-            UserRoleClient urc = it.next();
-            User user = urc.getUser();
-            if (user.getId().equals(userId)) {
-                it.remove();
-            }
-        }
-        tourneyDao.update(tpo);
-
-        UserVO uvo = null;
-        List<UserRoleClient> urcCopy = urcDao.findByUserId(userId);
-        for (UserRoleClient urc : urcCopy) {
-            User user = urc.getUser();
-            urcDao.delete(urc);
-            List<UserRoleClient> urcList = urcDao.findByUserId(user.getId());
-            if (urcList.isEmpty()) {
-                userDao.delete(user);
-                uvo = converter.convertUserPoVo(user);
-            }
-        }
-
-        Response.ResponseBuilder builder = Response.ok().entity(uvo);
-
-        return builder.build();
-    }
-
-    /**
      * Updates the received user found in the database. Performs validation, and will return a JAX-RS response with
      * either 200 ok, or with a map of fields, and related errors.
      */
@@ -343,16 +383,20 @@ public class UserRESTService extends AbstractRESTService {
 
         log.debug(logId() + "DELETE: deleteUser(" + id + ")");
 
-        User upo = userDao.getUserById(id);
+        try {
+            User upo = userDao.getUserById(id);
 
-        List<UserRoleClient> urcList = urcDao.findByUserId(upo.getId());
+            List<UserRoleClient> urcList = urcDao.findByUserId(upo.getId());
 
-        urcList.stream().forEach(urc -> urcDao.delete(urc));
+            urcList.stream().forEach(urc -> urcDao.delete(urc));
 
-        userDao.delete(upo);
-
+            userDao.delete(upo);
+            Response.ResponseBuilder builder = Response.ok();
+            return builder.build();
+        } catch (DaoException e) {
+            log.error("Unable do delete the user", e);
+        }
         Response.ResponseBuilder builder = Response.ok();
-
         return builder.build();
     }
 

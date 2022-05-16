@@ -12,17 +12,35 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @XmlRootElement
 @Table(name = "country", uniqueConstraints = @UniqueConstraint(columnNames = "city"))
+@Getter
+@Setter
 public class Country extends AbstractPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer           id;
+
+    @Column(name = "city")
     private String            city;
+
+    @Column(name = "city_code")
     private String            cityCode;
+
+    @Column(name = "province_code")
     private String            provinceCode;
+
+    @Column(name = "zip_code")
     private String            zipCode;
+
+    @Column(name = "country_code")
     private String            countryCode;
 
     public Country() {
@@ -35,72 +53,4 @@ public class Country extends AbstractPO implements Serializable {
         return super.toString() + " Country [city=" + city + ", cityCode=" + cityCode + ", provinceCode=" + provinceCode
                 + ", zipCode=" + zipCode + ", countryCode=" + countryCode + "]";
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
-    }
-
-    @Column(name = "city")
-    public String getCity() {
-
-        return city;
-    }
-
-    public void setCity(String city) {
-
-        this.city = city;
-    }
-
-    @Column(name = "city_code")
-    public String getCityCode() {
-
-        return cityCode;
-    }
-
-    public void setCityCode(String cityCode) {
-
-        this.cityCode = cityCode;
-    }
-
-    @Column(name = "province_code")
-    public String getProvinceCode() {
-
-        return provinceCode;
-    }
-
-    public void setProvinceCode(String provinceCode) {
-
-        this.provinceCode = provinceCode;
-    }
-
-    @Column(name = "zip_code")
-    public String getZipCode() {
-
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-
-        this.zipCode = zipCode;
-    }
-
-    @Column(name = "country_code")
-    public String getCountryCode() {
-
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-
-        this.countryCode = countryCode;
-    }
-
 }

@@ -195,6 +195,40 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
+     * Finds all URC in the client list of OPERATOR role type
+     * 
+     * @param loggedUserId the logged user identifier
+     * @return the list of URC
+     */
+    public List<UserRoleClient> findUrcBy(Integer userId, Integer clientId, Integer tourneyId) {
+
+        log.debug(logId() + "Entering findUrcBy()");
+
+        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+
+        Root<Tourney> root = cq.from(Tourney.class);
+
+        Join<Tourney, UserRoleClient> tourneyUrcJoin = root.join(Tourney_.urcs);
+        Join<UserRoleClient, Client> clientJoin = tourneyUrcJoin.join(UserRoleClient_.client);
+        Join<UserRoleClient, User> userJoin = tourneyUrcJoin.join(UserRoleClient_.user);
+
+        Predicate p1 = getCb().equal(root.get(Tourney_.id), tourneyId);
+        Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = getCb().equal(userJoin.get(User_.id), userId);
+
+        cq = cq.select(tourneyUrcJoin);
+        cq = cq.where(p1, p2, p3);
+
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+
+        List<UserRoleClient> urcList = nq.getResultList();
+        String info = "[Found " + urcList.size() + " Entity(ies)] ";
+        log.info(logId() + info);
+
+        return urcList;
+    }
+
+    /**
      * First finds all URC belonging to the received loggedUserId, so finds all remaining users, if any, of the found
      * clients
      * 
@@ -339,7 +373,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
         Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourneys);
+        Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourney);
         Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
         Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 

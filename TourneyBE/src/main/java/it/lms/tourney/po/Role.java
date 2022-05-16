@@ -14,22 +14,37 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * The persistent class for the role database table.
  * 
  */
 @Entity
 @Table(name = "role")
+@Getter
+@Setter
 public class Role extends AbstractPO implements Serializable {
 
     private static final long   serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer             id;
+
+    @Column(name = "name")
     private String              name;
+
+    @Column(name = "description")
     private String              description;
 
+    // bi-directional one-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private Set<UserRoleClient> urcSet;
 
     public enum ROLES {
+
         DEVELOPER(5), OWNER(4), ADMIN(3), OPERATOR(2), FOLLOWER(1);
 
         private ROLES(int value) {
@@ -64,50 +79,5 @@ public class Role extends AbstractPO implements Serializable {
     public String toString() {
 
         return super.toString() + " Role [name=" + name + ", description=" + description + "]";
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    public void setId(Integer id) {
-
-        super.setId(id);
-    }
-
-    @Column(name = "name")
-    public String getName() {
-
-        return this.name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
-    }
-
-    public String getDescription() {
-
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-
-        this.description = description;
-    }
-
-    // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    public Set<UserRoleClient> getUrcSet() {
-
-        return this.urcSet;
-    }
-
-    public void setUrcSet(Set<UserRoleClient> urcSet) {
-
-        this.urcSet = urcSet;
     }
 }

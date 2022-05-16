@@ -250,6 +250,7 @@ public class TourneyRESTService extends AbstractRESTService {
         userDao.insert(upo);
 
         UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo);
+        urcFollower.setTourney(tpo);
         urcDao.insert(urcFollower);
 
         Set<UserRoleClient> urcSet = tpo.getUrcs();

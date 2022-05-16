@@ -13,29 +13,60 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * The persistent class for the user database table.
  */
 @Entity
 @Table(name = "tourney")
+@Getter
+@Setter
 public class Tourney extends AbstractPO implements Serializable {
 
     private static final long   serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer             id;
+
+    @Column(name = "tourney_name")
     private String              tourneyName;
+
+    // bi-directional many-to-one association to Client
+    @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client              client;
+
+    // bi-directional many-to-one association to Session
+    @ManyToOne
+    @JoinColumn(name = "session_id")
     private Session             session;
+
+    // bi-directional many-to-one association to Country
+    @ManyToOne
+    @JoinColumn(name = "country_id")
     private Country             country;
+
+    // bi-directional many-to-one association to Discipline
+    @ManyToOne
+    @JoinColumn(name = "discipline_id")
+    private Discipline          discipline;
+
+    @Column(name = "json")
     private String              json;
 
+    // bi-directional one-to-many association to Meeting
+    @OneToMany(mappedBy = "tourney", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     private Set<Meeting>        meetings;
 
+    // bi-directional many-to-many association to UserRoleClient
+    @OneToMany(mappedBy = "tourney", fetch = FetchType.LAZY)
     private Set<UserRoleClient> urcs             = new HashSet<>();
 
     @Override
@@ -59,100 +90,5 @@ public class Tourney extends AbstractPO implements Serializable {
 
         return super.toString() + " Tourney [client=" + client + ", session=" + session + ", country=" + country
                 + ", json=" + json + "]";
-    }
-
-    @Override
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-
-        return super.getId();
-    }
-
-    @Column(name = "json")
-    public String getJson() {
-
-        return json;
-    }
-
-    public void setJson(String json) {
-
-        this.json = json;
-    }
-
-    @Column(name = "tourney_name")
-    public String getTourneyName() {
-
-        return tourneyName;
-    }
-
-    public void setTourneyName(String tourneyName) {
-
-        this.tourneyName = tourneyName;
-    }
-
-    // bi-directional many-to-one association to Client
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    public Client getClient() {
-
-        return client;
-    }
-
-    public void setClient(Client client) {
-
-        this.client = client;
-    }
-
-    // bi-directional many-to-one association to Session
-    @ManyToOne
-    @JoinColumn(name = "session_id")
-    public Session getSession() {
-
-        return session;
-    }
-
-    public void setSession(Session session) {
-
-        this.session = session;
-    }
-
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    public Country getCountry() {
-
-        return country;
-    }
-
-    public void setCountry(Country country) {
-
-        this.country = country;
-    }
-
-    // bi-directional one-to-many association to Meeting
-    @OneToMany(mappedBy = "tourney", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    public Set<Meeting> getMeetings() {
-
-        return this.meetings;
-    }
-
-    public void setMeetings(Set<Meeting> meetings) {
-
-        this.meetings = meetings;
-    }
-
-    // bi-directional many-to-many association to UserRoleClient
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "tourney_urc", joinColumns = { @JoinColumn(name = "tourney_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "urc_id") })
-    public Set<UserRoleClient> getUrcs() {
-
-        return urcs;
-    }
-
-    public void setUrcs(Set<UserRoleClient> urcs) {
-
-        this.urcs = urcs;
     }
 }

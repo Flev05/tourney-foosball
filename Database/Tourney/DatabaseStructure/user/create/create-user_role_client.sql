@@ -6,6 +6,7 @@ CREATE TABLE user_role_client
   	, user_id 		integer	NOT NULL	-- the foreign key toward the USER table
 	, role_id 		integer	NOT NULL	-- the foreign key toward the ROLE table
 	, client_id 	integer	NOT NULL	-- the foreign key toward the CLIENT table
-	, tourney_id 	integer	NOT NULL	-- the foreign key toward the TOURNEY table
+	, tourney_id 	integer	 			-- the foreign key toward the TOURNEY table
+	, available     boolean				-- true if the operator is available, false otherwise
 );
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -138,15 +139,16 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         log.debug(logId() + "Entering findOperatorsUrcByClientId()");
 
-        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
 
         Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
         Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
         Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 
-        Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
-        Predicate p3 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
 
         cq = cq.select(root);
         cq = cq.where(p2, p3);
@@ -161,43 +163,86 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
-     * Finds all URC in the client list of OPERATOR role type
+     * Finds all the URC operators in function of the received paramters
      * 
-     * @param loggedUserId the logged user identifier
+     * @param clientId the logged user identifier
+     * @param tourneyId the id of the tourney
+     * @param available the boolean if the record is available or not
      * @return the list of URC
      */
-    public List<UserRoleClient> findOperatorsUrcBy(Integer clientId, Integer tourneyId) {
+    public List<UserRoleClient> findAllOperatorsOf(Integer clientId, Integer tourneyId) {
 
-        log.debug(logId() + "Entering findOperatorsUrcBy()");
+        log.debug(logId() + "Entering findAllOperatorsOf()");
 
-        CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
 
-        Root<Tourney> root = cq.from(Tourney.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Join<Tourney, UserRoleClient> tourneyUrcJoin = root.join(Tourney_.urcs);
-        Join<UserRoleClient, Client> clientJoin = tourneyUrcJoin.join(UserRoleClient_.client);
-        Join<UserRoleClient, Role> roleJoin = tourneyUrcJoin.join(UserRoleClient_.role);
+        Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourney);
+        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 
-        Predicate p1 = getCb().equal(root.get(Tourney_.id), tourneyId);
-        Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
-        Predicate p3 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p2 = cb.equal(tourneyJoin.get(Tourney_.id), tourneyId);
+        Predicate p3 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p4 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
 
-        cq = cq.select(tourneyUrcJoin);
-        cq = cq.where(p1, p2, p3);
+        cq = cq.select(root);
+        cq = cq.where(p2, p3, p4);
 
         TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
         List<UserRoleClient> urcList = nq.getResultList();
-        String info = "[Found " + urcList.size() + " Entity(ies)] ";
+        String info = "[Found " + urcList.size() + " UserRoleClient(ies)] ";
         log.info(logId() + info);
 
         return urcList;
     }
 
     /**
-     * Finds all URC in the client list of OPERATOR role type
+     * Finds all the URC operators in function of the received paramters
      * 
-     * @param loggedUserId the logged user identifier
+     * @param clientId the logged user identifier
+     * @param tourneyId the id of the tourney
+     * @param available the boolean if the record is available or not
+     * @return the list of URC
+     */
+    public List<UserRoleClient> findAvailableOperatorsOf(Integer clientId, Integer tourneyId, Boolean available) {
+
+        log.debug(logId() + "Entering findAvailableOperatorsOf()");
+
+        CriteriaBuilder cb = getCb();
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourney);
+        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
+
+        Predicate p1 = cb.equal(root.get(UserRoleClient_.available), available);
+        Predicate p2 = cb.equal(tourneyJoin.get(Tourney_.id), tourneyId);
+        Predicate p3 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p4 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+
+        cq = cq.select(root);
+        cq = cq.where(p1, p2, p3, p4);
+
+        TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+
+        List<UserRoleClient> urcList = nq.getResultList();
+        String info = "[Found " + urcList.size() + " UserRoleClient(ies)] ";
+        log.info(logId() + info);
+
+        return urcList;
+    }
+
+    /**
+     * Finds all URC in function of received parameters and of any roles
+     * 
+     * @param userId the logged user identifier
+     * @param clientId the logged user identifier
+     * @param userId the logged user identifier
      * @return the list of URC
      */
     public List<UserRoleClient> findUrcBy(Integer userId, Integer clientId, Integer tourneyId) {
@@ -206,23 +251,29 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         CriteriaQuery<UserRoleClient> cq = getCb().createQuery(UserRoleClient.class);
 
-        Root<Tourney> root = cq.from(Tourney.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Join<Tourney, UserRoleClient> tourneyUrcJoin = root.join(Tourney_.urcs);
-        Join<UserRoleClient, Client> clientJoin = tourneyUrcJoin.join(UserRoleClient_.client);
-        Join<UserRoleClient, User> userJoin = tourneyUrcJoin.join(UserRoleClient_.user);
+        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+        Join<UserRoleClient, User> userJoin = root.join(UserRoleClient_.user);
 
-        Predicate p1 = getCb().equal(root.get(Tourney_.id), tourneyId);
         Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
         Predicate p3 = getCb().equal(userJoin.get(User_.id), userId);
 
-        cq = cq.select(tourneyUrcJoin);
+        Predicate p1;
+        if (tourneyId == null) {
+            p1 = getCb().isNull(root.get(UserRoleClient_.tourney));
+        } else {
+            Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourney);
+            p1 = getCb().equal(tourneyJoin.get(Tourney_.id), tourneyId);
+        }
+
+        cq = cq.select(root);
         cq = cq.where(p1, p2, p3);
 
         TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
         List<UserRoleClient> urcList = nq.getResultList();
-        String info = "[Found " + urcList.size() + " Entity(ies)] ";
+        String info = "[Found " + urcList.size() + " UserRoleClient(ies)] ";
         log.info(logId() + info);
 
         return urcList;
@@ -272,7 +323,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
 
-        Predicate p = getCb().equal(urcUserJoin.get(User_.id), userId);
+        Predicate p = cb.equal(urcUserJoin.get(User_.id), userId);
 
         cq = cq.select(root);
         cq = cq.where(p);
@@ -292,9 +343,9 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      * @param userIdList the id of the user to find
      * @return the URC found list
      */
-    public List<UserRoleClient> findOperatorsUrcBy(Integer clientId, List<Integer> userIdList) {
+    public List<UserRoleClient> findOperatorsUrcByUserIdList(Integer clientId, List<Integer> userIdList) {
 
-        log.debug(logId() + "Entering findOperatorsUrcBy()");
+        log.debug(logId() + "Entering findOperatorsUrcByUserIdList()");
 
         CriteriaBuilder cb = getCb();
 
@@ -306,8 +357,8 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
 
         Predicate p1 = userJoin.get(User_.id).in(userIdList);
-        Predicate p2 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
-        Predicate p3 = getCb().equal(clientJoin.get(Client_.id), clientId);
+        Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p3 = cb.equal(clientJoin.get(Client_.id), clientId);
 
         cq = cq.select(root);
         cq = cq.where(p1, p2, p3);
@@ -377,9 +428,9 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
         Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 
-        Predicate p1 = getCb().notEqual(tourneyJoin.get(Tourney_.id), tpo.getId());
-        Predicate p2 = getCb().notEqual(clientJoin.get(Client_.id), clientId);
-        Predicate p3 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p1 = cb.notEqual(tourneyJoin.get(Tourney_.id), tpo.getId());
+        Predicate p2 = cb.notEqual(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
 
         cq = cq.select(root);
         cq = cq.where(p1, p2, p3);
@@ -394,13 +445,44 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
-     * Find the URC bounded to the incoming parameters
+     * Find the free operators of received company
      * 
-     * @param userId the user bounded to the URC
      * @param clientId the client bounded to the URC
-     * @return
+     * @return the list of URC selected
      */
-    public UserRoleClient getOperator(Integer userId, Integer clientId) {
+    public List<UserRoleClient> getFreeOperatorsOfCompany(Integer clientId) {
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
+
+        Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p4 = cb.isNull(root.get(UserRoleClient_.tourney));
+
+        cq = cq.select(root);
+        cq = cq.where(p2, p3, p4);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        log.debug(logId() + "[Found " + resultList.size() + " UserRoleClient]");
+        return resultList;
+    }
+
+    /**
+     * Find the URC of OPERATOR role and bounded to the incoming parameters
+     * 
+     * @param username the user bounded to the URC
+     * @param clientId the client bounded to the URC
+     * @return the list of URC selected
+     */
+    public List<UserRoleClient> getOperatorsBy(String username, Integer clientId) {
 
         CriteriaBuilder cb = getCb();
 
@@ -411,25 +493,68 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
         Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 
-        Predicate p1 = getCb().equal(userJoin.get(User_.id), userId);
-        Predicate p2 = getCb().equal(clientJoin.get(Client_.id), clientId);
-        Predicate p3 = getCb().equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p1 = cb.equal(userJoin.get(User_.username), username);
+        Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+        Predicate p4 = cb.isNull(root.get(UserRoleClient_.tourney));
 
         cq = cq.select(root);
-        cq = cq.where(p1, p2, p3);
+        cq = cq.where(p1, p2, p3, p4);
 
         TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
 
         List<UserRoleClient> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+        log.debug(logId() + "[Found " + resultList.size() + " UserRoleClient]");
+        return resultList;
+    }
+
+    /**
+     * Find the URC of OPERATOR role and bounded to the incoming parameters
+     * 
+     * @param userId the user bounded to the URC
+     * @param clientId the client bounded to the URC
+     * @param tourneyId the tourney bounded to the URC
+     * @return the unique URC selected
+     */
+    public UserRoleClient getOperator(String username, Integer clientId, Integer tourneyId) {
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+
+        Join<UserRoleClient, User> userJoin = root.join(UserRoleClient_.user);
+        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+        Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
+
+        Predicate p1 = cb.equal(userJoin.get(User_.username), username);
+        Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
+        Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+
+        Predicate p4;
+        if (tourneyId == null) {
+            p4 = cb.isNull(root.get(UserRoleClient_.tourney));
+        } else {
+            Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourney);
+            p4 = cb.equal(tourneyJoin.get(Tourney_.id), tourneyId);
+        }
+
+        cq = cq.select(root);
+        cq = cq.where(p1, p2, p3, p4);
+
+        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+
+        List<UserRoleClient> resultList = tq.getResultList();
+
+        log.debug(logId() + "[Found " + resultList.size() + " UserRoleClient]");
         if (resultList.isEmpty()) {
             return null;
         }
         return resultList.get(0);
     }
 
-    public UserRoleClient newFollowerUrc(User upo, Client cpo) {
+    public UserRoleClient newFollowerUrc(User upo, Client cpo, Tourney tpo) {
 
         UserRoleClient urc = new UserRoleClient();
         urc.setUser(upo);
@@ -438,6 +563,19 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         urc.setRole(rpo);
         insert(urc);
         return urc;
+    }
+
+    public void deleteAnyUrcUsersBy(Integer clientId, Integer roleId, Integer tourneyId) {
+
+        Query query = getEm().createQuery(
+                "DELETE FROM UserRoleClient urc WHERE urc.client.id = :clientId and urc.role.id = :roleId and urc.tourney.id = :tourneyId");
+
+        query = query.setParameter("clientId", clientId);
+        query = query.setParameter("roleId", roleId);
+        query = query.setParameter("tourneyId", tourneyId);
+        int deletedCount = query.executeUpdate();
+
+        log.debug(logId() + "Deleted " + deletedCount + " UserRoleClient(s)");
     }
 
 }

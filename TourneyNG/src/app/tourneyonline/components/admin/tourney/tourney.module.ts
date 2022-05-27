@@ -42,7 +42,6 @@ import { PlayerModule } from '../player/player.module';
 import { PlayerPickList } from './player-picklist';
 import { TeamModule } from '../team/team.module';
 import { NewTourneyDetailView } from './new-tourney-detailview';
-import { OperatorDetailView } from './operator-detailview';
 
 @NgModule({
 	imports: [
@@ -86,7 +85,6 @@ import { OperatorDetailView } from './operator-detailview';
         ,TeamPlayerListView
         ,TeamPickList
         ,PlayerPickList
-        ,OperatorDetailView
     ]
     ,providers: [DateFormatPipe, LevelService]
 })

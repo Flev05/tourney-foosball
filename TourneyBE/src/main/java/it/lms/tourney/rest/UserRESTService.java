@@ -2,7 +2,6 @@
 package it.lms.tourney.rest;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,11 +33,8 @@ import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
 import it.lms.tourney.dao.ClientDao;
 import it.lms.tourney.dao.RoleDao;
-import it.lms.tourney.dao.TourneyDao;
 import it.lms.tourney.dao.UserDao;
 import it.lms.tourney.dao.UserRoleClientDao;
-import it.lms.tourney.po.Role;
-import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import lombok.extern.slf4j.Slf4j;
@@ -56,9 +52,6 @@ public class UserRESTService extends AbstractRESTService {
 
     @Inject
     private UserRoleClientDao urcDao;
-
-    @Inject
-    private TourneyDao        tourneyDao;
 
     @Inject
     ClientDao                 clientDao;
@@ -103,17 +96,18 @@ public class UserRESTService extends AbstractRESTService {
         ovo.setClientId(clientId);
         ovo.setTourneyId(tourneyId);
 
-        List<UserRoleClient> urcList = urcDao.findOperatorsUrcBy(clientId, tourneyId);
+        List<UserRoleClient> urcList = urcDao.findAvailableOperatorsOf(clientId, tourneyId, false);
         for (UserRoleClient urc : urcList) {
             UserVO uvo = converter.convertUserPoVo(urc.getUser());
             ovo.getSelectedOperators().add(uvo);
         }
 
-        urcList = urcDao.findOperatorsUrcByClientId(clientId);
+        urcList = urcDao.findAllOperatorsOf(clientId, tourneyId);
         for (UserRoleClient urc : urcList) {
             UserVO uvo = converter.convertUserPoVo(urc.getUser());
             ovo.getAllOperators().add(uvo);
         }
+
         return ovo;
     }
 
@@ -287,68 +281,6 @@ public class UserRESTService extends AbstractRESTService {
             log.error("Unable to delete the user", e);
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-    }
-
-    /**
-     * Creates a new operator from the provided values.
-     */
-    @POST
-    @Path("/mergeOperators")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response mergeOperators(OperatorsVO urcvo) {
-
-        log.debug(logId() + "POST: mergeOperators(" + urcvo.getClientId() + "/" + urcvo.getTourneyId() + ")");
-
-        // Integer tourneyId = urcvo.getTourneyId();
-        // Tourney tpo = tourneyDao.getById(tourneyId);
-
-        // removeOperators(tpo, urcvo);
-        // addOperators(tpo, urcvo);
-
-        Response.ResponseBuilder builder = Response.ok().entity(urcvo);
-
-        return builder.build();
-    }
-
-    /**
-     * Removes the operators in the relation table TOURNEY_URC than are not in the received operator list
-     * 
-     * @param tpo the tourney the operator belongs to
-     * @param urcvo the operators VO
-     */
-    private void removeOperators(Tourney tpo, OperatorsVO urcvo) {
-
-        List<Integer> userSelectIdList = urcvo.getSelectedOperators().stream().map(u -> u.getId())
-                .collect(Collectors.toList());
-
-        Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
-        while (it.hasNext()) {
-            UserRoleClient urc = it.next();
-            if (!urc.getRole().getName().equals(Role.ROLES.OPERATOR.name())) {
-                continue;
-            }
-            Integer userId = urc.getUser().getId();
-            if (!userSelectIdList.contains(userId)) {
-                it.remove();
-            }
-        }
-        tourneyDao.update(tpo);
-    }
-
-    /**
-     * Add the received list of operator to the tourney many to many relation in the TOURNEY_URC table
-     * 
-     * @param tpo the tourney the operator belongs to
-     * @param urcvo the operators VO
-     */
-    private void addOperators(Tourney tpo, OperatorsVO urcvo) {
-
-        for (UserVO uvo : urcvo.getSelectedOperators()) {
-            UserRoleClient urc = urcDao.getOperator(uvo.getId(), urcvo.getClientId());
-            tpo.getUrcs().add(urc);
-        }
-        tourneyDao.update(tpo);
     }
 
     /**

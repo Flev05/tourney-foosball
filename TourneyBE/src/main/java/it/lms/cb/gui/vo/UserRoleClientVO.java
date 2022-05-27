@@ -24,6 +24,6 @@ public class UserRoleClientVO extends AbstractVO {
     public String toString() {
 
         return super.toString() + " UserRoleClientVO [userVo=" + userVo + ", roleVo=" + roleVo + ", clientVO="
-                + clientVO + "]";
+                + clientVO + ", tourneyId=" + tourneyId + "]";
     }
 }

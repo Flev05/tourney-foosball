@@ -128,7 +128,6 @@ export class UserDetailView extends AbstractDetailView {
             userVo       : this.selectedUser,
             roleVo       : rvo,
             clientVO     : this.clientService.selectedClient,
-            disciplineId : null
         };
 
         const subscriber = this.createUserAndUrc(urc);
@@ -171,7 +170,6 @@ export class UserDetailView extends AbstractDetailView {
             roleVo: rvo,
             clientVO: this.clientService.selectedClient,
             tourneyId: null,
-            disciplineId: null
         };
     }
 
@@ -235,7 +233,7 @@ export class UserDetailView extends AbstractDetailView {
         this.goBack();
     }
 
-    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+    protected subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
             this.onSaveUserError = true;
@@ -245,9 +243,9 @@ export class UserDetailView extends AbstractDetailView {
         };
     }
 
-    protected onSaveComplete( cs : UserRoleClientVO ) {
+    protected onSaveComplete( urc : UserRoleClientVO ) {
         console.log("Entering onSaveComplete()");
-        this.selectedUrc = cs;
+        this.selectedUrc = urc;
         this.userService.newUser = false;
         if( !this.onSaveUserError ) {
             this.goBack();

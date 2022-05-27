@@ -8,7 +8,6 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 
-
 @Component({
     templateUrl: './team-detailview.html',
 })

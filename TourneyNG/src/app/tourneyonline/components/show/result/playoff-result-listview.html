@@ -32,7 +32,7 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()"></button>
+                        <button type="button" icon="fa fa-arrow-left" pButton (click)="prevOnewayDay()"></button>
                     </td>
                     <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
                         <div>{{selectedPlayoff.round.name}}</div>
@@ -77,7 +77,7 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
+                        <button type="button" icon="fa fa-arrow-left" pButton (click)="prevRoundtripDay()"></button>
                     </td>
                     <td colspan="2" style="width: 25mm; text-align: center; font-weight: bold;">
                         <div>{{selectedPlayoff.round.name}}</div>

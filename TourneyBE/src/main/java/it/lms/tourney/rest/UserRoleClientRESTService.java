@@ -19,6 +19,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.gui.vo.OperatorsVO;
 import it.lms.cb.gui.vo.UserRoleClientVO;
 import it.lms.cb.gui.vo.UserVO;
 import it.lms.tourney.cdi.Converter;
@@ -113,53 +114,6 @@ public class UserRoleClientRESTService extends AbstractRESTService {
         return builder.build();
     }
 
-    @POST
-    @Path("/insertUrcOperator")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response insertUrcOperator(UserRoleClientVO urcvo) {
-
-        log.debug(logId() + "Entering insertUrcOperator()");
-
-        Integer tourneyId = urcvo.getTourneyId();
-        Tourney tpo = tourneyDao.getById(tourneyId);
-        if (tpo == null) {
-            log.error("Tourney [{}] not found!", tourneyId);
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        Client cpo = clientDao.getById(urcvo.getClientVO().getId());
-        if (cpo == null) {
-            log.error("Client [{}] not found!", urcvo.getClientVO().getId());
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-
-        UserVO uvo = urcvo.getUserVo();
-        String username = uvo.getUsername();
-        log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
-
-        User upo = userDao.findUserBy(username);
-        UserRoleClient urcpo;
-        if (upo == null) {
-            upo = converter.convertUserVoPo(uvo);
-            userDao.insert(upo);
-        }
-        urcpo = new UserRoleClient();
-        urcpo.setClient(cpo);
-        urcpo.setUser(upo);
-        urcpo.setTourney(tpo);
-        Role rpo = roleDao.getOperatorRole();
-        urcpo.setRole(rpo);
-        urcDao.insert(urcpo);
-
-        tpo.getUrcs().add(urcpo);
-        upo.getUrcSet().add(urcpo);
-        rpo.getUrcSet().add(urcpo);
-
-        Response.ResponseBuilder builder = Response.ok(urcvo);
-
-        return builder.build();
-    }
-
     /**
      * Updates the received user found in the database. Performs validation, and will return a JAX-RS response with
      * either 200 ok, or with a map of fields, and related errors.
@@ -199,4 +153,133 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 
         return builder.build();
     }
+
+    @POST
+    @Path("/insertUrcOperator")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertUrcOperator(UserRoleClientVO urcvo) {
+
+        log.debug(logId() + "Entering insertUrcOperator({})", urcvo);
+
+        Integer tourneyId = urcvo.getTourneyId();
+        Tourney tpo = tourneyDao.getById(tourneyId);
+        if (tpo == null) {
+            log.error("Tourney [{}] not found!", tourneyId);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        Client cpo = clientDao.getById(urcvo.getClientVO().getId());
+        if (cpo == null) {
+            log.error("Client [{}] not found!", urcvo.getClientVO().getId());
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        UserVO uvo = urcvo.getUserVo();
+        String username = uvo.getUsername();
+        log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
+
+        User upo = userDao.findUserBy(username);
+        UserRoleClient urcpo;
+        if (upo == null) {
+            upo = converter.convertUserVoPo(uvo);
+            userDao.insert(upo);
+        }
+        urcpo = new UserRoleClient();
+        urcpo.setAvailable(true);
+        urcpo.setClient(cpo);
+        urcpo.setUser(upo);
+        urcpo.setTourney(tpo);
+        Role rpo = roleDao.getOperatorRole();
+        urcpo.setRole(rpo);
+        urcDao.insert(urcpo);
+
+        tpo.getUrcs().add(urcpo);
+        upo.getUrcSet().add(urcpo);
+        rpo.getUrcSet().add(urcpo);
+
+        Response.ResponseBuilder builder = Response.ok(urcvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Creates a new operator from the provided values.
+     */
+    @POST
+    @Path("/mergeOperators")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mergeOperators(OperatorsVO urcvo) {
+
+        log.debug(logId() + "POST: mergeOperators(" + urcvo.getClientId() + "/" + urcvo.getTourneyId() + ")");
+
+        Integer tourneyId = urcvo.getTourneyId();
+        Tourney tpo = tourneyDao.getById(tourneyId);
+        if (tpo == null) {
+            log.error("Tourney [{}] not found!", tourneyId);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        Client cpo = clientDao.getById(urcvo.getClientId());
+        if (cpo == null) {
+            log.error("Client [{}] not found!", urcvo.getClientId());
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        List<UserRoleClient> urcList = urcDao.findAllOperatorsOf(urcvo.getClientId(), tourneyId);
+        for (UserRoleClient urc : urcList) {
+            urc.setAvailable(true);
+            urcDao.update(urc);
+        }
+        for (UserVO uvo : urcvo.getSelectedOperators()) {
+            UserRoleClient urc = urcDao.getOperator(uvo.getUsername(), urcvo.getClientId(), tourneyId);
+            urc.setAvailable(false);
+            urcDao.update(urc);
+        }
+
+        // for (UserVO uvo : urcvo.getSelectedOperators()) {
+        // UserRoleClient urc = urcDao.getOperator(uvo.getUsername(), urcvo.getClientId(), null);
+        // if (urc != null) {
+        // urc.setTourney(tpo);
+        // urcDao.update(urc);
+        // } else {
+        // urc = urcDao.getOperator(uvo.getUsername(), urcvo.getClientId(), tourneyId);
+        // if (urc == null) {
+        // UserRoleClient urcpo = new UserRoleClient();
+        // User upo = userDao.findUserBy(uvo.getUsername());
+        // urcpo.setUser(upo);
+        // Role rpo = roleDao.getOperatorRole();
+        // urcpo.setRole(rpo);
+        // urcpo.setClient(cpo);
+        // urcpo.setTourney(tpo);
+        // urcDao.insert(urcpo);
+        // }
+        // }
+        // }
+        // List<UserRoleClient> freeOpList = urcDao.getFreeOperatorsOfCompany(urcvo.getClientId());
+        // for (UserRoleClient urc : freeOpList) {
+        // purgeDuplicates(urc.getUser().getUsername(), urcvo.getClientId());
+        // }
+
+        Response.ResponseBuilder builder = Response.ok().entity(urcvo);
+
+        return builder.build();
+    }
+
+    /**
+     * Purge of duplicates operators of the same company having tourney=null when the same operator is used on more
+     * tourneys of the same company.
+     * 
+     * @param username the user name to check if duplicate
+     * @param clientId the client id under check
+     */
+    // private void purgeDuplicates(String username, Integer clientId) {
+    //
+    // List<UserRoleClient> opList = urcDao.getOperatorsBy(username, clientId);
+    // if (opList.size() >= 2) {
+    // for (int i = 1; i < opList.size(); i++) {
+    // UserRoleClient urc = opList.get(i);
+    // urcDao.delete(urc);
+    // }
+    // }
+    // }
 }

@@ -1,39 +1,40 @@
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { HomeComponent } from './components/home/home.component';
 
+const routes: Routes = [
+    {path: '', component: HomeComponent},
+    {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
+    {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
+
+    // Admin Section
+    {path: 'admintourney',      loadChildren: './components/admin/tourney/tourney.module#TourneyModule'},
+    {path: 'clients',           loadChildren: './components/admin/client/client.module#ClientModule'},
+    {path: 'users',             loadChildren: './components/admin/userng/user.module#UserModule'},
+    {path: 'lease',             loadChildren: './components/admin/lease/lease.module#LeaseModule'},
+    
+    {path: 'adminplayer',       loadChildren: './components/admin/player/player.module#PlayerModule'},
+    {path: 'adminteam',         loadChildren: './components/admin/team/team.module#TeamModule'},
+    {path: 'adminoperator',     loadChildren: './components/admin/operator/operator.module#OperatorModule'},
+
+    {path: 'adminround',        loadChildren: './components/admin/round/round.module#RoundModule'},
+    {path: 'adminplayoff',      loadChildren: './components/admin/playoff/playoff.module#PlayoffModule'},
+    {path: 'admineliminatory',  loadChildren: './components/admin/eliminatory/eliminatory.module#EliminatoryModule'},
+    {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
+
+    // Presentation Section
+    {path: 'showtourney',    loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
+    {path: 'result',         loadChildren: './components/show/result/result.module#ResultModule'},
+    {path: 'matrix',         loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
+    {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},
+    {path: 'match',          loadChildren: './components/show/match/match.module#MatchModule'},
+
+    // Login Section
+    {path: 'login',          loadChildren: './components/login/login.module#LoginModule'},
+];
+
 @NgModule({
-    imports: [
-        RouterModule.forRoot([
-            {path: '', component: HomeComponent},
-            {path: 'demo',      loadChildren: './components/demo/demo.module#DemoModule'},
-            {path: 'realtime',  loadChildren: './components/realtime/realtime.module#RealtimeModule'},
-
-            // Admin Section
-            {path: 'admintourney',      loadChildren: './components/admin/tourney/tourney.module#TourneyModule'},
-            {path: 'clients',           loadChildren: './components/admin/client/client.module#ClientModule'},
-            {path: 'users',             loadChildren: './components/admin/userng/user.module#UserModule'},
-            {path: 'lease',             loadChildren: './components/admin/lease/lease.module#LeaseModule'},
-            
-            {path: 'adminplayer',       loadChildren: './components/admin/player/player.module#PlayerModule'},
-            {path: 'adminteam',         loadChildren: './components/admin/team/team.module#TeamModule'},
-
-            {path: 'adminround',        loadChildren: './components/admin/round/round.module#RoundModule'},
-            {path: 'adminplayoff',      loadChildren: './components/admin/playoff/playoff.module#PlayoffModule'},
-            {path: 'admineliminatory',  loadChildren: './components/admin/eliminatory/eliminatory.module#EliminatoryModule'},
-            {path: 'adminobjective',    loadChildren: './components/admin/objective/objective.module#ObjectiveModule'},
-
-            // Presentation Section
-            {path: 'showtourney',    loadChildren: './components/show/tourney/tourney.module#TourneyModule'},
-            {path: 'result',         loadChildren: './components/show/result/result.module#ResultModule'},
-            {path: 'matrix',         loadChildren: './components/show/matrix/matrix.module#MatrixModule'},
-            {path: 'classification', loadChildren: './components/show/classification/classification.module#ClassificationModule'},
-            {path: 'match',          loadChildren: './components/show/match/match.module#MatchModule'},
-
-            // Login Section
-            {path: 'login',          loadChildren: './components/login/login.module#LoginModule'},
-        ], {onSameUrlNavigation: 'reload'})    
-    ],
+    imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}

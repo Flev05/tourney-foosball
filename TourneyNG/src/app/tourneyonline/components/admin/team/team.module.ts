@@ -26,13 +26,12 @@ import {TeamListView} from './team-listview';
 import {TeamDetailView} from './team-detailview';
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { CalendarModule } from 'app/components/calendar/calendar';
-import { TeamRoutingModule } from './team-routing.module';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { TeamRoutingModule } from './team-routing.module';
 
 @NgModule({
 	imports: [
-
 		CommonModule
         ,FormsModule
         ,ReactiveFormsModule
@@ -56,9 +55,9 @@ import { MessageModule } from 'primeng/message';
         ,CalendarModule
         ,MessagesModule
         ,MessageModule
-        ,TeamRoutingModule
         ,AccordionModule
-        ,PickListModule
+        ,PickListModule      
+        ,TeamRoutingModule
     ],
 	declarations: [
         TeamListView,

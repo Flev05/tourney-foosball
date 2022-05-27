@@ -22,7 +22,8 @@ export class UserListView extends AbstractListView {
 
     users: UserVO[];
 
-    cols: TableCols[] ;
+    cols: TableCols[]  = this.userService.cols;
+
     onLoadUserError: boolean;
     onDeleteError: boolean;
     loggedUsername: string;
@@ -47,12 +48,6 @@ export class UserListView extends AbstractListView {
 
         this.userService.newUser = false;
 
-        this.cols = [
-            { field: 'username',    header: 'Username' },
-            { field: 'firstname',   header: 'Nome' },
-            { field: 'lastname',    header: 'Cognome' },
-            { field: 'email',       header: 'Email' },
-        ];
 
         this.onLoadUserError = false;
 

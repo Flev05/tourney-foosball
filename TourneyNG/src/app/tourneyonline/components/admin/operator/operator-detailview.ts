@@ -42,6 +42,7 @@ export class OperatorDetailView extends UserDetailView {
             );
     }
 
+    // @Override
     ngOnInit() {
         super.ngOnInit();
         this.selectedTourney = this.tourneyService.selectedTourney;
@@ -62,25 +63,38 @@ export class OperatorDetailView extends UserDetailView {
         let rvo: RoleVO = this.roleService.selectedRoles.find(r => { var asEnum: ERoles = <ERoles>ERoles[r.name]; return asEnum == ERoles.OPERATOR; });
         return rvo;
     }
-
-   /*  protected createUserAndUrc(urc: UserRoleClientVO): Observable<UserRoleClientVO> {
-        const subscriber = this.userService.createOperator(urc, this.selectedTourney.id, this.saveUserErrorHandler('Create Operator operation'));
-        return subscriber;
-    } */
- 
+  
+    // @Override
     protected createUserAndUrc(urc: UserRoleClientVO) {
         urc.tourneyId = this.selectedTourney.id;
-        return this.urcService.insertUrcOperator(urc, this.saveUserErrorHandler('Create User operation'));
+        const subscriber = this.urcService.insertUrcOperator(urc, this.saveUserErrorHandler('Create Operator operation'));
+        return subscriber;
+    }
+    
+    // @Override
+    protected createUrc(urc: UserRoleClientVO) {
+        return this.createUserAndUrc(urc);
     }
 
+    // @Override
     protected prepareUrcVO(existingUser: UserVO, rvo: RoleVO): UserRoleClientVO {
         return {
             id: null,
             userVo: existingUser,
             roleVo: rvo,
             clientVO: this.clientService.selectedClient,
-            tourneyId: this.tourneyService.selectedTourney.id,
-            disciplineId: null
+            tourneyId: this.selectedTourney.id,
         };
+    }
+
+    // @Override
+    protected onSaveComplete( urc : UserRoleClientVO ) {
+        console.log("Entering onSaveComplete()");
+        this.userService.newUser = false;
+        this.tourneyService.operatorVo.selectedOperators.push(urc.userVo);
+        this.tourneyService.operatorVo.allOperators.push(urc.userVo);
+        if( !this.onSaveUserError ) {
+            this.goBack();
+        }
     }
 }

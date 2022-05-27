@@ -14,7 +14,7 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
 
 @Component({
-    templateUrl: './player-picklist.html',
+    templateUrl: './player-picklist.html'
 })
 export class PlayerPickList extends AbstractListView {
 

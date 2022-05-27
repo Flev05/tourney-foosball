@@ -8,6 +8,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { UserVO } from '../domain/user-vo';
 import { UserRoleClientVO } from '../domain/urc-vo';
 import { OperatorsVO } from '../domain/operators-vo';
+import { TableCols } from '../domain/table-cols';
 
 const userUrl = 'api/users';                         // URL to Back End api
 const resetPasswordUrl = userUrl + '/resetPassword';
@@ -19,8 +20,16 @@ const httpOptions = {
 
 @Injectable()
 export class UserService {
+    cols: TableCols[] = [
+        { field: 'username',    header: 'Username' },
+        { field: 'firstname',   header: 'Nome' },
+        { field: 'lastname',    header: 'Cognome' },
+        { field: 'email',       header: 'Email' },
+    ];
     newUser : boolean = false;
     selectedUser: UserVO;
+
+    isOperatorChanged: boolean = false;
     
     constructor(private http: HttpClient) 
     { 
@@ -138,19 +147,8 @@ export class UserService {
         );
     } */
 
-    /** Saves the relation betweeen the User and the tourney to the server */
- /*    mergeOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
-        let url = userUrl + "/mergeOperators";
-        console.log(url);
-
-        return this.http.post<OperatorsVO>(url, ovo, httpOptions).pipe(
-            tap((op: OperatorsVO) => this.log(`mergeOperators for tourney id=${op.tourneyId}`))
-            , catchError(selector)
-        );
-    } */
-
     /** Detach the operator relation between tourney and operatorSS */
-    deleteOperator(userId: number,clientId: number,tourneyId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+    deleteOperator(userId: number, clientId: number, tourneyId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
         const url = userUrl + "/deleteOperator?userId=" + userId+ "&clientId=" + clientId + "&tourneyId=" + tourneyId;
         console.log(url);
 

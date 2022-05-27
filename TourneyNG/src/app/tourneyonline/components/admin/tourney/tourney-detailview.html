@@ -1504,7 +1504,7 @@
                     
             <h5>Rimuovere un operatore</h5>
             <p>
-                Rimuvere un operatore significa rimuovere l'associazione dell'operatore dal torneo in corso così che non possa più
+                Rimuovere un operatore significa rimuovere l'associazione dell'operatore dal torneo in corso così che non possa più
                 esercitare le funzioni di modifica dei risultati del torneo. L'utente rimmarrà nel sistema a far parte della stessa
                 azienda cui apparteneva pronto per essere riuttilizzato per altri tornei.
             </p> 
@@ -1514,34 +1514,38 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <div style="text-align:left">
                 <button pButton icon="fa fa-plus" 
-                type="button"
-                (click)="newOperator()" 
-                label="Nuovo Operatore" ></button>
+                    type="button"
+                    (click)="manageOperator()" 
+                    label="Gestisci Operatori">
+                </button>
             </div>
- 
+
             <p-table [columns]="operatorCols"
-                [value]="operatorRows" 
-                [(selection)]="selectedOperatorRows" 
-                dataKey="id">
+                [value]="operators"
+                [responsive]="true"
+                selectionMode="single" 
+                [(selection)]="selectedOperator"
+                (onRowSelect)="onOperatorRowSelect($event)"
+                [scrollable]="true" 
+                scrollHeight="500px">
+
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th class="deleteColSize">E</th>
+                        <th style="width: 15mm;">N°</th>
                         <th *ngFor="let col of columns">
                             {{col.header}}                                
                         </th>
-                        <th class="deleteColSize">D</th>
+                        <th style="width: 15mm;">X</th>
                     </tr>
                 </ng-template>                                     
-            
-                <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                     <tr>
-                        <td>
-                            <button class="ui-button-success" pButton icon="fa fa-edit" (click)="editOperator(rowData)"></button>
-                        </td>
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
                             {{rowData[col.field]}}
                         </td>            
-                        <td>
+                        <td style="width: 15mm;">
                             <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="deleteOperator(rowData)"></button>
                         </td>
                     </tr>

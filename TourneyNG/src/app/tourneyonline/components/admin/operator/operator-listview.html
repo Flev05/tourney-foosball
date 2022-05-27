@@ -1,0 +1,103 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista elenco operatori</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">  
+    <p>
+        Vista elenco degli operatori che controllano il torneo.
+    </p>
+    <p>
+        Potete eseguire 3 operazioni:
+    </p>
+    <ul>
+        <li>Creare un nuovo operatore</li>
+        <li>Selezionare un operatore esistente</li>
+        <li>Rimuovere un operatore esistente</li>
+    </ul>
+
+    <h4>Creare un nuovo operatore</h4>
+    <p>
+        Con il bottone Aggiungi Operatore si apre la vista di dettaglio dalla quale compilare l'anagrafica di un nuovo operatore.
+        L'operatore creato sarà reso disponibile per il toreo in corso ma sarà visibile anche per altri tornei.
+    </p>            
+
+    <h4>Selezionare un operatore esistente</h4>
+    <p>
+        Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio.
+    </p>
+    <p>        
+        Attenzione: una modifica a livello di operatore, non viene riflessa automaticamente a livello dello stesso operatore
+        già incluso in un torneo. Per avere le modifiche apportate sull'operatore, bisogna rimuoverlo dal torneo e ricaricarlo.
+    </p>
+
+    <h4>Rimuovere anagrafica operatore</h4>
+    <p>
+        Si può rimuovere l'anagrafica di un operatore esistente con il bottore X a fine riga.
+        Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
+        sarà rimossa dal sistema.
+    </p>    
+    <p>
+        Attenzione! La rimozione dell'operatore è a livello globale, nel senso che non può essere più inserito in nuovi tornei, 
+        ma non viene rimosso dai tornei preesistenti.
+    </p>
+    </p-accordionTab>
+</p-accordion>    
+</div>           
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" pButton icon="fa fa-arrow-left"  (click)="goBack()" label="Indietro"></button>
+</div>
+
+<p-table [columns]="cols" 
+    [value]="rows" 
+    [responsive]="true" 
+    selectionMode="single"
+    [(selection)]="selectedRow" 
+    (onRowSelect)="onRowSelect($event)" 
+    [scrollable]="true" 
+    scrollHeight="500px">
+
+    <ng-template pTemplate="caption">
+        <div style="text-align:left">
+            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Nuovo Operatore" ></button>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 15mm;">N°</th>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+            <th style="width: 15mm;">X</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+            <td *ngFor="let col of columns">
+                <span class="ui-column-title">{{col.header}}</span>
+                {{rowData[col.field]}}
+            </td>
+            <td style="width: 15mm; text-align: center;">
+                <button class="ui-button-danger" pButton icon="fa fa-close" (click)="doDelete(rowData)"></button>
+            </td>        
+        </tr>
+    </ng-template>  
+
+    <ng-template pTemplate="summary">
+        <div style="text-align:left">
+            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Nuovo Operatore" ></button>
+        </div>
+    </ng-template>
+</p-table>
+
+<div *ngIf="onDeleteOperatorError" style="margin-top:30px">
+    <p-message severity="error" text="Impossibile rimuore l'operatore {{selectedOperator.clientId}} perchè ancora in uso!"></p-message>
+</div>    
+ 

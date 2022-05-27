@@ -3,6 +3,7 @@ package it.lms.tourney.po;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,6 +48,9 @@ public class UserRoleClient extends AbstractPO implements Serializable {
     @ManyToOne()
     @JoinColumn(name = "tourney_id")
     private Tourney           tourney;
+
+    @Column(name = "available")
+    private Boolean           available;
 
     @Override
     public String toString() {

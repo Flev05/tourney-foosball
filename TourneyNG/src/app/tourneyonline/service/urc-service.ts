@@ -7,6 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { RoleService } from './role-service';
 import { UserRoleClientVO } from '../domain/urc-vo';
+import { OperatorsVO } from '../domain/operators-vo';
 
 const userUrl = 'api/urc';                         // URL to Back End api
 const httpOptions = {
@@ -48,7 +49,7 @@ export class UrcService {
         console.log('UrcService: ' + message);
     }
 
-    /** POST: add a new User to the server */
+    /** POST: add a new URC for User to the server */
     public createUrc (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
         let url = userUrl + "/insert";
         console.log(url);
@@ -59,13 +60,24 @@ export class UrcService {
         );
     }
 
-    /** POST: add a new User to the server */
+    /** POST: add a new URC for Operator to the server */
     public insertUrcOperator (urc: UserRoleClientVO, selector: (err: any, caught: Observable<UserRoleClientVO> ) => Observable<UserRoleClientVO> ): Observable<UserRoleClientVO> {
         let url = userUrl + "/insertUrcOperator";
         console.log(url);
 
         return this.http.post<UserRoleClientVO>(url, urc, httpOptions).pipe(
                 tap((urc: UserRoleClientVO) => this.log(`insertUrcOperator w/ url=` + urc))
+            , catchError(selector)
+        );
+    }
+    
+    /** Saves the relation betweeen the User and the tourney to the server */
+    mergeOperators (ovo: OperatorsVO, selector: (err: any, caught: Observable<OperatorsVO> ) => Observable<OperatorsVO>): Observable<OperatorsVO> {
+        let url = userUrl + "/mergeOperators";
+        console.log(url);
+
+        return this.http.post<OperatorsVO>(url, ovo, httpOptions).pipe(
+            tap((op: OperatorsVO) => this.log(`mergeOperators for tourney id=${op.tourneyId}`))
             , catchError(selector)
         );
     }

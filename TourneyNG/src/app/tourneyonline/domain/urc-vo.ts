@@ -9,5 +9,4 @@ export interface UserRoleClientVO
     roleVo?       : RoleVO;
     clientVO?     : ClientVO;
     tourneyId?    : number;
-    disciplineId? : number;
 }

@@ -5,6 +5,7 @@ import { MeetingDb } from "./meeting-db";
 export interface TourneyVO {
     id?             : number;    
     tourneyName?    : string;
+    disciplineId?   : number;
     followerName?   : string;
     clientVO?       : ClientVO;
     country?        : Country;

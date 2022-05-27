@@ -13,7 +13,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Observable, of } from 'rxjs';
 
 @Component({
-    templateUrl: './team-picklist.html',
+    templateUrl: './team-picklist.html'
 })
 export class TeamPickList extends AbstractListView {
 

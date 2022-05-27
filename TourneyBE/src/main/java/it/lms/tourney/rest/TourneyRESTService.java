@@ -182,7 +182,6 @@ public class TourneyRESTService extends AbstractRESTService {
             } else {
                 spo = sessionDao.update(spo, sessionId, userAgent);
             }
-
         } else {
             Integer clientId = tvo.getClientVO().getId();
             foundTourney = tourneyDao.getTourneyByClient(clientId, tvo.getTourneyName());
@@ -222,8 +221,36 @@ public class TourneyRESTService extends AbstractRESTService {
         if (spo == null) {
             insertFollowerUser(tvo, tpo);
         }
+        addDefaultOperators(tvo);
         tourneyDao.insert(tpo);
         return tpo;
+    }
+
+    private void addDefaultOperators(TourneyVO tvo) {
+
+        Integer clientId = tvo.getClientVO().getId();
+        List<UserRoleClient> urcList = urcDao.findOperatorsUrcByClientId(clientId);
+        Map<Integer, UserRoleClient> opMap = new HashMap<>();
+        // take only distinct operators...
+        for (UserRoleClient urc : urcList) {
+            Integer key = urc.getClient().getId();
+            opMap.put(key, urc);
+        }
+
+        Client cpo = clientDao.getById(clientId);
+        Integer tourneyId = tvo.getId();
+        Tourney tpo = tourneyDao.getById(tourneyId);
+        for (Integer key : opMap.keySet()) {
+            UserRoleClient urc = opMap.get(key);
+
+            UserRoleClient newurc = new UserRoleClient();
+            User upo = urc.getUser();
+            newurc.setClient(cpo);
+            newurc.setTourney(tpo);
+            newurc.setUser(upo);
+            newurc.setAvailable(true);
+            urcDao.insert(newurc);
+        }
     }
 
     private void insertFollowerUser(TourneyVO tvo, Tourney tpo) {
@@ -249,8 +276,7 @@ public class TourneyRESTService extends AbstractRESTService {
         tvo.setFollowerName(followerUserName);
         userDao.insert(upo);
 
-        UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo);
-        urcFollower.setTourney(tpo);
+        UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo, tpo);
         urcDao.insert(urcFollower);
 
         Set<UserRoleClient> urcSet = tpo.getUrcs();

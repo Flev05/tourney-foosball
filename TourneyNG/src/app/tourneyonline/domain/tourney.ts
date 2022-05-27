@@ -45,7 +45,7 @@ export interface Tourney {
 
     phases?                     : PhaseType[];
 
-    matchWinnerScores?          :  number;
+    matchWinnerScores?          : number;
     matchBalanceScores?         : number;
 
     pointsNeededToWin?          : number;

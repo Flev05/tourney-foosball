@@ -24,6 +24,8 @@ import { MeetingService } from './meeting-service';
 import { AbstractService } from '../components/common/abstract-service';
 import { ClientVO } from '../domain/client-vo';
 import { MeetingDb } from '../domain/meeting-db';
+import { UserVO } from '../domain/user-vo';
+import { OperatorsVO } from '../domain/operators-vo';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -76,6 +78,9 @@ export class TourneyService extends AbstractService {
     playoffsConfig: boolean;
 
     originalTeams: Team[];
+    // operators: UserVO[];
+    selectedOperator: UserVO;
+    operatorVo : OperatorsVO;
     isOneway: boolean;
     selectedPlayoffConfig: PlayoffRule;
     newRule: boolean;
@@ -122,6 +127,11 @@ export class TourneyService extends AbstractService {
         { field: 'points1',     header: 'Pt.1' },
         { field: 'points2',     header: 'Pt.2' },
         { field: 'teamName2',   header: 'Trasferta' },
+    ];
+    operatorCols:  TableCols[] = [
+        { field: 'username',  header: 'Username' },
+        { field: 'firstname', header: 'Nome' },
+        { field: 'lastname',  header: 'Cognome' },
     ];
     
     private tvo: TourneyVO;

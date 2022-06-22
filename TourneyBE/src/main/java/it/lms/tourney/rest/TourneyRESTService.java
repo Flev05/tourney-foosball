@@ -21,6 +21,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.lms.cb.dao.DaoException;
 import it.lms.cb.gui.vo.MeetingVO;
 import it.lms.cb.gui.vo.TourneyVO;
 import it.lms.tourney.cdi.Converter;
@@ -219,70 +220,35 @@ public class TourneyRESTService extends AbstractRESTService {
 
         Tourney tpo = prepareNewTourney(tvo, spo);
         if (spo == null) {
-            insertFollowerUser(tvo, tpo);
+            insertFollowerUserAndAvailableOperators(tvo, tpo);
         }
-        addDefaultOperators(tvo);
-        tourneyDao.insert(tpo);
         return tpo;
     }
 
-    private void addDefaultOperators(TourneyVO tvo) {
-
-        Integer clientId = tvo.getClientVO().getId();
-        List<UserRoleClient> urcList = urcDao.findOperatorsUrcByClientId(clientId);
-        Map<Integer, UserRoleClient> opMap = new HashMap<>();
-        // take only distinct operators...
-        for (UserRoleClient urc : urcList) {
-            Integer key = urc.getClient().getId();
-            opMap.put(key, urc);
-        }
-
-        Client cpo = clientDao.getById(clientId);
-        Integer tourneyId = tvo.getId();
-        Tourney tpo = tourneyDao.getById(tourneyId);
-        for (Integer key : opMap.keySet()) {
-            UserRoleClient urc = opMap.get(key);
-
-            UserRoleClient newurc = new UserRoleClient();
-            User upo = urc.getUser();
-            newurc.setClient(cpo);
-            newurc.setTourney(tpo);
-            newurc.setUser(upo);
-            newurc.setAvailable(true);
-            urcDao.insert(newurc);
-        }
-    }
-
-    private void insertFollowerUser(TourneyVO tvo, Tourney tpo) {
+    private void insertFollowerUserAndAvailableOperators(TourneyVO tvo, Tourney tpo) {
 
         String followerUserName = tvo.getFollowerName();
         Integer clientId = tvo.getClientVO().getId();
-        User foundUpo = userDao.getFollowerLike(followerUserName, clientId);
-        if (foundUpo != null) {
-            int lastIndex = followerUserName.lastIndexOf('.');
-            if (lastIndex != -1) {
-                String digitS = followerUserName.substring(lastIndex + 1);
-                int digit = Integer.valueOf(digitS);
-                digit++;
-                String prefix = followerUserName.substring(0, lastIndex);
-                followerUserName = prefix + "." + digit;
-            } else {
-                followerUserName = followerUserName + "." + 1;
-            }
-        }
+
+        followerUserName = "" + tpo.getId();
 
         Client cpo = clientDao.getById(clientId);
         User upo = userDao.newFollowerUser(followerUserName, cpo);
         tvo.setFollowerName(followerUserName);
         userDao.insert(upo);
 
-        UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo, tpo);
-        urcDao.insert(urcFollower);
-
         Set<UserRoleClient> urcSet = tpo.getUrcs();
+        UserRoleClient urcFollower = urcDao.newFollowerUrc(upo, cpo, tpo);
+        upo.getUrcSet().add(urcFollower);
         urcSet.add(urcFollower);
 
-        upo.getUrcSet().add(urcFollower);
+        List<UserRoleClient> opList = urcDao.findOperatorsUrcByClientId(clientId);
+        for (UserRoleClient urc : opList) {
+            UserRoleClient urcOp = urcDao.newUrcAvailableOperator(urc.getUser(), urc.getClient(), tpo);
+            urcSet.add(urcOp);
+            upo.getUrcSet().add(urcOp);
+        }
+
     }
 
     private Tourney prepareNewTourney(TourneyVO tvo, Session spo) {
@@ -304,6 +270,8 @@ public class TourneyRESTService extends AbstractRESTService {
         tpo.setTourneyName(tvo.getTourneyName());
         tpo.setId(tvo.getId());
         tpo.setJson(tvo.getJson());
+
+        tourneyDao.insert(tpo);
 
         return tpo;
     }
@@ -454,11 +422,11 @@ public class TourneyRESTService extends AbstractRESTService {
             }
 
             if (!found) {
-                insertFollowerUser(tvo, tpo);
+                insertFollowerUserAndAvailableOperators(tvo, tpo);
             } else if (!tpo.getTourneyName().equals(tvo.getTourneyName())) {
                 User fupo = userDao.getFollowerByTourneyID(tpo.getId(), tvo.getClientVO().getId());
                 if (fupo == null) {
-                    insertFollowerUser(tvo, tpo);
+                    insertFollowerUserAndAvailableOperators(tvo, tpo);
                 } else {
                     String followerUserName = tvo.getFollowerName();
                     User upo = userDao.getFollowerLike(followerUserName, tvo.getClientVO().getId());
@@ -512,6 +480,16 @@ public class TourneyRESTService extends AbstractRESTService {
     public Response deleteTourney(@PathParam("id") Integer id) {
 
         log.debug(logId() + "DELETE: deleteTourney(" + id + ")");
+
+        List<User> userList = urcDao.findFollowerByTourneyId(id);
+        urcDao.deleteUrcByTourney(id);
+        for (User u : userList) {
+            try {
+                userDao.delete(u);
+            } catch (DaoException e) {
+                log.error("Unable to delete the User {}", u.getUsername(), e);
+            }
+        }
 
         Tourney tourney = tourneyDao.getById(id);
         tourneyDao.delete(tourney);

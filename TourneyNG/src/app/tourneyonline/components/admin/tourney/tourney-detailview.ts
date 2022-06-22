@@ -30,6 +30,7 @@ import { UserService } from 'app/tourneyonline/service/user-service';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
 import { environment } from 'environments/environment';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney';
 
@@ -130,7 +131,8 @@ export class TourneyDetailView extends AbstractDetailView {
         protected meetingPlayoffService: MeetingPlayoffService,
         protected levelService: LevelService,
         private disciplineService: DisciplineService,
-        private router: Router 
+        private router: Router,
+        public urcService: UrcService 
     ) { 
         super(tourneyService, location);
     }
@@ -190,14 +192,6 @@ export class TourneyDetailView extends AbstractDetailView {
             return of(result as T);
         };
     }
-
-    // private disableEditButton(o: UserVO): void {
-    //     var asEnum : ERoles= <ERoles>ERoles[this.urcService.selectedUrc.roleVo.name];
-    //     if(o.id == this.urcService.selectedUrc.userVo.id && asEnum != ERoles.OPERATOR) {
-    //         o.disabled = "disabled";
-    //     }
-    // }
-
 
     private blockDocument() {
         this.blockedDocument = false;
@@ -492,14 +486,21 @@ export class TourneyDetailView extends AbstractDetailView {
                 this.operators.splice(index, 1);
             }
 
-            let selectedClientId = this.clientService.selectedClient.id;
+/*             let selectedClientId = this.clientService.selectedClient.id;
             const subscriber = this.userService.deleteOperator(dvo.id
                 , selectedClientId
                 , this.selectedTourney.id
                 , this.loadUsersErrorHandler('deleteOperator()'));
             subscriber.subscribe(cs => this.onDeleteNext(cs), e => this.onError(e) );
+ */
+            
+            let op : OperatorsVO = this.tourneyService.operatorVo;
+            op.selectedOperators = [...this.operators];
+            const subscriber = this.urcService.mergeOperators(op, this.loadUsersErrorHandler('mergeOperators()'));
+            subscriber.subscribe(cs => this.next(cs), e => this.onError(e) );
         }
     }
+ 
     onDeleteNext(cs: UserVO): void {
         this.loadOperators();
     }

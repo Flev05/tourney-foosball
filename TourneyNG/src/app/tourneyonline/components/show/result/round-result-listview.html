@@ -32,14 +32,14 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-arrow-left" pButton (click)="prevOnewayDay()"></button>
+                        <button type="button" icon="fa fa-arrow-left" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
                     </td>
                     <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
                         <div>{{selectedRound.name}}</div>
                         <div>{{onewayCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
-                        <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()"></button>
+                        <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
                     </td>
                 </tr>
             </ng-template>

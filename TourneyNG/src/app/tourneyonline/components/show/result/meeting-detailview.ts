@@ -68,7 +68,6 @@ export class MeetingDetailView extends AbstractDetailView {
         if(this.selectedMeeting.teamName1 == "" || this.selectedMeeting.teamName2 == "") {
             let teamPassed = this.selectedMeeting.teamName1 != "" ? 
                 this.selectedMeeting.teamName1 : this.selectedMeeting.teamName2;
-
             if(this.tourneyService.selectedEliminatoryLevel.isTopLevel) {
                 this.teamPassedMessage = "Attenzione! La Squadra: " + teamPassed + " passa automaticamente al turno successivo!";
             } else {
@@ -90,7 +89,6 @@ export class MeetingDetailView extends AbstractDetailView {
                 this.selectedMeeting.matches.push(m);
             }
         }
-        // this.matches = [...this.selectedMeeting.matches];
         this.matches = this.selectedMeeting.matches;
     }
     
@@ -103,7 +101,6 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onToPlayClick() {
         console.log("Entering onToPlayClick()");
-        console.log(event);
         if(!confirm(TO_PLAY_POPUP)) {
             return;
         }
@@ -120,14 +117,12 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onInProgressClick() {
         console.log("Entering onInProgressClick()");
-        console.log(event);
         this.selectedMeeting.status = MeetingStatus.InProgress;
         this.save();
     }
 
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
-        console.log(event);
         this.selectedMeeting.status = MeetingStatus.Terminated;
         this.save();
     }
@@ -207,7 +202,6 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.matches = this.matches;
         this.selectedMeeting.points1 = 0;
         this.selectedMeeting.points2 = 0;
-
         let goals1 = 0;
         let goals2 = 0;
 
@@ -267,7 +261,6 @@ export class MeetingDetailView extends AbstractDetailView {
         }
     }
 
-
     private nextCallback(n: Meeting) {   
         console.log(n);  
         if(this.serverUnreachable) {
@@ -289,7 +282,6 @@ export class MeetingDetailView extends AbstractDetailView {
         if( this.selectedMeetingDb.roundId != null ) {
             this.meetingRoundService.reloadRoundMeeting(this.selectedTourney, this.selectedRound, () => {} );
         } 
-        
         if( this.selectedMeetingDb.playoffId != null ) {
             let p: Playoff = this.selectedTourney.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
             this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => {}, e => this.serverUnreachableHandler(e) );
@@ -304,4 +296,3 @@ export class MeetingDetailView extends AbstractDetailView {
         console.log('Modifica result fallita');
     }
 }
-

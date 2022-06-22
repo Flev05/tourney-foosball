@@ -22,6 +22,7 @@ public class CommonUserVO extends AbstractVO {
     private String            phoneNumber;
 
     private String            description;
+    private String            disabled;
 
     private Country           country;
 

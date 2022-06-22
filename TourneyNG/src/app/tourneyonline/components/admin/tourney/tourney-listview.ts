@@ -19,6 +19,7 @@ import { DisciplineService } from 'app/tourneyonline/service/discipline-service'
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Player } from 'app/tourneyonline/domain/player';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -44,7 +45,7 @@ export class TourneyListView extends AbstractTourneyListView {
         , public    router: Router
         , public    loc: Location
         , protected dfp: DateFormatPipe
-        , protected disciplineService: DisciplineService ) 
+        , protected disciplineService: DisciplineService) 
     { 
         super(TourneyDetailView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, loc, dfp);
     }

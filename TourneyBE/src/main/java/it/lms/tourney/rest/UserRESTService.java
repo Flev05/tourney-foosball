@@ -72,7 +72,7 @@ public class UserRESTService extends AbstractRESTService {
 
         List<User> userList;
         if (userDao.isDeveloperUser(loggedUserId)) {
-            userList = userDao.findAllUsersAtLeastAdmin();
+            userList = userDao.findAllUsersAtLeastOperator();
         } else {
             List<UserRoleClient> urcList = urcDao.findUrcByUser(loggedUserId);
             userList = urcList.stream().map(urc -> urc.getUser()).collect(Collectors.toList());
@@ -182,54 +182,6 @@ public class UserRESTService extends AbstractRESTService {
     }
 
     /**
-     * Creates a new operator from the values provided. Performs validation, and will return a JAX-RS response with
-     * either 200 ok, or with a map of fields, and related errors.
-     */
-    // @POST
-    // @Path("/createOperator/{tourneyId:[0-9][0-9]*}")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response createOperator(UserRoleClientVO urcvo, @PathParam("tourneyId") Integer tourneyId) {
-    //
-    // Tourney tpo = tourneyDao.getById(tourneyId);
-    // if (tpo == null) {
-    // log.error("Tourney [{}] not found!", tourneyId);
-    // throw new WebApplicationException(Response.Status.NOT_FOUND);
-    // }
-    // Client cpo = clientDao.getById(urcvo.getClientVO().getId());
-    // if (cpo == null) {
-    // log.error("Client [{}] not found!", urcvo.getClientVO().getId());
-    // throw new WebApplicationException(Response.Status.NOT_FOUND);
-    // }
-    //
-    // UserVO uvo = urcvo.getUserVo();
-    // String username = uvo.getUsername();
-    // log.debug(logId() + "POST: createOperator(" + username + "/" + tourneyId + ")");
-    //
-    // User upo = userDao.findUserBy(username);
-    // UserRoleClient urcpo;
-    // if (upo == null) {
-    // upo = converter.convertUserVoPo(uvo);
-    // userDao.insert(upo);
-    // }
-    // urcpo = new UserRoleClient();
-    // urcpo.setClient(cpo);
-    // urcpo.setUser(upo);
-    // urcpo.setTourney(tpo);
-    // Role rpo = roleDao.getOperatorRole();
-    // urcpo.setRole(rpo);
-    // urcDao.insert(urcpo);
-    //
-    // tpo.getUrcs().add(urcpo);
-    // upo.getUrcSet().add(urcpo);
-    // rpo.getUrcSet().add(urcpo);
-    //
-    // Response.ResponseBuilder builder = Response.ok().entity(urcvo);
-    //
-    // return builder.build();
-    // }
-
-    /**
      * Finds the URC bounded to the incoming tourneyId, get the corresponding client and user , remove the found URC,
      * verify if there is no more URC for the got client and, if no, remove the got user
      */
@@ -248,31 +200,6 @@ public class UserRESTService extends AbstractRESTService {
                 urcDao.delete(urc);
                 uvo = converter.convertUserPoVo(urc.getUser());
             }
-
-            // Tourney tpo = tourneyDao.getById(tourneyId);
-            // UserVO uvo = null;
-            // Iterator<UserRoleClient> it = tpo.getUrcs().iterator();
-            // while (it.hasNext()) {
-            // UserRoleClient urc = it.next();
-            // User user = urc.getUser();
-            // if (user.getId().equals(userId)) {
-            // it.remove();
-            // userDao.delete(user);
-            // uvo = converter.convertUserPoVo(user);
-            // }
-            // }
-            // tourneyDao.update(tpo);
-
-            // List<UserRoleClient> urcCopy = urcDao.findByUserId(userId);
-            // for (UserRoleClient urc : urcCopy) {
-            // User user = urc.getUser();
-            // urcDao.delete(urc);
-            // List<UserRoleClient> urcList = urcDao.findByUserId(user.getId());
-            // if (urcList.isEmpty()) {
-            // userDao.delete(user);
-            // uvo = converter.convertUserPoVo(user);
-            // }
-            // }
 
             Response.ResponseBuilder builder = Response.ok().entity(uvo);
 

@@ -12,7 +12,6 @@ import { AbstractRoundResultListView } from '../../common/abstract-round-result-
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { ClassificationDetailView } from '../classification/classification-detailview';
 import { LoginService } from 'app/tourneyonline/service/login-service';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './round-result-listview.html',
@@ -84,6 +83,5 @@ export class RoundResultListView extends AbstractRoundResultListView {
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedRound.name);
         this.router.navigate([ClassificationDetailView.redirect]);
     }
-
 }
 

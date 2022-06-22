@@ -22,13 +22,15 @@ Copiare a manaina la cartella WEB-INF da %WEB_INF_SRC_DIR% a %WEB_CONTENT_DIR%\W
 TourneyBE/deploy/build-project-prod.cmd 
 come descritto sopra
 
-Spostarsi sotto TourneyBE e lanciare maven:
+3) Per produrre il .war di produzione, spostarsi sotto TourneyBE e lanciare maven:
+
 mvn clean install
 che produrrà il file TourneyBE.war sotto target
+
 Connettersi in SSH con PUTTY al server www.erebus-soft.com
 aprire le porte 8280 e 9990 in modo che il PC veda l'Application Server WildFly installato sul server
 Aprire la pagina Web: http://localhost:8280 e collegarsi alla console di WildFly con:
 Usename: lmartino
-Password: la solita short
+Password: <la solita short>
 
 Luciano Martino

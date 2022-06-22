@@ -225,6 +225,10 @@ export class UserDetailView extends AbstractDetailView {
     }
 
     private updateUser() {
+        if(this.currentPassword != this.selectedUser.password) {
+            this.selectedUser.password = Md5.init(this.currentPassword);
+            console.log("MD5(password)=" + this.selectedUser.password);
+        }
         const subscriber = this.userService.updateUser(this.selectedUser, this.saveUserErrorHandler('Create User operation'));
         subscriber.subscribe(cs => this.onUpdateNext(cs), e => this.subscribeErrorHandler(e) );
     }

@@ -82,15 +82,7 @@ export class OperatorPickList extends AbstractListView {
      */
     goBack(): void {
         this.afterMerge();
-    } 
- 
-    private alignTourneyOperators() {
-        if(!this.userService.isOperatorChanged) {
-            return;
-        }
-        this.userService.isOperatorChanged=false;
-        // this.mergeOperators();
-    }     
+    }  
 
     private afterMerge() {
         let tvo: TourneyVO = {
@@ -133,6 +125,7 @@ export class OperatorPickList extends AbstractListView {
             return of(result as T);
         };
     }
+    
     private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
         return (res: any): Observable<T> => {
             console.log("Entering saveTourneyErrorHandler()");

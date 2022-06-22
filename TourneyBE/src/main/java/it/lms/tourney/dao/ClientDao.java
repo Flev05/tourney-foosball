@@ -109,29 +109,31 @@ public class ClientDao extends BaseJPACrudDao<Client, Integer> {
      */
     public List<Client> findClientsByUser(Integer loggedUserId) {
 
-        log.debug(logId() + "Entering findClientsByUser()");
+        log.debug(logId() + "Entering findClientsByUser({})", loggedUserId);
 
         CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+        CriteriaQuery<Client> cq = cb.createQuery(Client.class);
         Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
         Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
 
         Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
 
-        cq = cq.select(root);
+        cq = cq.select(clientJoin);
         cq = cq.where(p);
+        cq = cq.distinct(true);
 
-        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+        TypedQuery<Client> tq = getEm().createQuery(cq);
 
-        List<UserRoleClient> resultList = tq.getResultList();
+        List<Client> poList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
+        log.debug(logId() + "[Found " + poList.size() + " Clients]");
 
-        List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
+        // List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
 
-        return clientList;
+        return poList;
     }
 
     public List<Client> findAllClients() {

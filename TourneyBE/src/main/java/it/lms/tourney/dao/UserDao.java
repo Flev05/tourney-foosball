@@ -246,7 +246,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         return true;
     }
 
-    public List<User> findAllUsersAtLeastAdmin() {
+    public List<User> findAllUsersAtLeastOperator() {
 
         CriteriaQuery<User> cq = getCb().createQuery(User.class);
 
@@ -256,7 +256,7 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
         Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
 
         Predicate p1 = roleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name(), Role.ROLES.OWNER.name(),
-                Role.ROLES.ADMIN.name());
+                Role.ROLES.ADMIN.name(), Role.ROLES.OPERATOR.name());
 
         Predicate pAndQ = getCb().and(p1);
         cq = cq.select(root);

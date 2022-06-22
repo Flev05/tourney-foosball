@@ -108,7 +108,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
      */
     public List<UserRoleClient> findUrcByUser(Integer loggedUserId) {
 
-        log.debug(logId() + "Entering findOwnerUsers()");
+        log.debug(logId() + "Entering findUrcByUser()");
 
         List<Client> clientList = clientDao.findClientsByUser(loggedUserId);
 
@@ -119,7 +119,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         for (Role.ROLES r : Role.ROLES.values()) {
 
             int v = r.getValue();
-            if (v <= maxRole.getValue() && v > Role.ROLES.OPERATOR.getValue()) {
+            if (v <= maxRole.getValue() && v >= Role.ROLES.OPERATOR.getValue()) {
                 roleList.add(r);
             }
         }
@@ -152,6 +152,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
         cq = cq.select(root);
         cq = cq.where(p2, p3);
+        cq = cq.distinct(true);
 
         TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
@@ -200,7 +201,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
     }
 
     /**
-     * Finds all the URC operators in function of the received paramters
+     * Finds all the URC operators in function of the received parameters
      * 
      * @param clientId the logged user identifier
      * @param tourneyId the id of the tourney
@@ -335,6 +336,34 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
         return resultList;
+    }
+
+    public List<User> findFollowerByTourneyId(Integer tourneyId) {
+
+        log.debug(logId() + "Entering findByTourneyId()");
+
+        CriteriaBuilder cb = getCb();
+
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+
+        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+        Join<UserRoleClient, Tourney> urcTourneyJoin = root.join(UserRoleClient_.tourney);
+        Join<UserRoleClient, User> userJoin = root.join(UserRoleClient_.user);
+        Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
+
+        Predicate p1 = cb.equal(urcTourneyJoin.get(Tourney_.id), tourneyId);
+        Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.FOLLOWER.name());
+
+        cq = cq.select(userJoin);
+        cq = cq.where(p1, p2);
+
+        TypedQuery<User> tq = getEm().createQuery(cq);
+
+        List<User> poList = tq.getResultList();
+
+        log.debug(logId() + "[Found " + poList.size() + " User(s)]");
+
+        return poList;
     }
 
     /**
@@ -559,7 +588,21 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         UserRoleClient urc = new UserRoleClient();
         urc.setUser(upo);
         urc.setClient(cpo);
+        urc.setTourney(tpo);
         Role rpo = roleDao.getFollowerRole();
+        urc.setRole(rpo);
+        insert(urc);
+        return urc;
+    }
+
+    public UserRoleClient newUrcAvailableOperator(User upo, Client cpo, Tourney tpo) {
+
+        UserRoleClient urc = new UserRoleClient();
+        urc.setAvailable(true);
+        urc.setUser(upo);
+        urc.setClient(cpo);
+        urc.setTourney(tpo);
+        Role rpo = roleDao.getOperatorRole();
         urc.setRole(rpo);
         insert(urc);
         return urc;
@@ -578,4 +621,11 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
         log.debug(logId() + "Deleted " + deletedCount + " UserRoleClient(s)");
     }
 
+    public void deleteUrcByTourney(Integer tourneyId) {
+
+        Query query = getEm().createQuery("DELETE FROM UserRoleClient urc WHERE urc.tourney.id = :tourneyId");
+        query = query.setParameter("tourneyId", tourneyId);
+        int deletedCount = query.executeUpdate();
+        log.debug(logId() + "Deleted " + deletedCount + " UserRoleClient(s) where tourneyId=" + tourneyId);
+    }
 }

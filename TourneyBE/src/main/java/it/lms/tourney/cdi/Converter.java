@@ -102,7 +102,7 @@ public class Converter extends AbstractLogger {
         UserRoleClientVO urcvo = new UserRoleClientVO();
         urcvo.setId(urc.getId());
         Tourney tpo = urc.getTourney();
-        urcvo.setDisciplineId(tpo.getDiscipline() == null ? null : tpo.getDiscipline().getId());
+        urcvo.setDisciplineId(tpo == null || tpo.getDiscipline() == null ? null : tpo.getDiscipline().getId());
 
         UserVO userVo = convertUserPoVo(urc.getUser());
         urcvo.setUserVo(userVo);

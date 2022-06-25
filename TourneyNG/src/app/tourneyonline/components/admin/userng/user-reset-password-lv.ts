@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { Observable, of } from 'rxjs';
+
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Observable, of } from 'rxjs';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect = '/users/resetPasswordDv';

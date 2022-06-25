@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Classification } from 'app/tourneyonline/domain/classification';
 

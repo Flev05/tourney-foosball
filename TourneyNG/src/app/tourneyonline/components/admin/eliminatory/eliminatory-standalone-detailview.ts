@@ -7,7 +7,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';

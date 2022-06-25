@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-import {Message} from '../../../../components/common/api';
+import {Message} from 'primeng/api';
 
 @Component({
     templateUrl: './lease.component.html'

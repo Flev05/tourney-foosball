@@ -6,8 +6,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamService } from 'app/tourneyonline/service/team-service';
-import { AbstractListView } from '../../common/abstract-listview';
-import { TeamDetailView } from '../team/team-detailview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 

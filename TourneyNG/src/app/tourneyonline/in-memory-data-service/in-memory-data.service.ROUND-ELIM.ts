@@ -5,7 +5,6 @@ import { TeamsPool } from './teams-pool';
 import { Meeting } from '../domain/meeting';
 import { Tourney } from '../domain/tourney';
 import { MeetingDb } from '../domain/meeting-db';
-import { TeamService } from '../service/team-service';
 
 const tourneyId = 3;
 const ROUND_NUM = 4;

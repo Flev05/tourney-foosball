@@ -4,12 +4,12 @@ import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MeetingDetailView } from './meeting-detailview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { LevelService } from '../../admin/eliminatory/level-service';
-import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
-import { MeetingRoundService } from '../../admin/round/meeting-round-service';
-import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
+import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
+import { MeetingPlayoffService } from 'app/tourneyonline/components/admin/playoff/meeting-playoff-service';
+import { MeetingRoundService } from 'app/tourneyonline/components/admin/round/meeting-round-service';
+import { AbstractTabResultListView } from 'app/tourneyonline/components/common/abstract-tab-result-listview';
 import { TourneyResultListView } from '../tourney/tourney-listview';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 

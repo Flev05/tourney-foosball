@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { AbstractEliminatoryListView } from 'app/tourneyonline/components/common/abstract-eliminatory-listview';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { Round } from 'app/tourneyonline/domain/round';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 

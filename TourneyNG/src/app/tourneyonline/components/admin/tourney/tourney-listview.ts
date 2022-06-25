@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 
-import { AbstractTourneyListView } from '../../common/abstract-tourney-listview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { AbstractTourneyListView } from 'app/tourneyonline/components/common/abstract-tourney-listview';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { LoginService } from 'app/tourneyonline/service/login-service';
@@ -14,12 +15,10 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { NewTourneyDetailView } from './new-tourney-detailview';
 import { TourneyDetailView } from './tourney-detailview';
-import { Observable, of } from 'rxjs';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Player } from 'app/tourneyonline/domain/player';
-import { UrcService } from 'app/tourneyonline/service/urc-service';
 
 @Component({
     templateUrl: './tourney-listview.html'

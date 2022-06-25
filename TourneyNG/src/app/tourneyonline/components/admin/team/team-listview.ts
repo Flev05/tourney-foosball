@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TeamService } from 'app/tourneyonline/service/team-service';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common'
 import { Md5 } from 'md5-typescript';
+import { Observable, of } from 'rxjs';
 ;
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { UserService } from 'app/tourneyonline/service/user-service';
-import { Observable, of } from 'rxjs';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';

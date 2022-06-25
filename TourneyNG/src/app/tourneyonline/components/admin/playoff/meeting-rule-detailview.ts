@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Message } from 'primeng/api';
 
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { Message } from 'primeng/api';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';

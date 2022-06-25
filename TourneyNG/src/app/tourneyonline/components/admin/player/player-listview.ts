@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Player } from 'app/tourneyonline/domain/player';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { PlayerService } from 'app/tourneyonline/service/player-service';

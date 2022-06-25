@@ -5,23 +5,23 @@ import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import {AccordionModule} from 'primeng/accordion';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-import { GrowlModule } from 'app/components/growl/growl';
-import { PanelModule } from 'app/components/panel/panel';
-import { DropdownModule } from 'app/components/dropdown/dropdown';
-import { InputTextModule } from 'app/components/inputtext/inputtext';
-import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
-import { ButtonModule } from 'app/components/button/button';
-import { TabViewModule } from 'app/components/tabview/tabview';
-import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
-import { SliderModule } from 'app/components/slider/slider';
+import { GrowlModule } from 'primeng/growl';
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+import { TabViewModule } from 'primeng/tabview';
+import { CodeHighlighterModule } from 'primeng/codehighlighter';
+import { SliderModule } from 'primeng/slider';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { BlockUIModule } from 'primeng/blockui';
 
 import {LoginRoutingModule} from './login-routing.module';
 import {LoginDetailView} from './login-detailview';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
 import { ClientLoginListView } from './client-listview';
 import { ClientTourneyListView } from './client-tourney-listview';
-import { BlockUIModule } from 'primeng/blockui';
 import { FollowerDetailView } from './follower-detailview';
 
 @NgModule({

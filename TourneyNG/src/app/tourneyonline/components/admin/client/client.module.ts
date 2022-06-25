@@ -7,23 +7,22 @@ import {AccordionModule} from 'primeng/accordion';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
-import { SliderModule } from 'app/components/slider/slider';
-import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
-import { TabViewModule } from 'app/components/tabview/tabview';
+import { SliderModule } from 'primeng/slider';
+import { CodeHighlighterModule } from 'primeng/codehighlighter';
+import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'app/components/dropdown/dropdown';
-import { GrowlModule } from 'app/components/growl/growl';
-import { PanelModule } from 'app/components/panel/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { GrowlModule } from 'primeng/growl';
+import { PanelModule } from 'primeng/panel';
 import {AutoCompleteModule} from 'primeng/autocomplete';
+import { FieldsetModule } from 'primeng/fieldset';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 import {ClientRoutingModule} from './client-routing.module';
 import {ClientListView} from './client-listview';
 import {ClientDetailView} from './client-detailview';
-import { FieldsetModule } from 'primeng/fieldset';
-import { RadioButtonModule } from 'primeng/radiobutton';
-
 
 @NgModule({
 	imports: [

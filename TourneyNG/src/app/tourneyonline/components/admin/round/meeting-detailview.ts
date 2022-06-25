@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';

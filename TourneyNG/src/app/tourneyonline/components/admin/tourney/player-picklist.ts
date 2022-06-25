@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
-import { AbstractListView } from '../../common/abstract-listview';
-import { Router } from '@angular/router';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';

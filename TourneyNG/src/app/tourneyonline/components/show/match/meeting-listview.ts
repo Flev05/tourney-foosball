@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 
 const redirect = '/match/matchlv';
 

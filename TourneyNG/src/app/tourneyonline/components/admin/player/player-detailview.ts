@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { Player } from 'app/tourneyonline/domain/player';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
@@ -9,7 +9,6 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
-import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './player-detailview.html',

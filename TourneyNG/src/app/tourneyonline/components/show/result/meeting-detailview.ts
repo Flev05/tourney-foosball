@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import {ConfirmationService,  MessageService} from 'primeng/api';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
@@ -9,14 +10,15 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { Round } from 'app/tourneyonline/domain/round';
-import { MeetingRoundService } from '../../admin/round/meeting-round-service';
-import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
+import { MeetingRoundService } from 'app/tourneyonline/components/admin/round/meeting-round-service';
+import { MeetingPlayoffService } from 'app/tourneyonline/components/admin/playoff/meeting-playoff-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const TO_PLAY_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
 @Component({
-    templateUrl: './meeting-detailview.html'
+    templateUrl: './meeting-detailview.html',
+    providers: [ConfirmationService, MessageService]
 })
 export class MeetingDetailView extends AbstractDetailView {
     static redirect: string = "";
@@ -34,6 +36,7 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedDirection: Direction;
     allDaysNo: number;
     meetingLabel: string;
+    status: MeetingStatus;
 
     constructor(
         protected location: Location,
@@ -42,6 +45,8 @@ export class MeetingDetailView extends AbstractDetailView {
         protected meetingRoundService: MeetingRoundService,
         protected meetingPlayoffService: MeetingPlayoffService,
         public loginService: LoginService,
+        private confirmationService: ConfirmationService, 
+        private messageService: MessageService
     ) { 
         super(tourneyService, location);
     }
@@ -51,6 +56,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
         this.selectedMeeting  = this.meetingService.selectedMeeting;   
+        this.status = this.selectedMeeting.status;
 
         this.selectedRound = this.meetingService.selectedRound;
         this.roundName = this.selectedRound.name;
@@ -91,7 +97,21 @@ export class MeetingDetailView extends AbstractDetailView {
         }
         this.matches = this.selectedMeeting.matches;
     }
-    
+
+    confirm(event: Event) {
+        this.confirmationService.confirm({
+            // target: event.target,
+            message: 'Are you sure that you want to proceed?',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.messageService.add({severity:'info', summary:'Confirmed', detail:'You have accepted'});
+            },
+            reject: () => {
+                this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
+            }
+        });
+    }
+
     disableButton() : string {
         return this.loginService.isFollower() 
             || this.selectedMeeting.status == MeetingStatus.ToPlay 
@@ -102,6 +122,7 @@ export class MeetingDetailView extends AbstractDetailView {
     onToPlayClick() {
         console.log("Entering onToPlayClick()");
         if(!confirm(TO_PLAY_POPUP)) {
+            this.reloadMeetings();
             return;
         }
 
@@ -111,19 +132,22 @@ export class MeetingDetailView extends AbstractDetailView {
             m.score1 = 0;
             m.score2 = 0;
         }
-        this.selectedMeeting.status = MeetingStatus.ToPlay;
+        this.status = MeetingStatus.ToPlay
+        this.selectedMeeting.status = this.status;
         this.save();
     }
 
     onInProgressClick() {
         console.log("Entering onInProgressClick()");
-        this.selectedMeeting.status = MeetingStatus.InProgress;
+        this.status = MeetingStatus.InProgress;
+        this.selectedMeeting.status = this.status;
         this.save();
     }
 
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
-        this.selectedMeeting.status = MeetingStatus.Terminated;
+        this.status = MeetingStatus.Terminated;
+        this.selectedMeeting.status = this.status;
         this.save();
     }
 

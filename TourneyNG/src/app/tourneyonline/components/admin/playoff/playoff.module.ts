@@ -14,23 +14,23 @@ import {PickListModule} from 'primeng/picklist';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 
-import { GrowlModule } from 'app/components/growl/growl';
-import { PanelModule } from 'app/components/panel/panel';
-import { DropdownModule } from 'app/components/dropdown/dropdown';
-import { InputTextModule } from 'app/components/inputtext/inputtext';
-import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
-import { ButtonModule } from 'app/components/button/button';
-import { TabViewModule } from 'app/components/tabview/tabview';
-import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
-import { SliderModule } from 'app/components/slider/slider';
-import { CalendarModule } from 'app/components/calendar/calendar';
+import { GrowlModule } from 'primeng/growl';
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+import { TabViewModule } from 'primeng/tabview';
+import { CodeHighlighterModule } from 'primeng/codehighlighter';
+import { SliderModule } from 'primeng/slider';
+import { CalendarModule } from 'primeng/calendar';
 
 import {PlayoffRoutingModule} from './playoff-routing.module';
 import { RuleListView } from './rule-listview';
 import { RuleDetailView } from './rule-detailview';
 import { MeetingPageListView } from './meeting-page-listview';
 import { MeetingRuleDetailView } from './meeting-rule-detailview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 
 @NgModule({
 	imports: [

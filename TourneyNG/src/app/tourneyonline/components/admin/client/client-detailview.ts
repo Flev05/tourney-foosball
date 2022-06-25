@@ -6,7 +6,7 @@ import { ClientVO } from 'app/tourneyonline/domain/client-vo';
 import { Country } from 'app/tourneyonline/domain/country';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 

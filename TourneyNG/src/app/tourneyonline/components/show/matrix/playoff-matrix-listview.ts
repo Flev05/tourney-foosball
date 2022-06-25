@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
-import { LevelService } from '../../admin/eliminatory/level-service';
-import { AbstractPlayoffResultListView } from '../../common/abstract-playoff-result-listview';
+import { MeetingPlayoffService } from 'app/tourneyonline/components/admin/playoff/meeting-playoff-service';
+import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
+import { AbstractPlayoffResultListView } from 'app/tourneyonline/components/common/abstract-playoff-result-listview';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
 import { MatrixService } from './matrix-service';
 import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';

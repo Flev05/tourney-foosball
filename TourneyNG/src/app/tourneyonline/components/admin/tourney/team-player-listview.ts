@@ -8,9 +8,9 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { ClientService } from 'app/tourneyonline/service/client-service';
-import { TeamDetailView } from '../team/team-detailview';
+import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 
 const REDIRECT_PLAYER_PL = "admintourney/dv/playerpl";
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";

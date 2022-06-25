@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Meeting } from 'app/tourneyonline/domain/meeting';

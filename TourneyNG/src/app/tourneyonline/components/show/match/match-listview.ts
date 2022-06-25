@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Match } from 'app/tourneyonline/domain/match';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { AbstractListView } from '../../common/abstract-listview';
-import { Router } from '@angular/router';
-
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 
 @Component({
     templateUrl: './match-listview.html',

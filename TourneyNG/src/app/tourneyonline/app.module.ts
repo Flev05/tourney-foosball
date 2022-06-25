@@ -5,15 +5,21 @@ import { HttpClientModule }    from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
-
-import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
-
 import { InputTextModule }  from 'primeng/inputtext';
 import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
 import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule }  from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import {SlideMenuModule} from 'primeng/slidemenu';
+import {SidebarModule} from 'primeng/sidebar';
+
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home/home.component';
+
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data-service/in-memory-data.service';
+import { environment } from 'environments/environment';
 
 import { LoginService } from './service/login-service';
 import { TourneyService } from './service/tourney-service';
@@ -23,19 +29,13 @@ import { RoleService } from './service/role-service';
 import { CountryService } from './service/country-service';
 import { PlayerService } from './service/player-service';
 import { TeamService } from './service/team-service';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data-service/in-memory-data.service';
-import { environment } from 'environments/environment';
 import { UrcService } from './service/urc-service';
-import {SlideMenuModule} from 'primeng/slidemenu';
 import { DisciplineService } from './service/discipline-service';
 import { MeetingService } from './service/meeting-service';
 import { DateFormatModule } from './components/common/date-format.module';
-import { DropdownModule } from 'app/components/dropdown/dropdown';
 import { MeetingPlayoffService } from './components/admin/playoff/meeting-playoff-service';
 import { MeetingRoundService } from './components/admin/round/meeting-round-service';
 import { DateFormatPipe } from './components/common/date-format-pipe';
-import {SidebarModule} from 'primeng/sidebar';
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { AbstractDetailView } from '../../common/abstract-detailview';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';

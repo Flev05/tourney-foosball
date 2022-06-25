@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { Router } from '@angular/router';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Round } from 'app/tourneyonline/domain/round';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';

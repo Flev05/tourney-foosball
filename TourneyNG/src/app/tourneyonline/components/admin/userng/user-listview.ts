@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { UserService } from 'app/tourneyonline/service/user-service';
-import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Observable} from 'rxjs';
 import { of } from 'rxjs/observable/of';
+
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';

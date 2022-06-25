@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { LevelService } from '../../admin/eliminatory/level-service';
+import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
-import { DateFormatPipe } from '../../common/date-format-pipe';
-import { AbstractTabResultListView } from '../../common/abstract-tab-result-listview';
-import { MeetingRoundService } from '../../admin/round/meeting-round-service';
-import { MeetingPlayoffService } from '../../admin/playoff/meeting-playoff-service';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
+import { AbstractTabResultListView } from 'app/tourneyonline/components/common/abstract-tab-result-listview';
+import { MeetingRoundService } from 'app/tourneyonline/components/admin/round/meeting-round-service';
+import { MeetingPlayoffService } from 'app/tourneyonline/components/admin/playoff/meeting-playoff-service';
 import { TourneyResultListView } from '../tourney/tourney-listview';
 
 const REDIRECT_ROUND_MATRIX_LV   = 'matrix/lv/roundLv/dv';

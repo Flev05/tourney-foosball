@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable} from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { UrcService } from 'app/tourneyonline/service/urc-service';

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+
 import { Round } from 'app/tourneyonline/domain/round';
 import { Matrix } from 'app/tourneyonline/domain/matrix';
 import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Router } from '@angular/router';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MatrixService } from './matrix-service';
 

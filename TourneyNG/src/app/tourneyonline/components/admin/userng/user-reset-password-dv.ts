@@ -6,7 +6,6 @@ import { Password } from 'app/tourneyonline/domain/password';
 import { Message } from 'primeng/api';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { Md5 } from 'md5-typescript';
-import { UserDetailView } from './user-detailview';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({

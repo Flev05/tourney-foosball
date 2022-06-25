@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Router } from '@angular/router';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';

@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
-import { AbstractListView } from '../../common/abstract-listview';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { LevelService } from './level-service';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';

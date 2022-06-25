@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Message } from 'app/components/common/api';
+import { Message } from 'primeng/api';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { AbstractRuleListView } from '../../common/abstract-rule-listview';
+import { AbstractRuleListView } from 'app/tourneyonline/components/common/abstract-rule-listview';
 import { MeetingPlayoffService } from './meeting-playoff-service';
 
 @Component({

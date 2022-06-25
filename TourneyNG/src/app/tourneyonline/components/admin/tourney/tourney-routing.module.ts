@@ -4,11 +4,11 @@ import {TourneyListView} from './tourney-listview';
 import {TourneyDetailView} from './tourney-detailview';
 import { TeamPlayerListView } from './team-player-listview';
 import { TeamPickList } from './team-picklist';
-import { RoundListView } from '../round/round-listview';
+import { RoundListView } from 'app/tourneyonline/components/admin/round/round-listview';
 import { RuleListView } from '../playoff/rule-listview';
-import { PlayerDetailView } from '../player/player-detailview';
+import { PlayerDetailView } from 'app/tourneyonline/components/admin/player/player-detailview';
 import { PlayerPickList } from './player-picklist';
-import { TeamDetailView } from '../team/team-detailview';
+import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 import { NewTourneyDetailView } from './new-tourney-detailview';
 
 @NgModule({

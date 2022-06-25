@@ -10,7 +10,7 @@ import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';

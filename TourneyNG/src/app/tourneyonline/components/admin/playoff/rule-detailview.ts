@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Message } from 'app/components/common/api';
+import { Message } from 'primeng/api';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 

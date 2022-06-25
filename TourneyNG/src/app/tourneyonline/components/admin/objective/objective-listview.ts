@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import {Message} from 'primeng/api';
 
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import {Message} from 'app/components/common/api';
 import { ObjectiveConfig } from 'app/tourneyonline/domain/objective-config';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Final } from 'app/tourneyonline/domain/final';
-import { PhaseType } from '../../../domain/enumerations';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './objective-listview.html'

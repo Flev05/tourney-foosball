@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Message } from 'app/components/common/api';
+import { Message } from 'primeng/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import {  PhaseType, Direction } from 'app/tourneyonline/domain/enumerations';

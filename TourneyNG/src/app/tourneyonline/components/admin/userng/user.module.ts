@@ -1,26 +1,25 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
+import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import {AccordionModule} from 'primeng/accordion';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-
-import { SliderModule } from 'app/components/slider/slider';
-import { CodeHighlighterModule } from 'app/components/codehighlighter/codehighlighter';
-import { TabViewModule } from 'app/components/tabview/tabview';
+import { SliderModule } from 'primeng/slider';
+import { CodeHighlighterModule } from 'primeng/codehighlighter';
+import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { InputTextareaModule } from 'app/components/inputtextarea/inputtextarea';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'app/components/dropdown/dropdown';
-import { GrowlModule } from 'app/components/growl/growl';
-import { PanelModule } from 'app/components/panel/panel';
-import { UserRoutingModule } from './user-routing.module';
+import { DropdownModule } from 'primeng/dropdown';
+import { GrowlModule } from 'primeng/growl';
+import { PanelModule } from 'primeng/panel';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FieldsetModule } from 'primeng/fieldset';
 
+import { UserRoutingModule } from './user-routing.module';
 import {UserChangePassword} from './user-changepassword';
 import {UserResetPasswordLv} from './user-reset-password-lv';
 import {UserResetPasswordDv} from './user-reset-password-dv';

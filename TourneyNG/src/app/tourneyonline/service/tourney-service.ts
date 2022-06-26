@@ -697,7 +697,7 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Pprepares the teams classification in function of the list of all of the meteengs for each team 
+     * Prepares the teams classification in function of the list of all of the meetings for each team 
      * @param meetings the list of the meetings
      */
     public createClassification(round: Round, meetings: Meeting[]): Classification[] {
@@ -708,8 +708,9 @@ export class TourneyService extends AbstractService {
             classificationMap.set(t, c);
         }
 
+        let ptw = this.selectedTourney.pointsNeededToWin;
         for(let m of meetings) {
-            if( m.status == MeetingStatus.InProgress || m.isSkiping ) {
+            if( m.isSkiping ) {
                 continue;
             }
             let t1 = m.teamName1;
@@ -721,11 +722,17 @@ export class TourneyService extends AbstractService {
             let c1: Classification = classificationMap.get(key1);            
             let c2: Classification = classificationMap.get(key2);
 
-            c1.played++;
-            c2.played++;
-
             c1.points += m.points1;            
             c2.points += m.points2;
+
+            if(c1.points > 0 || c2.points > 0)  {
+                for( let ma of m.matches ) {
+                    if( ma.score1 > 0 || ma.score2 > 0) {
+                        c1.played++;
+                        c2.played++;
+                    }
+                }
+            }
 
             if (m.points1 > m.points2) {
                 c1.won++;

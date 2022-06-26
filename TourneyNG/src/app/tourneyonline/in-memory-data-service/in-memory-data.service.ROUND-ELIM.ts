@@ -142,7 +142,7 @@ static prepareDefaultMeeting(r : Round  )  {
           , datetime: new Date(2018, 11, 22, 21, 0)
           , address: t1.address
           , country: t1.country
-          , status: MeetingStatus.ToPlay
+          , status: MeetingStatus.InProgress
           , teamName1: t1.teamName
           , teamName2: t2.teamName
           , points1: 0

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import {ConfirmationService,  MessageService} from 'primeng/api';
 
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
@@ -17,8 +16,7 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const TO_PLAY_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
 @Component({
-    templateUrl: './meeting-detailview.html',
-    providers: [ConfirmationService, MessageService]
+    templateUrl: './meeting-detailview.html' 
 })
 export class MeetingDetailView extends AbstractDetailView {
     static redirect: string = "";
@@ -36,7 +34,6 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedDirection: Direction;
     allDaysNo: number;
     meetingLabel: string;
-    status: MeetingStatus;
 
     constructor(
         protected location: Location,
@@ -44,9 +41,7 @@ export class MeetingDetailView extends AbstractDetailView {
         protected meetingService: MeetingService,
         protected meetingRoundService: MeetingRoundService,
         protected meetingPlayoffService: MeetingPlayoffService,
-        public loginService: LoginService,
-        private confirmationService: ConfirmationService, 
-        private messageService: MessageService
+        public loginService: LoginService
     ) { 
         super(tourneyService, location);
     }
@@ -55,8 +50,10 @@ export class MeetingDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
-        this.selectedMeeting  = this.meetingService.selectedMeeting;   
-        this.status = this.selectedMeeting.status;
+        this.selectedMeeting = this.meetingService.selectedMeeting;   
+        if(this.selectedMeeting.status == MeetingStatus.ToPlay) {
+            this.selectedMeeting.status = MeetingStatus.InProgress;
+        }
 
         this.selectedRound = this.meetingService.selectedRound;
         this.roundName = this.selectedRound.name;
@@ -98,31 +95,15 @@ export class MeetingDetailView extends AbstractDetailView {
         this.matches = this.selectedMeeting.matches;
     }
 
-    confirm(event: Event) {
-        this.confirmationService.confirm({
-            // target: event.target,
-            message: 'Are you sure that you want to proceed?',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.messageService.add({severity:'info', summary:'Confirmed', detail:'You have accepted'});
-            },
-            reject: () => {
-                this.messageService.add({severity:'error', summary:'Rejected', detail:'You have rejected'});
-            }
-        });
-    }
-
     disableButton() : string {
         return this.loginService.isFollower() 
-            || this.selectedMeeting.status == MeetingStatus.ToPlay 
             || this.selectedMeeting.status == MeetingStatus.Terminated 
             ? "disabled" : "";
     }
 
     onToPlayClick() {
         console.log("Entering onToPlayClick()");
-        if(!confirm(TO_PLAY_POPUP)) {
-            this.reloadMeetings();
+         if(!confirm(TO_PLAY_POPUP)) {
             return;
         }
 
@@ -132,22 +113,18 @@ export class MeetingDetailView extends AbstractDetailView {
             m.score1 = 0;
             m.score2 = 0;
         }
-        this.status = MeetingStatus.ToPlay
-        this.selectedMeeting.status = this.status;
         this.save();
     }
 
     onInProgressClick() {
         console.log("Entering onInProgressClick()");
-        this.status = MeetingStatus.InProgress;
-        this.selectedMeeting.status = this.status;
+        this.selectedMeeting.status = MeetingStatus.InProgress; 
         this.save();
     }
 
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
-        this.status = MeetingStatus.Terminated;
-        this.selectedMeeting.status = this.status;
+        this.selectedMeeting.status = MeetingStatus.Terminated;
         this.save();
     }
 
@@ -163,7 +140,8 @@ export class MeetingDetailView extends AbstractDetailView {
     plus1(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
-        if(this.matches[ii].score1 == this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin
+            || this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
@@ -197,7 +175,8 @@ export class MeetingDetailView extends AbstractDetailView {
     plus2(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
-        if(this.matches[ii].score2 == this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin
+            || this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
@@ -260,9 +239,16 @@ export class MeetingDetailView extends AbstractDetailView {
                 }
             }
 
-            if (goals1 == goals2 && m.status == MeetingStatus.InProgress) {
-                this.selectedMeeting.points2 += this.selectedTourney.matchBalanceScores;
-                this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;
+            if (goals1 == goals2) {
+                if (this.selectedTourney.tourneyType == TourneyType.Score ) {
+                    if (goals1 != 0) {
+                        this.selectedMeeting.points2 += this.selectedTourney.matchBalanceScores;
+                        this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;        
+                    }
+                } else {
+                    this.selectedMeeting.points2 += this.selectedTourney.matchBalanceScores;
+                    this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;        
+                }
             }
         }
        

@@ -496,7 +496,7 @@ export  class MeetingService extends AbstractService {
             rule1: pr1,
             rule2: pr2,
             ruleName: ruleName,
-            status: MeetingStatus.ToPlay,
+            status: MeetingStatus.InProgress,
             matches: matches
         };
 

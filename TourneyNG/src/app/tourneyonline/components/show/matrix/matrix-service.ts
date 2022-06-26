@@ -232,7 +232,7 @@ export class MatrixService   {
             this.selectedMeeting.points1 = c1.points.value;
             this.selectedMeeting.points2 = c2.points.value;
         }
-        this.selectedMeeting.status = MeetingStatus.ToPlay;
+        this.selectedMeeting.status = MeetingStatus.InProgress;
     }
 
     private saveRoundMeeting( roundId: number): void {

@@ -13,7 +13,6 @@
 </p-accordionTab>
 </p-accordion>
 
-
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
@@ -29,38 +28,25 @@
 </div>       
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div *ngIf="!loginService.isFollower()" class="ui-grid-row">
+    <div *ngIf="!loginService.isFollower()" class="ui-grid-row"> 
         <div class="ui-grid-col-3">
-            Stato dell'incontro:
-        </div>
-   
-        <div class="ui-grid-col-3">
-            <div class="ui-g radiobuttons">
-                <div class="ui-g-12">
-                    <p-radioButton name="statusGroupname" 
-                        label="Non iniziato" 
-                        value="toplay" 
-                        [(ngModel)]="status"
-                        (onClick)="onToPlayClick()">
-                    </p-radioButton>
-                </div>
-                <div class="ui-g-12">
-                    <p-radioButton name="statusGroupname" 
-                        label="In corso" 
-                        value="inprogress" 
-                        [(ngModel)]="status"
-                        (onClick)="onInProgressClick()">
-                    </p-radioButton>
-                </div>
-                <div class="ui-g-12">
-                    <p-radioButton name="statusGroupname" 
-                        label="Terminato" 
-                        value="terminated" 
-                        [(ngModel)]="status"
-                        (onClick)="onTerminatedClick()">
-                    </p-radioButton>
-                </div>
-            </div>
+            <p-radioButton name="statusGroupname" 
+                label="In corso" 
+                value="inprogress" 
+                [(ngModel)]="selectedMeeting.status"
+                (onClick)="onInProgressClick()">
+            </p-radioButton>
+            <p-radioButton name="statusGroupname" 
+                label="Terminato" 
+                value="terminated" 
+                [(ngModel)]="selectedMeeting.status"
+                (onClick)="onTerminatedClick()">
+            </p-radioButton>
+            <button type="button" 
+                icon="fa fa-remove" 
+                pButton (click)="onToPlayClick()" 
+                pTooltip="Attenzione! La conferma di tale button azzera tutti i dati dell'incontro!">
+            </button>
         </div>
     </div>
     

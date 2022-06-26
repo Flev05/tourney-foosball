@@ -709,7 +709,7 @@ export class TourneyService extends AbstractService {
         }
 
         for(let m of meetings) {
-            if( m.status == MeetingStatus.ToPlay || m.isSkiping ) {
+            if( m.status == MeetingStatus.InProgress || m.isSkiping ) {
                 continue;
             }
             let t1 = m.teamName1;

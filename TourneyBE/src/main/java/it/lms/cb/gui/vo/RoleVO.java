@@ -1,39 +1,37 @@
 
 package it.lms.cb.gui.vo;
 
-import java.io.Serializable;
+public class RoleVO extends AbstractVO {
 
-public class RoleVO extends AbstractVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 1L;
+	private String name;
+	private String description;
 
-    private String            name;
-    private String            description;
+	@Override
+	public String toString() {
 
-    @Override
-    public String toString() {
+		return super.toString() + " RoleVO [name=" + name + ", description=" + description + "]";
+	}
 
-        return super.toString() + " RoleVO [name=" + name + ", description=" + description + "]";
-    }
+	public String getName() {
 
-    public String getName() {
+		return name;
+	}
 
-        return name;
-    }
+	public void setName(String name) {
 
-    public void setName(String name) {
+		this.name = name;
+	}
 
-        this.name = name;
-    }
+	public String getDescription() {
 
-    public String getDescription() {
+		return description;
+	}
 
-        return description;
-    }
+	public void setDescription(String description) {
 
-    public void setDescription(String description) {
-
-        this.description = description;
-    }
+		this.description = description;
+	}
 
 }

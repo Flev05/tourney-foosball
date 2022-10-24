@@ -39,133 +39,133 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LoginRESTService extends AbstractRESTService {
 
-    @Inject
-    private SessionDao sessionDao;
+	@Inject
+	private SessionDao sessionDao;
 
-    @Inject
-    private UserDao    userDao;
+	@Inject
+	private UserDao userDao;
 
-    @Inject
-    private RoleDao    roleDao;
+	@Inject
+	private RoleDao roleDao;
 
-    @Inject
-    @ConverterObject
-    private Converter  converter;
+	@Inject
+	@ConverterObject
+	private Converter converter;
 
-    public LoginRESTService() {
+	public LoginRESTService() {
 
-        super();
-    }
+		super();
+	}
 
-    /**
-     * Called to perform the system logout
-     */
-    @PUT
-    @Path("/logout/{loggedUserId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response doLogout(@PathParam("loggedUserId") Integer loggedUserId) {
+	/**
+	 * Called to perform the system login
+	 */
+	@PUT
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response doLogin(Login login) {
 
-        log.debug(logId() + "PUT: doLogout(" + loggedUserId + ")");
+		log.debug(logId() + "PUT: doLogin(" + login + ")");
+		Response.ResponseBuilder builder;
 
-        try {
-            super.invalidateSession();
-        } catch (Exception e) {
-            log.error(logId() + "Ignore logout Exception:" + e);
-        }
+		Map<String, String> responseObj = new HashMap<>();
 
-        Response.ResponseBuilder builder = Response.ok();
-        return builder.build();
-    }
+		String username = login.getUsername();
+		String md5Pssword = login.getPassword().toUpperCase();
 
-    /**
-     * Called to perform the system login
-     */
-    @PUT
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response doLogin(Login login) {
+		log.debug(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
 
-        log.debug(logId() + "PUT: doLogin(" + login + ")");
-        Response.ResponseBuilder builder;
+		printAuthentication();
 
-        Map<String, String> responseObj = new HashMap<String, String>();
+		if (username == null || username.equals("")) {
+			String errmsg = logId() + "Username is empty, re-logging";
+			log.debug(errmsg);
 
-        String username = login.getUsername();
-        String md5Pssword = login.getPassword().toUpperCase();
+			responseObj = new HashMap<>();
+			responseObj.put("error", errmsg);
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+		}
 
-        log.debug(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
+		try {
 
-        printAuthentication();
+			User u = userDao.findUserBy(username, md5Pssword);
 
-        if (username == null || username.equals("")) {
-            String errmsg = logId() + "Username is empty, re-logging";
-            log.debug(errmsg);
+			if (u == null) {
+				String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
+				log.error(message);
+				responseObj = new HashMap<>();
+				responseObj.put("error", "Login failed");
+				builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+				return builder.build();
+			}
 
-            responseObj = new HashMap<String, String>();
-            responseObj.put("error", errmsg);
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
+			String sessionId = getSessionId();
+			String userAgent = super.getUserAgent();
 
-        try {
+			Session s = sessionDao.findSessionBy(u);
+			if (s == null) {
+				String message = logId() + "User Session doesn't exist, create a new one";
+				log.error(message);
 
-            User u = userDao.findUserBy(username, md5Pssword);
+				sessionDao.insert(u, sessionId, userAgent);
+			} else {
+				sessionDao.update(s, sessionId, userAgent);
+			}
 
-            if (u == null) {
-                String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
-                log.error(message);
-                responseObj = new HashMap<String, String>();
-                responseObj.put("error", "Login failed");
-                builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-                return builder.build();
-            }
+			String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") successful";
+			log.debug(message);
 
-            String sessionId = getSessionId();
-            String userAgent = super.getUserAgent();
+			UserVO uvo = prepareResponse(u);
 
-            Session s = sessionDao.findSessionBy(u);
-            if (s == null) {
-                String message = logId() + "User Session doesn't exist, create a new one";
-                log.error(message);
+			builder = Response.status(Response.Status.OK).entity(uvo);
+		} catch (Exception e) {
 
-                sessionDao.insert(u, sessionId, userAgent);
-            } else {
-                sessionDao.update(s, sessionId, userAgent);
-            }
+			log.error(logId() + "Login failed", e);
+			responseObj = new HashMap<>();
+			responseObj.put("error", e.getMessage());
+			builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+		}
 
-            String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") successful";
-            log.debug(message);
+		return builder.build();
+	}
 
-            UserVO uvo = prepareResponse(u);
+	private UserVO prepareResponse(User u) {
 
-            builder = Response.status(Response.Status.OK).entity(uvo);
-        } catch (Exception e) {
+		Set<RoleVO> roleSet = new HashSet<>();
+		UserVO uvo = converter.convertUserPoVo(u);
+		for (UserRoleClient urc : u.getUrcSet()) {
+			Role r = urc.getRole();
+			RoleVO rvo = converter.convertRolePoVo(r);
+			roleSet.add(rvo);
+		}
 
-            log.error(logId() + "Login failed", e);
-            responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
+		List<Role> minorRoles = roleDao.findRoleLesserThan(u.getId());
 
-        return builder.build();
-    }
+		List<RoleVO> minorRoleList = converter.convertRolePoVoList(minorRoles);
 
-    private UserVO prepareResponse(User u) {
+		uvo.setMinorRoles(minorRoleList);
+		log.debug(logId() + uvo);
+		return uvo;
+	}
 
-        Set<RoleVO> roleSet = new HashSet<>();
-        UserVO uvo = converter.convertUserPoVo(u);
-        for (UserRoleClient urc : u.getUrcSet()) {
-            Role r = urc.getRole();
-            RoleVO rvo = converter.convertRolePoVo(r);
-            roleSet.add(rvo);
-        }
+	/**
+	 * Called to perform the system logout
+	 */
+	@PUT
+	@Path("/logout/{loggedUserId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response doLogout(@PathParam("loggedUserId") Integer loggedUserId) {
 
-        List<Role> minorRoles = roleDao.findRoleLesserThan(u.getId());
+		log.debug(logId() + "PUT: doLogout(" + loggedUserId + ")");
 
-        List<RoleVO> minorRoleList = converter.convertRolePoVoList(minorRoles);
+		try {
+			super.invalidateSession();
+		} catch (Exception e) {
+			log.error(logId() + "Ignore logout Exception:" + e);
+		}
 
-        uvo.setMinorRoles(minorRoleList);
-        log.debug(logId() + uvo);
-        return uvo;
-    }
+		Response.ResponseBuilder builder = Response.ok();
+		return builder.build();
+	}
 }

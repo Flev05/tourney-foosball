@@ -1,8 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,40 +20,40 @@ import lombok.Setter;
 @Table(name = "user_role_client")
 @Getter
 @Setter
-public class UserRoleClient extends AbstractPO implements Serializable {
+public class UserRoleClient extends AbstractPO {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer           id;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    // bi-directional many-to-one association to User
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User              user;
+	// bi-directional many-to-one association to User
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    // bi-directional many-to-one association to Role
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role              role;
+	// bi-directional many-to-one association to Role
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
-    // bi-directional many-to-one association to Client
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client            client;
+	// bi-directional many-to-one association to Client
+	@ManyToOne
+	@JoinColumn(name = "client_id")
+	private Client client;
 
-    // bi-directional many-to-many association to Tourney
-    @ManyToOne()
-    @JoinColumn(name = "tourney_id")
-    private Tourney           tourney;
+	// bi-directional many-to-many association to Tourney
+	@ManyToOne()
+	@JoinColumn(name = "tourney_id")
+	private Tourney tourney;
 
-    @Column(name = "available")
-    private Boolean           available;
+	@Column(name = "available")
+	private Boolean available;
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " UserRoleClient [user=" + user.getUsername() + ", role=" + role.getName()
-                + ", client=" + client.getBusinessName() + "]";
-    }
+		return super.toString() + " UserRoleClient [user=" + user.getUsername() + ", role=" + role.getName()
+				+ ", client=" + client.getBusinessName() + "]";
+	}
 }

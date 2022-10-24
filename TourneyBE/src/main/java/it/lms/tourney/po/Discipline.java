@@ -1,8 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,24 +18,24 @@ import lombok.Setter;
 @Table(name = "discipline", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @Getter
 @Setter
-public class Discipline extends AbstractPO implements Serializable {
+public class Discipline extends AbstractPO {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer           id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "name")
-    private String            name;
+	@Column(name = "name")
+	private String name;
 
-    public Discipline() {
+	public Discipline() {
 
-    }
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " Discipline [name=" + name + "]";
-    }
+		return super.toString() + " Discipline [name=" + name + "]";
+	}
 }

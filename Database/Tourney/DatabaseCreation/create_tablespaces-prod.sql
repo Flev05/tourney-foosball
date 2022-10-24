@@ -9,17 +9,17 @@
 -- \set TS_DATA_LOCATION  '\'D:/luciano/EREBUS/DB/tourney/prod/data\''
 -- \set TS_INDEX_LOCATION '\'D:/luciano/EREBUS/DB/tourney/prod/index\''
 
--- DESKTOP HP
--- \set TS_DATA_LOCATION  '\'C:/DATA/TOOLS/DB/TableSpaces/tourney/prod/data\''
--- \set TS_INDEX_LOCATION '\'C:/DATA/TOOLS/DB/TableSpaces/tourney/prod/index\''
-
 -- LAPTOP LENOVO
 -- \set TS_DATA_LOCATION  '\'C:/views/tablespaces/tourney/prod/data\''
 -- \set TS_INDEX_LOCATION '\'C:/views/tablespaces/tourney/prod/index\''
 
+-- DESKTOP HP ENVY
+\set TS_DATA_LOCATION  '\'C:/views/tablespaces/tourney/test/data\''
+\set TS_INDEX_LOCATION '\'C:/views/tablespaces/tourney/test/index\''
+
 -- Server Centos Linux
-\set TS_DATA_LOCATION  '\'/data/tourney/tourneydb/data\''
-\set TS_INDEX_LOCATION '\'/data/tourney/tourneydb/index\''
+-- \set TS_DATA_LOCATION  '\'/data/tourney/tourneydb/data\''
+-- \set TS_INDEX_LOCATION '\'/data/tourney/tourneydb/index\''
 
 \i ../../DatabaseCommons/DatabaseCreation/create_tablespaces.sql
 

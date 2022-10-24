@@ -1,8 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,22 +9,22 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Login extends AbstractPO implements Serializable {
+public class Login extends AbstractPO {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private Integer           id;
+	private Integer id;
 
-    private String            username;
-    private String            password;
+	private String username;
+	private String password;
 
-    public Login() {
+	public Login() {
 
-    }
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " Login [username=" + username + ", password=" + password + "]";
-    }
+		return super.toString() + " Login [username=" + username + ", password=" + password + "]";
+	}
 }

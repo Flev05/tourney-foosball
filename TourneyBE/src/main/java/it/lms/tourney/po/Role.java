@@ -1,7 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,59 +24,63 @@ import lombok.Setter;
 @Table(name = "role")
 @Getter
 @Setter
-public class Role extends AbstractPO implements Serializable {
+public class Role extends AbstractPO {
 
-    private static final long   serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer             id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "name")
-    private String              name;
+	@Column(name = "name")
+	private String name;
 
-    @Column(name = "description")
-    private String              description;
+	@Column(name = "description")
+	private String description;
 
-    // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private Set<UserRoleClient> urcSet;
+	// bi-directional one-to-many association to UserRoleClient
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+	private Set<UserRoleClient> urcSet;
 
-    public enum ROLES {
+	public enum ROLES {
 
-        DEVELOPER(5), OWNER(4), ADMIN(3), OPERATOR(2), FOLLOWER(1);
+						DEVELOPER(5),
+						OWNER(4),
+						ADMIN(3),
+						OPERATOR(2),
+						FOLLOWER(1);
 
-        private ROLES(int value) {
+		private ROLES(int value) {
 
-            this.value = value;
-        }
+			this.value = value;
+		}
 
-        public static ROLES resolve(String roleName) {
+		public static ROLES resolve(String roleName) {
 
-            for (ROLES r : ROLES.values()) {
-                if (r.name().equals(roleName)) {
-                    return r;
-                }
-            }
-            return null;
-        }
+			for (ROLES r : ROLES.values()) {
+				if (r.name().equals(roleName)) {
+					return r;
+				}
+			}
+			return null;
+		}
 
-        private int value;
+		private int value;
 
-        public int getValue() {
+		public int getValue() {
 
-            return value;
-        }
-    }
+			return value;
+		}
+	}
 
-    public Role() {
+	public Role() {
 
-        urcSet = new HashSet<>();
-    }
+		urcSet = new HashSet<>();
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " Role [name=" + name + ", description=" + description + "]";
-    }
+		return super.toString() + " Role [name=" + name + ", description=" + description + "]";
+	}
 }

@@ -1,7 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,57 +25,57 @@ import lombok.Setter;
 @Table(name = "user_table")
 @Getter
 @Setter
-public class User extends AbstractPO implements Serializable {
+public class User extends AbstractPO {
 
-    private static final long   serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer             id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "username")
-    private String              username;
+	@Column(name = "username")
+	private String username;
 
-    @Column(name = "password")
-    private String              password;
+	@Column(name = "password")
+	private String password;
 
-    @Column(name = "firstname")
-    private String              firstname;
+	@Column(name = "firstname")
+	private String firstname;
 
-    @Column(name = "lastname")
-    private String              lastname;
+	@Column(name = "lastname")
+	private String lastname;
 
-    @Column(name = "address")
-    private String              address;
+	@Column(name = "address")
+	private String address;
 
-    @Column(name = "email")
-    private String              email;
+	@Column(name = "email")
+	private String email;
 
-    @Column(name = "phone_number")
-    private String              phoneNumber;
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
-    @Column(name = "description")
-    private String              description;
+	@Column(name = "description")
+	private String description;
 
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country             country;
+	// bi-directional many-to-one association to Country
+	@ManyToOne
+	@JoinColumn(name = "country_id")
+	private Country country;
 
-    // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<UserRoleClient> urcSet;
+	// bi-directional one-to-many association to UserRoleClient
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	private Set<UserRoleClient> urcSet;
 
-    public User() {
+	public User() {
 
-        urcSet = new HashSet<>();
-    }
+		urcSet = new HashSet<>();
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " User [username=" + username + ", password=" + password + ", firstname=" + firstname
-                + ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
-                + phoneNumber + ", description=" + description + "]";
-    }
+		return super.toString() + " User [username=" + username + ", password=" + password + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", address=" + address + ", email=" + email + ", phoneNumber="
+				+ phoneNumber + ", description=" + description + "]";
+	}
 }

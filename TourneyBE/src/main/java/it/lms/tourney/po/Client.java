@@ -1,7 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,55 +25,55 @@ import lombok.Setter;
 @Table(name = "client", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Getter
 @Setter
-public class Client extends AbstractPO implements Serializable {
+public class Client extends AbstractPO {
 
-    private static final long   serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer             id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "business_name")
-    private String              businessName;
+	@Column(name = "business_name")
+	private String businessName;
 
-    @Column(name = "address")
-    private String              address;
+	@Column(name = "address")
+	private String address;
 
-    @Column(name = "phone_number")
-    private String              phoneNumber;
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
-    @Column(name = "email")
-    private String              email;
+	@Column(name = "email")
+	private String email;
 
-    @Column(name = "site_url")
-    private String              siteUrl;
+	@Column(name = "site_url")
+	private String siteUrl;
 
-    // bi-directional many-to-one association to Country
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country             country;
+	// bi-directional many-to-one association to Country
+	@ManyToOne
+	@JoinColumn(name = "country_id")
+	private Country country;
 
-    // bi-directional one-to-many association to UserRoleClient
-    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
-    private Set<UserRoleClient> urcSet;
+	// bi-directional one-to-many association to UserRoleClient
+	@OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+	private Set<UserRoleClient> urcSet;
 
-    public Client() {
+	public Client() {
 
-        super();
-        urcSet = new HashSet<>();
+		super();
+		urcSet = new HashSet<>();
 
-    }
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return "Client [businessName=" + businessName + ", address=" + address + ", phoneNumber=" + phoneNumber
-                + ", email=" + email + ", siteUrl=" + siteUrl + ", country=" + country + "]";
-    }
+		return "Client [businessName=" + businessName + ", address=" + address + ", phoneNumber=" + phoneNumber
+				+ ", email=" + email + ", siteUrl=" + siteUrl + ", country=" + country + "]";
+	}
 
-    @Override
-    public int hashCode() {
+	@Override
+	public int hashCode() {
 
-        return getId() + email.hashCode();
-    }
+		return getId() + email.hashCode();
+	}
 }

@@ -1,95 +1,93 @@
 
 package it.lms.cb.gui.vo;
 
-import java.io.Serializable;
-
 import it.lms.tourney.po.Country;
 
 /**
  * The view object VO class
  */
-public class MeetingVO extends AbstractVO implements Serializable {
+public class MeetingVO extends AbstractVO {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private String            json;
+	private String json;
 
-    private Integer           tourneyId;
-    private Integer           roundId;
-    private Integer           playoffId;
-    private Integer           eliminatoryId;
+	private Integer tourneyId;
+	private Integer roundId;
+	private Integer playoffId;
+	private Integer eliminatoryId;
 
-    private Country           country;
+	private Country country;
 
-    public MeetingVO() {
+	public MeetingVO() {
 
-    }
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " Meeting [json=" + json + ", tourneyId=" + tourneyId + ", roundId=" + roundId
-                + ", playoffId=" + playoffId + ", eliminatoryId=" + eliminatoryId + ", country=" + country + "]";
-    }
+		return super.toString() + " Meeting [json=" + json + ", tourneyId=" + tourneyId + ", roundId=" + roundId
+				+ ", playoffId=" + playoffId + ", eliminatoryId=" + eliminatoryId + ", country=" + country + "]";
+	}
 
-    public Integer getTourneyId() {
+	public Integer getTourneyId() {
 
-        return tourneyId;
-    }
+		return tourneyId;
+	}
 
-    public void setTourneyId(Integer tourneyId) {
+	public void setTourneyId(Integer tourneyId) {
 
-        this.tourneyId = tourneyId;
-    }
+		this.tourneyId = tourneyId;
+	}
 
-    public String getJson() {
+	public String getJson() {
 
-        return json;
-    }
+		return json;
+	}
 
-    public void setJson(String json) {
+	public void setJson(String json) {
 
-        this.json = json;
-    }
+		this.json = json;
+	}
 
-    public Integer getRoundId() {
+	public Integer getRoundId() {
 
-        return roundId;
-    }
+		return roundId;
+	}
 
-    public void setRoundId(Integer roundId) {
+	public void setRoundId(Integer roundId) {
 
-        this.roundId = roundId;
-    }
+		this.roundId = roundId;
+	}
 
-    public Integer getPlayoffId() {
+	public Integer getPlayoffId() {
 
-        return playoffId;
-    }
+		return playoffId;
+	}
 
-    public void setPlayoffId(Integer playoffId) {
+	public void setPlayoffId(Integer playoffId) {
 
-        this.playoffId = playoffId;
-    }
+		this.playoffId = playoffId;
+	}
 
-    public Integer getEliminatoryId() {
+	public Integer getEliminatoryId() {
 
-        return eliminatoryId;
-    }
+		return eliminatoryId;
+	}
 
-    public void setEliminatoryId(Integer eliminatoryId) {
+	public void setEliminatoryId(Integer eliminatoryId) {
 
-        this.eliminatoryId = eliminatoryId;
-    }
+		this.eliminatoryId = eliminatoryId;
+	}
 
-    public Country getCountry() {
+	public Country getCountry() {
 
-        return country;
-    }
+		return country;
+	}
 
-    public void setCountry(Country country) {
+	public void setCountry(Country country) {
 
-        this.country = country;
-    }
+		this.country = country;
+	}
 
 }

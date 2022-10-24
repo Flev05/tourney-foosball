@@ -4,14 +4,22 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
         {
-            "type": "chrome",
+            "name": "Launch http://localhost:8082/TourneyB",
+            "type": "firefox",
             "request": "launch",
-            "name": "Launch Chrome",
+            "reAttach": true,
             "url": "http://localhost:8082/TourneyBE",
             "webRoot": "${workspaceFolder}"
         }
+
+        // {
+        //     "type": "chrome",
+        //     "request": "launch",
+        //     "name": "Launch Chrome",
+        //     "url": "http://localhost:8082/TourneyBE",
+        //     "webRoot": "${workspaceFolder}"
+        // }
         
         // {
         //     "type": "chrome",

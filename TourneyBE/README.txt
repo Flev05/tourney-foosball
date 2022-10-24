@@ -6,10 +6,10 @@ Di seguito sono riportate le linee guida per il porgetto Tourney.
 
 1) Per lo sviluppo e il test dell'applicazione seguire i segusnti passi:
 portarsi sotto la directory di sviluppo:
-C:\views\EREBUS\CalcioBalilla\TourneyNG
+C:\views\EREBUS\Tourney\TourneyNG
 cat and past delle righe sotto:
 
-set TOURNEY_DIR=C:\views\EREBUS\CalcioBalilla
+set TOURNEY_DIR=C:\views\EREBUS\Tourney
 set FE_DIR=%TOURNEY_DIR%\TourneyNG
 set BE_DIR=%TOURNEY_DIR%\TourneyBE
 set WEB_CONTENT_DIR=%BE_DIR%\WebContent

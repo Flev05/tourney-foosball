@@ -1,8 +1,6 @@
 
 package it.lms.tourney.po;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,37 +18,37 @@ import lombok.Setter;
 @Table(name = "country", uniqueConstraints = @UniqueConstraint(columnNames = "city"))
 @Getter
 @Setter
-public class Country extends AbstractPO implements Serializable {
+public class Country extends AbstractPO {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer           id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "city")
-    private String            city;
+	@Column(name = "city")
+	private String city;
 
-    @Column(name = "city_code")
-    private String            cityCode;
+	@Column(name = "city_code")
+	private String cityCode;
 
-    @Column(name = "province_code")
-    private String            provinceCode;
+	@Column(name = "province_code")
+	private String provinceCode;
 
-    @Column(name = "zip_code")
-    private String            zipCode;
+	@Column(name = "zip_code")
+	private String zipCode;
 
-    @Column(name = "country_code")
-    private String            countryCode;
+	@Column(name = "country_code")
+	private String countryCode;
 
-    public Country() {
+	public Country() {
 
-    }
+	}
 
-    @Override
-    public String toString() {
+	@Override
+	public String toString() {
 
-        return super.toString() + " Country [city=" + city + ", cityCode=" + cityCode + ", provinceCode=" + provinceCode
-                + ", zipCode=" + zipCode + ", countryCode=" + countryCode + "]";
-    }
+		return super.toString() + " Country [city=" + city + ", cityCode=" + cityCode + ", provinceCode=" + provinceCode
+				+ ", zipCode=" + zipCode + ", countryCode=" + countryCode + "]";
+	}
 }

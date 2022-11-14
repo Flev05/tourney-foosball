@@ -238,11 +238,12 @@
 		-->
 		
 		<!-- Annotation processor to generate the JPA metamodel classes for typesafe 
-			criteria queries -->
+			criteria queries 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
 		</dependency>
+		-->
 		
 		<!-- Import the JPA API, we use provided scope as the API is included in 
 			JBoss EAP -->
@@ -251,6 +252,7 @@
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/de.jpdigital/hibernate53-ddl-maven-plugin -->
 		<dependency>
 			<groupId>de.jpdigital</groupId>

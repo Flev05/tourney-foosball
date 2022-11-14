@@ -5,6 +5,7 @@ import { RoundType, Direction } from './enumerations';
 export interface Round {
     id: number;
     
+    direction: Direction;
     selectedTabIndex?: number;
     name: string;
     label?: string;
@@ -14,8 +15,6 @@ export interface Round {
     daysNo: number;
     onewayCurrentDay: number;
     roundtripCurrentDay: number;
-
-    direction: Direction;
 
     teamNames: string[];
 

@@ -114,19 +114,19 @@ export class TeamPickList extends AbstractListView {
     }
 
     private cleanRoundMeetings() {
-        for (let r of this.selectedTourney.rounds) {
+        for (let r of this.selectedTourney.roundVO.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
         }
-        this.selectedTourney.rounds = [];
+        this.selectedTourney.roundVO.rounds = [];
     }
 
     private cleanPlayoffMeetings() {
-        for (let p of this.selectedTourney.playoffs) {
+        for (let p of this.selectedTourney.playoffVO.playoffs) {
             p.round.onewayMeetings = [];
             p.round.roundtripMeetings = [];
         }
-        this.selectedTourney.playoffs = [];
+        this.selectedTourney.playoffVO.playoffs = [];
     }
     
     private cleanEliminatoryMeetings( ) {
@@ -188,7 +188,7 @@ export class TeamPickList extends AbstractListView {
         subscriber.subscribe(cs => this.next(cs));
     }
 
-    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+    protected saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
         return (res: any): Observable<T> => {
             console.log("Entering saveTourneyErrorHandler()");
             console.log(`${operation} failed!`);

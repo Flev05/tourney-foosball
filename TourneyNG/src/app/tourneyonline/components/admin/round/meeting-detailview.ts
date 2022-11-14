@@ -9,6 +9,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Observable, of } from 'rxjs';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
     templateUrl: './meeting-detailview.html',
@@ -18,6 +19,12 @@ export class MeetingDetailView extends AbstractDetailView {
     selectedRound: Round;
     selectedMeeting: Meeting;
     onSaveMeetingError: boolean;
+    isRoundAutoGen: string;
+
+    teamName1CB: Combobox;
+    teamName2CB: Combobox;
+    teams4RoundCombobox: Combobox[]; 
+
     
     constructor( protected location: Location,
         protected tourneyService: TourneyService,
@@ -38,6 +45,27 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting = this.meetingRoundService.selectedMeeting;
 
         this.selectedMeeting.datetime = new Date(this.selectedMeeting.datetime);
+        this.isRoundAutoGen = this.meetingRoundService.isRoundAutoGen;
+
+        this.teams4RoundCombobox = [];
+        for( let t of this.selectedTourney.teams) {
+            this.teams4RoundCombobox.push({label: t.teamName, value: t.id});
+        }
+
+        this.teamName1CB = {label: this.selectedMeeting.teamName1, value: -1};
+        for( let t of this.selectedTourney.teams) {
+            if(t.teamName == this.selectedMeeting.teamName1) {
+                this.teamName1CB.value = t.id;
+                break;
+            }
+        }
+        this.teamName2CB = {label: this.selectedMeeting.teamName2, value: -1};
+        for( let t of this.selectedTourney.teams) {
+            if(t.teamName == this.selectedMeeting.teamName2) {
+                this.teamName2CB.value = t.id;
+                break;
+            }
+        }
     }
 
     private onLoadAllCountriesComplete(): void {
@@ -83,4 +111,28 @@ export class MeetingDetailView extends AbstractDetailView {
         let msgerr : string = 'Modifica meeting fallita';
         console.error(msgerr);
     }
+
+    /**
+     * Processes the change on the number of teams for each round
+     * @param cb the selected item in the combo box
+     */
+    onTeam1Change(cb: Combobox) {
+        console.log('Entering onTeam1Change(' + cb +")");
+        for(let t of this.selectedTourney.teams) {
+            if(t.teamName == this.selectedMeeting.teamName1) {
+                this.selectedMeeting.teamName1 = cb.label;
+                break;
+            }
+        }
+    }
+    onTeam2Change(cb: Combobox) {
+        console.log('Entering onTeam2Change(' + cb +")");
+        for(let t of this.selectedTourney.teams) {
+            if(t.teamName == this.selectedMeeting.teamName2) {
+                this.selectedMeeting.teamName2 = cb.label;
+                break;
+            }
+        }
+    }
+    
 }

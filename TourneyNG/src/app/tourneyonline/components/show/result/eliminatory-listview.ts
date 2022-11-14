@@ -35,7 +35,8 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     
     ngOnInit() {
         super.ngOnInit();
-        this.isOneway = this.tourneyService.selectedEliminatoryLevel.direction == Direction.OneWay ? "true" : "false";
+        this.meetingService.abstractRoundVO = this.tourneyService.selectedEliminatoryLevel.abstractRoundVO;
+        this.isOneway = this.meetingService.abstractRoundVO.direction == Direction.OneWay ? "true" : "false";
         this.isRoundTrip = this.isOneway == "true" ? false : true;
 
         this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete(), e => this.serverUnreachableHandler(e));

@@ -68,14 +68,6 @@ export class TourneyListView extends AbstractTourneyListView {
        });
     }
  
-    // onSearch(value: string) {
-    //     this.clientService.selectedClientOption = this.tourneyFormGroup.get('selectedClientOption').value;
-    //     this.fromDate = this.tourneyFormGroup.get('fromDate').value;
-    //     this.toDate   = this.tourneyFormGroup.get('toDate').value;
-    //     const subsbr = this.tourneyService.loadTourneys(this.fromDate, this.toDate);
-    //     subsbr.subscribe(t => this.tdbs = t, e => this.onError(e), () => this.onLoadAllTourneysComplete());
-    // }
-    
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
         console.log(event.data);

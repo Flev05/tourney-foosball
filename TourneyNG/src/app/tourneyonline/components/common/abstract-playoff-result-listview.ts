@@ -76,7 +76,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.playoffTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedPlayoff.round.teamNames);
 
         let playoffIds: number[] = [];
-        for(let p of this.selectedTourney.playoffs) {
+        for(let p of this.selectedTourney.playoffVO.playoffs) {
             playoffIds.push(p.id);
         }
         
@@ -194,6 +194,8 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingService = this.meetingPlayoffService;
         this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         
+        this.meetingService.abstractRoundVO = this.selectedTourney.playoffVO;
+
         this.meetingService.selectedRound = this.selectedPlayoff.round;
         this.meetingService.selectedRound.name = this.selectedPlayoff.round.name;
         this.meetingService.selectedRound.direction = this.selectedRow.direction;
@@ -209,7 +211,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     
     refresh(): void {     
         let playoffIds: number[] = [];
-        for(let p of this.selectedTourney.playoffs) {
+        for(let p of this.selectedTourney.playoffVO.playoffs) {
             playoffIds.push(p.id);
         }
         

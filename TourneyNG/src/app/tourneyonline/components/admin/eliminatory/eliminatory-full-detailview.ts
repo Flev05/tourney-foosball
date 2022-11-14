@@ -72,8 +72,8 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
 
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.isOneway   = this.selectedEliminatoryLevel.direction == Direction.OneWay;
-        this.isPlayoff  = this.selectedTourney.playoffs.length > 0 ? true : false;
+        this.isOneway   = this.selectedEliminatoryLevel.abstractRoundVO.direction == Direction.OneWay;
+        this.isPlayoff  = this.selectedTourney.playoffVO.playoffs.length > 0 ? true : false;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.positions = this.tourneyService.positionsCombobox;

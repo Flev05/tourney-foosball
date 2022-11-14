@@ -22,8 +22,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         protected levelService: LevelService,
         protected router: Router,
         protected location: Location,
-        public dfp: DateFormatPipe,
-        private matrixService: MatrixService
+        public dfp: DateFormatPipe 
     ) {
         super(matrixDvRedirect, tourneyService, meetingService, levelService, router, location, dfp)
     } 

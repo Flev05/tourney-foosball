@@ -59,7 +59,7 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
-        this.isOneway = this.selectedEliminatoryLevel.direction == Direction.OneWay;
+        this.isOneway = this.selectedEliminatoryLevel.abstractRoundVO.direction == Direction.OneWay;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
         this.m1 = this.selectedEliminatory.round.onewayMeetings[0];

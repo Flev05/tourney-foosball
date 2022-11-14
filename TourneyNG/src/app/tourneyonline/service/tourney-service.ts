@@ -92,7 +92,7 @@ export class TourneyService extends AbstractService {
     selectedClassificationRow: Classification;
 
     static roundCols: TableCols[] = [
-        { field: 'name',        header: 'Girone' },
+        { field: 'name',        header: 'Giron1' },
     ];
 
     static playoffCols: TableCols[] = [
@@ -171,7 +171,7 @@ export class TourneyService extends AbstractService {
     }
 
     prepareDefaultComboBoxes(): number {
-        if(this.selectedTourney.rounds.length==0 && this.selectedTourney.teams.length==0) {
+        if(this.selectedTourney.roundVO.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return;
         }
 
@@ -181,12 +181,12 @@ export class TourneyService extends AbstractService {
 
         let min: number = 2;
 
-        let teamsNo = this.selectedTourney.rounds.length;
-        if( this.selectedTourney.rounds.length == 0 ) {
+        let teamsNo = this.selectedTourney.roundVO.rounds.length;
+        if( this.selectedTourney.roundVO.rounds.length == 0 ) {
             teamsNo = this.selectedTourney.teams.length;
         } else {
             teamsNo = 0;
-            for( let r of this.selectedTourney.rounds ){
+            for( let r of this.selectedTourney.roundVO.rounds ){
                 teamsNo += r.teamNames.length;
             }
         }
@@ -204,24 +204,24 @@ export class TourneyService extends AbstractService {
         this.roundsCombobox = [];
         this.roundsCombobox.push({label: "", value: 0});
             
-        for(let i=0; i<this.selectedTourney.rounds.length; i++) {
-            let r=this.selectedTourney.rounds[i];
+        for(let i=0; i<this.selectedTourney.roundVO.rounds.length; i++) {
+            let r=this.selectedTourney.roundVO.rounds[i];
             this.roundsCombobox.push({label: r.name, value: r.id});
         }
 
-        if(this.selectedTourney.playoffs.length > 0) {
+        if(this.selectedTourney.playoffVO.playoffs.length > 0) {
             this.playoffsCombobox = [];
             this.playoffsCombobox.push({label: "", value: 0});
-            for(let i=0; i<this.selectedTourney.playoffs.length; i++) {
-                let r=this.selectedTourney.playoffs[i];
+            for(let i=0; i<this.selectedTourney.playoffVO.playoffs.length; i++) {
+                let r=this.selectedTourney.playoffVO.playoffs[i];
                 this.playoffsCombobox.push({label: r.round.name, value: r.round.id});
             }
         }
 
         this.positionsCombobox = [{label: "", value: 0}];
-        if(this.selectedTourney.rounds.length > 0) {
-            let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.rounds.length;
-            if(this.selectedTourney.teams.length % this.selectedTourney.rounds.length > 0) {
+        if(this.selectedTourney.roundVO.rounds.length > 0) {
+            let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.roundVO.rounds.length;
+            if(this.selectedTourney.teams.length % this.selectedTourney.roundVO.rounds.length > 0) {
                 maxPosition++;
             }
             for(let p=1; p<=maxPosition; p++ ) {
@@ -442,7 +442,7 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Save the meetings and the tourney in one trasaction!
+     * Save the meetings and the tourney in one transaction!
      * 
      * Before to update the received tourney, saves the roundtrip and oneway playoff meetings in the local variables, clean both
      * the oneway and roundtrip meetings, save the toruney and meetings on the DB and, when the method returns, restores the saved meetings in 
@@ -474,7 +474,7 @@ export class TourneyService extends AbstractService {
 
     private  preparePlayoffTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
         let playoffsMeetings : MeetingDb [] = [];
-        for (let p of t.playoffs) {
+        for (let p of t.playoffVO.playoffs) {
             for (let m of p.round.onewayMeetings) {
                 let mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
                 playoffsMeetings.push(mdb);
@@ -484,7 +484,7 @@ export class TourneyService extends AbstractService {
                 playoffsMeetings.push(mdb);
             }
         }
-        for (let p of t.playoffs) {
+        for (let p of t.playoffVO.playoffs) {
             this.onewayPlayoffMap.set(p.playoffName, p.round.onewayMeetings);
             p.round.onewayMeetings = [];            
             this.roundtripPlayoffMap.set(p.playoffName, p.round.roundtripMeetings);
@@ -510,7 +510,7 @@ export class TourneyService extends AbstractService {
      */
     private restoreOnComplete(t: Tourney, complete: () => void): void {
 
-        for (let p of t.playoffs) {
+        for (let p of t.playoffVO.playoffs) {
             p.round.onewayMeetings = this.onewayPlayoffMap.get(p.playoffName);            
             p.round.roundtripMeetings = this.roundtripPlayoffMap.get(p.playoffName);
         }
@@ -542,6 +542,15 @@ export class TourneyService extends AbstractService {
       
             return of(result as T);
         };
+    }
+    
+    updateTourneyRoundTeams(tvo: TourneyVO, complete?: () => void )  {
+        let url = updateTourneyRoundsUrl;
+        const subscriber = this.http.put(url, tvo, httpOptions).pipe(
+                tap(_ => this.log('updated TourneyDb url=' + url)),
+                catchError(this.handleError('update TourneyDb', []))
+        );
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () =>  complete());
     }
 
     updateTourneyAndRounds(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
@@ -599,9 +608,9 @@ export class TourneyService extends AbstractService {
         let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";
 
         if(confirm(popup)) {
-            let index: number = this.selectedTourney.rounds.indexOf(round);
+            let index: number = this.selectedTourney.roundVO.rounds.indexOf(round);
             if(index > -1) {
-                let rounds: Round[] = this.selectedTourney.rounds.splice(index, 1);
+                let rounds: Round[] = this.selectedTourney.roundVO.rounds.splice(index, 1);
                 for(let r of rounds) {
                     this.removeRound(r);
                 }
@@ -620,9 +629,9 @@ export class TourneyService extends AbstractService {
                 this.meetingService.deleteMeeting(m);
             }
 
-            let index = this.selectedTourney.playoffs.indexOf(playoff);
+            let index = this.selectedTourney.playoffVO.playoffs.indexOf(playoff);
             if(index > -1) {
-                this.selectedTourney.playoffs.splice(index, 1);
+                this.selectedTourney.playoffVO.playoffs.splice(index, 1);
                 this.updateTourney(this.selectedTourney, selector).subscribe(n => this.next(n), e => this.onError(e) );
             }
         }
@@ -708,7 +717,6 @@ export class TourneyService extends AbstractService {
             classificationMap.set(t, c);
         }
 
-        let ptw = this.selectedTourney.pointsNeededToWin;
         for(let m of meetings) {
             if( m.isSkiping ) {
                 continue;
@@ -872,11 +880,11 @@ export class TourneyService extends AbstractService {
      */
     public clearTourneyMeetings(tourney: Tourney) {
 
-        for (let r of tourney.rounds) {
+        for (let r of tourney.roundVO.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
         }
-        for (let p of tourney.playoffs) {
+        for (let p of tourney.playoffVO.playoffs) {
             p.round.onewayMeetings = [];
             p.round.roundtripMeetings = [];
         }
@@ -889,7 +897,7 @@ export class TourneyService extends AbstractService {
     }
 
     public cleanRoundMeeting(t: Tourney): Tourney  {
-        for(let r of t.rounds) {
+        for(let r of t.roundVO.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
         }
@@ -897,7 +905,7 @@ export class TourneyService extends AbstractService {
     }
 
     public cleanPlayoffMeeting(t:  Tourney): Tourney {
-        for(let p of t.playoffs) {
+        for(let p of t.playoffVO.playoffs) {
             p.round.onewayMeetings = [];
             p.round.roundtripMeetings = [];
         }

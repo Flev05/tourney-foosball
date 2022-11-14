@@ -41,7 +41,8 @@ export class TeamService {
     onSaveTeamError: boolean;
     badRequest: boolean;
     teamAlreadyExists: boolean = false;
-
+    isRoundAutoGen: string;
+    
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }
@@ -186,7 +187,7 @@ export class TeamService {
         if( newTeam.id == null ) {
             return t.teamName == newTeam.teamName;
         }
-        return t.id != newTeam.id && t.teamName == newTeam.teamName;
+        return t.id != newTeam.id && t.teamName.toUpperCase() == newTeam.teamName.toUpperCase();
     }
 
     private isTourneyTeamAlreadyExists(tourney: Tourney, newTeam: Team) : boolean  {

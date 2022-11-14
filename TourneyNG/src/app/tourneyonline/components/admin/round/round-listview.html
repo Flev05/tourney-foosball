@@ -6,10 +6,10 @@
 
 <div class="content-section documentation">
 <p-accordion>
-    <p-accordionTab header="Introduzione">                        
+    <p-accordionTab header="Introduzione/Istruzioni">                        
         <p>
             Vista di dettaglio girone.
-            Da questa vista potete modificare le squadre del girone selezionato.
+            In questa vista potete vedere le squadre che compongono il girone selezionato.
         </p>
         <p>                
             Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
@@ -18,60 +18,54 @@
         </p>
         
         <p>
-            L'utente deve semplicemente spostare, con i bottoni preposti, la squadra scelta da sinstra verso destra per aggiungerla
-            al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.            
+            L'utente può eseguire 4 operazioni.            
         </p>
+        <h4>Tornare alla vista precedente</h4>
         <p>
-            Attenzione! Se non ci sono squadre nell'area di sinistra, dovete prima creare le squadre del torneo
-            nella scheda delle squadre.
+            Con un click sul bottone Indietro si torna alla scheda Gironi del torneo.            
         </p>
-
+        <h4>Accedere alla vista degli incontri</h4>
         <p>
-            Tutti i dettagli relativi agli incontri tra le squadre del girone sono demandati alla vista degli incontri.
-            Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
-            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente accessibile con
-            il bottone "Incontri".
+            Con un click sul bottone Incontri, si accede alla vista di tutti gli incontri previsti per il girone
+            selezionato. L'azione non rigenera gli accoppiamenti ma li mostra per eventuali modifiche puntuali.            
         </p>
+        <h4>Ricreare tutti degli incontri del girone</h4>
+         <p>
+            Il bottone, abilitato solo per i tornei in modalità Manuale, rigenera tutti gli incontri 
+            sulla base delle squadre definite nel girone al momento del click.
+            Per eseguire l'operazione, dovete confermare l'azione.
+        </p>
+        <h4>Selezionare la squadra</h4>
         <p>
-            Attenzione! Se non entrate esplicitamente nella vista degli incontri, con il bottone Incontri, non saranno generati
-            gli incontri tra le squadre del girone e il sistema non sarà in grado di organizzare il resto del torneo.
+            Con un click su una riga nella lista delle squadre si acceda alla vista di dettaglio corrispondente, 
+            per eventuali modifiche puntuali all'anagrafica della squadra.
         </p>
     </p-accordionTab>
 </p-accordion>
 
-<p-accordion>
-    <p-accordionTab header="Istruzioni">                        
-            
-        <h4>Creare un nuovo girone</h4>
-        <p>
-            L'area di destra "Selezionati", elenca le squadre che compongono il girone
-            mentre quella di sinistra "Disponibili", elenca tutte le squadre disponibili
-        </p>
-
-        <h4>Modificare un girone</h4>
-        <p>
-            La modifica del girone consiste nello spostare le squadre dall'area dei Disponibili a quella dei 
-            Selezionati e viceversa.
-        </p>
-
-        <h4>Attenzione!</h4>
-        <p>
-            Ricordarsi, una volta che avete sistemato le squadre, di accedere esplicitamente alla vista di dettaglio 
-            degli incontri con il bottone Incontri altrimenti il sistema non disporrà di alcun incontro e non potrà
-            gestire il resto del torneo.
-        </p>
-    </p-accordionTab>
-</p-accordion>
+<div *ngIf="isRoundAutoGen=='false'" class="ui-grid-row">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            Girone:
+        </div>
+        <div class="ui-grid-col-3" pTooltip="Nome del girone.">
+            <input pInputText type="text" [(ngModel)]="selectedRound.name"/>
+        </div>
+    </div>
 </div>
-
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-
     <button type="button" 
         icon="fa fa-user-plus" 
         pButton (click)="goMeeting()" 
         label="Incontri" 
         class="ui-button-success">
+    </button>
+    <button *ngIf="isRoundAutoGen=='false'" type="button" 
+        icon="fa fa-user-plus" 
+        pButton (click)="redoMeetings()" 
+        label="Ricrea Incontri" 
+        class="ui-button-danger">
     </button>
 </div>                  
 
@@ -109,3 +103,12 @@
         </tr>
     </ng-template>
 </p-table>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" 
+        icon="fa fa-user-plus" 
+        pButton (click)="saveRound()" 
+        label="Save" 
+        class="ui-button-success">
+    </button>
+</div>    

@@ -10,6 +10,10 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
 import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+
+const ROUND_CHANGE_TEAMS_POPUP = "ATTENZIONE! L'operazione ricrea tutti gli incontri fra le squadre del girone facendo perdere tutte le impostazioni preesistenti. Confermi?";
 
 @Component({
     templateUrl: './round-listview.html',
@@ -23,6 +27,7 @@ export class RoundListView extends AbstractListView {
 
     selectedRound: Round;
     mdbList:  MeetingDb[];
+    isRoundAutoGen: string;
 
     constructor(
         protected location: Location,
@@ -30,6 +35,7 @@ export class RoundListView extends AbstractListView {
         protected tourneyService: TourneyService,
         protected meetingRoundService: MeetingRoundService,
         public teamService: TeamService,
+        private clientService: ClientService
     ) { 
         super(TeamDetailView.redirect, tourneyService, router, location);
     }
@@ -41,10 +47,14 @@ export class RoundListView extends AbstractListView {
         
         this.selectedRound = this.tourneyService.selectedRound;
         this.teamService.readOnly = false;
+        this.isRoundAutoGen = this.meetingRoundService.isRoundAutoGen;
 
         this.teams = [];
         for (let tn of this.selectedRound.teamNames ) {
             let t: Team = TeamService.getTeamByName(this.selectedTourney, tn);
+            if(t == null) {
+                t = {teamName: tn, address: "Indirizzo " + tn};
+            }
             let clone: Team = this.cloneObject(t);
             this.teams.push(clone);
         } 
@@ -54,6 +64,24 @@ export class RoundListView extends AbstractListView {
         this.router.navigate([RoundListView.meetingListviewRedirect]);
     }
     
+    redoMeetings() {        
+        if(this.isRoundAutoGen == 'false') {
+            if(!confirm(ROUND_CHANGE_TEAMS_POPUP)) {
+                return;
+            } 
+            this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
+            for( let r of this.selectedTourney.roundVO.rounds ) {
+                this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
+            }
+            this.meetingRoundService.saveRoundMeetings(this.selectedTourney
+                ,(m,t) => this.saveTourneyErrorHandler(m,t)
+                ,(m,t) => this.subscribeErrorHandler(m,t)
+                ,()    => this.router.navigate([RoundListView.meetingListviewRedirect])
+            );
+            this.router.navigate([RoundListView.meetingListviewRedirect]);
+        }
+    }
+
     goBack(): void {
         super.goBack();
     }
@@ -62,7 +90,21 @@ export class RoundListView extends AbstractListView {
         console.log(event.data);
 
         this.teamService.selectedTeam = this.selectedTeam;
-        this.teamService.readOnly = true;
+        if(this.isRoundAutoGen == 'true') {
+            this.teamService.readOnly = true;
+            this.teamService.isRoundAutoGen = 'true';
+        } else {
+            this.teamService.readOnly = false;
+            this.teamService.isRoundAutoGen = 'false';
+        }
         this.gotoDetailView();
+    }
+
+    saveRound(): void {
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack( 
+
+        ));
     }
 }

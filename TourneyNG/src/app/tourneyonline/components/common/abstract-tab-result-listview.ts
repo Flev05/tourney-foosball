@@ -61,11 +61,11 @@ export abstract class AbstractTabResultListView extends AbstractListView {
 
         this.roundCount = 0;
         if(super.containsRound()) {
-            this.roundRows = this.selectedTourney.rounds;
+            this.roundRows = this.selectedTourney.roundVO.rounds;
             this.roundCount = this.roundRows.length;
 
             let roundIds: number[] = [];
-            for(let round of this.selectedTourney.rounds) {
+            for(let round of this.selectedTourney.roundVO.rounds) {
                 roundIds.push(round.id);
             }
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
@@ -77,7 +77,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
     
     private onRoundCompleteLoad(t: MeetingDb[]): void {
         this.mdbList = t;
-        for(let round of this.selectedTourney.rounds) { 
+        for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
             round.classification = this.tourneyService.createClassification(round, allMeetings);
@@ -86,11 +86,11 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.playoffCount = 0;
         this.mdbList = [];
         if(super.containsPlayoff()) {
-            this.playoffRows = this.selectedTourney.playoffs;
+            this.playoffRows = this.selectedTourney.playoffVO.playoffs;
             this.playoffCount = this.playoffRows.length;
 
             let playoffIds: number[] = [];
-            for(let p of this.selectedTourney.playoffs) {
+            for(let p of this.selectedTourney.playoffVO.playoffs) {
                 playoffIds.push(p.id);
             }
             
@@ -115,15 +115,15 @@ export abstract class AbstractTabResultListView extends AbstractListView {
 
     private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
         this.mdbList = mdbList;
-        for(let playoff of this.selectedTourney.playoffs) { 
+        for(let playoff of this.selectedTourney.playoffVO.playoffs) { 
             this.meetingPlayoffService.extractPlayoffMeetings(playoff, this.mdbList);
     
-            if( this.selectedTourney.isPlayoffAutoGen == "true") {
+            if( this.selectedTourney.playoffVO.isPlayoffAutoGen == "true") {
                 this.meetingPlayoffService.resolveAutomaticTeams(playoff);
-                this.meetingPlayoffService.resolveAutomaticMeetings(playoff, this.selectedTourney.rounds);
+                this.meetingPlayoffService.resolveAutomaticMeetings(playoff, this.selectedTourney.roundVO.rounds);
             } else {
                 this.meetingPlayoffService.resolveManualTeams(playoff);
-                this.meetingPlayoffService.resolveManualMeetings(playoff, this.selectedTourney.rounds);
+                this.meetingPlayoffService.resolveManualMeetings(playoff, this.selectedTourney.roundVO.rounds);
             }
     
             let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);

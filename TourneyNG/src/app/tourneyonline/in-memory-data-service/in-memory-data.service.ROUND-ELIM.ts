@@ -46,22 +46,22 @@ static getTourneyDb() {
 
       ,raceDuration:90
 
-      ,matchWinnerScores:3
-      ,matchBalanceScores:1
+      // ,matchWinnerScores:3
+      // ,matchBalanceScores:1
 
-      ,maxMatchesPerMeeting:1
-      ,isAllMatches: "true"
+      // ,maxMatchesPerMeeting:1
+      // ,isAllMatches: "true"
       ,playersPerTeam: 2
 
-      ,pointsNeededToWin:9
-      ,pointsGoldenGoalTieBreakWin:2
-      ,pointsGoldenGoalTieBreakDefeat:1
+      // ,pointsNeededToWin:9
+      // ,pointsGoldenGoalTieBreakWin:2
+      // ,pointsGoldenGoalTieBreakDefeat:1
 
       ,teams: InMemoryDataServiceRoundElim.teams
       
-      ,rounds: rounds
+      // ,rounds: rounds
 
-      ,playoffs:[]
+      // ,playoffs:[]
       ,eliminatoryLevels: []
       ,objectives:[]  
     };

@@ -152,16 +152,12 @@ export class ClientDetailView extends AbstractDetailView {
         };
     }
 
-    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+    protected subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
-
             this.onSaveClientError = true;
-
             console.error(error); // log to console instead
-      
             console.log(`${operation} failed: ${error.message}`);
-      
             return of(result as T);
         };
     }

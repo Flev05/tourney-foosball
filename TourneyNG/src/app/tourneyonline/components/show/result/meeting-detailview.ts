@@ -13,6 +13,7 @@ import { MeetingRoundService } from 'app/tourneyonline/components/admin/round/me
 import { MeetingPlayoffService } from 'app/tourneyonline/components/admin/playoff/meeting-playoff-service';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { AbstractRoundVO } from 'app/tourneyonline/domain/abstract-round-vo';
 
 const TO_PLAY_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
 @Component({
@@ -30,6 +31,7 @@ export class MeetingDetailView extends AbstractDetailView {
     teamPassedMessage: string;
     currentDay: number;
     roundName: string;
+    abstractRoundVO: AbstractRoundVO;
     selectedRound: Round;
     selectedDirection: Direction;
     allDaysNo: number;
@@ -55,6 +57,7 @@ export class MeetingDetailView extends AbstractDetailView {
             this.selectedMeeting.status = MeetingStatus.InProgress;
         }
 
+        this.abstractRoundVO = this.meetingService.abstractRoundVO;
         this.selectedRound = this.meetingService.selectedRound;
         this.roundName = this.selectedRound.name;
         this.selectedDirection = this.selectedRound.direction;
@@ -80,9 +83,9 @@ export class MeetingDetailView extends AbstractDetailView {
             return;
         }
 
-        if(this.selectedMeeting.matches.length!=this.selectedTourney.maxMatchesPerMeeting) {
+        if(this.selectedMeeting.matches.length!=this.abstractRoundVO.maxMatchesPerMeeting) {
             this.selectedMeeting.matches=[];
-            for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
+            for(let i=0; i<this.abstractRoundVO.maxMatchesPerMeeting; i++) {
                 let m: Match = {id:i
                     ,players1: []
                     ,players2: []
@@ -140,17 +143,17 @@ export class MeetingDetailView extends AbstractDetailView {
     plus1(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
-        if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin
-            || this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score1 >= this.abstractRoundVO.pointsNeededToWin
+            || this.matches[ii].score2 >= this.abstractRoundVO.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
         this.matches[ii].score1++;
-        if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin) {
-            this.matches[ii].score1 = this.selectedTourney.pointsNeededToWin;
+        if(this.matches[ii].score1 >= this.abstractRoundVO.pointsNeededToWin) {
+            this.matches[ii].score1 = this.abstractRoundVO.pointsNeededToWin;
             let all : boolean = true;
             for( let m of this.matches ) {
-                if( m.score1 < this.selectedTourney.pointsNeededToWin && m.score2 < this.selectedTourney.pointsNeededToWin) {
+                if( m.score1 < this.abstractRoundVO.pointsNeededToWin && m.score2 < this.abstractRoundVO.pointsNeededToWin) {
                     all = false;
                     break;
                 }
@@ -175,17 +178,17 @@ export class MeetingDetailView extends AbstractDetailView {
     plus2(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
-        if(this.matches[ii].score1 >= this.selectedTourney.pointsNeededToWin
-            || this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
+        if(this.matches[ii].score1 >= this.abstractRoundVO.pointsNeededToWin
+            || this.matches[ii].score2 >= this.abstractRoundVO.pointsNeededToWin) {
             this.matches[ii].status = MeetingStatus.Terminated;
             return;
         }
         this.matches[ii].score2++;
-        if(this.matches[ii].score2 >= this.selectedTourney.pointsNeededToWin) {
-            this.matches[ii].score2 = this.selectedTourney.pointsNeededToWin;
+        if(this.matches[ii].score2 >= this.abstractRoundVO.pointsNeededToWin) {
+            this.matches[ii].score2 = this.abstractRoundVO.pointsNeededToWin;
             let all : boolean = true;
             for( let m of this.matches ) {
-                if( m.score1 < this.selectedTourney.pointsNeededToWin && m.score2 < this.selectedTourney.pointsNeededToWin) {
+                if( m.score1 < this.abstractRoundVO.pointsNeededToWin && m.score2 < this.abstractRoundVO.pointsNeededToWin) {
                     all = false;
                     break;
                 }
@@ -215,39 +218,39 @@ export class MeetingDetailView extends AbstractDetailView {
 
             if (goals1 > goals2) {
                 if (this.selectedTourney.tourneyType == TourneyType.Score) {
-                    if (goals1==this.selectedTourney.pointsNeededToWin && (goals1 == goals2 + 1)) {
-                        this.selectedMeeting.points1 += this.selectedTourney.pointsGoldenGoalTieBreakWin;
-                        this.selectedMeeting.points2 += this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                    if (goals1==this.abstractRoundVO.pointsNeededToWin && (goals1 == goals2 + 1)) {
+                        this.selectedMeeting.points1 += this.abstractRoundVO.pointsGoldenGoalTieBreakWin;
+                        this.selectedMeeting.points2 += this.abstractRoundVO.pointsGoldenGoalTieBreakDefeat;
                     } else {
-                        this.selectedMeeting.points1 += this.selectedTourney.matchWinnerScores;
+                        this.selectedMeeting.points1 += this.abstractRoundVO.matchWinnerScores;
                     }
                 } else {
-                    this.selectedMeeting.points1 += this.selectedTourney.matchWinnerScores;
+                    this.selectedMeeting.points1 += this.abstractRoundVO.matchWinnerScores;
                 }
             } 
                         
             if (goals2 > goals1) {
                 if (this.selectedTourney.tourneyType == TourneyType.Score) {
-                    if (goals2==this.selectedTourney.pointsNeededToWin && (goals2 == goals1 + 1)) {
-                        this.selectedMeeting.points2 += this.selectedTourney.pointsGoldenGoalTieBreakWin;
-                        this.selectedMeeting.points1 += this.selectedTourney.pointsGoldenGoalTieBreakDefeat;
+                    if (goals2==this.abstractRoundVO.pointsNeededToWin && (goals2 == goals1 + 1)) {
+                        this.selectedMeeting.points2 += this.abstractRoundVO.pointsGoldenGoalTieBreakWin;
+                        this.selectedMeeting.points1 += this.abstractRoundVO.pointsGoldenGoalTieBreakDefeat;
                     } else {
-                        this.selectedMeeting.points2 += this.selectedTourney.matchWinnerScores;
+                        this.selectedMeeting.points2 += this.abstractRoundVO.matchWinnerScores;
                     }
                 } else {
-                    this.selectedMeeting.points2 += this.selectedTourney.matchWinnerScores;
+                    this.selectedMeeting.points2 += this.abstractRoundVO.matchWinnerScores;
                 }
             }
 
             if (goals1 == goals2) {
                 if (this.selectedTourney.tourneyType == TourneyType.Score ) {
                     if (goals1 != 0) {
-                        this.selectedMeeting.points2 += this.selectedTourney.matchBalanceScores;
-                        this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;        
+                        this.selectedMeeting.points2 += this.abstractRoundVO.matchBalanceScores;
+                        this.selectedMeeting.points1 += this.abstractRoundVO.matchBalanceScores;        
                     }
                 } else {
-                    this.selectedMeeting.points2 += this.selectedTourney.matchBalanceScores;
-                    this.selectedMeeting.points1 += this.selectedTourney.matchBalanceScores;        
+                    this.selectedMeeting.points2 += this.abstractRoundVO.matchBalanceScores;
+                    this.selectedMeeting.points1 += this.abstractRoundVO.matchBalanceScores;        
                 }
             }
         }
@@ -293,7 +296,7 @@ export class MeetingDetailView extends AbstractDetailView {
             this.meetingRoundService.reloadRoundMeeting(this.selectedTourney, this.selectedRound, () => {} );
         } 
         if( this.selectedMeetingDb.playoffId != null ) {
-            let p: Playoff = this.selectedTourney.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
+            let p: Playoff = this.selectedTourney.playoffVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
             this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => {}, e => this.serverUnreachableHandler(e) );
         }
     }

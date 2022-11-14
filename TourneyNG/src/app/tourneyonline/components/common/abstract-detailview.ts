@@ -4,8 +4,11 @@ import { AbstractView } from './abstract-view';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Observable, of } from 'rxjs';
 
 export abstract class AbstractDetailView extends AbstractView {
+
+    blockedDocument: boolean = false;
 
     constructor(
         protected tourneyService: TourneyService,
@@ -39,5 +42,9 @@ export abstract class AbstractDetailView extends AbstractView {
     onError(e:any) {
         console.log("onError()");
         console.log(e);
+    }
+
+    protected unBlockDocument(): void {
+        this.blockedDocument = false;
     }
 }

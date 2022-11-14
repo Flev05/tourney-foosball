@@ -14,7 +14,10 @@ export abstract class AbstractView implements OnInit {
     filteredCountriesSingle: Country[];
     toggleable: boolean = false;
     serverUnreachable: boolean = false;
-
+    onSaveTourneyError: boolean;
+    tourneyAlreadyExists: boolean;
+    badRequest: boolean;
+    
     constructor(
          protected tourneyService: TourneyService
          , protected location: Location
@@ -65,7 +68,6 @@ export abstract class AbstractView implements OnInit {
     }
 
     protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean {
-
         for(let i=0; i<phases.length; i++ ) {
             if(phases[i] == value ) {
                 return true;
@@ -112,4 +114,33 @@ export abstract class AbstractView implements OnInit {
         }
         return filtered;
     }
+
+    protected saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+            this.onSaveTourneyError = true;
+            if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
+                this.badRequest = true;
+                return of(result as T);
+            } 
+            if( res.error.errorCode == "TourneyAlreadyExists" ) {
+                this.tourneyAlreadyExists = true;
+                return of(result as T);
+            }
+            return of(result as T);
+        };
+    }
+
+    protected subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+            this.onSaveTourneyError = true;
+            console.error(error); // log to console instead
+            console.log(`${operation} failed: ${error.message}`);
+            return of(result as T);
+        };
+    }
+
 }

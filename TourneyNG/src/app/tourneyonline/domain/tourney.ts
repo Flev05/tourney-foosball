@@ -1,5 +1,5 @@
-import { Round } from './round';
-import { Playoff } from './playoff';
+import { RoundVO } from './round-vo';
+import { PlayoffVO } from './playoff-vo';
 
 import { Country } from './country';
 import { Team } from './team';
@@ -20,12 +20,12 @@ export interface Tourney {
     followerName?   : string;
     isDaily?        : string;
     datetime?       : Date;
-    resultTool?     : EResultTool;
 
     wizardModeIndex?        : number;
     selectedTabIndex?       : number;
     selectedResultTabIndex? : number;
 
+    selectedTeams4RoundCB?      : Combobox;
     selectedTeams4PlayoffsCB?   : Combobox;
     selectedPlayoffsCB?         : Combobox;
     selectedRoundsNumCB?        : Combobox;
@@ -44,16 +44,6 @@ export interface Tourney {
     raceDuration?               : number;
 
     phases?                     : PhaseType[];
-
-    matchWinnerScores?          : number;
-    matchBalanceScores?         : number;
-
-    pointsNeededToWin?          : number;
-    pointsGoldenGoalTieBreakWin?    : number;
-    pointsGoldenGoalTieBreakDefeat? : number;
-
-    maxMatchesPerMeeting?       : number;
-    isAllMatches?               : string;
     playersPerTeam?             : number;
 
     eliminatoryMode?            : EliminatoryMode;
@@ -64,9 +54,12 @@ export interface Tourney {
 
     objectives?                 : Final[];
     teams?: Team[];
-    rounds?: Round[];
-    playoffs?: Playoff[];
-    isPlayoffAutoGen?: string;
+
+    resultTool?                 : EResultTool;
+
+    roundVO?:   RoundVO;
+    playoffVO?: PlayoffVO;
+
     isEliminatoryAutoGen?: string;
     eliminatoryLevels?: Array<EliminatoryLevel>;
 }

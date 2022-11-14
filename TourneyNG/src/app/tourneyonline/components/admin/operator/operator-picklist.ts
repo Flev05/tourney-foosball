@@ -126,7 +126,7 @@ export class OperatorPickList extends AbstractListView {
         };
     }
     
-    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+    protected saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
         return (res: any): Observable<T> => {
             console.log("Entering saveTourneyErrorHandler()");
             console.log(`${operation} failed!`);

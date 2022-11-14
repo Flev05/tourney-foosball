@@ -298,7 +298,7 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private prepareAutomaticEliminatoryRules(selectedTeamsNo: number, automatic : boolean): void {
         console.log("Entering prepareAutomaticEliminatoryRules()");
-        if( this.selectedTourney.rounds.length == 0) {
+        if( this.selectedTourney.roundVO.rounds.length == 0) {
             return;
         }
 
@@ -311,9 +311,9 @@ export class LevelService extends AbstractEliminatoryListView {
 
         let rounds : Array<Round> = new Array<Round>();
         if(this.containsPlayoff()) {
-            rounds = this.selectedTourney.playoffs.map((p) => {return p.round;});
+            rounds = this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
         } else {
-            rounds = [...this.selectedTourney.rounds];
+            rounds = [...this.selectedTourney.roundVO.rounds];
         }
         let R: number  = rounds.length;
 
@@ -670,4 +670,3 @@ export class LevelService extends AbstractEliminatoryListView {
         }
     }
 }
-

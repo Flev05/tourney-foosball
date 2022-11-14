@@ -26,6 +26,7 @@ come descritto sopra
 3) Per produrre il .war di produzione, spostarsi sotto TourneyBE e lanciare maven:
 
 mvn clean install
+
 che produrrà il file TourneyBE.war sotto target
 
 Connettersi in SSH con PUTTY al server www.erebus-soft.com

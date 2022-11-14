@@ -38,17 +38,17 @@ export class InMemoryDataServiceCSI  {
 
     ,raceDuration:90
 
-    ,matchWinnerScores:1
-    ,matchBalanceScores:0
+   // ,matchWinnerScores:1
+    // ,matchBalanceScores:0
 
-    ,maxMatchesPerMeeting:9
-    ,isAllMatches: "true"
+    //,maxMatchesPerMeeting:9
+    //,isAllMatches: "true"
     ,isDaily: "true"
     ,playersPerTeam: 2
 
-    ,pointsNeededToWin:9
-    ,pointsGoldenGoalTieBreakWin:1
-    ,pointsGoldenGoalTieBreakDefeat:0
+    //,pointsNeededToWin:9
+    //,pointsGoldenGoalTieBreakWin:1
+    // ,pointsGoldenGoalTieBreakDefeat:0
    
     ,teams:[
         {id:20,teamName:"AURORA PREGNANA BLU", address:"Via Roma, 110"
@@ -118,101 +118,101 @@ export class InMemoryDataServiceCSI  {
         ]              
       }
     ]  
-    , rounds:[{
-        id:1, name: "Girone A", type: RoundType.R
-        , onewayCurrentDay: 1
-        , roundtripCurrentDay: 1
-        ,direction: Direction.OneWay
-        ,pageSize: 1
-        ,daysNo: 1
-        ,teamNames:[
-            "ORATORIO ZIBIDO B"
-          ,"AIROLDI ORIGGIO BIANCA"
-        ]
-        ,onewayMeetings:[]
-        ,roundtripMeetings:[]
-        ,classification:[]
-      }
-      ,{
-        id:2, name: "Girone B", type: RoundType.R
-        ,direction: Direction.OneWay
-        , onewayCurrentDay: 1
-        , roundtripCurrentDay: 1
-        ,pageSize: 1
-        ,daysNo: 1
-        ,teamNames:[
-          "SOLAROSPORT"
-          ,"AURORA PREGNANA BLU"
-        ]
-        ,onewayMeetings:[]
-        ,roundtripMeetings:[]
-        ,classification:[]
-      }
-    ]
-    ,playoffs: [
-      {id:1, round:{
-          id:1, name: "Playoff Girone A", type: RoundType.P
-          ,direction: Direction.OneWay
-          , onewayCurrentDay: 1
-          , roundtripCurrentDay: 1
-          ,pageSize: 1
-          ,daysNo: 1
-            ,teamNames:[]
-          ,onewayMeetings:[]
-          ,roundtripMeetings:[]
-          ,classification:[]
-        }
-        ,playoffRules:[
-             {id:1
-              , ruleName:""
-              , isDummy: false
-              , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1}
-              , bandPosition: 0
-              , isAutomatic:true
-              ,isDummy: false
-            }}
-            ,{id:2
-              , ruleName:""
-              , isDummy: false
-              , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2}
-            , bandPosition: 0
-            , isAutomatic:true
-            ,isDummy: false
-          }}
-          ]
-      }
-      ,{id:2, round:{
-          id:2, name: "Playoff Girone B", type: RoundType.P
-          ,direction: Direction.OneWay
-          , onewayCurrentDay: 1
-          , roundtripCurrentDay: 1
-          ,pageSize: 1
-          ,daysNo: 1
-            ,teamNames:[]
-          ,onewayMeetings:[]
-          ,roundtripMeetings:[]
-          ,classification:[]
-      }
-      ,playoffRules:[
-          {id:1
-            , ruleName:""
-            , isDummy: false
-            , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2}
-          , bandPosition: 0
-          , isAutomatic:true
-          ,isDummy: false
-        }}
-          ,{id:2
-            , ruleName:""            
-            , isDummy: false
-            , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1}
-          , bandPosition: 0
-          , isAutomatic:true
-          ,isDummy: false
-        }}
-        ]
-      }
-    ]
+    // , rounds:[{
+    //     id:1, name: "Girone A", type: RoundType.R
+    //     , onewayCurrentDay: 1
+    //     , roundtripCurrentDay: 1
+    //     ,direction: Direction.OneWay
+    //     ,pageSize: 1
+    //     ,daysNo: 1
+    //     ,teamNames:[
+    //         "ORATORIO ZIBIDO B"
+    //       ,"AIROLDI ORIGGIO BIANCA"
+    //     ]
+    //     ,onewayMeetings:[]
+    //     ,roundtripMeetings:[]
+    //     ,classification:[]
+    //   }
+    //   ,{
+    //     id:2, name: "Girone B", type: RoundType.R
+    //     ,direction: Direction.OneWay
+    //     , onewayCurrentDay: 1
+    //     , roundtripCurrentDay: 1
+    //     ,pageSize: 1
+    //     ,daysNo: 1
+    //     ,teamNames:[
+    //       "SOLAROSPORT"
+    //       ,"AURORA PREGNANA BLU"
+    //     ]
+    //     ,onewayMeetings:[]
+    //     ,roundtripMeetings:[]
+    //     ,classification:[]
+    //   }
+    // ]
+    // ,playoffs: [
+    //   {id:1, round:{
+    //       id:1, name: "Playoff Girone A", type: RoundType.P
+    //       ,direction: Direction.OneWay
+    //       , onewayCurrentDay: 1
+    //       , roundtripCurrentDay: 1
+    //       ,pageSize: 1
+    //       ,daysNo: 1
+    //         ,teamNames:[]
+    //       ,onewayMeetings:[]
+    //       ,roundtripMeetings:[]
+    //       ,classification:[]
+    //     }
+    //     ,playoffRules:[
+    //          {id:1
+    //           , ruleName:""
+    //           , isDummy: false
+    //           , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone A", value:1}
+    //           , bandPosition: 0
+    //           , isAutomatic:true
+    //           ,isDummy: false
+    //         }}
+    //         ,{id:2
+    //           , ruleName:""
+    //           , isDummy: false
+    //           , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone B", value:2}
+    //         , bandPosition: 0
+    //         , isAutomatic:true
+    //         ,isDummy: false
+    //       }}
+    //       ]
+    //   }
+    //   ,{id:2, round:{
+    //       id:2, name: "Playoff Girone B", type: RoundType.P
+    //       ,direction: Direction.OneWay
+    //       , onewayCurrentDay: 1
+    //       , roundtripCurrentDay: 1
+    //       ,pageSize: 1
+    //       ,daysNo: 1
+    //         ,teamNames:[]
+    //       ,onewayMeetings:[]
+    //       ,roundtripMeetings:[]
+    //       ,classification:[]
+    //   }
+    //   ,playoffRules:[
+    //       {id:1
+    //         , ruleName:""
+    //         , isDummy: false
+    //         , fromRound:{id:1, position:{label:"1°", value:1},round:{label:"Girone B", value:2}
+    //       , bandPosition: 0
+    //       , isAutomatic:true
+    //       ,isDummy: false
+    //     }}
+    //       ,{id:2
+    //         , ruleName:""            
+    //         , isDummy: false
+    //         , fromRound:{id:2, position:{label:"2°", value:2},round:{label:"Girone A", value:1}
+    //       , bandPosition: 0
+    //       , isAutomatic:true
+    //       ,isDummy: false
+    //     }}
+    //     ]
+    //   }
+    // ]
     ,eliminatoryLevels: []
     ,objectives:[]
   }

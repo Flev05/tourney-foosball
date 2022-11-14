@@ -1,5 +1,3 @@
-import { Team } from './team';
-
 export interface Classification
 {
     id?            : number;

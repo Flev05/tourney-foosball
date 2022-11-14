@@ -55,7 +55,7 @@ export class RuleListView extends AbstractListView {
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds    = this.tourneyService.roundsCombobox;
 
-        this.isAutoGen = this.selectedTourney.isPlayoffAutoGen == "true" ? true : false;
+        this.isAutoGen = this.selectedTourney.playoffVO.isPlayoffAutoGen == "true" ? true : false;
         if(this.isAutoGen) {
             this.playoffCols  = [
                 { field: 'ruleName',    header: 'Regola' },

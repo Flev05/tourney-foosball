@@ -68,6 +68,8 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
         this.classificationCols = this.tourneyService.classificationCols;
 
+        this.meetingService.abstractRoundVO =this.selectedTourney.roundVO;
+
         this.selectedRound = this.tourneyService.selectedRound;
         this.roundTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedRound.teamNames);
 
@@ -199,7 +201,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
     refresh(): void {        
         let roundIds: number[] = [];
-        for(let round of this.selectedTourney.rounds) {
+        for(let round of this.selectedTourney.roundVO.rounds) {
             roundIds.push(round.id);
         }
         const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));

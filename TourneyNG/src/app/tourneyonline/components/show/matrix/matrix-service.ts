@@ -10,6 +10,7 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { RoundVO } from 'app/tourneyonline/domain/round-vo';
 
 @Injectable()
 export class MatrixService   {
@@ -18,6 +19,7 @@ export class MatrixService   {
     onewayMatrix: Matrix;
     roundtripMatrix: Matrix;
     round: Round;
+    roundVO: RoundVO;
     tourney: Tourney;
 
     selectedMeeting: Meeting;
@@ -33,6 +35,7 @@ export class MatrixService   {
     ngOnInit(tourney: Tourney, round: Round) {
 
         this.tourney = tourney;
+        this.roundVO = tourney.roundVO;
         this.round = round;
 
         this.roundName = this.round.name;
@@ -171,22 +174,22 @@ export class MatrixService   {
         let col = cb.row + 1;
 
         const cell: Cell = matrix.rows[row].cells[col];
-        if(cb.value == this.tourney.matchWinnerScores) {
+        if(cb.value == this.roundVO.matchWinnerScores) {
             cell.points.value = 0;
             cell.points.label = "0";
         }
         if(cb.value == 0) {
-            cell.points.value = this.tourney.matchWinnerScores;
-            cell.points.label = "" + this.tourney.matchWinnerScores;
+            cell.points.value = this.roundVO.matchWinnerScores;
+            cell.points.label = "" + this.roundVO.matchWinnerScores;
         }
 
-        if(cb.value == this.tourney.pointsGoldenGoalTieBreakWin) {
-            cell.points.value = this.tourney.pointsGoldenGoalTieBreakDefeat;
-            cell.points.label = "" + this.tourney.pointsGoldenGoalTieBreakDefeat;
+        if(cb.value == this.roundVO.pointsGoldenGoalTieBreakWin) {
+            cell.points.value = this.roundVO.pointsGoldenGoalTieBreakDefeat;
+            cell.points.label = "" + this.roundVO.pointsGoldenGoalTieBreakDefeat;
         }
-        if(cb.value == this.tourney.pointsGoldenGoalTieBreakDefeat) {
-            cell.points.label = "" + this.tourney.pointsGoldenGoalTieBreakWin;
-            cell.points.value = this.tourney.pointsGoldenGoalTieBreakWin;
+        if(cb.value == this.roundVO.pointsGoldenGoalTieBreakDefeat) {
+            cell.points.label = "" + this.roundVO.pointsGoldenGoalTieBreakWin;
+            cell.points.value = this.roundVO.pointsGoldenGoalTieBreakWin;
         }
 
         cell.isVisited = true;
@@ -274,7 +277,7 @@ export class MatrixService   {
 
         let options: CellCombobox[] = [];
         if(teamName1 != null && teamName2 != null) {            
-            for(let i=0; i<=this.tourney.matchWinnerScores; i++) {
+            for(let i=0; i<=this.roundVO.matchWinnerScores; i++) {
                 let cb: CellCombobox = {label: "" + i, value: i, row: row, col: col};
                 options.push(cb);
             }

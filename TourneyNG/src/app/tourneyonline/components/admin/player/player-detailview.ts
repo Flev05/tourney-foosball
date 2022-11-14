@@ -79,14 +79,12 @@ export class PlayerDetailView extends AbstractDetailView {
         this.selectedPlayer.id = tvo.id;
     }
 
-    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+    protected subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
-
             this.onSavePlayerError = true;
-
             console.error(error); // log to console instead
-      
+
             console.log(`${operation} failed: ${error.message}`);
       
             return of(result as T);

@@ -10,6 +10,7 @@ import { LevelService } from './level-service';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { EResultTool } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './eliminatory-full-listview.html'
@@ -18,7 +19,7 @@ export class FullEliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows:  EliminatoryVO[];
     eliminatoryCols: TableCols[];
-
+    
     constructor(
         public tourneyService: TourneyService,
         public levelService: LevelService,
@@ -30,6 +31,7 @@ export class FullEliminatoryListView extends AbstractListView {
     }
 
     ngOnInit() {
+        console.log("FullEliminatoryListView.ngOnInit()");
         super.ngOnInit();
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
 
@@ -74,6 +76,19 @@ export class FullEliminatoryListView extends AbstractListView {
         this.eliminatoryRows = this.levelService.eliminatoryRows;
         this.eliminatoryCols = this.levelService.eliminatoryCols;
     }
+ 
+    onEliminatorySpinnerChange(event) {
+        let spin = this.selectedEliminatoryLevel.abstractRoundVO.maxMatchesPerMeeting;
+        if(spin == 1 || spin == 2) {
+            this.selectedEliminatoryLevel.abstractRoundVO.allMatchesEnabled = false;
+        } else {
+            this.selectedEliminatoryLevel.abstractRoundVO.allMatchesEnabled = true;
+        }
+        this.selectedEliminatoryLevel.abstractRoundVO.bestOfWinner = spin;
+    }
 
+    onAllEliminatoryMatchesClick() {
+        this.selectedEliminatoryLevel.abstractRoundVO.isAllMatches = "true";
+    }
 }
 

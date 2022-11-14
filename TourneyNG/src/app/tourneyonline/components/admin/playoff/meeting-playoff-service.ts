@@ -47,12 +47,12 @@ export class MeetingPlayoffService extends MeetingService {
         this.mdbList = t;
         this.extractPlayoffMeetings(p, this.mdbList);
 
-        if( this.selectedTourney.isPlayoffAutoGen == "true") {
+        if( this.selectedTourney.playoffVO.isPlayoffAutoGen == "true") {
             this.resolveAutomaticTeams(p);
-            this.resolveAutomaticMeetings(p, this.selectedTourney.rounds);
+            this.resolveAutomaticMeetings(p, this.selectedTourney.roundVO.rounds);
         } else {
             this.resolveManualTeams(p);
-            this.resolveManualMeetings(p, this.selectedTourney.rounds);
+            this.resolveManualMeetings(p, this.selectedTourney.roundVO.rounds);
         }
 
         this.prepareMeetingsMap(p.round, false);
@@ -137,10 +137,10 @@ export class MeetingPlayoffService extends MeetingService {
             let p2 = m.rule2.fromRound.position.label;
             let r2 = m.rule2.fromRound.round.label;
 
-            let prefix = this.selectedTourney.rounds.length == 1 ? "" : p1 + " delle ";
+            let prefix = this.selectedTourney.roundVO.rounds.length == 1 ? "" : p1 + " delle ";
             m.ruleName1 = prefix + r1;
             
-            prefix = this.selectedTourney.rounds.length == 1 ? "" : p2 + " delle ";
+            prefix = this.selectedTourney.roundVO.rounds.length == 1 ? "" : p2 + " delle ";
             m.ruleName2 = prefix + r2;
             
             let rn = m.ruleName1 + " - " + m.ruleName2;
@@ -174,7 +174,7 @@ export class MeetingPlayoffService extends MeetingService {
      */
     private applyPlayoffBergerAlgorithm(playoff: Playoff, rules: PlayoffRule[]): void {
         if( rules.length % 2 > 0 ) {
-            let isAutoGen = this.selectedTourney.isPlayoffAutoGen == "true" ? true : false;
+            let isAutoGen = this.selectedTourney.playoffVO.isPlayoffAutoGen == "true" ? true : false;
             let dummyRule: PlayoffRule = this.prepareSkipingRule(isAutoGen);
             rules.push(dummyRule);
         }
@@ -205,7 +205,8 @@ export class MeetingPlayoffService extends MeetingService {
 
             /* alterna le partite in casa e fuori */
             if (i % 2 == 0) {
-                for (let j = 0; j < rulesNo / 2; j++) {
+                let rn = rulesNo / 2;
+                for (let j = 0; j < rn; j++) {
                     let pr1: PlayoffRule = home[j];
                     let pr2: PlayoffRule = away[j];
                     let rule1: string = this.makeRule(pr1);
@@ -385,7 +386,7 @@ export class MeetingPlayoffService extends MeetingService {
      * qualified teams from the tourney rounds
      */
     public resolveAutomaticTeams(playoff: Playoff) {
-        let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(this.selectedTourney.rounds);
+        let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(this.selectedTourney.roundVO.rounds);
         playoff.round.teamNames = [];
 
         for(let r=0; r<playoff.playoffRules.length; r++) {
@@ -430,7 +431,7 @@ export class MeetingPlayoffService extends MeetingService {
             let position:  number = rule.fromRound.position.value;
             let roundName: string = rule.fromRound.round.label;
 
-            let round = this.selectedTourney.rounds.find( r => r.name == roundName );
+            let round = this.selectedTourney.roundVO.rounds.find( r => r.name == roundName );
             if( round != undefined ) {
                 if( round.classification.length > 0 ) {
                     let c: Classification = round.classification[position-1];

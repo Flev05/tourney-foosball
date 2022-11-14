@@ -1,11 +1,8 @@
-
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { catchError, tap } from 'rxjs/operators';
-
 import { Meeting } from '../domain/meeting';
 import { Router } from '@angular/router';
 import { MeetingDb } from '../domain/meeting-db';
@@ -18,6 +15,7 @@ import { Round } from '../domain/round';
 import { DateFormatPipe } from '../components/common/date-format-pipe';
 import { Playoff } from '../domain/playoff';
 import { Classification } from '../domain/classification';
+import { AbstractRoundVO } from '../domain/abstract-round-vo';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -66,8 +64,9 @@ export  class MeetingService extends AbstractService {
     
     roundtripMeetingDaysMap: Map<number, Meeting[]>;
     roundtripDays: any[];
-
     goBackFromMeeting: boolean = false;
+
+    abstractRoundVO: AbstractRoundVO;
 
     selectedRound: Round;
     allDaysNo: number;
@@ -454,7 +453,7 @@ export  class MeetingService extends AbstractService {
     public createMeeting(t1: string, t2: string, pr1: PlayoffRule, pr2: PlayoffRule, day: number, d: Direction, skiping: boolean): Meeting {
         let matches = new Array<Match>();
 
-        for(let i=0; i<this.selectedTourney.maxMatchesPerMeeting; i++) {
+        for(let i=0; i<this.abstractRoundVO.maxMatchesPerMeeting; i++) {
             let m: Match = {id:i
                 ,players1: []
                 ,players2: []

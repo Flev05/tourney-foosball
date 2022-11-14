@@ -39,7 +39,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     ngOnInit() {
         super.ngOnInit();
         this.classificationCols = this.tourneyService.classificationCols;
-        
         this.isRoundTrip = this.isOneway == "true" ? false : true;
     }
     
@@ -100,10 +99,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             for (let m of e.round.onewayMeetings) {
                 if (m.teamName1 == "") {
                     m.points1 = 0;
-                    m.points2 = this.selectedTourney.matchWinnerScores;
+                    m.points2 = el.abstractRoundVO.matchWinnerScores;
                 }
                 if (m.teamName2 == "") {
-                    m.points1 = this.selectedTourney.matchWinnerScores;
+                    m.points1 = el.abstractRoundVO.matchWinnerScores;
                     m.points2 = 0;
                 }
                 m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
@@ -112,10 +111,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             for (let m of e.round.roundtripMeetings) {
                 if (m.teamName1 == "") {
                     m.points1 = 0;
-                    m.points2 = this.selectedTourney.matchWinnerScores;
+                    m.points2 = el.abstractRoundVO.matchWinnerScores;
                 }
                 if (m.teamName2 == "") {
-                    m.points1 = this.selectedTourney.matchWinnerScores;
+                    m.points1 = el.abstractRoundVO.matchWinnerScores;
                     m.points2 = 0;
                 }
                 m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
@@ -142,16 +141,16 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     private resolveNotStadaloneTopLevelRules(el : EliminatoryLevel ): void {
         let rounds: Array<Round> = new Array<Round>();
         if( this.isPlayoff ) {
-            rounds = this.selectedTourney.playoffs.map((p) => {return p.round;});
+            rounds = this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
         } else {
-            rounds = [...this.selectedTourney.rounds];
+            rounds = [...this.selectedTourney.roundVO.rounds];
         }
 
         for(let e of el.eliminatories ) {
             if(e.rule1.fromRound.isAutomatic) {
-                this.resolveToplevelAutomatic(e, rounds);
+                this.resolveToplevelAutomatic(el, e, rounds);
             } else {
-                this.resolveToplevelManual(e);
+                this.resolveToplevelManual(el, e);
             }
 
             if(this.tourneyService.selectedEliminatoryLevelIndex >= 2) {
@@ -165,7 +164,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * In function of the classification reached in the previous rounds or playoffs, the method
      * finds the teams that gained the right for the direct eliminations
      */
-    private resolveToplevelAutomatic( e: Eliminatory, rounds: Array<Round> ) {
+    private resolveToplevelAutomatic( el : EliminatoryLevel, e: Eliminatory, rounds: Array<Round> ) {
         let roundMatrix: Array<Array<Classification>> = this.meetingService.createRoundMatrix(rounds);
 
         let row1 = this.isPlayoff ? e.rule1.fromPlayoff.position.value : e.rule1.fromRound.position.value;
@@ -175,15 +174,15 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let col2 = this.isPlayoff ? e.rule2.fromPlayoff.bandPosition   : e.rule2.fromRound.bandPosition;
         
         for (let m of e.round.onewayMeetings) {
-            this.resolveMeetingsRules(m, roundMatrix, row1, col1, row2, col2);
+            this.resolveMeetingsRules(el, m, roundMatrix, row1, col1, row2, col2);
             e.round.teamNames = [m.teamName1, m.teamName2];
         }
         for (let m of e.round.roundtripMeetings) {
-            this.resolveMeetingsRules(m, roundMatrix, row2, col2, row1, col1);
+            this.resolveMeetingsRules(el, m, roundMatrix, row2, col2, row1, col1);
         }
     }
 
-    private resolveMeetingsRules(m: Meeting, roundMatrix: Classification[][], row1: number, col1: number, row2: number, col2: number) {
+    private resolveMeetingsRules(el : EliminatoryLevel, m: Meeting, roundMatrix: Classification[][], row1: number, col1: number, row2: number, col2: number) {
         m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
         if (row1 <= 0 || m.isDummy) {
             m.teamName1 = "";
@@ -203,10 +202,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         if( m.isSkiping ) {
             if( m.teamName1 == "" ) {
                 m.points1 = 0;
-                m.points2 = this.selectedTourney.matchWinnerScores;
+                m.points2 = el.abstractRoundVO.matchWinnerScores;
             }
             if( m.teamName2 == "" ) {
-                m.points1 = this.selectedTourney.matchWinnerScores;
+                m.points1 = el.abstractRoundVO.matchWinnerScores;
                 m.points2 = 0;
             }
         }
@@ -219,7 +218,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * In function of the classification reached in the previous rounds or playoffs, the method
      * finds the teams that gained the right for the direct eliminations
      */
-    private resolveToplevelManual(e: Eliminatory) {
+    private resolveToplevelManual(el : EliminatoryLevel, e: Eliminatory) {
         let fr1 = e.rule1.fromRound;
         let fp1 = e.rule1.fromPlayoff;
                    
@@ -243,7 +242,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         if(pr1 > 0 && fr1.round.value > 0) {
             let roundName = fr1.round.label;
-            for(let r of this.selectedTourney.rounds) {
+            for(let r of this.selectedTourney.roundVO.rounds) {
                 if(r.name == roundName) {
                     let teamName = r.classification[pr1-1].teamName;
                     m1.teamName1 = teamName;
@@ -252,7 +251,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
         } else {
             let roundName = fp1.round.label;
-            for(let p of this.selectedTourney.playoffs) {
+            for(let p of this.selectedTourney.playoffVO.playoffs) {
                 if(p.round.name == roundName) {
                     let teamName = p.round.classification[pp1-1].teamName;
                     m1.teamName1 = teamName;
@@ -263,7 +262,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         
         if(pr2 > 0 && fr2.round.value > 0) {
             let roundName = fr2.round.label;
-            for(let r of this.selectedTourney.rounds) {
+            for(let r of this.selectedTourney.roundVO.rounds) {
                 if(r.name == roundName) {
                     let teamName = r.classification[pr2-1].teamName;
                     m1.teamName1 = teamName;
@@ -272,7 +271,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
         } else {
             let roundName = fp2.round.label;
-            for(let p of this.selectedTourney.playoffs) {
+            for(let p of this.selectedTourney.playoffVO.playoffs) {
                 if(p.round.name == roundName) {
                     let teamName = p.round.classification[pp2-1].teamName;
                     m1.teamName2 = teamName;
@@ -287,19 +286,19 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         m2.teamName2 = m1.teamName1;
         if( m1.teamName1 == "" ) {
             m1.points1 = 0;
-            m1.points2 = this.selectedTourney.matchWinnerScores;
+            m1.points2 = el.abstractRoundVO.matchWinnerScores;
         }
         if( m1.teamName2 == "" ) {
-            m1.points1 = this.selectedTourney.matchWinnerScores;
+            m1.points1 = el.abstractRoundVO.matchWinnerScores;
             m1.points2 = 0;
         }
 
         if( m2.teamName1 == "" ) {
             m2.points1 = 0;
-            m2.points2 = this.selectedTourney.matchWinnerScores;
+            m2.points2 = el.abstractRoundVO.matchWinnerScores;
         }
         if( m2.teamName2 == "" ) {
-            m2.points1 = this.selectedTourney.matchWinnerScores;
+            m2.points1 = el.abstractRoundVO.matchWinnerScores;
             m2.points2 = 0;
         }
         m1.vpoints1 = m1.matches.length==1 ? m1.matches[0].score1 : m1.points1;

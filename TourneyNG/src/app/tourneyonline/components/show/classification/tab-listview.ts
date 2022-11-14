@@ -40,7 +40,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
             // super.loadPlayoffs();
 
             this.incompletePlayoffConfiguration = false;
-            this.playoffRows = this.selectedTourney.playoffs;
+            this.playoffRows = this.selectedTourney.playoffVO.playoffs;
             for(let p of this.playoffRows) {
                 p.playoffName = p.round.name;
                 if( p.playoffRules.length == 0 ) {

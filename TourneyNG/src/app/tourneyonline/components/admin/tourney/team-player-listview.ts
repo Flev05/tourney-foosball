@@ -11,6 +11,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 const REDIRECT_PLAYER_PL = "admintourney/dv/playerpl";
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
@@ -33,7 +34,7 @@ export class TeamPlayerListView extends AbstractDetailView {
         private   teamService: TeamService,
         public    playerService: PlayerService,
         private   router: Router,
-        private   clientService: ClientService
+        private   countryService: CountryService
     ) { 
         super(tourneyService, location);
     }
@@ -42,7 +43,7 @@ export class TeamPlayerListView extends AbstractDetailView {
         console.log("TeamDetailView.ngOnInit() ");
 
         super.ngOnInit();
-
+        this.countries = this.countryService.countries;
         this.selectedTeam = this.teamService.selectedTeam;
         this.playerCols = PlayerService.cols;
 
@@ -71,7 +72,7 @@ export class TeamPlayerListView extends AbstractDetailView {
     }
 
     private onSaveTourneyComplete(): void {
-        this.selectedTourney.rounds = [];
+        this.selectedTourney.roundVO.rounds = [];
         super.goBack();
     }
     

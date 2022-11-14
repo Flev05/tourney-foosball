@@ -1,6 +1,5 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Vista di dettaglio di incontri di un girone</span>
         <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
         <h3><span>Girone: "{{selectedRound.name}}"</span></h3>
         <h4><span>Incontro: "{{selectedMeeting.name}}"</span></h4>        
@@ -14,7 +13,8 @@
             Da questa vista potete modificare i dati dell'incontro selezionato.
         </p>
         <p>
-            I soli dati che potete modificare sono la data, l'ora e il luogo dove si svolge l'incontro.
+            I soli dati che potete modificare sono la data/ora, il luogo dove si svolge l'incontro e,
+            se in modalità manuale, i nomi delle squadre che compongono il match.
             La rimozione di un incontro non è contemplata in questa vista perchè gli incontri sono
             gestiti a livello di girone al momento dell'inserimento o rimozione di una squadra.
         </p>
@@ -29,11 +29,46 @@
         pButton (click)="done()" 
         label="Fatto">
     </button>
-</div>   
+</div>
+
+<div *ngIf="isRoundAutoGen=='false'" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            In Casa:
+        </div>
+        <div class="ui-grid-col-5" tooltipPosition="right" 
+                pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
+            <p-dropdown id="teams1RoundId" 
+                [options]="teams4RoundCombobox" 
+                [(ngModel)]="teamName1CB"  
+                optionLabel="label"
+                (onChange)="onTeam1Change($event.value)" 
+                placeholder="Seleziona"
+                [autoWidth]="false">
+            </p-dropdown>
+        </div>  
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            In Trasferta:
+        </div>
+        <div class="ui-grid-col-5" tooltipPosition="right" 
+                pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
+            <p-dropdown id="teams2RoundId" 
+                [options]="teams4RoundCombobox" 
+                [(ngModel)]="teamName2CB"  
+                optionLabel="label"
+                (onChange)="onTeam2Change($event.value)" 
+                placeholder="Seleziona"
+                [autoWidth]="false">
+            </p-dropdown>
+        </div>                  
+    </div>
+</div>
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+        <div class="ui-grid-col-1">
             Via:
         </div>
         <div class="ui-grid-col-5" pTooltip="Inserire la via della squadra.">
@@ -42,7 +77,7 @@
     </div>
 
     <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+        <div class="ui-grid-col-1">
             <label for="country-id">Comune:</label>
         </div>
         <div class="ui-grid-col-5">
@@ -58,7 +93,7 @@
     </div>
 
     <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+        <div class="ui-grid-col-1">
             Indirizzo:
         </div>
         <div class="ui-grid-col-8">
@@ -66,21 +101,19 @@
             + " (" + selectedMeeting.country.provinceCode +")" : "" }}
         </div>
     </div> 
-</div>
 
-<div class="ui-grid-row">
-    <div class="ui-grid-col-3">
-        Data e ora:
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            Data e ora:
+        </div>
+        <div class="ui-grid-col-3" tooltipPosition="right"
+                pTooltip="Indicare la data e ora di inizio dell'incontro.">
+            <p-calendar [(ngModel)]="selectedMeeting.datetime" 
+                [locale]="it" 
+                dateFormat="dd/mm/yy" 
+                [showIcon]="true"
+                showTime="false">
+            </p-calendar>
+        </div>            
     </div>
-    <div class="ui-grid-col-3" tooltipPosition="right"
-            pTooltip="Indicare la data e ora di inizio dell'incontro.">
-        <p-calendar [(ngModel)]="selectedMeeting.datetime" 
-            [locale]="it" 
-            dateFormat="dd/mm/yy" 
-            [showIcon]="true"
-            showTime="false">
-        </p-calendar>
-    </div>            
 </div>
-
- 

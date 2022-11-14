@@ -8,20 +8,24 @@ import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { Round } from 'app/tourneyonline/domain/round';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Direction, PhaseType } from 'app/tourneyonline/domain/enumerations';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
     onSaveMeetingError: boolean;
+    isRoundAutoGen: string;
 
     constructor(protected http: HttpClient
         , protected router: Router
         , protected tourneyService: TourneyService
+        , protected clientService: ClientService
         , protected dateFormatPipe: DateFormatPipe ) 
     { 
         super( http, router, dateFormatPipe );
@@ -43,6 +47,100 @@ export class MeetingRoundService extends MeetingService {
         );
 
         return subsbr;
+    }
+
+    public saveRoundMeetings( st : TourneyVO
+        , saveEH : (operation: string, result?: TourneyVO) => any
+        , subscribeEH : (operation: string, result?: TourneyVO) => void
+        , unBlockDocument: () => void)
+    {
+        this.selectedTourney = st;
+        let roundsMeetings: MeetingDb[] = [];
+        for (let r of this.selectedTourney.roundVO.rounds) {
+            for(let m of r.onewayMeetings ) {
+                let mdb = this.prepareRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                roundsMeetings.push(mdb);
+            }
+            for(let m of r.roundtripMeetings ) {
+                let mdb = this.prepareRoundMeetingDb(m, this.selectedTourney.id, r.id);
+                roundsMeetings.push(mdb);
+            }
+        }
+
+        let tvo: TourneyVO = this.prepareTourneyVOForRound(false);
+        tvo.mdbs = roundsMeetings;
+        const subscriber = this.tourneyService.updateTourneyAndRounds(tvo, saveEH('Create Tourney operation', tvo));
+        subscriber.subscribe(cs => this.saveTourneyNext(cs), e => subscribeEH(e, tvo), () => unBlockDocument() );
+    }
+ 
+    private saveTourneyNext(tvo: TourneyVO): void {
+        console.log("saveTourneyNext()");
+        console.log(tvo);
+        this.selectedTourney.id = tvo.id;
+    }
+
+    public prepareTourneyVOForRound(cleanRounds: boolean) {
+        this.cleanRoundMeetings(cleanRounds);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        return tvo;
+    }
+
+    public cleanRoundMeetings(cleanRounds: boolean) {
+        for (let r of this.selectedTourney.roundVO.rounds) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+        }
+        if (cleanRounds) {
+            this.selectedTourney.roundVO.rounds = [];
+        }
+        if(this.containsPlayoff()) {
+            this.cleanPlayoffMeetings(cleanRounds);
+        }
+    }
+    public cleanPlayoffMeetings(cleanPlayoffs: boolean) {
+        for (let p of this.selectedTourney.playoffVO.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        if (cleanPlayoffs) {
+            this.selectedTourney.playoffVO.playoffs = [];
+            
+        }
+        if(this.containsEliminatory()) {
+            this.cleanEliminatoryMeetings(cleanPlayoffs);
+        }
+    }
+     
+    containsPlayoff(): boolean {
+        return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
+    }
+
+    containsEliminatory(): boolean {
+        let con: boolean = this.containsPhase(PhaseType.E, this.selectedTourney.phases);
+        return con;
+    }
+    protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean {
+        for(let i=0; i<phases.length; i++ ) {
+            if(phases[i] == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+ 
+    public cleanEliminatoryMeetings(cleanEliminatory: boolean) {
+        for (let el of this.selectedTourney.eliminatoryLevels) {
+            for (let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        if (cleanEliminatory) {
+            for (let el of this.selectedTourney.eliminatoryLevels) {
+                el.eliminatories = [];
+            }
+            this.selectedTourney.eliminatoryLevels = [];
+        }
     }
 
     /** 
@@ -103,11 +201,15 @@ export class MeetingRoundService extends MeetingService {
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
 
+        this.prepareCaption(meetingsNo, allDaysNo);
+    }
+
+    private prepareCaption(meetingsNo: number, allDaysNo: number) {
         if (this.selectedTourney.isOnewayRound == "true") {
-            this.meetingsNoMsg = "" + meetingsNo + " in " + allDaysNo + " giornate (Solo Andata)";
+            this.meetingsNoMsg = this.selectedRound.name + ": " + meetingsNo + " incontri in " + allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = this.selectedRound.name + ": " + meetingsNo * 2 + " incontri in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
     }
 
@@ -124,12 +226,7 @@ export class MeetingRoundService extends MeetingService {
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
 
-        if (this.selectedTourney.isOnewayRound == "true") {
-            this.meetingsNoMsg = "" + meetingsNo + " in " + allDaysNo + " giornate (Solo Andata)";
-        } else {
-            this.isRoundTrip = true;
-            this.meetingsNoMsg = "" + meetingsNo * 2 + " in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
-        }
+        this.prepareCaption(meetingsNo, allDaysNo);
         complete();
     }
 

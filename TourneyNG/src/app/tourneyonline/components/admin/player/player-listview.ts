@@ -88,7 +88,7 @@ export class PlayerListView extends AbstractListView {
         };
     }
 
-    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+    protected subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
 

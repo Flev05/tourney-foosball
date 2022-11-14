@@ -22,12 +22,12 @@
 </p-accordion>    
 </div>
 
-<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-
 <div style="margin-top:30px">
     <p-message *ngIf="!atLeast2teams" severity="error" text="Attenzione! C'è almeno un girone vuoto, inserire almeno 2 squadre per ciascuno girone"></p-message>
 </div>     
-
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>
 <p-tabView *ngIf="atLeast2teams" 
         [activeIndex]="selectedRound.selectedTabIndex"
         (onChange)="onChangeTab($event)">
@@ -43,7 +43,7 @@
             [rows]="pageSize">
 
             <ng-template pTemplate="caption">  
-                <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>
+                <h4><span>{{meetingRoundService.meetingsNoMsg}}</span></h4>
             </ng-template>
 
             <ng-template pTemplate="header" let-columns>
@@ -79,7 +79,7 @@
             [rows]="pageSize">
             
             <ng-template pTemplate="caption">  
-                <h4><span>Incontri: {{meetingRoundService.meetingsNoMsg}}</span></h4>
+                <h4><span>{{meetingRoundService.meetingsNoMsg}}</span></h4>
             </ng-template>
             
             <ng-template pTemplate="header" let-columns>

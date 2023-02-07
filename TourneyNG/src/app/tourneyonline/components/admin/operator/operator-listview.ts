@@ -9,15 +9,15 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { UserService } from 'app/tourneyonline/service/user-service';
 import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
+import { OperatorDetailView } from './operator-detailview';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
-const REDIRECT_TOURNEY_DV   = 'adminoperator/dv';
 
 @Component({
     templateUrl: './operator-listview.html'
 })
 export class OperatorListView extends AbstractListView {
-    public static redirect: string = REDIRECT_TOURNEY_DV;
+    
 
     cols: TableCols[]  = this.userService.cols;
     rows: any[];
@@ -39,7 +39,7 @@ export class OperatorListView extends AbstractListView {
         private userService: UserService,
         protected clientService: ClientService
     ) {
-        super(OperatorListView.redirect, tourneyService, router, location);
+        super(OperatorDetailView.redirect, tourneyService, router, location);
     }
 
     ngOnInit() {

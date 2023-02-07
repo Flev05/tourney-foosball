@@ -45,6 +45,7 @@ const updateTourneyDeleteAllMeetingsUrl = tourneyUrl + "/updateTourneyDeleteAllM
 const updateTourneyRoundsUrl = tourneyUrl + "/updateTourneyRounds";
 const updateTourneyPlayoffsUrl = tourneyUrl + "/updateTourneyPlayoffs";
 const updateTourneyEliminatoriesUrl = tourneyUrl + "/updateTourneyEliminatories";
+const updateTourneyEliminatoriesBUrl = tourneyUrl + "/updateTourneyEliminatoriesB";
 
 const deleteTourneyUrl = tourneyUrl + '/delete';
 
@@ -64,8 +65,10 @@ export class TourneyService extends AbstractService {
 
     selectedRound : Round;
     selectedPlayoff : Playoff;
+    selectedPlayout : Playoff;
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
+    selectedEliminatoryBLevel: EliminatoryLevel;
 
     newTourney : boolean = false;
     newRound : boolean = false;
@@ -73,7 +76,8 @@ export class TourneyService extends AbstractService {
     newPlayoffConfig : boolean = false;
 
     firstTime : boolean = true;
-    
+    selectedResultTabIndex: number = 0; 
+    selectedTabIndex: number = 0; 
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean;
 
@@ -87,16 +91,22 @@ export class TourneyService extends AbstractService {
     selectedRoundTabIndex: number = 0;
     selectedPlayoffTabIndex: number = 0;
     selectedEliminatoryTabIndex: number = 0;
+    selectedEliminatoryBTabIndex: number = 0;
     selectedEliminatoryLevelIndex: number = 0;
+    selectedEliminatoryBLevelIndex: number = 0;
     selectedEliminatoryIndex: number = 0;
+    selectedEliminatoryLevelBIndex: number = 0;
+    selectedEliminatoryBIndex: number = 0;
     selectedClassificationRow: Classification;
 
     static roundCols: TableCols[] = [
-        { field: 'name',        header: 'Giron1' },
+        { field: 'name',        header: 'Gironi' },
+        { field: 'teamNames',   header: 'Squadre' },
     ];
 
     static playoffCols: TableCols[] = [
-        { field: 'playoffName',   header: 'Playoff' },
+        { field: 'playoffName', header: 'Playoff' },
+        { field: 'teamNames',   header: 'Squadre' },
     ];
     redirect: string;
 
@@ -569,6 +579,14 @@ export class TourneyService extends AbstractService {
         );
     }
 
+    updateTourneyAndEliminatoriesB(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyEliminatoriesBUrl;
+        return this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
     /** PUT: update the tourney on the server */
     private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let url = updateTourneyUrl;
@@ -711,7 +729,7 @@ export class TourneyService extends AbstractService {
      */
     public createClassification(round: Round, meetings: Meeting[]): Classification[] {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
-
+ 
         for( let t of round.teamNames) {
             let c = this.newClassification(t, 0);
             classificationMap.set(t, c);
@@ -735,7 +753,7 @@ export class TourneyService extends AbstractService {
 
             if(c1.points > 0 || c2.points > 0)  {
                 for( let ma of m.matches ) {
-                    if( ma.score1 > 0 || ma.score2 > 0) {
+                    if( ma.score1 > 0 || ma.score2 > 0 || m.status == MeetingStatus.Terminated) {
                         c1.played++;
                         c2.played++;
                     }
@@ -750,7 +768,7 @@ export class TourneyService extends AbstractService {
                 c2.won++;
                 c1.lost++;
             }
-            if ( m.points1 == m.points2) {
+            if ( m.points1 == m.points2 && m.status == MeetingStatus.Terminated) {
                 c1.balanced++;
                 c2.balanced++;
             }

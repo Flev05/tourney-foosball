@@ -27,9 +27,9 @@ import { CalendarModule } from 'primeng/calendar';
 
 import {EliminatoryRoutingModule} from './eliminatory-routing.module';
 import {StandaloneEliminatoryListView} from './eliminatory-standalone-listview';
-import {FullEliminatoryListView} from './eliminatory-full-listview';
+import {EliminatoryListView} from './eliminatory-listview';
 import {StandaloneEliminatoryDetailView} from './eliminatory-standalone-detailview';
-import { FullEliminatoryDetailView } from './eliminatory-full-detailview';
+import { EliminatoryDetailView } from './eliminatory-detailview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { LevelService } from './level-service';
 
@@ -63,9 +63,9 @@ import { LevelService } from './level-service';
         ,MessageModule
     ],
 	declarations: [StandaloneEliminatoryListView
-        ,FullEliminatoryListView
+        ,EliminatoryListView
         ,StandaloneEliminatoryDetailView        
-        ,FullEliminatoryDetailView        
+        ,EliminatoryDetailView        
     ]
     ,providers: [DateFormatPipe, LevelService]
 })

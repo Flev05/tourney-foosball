@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+        <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
         <h4><span>Girone Playoff: {{selectedPlayoff.round.name}}</span></h4>
         <h4><span>Incontri: {{meetingPlayoffService.meetingsNoMsg}}</span></h4>
     </div>
@@ -13,7 +13,6 @@
         Vista elenco degli incontri di playoff in termini di regole di passaggio del turno
         dai gironi all'italiana ai gironi di playoff.
     </p>
-
     <p>
         Selezionare l'incontro di interesse per accedere alla vista di dettaglio dell'incontro corrispondente.
     </p>
@@ -27,7 +26,7 @@
 
 <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
-<p-tabView [activeIndex]="selectedPlayoff.selectedTabIndex"
+<p-tabView [activeIndex]="meetingPlayoffService.selectedTabIndex"
         (onChange)="onChangeTab($event)">
     <p-tabPanel header="ANDATA ({{allDaysNo}} giornate)">
 
@@ -49,13 +48,12 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
                     <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                    <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
-                        {{rowData[col.field]}}
-                    </td>
+                    <td>{{rowData.datetime | date: 'dd/MM/y HH:mm'}}</td>
+                    <td>{{rowData.ruleName1}}</td>
+                    <td>{{rowData.ruleName2}}</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -81,13 +79,12 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
                     <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                    <td *ngFor="let col of columns">
-                        <span class="ui-column-title">{{col.header}}</span>
-                        {{rowData[col.field]}}
-                    </td>
+                    <td>{{rowData.datetime | date: 'dd/MM/y HH:mm'}}</td>
+                    <td>{{rowData.ruleName1}}</td>
+                    <td>{{rowData.ruleName2}}</td>
                 </tr>
             </ng-template>
         </p-table>

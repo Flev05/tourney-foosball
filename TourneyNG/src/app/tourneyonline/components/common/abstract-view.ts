@@ -81,11 +81,19 @@ export abstract class AbstractView implements OnInit {
     }
 
     containsPlayoff(): boolean {
-        return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
+        return this.containsPhase(PhaseType.P, this.selectedTourney.phases) && this.containsRound();
+    }
+
+    containsPlayout(): boolean {
+        return this.containsPhase(PhaseType.O, this.selectedTourney.phases) && this.containsPlayoff();
     }
 
     containsEliminatory(): boolean {
         let con: boolean = this.containsPhase(PhaseType.E, this.selectedTourney.phases);
+        return con;
+    }
+    containsEliminatoryB(): boolean {
+        let con: boolean = this.containsPhase(PhaseType.EB, this.selectedTourney.phases);
         return con;
     }
 

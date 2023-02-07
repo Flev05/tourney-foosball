@@ -6,11 +6,10 @@
             </td>
             <td>
                 <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
-                <p style="text-align: center;font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</p>
             </td>
-            <!--td style="text-align: right;">
+            <td style="text-align: right;">
                 <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
-            </td -->
+            </td>
         </tr>
     </ng-template>
 </p-table>
@@ -32,11 +31,10 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-arrow-left" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
+                        <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
                     </td>
-                    <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}}</div>
-                        <div>{{onewayCurrentDay}}/{{allDaysNo}}</div>
+                    <td style="text-align: center; font-weight: bold;">
+                        <div>{{selectedRound.name}} ({{onewayCurrentDay}}/{{allDaysNo}})</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
@@ -49,14 +47,18 @@
                     <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
-                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
-                        {{rowData['vpoints1']}}
-                    </td>
-                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
-                        {{rowData['vpoints2']}}
-                    </td>
-                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
-                        {{rowData['datetime'] | date: 'dd/MM/y'}}
+                    <td class="centralPoints">
+                        <div>
+                            <span>{{rowData['datetime'] | date: 'dd/MM/y HH:mm'}}</span>
+                        </div>
+                        <div>
+                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                        </div>
+                        <div>
+                            <span>
+                                {{rowData['status']}}
+                            </span>                        
+                        </div>
                     </td>
                     <td class="rightTeamName">
                         {{rowData['teamName2']}}
@@ -77,11 +79,10 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-arrow-left" pButton (click)="prevRoundtripDay()"></button>
+                        <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
                     </td>
-                    <td colspan="2" style="width: 25mm;text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}}</div>
-                        <div>{{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}}</div>
+                    <td style="text-align: center; font-weight: bold;">
+                        <div>{{selectedRound.name}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>
@@ -93,15 +94,17 @@
                     <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
-                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
-                        {{rowData['vpoints1']}}
-                    </td>
-                    <td *ngIf="rowData['status']!='toplay'" class="centralPoints">
-                        {{rowData['vpoints2']}}
-                    </td>
-                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
-                        {{rowData['datetime'] | date: 'dd/MM/y'}}
-                    </td>                    
+                    <td class="centralPoints">
+                        <div>
+                            <span>{{rowData['datetime'] | date: 'dd/MM/y HH:mm'}}</span>
+                        </div>
+                        <div>
+                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                        </div>
+                        <div>
+                            <span>{{rowData['status']}}</span>                        
+                        </div>                        
+                    </td>                 
                     <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>

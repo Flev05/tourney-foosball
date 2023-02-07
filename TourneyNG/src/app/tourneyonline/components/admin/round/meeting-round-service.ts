@@ -119,6 +119,11 @@ export class MeetingRoundService extends MeetingService {
         let con: boolean = this.containsPhase(PhaseType.E, this.selectedTourney.phases);
         return con;
     }
+    
+    containsEliminatoryB(): boolean {
+        let con: boolean = this.containsPhase(PhaseType.EB, this.selectedTourney.phases);
+        return con;
+    }
     protected containsPhase(value: PhaseType, phases: PhaseType[]) : boolean {
         for(let i=0; i<phases.length; i++ ) {
             if(phases[i] == value ) {
@@ -135,11 +140,40 @@ export class MeetingRoundService extends MeetingService {
                 e.round.roundtripMeetings = [];
             }
         }
+        if(this.containsEliminatoryB() ) {
+            for (let el of this.selectedTourney.eliminatoryBLevels) {
+                for (let e of el.eliminatories) {
+                    e.round.onewayMeetings = [];
+                    e.round.roundtripMeetings = [];
+                }
+            }
+        }
         if (cleanEliminatory) {
             for (let el of this.selectedTourney.eliminatoryLevels) {
                 el.eliminatories = [];
             }
             this.selectedTourney.eliminatoryLevels = [];
+            if(this.containsEliminatoryB() ) {
+                for (let el of this.selectedTourney.eliminatoryBLevels) {
+                    el.eliminatories = [];
+                }
+                this.selectedTourney.eliminatoryBLevels = [];
+            }
+        }
+    }
+
+    public cleanEliminatoryBMeetings(cleanEliminatory: boolean) {
+        for (let el of this.selectedTourney.eliminatoryBLevels) {
+            for (let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        if (cleanEliminatory) {
+            for (let el of this.selectedTourney.eliminatoryBLevels) {
+                el.eliminatories = [];
+            }
+            this.selectedTourney.eliminatoryBLevels = [];
         }
     }
 
@@ -201,15 +235,15 @@ export class MeetingRoundService extends MeetingService {
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
 
-        this.prepareCaption(meetingsNo, allDaysNo);
+        this.prepareCaption(meetingsNo, allDaysNo, round);
     }
 
-    private prepareCaption(meetingsNo: number, allDaysNo: number) {
+    private prepareCaption(meetingsNo: number, allDaysNo: number, r : Round) {
         if (this.selectedTourney.isOnewayRound == "true") {
-            this.meetingsNoMsg = this.selectedRound.name + ": " + meetingsNo + " incontri in " + allDaysNo + " giornate (Solo Andata)";
+            this.meetingsNoMsg = r.name + ": " + meetingsNo + " incontri in " + allDaysNo + " giornate (Solo Andata)";
         } else {
             this.isRoundTrip = true;
-            this.meetingsNoMsg = this.selectedRound.name + ": " + meetingsNo * 2 + " incontri in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
+            this.meetingsNoMsg = r.name + ": " + meetingsNo * 2 + " incontri in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
         }
     }
 
@@ -226,13 +260,13 @@ export class MeetingRoundService extends MeetingService {
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
 
-        this.prepareCaption(meetingsNo, allDaysNo);
+        this.prepareCaption(meetingsNo, allDaysNo, round);
         complete();
     }
 
     private makeTeamName(meetings: Meeting[]) {
         for(let m of meetings) {
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
             m.teamName1 = m.teamName1;
             m.teamName2 = m.teamName2;
         }
@@ -246,7 +280,7 @@ export class MeetingRoundService extends MeetingService {
         let teams: string[] = [...round.teamNames];
         
         if( teams.length % 2 > 0 ) {
-            let dummyTeam = this.SKIPING_TEAM;
+            let dummyTeam = MeetingService.SKIPING_TEAM;
             teams.push(dummyTeam);
         }
 
@@ -358,13 +392,13 @@ export class MeetingRoundService extends MeetingService {
             let onewayMeetings: Meeting[] = this.onewayMeetingDaysMap.get(key);
 
             for( let m of onewayMeetings ) {   
-                m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+                // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
     
                 let rtm = round.roundtripMeetings.find( i => this.whereCondition(m, m.teamName2, m.teamName1));
 
                 if( rtm == undefined ) {
                     rtm = this.newMeeting(m.teamName2, m.teamName1, m.day, Direction.RoundTrip);
-                    rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
+                    // rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
 
                 if( !this.roundtripMeetingDaysMap.has(key) ) {
@@ -387,7 +421,7 @@ export class MeetingRoundService extends MeetingService {
     }
 
     public newMeeting(t1: string, t2: string, day: number, d: Direction): Meeting {
-        let skiping: boolean = t1 == this.SKIPING_TEAM || t2 == this.SKIPING_TEAM;
+        let skiping: boolean = t1 == MeetingService.SKIPING_TEAM || t2 == MeetingService.SKIPING_TEAM;
         let m = this.createMeeting(t1, t2, null, null, day, d, skiping);
         return m;
     }

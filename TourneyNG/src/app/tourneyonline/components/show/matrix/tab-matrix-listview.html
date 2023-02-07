@@ -30,7 +30,7 @@
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
-<p-tabView [activeIndex]="selectedTourney.selectedResultTabIndex" (onChange)="onChangeTab($event)">
+<p-tabView [activeIndex]="tourneyService.selectedResultTabIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Gironi({{roundCount}})" *ngIf="containsRound()" >    
         <p-table [columns]="roundCols"
             [value]="roundRows"

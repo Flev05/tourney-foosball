@@ -45,7 +45,6 @@ export class LoginDetailView extends AbstractListView {
         protected clientService: ClientService,
         protected location: Location
     ) {
-
         super(redirect 
             ,   null 
             ,   router 

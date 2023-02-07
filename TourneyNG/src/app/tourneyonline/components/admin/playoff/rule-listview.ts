@@ -10,6 +10,8 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './rule-listview.html'
@@ -37,6 +39,7 @@ export class RuleListView extends AbstractListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
+        private clientService: ClientService
     ) {
         super("", tourneyService, router, location);
     }
@@ -77,6 +80,12 @@ export class RuleListView extends AbstractListView {
 
         msgerr = 'Modifica configurazione playoff fallita';
         console.error(msgerr);
+    }
+    
+    savePlayoff(): void {
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack());
     }
 }
 

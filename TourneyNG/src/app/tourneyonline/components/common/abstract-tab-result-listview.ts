@@ -15,6 +15,8 @@ import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { MeetingPlayoffService } from '../admin/playoff/meeting-playoff-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 export abstract class AbstractTabResultListView extends AbstractListView {
     cols: TableCols[] ;
@@ -22,19 +24,25 @@ export abstract class AbstractTabResultListView extends AbstractListView {
     roundCols: TableCols[] = TourneyService.roundCols;
     roundRows: Round[];
     roundCount: number;
+ 
     selectedRound: Round;
 
     playoffCols: TableCols[] = TourneyService.playoffCols;
     playoffRows: Playoff[];
+    playoutRows: Playoff[];
     playoffCount: number;
+    playoutCount: number;
     selectedPlayoff: Playoff;
+    selectedPlayout: Playoff;
     mdbList: MeetingDb[];
-    selectedTabIndex: number = 0;
 
     eliminatoryCount: number;
+    eliminatoryBCount: number;
     eliminatoryLevelCols: TableCols[];
     eliminatoryLevelRows: EliminatoryLevelVO[];
+    eliminatoryLevelBRows: EliminatoryLevelVO[];
     selctedEliminatoryLevel: EliminatoryLevelVO;
+    selctedEliminatoryBLevel: EliminatoryLevelVO;
 
     constructor(
         protected redirect: string,
@@ -45,7 +53,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe,
-        protected levelService: LevelService
+        protected levelService: LevelService,
+        protected clientService: ClientService,
     ) {
         super(redirect, tourneyService, router, location);
     }
@@ -88,14 +97,40 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if(super.containsPlayoff()) {
             this.playoffRows = this.selectedTourney.playoffVO.playoffs;
             this.playoffCount = this.playoffRows.length;
-
             let playoffIds: number[] = [];
             for(let p of this.selectedTourney.playoffVO.playoffs) {
                 playoffIds.push(p.id);
+                p.teamNames = "";
+                for( let tn of p.round.teamNames) {
+                    if( tn == MeetingService.SKIPING_TEAM) {
+                        continue;
+                    }
+                    p.teamNames += tn + ", ";
+                }
+                p.teamNames = p.teamNames.substring(0, p.teamNames.length-1);
             }
-            
+
             const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds, e => this.serverUnreachableHandler(e));
             subsbr.subscribe(t => this.onPlayoffCompleteLoad(t), e => this.onError(e));
+
+            if(super.containsPlayout()) {
+                this.playoutRows = this.selectedTourney.playoutVO.playoffs;
+                this.playoutCount = this.playoutRows.length;
+                let playoutIds: number[] = [];                
+                for(let p of this.selectedTourney.playoutVO.playoffs) {
+                    playoutIds.push(p.id);
+                    p.teamNames = "";
+                    for( let tn of p.round.teamNames) {
+                        if( tn == MeetingService.SKIPING_TEAM) {
+                            continue;
+                        }
+                        p.teamNames += tn;
+                    }
+                    p.teamNames = p.teamNames.substring(0, p.teamNames.length-1);
+                }
+                const subsbr = this.meetingPlayoffService.loadPlayoutMeetings(this.selectedTourney.id, playoutIds, e => this.serverUnreachableHandler(e));
+                subsbr.subscribe(t => this.onPlayoutCompleteLoad(t), e => this.onError(e));
+            }
         } else {
             this.prepareEliminatoryLevels();
         }
@@ -107,10 +142,12 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         }
             
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.levelService.prepareEliminatoryLevelsGui();
+        this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels);
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
+        this.eliminatoryLevelBRows = this.levelService.eliminatoryBLevelRows;
         this.eliminatoryCount = this.eliminatoryLevelRows.length;
+        this.eliminatoryBCount = this.eliminatoryLevelBRows.length;
     }
 
     private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
@@ -132,9 +169,29 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.prepareEliminatoryLevels();
     }
 
-    onChangeTab(e) {
-        let index=e.index;
-        this.selectedTourney.selectedResultTabIndex = index;
+    private onPlayoutCompleteLoad(mdbList: MeetingDb[]) {
+        this.mdbList = mdbList;
+        for(let playout of this.selectedTourney.playoutVO.playoffs) { 
+            this.meetingPlayoffService.extractPlayoffMeetings(playout, this.mdbList);
+            if( this.selectedTourney.playoffVO.isPlayoffAutoGen == "true") {
+                this.meetingPlayoffService.resolveAutomaticTeams(playout);
+                this.meetingPlayoffService.resolveAutomaticMeetings(playout, this.selectedTourney.roundVO.rounds);
+            } else {
+                this.meetingPlayoffService.resolveManualTeams(playout);
+                this.meetingPlayoffService.resolveManualMeetings(playout, this.selectedTourney.roundVO.rounds);
+            }
+            let allMeetings = playout.round.onewayMeetings.concat(playout.round.roundtripMeetings);
+            playout.round.classification = this.tourneyService.createClassification(playout.round, allMeetings);
+        }
+    }
+ 
+    onChangeTab(e : any) {
+        var index = e.index;
+        console.log(index);
+        this.meetingService.selectedResultTabIndex = index;
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Update Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {

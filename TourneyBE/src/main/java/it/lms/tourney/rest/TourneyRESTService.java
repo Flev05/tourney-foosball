@@ -353,6 +353,21 @@ public class TourneyRESTService extends AbstractRESTService {
 		return updateTourney(tvo, EMeetingUpdate.ELIMNATORY);
 	}
 
+	/**
+	 * Updates the received tourney found in the database. Performs validation, deletes the meetings related to the
+	 * Rounds, and will return a JAX-RS response with either 200 ok, or with a map of fields, and related errors.
+	 */
+	@PUT
+	@Path("/updateTourneyEliminatoriesB")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateTourneyEliminatoriesB(TourneyVO tvo) {
+
+		log.debug(logId() + "PUT: updateTourneyEliminatoriesB(" + tvo + ")");
+
+		return updateTourney(tvo, EMeetingUpdate.ELIMNATORY_B);
+	}
+
 	private Response updateTourney(TourneyVO tvo, EMeetingUpdate update) {
 
 		log.debug(logId() + "PUT: updateTourney(" + tvo + ")");
@@ -392,8 +407,16 @@ public class TourneyRESTService extends AbstractRESTService {
 			meetingDao.deletePlayoffMeetingsByTourneyId(tourneyId);
 			insertMeetings(tvo);
 		}
+		if (update == EMeetingUpdate.PLAYOUT) {
+			meetingDao.deletePlayoutMeetingsByTourneyId(tourneyId);
+			insertMeetings(tvo);
+		}
 		if (update == EMeetingUpdate.ELIMNATORY) {
 			meetingDao.deleteEliminatoryMeetingsByTourneyId(tourneyId);
+			insertMeetings(tvo);
+		}
+		if (update == EMeetingUpdate.ELIMNATORY_B) {
+			meetingDao.deleteEliminatoryBMeetingsByTourneyId(tourneyId);
 			insertMeetings(tvo);
 		}
 

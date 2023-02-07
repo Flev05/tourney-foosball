@@ -12,7 +12,6 @@ export interface Meeting
     name?           : string;
     direction?      : Direction
     datetime?       : Date;
-    dateAndTime?    : string;
     address?        : string;
     country?        : Country;
     teamName1?      : string;

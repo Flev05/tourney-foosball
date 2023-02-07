@@ -91,7 +91,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
 
         this.roundDaysNo = this.selectedPlayoff.round.daysNo;
         this.pageSize  = this.selectedPlayoff.round.pageSize;
-        this.onewayMeetings = this.selectedPlayoff.round.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
+        this.onewayMeetings    = this.selectedPlayoff.round.onewayMeetings.map( (m, index, ms) => this.mapCallback(m, index, ms) );
         this.roundtripMeetings = this.selectedPlayoff.round.roundtripMeetings.filter( (m, index, ms) => this.filterCallback(m, index, ms) );
 
         let key = this.selectedPlayoff.round.onewayCurrentDay;
@@ -147,7 +147,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         }
             
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.levelService.prepareEliminatoryLevelsGui();
+        this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels);
     }
 
     private mapCallback(m: Meeting, index: number, ms: Meeting[]): Meeting {
@@ -220,22 +220,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     }
 
     private onPlayoffNext(mdbList: MeetingDb[]) {
-
         this.mdbList = mdbList;
-        // for(let playoff of this.selectedTourney.playoffs) { 
-        //     this.meetingPlayoffService.extractPlayoffMeetings(playoff, this.mdbList);
-    
-        //     if( this.selectedTourney.isPlayoffAutoGen == "true") {
-        //         this.meetingPlayoffService.resolveAutomaticTeams(playoff);
-        //         this.meetingPlayoffService.resolveAutomaticMeetings(playoff, this.selectedTourney.rounds);
-        //     } else {
-        //         this.meetingPlayoffService.resolveManualTeams(playoff);
-        //         this.meetingPlayoffService.resolveManualMeetings(playoff, this.selectedTourney.rounds);
-        //     }
-    
-        //     let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);
-        //     playoff.round.classification = this.tourneyService.createClassification(playoff.round, allMeetings);
-        // }
         this.ngOnInit();
     }
 }

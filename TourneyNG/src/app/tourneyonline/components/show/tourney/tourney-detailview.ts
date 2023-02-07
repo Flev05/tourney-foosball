@@ -17,7 +17,7 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     ngOnInit() {
-        console.log("MatrixDetailView.ngOnInit() ");
+        console.log("TourneyDetailView.ngOnInit() ");
 
         super.ngOnInit();
     }

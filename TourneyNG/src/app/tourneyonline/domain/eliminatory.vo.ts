@@ -6,7 +6,7 @@ export class EliminatoryVO  {
     teamName1: string;
     teamName2: string;
     onewayDatetime: Date;
-    roundtripDatetime: DataCue;
+    roundtripDatetime: Date;
     position1: string;
     fromRound1: string;
     fromPlayoff1: string;

@@ -10,32 +10,19 @@
 
 <div class="content-section documentation">
 <p-accordion>
-    <p-accordionTab header="Istruzioni">                     
-        
+    <p-accordionTab header="Istruzioni">                        
         <p>
-            Se siete in modalità manuale ed avete selezionato il livello più alto, quello di partenza delle eliminazioni dirette,
-            la vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai 
+            La vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai 
             gironi all'italiana e/o playoff al primo livello di partenza per le eliminazioni dirette.
         </p>
-        <p>
-            Se siete in modalità automatica, potete solo modificare la data e locazione dei turni di andata e/o andata e ritorno.
-        </p>
-        
-        <p>
-            Quindi, in modalità automatica, potete compilare solo il punto 2), in manuale entrambi:
-        </p>
-        <ul>
-            <li>1) Regole per il passaggio del turno</li>
-            <li>2) Data e luogo dell'incontro andata/ritorno</li>
-        </ul>
-
+ 
         <h4>1) Regole o squadre per il passaggio del turno</h4>
         <p>
-            In modalità manuale, Il sistema vi propone una soluzione d'ufficio a partire dai precedenti turni di qualificazione.
+            Il sistema vi propone una soluzione d'ufficio a partire dai precedenti turni di qualificazione.
             Se esistono i playoff, le regole sono relative ai playoff altrimenti si riferiscono ai gironi all'italiana. 
         </p>
         <p>
-            Se avete esigenza bisogno di regole miste che prelevano squadre sia dai playoff che dai gironi all'italiana,
+            Se avete bisogno di regole miste che prelevano squadre sia dai playoff che dai gironi all'italiana,
             potete modificare le regole a vostro piacimento selezionando opportunamente posizioni di classifica e nomi
             dei gironi dalle corrispondenti combo box. 
         </p>
@@ -61,10 +48,10 @@
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
 <form [formGroup]="eliminatoryFormGroup" >
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Indietro"></button>
-    </div>                  
 
     <div *ngIf="isDoubleSelection" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div style="margin-top:30px">
@@ -291,5 +278,8 @@
             </p-message>
         </div>   
     </div>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" class="ui-button-success" icon="fa fa-save" pButton (click)="done()" label="Salva"></button>
+    </div>                      
 </form>   
  

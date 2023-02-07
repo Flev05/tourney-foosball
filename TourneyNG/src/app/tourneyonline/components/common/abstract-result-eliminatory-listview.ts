@@ -23,6 +23,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
     isRoundTrip: boolean = false;
+    selectedClassificationRow: Classification;
 
     constructor(
         public redirect: string,
@@ -51,11 +52,11 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.tourneyService.selectedEliminatoryTabIndex = index;
     }
 
-    protected onLoadComplete(): void {
+    protected onLoadComplete(eliminatoryLevels : Array<EliminatoryLevel>, levelIndex : number): void {
         this.cols = this.tourneyService.resultCols;
 
-        for( let l=0; l < this.selectedTourney.eliminatoryLevels.length; l++ ) {
-            let el = this.selectedTourney.eliminatoryLevels[l];
+        for( let l=0; l < eliminatoryLevels.length; l++ ) {
+            let el = eliminatoryLevels[l];
             if( this.isStandAlone(this.selectedTourney) ) {
                 if( el.isTopLevel ) {
                     this.resolveStandaloneTopLevel(el);
@@ -64,7 +65,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 }
             } else {
                 if( el.isTopLevel ) {
-                    this.resolveNotStadaloneTopLevelRules( el );
+                    this.resolveNotStandaloneTopLevelRules( el );
                 } else {
                     this.resolveNextLevel(l, el);
                 }
@@ -76,10 +77,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.roundtripMeetings = [];
         this.eliminatoryClassification = [];
 
-        // let sel = this.tourneyService.selectedEliminatoryLevel;
-        // let sel = this.selectedTourney.eliminatoryLevels.find( l => l.id == this.tourneyService.selectedEliminatoryLevel.id ) ;
-
-        let sel = this.selectedTourney.eliminatoryLevels[this.tourneyService.selectedEliminatoryLevelIndex ];
+        let sel = eliminatoryLevels[levelIndex];
         
         for(let level=0; level < sel.eliminatories.length; level++) {
             let e = sel.eliminatories[level];
@@ -90,6 +88,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             this.roundtripMeetings = this.roundtripMeetings.concat(e.round.roundtripMeetings);
             this.eliminatoryClassification = this.eliminatoryClassification.concat(this.tourneyService.prepareRoundsGui([e.round]));
         }
+        // this.onewayMeetings.sort((m1,m2) => this.meetingService.sortMeeting(m1,m2));
+        // this.roundtripMeetings.sort((m1,m2) => this.meetingService.sortMeeting(m1,m2));
         console.log("OnewayMeetings.len    [" + this.onewayMeetings.length +"]" );
         console.log("RoundtripMeetings.len [" + this.roundtripMeetings.length +"]" );
     }
@@ -138,7 +138,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * For a given position > 0, verify the round and, if doesn't exist, verify the playoff.
      * One of them must contains a valued name, otherwise the configuration was not completed
      */
-    private resolveNotStadaloneTopLevelRules(el : EliminatoryLevel ): void {
+    private resolveNotStandaloneTopLevelRules(el : EliminatoryLevel ): void {
         let rounds: Array<Round> = new Array<Round>();
         if( this.isPlayoff ) {
             rounds = this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
@@ -147,7 +147,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         }
 
         for(let e of el.eliminatories ) {
-            if(e.rule1.fromRound.isAutomatic) {
+            if(this.selectedTourney.isEliminatoryAutoGen) {
                 this.resolveToplevelAutomatic(el, e, rounds);
             } else {
                 this.resolveToplevelManual(el, e);
@@ -183,7 +183,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     }
 
     private resolveMeetingsRules(el : EliminatoryLevel, m: Meeting, roundMatrix: Classification[][], row1: number, col1: number, row2: number, col2: number) {
-        m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
         if (row1 <= 0 || m.isDummy) {
             m.teamName1 = "";
             m.isSkiping = true;
@@ -265,7 +264,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             for(let r of this.selectedTourney.roundVO.rounds) {
                 if(r.name == roundName) {
                     let teamName = r.classification[pr2-1].teamName;
-                    m1.teamName1 = teamName;
+                    m1.teamName2 = teamName;
                     break;
                 }
             }
@@ -317,19 +316,21 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     private resolveNextLevel(l: number, el: EliminatoryLevel) {
 
         if(el.isOptional) { // for 3° and 4° classification position
+            let e = el.eliminatories[0];
+
             let prevIndex: number = l-2;
             let semifinalLevel: Array<Eliminatory> = new Array<Eliminatory>();
             for( let e of this.selectedTourney.eliminatoryLevels[prevIndex].eliminatories ) {
                 semifinalLevel.push(e);
             }
     
+            let team1: string = e.round.onewayMeetings[0].teamName1;
+            let team2: string = e.round.onewayMeetings[0].teamName2;
+
             let prevEliminatory1 : Eliminatory = semifinalLevel[0];
-            let team1: string = this.fromClassification(prevEliminatory1, 1);
-
+            team1 = this.fromClassification(prevEliminatory1, 1);
             let prevEliminatory2 : Eliminatory = semifinalLevel[1];
-            let team2: string = this.fromClassification(prevEliminatory2, 1);
-
-            let e = el.eliminatories[0];
+            team2 = this.fromClassification(prevEliminatory2, 1);
             e.round.teamNames = [team1, team2];
 
             e.round.onewayMeetings[0].teamName1 = team1;
@@ -356,25 +357,18 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             previousEliminatoryLevel.push(e);
         }
 
-        let firstEliminatoryIndex : number = 0;
-        let lastEliminatoryIndex : number = previousEliminatoryLevel.length;
-        for(let level=0; level<el.eliminatories.length; level++) {
-            let e = el.eliminatories[level];
-
-            let prevEliminatory1 : Eliminatory = previousEliminatoryLevel[firstEliminatoryIndex];
-            firstEliminatoryIndex++
+        let previousEliminatoryIndex : number = 0;
+        for(let e of el.eliminatories ) {
+            let prevEliminatory1 : Eliminatory = previousEliminatoryLevel[previousEliminatoryIndex];
             let team1: string = this.fromClassification(prevEliminatory1, 0);
-
-            lastEliminatoryIndex--;
-            let prevEliminatory2 : Eliminatory = previousEliminatoryLevel[lastEliminatoryIndex];
+            let prevEliminatory2 : Eliminatory = previousEliminatoryLevel[previousEliminatoryIndex + 1];
             let team2: string = this.fromClassification(prevEliminatory2, 0);
-
             e.round.teamNames = [team1, team2];
-
+            
             e.round.onewayMeetings[0].teamName1 = team1;
             e.round.onewayMeetings[0].teamName2 = team2;
             e.round.onewayMeetings[0].name = team1 + " - " + team2;
-
+            
             e.round.roundtripMeetings[0].teamName1 = team2;
             e.round.roundtripMeetings[0].teamName2 = team1;
             e.round.roundtripMeetings[0].name = team2 + " - " + team1;
@@ -386,6 +380,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             m = e.round.roundtripMeetings[0];
             m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
             m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+
+            previousEliminatoryIndex += 2;
         }
     }
     
@@ -406,10 +402,14 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let el : Eliminatory  = this.eliminatories.find( e => e.id == this.selectedRow.containerId );
         this.meetingService.selectedRound = el.round;
 
-        let mm = this.tourneyService.selectedEliminatoryTabIndex == 0 ? "Andata" : "Ritorno";
-        this.meetingService.selectedRound.label = this.tourneyService.selectedEliminatoryLevel.name + "(" + this.meetingService.selectedRound.name + ") - " + mm;
+        this.meetingService.selectedRound.label = this.makeEliminatoryLabel();
 
         this.gotoDetailView();
+    }
+
+    protected makeEliminatoryLabel() : string {
+        let mm = this.tourneyService.selectedEliminatoryTabIndex == 0 ? "Andata" : "Ritorno";
+        return this.tourneyService.selectedEliminatoryLevel.name + "(" + this.meetingService.selectedRound.name + ") - " + mm;
     }
 }
 

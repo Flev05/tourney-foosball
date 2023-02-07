@@ -210,11 +210,11 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
     private onRoundCompleteLoad(t: MeetingDb[]): void {
         this.mdbList = t;
-        // for(let round of this.selectedTourney.rounds) { 
-        //     this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
-        //     let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-        //     round.classification = this.tourneyService.createClassification(round, allMeetings);
-        // }
+        for(let round of this.selectedTourney.roundVO.rounds) { 
+            this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
+            let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
+            round.classification = this.tourneyService.createClassification(round, allMeetings);
+        }
         this.ngOnInit();
     }
 }

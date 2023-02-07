@@ -29,7 +29,7 @@ export class RuleDetailView extends AbstractDetailView {
     constructor(
         private fb: FormBuilder,
         protected tourneyService: TourneyService,
-        protected location: Location,
+        protected location: Location
     ) {
         super(tourneyService, location);
     }
@@ -64,7 +64,6 @@ export class RuleDetailView extends AbstractDetailView {
                 ,position: { label: 1 + "°", value: 1 }
                 ,round: { label: "", value: 0 }
                 , bandPosition: 0
-                , isAutomatic: true
                 ,isDummy: false
             }
         };

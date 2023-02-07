@@ -1,6 +1,7 @@
 
 package it.lms.tourney.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,280 +33,326 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MeetingRESTService extends AbstractRESTService {
 
-    @Inject
-    private MeetingDao meetingDao;
+	@Inject
+	private MeetingDao meetingDao;
+
+	@Inject
+	@ConverterObject
+	private Converter converter;
+
+	@GET
+	@Path("/loadByRoundId/{tourneyId:[0-9][0-9]*}/{roundId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByRoundId(@PathParam("tourneyId") Integer tourneyId,
+			@PathParam("roundId") Integer roundId) {
+
+		log.debug(logId() + "[GET: loadByRoundId(" + tourneyId + ", " + roundId + ")]");
+
+		List<Meeting> meetingList = meetingDao.findMeetingsByRoundId(tourneyId, roundId);
+
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
+
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundId "
+				+ roundId + "]");
+
+		return meetingVoList;
+	}
+
+	@POST
+	@Path("/loadByRoundIds/{tourneyId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByRoundIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> roundIds) {
+
+		log.debug(logId() + "[GET: loadByRoundIds(" + tourneyId + ")]");
+
+		List<Meeting> meetingList = meetingDao.findMeetingsByRoundIds(tourneyId, roundIds);
+
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
+
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds "
+				+ "]");
+
+		return meetingVoList;
+	}
+
+	@GET
+	@Path("/loadByPlayoffId/{tourneyId:[0-9][0-9]*}/{playoffId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByPlayoffId(@PathParam("tourneyId") Integer tourneyId,
+			@PathParam("playoffId") Integer playoffId) {
+		log.debug(logId() + "[GET: loadByPlayoffId(" + tourneyId + ", " + playoffId + ")]");
+		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffId(tourneyId, playoffId);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoffId "
+				+ playoffId + "]");
+		return meetingVoList;
+	}
+
+	@GET
+	@Path("/loadByPlayoutId/{tourneyId:[0-9][0-9]*}/{playoffId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByPlayoutId(@PathParam("tourneyId") Integer tourneyId,
+			@PathParam("playoutId") Integer playoutId) {
+		log.debug(logId() + "[GET: loadByPlayoutId(" + tourneyId + ", " + playoutId + ")]");
+		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoutId(tourneyId, playoutId);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoutId "
+				+ playoutId + "]");
+		return meetingVoList;
+	}
+
+	@POST
+	@Path("/loadByPlayoffIds/{tourneyId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByPlayoffIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
+		log.debug(logId() + "[GET: loadByPlayoffIds(" + tourneyId + ")]");
+		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffIds(tourneyId, playoffs);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoffId "
+				+ "]");
+		return meetingVoList;
+	}
+
+	@POST
+	@Path("/loadByPlayoutIds/{tourneyId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByPlayoutIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
+		if (playoffs.isEmpty()) {
+			return new ArrayList<>();
+		}
+		log.debug(logId() + "[GET: loadByPlayoutIds(" + tourneyId + ")]");
+		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoutIds(tourneyId, playoffs);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoutId "
+				+ "]");
+		return meetingVoList;
+	}
 
-    @Inject
-    @ConverterObject
-    private Converter  converter;
+	@GET
+	@Path("/loadByEliminatoryId/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadByEliminatoryIdId(@PathParam("tourneyId") Integer tourneyId,
+			@PathParam("eliminatoryId") Integer eliminatoryId) {
 
-    @GET
-    @Path("/loadByRoundId/{tourneyId:[0-9][0-9]*}/{roundId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<MeetingVO> loadByRoundId(@PathParam("tourneyId") Integer tourneyId,
-            @PathParam("roundId") Integer roundId) {
+		log.debug(logId() + "[GET: loadByEliminatoryIdId(" + tourneyId + ", " + eliminatoryId + ")]");
 
-        log.debug(logId() + "[GET: loadByRoundId(" + tourneyId + ", " + roundId + ")]");
+		List<Meeting> meetingList = meetingDao.findMeetingsByEliminatoryId(tourneyId, eliminatoryId);
 
-        List<Meeting> meetingList = meetingDao.findMeetingsByRoundId(tourneyId, roundId);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
+				+ ", eliminatoryId " + eliminatoryId + "]");
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundId "
-                + roundId + "]");
+		return meetingVoList;
+	}
 
-        return meetingVoList;
-    }
+	@GET
+	@Path("/loadAllEliminatoryMeetingsBy/{tourneyId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<MeetingVO> loadAllEliminatoryMeetingsBy(@PathParam("tourneyId") Integer tourneyId) {
 
-    @POST
-    @Path("/loadByRoundIds/{tourneyId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<MeetingVO> loadByRoundIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> roundIds) {
+		log.debug(logId() + "[GET: loadAllEliminatoryMeetingsBy(" + tourneyId + ")]");
 
-        log.debug(logId() + "[GET: loadByRoundIds(" + tourneyId + ")]");
+		List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsBy(tourneyId);
 
-        List<Meeting> meetingList = meetingDao.findMeetingsByRoundIds(tourneyId, roundIds);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds "
-                + "]");
+		return meetingVoList;
+	}
 
-        return meetingVoList;
-    }
+	@POST
+	@Path("/loadEliminatoryMeetingByIdList/{tourneyId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response loadEliminatoryMeetingByIdList(@PathParam("tourneyId") Integer tourneyId, List<Integer> idsList) {
 
-    @GET
-    @Path("/loadByPlayoffId/{tourneyId:[0-9][0-9]*}/{playoffId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<MeetingVO> loadByPlayoffId(@PathParam("tourneyId") Integer tourneyId,
-            @PathParam("playoffId") Integer playoffId) {
+		log.debug(logId() + "[GET: loadEliminatoryMeetingByIdList(" + tourneyId + ")]");
 
-        log.debug(logId() + "[GET: loadByPlayoffId(" + tourneyId + ", " + playoffId + ")]");
+		List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsByIdList(tourneyId, idsList);
 
-        List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffId(tourneyId, playoffId);
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoffId "
-                + playoffId + "]");
+		Response.ResponseBuilder builder = Response.ok().entity(meetingVoList);
 
-        return meetingVoList;
-    }
+		return builder.build();
+	}
 
-    @POST
-    @Path("/loadByPlayoffIds/{tourneyId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<MeetingVO> loadByPlayoffIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
+	@POST
+	@Path("/loadEliminatoryBMeetingByIdList/{tourneyId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response loadEliminatoryBMeetingByIdList(@PathParam("tourneyId") Integer tourneyId, List<Integer> idsList) {
 
-        log.debug(logId() + "[GET: loadByPlayoffIds(" + tourneyId + ")]");
+		log.debug(logId() + "[GET: loadEliminatoryBMeetingByIdList(" + tourneyId + ")]");
 
-        List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffIds(tourneyId, playoffs);
+		List<Meeting> meetingList = meetingDao.findAllEliminatoryBMeetingsByIdList(tourneyId, idsList);
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
+				.collect(Collectors.toList());
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoffId "
-                + "]");
+		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
 
-        return meetingVoList;
-    }
+		Response.ResponseBuilder builder = Response.ok().entity(meetingVoList);
 
-    @GET
-    @Path("/loadByEliminatoryId/{tourneyId:[0-9][0-9]*}/{eliminatoryId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<MeetingVO> loadByEliminatoryIdId(@PathParam("tourneyId") Integer tourneyId,
-            @PathParam("eliminatoryId") Integer eliminatoryId) {
+		return builder.build();
+	}
 
-        log.debug(logId() + "[GET: loadByEliminatoryIdId(" + tourneyId + ", " + eliminatoryId + ")]");
+	/**
+	 * Creates a new meeting from the values provided. Performs validation, and will return a JAX-RS response with
+	 * either 200 ok, or with a map of fields, and related errors.
+	 */
+	@POST
+	@Path("/insert")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createMeeting(MeetingVO mvo) {
 
-        List<Meeting> meetingList = meetingDao.findMeetingsByEliminatoryId(tourneyId, eliminatoryId);
+		log.debug(logId() + "[POST: createMeeting(" + mvo + ")]");
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		Meeting mpo = converter.convertMeetingVoPo(mvo);
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId
-                + ", eliminatoryId " + eliminatoryId + "]");
+		meetingDao.insert(mpo);
 
-        return meetingVoList;
-    }
+		mvo = converter.convertMeetingPoVo(mpo);
 
-    @GET
-    @Path("/loadAllEliminatoryMeetingsBy/{tourneyId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<MeetingVO> loadAllEliminatoryMeetingsBy(@PathParam("tourneyId") Integer tourneyId) {
+		Response.ResponseBuilder builder = Response.ok().entity(mvo);
 
-        log.debug(logId() + "[GET: loadAllEliminatoryMeetingsBy(" + tourneyId + ")]");
+		return builder.build();
+	}
 
-        List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsBy(tourneyId);
+	/**
+	 * Updates the received meeting found in the database. Performs validation, and will return a JAX-RS response with
+	 * either 200 ok, or with a map of fields, and related errors.
+	 */
+	@PUT
+	@Path("/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateMeeting(MeetingVO mvo) {
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		log.debug(logId() + "[PUT: updateMeeting(" + mvo + ")]");
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
+		Meeting cpo = converter.convertMeetingVoPo(mvo);
 
-        return meetingVoList;
-    }
+		meetingDao.update(cpo);
 
-    @POST
-    @Path("/loadEliminatoryMeetingByIdList/{tourneyId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response loadEliminatoryMeetingByIdList(@PathParam("tourneyId") Integer tourneyId, List<Integer> idsList) {
+		Response.ResponseBuilder builder = Response.ok().entity(mvo);
 
-        log.debug(logId() + "[GET: loadEliminatoryMeetingByIdList(" + tourneyId + ")]");
+		return builder.build();
+	}
 
-        List<Meeting> meetingList = meetingDao.findAllEliminatoryMeetingsByIdList(tourneyId, idsList);
+	/**
+	 * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+	 * map of fields, and related errors.
+	 */
+	@DELETE
+	@Path("/delete/{id:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteMeeting(@PathParam("id") Integer id) {
 
-        List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
-                .collect(Collectors.toList());
+		log.debug(logId() + "[DELETE: deleteMeeting(" + id + ")]");
 
-        log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + "]");
+		Meeting meeting = meetingDao.getById(id);
+		meetingDao.delete(meeting);
 
-        Response.ResponseBuilder builder = Response.ok().entity(meetingVoList);
+		Response.ResponseBuilder builder = Response.ok();
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 
-    /**
-     * Creates a new meeting from the values provided. Performs validation, and will return a JAX-RS response with
-     * either 200 ok, or with a map of fields, and related errors.
-     */
-    @POST
-    @Path("/insert")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createMeeting(MeetingVO mvo) {
+	/**
+	 * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+	 * map of fields, and related errors.
+	 */
+	@DELETE
+	@Path("/deleteRoundMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteRoundMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-        log.debug(logId() + "[POST: createMeeting(" + mvo + ")]");
+		log.debug(logId() + "[DELETE: deleteRoundMeetingsByTourneyId(" + tourneyId + ")]");
 
-        Meeting mpo = converter.convertMeetingVoPo(mvo);
+		meetingDao.deleteRoundMeetingsByTourneyId(tourneyId);
 
-        meetingDao.insert(mpo);
+		Response.ResponseBuilder builder = Response.ok();
 
-        mvo = converter.convertMeetingPoVo(mpo);
+		return builder.build();
+	}
 
-        Response.ResponseBuilder builder = Response.ok().entity(mvo);
+	/**
+	 * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+	 * map of fields, and related errors.
+	 */
+	@DELETE
+	@Path("/deleteMeetingsByRoundId/{tourneyId:[0-9][0-9]*}/{roundId:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteMeetingsByRoundId(@PathParam("tourneyId") Integer tourneyId,
+			@PathParam("roundId") Integer roundId) {
 
-        return builder.build();
-    }
+		log.debug(logId() + "[DELETE: deleteMeetingsByRoundId(" + tourneyId + ", " + roundId + ")]");
 
-    /**
-     * Updates the received meeting found in the database. Performs validation, and will return a JAX-RS response with
-     * either 200 ok, or with a map of fields, and related errors.
-     */
-    @PUT
-    @Path("/update")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateMeeting(MeetingVO mvo) {
+		meetingDao.deleteMeetingsByRoundId(tourneyId, roundId);
 
-        log.debug(logId() + "[PUT: updateMeeting(" + mvo + ")]");
+		Response.ResponseBuilder builder = Response.ok();
 
-        Meeting cpo = converter.convertMeetingVoPo(mvo);
+		return builder.build();
+	}
 
-        meetingDao.update(cpo);
+	/**
+	 * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
+	 * map of fields, and related errors.
+	 */
+	@DELETE
+	@Path("/deletePlayoffMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deletePlayoffMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
+		log.debug(logId() + "[DELETE: deletePlayoffMeetingsByTourneyId(" + tourneyId + ")]");
+		meetingDao.deletePlayoffMeetingsByTourneyId(tourneyId);
+		Response.ResponseBuilder builder = Response.ok();
+		return builder.build();
+	}
 
-        Response.ResponseBuilder builder = Response.ok().entity(mvo);
+	@DELETE
+	@Path("/deletePlayoutMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deletePlayoutMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
+		log.debug(logId() + "[DELETE: deletePlayoutMeetingsByTourneyId(" + tourneyId + ")]");
+		meetingDao.deletePlayoutMeetingsByTourneyId(tourneyId);
+		Response.ResponseBuilder builder = Response.ok();
+		return builder.build();
+	}
 
-        return builder.build();
-    }
+	/**
+	 * Removes the meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a map of
+	 * fields, and related errors.
+	 */
+	@DELETE
+	@Path("/deleteEliminatoryMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteEliminatoryMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
 
-    /**
-     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
-     * map of fields, and related errors.
-     */
-    @DELETE
-    @Path("/delete/{id:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMeeting(@PathParam("id") Integer id) {
+		log.debug(logId() + "[DELETE: deleteEliminatoryMeetingsByTourneyId(" + tourneyId + ")]");
 
-        log.debug(logId() + "[DELETE: deleteMeeting(" + id + ")]");
+		meetingDao.deleteEliminatoryMeetingsByTourneyId(tourneyId);
 
-        Meeting meeting = meetingDao.getById(id);
-        meetingDao.delete(meeting);
+		Response.ResponseBuilder builder = Response.ok();
 
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
-
-    /**
-     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
-     * map of fields, and related errors.
-     */
-    @DELETE
-    @Path("/deleteRoundMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteRoundMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
-
-        log.debug(logId() + "[DELETE: deleteRoundMeetingsByTourneyId(" + tourneyId + ")]");
-
-        meetingDao.deleteRoundMeetingsByTourneyId(tourneyId);
-
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
-
-    /**
-     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
-     * map of fields, and related errors.
-     */
-    @DELETE
-    @Path("/deleteMeetingsByRoundId/{tourneyId:[0-9][0-9]*}/{roundId:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMeetingsByRoundId(@PathParam("tourneyId") Integer tourneyId,
-            @PathParam("roundId") Integer roundId) {
-
-        log.debug(logId() + "[DELETE: deleteMeetingsByRoundId(" + tourneyId + ", " + roundId + ")]");
-
-        meetingDao.deleteMeetingsByRoundId(tourneyId, roundId);
-
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
-
-    /**
-     * Removes the received meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a
-     * map of fields, and related errors.
-     */
-    @DELETE
-    @Path("/deletePlayoffMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deletePlayoffMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
-
-        log.debug(logId() + "[DELETE: deletePlayoffMeetingsByTourneyId(" + tourneyId + ")]");
-
-        meetingDao.deletePlayoffMeetingsByTourneyId(tourneyId);
-
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
-
-    /**
-     * Removes the meeting from the persistent store. Return a JAX-RS response with either 200 ok, or with a map of
-     * fields, and related errors.
-     */
-    @DELETE
-    @Path("/deleteEliminatoryMeetingsByTourneyId/{tourneyId:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteEliminatoryMeetingsByTourneyId(@PathParam("tourneyId") Integer tourneyId) {
-
-        log.debug(logId() + "[DELETE: deleteEliminatoryMeetingsByTourneyId(" + tourneyId + ")]");
-
-        meetingDao.deleteEliminatoryMeetingsByTourneyId(tourneyId);
-
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
+		return builder.build();
+	}
 }

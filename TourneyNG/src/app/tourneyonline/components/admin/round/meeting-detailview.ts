@@ -10,6 +10,7 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Observable, of } from 'rxjs';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './meeting-detailview.html',
@@ -25,7 +26,6 @@ export class MeetingDetailView extends AbstractDetailView {
     teamName2CB: Combobox;
     teams4RoundCombobox: Combobox[]; 
 
-    
     constructor( protected location: Location,
         protected tourneyService: TourneyService,
         protected meetingRoundService: MeetingRoundService,
@@ -48,9 +48,19 @@ export class MeetingDetailView extends AbstractDetailView {
         this.isRoundAutoGen = this.meetingRoundService.isRoundAutoGen;
 
         this.teams4RoundCombobox = [];
-        for( let t of this.selectedTourney.teams) {
-            this.teams4RoundCombobox.push({label: t.teamName, value: t.id});
+        for( let tn of this.selectedRound.teamNames) {
+            let team : Team = this.selectedTourney.teams.find( t => t.teamName == tn);
+            this.teams4RoundCombobox.push({label: team.teamName, value: team.id});
         }
+        this.teams4RoundCombobox.sort((t1,t2) => {
+            if(t1.label < t2.label) {
+                return -1;
+            }
+            if(t1.label > t2.label) {
+                return 1;
+            }
+            return 0;
+        });
 
         this.teamName1CB = {label: this.selectedMeeting.teamName1, value: -1};
         for( let t of this.selectedTourney.teams) {
@@ -72,7 +82,7 @@ export class MeetingDetailView extends AbstractDetailView {
         this.countries = this.countryService.countries;
     }
 
-    done() {
+    save() {
         if( this.selectedRound.direction == Direction.RoundTrip ) {
             let index = this.selectedRound.onewayMeetings.indexOf(this.selectedMeeting);
             if( index > -1 ) {
@@ -86,7 +96,20 @@ export class MeetingDetailView extends AbstractDetailView {
         this.onSaveMeetingError = false;
         let observer = this.meetingRoundService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedRound.id, this.saveMeetingErrorHandler()  );
         observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+    }
 
+    private saveMeetingNext(n:  MeetingDb, m: Meeting): void {
+        console.log("saveMeetingNext()");
+        console.log(n);
+        m.id = n.id;
+        this.selectedRound = this.tourneyService.selectedRound;
+        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound);
+        subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
+    }
+
+    private onCompleteLoad(t: MeetingDb[]): void {
+        this.meetingRoundService.selectedTourney = this.selectedTourney;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, t, () => {});
         super.goBack();
     }
 
@@ -94,17 +117,9 @@ export class MeetingDetailView extends AbstractDetailView {
         return (res: any): Observable<MeetingDb> => {
             console.log("Entering saveMeetingErrorHandler()");
             console.error(res); // log to console instead
-      
             this.onSaveMeetingError = true;
-
             return of(result as MeetingDb);
         };
-    }
-
-    private saveMeetingNext(n:  MeetingDb, m: Meeting): void {
-        console.log("saveMeetingNext()");
-        console.log(n);
-        m.id = n.id;
     }
 
     onError(n:any) {
@@ -119,8 +134,10 @@ export class MeetingDetailView extends AbstractDetailView {
     onTeam1Change(cb: Combobox) {
         console.log('Entering onTeam1Change(' + cb +")");
         for(let t of this.selectedTourney.teams) {
-            if(t.teamName == this.selectedMeeting.teamName1) {
+            if(t.teamName == cb.label) {
                 this.selectedMeeting.teamName1 = cb.label;
+                this.selectedMeeting.address = t.address;
+                this.selectedMeeting.country = t.country;
                 break;
             }
         }
@@ -128,11 +145,10 @@ export class MeetingDetailView extends AbstractDetailView {
     onTeam2Change(cb: Combobox) {
         console.log('Entering onTeam2Change(' + cb +")");
         for(let t of this.selectedTourney.teams) {
-            if(t.teamName == this.selectedMeeting.teamName2) {
+            if(t.teamName == cb.label) {
                 this.selectedMeeting.teamName2 = cb.label;
                 break;
             }
         }
     }
-    
 }

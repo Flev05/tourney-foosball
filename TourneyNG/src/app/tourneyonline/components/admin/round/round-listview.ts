@@ -60,10 +60,16 @@ export class RoundListView extends AbstractListView {
         } 
     }
  
-    goMeeting() {        
-        this.router.navigate([RoundListView.meetingListviewRedirect]);
+    goMeeting() {
+        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound);
+        subsbr.subscribe(mdbList => this.onCompleteLoad(mdbList), e => this.onError(e) );
     }
-    
+
+    private onCompleteLoad(mdbList: MeetingDb[]): void {
+        this.meetingRoundService.selectedTourney = this.selectedTourney;
+        this.meetingRoundService.onCompleteLoad(this.selectedRound, mdbList, () => {this.router.navigate([RoundListView.meetingListviewRedirect]);});
+    }
+
     redoMeetings() {        
         if(this.isRoundAutoGen == 'false') {
             if(!confirm(ROUND_CHANGE_TEAMS_POPUP)) {
@@ -76,9 +82,8 @@ export class RoundListView extends AbstractListView {
             this.meetingRoundService.saveRoundMeetings(this.selectedTourney
                 ,(m,t) => this.saveTourneyErrorHandler(m,t)
                 ,(m,t) => this.subscribeErrorHandler(m,t)
-                ,()    => this.router.navigate([RoundListView.meetingListviewRedirect])
+                ,()    => {this.goMeeting();}
             );
-            this.router.navigate([RoundListView.meetingListviewRedirect]);
         }
     }
 
@@ -90,6 +95,7 @@ export class RoundListView extends AbstractListView {
         console.log(event.data);
 
         this.teamService.selectedTeam = this.selectedTeam;
+        this.teamService.newTeam = false;
         if(this.isRoundAutoGen == 'true') {
             this.teamService.readOnly = true;
             this.teamService.isRoundAutoGen = 'true';
@@ -103,8 +109,6 @@ export class RoundListView extends AbstractListView {
     saveRound(): void {
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack( 
-
-        ));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack());
     }
 }

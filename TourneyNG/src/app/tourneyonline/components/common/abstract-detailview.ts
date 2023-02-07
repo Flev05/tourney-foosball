@@ -4,7 +4,6 @@ import { AbstractView } from './abstract-view';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Observable, of } from 'rxjs';
 
 export abstract class AbstractDetailView extends AbstractView {
 

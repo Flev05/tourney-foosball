@@ -51,7 +51,7 @@ export class UserChangePassword implements OnInit {
         
         this.userform = this.fb.group({
             'username': new FormControl(this.loginService.userLogged.username),
-            'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
+            'password': new FormControl(''),
             'newPassword': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
             'confirmedPassword': new FormControl('', Validators.compose([Validators.required, Validators.minLength(8)])),
         });

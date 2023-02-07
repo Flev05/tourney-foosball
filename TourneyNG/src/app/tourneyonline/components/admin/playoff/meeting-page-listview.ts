@@ -28,7 +28,7 @@ export class MeetingPageListView extends AbstractRuleListView {
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
     allDaysNo: number;
-    
+
     constructor(
         protected tourneyService: TourneyService,
         public meetingPlayoffService: MeetingPlayoffService,
@@ -61,7 +61,7 @@ export class MeetingPageListView extends AbstractRuleListView {
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.selectedPlayoff.selectedTabIndex = index; 
+        this.meetingPlayoffService.selectedTabIndex = index; 
     }
     
     private onCompleteLoad(t: MeetingDb[]): void {
@@ -82,9 +82,7 @@ export class MeetingPageListView extends AbstractRuleListView {
 
     onRowSelect(event) {
         console.log(event.data);
-
         this.meetingPlayoffService.selectedMeeting = this.selectedRow;
-
         this.gotoDetailView();
     }
 }

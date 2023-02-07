@@ -25,20 +25,24 @@ const meetingUrl = 'api/meetings';
 const loadMeetingByRoundIdsUrl  = meetingUrl + '/loadByRoundIds';
 
 const loadMeetingByPlayoffIdUrl = meetingUrl + '/loadByPlayoffId'; 
+const loadMeetingByPlayoutIdUrl = meetingUrl + '/loadByPlayoutId'; 
 const loadMeetingByPlayoffIdsUrl = meetingUrl + '/loadByPlayoffIds'; 
+const loadMeetingByPlayoutIdsUrl = meetingUrl + '/loadByPlayoutIds'; 
 const loadMeetingByEliminatoryIdUrl = meetingUrl + '/loadByEliminatoryId';  
 const loadAllEliminatoryMeetingsUrl = meetingUrl + '/loadAllEliminatoryMeetingsBy';  
 const loadEliminatoryMeetingByIdListUrl = meetingUrl + "/loadEliminatoryMeetingByIdList";
+const loadEliminatoryBMeetingByIdListUrl = meetingUrl + "/loadEliminatoryBMeetingByIdList";
 
 const insertMeetingUrl = meetingUrl + '/insert';
 const updateMeetingUrl = meetingUrl + '/update';
 
 const deleteMeetingUrl                  = meetingUrl + '/delete';
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
+const deleteMeetingByPlayoutIdUrl       = meetingUrl + "/deletePlayoutMeetingsByTourneyId"
 
 @Injectable()
 export  class MeetingService extends AbstractService {
-    protected SKIPING_TEAM = "(Riposo)";
+    public static SKIPING_TEAM = "(Riposo)";
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
     protected loadMeetingByRoundIdUrl: string   = meetingUrl + '/loadByRoundId';  
@@ -58,7 +62,8 @@ export  class MeetingService extends AbstractService {
 
     onewayDaysNo: number;
     roundtripDaysNo: number;
-    
+    selectedTabIndex: number = 0;
+    selectedResultTabIndex: number = 0; 
     onewayMeetingDaysMap: Map<number, Meeting[]>;
     onewayDays: any[];
     
@@ -116,17 +121,14 @@ export  class MeetingService extends AbstractService {
             }
             if (m.direction == Direction.OneWay) {
                 round.onewayMeetings.push(m);
-            }
-            else {
+            } else {
                 round.roundtripMeetings.push(m);
             }
         }
-
         round.onewayMeetings    = MeetingService.sortMeetings(round.onewayMeetings);
         round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }
 
-    
     /** 
      * Loads all the meetings of the receìved tourney id
      *  GET meetings by params. Will 404 if meetings not found 
@@ -148,31 +150,44 @@ export  class MeetingService extends AbstractService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadPlayoffMeeting(tourneyId: number, playoffId: number, error: (error: any) => any) : Observable<MeetingDb[]> {
-
         let url = loadMeetingByPlayoffIdUrl + "/" + tourneyId + "/" + playoffId;
-
         console.log("Url=" + url);
-
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(error('loadPlayoffMeetingDb url=' + url))
         );
-
         return obs;
     }
     
+    loadPlayoutMeeting(tourneyId: number, playoutId: number, error: (error: any) => any) : Observable<MeetingDb[]> {
+        let url = loadMeetingByPlayoutIdUrl + "/" + tourneyId + "/" + playoutId;
+        console.log("Url=" + url);
+        const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
+        obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
+            catchError(error('loadPlayoutMeetingDb url=' + url))
+        );
+        return obs;
+    }
+
     /** 
      * Loads all the meetings of the receìved tourney id
      *  GET meetings by params. Will 404 if meetings not found 
      */
     loadPlayoffMeetings(tourneyId: number, playoffIds: Array<number>, error: (error: any) => any) : Observable<MeetingDb[]> {
-
         let url = loadMeetingByPlayoffIdsUrl + "/" + tourneyId ;
-
         console.log("Url=" + url);
-
         let obs = this.http.post<MeetingDb[]>(url, playoffIds, httpOptions).pipe(
             tap((m: MeetingDb[]) => this.log('loadPlayoffMeetings, url=' + url)),
+            catchError(error('addMeetingDb, url=' + url))
+        );
+        return obs;
+    }
+
+    loadPlayoutMeetings(tourneyId: number, playoutIds: Array<number>, error: (error: any) => any) : Observable<MeetingDb[]> {
+        let url = loadMeetingByPlayoutIdsUrl + "/" + tourneyId ;
+        console.log("Url=" + url);
+        let obs = this.http.post<MeetingDb[]>(url, playoutIds, httpOptions).pipe(
+            tap((m: MeetingDb[]) => this.log('loadPlayoutMeetings, url=' + url)),
             catchError(error('addMeetingDb, url=' + url))
         );
         return obs;
@@ -229,6 +244,22 @@ export  class MeetingService extends AbstractService {
         return obs;
     }
 
+    /** 
+     * Loads all the meetings of the receìved tourney id and eliminatory id list
+     *  GET meetings by params. Will 404 if meetings not found 
+     */
+    loadEliminatoryBMeetingByIdList(tourneyId: number, eliminiatoryIdList: number[], error: (e: any) => any) : Observable<MeetingDb[]> {
+        let url = loadEliminatoryBMeetingByIdListUrl + "/" + tourneyId;
+        
+        console.log("Url=" + url);
+
+        let obs = this.http.post<MeetingDb[]>(url, eliminiatoryIdList, httpOptions).pipe(
+            tap((m: MeetingDb[]) => this.log('added MeetingDb, url=' + url)),
+            catchError(error('addMeetingDb, url=' + url))
+        );
+        return obs;
+    }
+
     /**
      * Converts the date and time and complete the round trip meetings copying from 
      * its corresponding oneway meeting list
@@ -239,7 +270,7 @@ export  class MeetingService extends AbstractService {
 
         for( let m of round.onewayMeetings ) {
 
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
+            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
             m.containerId = round.id;
 
             let key = m.day;
@@ -254,7 +285,7 @@ export  class MeetingService extends AbstractService {
 
         for( let m of round.roundtripMeetings ) {
 
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
+            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
             m.containerId = round.id;
 
             let key = m.day;
@@ -293,28 +324,34 @@ export  class MeetingService extends AbstractService {
     }
 
     private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): Observable<MeetingDb> {
-        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, null, playoffId, eliminatoryId, null);
 
         return this.addMeeting(mdb);
     }
 
     prepareRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number):  MeetingDb {
-        return this.prepareMdb(m, tourneyId, roundId, null, null);
+        return this.prepareMdb(m, tourneyId, roundId, null, null, null, null);
     }
     preparePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number):  MeetingDb {
-        return this.prepareMdb(m, tourneyId, null, playoffId, null);
+        return this.prepareMdb(m, tourneyId, null, playoffId, null, null, null);
     }
     prepareEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number):  MeetingDb {
-        return this.prepareMdb(m, tourneyId, null, null, eliminatoryId);
+        return this.prepareMdb(m, tourneyId, null, null, null, eliminatoryId, null);
+    }
+    prepareEliminatoryBMeetingDb(m: Meeting, tourneyId: number, eliminatoryBId: number):  MeetingDb {
+        return this.prepareMdb(m, tourneyId, null, null, null, null, eliminatoryBId);
     }
 
-    private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): MeetingDb {
+    private prepareMdb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, playoutId: number, eliminatoryId: number, eliminatoryBId: number): MeetingDb {
+        m.name = m.teamName1 + " - " + m.teamName2;
         let mdb: MeetingDb = {
               id: m.id
             , tourneyId: tourneyId
             , roundId: roundId
             , playoffId: playoffId
+            , playoutId: playoutId
             , eliminatoryId: eliminatoryId
+            , eliminatoryBId: eliminatoryBId
             , country: m.country
             , json: JSON.stringify(m)
         }
@@ -333,20 +370,20 @@ export  class MeetingService extends AbstractService {
     }
 
     completeRoundMeetingDb(m: Meeting, tourneyId: number, roundId: number): MeetingDb {
-        return this.prepareMdb(m, tourneyId, roundId, 0, 0);
+        return this.prepareMdb(m, tourneyId, roundId, 0, 0, 0, 0);
     }
 
     completePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): MeetingDb {
-        return this.prepareMdb(m, tourneyId, 1, playoffId, 0);
+        return this.prepareMdb(m, tourneyId, 1, playoffId, 0, 0, 0);
     }
 
     completeEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): MeetingDb {
-        return this.prepareMdb(m, tourneyId, 0, 0, eliminatoryId);
+        return this.prepareMdb(m, tourneyId, 0, 0, 0, eliminatoryId, 0);
     }
 
     private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number
         , error: (error: any) => any ):  Observable<MeetingDb> {
-        let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, eliminatoryId);
+        let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, 0, eliminatoryId, 0);
         let obs = this.updateMeetingMdb(mdb, error);
         return obs;
     }
@@ -393,12 +430,19 @@ export  class MeetingService extends AbstractService {
      
     deletePlayoffMeetingsByTourneyId (tourneyId: number ): void {
         const url = deleteMeetingByPlayoffIdUrl + "/" + tourneyId;
-
         let obs = this.http.delete<Meeting>(url).pipe(
             tap(_ => this.log('deleting MeetingDb: ' + url)),
             catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
         );
-
+        obs.subscribe();
+    }
+    
+    deletePlayoutMeetingsByTourneyId (tourneyId: number ): void {
+        const url = deleteMeetingByPlayoutIdUrl + "/" + tourneyId;
+        let obs = this.http.delete<Meeting>(url).pipe(
+            tap(_ => this.log('deleting MeetingDb: ' + url)),
+            catchError(this.handleError<Meeting>('deletingMeeting: ' + url))
+        );
         obs.subscribe();
     }
 
@@ -463,7 +507,7 @@ export  class MeetingService extends AbstractService {
             matches.push(m);
         }
 
-        let name = "";
+        var name = "";
         if(t1!=null) {
             name = t1;
             if(t2!=null) {
@@ -484,7 +528,6 @@ export  class MeetingService extends AbstractService {
             isSkiping: skiping,
             direction: d,
             datetime: this.selectedTourney.datetime,
-            dateAndTime: this.dateFormatPipe.transform(this.selectedTourney.datetime),
             address:  this.selectedTourney.address,
             country:  this.selectedTourney.country,
             day: day,
@@ -495,7 +538,7 @@ export  class MeetingService extends AbstractService {
             rule1: pr1,
             rule2: pr2,
             ruleName: ruleName,
-            status: MeetingStatus.InProgress,
+            status: skiping ? MeetingStatus.Terminated :  MeetingStatus.ToPlay,
             matches: matches
         };
 
@@ -596,7 +639,7 @@ export  class MeetingService extends AbstractService {
      * @param rounds the list of the rounds from which take the round names
      */
     public resolveAutomaticRules( m: Meeting, rounds: Round[] ): void {
-        m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
+        // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
         let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(rounds);
 
         let row = m.rule1.fromRound.bandPosition;

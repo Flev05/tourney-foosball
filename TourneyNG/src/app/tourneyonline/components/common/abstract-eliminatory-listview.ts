@@ -23,9 +23,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
          
     eliminatoryLevelCols: TableCols[] ;
     eliminatoryLevelSelectedRow: EliminatoryLevelVO;
+    eliminatoryLevelBSelectedRow: EliminatoryLevelVO;
     
     eliminatoryCols: TableCols[] ;
     eliminatoryLevelRows: EliminatoryLevelVO[];
+    eliminatoryBLevelRows: EliminatoryLevelVO[];
  
     eliminatoryRows: EliminatoryVO[];
     eliminatorySelectedRow: EliminatoryVO;
@@ -33,6 +35,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     msgs: Message[] = [];
    
     eliminatoryLevels: Array<EliminatoryLevel>;
+    eliminatoryBLevels: Array<EliminatoryLevel>;
     
     eliminatories: Eliminatory[];
 
@@ -76,7 +79,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         super.ngOnInit();
         this.meetingService.selectedTourney = this.tourneyService.selectedTourney;
 
-        this.isAutomatic   = this.tourneyService.selectedTourney.isEliminatoryAutoGen=="true" ? true : false;
+        this.isAutomatic   = this.tourneyService.selectedTourney.isEliminatoryAutoGen==true ? true : false;
 
         this.isPlayoff = this.containsPlayoff();
           

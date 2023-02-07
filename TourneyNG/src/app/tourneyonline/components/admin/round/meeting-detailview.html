@@ -23,11 +23,10 @@
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button class="ui-button-success" 
-        type="button" 
+    <button type="button" 
         icon="fa fa-arrow-left" 
-        pButton (click)="done()" 
-        label="Fatto">
+        pButton (click)="goBack()" 
+        label="Indietro">
     </button>
 </div>
 
@@ -116,4 +115,12 @@
             </p-calendar>
         </div>            
     </div>
+</div>
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" 
+        type="button" 
+        icon="fa fa-save" 
+        pButton (click)="save()" 
+        label="Salva">
+    </button>
 </div>

@@ -8,9 +8,9 @@ import { MeetingPageListView } from './meeting-page-listview';
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{ path: 'lv/playoffRuleLv', component: RuleListView },
-			{ path: 'lv/playoffRuleLv/dv', component: RuleDetailView },
-			{ path: 'lv/meetingLv', component: MeetingPageListView },
+			{ path: 'lv/playoffRuleLv', 	component: RuleListView },
+			{ path: 'lv/playoffRuleLv/dv', 	component: RuleDetailView },
+			{ path: 'lv/meetingLv', 		component: MeetingPageListView },
 			{ path: 'lv/meetingLv/playoffRuledv', component: MeetingRuleDetailView },
 		])
 	],

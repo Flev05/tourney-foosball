@@ -10,12 +10,13 @@ import { LevelService } from './level-service';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
-import { EResultTool } from 'app/tourneyonline/domain/enumerations';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Component({
-    templateUrl: './eliminatory-full-listview.html'
+    templateUrl: './eliminatory-listview.html'
 })
-export class FullEliminatoryListView extends AbstractListView {
+export class EliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel;
     eliminatoryRows:  EliminatoryVO[];
     eliminatoryCols: TableCols[];
@@ -25,7 +26,8 @@ export class FullEliminatoryListView extends AbstractListView {
         public levelService: LevelService,
         protected router: Router,
         protected location: Location,
-        protected dfp: DateFormatPipe
+        protected dfp: DateFormatPipe,
+        protected clientService: ClientService,
     ) {
         super(LevelService.manualRedirectDV, tourneyService,  router, location);
     }
@@ -89,6 +91,13 @@ export class FullEliminatoryListView extends AbstractListView {
 
     onAllEliminatoryMatchesClick() {
         this.selectedEliminatoryLevel.abstractRoundVO.isAllMatches = "true";
+    }
+
+    save() {
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => this.goBack());
     }
 }
 

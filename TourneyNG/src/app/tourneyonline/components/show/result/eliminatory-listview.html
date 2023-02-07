@@ -6,7 +6,6 @@
             </td>
             <td>
                 <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
-                <p style="text-align: center;font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</p>
                 <p style="text-align: center;font-weight: bold;">{{tourneyService.selectedEliminatoryLevel.name}}</p>
             </td>
             <td style="text-align: right;">
@@ -35,15 +34,19 @@
                     <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
-                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
-                        {{rowData['vpoints1']}}
-                    </td>
-                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
-                        {{rowData['vpoints2']}}
-                    </td>
-                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
-                        {{rowData['datetime'] | date: 'dd/MM/y'}}
-                    </td>                    
+                    <td class="centralPoints">
+                        <div>
+                            <span>{{rowData['datetime'] | date: 'dd/MM/y HH:mm'}}</span>
+                        </div>
+                        <div>
+                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                        </div>
+                        <div>
+                            <span>
+                                {{rowData['status']}}
+                            </span>                        
+                        </div>
+                    </td>                  
                     <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>
@@ -59,20 +62,24 @@
             [(selection)]="selectedRow"  
             (onRowSelect)="onEliminatoryRowSelect($event)">
 
-            <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <ng-template pTemplate="body" let-rowData>
                 <tr [pSelectableRow]="rowData">
                     <td class="leftTeamName">
                         {{rowData['teamName1']}}
                     </td>
-                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
-                        {{rowData['vpoints1']}}
-                    </td>
-                    <td *ngIf="rowData['status']!='toplay'" style="width: 13mm; text-align: center;">
-                        {{rowData['vpoints2']}}
-                    </td>
-                    <td  *ngIf="rowData['status']=='toplay'" colspan="2" class="centralPoints">
-                        {{rowData['datetime'] | date: 'dd/MM/y'}}
-                    </td>                    
+                    <td class="centralPoints">
+                        <div>
+                            <span>{{rowData['datetime'] | date: 'dd/MM/y HH:mm'}}</span>
+                        </div>
+                        <div>
+                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                        </div>
+                        <div>
+                            <span>
+                                {{rowData['status']}}
+                            </span>                        
+                        </div>
+                    </td>                
                     <td class="rightTeamName">
                         {{rowData['teamName2']}}
                     </td>

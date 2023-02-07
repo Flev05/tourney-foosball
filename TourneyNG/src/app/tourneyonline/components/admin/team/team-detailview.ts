@@ -42,29 +42,43 @@ export class TeamDetailView extends AbstractDetailView {
 
         super.ngOnInit();
         this.countries = this.countryService.countries;
-        this.selectedRound = this.tourneyService.selectedRound;
         this.selectedTeam = this.teamService.selectedTeam;
         this.isRoundAutoGen = this.teamService.isRoundAutoGen;
         
+        this.selectedRound = null;
         if(this.teamService.newTeam) {
-            this.selectedTeam={id: null, teamName:""};
+            this.selectedTeam={id: 0, teamName:""};
             this.selectedTeam.players = [];
+            this.tourneyService.selectedRound = null;
         }
         this.previousTeamName = this.selectedTeam.teamName;
         this.teamService.teamAlreadyExists = false;
 
         this.teams4RoundCombobox = [];
-        for( let t of this.selectedTourney.teams) {
-            if(t.teamName == this.selectedTeam.teamName) {
-                this.selectedTeam.id = t.id;
+        if( this.tourneyService.selectedRound != null ) {
+            this.selectedRound = this.tourneyService.selectedRound;
+            for( let t of this.selectedTourney.teams) {
+                if(t.teamName == this.selectedTeam.teamName) {
+                    this.selectedTeam.id = t.id;
+                }
+                if( this.selectedRound.teamNames.indexOf(t.teamName) != -1) {
+                    continue;
+                }
+                this.teams4RoundCombobox.push({label: t.teamName, value: t.id});
             }
-            if( this.selectedRound.teamNames.indexOf(t.teamName) != -1) {
-                continue;
-            }
-            this.teams4RoundCombobox.push({label: t.teamName, value: t.id});
+            this.teams4RoundCombobox.sort((t1,t2) => {
+                if(t1.label < t2.label) {
+                    return -1;
+                }
+                if(t1.label > t2.label) {
+                    return 1;
+                }
+                return 0;
+            });
+    
+            this.teams4RoundCombobox.push({label: this.selectedTeam.teamName, value: this.selectedTeam.id});
+            this.teamNameCB = {label: this.selectedTeam.teamName, value: this.selectedTeam.id};
         }
-        this.teams4RoundCombobox.push({label: this.selectedTeam.teamName, value: this.selectedTeam.id});
-        this.teamNameCB = {label: this.selectedTeam.teamName, value: this.selectedTeam.id};
     }
 
     saveTourneyTeam() {     

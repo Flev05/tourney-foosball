@@ -94,7 +94,7 @@ export class MeetingPlayoffService extends MeetingService {
         
     private prepareRuleName(meetings: Meeting[]) {
         for (let m of meetings) {
-            m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
             this.makeRuleName(m.rule1, m.rule2);
         }
     }
@@ -112,6 +112,19 @@ export class MeetingPlayoffService extends MeetingService {
         this.shiftRoundtripDays(this.roundtripDaysNo);
         
         this.makeRuleNames(playoff);
+        
+        let allDaysNo = this.onewayMeetingDaysMap.size;
+        let meetingsNo = playoff.round.onewayMeetings.length;
+        this.prepareCaption(meetingsNo, allDaysNo,  playoff.round);
+    }
+
+    private prepareCaption(meetingsNo: number, allDaysNo: number, r : Round) {
+        if (this.selectedTourney.isOnewayPlayoff == "true") {
+            this.meetingsNoMsg = r.name + ": " + meetingsNo + " incontri in " + allDaysNo + " giornate (Solo Andata)";
+        } else {
+            this.isRoundTrip = true;
+            this.meetingsNoMsg = r.name + ": " + meetingsNo * 2 + " incontri in " + allDaysNo * 2 + " giornate (Andata e Ritorno)";
+        }
     }
 
     private makeRuleNames(playoff: Playoff) {
@@ -137,10 +150,10 @@ export class MeetingPlayoffService extends MeetingService {
             let p2 = m.rule2.fromRound.position.label;
             let r2 = m.rule2.fromRound.round.label;
 
-            let prefix = this.selectedTourney.roundVO.rounds.length == 1 ? "" : p1 + " delle ";
+            let prefix = this.selectedTourney.roundVO.rounds.length == 1 ? "" : p1;
             m.ruleName1 = prefix + r1;
             
-            prefix = this.selectedTourney.roundVO.rounds.length == 1 ? "" : p2 + " delle ";
+            prefix = this.selectedTourney.roundVO.rounds.length == 1 ? "" : p2;
             m.ruleName2 = prefix + r2;
             
             let rn = m.ruleName1 + " - " + m.ruleName2;
@@ -158,14 +171,13 @@ export class MeetingPlayoffService extends MeetingService {
 
     private prepareSkipingRule(isAutoGen : boolean): PlayoffRule {
         let posCB:     Combobox    = { label: "", value: 0 };
-        let roundCB:   Combobox    = { label: this.SKIPING_TEAM , value: 0 };
+        let roundCB:   Combobox    = { label: MeetingService.SKIPING_TEAM , value: 0 };
         let fromRound: FromRound   = { id: this.tourneyService.getSequenceNumber()
-            , isAutomatic: isAutoGen
-            ,isDummy: false
+            , isDummy: false
             , position: posCB
             , round: roundCB
             , bandPosition: posCB.value };
-        let pr:        PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: this.SKIPING_TEAM, isDummy: true };
+        let pr: PlayoffRule = { id: this.tourneyService.getSequenceNumber(), fromRound: fromRound, ruleName: MeetingService.SKIPING_TEAM, isDummy: true };
         return pr;
     } 
     
@@ -216,10 +228,9 @@ export class MeetingPlayoffService extends MeetingService {
                     let mfound = playoff.round.onewayMeetings.find( m => this.isEquals(m, pr2, pr1));
 
                     if( mfound == undefined ) {
-                        let skip = pr1.ruleName == this.SKIPING_TEAM || pr2.ruleName == this.SKIPING_TEAM;
+                        let skip = pr1.ruleName.indexOf(MeetingService.SKIPING_TEAM)!=-1 || pr2.ruleName.indexOf(MeetingService.SKIPING_TEAM)!=-1;
                         mfound = this.newPlayoffMeeting(pr2, pr1, key, Direction.OneWay, skip);
                     }
-
                     meetingList.push(mfound);
                 }
             } else {
@@ -233,7 +244,7 @@ export class MeetingPlayoffService extends MeetingService {
                     let mfound = playoff.round.onewayMeetings.find( m => this.isEquals(m, pr1, pr2));
 
                     if( mfound == undefined ) {
-                        let skip = pr1.ruleName == this.SKIPING_TEAM || pr2.ruleName == this.SKIPING_TEAM;
+                        let skip = pr1.ruleName.indexOf(MeetingService.SKIPING_TEAM)!=-1 || pr2.ruleName.indexOf(MeetingService.SKIPING_TEAM)!=-1;
                         mfound = this.newPlayoffMeeting(pr1, pr2, key, Direction.OneWay, skip);
                     }
                     meetingList.push(mfound);
@@ -276,11 +287,11 @@ export class MeetingPlayoffService extends MeetingService {
             return "";
         }
     
-        return this.makeRule(pr1) + " " + this.makeRule(pr2);
+        return this.makeRule(pr1) + " delle migliori " + this.makeRule(pr2);
     }
     
     protected makeRule(rule: PlayoffRule): string {
-        return rule.fromRound.position.label + "." + rule.fromRound.round.label;
+        return rule.fromRound.position.label + " del girone " + rule.fromRound.round.label;
     }
     
     /**
@@ -295,7 +306,7 @@ export class MeetingPlayoffService extends MeetingService {
             let onewayMeetings: Meeting[] = this.onewayMeetingDaysMap.get(key);
 
             for( let m of onewayMeetings ) {   
-                m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
+                // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
 
                 let pr1 = m.rule1;
                 let pr2 = m.rule2;
@@ -305,7 +316,7 @@ export class MeetingPlayoffService extends MeetingService {
                 if( rtm == undefined ) {
                     rtm = this.newPlayoffMeeting(pr2, pr1, key, Direction.RoundTrip, m.isSkiping);
                 }
-                rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
+                // rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
 
                 if( !this.roundtripMeetingDaysMap.has(key) ) {
                     let emptyList: Meeting[] = [];
@@ -389,8 +400,7 @@ export class MeetingPlayoffService extends MeetingService {
         let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(this.selectedTourney.roundVO.rounds);
         playoff.round.teamNames = [];
 
-        for(let r=0; r<playoff.playoffRules.length; r++) {
-            const pr: PlayoffRule = playoff.playoffRules[r];
+        for(let pr of playoff.playoffRules ) {
             if( pr.isDummy ) {
                 continue;
             }
@@ -419,7 +429,6 @@ export class MeetingPlayoffService extends MeetingService {
         }
     }
 
-
     /**
      * Called every time at meeting reload, it resolves the playoff rules to their corresponding 
      * qualified teams from the tourney rounds
@@ -428,6 +437,9 @@ export class MeetingPlayoffService extends MeetingService {
         playoff.round.teamNames = [];
 
         for( let rule of playoff.playoffRules ) {
+            if( rule.isDummy ) {
+                continue;
+            }
             let position:  number = rule.fromRound.position.value;
             let roundName: string = rule.fromRound.round.label;
 
@@ -464,7 +476,7 @@ export class MeetingPlayoffService extends MeetingService {
      * @param rounds the list of the rounds from which take the round names
      */
     private resolveManualRules( m: Meeting, rounds: Round[]): void {
-        m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
+        // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
 
         let teamName: string = null;
         if( m.isDummy ) {
@@ -502,7 +514,7 @@ export class MeetingPlayoffService extends MeetingService {
                 console.log("Resolved Team is [" + teamName + "]");
                 return teamName;
             }
-        }        
+        }       
         return null;
     }
 }

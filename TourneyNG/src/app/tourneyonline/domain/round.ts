@@ -6,7 +6,6 @@ export interface Round {
     id: number;
     
     direction: Direction;
-    selectedTabIndex?: number;
     name: string;
     label?: string;
     type: RoundType;

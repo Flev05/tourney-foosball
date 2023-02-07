@@ -17,9 +17,21 @@ set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
 cd %FE_DIR%
 ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
 
+
+###################### Begin Versione PRIME NG 15 ##################################
+set TOURNEY_DIR=C:\views\EREBUS\Tourney
+set BE_DIR=%TOURNEY_DIR%\TourneyBE
+set WEB_CONTENT_DIR=%BE_DIR%\WebContent
+set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
+set FE_DIR=C:\views\EREBUS\primeng
+cd %FE_DIR%
+ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
+###################### End    Versione PRIME NG 15 ##################################
+
+
 Copiare a manaina la cartella WEB-INF da %WEB_INF_SRC_DIR% a %WEB_CONTENT_DIR%\WEB-INF 
 
-2) Per la produzione lanciare il contenuto dello script;:
+2) Per la produzione lanciare il contenuto dello script:
 TourneyBE/deploy/build-project-prod.cmd 
 come descritto sopra
 

@@ -37,316 +37,380 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
-    public MeetingDao() {
+	public MeetingDao() {
 
-        super(Meeting.class);
-    }
+		super(Meeting.class);
+	}
 
-    public Meeting getById(Integer id) {
+	public Meeting getById(Integer id) {
 
-        return super.findById(id);
-    }
+		return super.findById(id);
+	}
+
+	/**
+	 * Finds all meetings associated to the received tourney and round id
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @param roundId
+	 *            the round identifier
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findMeetingsByRoundId(Integer tourneyId, Integer roundId) {
+
+		log.debug(logId() + "Entering findMeetingsByRoundId()");
+
+		CriteriaBuilder cb = getCb();
+
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+
+		Predicate p = cb.equal(root.get(Meeting_.roundId), roundId);
+		Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+
+		List<Meeting> resultList = tq.getResultList();
+
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+		return resultList;
+	}
+
+	/**
+	 * Finds all meetings associated to the received tourney and round id
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @param roundId
+	 *            the round identifier
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findMeetingsByRoundIds(Integer tourneyId, List<Integer> roundIds) {
+
+		log.debug(logId() + "Entering findMeetingsByRoundIds()");
+
+		CriteriaBuilder cb = getCb();
+
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+
+		Predicate p = root.get(Meeting_.roundId).in(roundIds);
+		Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+
+		List<Meeting> resultList = tq.getResultList();
+
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+
+		return resultList;
+	}
+
+	/**
+	 * Finds all meetings associated to the received tourney and playoff id
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @param roundId
+	 *            the playoff identifier
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findMeetingsByPlayoffId(Integer tourneyId, Integer playoffId) {
+		log.debug(logId() + "Entering findMeetingsByPlayoffId()");
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		Predicate p = cb.equal(root.get(Meeting_.playoffId), playoffId);
+		Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		List<Meeting> resultList = tq.getResultList();
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		return resultList;
+	}
+
+	public List<Meeting> findMeetingsByPlayoutId(Integer tourneyId, Integer playoutId) {
+		log.debug(logId() + "Entering findMeetingsByPlayoutId()");
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		Predicate p = cb.equal(root.get(Meeting_.playoutId), playoutId);
+		Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		List<Meeting> resultList = tq.getResultList();
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		return resultList;
+	}
+
+	/**
+	 * Finds all meetings associated to the received tourney id
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findMeetingsByPlayoffIds(Integer tourneyId, List<Integer> playoffs) {
+		log.debug(logId() + "Entering findMeetingsByPlayoffIds()");
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		Predicate p = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		Predicate q = root.get(Meeting_.playoffId).in(playoffs);
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		List<Meeting> resultList = tq.getResultList();
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		return resultList;
+	}
+
+	public List<Meeting> findMeetingsByPlayoutIds(Integer tourneyId, List<Integer> playouts) {
+		log.debug(logId() + "Entering findMeetingsByPlayoutIds()");
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		Predicate p = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		Predicate q = root.get(Meeting_.playoutId).in(playouts);
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		List<Meeting> resultList = tq.getResultList();
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		return resultList;
+	}
+
+	/**
+	 * Finds all meetings associated to the received tourney and eliminatory not null
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findAllEliminatoryMeetingsBy(Integer tourneyId) {
+
+		log.debug(logId() + "Entering findAllEliminatoryMeetingsBy()");
+
+		CriteriaBuilder cb = getCb();
+
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
+
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+
+		Predicate p = cb.isNotNull(root.get(Meeting_.eliminatoryId));
+		Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
+
+		List<Meeting> resultList = tq.getResultList();
 
-    /**
-     * Finds all meetings associated to the received tourney and round id
-     * 
-     * @param tourneyId the tourney identifier
-     * @param roundId the round identifier
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findMeetingsByRoundId(Integer tourneyId, Integer roundId) {
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        log.debug(logId() + "Entering findMeetingsByRoundId()");
+		return resultList;
+	}
 
-        CriteriaBuilder cb = getCb();
+	/**
+	 * Finds all meetings associated to the received tourney and eliminatory id list
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @param idList
+	 *            the list of Eliminatory ids
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findAllEliminatoryMeetingsByIdList(Integer tourneyId, List<Integer> idList) {
 
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
+		log.debug(logId() + "Entering findAllEliminatoryMeetingsByIdList()");
 
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		CriteriaBuilder cb = getCb();
 
-        Predicate p = cb.equal(root.get(Meeting_.roundId), roundId);
-        Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
 
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		Predicate p2 = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		Predicate p3 = root.get(Meeting_.eliminatoryId).in(idList);
 
-        List<Meeting> resultList = tq.getResultList();
+		cq = cq.select(root);
+		cq = cq.where(p2, p3);
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
 
-        return resultList;
-    }
+		List<Meeting> resultList = tq.getResultList();
 
-    /**
-     * Finds all meetings associated to the received tourney and round id
-     * 
-     * @param tourneyId the tourney identifier
-     * @param roundId the round identifier
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findMeetingsByRoundIds(Integer tourneyId, List<Integer> roundIds) {
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        log.debug(logId() + "Entering findMeetingsByRoundIds()");
+		return resultList;
+	}
 
-        CriteriaBuilder cb = getCb();
+	public List<Meeting> findAllEliminatoryBMeetingsByIdList(Integer tourneyId, List<Integer> idList) {
 
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
+		log.debug(logId() + "Entering findAllEliminatoryBMeetingsByIdList()");
 
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		CriteriaBuilder cb = getCb();
 
-        Predicate p = root.get(Meeting_.roundId).in(roundIds);
-        Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
 
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		Predicate p2 = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		Predicate p3 = root.get(Meeting_.eliminatoryBId).in(idList);
 
-        List<Meeting> resultList = tq.getResultList();
+		cq = cq.select(root);
+		cq = cq.where(p2, p3);
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
 
-        return resultList;
-    }
+		List<Meeting> resultList = tq.getResultList();
 
-    /**
-     * Finds all meetings associated to the received tourney and playoff id
-     * 
-     * @param tourneyId the tourney identifier
-     * @param roundId the playoff identifier
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findMeetingsByPlayoffId(Integer tourneyId, Integer playoffId) {
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        log.debug(logId() + "Entering findMeetingsByPlayoffId()");
+		return resultList;
+	}
 
-        CriteriaBuilder cb = getCb();
+	/**
+	 * Finds all meetings associated to the received tourney and eliminatory id
+	 * 
+	 * @param tourneyId
+	 *            the tourney identifier
+	 * @param eliminatoryId
+	 *            the eliminatory identifier
+	 * @return the list of meetings related to the ids
+	 */
+	public List<Meeting> findMeetingsByEliminatoryId(Integer tourneyId, Integer eliminatoryId) {
 
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
+		log.debug(logId() + "Entering findMeetingsByEliminatoryId()");
 
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		CriteriaBuilder cb = getCb();
 
-        Predicate p = cb.equal(root.get(Meeting_.playoffId), playoffId);
-        Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
+		Root<Meeting> root = cq.from(Meeting.class);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
+		Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
 
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		Predicate p = cb.equal(root.get(Meeting_.eliminatoryId), eliminatoryId);
+		Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
 
-        List<Meeting> resultList = tq.getResultList();
+		cq = cq.select(root);
+		cq = cq.where(p, q);
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		TypedQuery<Meeting> tq = getEm().createQuery(cq);
 
-        return resultList;
-    }
+		List<Meeting> resultList = tq.getResultList();
 
-    /**
-     * Finds all meetings associated to the received tourney id
-     * 
-     * @param tourneyId the tourney identifier
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findMeetingsByPlayoffIds(Integer tourneyId, List<Integer> playoffs) {
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        log.debug(logId() + "Entering findMeetingsByPlayoffIds()");
+		return resultList;
+	}
 
-        CriteriaBuilder cb = getCb();
+	public void insert(Meeting m) {
 
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
+		log.debug(logId() + "Entering insert(" + m.getJson() + ")");
 
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+		super.insertPo(m);
+	}
 
-        Predicate p = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
-        Predicate q = root.get(Meeting_.playoffId).in(playoffs);
+	public void update(Meeting m) {
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
+		log.debug(logId() + "Entering update(" + m.getId() + ")");
 
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		super.updatePo(m);
+	}
 
-        List<Meeting> resultList = tq.getResultList();
+	public void delete(Meeting m) {
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		log.debug(logId() + "Entering delete(" + m.getId() + ")");
 
-        return resultList;
-    }
+		super.deletePo(m);
+	}
 
-    /**
-     * Finds all meetings associated to the received tourney and eliminatory not null
-     * 
-     * @param tourneyId the tourney identifier
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findAllEliminatoryMeetingsBy(Integer tourneyId) {
+	public void deleteAllMeetingsByTourneyId(Integer tourneyId) {
 
-        log.debug(logId() + "Entering findAllEliminatoryMeetingsBy()");
+		Query query = getEm().createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId");
 
-        CriteriaBuilder cb = getCb();
+		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
+		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
+	}
 
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+	public void deleteRoundMeetingsByTourneyId(Integer tourneyId) {
 
-        Predicate p = cb.isNotNull(root.get(Meeting_.eliminatoryId));
-        Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
+		Query query = getEm()
+				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId is not null");
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
+		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
+	}
 
-        List<Meeting> resultList = tq.getResultList();
+	public void deleteMeetingsByRoundId(Integer tourneyId, Integer roundId) {
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		Query query = getEm()
+				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId = :roundId");
 
-        return resultList;
-    }
+		query = query.setParameter("tourneyId", tourneyId);
+		query = query.setParameter("roundId", roundId);
 
-    /**
-     * Finds all meetings associated to the received tourney and eliminatory id list
-     * 
-     * @param tourneyId the tourney identifier
-     * @param idList the list of Eliminatory ids
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findAllEliminatoryMeetingsByIdList(Integer tourneyId, List<Integer> idList) {
+		int deletedCount = query.executeUpdate();
 
-        log.debug(logId() + "Entering findAllEliminatoryMeetingsByIdList()");
+		log.debug(logId() + "[Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId + " and roundId="
+				+ roundId + "]");
+	}
 
-        CriteriaBuilder cb = getCb();
+	public void deletePlayoffMeetingsByTourneyId(Integer tourneyId) {
+		Query query = getEm()
+				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoffId is not null");
+		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
+		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+	}
 
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
+	public void deletePlayoutMeetingsByTourneyId(Integer tourneyId) {
+		Query query = getEm()
+				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoutId is not null");
+		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
+		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+	}
 
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
+	public void deleteEliminatoryMeetingsByTourneyId(Integer tourneyId) {
 
-        Predicate p2 = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
-        Predicate p3 = root.get(Meeting_.eliminatoryId).in(idList);
+		Query query = getEm()
+				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryId is not null");
 
-        cq = cq.select(root);
-        cq = cq.where(p2, p3);
+		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
+		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+	}
 
-        List<Meeting> resultList = tq.getResultList();
+	public void deleteEliminatoryBMeetingsByTourneyId(Integer tourneyId) {
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		Query query = getEm()
+				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryBId is not null");
 
-        return resultList;
-    }
+		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-    /**
-     * Finds all meetings associated to the received tourney and eliminatory id
-     * 
-     * @param tourneyId the tourney identifier
-     * @param eliminatoryId the eliminatory identifier
-     * @return the list of meetings related to the ids
-     */
-    public List<Meeting> findMeetingsByEliminatoryId(Integer tourneyId, Integer eliminatoryId) {
-
-        log.debug(logId() + "Entering findMeetingsByEliminatoryId()");
-
-        CriteriaBuilder cb = getCb();
-
-        CriteriaQuery<Meeting> cq = cb.createQuery(Meeting.class);
-        Root<Meeting> root = cq.from(Meeting.class);
-
-        Join<Meeting, Tourney> meetingTourneyJoin = root.join(Meeting_.tourney);
-
-        Predicate p = cb.equal(root.get(Meeting_.eliminatoryId), eliminatoryId);
-        Predicate q = cb.equal(meetingTourneyJoin.get(Tourney_.id), tourneyId);
-
-        cq = cq.select(root);
-        cq = cq.where(p, q);
-
-        TypedQuery<Meeting> tq = getEm().createQuery(cq);
-
-        List<Meeting> resultList = tq.getResultList();
-
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
-
-        return resultList;
-    }
-
-    public void insert(Meeting m) {
-
-        log.debug(logId() + "Entering insert(" + m.getJson() + ")");
-
-        super.insertPo(m);
-    }
-
-    public void update(Meeting m) {
-
-        log.debug(logId() + "Entering update(" + m.getId() + ")");
-
-        super.updatePo(m);
-    }
-
-    public void delete(Meeting m) {
-
-        log.debug(logId() + "Entering delete(" + m.getId() + ")");
-
-        super.deletePo(m);
-    }
-
-    public void deleteAllMeetingsByTourneyId(Integer tourneyId) {
-
-        Query query = getEm().createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId");
-
-        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-
-        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
-    }
-
-    public void deleteRoundMeetingsByTourneyId(Integer tourneyId) {
-
-        Query query = getEm()
-                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId is not null");
-
-        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-
-        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId);
-    }
-
-    public void deleteMeetingsByRoundId(Integer tourneyId, Integer roundId) {
-
-        Query query = getEm()
-                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.roundId = :roundId");
-
-        query = query.setParameter("tourneyId", tourneyId);
-        query = query.setParameter("roundId", roundId);
-
-        int deletedCount = query.executeUpdate();
-
-        log.debug(logId() + "[Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId + " and roundId="
-                + roundId + "]");
-    }
-
-    public void deletePlayoffMeetingsByTourneyId(Integer tourneyId) {
-
-        Query query = getEm()
-                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoffId is not null");
-
-        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-
-        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
-    }
-
-    public void deleteEliminatoryMeetingsByTourneyId(Integer tourneyId) {
-
-        Query query = getEm()
-                .createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryId is not null");
-
-        int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-
-        log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
-    }
+		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+	}
 }

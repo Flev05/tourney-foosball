@@ -37,317 +37,322 @@ import it.lms.tourney.po.UserRoleClient;
 @ConverterObject
 public class Converter extends AbstractLogger {
 
-    @Inject
-    RoleDao           roleDao;
+	@Inject
+	RoleDao roleDao;
 
-    @Inject
-    ClientDao         clientDao;
+	@Inject
+	ClientDao clientDao;
 
-    @Inject
-    TourneyDao        tourneyDao;
+	@Inject
+	TourneyDao tourneyDao;
 
-    @Inject
-    UserRoleClientDao urcDao;
+	@Inject
+	UserRoleClientDao urcDao;
 
-    @Inject
-    UserDao           userDao;
+	@Inject
+	UserDao userDao;
 
-    @Inject
-    CountryDao        countryDao;
+	@Inject
+	CountryDao countryDao;
 
-    @Inject
-    DisciplineDao     disciplineDao;
+	@Inject
+	DisciplineDao disciplineDao;
 
-    public RoleVO convertRolePoVo(Role rpo) {
+	public RoleVO convertRolePoVo(Role rpo) {
 
-        RoleVO rvo = new RoleVO();
-        rvo.setId(rpo.getId());
-        rvo.setDescription(rpo.getDescription());
-        rvo.setName(rpo.getName());
-        return rvo;
-    }
+		RoleVO rvo = new RoleVO();
+		rvo.setId(rpo.getId());
+		rvo.setDescription(rpo.getDescription());
+		rvo.setName(rpo.getName());
+		return rvo;
+	}
 
-    public List<RoleVO> convertRolePoVoList(List<Role> roleList) {
+	public List<RoleVO> convertRolePoVoList(List<Role> roleList) {
 
-        List<RoleVO> roleVoLst = new ArrayList<>();
-        for (Role rpo : roleList) {
-            RoleVO rvo = convertRolePoVo(rpo);
-            roleVoLst.add(rvo);
-        }
-        return roleVoLst;
-    }
+		List<RoleVO> roleVoLst = new ArrayList<>();
+		for (Role rpo : roleList) {
+			RoleVO rvo = convertRolePoVo(rpo);
+			roleVoLst.add(rvo);
+		}
+		return roleVoLst;
+	}
 
-    public ClientVO convertClientPoVo(Client cpo) {
+	public ClientVO convertClientPoVo(Client cpo) {
 
-        if (cpo == null) {
-            return null;
-        }
+		if (cpo == null) {
+			return null;
+		}
 
-        ClientVO cvo = new ClientVO();
+		ClientVO cvo = new ClientVO();
 
-        cvo.setId(cpo.getId());
+		cvo.setId(cpo.getId());
 
-        cvo.setAddress(cpo.getAddress());
-        cvo.setBusinessName(cpo.getBusinessName());
-        cvo.setCountry(cpo.getCountry());
-        cvo.setEmail(cpo.getEmail());
-        cvo.setPhoneNumber(cpo.getPhoneNumber());
-        cvo.setSiteUrl(cpo.getSiteUrl());
+		cvo.setAddress(cpo.getAddress());
+		cvo.setBusinessName(cpo.getBusinessName());
+		cvo.setCountry(cpo.getCountry());
+		cvo.setEmail(cpo.getEmail());
+		cvo.setPhoneNumber(cpo.getPhoneNumber());
+		cvo.setSiteUrl(cpo.getSiteUrl());
 
-        return cvo;
-    }
+		return cvo;
+	}
 
-    public UserRoleClientVO convertUrcPoVo(UserRoleClient urc) {
+	public UserRoleClientVO convertUrcPoVo(UserRoleClient urc) {
 
-        UserRoleClientVO urcvo = new UserRoleClientVO();
-        urcvo.setId(urc.getId());
-        Tourney tpo = urc.getTourney();
-        urcvo.setDisciplineId(tpo == null || tpo.getDiscipline() == null ? null : tpo.getDiscipline().getId());
+		UserRoleClientVO urcvo = new UserRoleClientVO();
+		urcvo.setId(urc.getId());
+		Tourney tpo = urc.getTourney();
+		urcvo.setDisciplineId(tpo == null || tpo.getDiscipline() == null ? null : tpo.getDiscipline().getId());
 
-        UserVO userVo = convertUserPoVo(urc.getUser());
-        urcvo.setUserVo(userVo);
+		UserVO userVo = convertUserPoVo(urc.getUser());
+		urcvo.setUserVo(userVo);
 
-        RoleVO roleVo = convertRolePoVo(urc.getRole());
-        urcvo.setRoleVo(roleVo);
+		RoleVO roleVo = convertRolePoVo(urc.getRole());
+		urcvo.setRoleVo(roleVo);
 
-        ClientVO clientVo = convertClientPoVo(urc.getClient());
-        urcvo.setClientVO(clientVo);
+		ClientVO clientVo = convertClientPoVo(urc.getClient());
+		urcvo.setClientVO(clientVo);
 
-        return urcvo;
-    }
+		return urcvo;
+	}
 
-    public UserRoleClient convertUrcVoPo(UserRoleClientVO urcvo) {
+	public UserRoleClient convertUrcVoPo(UserRoleClientVO urcvo) {
 
-        UserRoleClient urc;
-        if (urcvo.getId() == null) {
-            urc = new UserRoleClient();
-        } else {
-            urc = urcDao.findById(urcvo.getId());
-        }
+		UserRoleClient urc;
+		if (urcvo.getId() == null) {
+			urc = new UserRoleClient();
+		} else {
+			urc = urcDao.findById(urcvo.getId());
+		}
 
-        if (urcvo.getUserVo().getId() != null) {
-            User upo = userDao.getUserById(urcvo.getUserVo().getId());
-            urc.setUser(upo);
-        }
+		if (urcvo.getUserVo().getId() != null) {
+			User upo = userDao.getUserById(urcvo.getUserVo().getId());
+			urc.setUser(upo);
+		}
 
-        Client cpo = clientDao.getById(urcvo.getClientVO().getId());
-        urc.setClient(cpo);
+		Client cpo = clientDao.getById(urcvo.getClientVO().getId());
+		urc.setClient(cpo);
 
-        Role rpo = roleDao.getById(urcvo.getRoleVo().getId());
-        urc.setRole(rpo);
+		Role rpo = roleDao.getById(urcvo.getRoleVo().getId());
+		urc.setRole(rpo);
 
-        if (urcvo.getDisciplineId() != null) {
-            Discipline dpo = disciplineDao.getById(urcvo.getDisciplineId());
-            Tourney tpo = tourneyDao.getById(urcvo.getTourneyId());
-            tpo.setDiscipline(dpo);
-        }
+		if (urcvo.getDisciplineId() != null) {
+			Discipline dpo = disciplineDao.getById(urcvo.getDisciplineId());
+			Tourney tpo = tourneyDao.getById(urcvo.getTourneyId());
+			tpo.setDiscipline(dpo);
+		}
 
-        return urc;
-    }
+		return urc;
+	}
 
-    public UserVO convertUserPoVo(User u) {
+	public UserVO convertUserPoVo(User u) {
 
-        UserVO uvo = new UserVO();
-        uvo.setId(u.getId());
-        uvo.setAddress(u.getAddress());
-        uvo.setCountry(u.getCountry());
-        uvo.setEmail(u.getEmail());
-        uvo.setFirstname(u.getFirstname());
-        uvo.setLastname(u.getLastname());
-        uvo.setPassword(u.getPassword());
-        uvo.setPhoneNumber(u.getPhoneNumber());
-        uvo.setUsername(u.getUsername());
-        uvo.setDescription(u.getDescription());
+		UserVO uvo = new UserVO();
+		uvo.setId(u.getId());
+		uvo.setAddress(u.getAddress());
+		uvo.setCountry(u.getCountry());
+		uvo.setEmail(u.getEmail());
+		uvo.setFirstname(u.getFirstname());
+		uvo.setLastname(u.getLastname());
+		uvo.setPassword(u.getPassword());
+		uvo.setPhoneNumber(u.getPhoneNumber());
+		uvo.setUsername(u.getUsername());
+		uvo.setDescription(u.getDescription());
 
-        List<Role> roleList = roleDao.findRoleByUser(u);
+		List<Role> roleList = roleDao.findRoleByUser(u);
 
-        List<RoleVO> roleVoList = roleList.stream().map(r -> convertRolePoVo(r)).collect(Collectors.toList());
+		List<RoleVO> roleVoList = roleList.stream().map(r -> convertRolePoVo(r)).collect(Collectors.toList());
 
-        uvo.setRoles(roleVoList);
+		uvo.setRoles(roleVoList);
 
-        return uvo;
-    }
+		return uvo;
+	}
 
-    public User convertUserVoPo(UserVO uvo) {
+	public User convertUserVoPo(UserVO uvo) {
 
-        User upo = new User();
+		User upo = new User();
 
-        upo.setAddress(uvo.getAddress());
-        upo.setCountry(uvo.getCountry());
-        upo.setDescription(uvo.getDescription());
-        upo.setEmail(uvo.getEmail());
-        upo.setId(uvo.getId());
-        upo.setLastname(uvo.getLastname());
-        upo.setFirstname(uvo.getFirstname());
-        upo.setPhoneNumber(uvo.getPhoneNumber());
-        upo.setDescription(upo.getDescription());
+		upo.setAddress(uvo.getAddress());
+		upo.setCountry(uvo.getCountry());
+		upo.setDescription(uvo.getDescription());
+		upo.setEmail(uvo.getEmail());
+		upo.setId(uvo.getId());
+		upo.setLastname(uvo.getLastname());
+		upo.setFirstname(uvo.getFirstname());
+		upo.setPhoneNumber(uvo.getPhoneNumber());
+		upo.setDescription(upo.getDescription());
 
-        String password = uvo.getPassword() != null ? uvo.getPassword().trim().toUpperCase() : "";
-        upo.setPassword(password);
+		String password = uvo.getPassword() != null ? uvo.getPassword().trim().toUpperCase() : "";
+		upo.setPassword(password);
 
-        upo.setUsername(uvo.getUsername());
+		upo.setUsername(uvo.getUsername());
 
-        return upo;
-    }
+		return upo;
+	}
 
-    public TourneyVO convertTourneyPoVo(Tourney tpo) {
+	public TourneyVO convertTourneyPoVo(Tourney tpo) {
 
-        TourneyVO tvo = new TourneyVO();
+		TourneyVO tvo = new TourneyVO();
 
-        ClientVO cvo = convertClientPoVo(tpo.getClient());
+		ClientVO cvo = convertClientPoVo(tpo.getClient());
 
-        tvo.setClientVO(cvo);
-        tvo.setId(tpo.getId());
-        tvo.setJson(tpo.getJson());
-        tvo.setTourneyName(tpo.getTourneyName());
+		tvo.setClientVO(cvo);
+		tvo.setId(tpo.getId());
+		tvo.setJson(tpo.getJson());
+		tvo.setTourneyName(tpo.getTourneyName());
 
-        User fupo = userDao.getFollowerByTourneyID(tpo.getId(), tvo.getClientVO().getId());
+		User fupo = userDao.getFollowerByTourneyID(tpo.getId(), tvo.getClientVO().getId());
 
-        tvo.setFollowerName(fupo == null ? "" : fupo.getUsername());
-        tvo.setCountry(tpo.getCountry());
+		tvo.setFollowerName(fupo == null ? "" : fupo.getUsername());
+		tvo.setCountry(tpo.getCountry());
 
-        return tvo;
-    }
+		return tvo;
+	}
 
-    /**
-     * Converts the tourney PO in VO without the JSON attribute for the list view
-     * 
-     * @param tpo the PO to convert
-     * @return the converted VO
-     */
-    public TourneyVO convertLightTourneyPoVo(Tourney tpo) {
+	/**
+	 * Converts the tourney PO in VO without the JSON attribute for the list view
+	 * 
+	 * @param tpo
+	 *            the PO to convert
+	 * @return the converted VO
+	 */
+	public TourneyVO convertLightTourneyPoVo(Tourney tpo) {
 
-        TourneyVO tvo = convertTourneyPoVo(tpo);
+		TourneyVO tvo = convertTourneyPoVo(tpo);
 
-        tvo.setJson(null);
+		tvo.setJson(null);
 
-        return tvo;
-    }
+		return tvo;
+	}
 
-    public PlayerVO convertPlayerPoVo(Player ppo) {
+	public PlayerVO convertPlayerPoVo(Player ppo) {
 
-        PlayerVO pvo = new PlayerVO();
+		PlayerVO pvo = new PlayerVO();
 
-        if (ppo.getClient() != null) {
-            ClientVO cvo = convertClientPoVo(ppo.getClient());
-            pvo.setClientId(cvo.getId());
-        }
+		if (ppo.getClient() != null) {
+			ClientVO cvo = convertClientPoVo(ppo.getClient());
+			pvo.setClientId(cvo.getId());
+		}
 
-        if (ppo.getCountry() != null) {
-            Country country = countryDao.getById(ppo.getCountry().getId());
-            pvo.setCountry(country);
-        }
+		if (ppo.getCountry() != null) {
+			Country country = countryDao.getById(ppo.getCountry().getId());
+			pvo.setCountry(country);
+		}
 
-        pvo.setId(ppo.getId());
-        pvo.setJson(ppo.getJson());
-        pvo.setPlayerName(ppo.getPlayerName());
+		pvo.setId(ppo.getId());
+		pvo.setJson(ppo.getJson());
+		pvo.setPlayerName(ppo.getPlayerName());
 
-        return pvo;
-    }
+		return pvo;
+	}
 
-    public TeamVO convertTeamPoVo(Team tpo) {
+	public TeamVO convertTeamPoVo(Team tpo) {
 
-        TeamVO tvo = new TeamVO();
+		TeamVO tvo = new TeamVO();
 
-        if (tpo.getClient() != null) {
-            ClientVO cvo = convertClientPoVo(tpo.getClient());
-            tvo.setClientId(cvo.getId());
-        }
+		if (tpo.getClient() != null) {
+			ClientVO cvo = convertClientPoVo(tpo.getClient());
+			tvo.setClientId(cvo.getId());
+		}
 
-        if (tpo.getCountry() != null) {
-            Country country = countryDao.getById(tpo.getCountry().getId());
-            tvo.setCountry(country);
-        }
+		if (tpo.getCountry() != null) {
+			Country country = countryDao.getById(tpo.getCountry().getId());
+			tvo.setCountry(country);
+		}
 
-        tvo.setId(tpo.getId());
-        tvo.setJson(tpo.getJson());
-        tvo.setTeamName(tpo.getTeamName());
+		tvo.setId(tpo.getId());
+		tvo.setJson(tpo.getJson());
+		tvo.setTeamName(tpo.getTeamName());
 
-        return tvo;
-    }
+		return tvo;
+	}
 
-    public Player convertPlayerVoPo(PlayerVO pvo, Session spo) {
+	public Player convertPlayerVoPo(PlayerVO pvo, Session spo) {
 
-        Player ppo = new Player();
+		Player ppo = new Player();
 
-        if (spo == null) {
-            Client cpo = clientDao.findById(pvo.getClientId());
-            ppo.setClient(cpo);
-        } else {
-            ppo.setSession(spo);
-        }
+		if (spo == null) {
+			Client cpo = clientDao.findById(pvo.getClientId());
+			ppo.setClient(cpo);
+		} else {
+			ppo.setSession(spo);
+		}
 
-        if (pvo.getCountry() != null) {
-            Country country = countryDao.findById(pvo.getCountry().getId());
-            ppo.setCountry(country);
-        }
+		if (pvo.getCountry() != null) {
+			Country country = countryDao.findById(pvo.getCountry().getId());
+			ppo.setCountry(country);
+		}
 
-        ppo.setId(pvo.getId());
-        ppo.setJson(pvo.getJson());
-        ppo.setPlayerName(pvo.getPlayerName());
+		ppo.setId(pvo.getId());
+		ppo.setJson(pvo.getJson());
+		ppo.setPlayerName(pvo.getPlayerName());
 
-        return ppo;
-    }
+		return ppo;
+	}
 
-    public Team convertTeamVoPo(TeamVO tvo, Session spo) {
+	public Team convertTeamVoPo(TeamVO tvo, Session spo) {
 
-        Team tpo = new Team();
+		Team tpo = new Team();
 
-        if (spo == null) {
-            Client cpo = clientDao.findById(tvo.getClientId());
-            tpo.setClient(cpo);
-        } else {
-            tpo.setSession(spo);
-        }
+		if (spo == null) {
+			Client cpo = clientDao.findById(tvo.getClientId());
+			tpo.setClient(cpo);
+		} else {
+			tpo.setSession(spo);
+		}
 
-        if (tvo.getCountry() != null) {
-            Country country = countryDao.findById(tvo.getCountry().getId());
-            tpo.setCountry(country);
-        }
+		if (tvo.getCountry() != null) {
+			Country country = countryDao.findById(tvo.getCountry().getId());
+			tpo.setCountry(country);
+		}
 
-        tpo.setId(tvo.getId());
-        tpo.setTeamName(tvo.getTeamName());
-        tpo.setJson(tvo.getJson());
+		tpo.setId(tvo.getId());
+		tpo.setTeamName(tvo.getTeamName());
+		tpo.setJson(tvo.getJson());
 
-        return tpo;
-    }
+		return tpo;
+	}
 
-    public MeetingVO convertMeetingPoVo(Meeting mpo) {
+	public MeetingVO convertMeetingPoVo(Meeting mpo) {
 
-        MeetingVO mvo = new MeetingVO();
+		MeetingVO mvo = new MeetingVO();
 
-        mvo.setEliminatoryId(mpo.getEliminatoryId());
-        mvo.setId(mpo.getId());
-        mvo.setJson(mpo.getJson());
-        mvo.setPlayoffId(mpo.getPlayoffId());
-        mvo.setRoundId(mpo.getRoundId());
-        mvo.setTourneyId(mpo.getTourney().getId());
+		mvo.setEliminatoryId(mpo.getEliminatoryId());
+		mvo.setEliminatoryBId(mpo.getEliminatoryBId());
+		mvo.setId(mpo.getId());
+		mvo.setJson(mpo.getJson());
+		mvo.setPlayoffId(mpo.getPlayoffId());
+		mvo.setPlayoutId(mpo.getPlayoutId());
+		mvo.setRoundId(mpo.getRoundId());
+		mvo.setTourneyId(mpo.getTourney().getId());
 
-        mvo.setCountry(mpo.getCountry());
+		mvo.setCountry(mpo.getCountry());
 
-        return mvo;
-    }
+		return mvo;
+	}
 
-    public Meeting convertMeetingVoPo(MeetingVO mvo) {
+	public Meeting convertMeetingVoPo(MeetingVO mvo) {
 
-        Meeting mpo = new Meeting();
+		Meeting mpo = new Meeting();
 
-        mpo.setEliminatoryId(mvo.getEliminatoryId());
-        mpo.setId(mvo.getId());
-        mpo.setJson(mvo.getJson());
-        mpo.setPlayoffId(mvo.getPlayoffId());
-        mpo.setRoundId(mvo.getRoundId());
+		mpo.setEliminatoryId(mvo.getEliminatoryId());
+		mpo.setEliminatoryBId(mvo.getEliminatoryBId());
+		mpo.setId(mvo.getId());
+		mpo.setJson(mvo.getJson());
+		mpo.setPlayoffId(mvo.getPlayoffId());
+		mpo.setPlayoutId(mvo.getPlayoutId());
+		mpo.setRoundId(mvo.getRoundId());
 
-        if (mvo.getCountry() != null) {
-            Country country = countryDao.findById(mvo.getCountry().getId());
-            mpo.setCountry(country);
-        }
+		if (mvo.getCountry() != null) {
+			Country country = countryDao.findById(mvo.getCountry().getId());
+			mpo.setCountry(country);
+		}
 
-        Tourney tpo = tourneyDao.findById(mvo.getTourneyId());
+		Tourney tpo = tourneyDao.findById(mvo.getTourneyId());
 
-        mpo.setTourney(tpo);
+		mpo.setTourney(tpo);
 
-        return mpo;
-    }
+		return mpo;
+	}
 
 }

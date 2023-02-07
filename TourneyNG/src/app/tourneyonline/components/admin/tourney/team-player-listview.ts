@@ -9,7 +9,6 @@ import { Player } from 'app/tourneyonline/domain/player';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
-import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 

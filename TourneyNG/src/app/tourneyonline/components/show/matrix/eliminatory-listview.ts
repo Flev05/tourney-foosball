@@ -33,7 +33,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     }
 
     private onEliminatoryLoadComplete(): void {
-        super.onLoadComplete();
+        super.onLoadComplete(this.selectedTourney.eliminatoryLevels, this.tourneyService.selectedEliminatoryLevelIndex);
         this.prepareEliminatoryGui();
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationReducedCols);
     }

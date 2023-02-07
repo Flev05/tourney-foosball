@@ -17,17 +17,22 @@ export interface Tourney {
     id?: number;
     
     tourneyName?    : string;
+    roundTabName?   : string;
+    playoffTabName? : string;
+    playoutTabName? : string;
+    eliminatoryTabName?  : string;
+    eliminatoryBTabName? : string;
+
     followerName?   : string;
     isDaily?        : string;
     datetime?       : Date;
 
-    wizardModeIndex?        : number;
-    selectedTabIndex?       : number;
-    selectedResultTabIndex? : number;
+    wizardModeIndex?            : number;
 
     selectedTeams4RoundCB?      : Combobox;
     selectedTeams4PlayoffsCB?   : Combobox;
     selectedPlayoffsCB?         : Combobox;
+    selectedPlayoutsCB?         : Combobox;
     selectedRoundsNumCB?        : Combobox;
 
     address?                    : string;
@@ -36,6 +41,7 @@ export interface Tourney {
 
     isOnewayRound?              : string;
     isOnewayPlayoff?            : string;
+    isOnewayPlayout?            : string;
 
     access?                     : string;
     discipline?                 : Discipline;
@@ -53,14 +59,16 @@ export interface Tourney {
     teamsWeightEnabled?         : string;
 
     objectives?                 : Final[];
-    teams?: Team[];
+    teams?                      : Team[];
 
     resultTool?                 : EResultTool;
 
-    roundVO?:   RoundVO;
-    playoffVO?: PlayoffVO;
+    roundVO?                    : RoundVO;
+    playoffVO?                  : PlayoffVO;
+    playoutVO?                  : PlayoffVO;
 
-    isEliminatoryAutoGen?: string;
-    eliminatoryLevels?: Array<EliminatoryLevel>;
+    isEliminatoryAutoGen?       : boolean;
+    eliminatoryLevels?          : Array<EliminatoryLevel>;
+    eliminatoryBLevels?         : Array<EliminatoryLevel>;
 }
  

@@ -22,3 +22,18 @@
     text-align: center; 
     font-size: 90%;
 }
+.toplay {
+    text-align: center; 
+    font-size: 50%;
+    color: green;
+}
+.inProgress {
+    text-align: center; 
+    font-size: 50%;
+    color: orange;
+}
+.terminated {
+    text-align: center; 
+    font-size: 50%;
+    color: red;
+}

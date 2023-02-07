@@ -276,7 +276,7 @@
     <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="gotoListView()" label="Elenco Tornei"></button>
 </div>   
  
-<p-tabView [activeIndex]="selectedTourney.selectedTabIndex" (onChange)="onChangeTab($event)">
+<p-tabView [activeIndex]="tourneyService.selectedTabIndex" (onChange)="onChangeTab($event)">
     <p-tabPanel header="Generalità">
     <p-accordion>
         <p-accordionTab header="Istruzioni">
@@ -493,8 +493,8 @@
     
             <h4>Fasi</h4>
             <p>
-                Per Fasi si intende le tre classiche: Gironi, Playoff, Eliminazioni Dirette. Non sono ammesse tutte le
-                combinazioni, per esempio non si può scegliere Playoff ed Eliminazioni senza Gironi perchè
+                Per Fasi si intende le tre classiche: Gironi, Play Off, Ply Out, Eliminazioni Dirette. Non sono ammesse tutte le
+                combinazioni, per esempio non si può scegliere Play Off ed Eliminazioni senza Gironi perchè
                 non avrebbero senso. Se una combinazione non è ammessa, il sistema visualizzerà un messaggio di errore con
                 la spiegazione del caso.
             </p>
@@ -545,11 +545,8 @@
     </div>    
     
     <div *ngIf="modeTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <p-fieldset legend="Caratteristiche">
+        <p-fieldset legend="Gara">
             <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Gara:
-                </div>
                 <div class="ui-grid-col-4" tooltipPosition="right"
                         pTooltip="Indicare se le gare terminano a tempo o a punteggio">
                     <div class="ui-g radiobuttons">
@@ -560,7 +557,6 @@
                                 [(ngModel)]="selectedTourney.tourneyType"
                                 (onClick)="onScoreClick()">
                             </p-radioButton>
-                         
                         </div>
                         <div class="ui-g-12">
                             <p-radioButton name="tourneyTypeGroupname" 
@@ -573,10 +569,9 @@
                     </div>
                 </div>
             </div>
+        </p-fieldset>
+        <p-fieldset legend="Inserimento Risultati">
             <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Inserimento Risultati:
-                </div>
                 <div class="ui-grid-col-4" tooltipPosition="right"
                         pTooltip="Scegliere la modalità di inserimento dei risultati: Risultato Finale (un goal per volta) di ciascun incontro, con l'uso della MATRICE in cui si inseriscono solo i Punti Conquistati(3, 2, 1 o 0)">
                     <div class="ui-g radiobuttons">
@@ -599,52 +594,91 @@
                     </div>
                 </div>
             </div>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-2">
-                    Fasi:
+        </p-fieldset>
+        
+        <p-fieldset legend="Fasi"> 
+            <div class="ui-g" >
+                <div class="ui-g-2" tooltipPosition="left" 
+                    pTooltip="Selezionare Gironi se sono previsti gironi di qualificazione all'italiana">
+                    <p-checkbox name="phasesGroupname" 
+                        label="Gironi"     
+                        value="round"     
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onRoundPhaseChange($event)">
+                    </p-checkbox>
                 </div>
-                <div class="ui-grid-col-4" tooltipPosition="right"
-                        pTooltip="Indicare le fasi, una o più, in cui si svolge il torneo">
-                    <div class="ui-g radiobuttons">
-                        <div class="ui-g-12">
-                            <p-checkbox name="phasesGroupname" label="Gironi"     
-                                value="round"     
-                                [(ngModel)]="selectedTourney.phases"
-                                (onChange)="onRoundPhaseChange($event)">
-                            </p-checkbox>
-                        </div>
-                        <div class="ui-g-12">
-                            <p-checkbox name="phasesGroupname" label="Play Off"     
-                                value="playoff"     
-                                [(ngModel)]="selectedTourney.phases"
-                                (onChange)="onPlayoffPhaseChange($event)">
-                            </p-checkbox>
-                        </div>
-                        <div class="ui-g-12">
-                            <p-checkbox name="phasesGroupname" label="Eliminatorie" 
-                                value="eliminatory" 
-                                [(ngModel)]="selectedTourney.phases"
-                                (onChange)="onEliminatoryPhaseChange($event)">
-                            </p-checkbox>        
-                        </div>          
-                    </div>          
-                </div>
-
-                <div class="ui-grid-col-3">
-                    <div *ngIf="notAllowedPhases()" class="ui-message ui-messages-error ui-corner-all">
-                        <span>
-                            Questa combinazione non è prevista
-                        </span>
-                    </div>
-                    <div *ngIf="!atLeastOnePhase()" class="ui-message ui-messages-error ui-corner-all">
-                        <span>
-                            Abilitare almeno una fase
-                        </span>
-                    </div>
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Gironi">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.roundTabName"/>
                 </div>
             </div>
-        </p-fieldset>
-                                                    
+            <div *ngIf="containsRound()" class="ui-g" >                           
+                <div class="ui-g-2" tooltipPosition="left" 
+                    pTooltip="Selezionare Play Off se sono previsti altri gironi di qualificazione a valle dei gironi all'italiana">
+                    <p-checkbox name="phasesGroupname" label="Play Off"     
+                        value="playoff"     
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onPlayoffPhaseChange($event)">
+                    </p-checkbox>
+                </div>
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Play Off">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.playoffTabName"/>
+                </div>
+            </div>
+            <div *ngIf="containsPlayoff()" class="ui-g" >
+                <div class="ui-g-2" tooltipPosition="left" 
+                    pTooltip="Selezionare Play Out solo se previsto un ulteriore girone all'italiana creato con le squadre non qualificate ai Play Off">
+                    <p-checkbox name="phasesGroupname" label="Play Out"     
+                        value="playout"     
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onPlayoutPhaseChange($event)">
+                    </p-checkbox>
+                </div>
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Play Out">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.playoutTabName"/>
+                </div>
+            </div>    
+            <div class="ui-g">
+                <div class="ui-g-2" tooltipPosition="left"
+                    pTooltip="Selezionare Eliminazioni Dirette se sono previste le eliminazioni dirette sia derivanti dai precedenti gironi che come torneo con solo eliminatorie">
+                    <p-checkbox name="phasesGroupname" 
+                        label="Eliminazioni Dirette" 
+                        value="eliminatory" 
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onEliminatoryPhaseChange($event)">
+                    </p-checkbox>
+                </div>          
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.eliminatoryTabName"/>
+                </div>
+            </div>
+            <div class="ui-g"  *ngIf="containsEliminatory()">
+                <div class="ui-g-2" tooltipPosition="left"
+                    pTooltip="Selezionare Eliminazioni Dirette B se sono previste le eliminazioni dirette per le squadre che non si sono qualificate nei gironi precedenti">
+                    <p-checkbox name="phasesGroupname" label="Eliminazioni Dirette B" 
+                        value="eliminatoryB" 
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onEliminatoryBPhaseChange($event)">
+                    </p-checkbox>
+                </div>          
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette B">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.eliminatoryBTabName"/>
+                </div>
+            </div>
+                              
+            <div *ngIf="notAllowedPhases()" class="ui-grid-col-3">
+                <div class="ui-message ui-messages-error ui-corner-all">
+                    <span>
+                        Questa combinazione non è prevista
+                    </span>
+                </div>
+                <div *ngIf="!atLeastOnePhase()" class="ui-message ui-messages-error ui-corner-all">
+                    <span>
+                        Abilitare almeno una fase
+                    </span>
+                </div>
+            </div>
+             
+        </p-fieldset>                                    
         <p-fieldset legend="Durata" *ngIf="selectedTourney.tourneyType=='time'">
             <div class="ui-grid-row">
                 <div class="ui-grid-col-3">
@@ -669,7 +703,6 @@
                         (click)="prevTab()">
                     </button>
                 </div>
-                
                 <div class="ui-grid-col-2">
                     <button pButton type="button"
                         class="ui-button-success" 
@@ -800,7 +833,7 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel header="Gironi" *ngIf="containsRound()">    
+    <p-tabPanel header="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}" *ngIf="containsRound()">    
         <p-accordion>
             <p-accordionTab header="Istruzioni">              
                 <h4>Turni</h4>
@@ -1101,7 +1134,7 @@
         </div>
     </p-tabPanel>
     
-    <p-tabPanel header="Playoff" *ngIf="containsPlayoff()">    
+    <p-tabPanel header="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}" *ngIf="containsPlayoff()">    
         <p-accordion>
             <p-accordionTab header="Istruzioni">              
                 <p>
@@ -1121,10 +1154,6 @@
                     passaggio del turno dai gironi all'italiana ai playoff.
                     Potete modificare il contenuto del girone modificando le regole presenti.
                 </p>
-                <p>
-                    ATTENZIONE! A fronte di una modifica al numero di squadre o gironi, si perderanno irrimediabilmente 
-                    tutte le impostazioni precedenti.
-                </p>
             </p-accordionTab>
         </p-accordion>        
 
@@ -1135,14 +1164,15 @@
             </p-message>
         </div>     
 
-        <div *ngIf="playoffTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <p-fieldset legend="Struttura Playoff">
+        <div *ngIf="playoffTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" 
+            style="margin: 10px 0px">
+            <p-fieldset legend="Struttura Play Off">
                 <div class="ui-grid-row">
                     <div class="ui-grid-col-2">
                         Turni:
                     </div>
                     <div class="ui-grid-col-3" tooltipPosition="right"
-                        pTooltip="Indicare se gli incontri di playoff sono di solo andata o andata e ritorno">
+                        pTooltip="Indicare se gli incontri di Play Off sono di solo andata o andata e ritorno">
                         <p-radioButton name="isOnewayGroupname" 
                             label="Solo andata" 
                             value="true" 
@@ -1380,9 +1410,229 @@
                 </ng-template>
             </p-table>
         </div>
+    </p-tabPanel>    
+    
+    <p-tabPanel header="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}" *ngIf="containsPlayout()">    
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">              
+                <p>
+                    Vista elenco dei gironi di Play Out del torneo.
+                </p>
+                <p>
+                    Il girone di Play Out è unico, creato con tutte le squadre che non si sono qualificate ai Play off,
+                    non sono previsti le eliminzazioni dirette derivanti dagli esiti di questo girone, conta solo la classifica finale.
+                </p>
+                <p>
+                    Il programma genera tutti gli incontri con le squadre del girone in cui devono essere corrette le date
+                    dell'incontro e chi gioca in casa o fuori.
+                </p>
+            </p-accordionTab>
+        </p-accordion>        
+
+        <div *ngIf="!playoutTabEnabled" style="margin-top:30px">
+            <p-message 
+                severity="error" 
+                text="Attenzione! Completare la scheda del girone Play Off ed avanzare con il bottone Avanti!">
+            </p-message>
+        </div>
+
+        <div *ngIf="selectedTourney.playoutVO!=undefined && playoutTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid"    
+            style="margin: 10px 0px">
+            <p-fieldset legend="Struttura Play Out">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Turni:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se gli incontri di Play Out sono di solo andata o andata e ritorno">
+                        <p-radioButton name="isOnewayPlayoutGroupname" 
+                            label="Solo andata" 
+                            value="true" 
+                            [(ngModel)]="selectedTourney.isOnewayPlayout"
+                            (onClick)="onOnewayPlayoutClick()">
+                        </p-radioButton>
+                        <p-radioButton name="isOnewayPlayoutGroupname" 
+                            label="Andata e ritorno" 
+                            value="false" 
+                            [(ngModel)]="selectedTourney.isOnewayPlayout"
+                            (onClick)="onRoundtripPlayoutClick()">
+                        </p-radioButton>
+                    </div>
+                </div>
+            </p-fieldset>
+
+            <p-fieldset legend="Punteggi Playout">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Partite:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.maxMatchesPerMeeting" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Numero di partite in ciascun incontro"
+                            (onChange)="onPlayoutSpinnerChange($event)">
+                        </p-spinner>
+                    </div>          
+                </div>
+                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.allMatchesEnabled">
+                    <div class="ui-grid-col-3">
+                        Fine Incontro:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                            pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
+                        <div class="ui-g radiobuttons">
+                            <p-radioButton name="allPlayoutMatchesGroupname" 
+                                label="Tutte le partite" 
+                                value="true" 
+                                [(ngModel)]="selectedTourney.playoutVO.isAllMatches"
+                                (onClick)="onAllPlayoutMatchesClick()">
+                            </p-radioButton>
+                            <p-radioButton name="allPlayoutMatchesGroupname" 
+                                label="Al Meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite" 
+                                value="false" 
+                                [(ngModel)]="selectedTourney.playoutVO.isAllMatches"
+                                (onClick)="onPlayoutBestOfClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>        
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Goal:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsNeededToWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                        </p-spinner>
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoutVO.isAllMatches=='true'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Vittoria:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.matchWinnerScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Pareggio:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.matchBalanceScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di pareggio">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true'" 
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Vittoria (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                        </p-spinner>
+                    </div>                
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>                
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true'"
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Sconfitta (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                            [min]="0"
+                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                        </p-spinner>
+                    </div>                            
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+            </p-fieldset>
+            
+            <p-table [columns]="playoffCols"
+                [value]="playoutRows"
+                [responsive]="true"
+                selectionMode="single" 
+                [(selection)]="selectedPlayout"
+                (onRowSelect)="onPlayoutRowSelect($event)"
+                [scrollable]="true" 
+                scrollHeight="500px">
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 15mm;">N°</th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+        
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+                    <tr [pSelectableRow]="rowData">
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>             
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">   
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="playoutButtonDisabled()">
+                    </button> 
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button   pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="playoutButtonDisabled()">
+                                </button> 
+                            </div>
+                        </div>
+                    </div>                    
+                </ng-template>
+            </p-table>
+        </div>
     </p-tabPanel>
 
-    <p-tabPanel header="Eliminazioni Dirette" *ngIf="containsEliminatory()">  
+    <p-tabPanel header="{{selectedTourney.eliminatoryTabName==null?'Eliminazioni Dirette':selectedTourney.eliminatoryTabName}}" *ngIf="containsEliminatory()">  
         <p-accordion>
             <p-accordionTab header="Istruzioni">                                
             <p> 
@@ -1512,7 +1762,6 @@
         </div>     
 
         <div *ngIf="eliminatoryTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
             <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
                 <div class="ui-grid-col-2">
                     Generazione:
@@ -1556,6 +1805,85 @@
                 [responsive]="true"
                 selectionMode="single" 
                 (onRowSelect)="onEliminatoryLevelRowSelect($event)">
+            
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns">
+                            <span class="ui-column-title">{{col.header}}</span>
+                            {{rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">                
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="eliminatoryButtonDisabled()">
+                    </button>     
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="eliminatoryButtonDisabled()">
+                                </button>     
+                            </div>
+                        </div>
+                    </div>    
+                </ng-template>
+            </p-table>
+        </div>
+    </p-tabPanel>   
+
+    <p-tabPanel header="{{selectedTourney.eliminatoryBTabName==null?'Eliminazioni Dirette B':selectedTourney.eliminatoryBTabName}}" *ngIf="containsEliminatoryB()">  
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">                                
+                <p> 
+                    Come per le eliminazioni dirette principali ma costruite sulle squadre che non si sono qualificate
+                    nei gironi precedenti.
+                </p>
+            </p-accordionTab>
+        </p-accordion>
+                    
+        <div *ngIf="!eliminatoryBTabEnabled" style="margin-top:30px">
+            <p-message  
+                severity="error" 
+                text="Attenzione! Devono essere completate le schede precedenti. Avanzare passo passo con il bottone Avanti!">
+            </p-message>
+        </div>     
+
+        <div *ngIf="eliminatoryBTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">             
+            <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryBLevelRows" 
+                [responsive]="true"
+                selectionMode="single" 
+                (onRowSelect)="onEliminatoryBLevelRowSelect($event)">
             
                 <ng-template pTemplate="header" let-columns>
                     <tr>
@@ -1662,9 +1990,6 @@
             <p-table [columns]="operatorCols"
                 [value]="operators"
                 [responsive]="true"
-                selectionMode="single" 
-                [(selection)]="selectedOperator"
-                (onRowSelect)="onOperatorRowSelect($event)"
                 [scrollable]="true" 
                 scrollHeight="500px">
 
@@ -1680,6 +2005,9 @@
 
                 <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                     <tr>
+                        <td style="width: 15mm;">
+                            <button pButton icon="fa fa-edit" (click)="updateOperator(rowData)"></button>
+                        </td>
                         <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
                             {{rowData[col.field]}}
@@ -1690,7 +2018,7 @@
                     </tr>
                 </ng-template>
 
-                <ng-template pTemplate="summary">                
+                <ng-template pTemplate="summary">
                     <button *ngIf="!isInWizardMode()" pButton type="button"
                         class="ui-button-success" 
                         icon="{{nextButtonIcon}}" 

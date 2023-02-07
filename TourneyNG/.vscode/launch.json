@@ -10,34 +10,13 @@
             "request": "launch",
             "reAttach": true,
             "url": "http://localhost:8082/TourneyBE",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "pathMappings": [
+                {
+                    "url": "webpack:///src/app",
+                    "path": "${workspaceFolder}/src/app"
+                }
+            ]
         }
-
-        // {
-        //     "type": "chrome",
-        //     "request": "launch",
-        //     "name": "Launch Chrome",
-        //     "url": "http://localhost:8082/TourneyBE",
-        //     "webRoot": "${workspaceFolder}"
-        // }
-        
-        // {
-        //     "type": "chrome",
-        //     "request": "launch",
-        //     "name": "Launch Chrome",
-        //     "url": "http://localhost:4200",
-        //     "webRoot": "${workspaceFolder}"
-        // }
-
-        // {
-        //     "type": "node",
-        //     "request": "launch",
-        //     "name": "Launch Program",
-        //     "program": "${workspaceFolder}\\serve",
-        //     "preLaunchTask": "tsc: build - tsconfig.json",
-        //     "outFiles": [
-        //         "${workspaceFolder}/dist/out-tsc/**/*.js"
-        //     ]
-        // }
     ]
 }

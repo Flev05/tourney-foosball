@@ -12,6 +12,7 @@ import { UserVO } from 'app/tourneyonline/domain/user-vo';
 import { OperatorListView } from './operator-listview';
 import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { OperatorDetailView } from './operator-detailview';
 
 @Component({
     templateUrl: './operator-picklist.html'
@@ -73,7 +74,7 @@ export class OperatorPickList extends AbstractListView {
         this.userService.newUser = true;
         this.returnLabel = "Salva e torna";
         
-        this.router.navigate([OperatorListView.redirect]);
+        this.router.navigate([OperatorDetailView.redirect]);
     }
     
     /**

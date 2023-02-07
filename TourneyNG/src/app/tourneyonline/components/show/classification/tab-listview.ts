@@ -15,6 +15,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
     static tabDvRedirect: string = "classification/lv/eliminatories";
     activeIndex: any;
     incompletePlayoffConfiguration: boolean;
+    selectedTabIndex: number; 
 
     constructor(
         protected tourneyService: TourneyService,
@@ -28,7 +29,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
     }
 
     ngOnInit() {
-        this.activeIndex = this.selectedTourney.selectedTabIndex;
+        this.activeIndex = this.selectedTabIndex;
 
         super.ngOnInit();
 
@@ -54,7 +55,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
         this.activeIndex = index;
-        this.selectedTourney.selectedTabIndex = this.activeIndex;
+        this.selectedTabIndex = this.activeIndex;
     }
     
     protected processEliminationTree(): void {

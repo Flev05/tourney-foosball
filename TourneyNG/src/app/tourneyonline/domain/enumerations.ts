@@ -1,5 +1,5 @@
 export enum PhaseType {
-    R='round', P='playoff', E='eliminatory'
+    R='round', P='playoff', O='playout', E='eliminatory', EB='eliminatoryB'
 }
 
 export enum EliminatoryMode {
@@ -27,7 +27,7 @@ export enum Direction {
 }
 
 export enum MeetingStatus {
-    ToPlay='toplay', InProgress='inprogress', Terminated='terminated'
+    ToPlay='Da Giocare', InProgress='In Corso', Terminated='Terminata'
 }
 export enum ERoles {
     DEVELOPER, OWNER, ADMIN, OPERATOR, FOLLOWER

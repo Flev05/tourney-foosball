@@ -6,6 +6,7 @@ import { EliminatoryListView } from './eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
 import { TabResultListView } from './tab-result-listview';
 import { PlayoffResultListView } from './playoff-result-listview';
+import { EliminatoryBListView } from './eliminatory-b-listview';
 
 @NgModule({
 	imports: [
@@ -15,6 +16,7 @@ import { PlayoffResultListView } from './playoff-result-listview';
 			{ path: 'lv/round', 			component: RoundResultListView },
 			{ path: 'lv/playoff', 			component: PlayoffResultListView },
 			{ path: 'lv/eliminatoryLv/dv', 	component: EliminatoryListView },
+			{ path: 'lv/eliminatoryBLv/dv', component: EliminatoryBListView },
 			{ path: 'lv/meetingLv/dv',  	component: MeetingDetailView },			
 		])
 	],

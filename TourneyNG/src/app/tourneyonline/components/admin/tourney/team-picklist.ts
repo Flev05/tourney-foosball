@@ -23,6 +23,7 @@ export class TeamPickList extends AbstractListView {
     targetTeams: string[];
     returnLabel: string;
 
+    
     constructor( protected tourneyService: TourneyService
         , public router: Router
         , protected location: Location
@@ -53,6 +54,15 @@ export class TeamPickList extends AbstractListView {
                 this.avalilableTeams.push(t.teamName);
             }
         }
+        this.avalilableTeams.sort((t1, t2) =>{
+            if(t1 < t2) {
+                return -1;
+            }
+            if( t1 > t2) {
+                return 1;
+            }
+            return 0;
+        });
     }
 
     onMoveToTarget(event) {
@@ -146,21 +156,21 @@ export class TeamPickList extends AbstractListView {
         if( !this.containsRound() ) {
             return false;
         }
-        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+        return this.teamService.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
     }
 
     private isPlayoffTabEnabled(): boolean {
         if( !this.containsPlayoff() ) {
             return false;
         }
-        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+        return this.teamService.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
     }
 
     private isEliminatoryTabEnabled(): boolean {
         if( !this.containsEliminatory() ) {
             return false;
         }
-        return this.selectedTourney.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
+        return this.teamService.selectedTabIndex <= this.selectedTourney.wizardModeIndex  ? true : false;
     }
 
     private alignTourneyTeams() {
@@ -173,6 +183,9 @@ export class TeamPickList extends AbstractListView {
             let t: Team = this.teamService.teamPool.find(x => x.teamName == tn);
             if( t == undefined || t == null) {
                 continue;
+            }
+            if(t.operators == undefined) {
+                t.operators = [];
             }
             this.selectedTourney.teams.push(t);
         }       

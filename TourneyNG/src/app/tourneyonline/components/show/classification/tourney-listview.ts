@@ -26,7 +26,15 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
         , protected dfp: DateFormatPipe
         , protected disciplineService: DisciplineService) 
     { 
-        super(ClassificationTourneyListView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, loc, dfp);
+        super(ClassificationTourneyListView.redirect
+            , tourneyService
+            , countryService
+            , playerService
+            , teamService
+            , disciplineService
+            , router
+            , loc
+            , dfp);
     }
 
     protected filter(tourneys: Tourney[]): Tourney[] {

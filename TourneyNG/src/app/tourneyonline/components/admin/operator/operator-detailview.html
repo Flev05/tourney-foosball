@@ -24,7 +24,7 @@
     <button type="button" pButton icon="fa fa-arrow-left"  (click)="goBack()" label="Indietro"></button>
 </div>
 
-<p-fieldset legend="Utente">
+<p-fieldset legend="Utente Operatore">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
             <div class="ui-grid-col-2">
@@ -132,6 +132,40 @@
     </div>         
 </p-fieldset>
     
+<p-fieldset legend="Squadre per l'operatore">
+    <p-table [responsive]="true" 
+        [columns]="cols" 
+        [value]="teams" 
+        [scrollable]="true" 
+        scrollHeight="500px"
+        [(selection)]="selectedTeams"
+        dataKey="id">
+ 
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns" >
+            <tr [pSelectableRow]="rowData">
+                <td>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns">
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-fieldset>
+
 <div *ngIf="serverUnreachable" style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   

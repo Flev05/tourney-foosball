@@ -31,6 +31,7 @@ export class TeamService {
     selectedTeam : Team;
     newTeam : boolean = false;
     readOnly: boolean = false;
+    selectedTabIndex: number = 0; 
 
     static cols: TableCols[] = [
         { field: 'teamName',   header: 'Nome' },
@@ -243,12 +244,19 @@ export class TeamService {
     }
 
     private updateInternalTeams(tourney: Tourney) {
+        console.log('Entering updateInternalTeams()');
         if(tourney != undefined) {
             if(this.newTeam) {
                 tourney.teams.push(this.selectedTeam);
             }
-            let team = tourney.teams.find( t => t.id == this.selectedTeam.id );
-            if( team != undefined) {
+            var team : Team = null;
+            for(let t of tourney.teams) {
+                if(t.teamName == this.selectedTeam.teamName) {
+                    team = t;
+                    break;
+                }
+            }
+            if(team != null) {
                 team.teamName = this.selectedTeam.teamName;
                 team.address = this.selectedTeam.address
                 team.country = this.selectedTeam.country

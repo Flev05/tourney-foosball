@@ -2,13 +2,9 @@
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
             <button *ngIf="!loginService.isFollower()" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
-            <button *ngIf="loginService.isFollower()" type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
         </div>
-        <div class="ui-grid-col-5">
-            <span style="font-weight: bold;">{{selectedTourney.tourneyName}}</span>
-        </div>
-        <div class="ui-grid-col-5">
-            <span style="font-weight: bold;">{{selectedTourney.datetime | date: 'dd/MM/y'}}</span>
+        <div class="ui-grid-col-8">
+            <span style="font-weight: bold; text-align: center;">{{selectedTourney.tourneyName}}</span>
         </div>
     </div>
 </div>     
@@ -17,13 +13,14 @@
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
-<p-tabView [activeIndex]="selectedTourney.selectedResultTabIndex" (onChange)="onChangeTab($event)">
-    <p-tabPanel  *ngIf="containsRound()" header="Gironi({{roundCount}})" >    
+<p-tabView [activeIndex]="meetingService.selectedResultTabIndex" (onChange)="onChangeTab($event)">
+    <p-tabPanel  *ngIf="containsRound()" header="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})" >    
         <p-table [columns]="roundCols"
-            [value]="roundRows"
-            selectionMode="single" 
-            [(selection)]="selectedRound"
-            (onRowSelect)="onRoundRowSelect($event)" >
+                    [value]="roundRows"
+                    [responsive]="true"
+                    selectionMode="single" 
+                    [(selection)]="selectedRound"
+                    (onRowSelect)="onRoundRowSelect($event)">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -33,32 +30,35 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+            <ng-template pTemplate="body" let-rowData let-columns="columns">                    
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
                         {{rowData[col.field]}}
-                    </td>
+                    </td>           
                 </tr>
             </ng-template>
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="containsPlayoff()" header="Playoff({{playoffCount}})" >    
+    <p-tabPanel *ngIf="containsPlayoff()" header="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}({{playoffCount}})" >    
         <p-table [columns]="playoffCols"
             [value]="playoffRows"
             selectionMode="single" 
             [(selection)]="selectedPlayoff"
             (onRowSelect)="onPlayoffRowSelect($event)">
 
-            <ng-template pTemplate="header" let-columns>
+            <ng-template pTemplate="header">
                 <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
+                    <th>
+                        Gironi
+                    </th>
+                    <th>
+                        Squadre
                     </th>
                 </tr>
             </ng-template>
     
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+            <ng-template pTemplate="body" let-rowData let-columns="columns">                    
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
                         {{rowData[col.field]}}
@@ -68,7 +68,36 @@
         </p-table>
     </p-tabPanel>
 
-    <p-tabPanel *ngIf="containsEliminatory()" header="Eliminazioni Dirette({{eliminatoryCount}})"  >   
+    <p-tabPanel *ngIf="containsPlayout()" header="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}({{playoutCount}})" >    
+        <p-table [columns]="playoffCols"
+            [value]="playoutRows"
+            selectionMode="single" 
+            [(selection)]="selectedPlayout"
+            (onRowSelect)="onPlayoutRowSelect($event)">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                        Gironi
+                    </th>
+                    <th>
+                        Squadre
+                    </th>
+                </tr>
+            </ng-template>
+    
+            <ng-template pTemplate="body" let-rowData let-columns="columns">                    
+                <tr [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="containsEliminatory()" 
+        header="{{selectedTourney.eliminatoryTabName==null?'Eliminazioni Dirette':selectedTourney.eliminatoryTabName}}({{eliminatoryCount}})"  >   
         <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryLevelRows" 
                 selectionMode="single" 
@@ -97,7 +126,37 @@
                 </tr>
             </ng-template>
         </p-table>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="containsEliminatoryB()" 
+        header="{{selectedTourney.eliminatoryBTabName==null?'Eliminazioni Dirette B':selectedTourney.eliminatoryBTabName}}({{eliminatoryBCount}})"  >   
+        <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryLevelBRows" 
+                selectionMode="single" 
+                [(selection)]="selctedEliminatoryBLevel" 
+                (onRowSelect)="onEliminatoryBRowSelect($event)">
 
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th>
+                        Livello
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        Squadre
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        {{rowData['name']}}
+                    </td>
+                    <td style="width: 20mm; text-align: center;">
+                        {{rowData['level']}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </p-tabPanel>
 </p-tabView>        
     

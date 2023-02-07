@@ -2,7 +2,7 @@ import { Combobox } from "./tourney-combobox";
 
 export class FromRound {
     id: number;
-    isAutomatic: boolean;
+    // isAutomatic: boolean;
     isDummy: boolean;
     position: Combobox;
     bandPosition: number;

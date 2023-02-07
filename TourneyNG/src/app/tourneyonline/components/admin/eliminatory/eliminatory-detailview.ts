@@ -17,9 +17,9 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
 
 @Component({
-    templateUrl: './eliminatory-full-detailview.html',
+    templateUrl: './eliminatory-detailview.html',
 })
-export class FullEliminatoryDetailView extends AbstractDetailView {
+export class EliminatoryDetailView extends AbstractDetailView {
     
     msgs: Message[] = [];
 
@@ -67,7 +67,7 @@ export class FullEliminatoryDetailView extends AbstractDetailView {
         super.ngOnInit();
 
         this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
-
+        this.tourneyService.prepareDefaultComboBoxes();
         this.selectedEliminatory = this.tourneyService.selectedEliminatory;
 
         this.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;

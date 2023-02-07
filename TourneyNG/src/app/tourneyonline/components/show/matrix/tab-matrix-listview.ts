@@ -9,6 +9,7 @@ import { AbstractTabResultListView } from 'app/tourneyonline/components/common/a
 import { MeetingRoundService } from 'app/tourneyonline/components/admin/round/meeting-round-service';
 import { MeetingPlayoffService } from 'app/tourneyonline/components/admin/playoff/meeting-playoff-service';
 import { TourneyResultListView } from '../tourney/tourney-listview';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 const REDIRECT_ROUND_MATRIX_LV   = 'matrix/lv/roundLv/dv';
 const REDIRECT_PLAYOFF_MATRIX_LV = 'matrix/lv/playoffLv/dv';
@@ -26,7 +27,8 @@ export class TabMatrixListView extends AbstractTabResultListView {
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe,
-        protected levelService: LevelService
+        protected levelService: LevelService,
+        protected clientService: ClientService,
     ) {
         super(""
             , tourneyService
@@ -37,6 +39,7 @@ export class TabMatrixListView extends AbstractTabResultListView {
             , location
             , dfp
             , levelService
+            , clientService
             );
     }
 

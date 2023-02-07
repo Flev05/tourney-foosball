@@ -11,4 +11,5 @@ export interface Team {
     ruleName?: string;
     country?:  Country;
     players?:  Player[];
+    operators?:  string[];
 }

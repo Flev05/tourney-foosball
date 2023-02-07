@@ -8,7 +8,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingRoundService } from './meeting-round-service';
-import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 @Component({
     templateUrl: './meeting-page-listview.html'
@@ -26,9 +25,9 @@ export class MeetingListView extends AbstractListView {
     atLeast2teams: boolean;
  
     isRoundTrip: boolean;
-    mdbList: MeetingDb[];
     pageSize: number = 10;
-    allDaysNo: number;
+    allDaysNo: number; 
+ 
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
 
@@ -45,11 +44,9 @@ export class MeetingListView extends AbstractListView {
         super.ngOnInit();
 
         this.selectedRound = this.tourneyService.selectedRound;
-        const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound);
-        subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
-
+        this.onCompleteLoad();
         this.cols = [
-            { field: 'dateAndTime', header: 'Data/Ora' },
+            { field: 'datetime',    header: 'Data/Ora' },
             { field: 'teamName1',   header: 'In casa' },
             { field: 'teamName2',   header: 'Trasferta' }
         ];
@@ -68,14 +65,11 @@ export class MeetingListView extends AbstractListView {
     onChangeTab(e) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
-        this.selectedRound.selectedTabIndex = index; 
+        this.meetingRoundService.selectedTabIndex = index; 
     }
 
-    private onCompleteLoad(t: MeetingDb[]): void {
-        this.mdbList = t;
+    private onCompleteLoad( ): void {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.onCompleteLoad(this.selectedRound, this.mdbList, () => {});
-
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;
         this.onewayMeetings = this.selectedRound.onewayMeetings;

@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Anagrafica Squadra [{{selectedTeam.teamName}}] (Girone {{selectedRound.name}})</span>
+        <span class="feature-title">Anagrafica Squadra [{{selectedTeam.teamName}}]</span>
     </div>
 </div>
 
@@ -59,10 +59,11 @@
         <div class="ui-grid-col-1">
             Nome*:
         </div>
-        <div *ngIf="isRoundAutoGen=='true'" class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
+
+        <div *ngIf="!selectedRound || isRoundAutoGen=='true'" class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
             <input pInputText type="text" [(ngModel)]="selectedTeam.teamName"/>
         </div>      
-        <div *ngIf="isRoundAutoGen=='false'" class="ui-grid-col-3" tooltipPosition="right" 
+        <div *ngIf="selectedRound && isRoundAutoGen=='false'" class="ui-grid-col-3" tooltipPosition="right" 
                 pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
             <p-dropdown id="teamsRoundId" 
                 [options]="teams4RoundCombobox" 
@@ -111,7 +112,7 @@
     </div> 
 </div>
 
-<div *ngIf="!teamService.readOnly && isRoundAutoGen=='true'" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!teamService.readOnly && teamService.newTeam" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             <button class="ui-button-success" 
@@ -123,7 +124,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="!teamService.readOnly && isRoundAutoGen=='false'" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!teamService.readOnly && !teamService.newTeam" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             <button class="ui-button-success" 

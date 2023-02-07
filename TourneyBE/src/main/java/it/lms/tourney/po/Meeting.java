@@ -42,8 +42,14 @@ public class Meeting extends AbstractPO {
 	@Column(name = "playoff_id")
 	private Integer playoffId;
 
+	@Column(name = "playout_id")
+	private Integer playoutId;
+
 	@Column(name = "eliminatory_id")
 	private Integer eliminatoryId;
+
+	@Column(name = "eliminatory_b_id")
+	private Integer eliminatoryBId;
 
 	// bi-directional many-to-one association to Country
 	@ManyToOne

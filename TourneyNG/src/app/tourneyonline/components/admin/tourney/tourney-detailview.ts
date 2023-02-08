@@ -266,7 +266,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.tourneyService.selectedTourney = this.selectedTourney;    
         this.teamService.isTeamsChanged = false;
         this.selectedTourney.wizardModeIndex = 0;
-        this.selectedTourney.isEliminatoryAutoGen = true;
+        this.selectedTourney.isEliminatoryAutoGen = "true";
         this.selectedTourney.followerName = "";
         this.resetComboBoxes();
     }
@@ -477,6 +477,9 @@ export class TourneyDetailView extends AbstractDetailView {
                 }
             } else if (this.containsEliminatory()) {
                 lastTabIndex += 1;
+                if (this.containsEliminatory()) {
+                    lastTabIndex += 1;
+                }
             }
         }
 
@@ -732,12 +735,12 @@ export class TourneyDetailView extends AbstractDetailView {
     
     onEliminatoryAutoGenClick() {
         console.log("Entering onEliminatoryAutoGenClick()");
-        this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen == "true" ? true : false;
+        this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen;
     }
 
     onEliminatoryManualGenClick() {
         console.log("Entering onEliminatoryManualGenClick()");
-        this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen == "true" ? true : false;
+        this.selectedTourney.isEliminatoryAutoGen = this.isEliminatoryAutoGen;
     }
 
     onDisciplineChange(cb: Combobox) {

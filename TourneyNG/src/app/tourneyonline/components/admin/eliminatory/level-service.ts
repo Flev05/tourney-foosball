@@ -55,6 +55,7 @@ export class LevelService extends AbstractEliminatoryListView {
         console.log("Entering prepareEliminationTree("+teamsNo+")");
 
         this.isOneway = "false";
+
         let levelsCombobox: Combobox[] =  this.prepareLevelCombobox(teamsNo);
         let selectedLevel = levelsCombobox[0].value;
         let maxCurrentLevel : number = 0;
@@ -572,6 +573,10 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     private processEliminatoryTeams(teamCount: number): void {
+        if( teamCount==0 ) {
+            this.eliminatoryLevels =[];
+            return;
+        }
         this.eliminatoryLevels = this.prepareEliminationTree(this.eliminatoryLevels, teamCount);
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
 

@@ -40,7 +40,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
     eliminatoryBCount: number;
     eliminatoryLevelCols: TableCols[];
     eliminatoryLevelRows: EliminatoryLevelVO[];
-    eliminatoryLevelBRows: EliminatoryLevelVO[];
+    eliminatoryBLevelRows: EliminatoryLevelVO[];
     selctedEliminatoryLevel: EliminatoryLevelVO;
     selctedEliminatoryBLevel: EliminatoryLevelVO;
 
@@ -133,6 +133,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             }
         } else {
             this.prepareEliminatoryLevels();
+            this.prepareEliminatoryBLevels();
         }
     }
 
@@ -145,9 +146,16 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels);
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
-        this.eliminatoryLevelBRows = this.levelService.eliminatoryBLevelRows;
-        this.eliminatoryCount = this.eliminatoryLevelRows.length;
-        this.eliminatoryBCount = this.eliminatoryLevelBRows.length;
+    }
+
+    private prepareEliminatoryBLevels() {
+        if( !this.containsEliminatoryB() ) {
+            return;
+        }
+            
+        this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
+        this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels);
+        this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
     }
 
     private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {

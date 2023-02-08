@@ -146,7 +146,7 @@ export class TabResultListView extends AbstractTabResultListView {
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
         
-        let indexOf = this.eliminatoryLevelBRows.indexOf( this.selctedEliminatoryBLevel );
+        let indexOf = this.eliminatoryBLevelRows.indexOf( this.selctedEliminatoryBLevel );
         this.tourneyService.selectedEliminatoryBLevelIndex  = indexOf;
 
         this.tourneyService.selectedEliminatoryBLevel = this.selectedTourney.eliminatoryBLevels[indexOf];

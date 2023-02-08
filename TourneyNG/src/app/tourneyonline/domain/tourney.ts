@@ -67,7 +67,7 @@ export interface Tourney {
     playoffVO?                  : PlayoffVO;
     playoutVO?                  : PlayoffVO;
 
-    isEliminatoryAutoGen?       : boolean;
+    isEliminatoryAutoGen?       : string;
     eliminatoryLevels?          : Array<EliminatoryLevel>;
     eliminatoryBLevels?         : Array<EliminatoryLevel>;
 }

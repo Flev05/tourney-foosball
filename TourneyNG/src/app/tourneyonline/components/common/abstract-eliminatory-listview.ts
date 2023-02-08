@@ -79,7 +79,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         super.ngOnInit();
         this.meetingService.selectedTourney = this.tourneyService.selectedTourney;
 
-        this.isAutomatic   = this.tourneyService.selectedTourney.isEliminatoryAutoGen==true ? true : false;
+        this.isAutomatic   = this.tourneyService.selectedTourney.isEliminatoryAutoGen=="true" ? true : false;
 
         this.isPlayoff = this.containsPlayoff();
           

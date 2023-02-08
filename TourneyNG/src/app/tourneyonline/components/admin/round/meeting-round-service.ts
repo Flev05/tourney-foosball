@@ -140,25 +140,12 @@ export class MeetingRoundService extends MeetingService {
                 e.round.roundtripMeetings = [];
             }
         }
-        if(this.containsEliminatoryB() ) {
-            for (let el of this.selectedTourney.eliminatoryBLevels) {
-                for (let e of el.eliminatories) {
-                    e.round.onewayMeetings = [];
-                    e.round.roundtripMeetings = [];
-                }
-            }
-        }
+ 
         if (cleanEliminatory) {
             for (let el of this.selectedTourney.eliminatoryLevels) {
                 el.eliminatories = [];
             }
             this.selectedTourney.eliminatoryLevels = [];
-            if(this.containsEliminatoryB() ) {
-                for (let el of this.selectedTourney.eliminatoryBLevels) {
-                    el.eliminatories = [];
-                }
-                this.selectedTourney.eliminatoryBLevels = [];
-            }
         }
     }
 

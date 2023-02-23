@@ -47,14 +47,24 @@ export class MeetingPageListView extends AbstractRuleListView {
             { field: 'ruleName2',   header: 'Trasferta' }
         ];
 
-        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-    
+        if(this.tourneyService.selectedPlayoff != null ) {
+            this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        } else {
+            this.selectedPlayoff = this.tourneyService.selectedPlayout;
+        }
+
         this.isRoundTrip = false;
         if(this.selectedTourney.isOnewayPlayoff == "true") {
             this.isRoundTrip = true;
         }
 
-        const subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id, e => this.serverUnreachableHandler(e));
+        let subsbr : any = null;
+        if(this.tourneyService.selectedPlayoff != null ) {
+            subsbr = this.meetingPlayoffService.loadPlayoffMeeting(this.selectedTourney.id, this.selectedPlayoff.id, e => this.serverUnreachableHandler(e));
+        } else {
+            subsbr = this.meetingPlayoffService.loadPlayoutMeeting(this.selectedTourney.id, this.selectedPlayoff.id, e => this.serverUnreachableHandler(e));
+        }
+        
         subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
     }
    

@@ -26,6 +26,7 @@ import { ClientVO } from '../domain/client-vo';
 import { MeetingDb } from '../domain/meeting-db';
 import { UserVO } from '../domain/user-vo';
 import { OperatorsVO } from '../domain/operators-vo';
+import { PlayoffVO } from '../domain/playoff-vo';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -44,6 +45,7 @@ const updateTourneyDeleteRoundMeetingsUrl = tourneyUrl + '/updateTourneyDeleteRo
 const updateTourneyDeleteAllMeetingsUrl = tourneyUrl + "/updateTourneyDeleteAllMeetings";
 const updateTourneyRoundsUrl = tourneyUrl + "/updateTourneyRounds";
 const updateTourneyPlayoffsUrl = tourneyUrl + "/updateTourneyPlayoffs";
+const updateTourneyPlayoutsUrl = tourneyUrl + "/updateTourneyPlayouts";
 const updateTourneyEliminatoriesUrl = tourneyUrl + "/updateTourneyEliminatories";
 const updateTourneyEliminatoriesBUrl = tourneyUrl + "/updateTourneyEliminatoriesB";
 
@@ -62,13 +64,13 @@ export class TourneyService extends AbstractService {
     playoffsCombobox: Combobox[];
 
     selectedTourney : Tourney;
+    eliminatoryTabName: string;
 
     selectedRound : Round;
     selectedPlayoff : Playoff;
     selectedPlayout : Playoff;
     selectedEliminatory : Eliminatory;
     selectedEliminatoryLevel: EliminatoryLevel;
-    selectedEliminatoryBLevel: EliminatoryLevel;
 
     newTourney : boolean = false;
     newRound : boolean = false;
@@ -101,11 +103,13 @@ export class TourneyService extends AbstractService {
 
     static roundCols: TableCols[] = [
         { field: 'name',        header: 'Gironi' },
+        { field: 'teamNo',      header: 'N° Squadre' },
         { field: 'teamNames',   header: 'Squadre' },
     ];
 
     static playoffCols: TableCols[] = [
         { field: 'playoffName', header: 'Playoff' },
+        { field: 'teamNo',      header: 'N° Squadre' },
         { field: 'teamNames',   header: 'Squadre' },
     ];
     redirect: string;
@@ -435,7 +439,7 @@ export class TourneyService extends AbstractService {
         this.onewayPlayoffMap = new Map<string, Meeting[]>();
         this.roundtripPlayoffMap = new Map<string, Meeting[]>();
  
-        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, t.playoffVO, true, this.clientService.selectedClient);
 
         this.onSaveTourneyError = false;
 
@@ -447,7 +451,7 @@ export class TourneyService extends AbstractService {
         );
 
         if(!this.onSaveTourneyError) {
-            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t, complete ) );
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t.playoffVO, complete ) );
         }
     }
 
@@ -461,40 +465,61 @@ export class TourneyService extends AbstractService {
      * @param t the tourney to save 
      * @param complete the callback method do invoke when the save will finish
      */
-    public updateTourneyAndPlayoffs(t: Tourney, complete: () => void ) : void
-    {
+    public updateTourneyAndPlayoffs(t: Tourney, complete: () => void ) : void {
         this.onewayPlayoffMap = new Map<string, Meeting[]>();
         this.roundtripPlayoffMap = new Map<string, Meeting[]>();
- 
-        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, this.clientService.selectedClient);
-
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, t.playoffVO, true, this.clientService.selectedClient);
         this.onSaveTourneyError = false;
-
         let url = updateTourneyPlayoffsUrl;
         console.log("Invoking put method on URL: [" + url + "]");
         let subscriber: Observable<TourneyVO> = this.http.put(url, tvo, httpOptions).pipe(
             tap(x => this.log('updated TourneyDb url=' + url)),
             catchError(this.saveTourneyErrorHandler())
         );
-
         if(!this.onSaveTourneyError) {
-            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t, complete ) );
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t.playoffVO, complete ) );
         }
     }
 
-    private  preparePlayoffTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
+    public updateTourneyAndPlayouts(t: Tourney, complete: () => void ) : void {
+        this.onewayPlayoffMap = new Map<string, Meeting[]>();
+        this.roundtripPlayoffMap = new Map<string, Meeting[]>();
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, t.playoutVO, false, this.clientService.selectedClient);
+        this.onSaveTourneyError = false;
+        let url = updateTourneyPlayoutsUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+        if(!this.onSaveTourneyError) {
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t.playoutVO, complete ) );
+        }
+    }
+
+    private  preparePlayoffTourneyVO(t: Tourney, po: PlayoffVO, isPlayoff: boolean, c: ClientVO): TourneyVO {
         let playoffsMeetings : MeetingDb [] = [];
-        for (let p of t.playoffVO.playoffs) {
+        for (let p of po.playoffs) {
             for (let m of p.round.onewayMeetings) {
-                let mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                let mdb = null;
+                if(isPlayoff) {
+                    mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                } else {
+                    mdb = this.meetingService.preparePlayoutMeetingDb(m, this.selectedTourney.id, p.id);
+                }
                 playoffsMeetings.push(mdb);
             }
             for (let m of p.round.roundtripMeetings) {
-                let mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                let mdb = null;
+                if(isPlayoff) {
+                    mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                } else {
+                    mdb = this.meetingService.preparePlayoutMeetingDb(m, this.selectedTourney.id, p.id);
+                }
                 playoffsMeetings.push(mdb);
             }
         }
-        for (let p of t.playoffVO.playoffs) {
+        for (let p of po.playoffs) {
             this.onewayPlayoffMap.set(p.playoffName, p.round.onewayMeetings);
             p.round.onewayMeetings = [];            
             this.roundtripPlayoffMap.set(p.playoffName, p.round.roundtripMeetings);
@@ -518,9 +543,9 @@ export class TourneyService extends AbstractService {
      * @param t the tourney the meetings to restore 
      * @param complete the callback to call whene the restore will finish
      */
-    private restoreOnComplete(t: Tourney, complete: () => void): void {
+    private restoreOnComplete(po: PlayoffVO, complete: () => void): void {
 
-        for (let p of t.playoffVO.playoffs) {
+        for (let p of po.playoffs) {
             p.round.onewayMeetings = this.onewayPlayoffMap.get(p.playoffName);            
             p.round.roundtripMeetings = this.roundtripPlayoffMap.get(p.playoffName);
         }
@@ -797,7 +822,7 @@ export class TourneyService extends AbstractService {
     /**
      *   Prepares the classification rows for Round, Playoff  and Eliminatoryformat  
      */
-     prepareRoundsGui(rounds: Round[]): any[] {
+     prepareRoundsGui(maxMatchesPerMeeting : number, rounds: Round[]): any[] {
 
         let row : number = 0;
         let rows: any[] = [];
@@ -810,11 +835,12 @@ export class TourneyService extends AbstractService {
 
                 rows.push(c);
 
+                let played = c.played / maxMatchesPerMeeting;
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.teamName;    
                 rows[row].points = c.points < 0 ? 0 : c.points;    
-                rows[row].played = c.played;    
+                rows[row].played = c.played + " (" + played + "x" + maxMatchesPerMeeting + ")";    
                 rows[row].won = c.won;    
                 rows[row].lost = c.lost;    
                 rows[row].balanced = c.balanced;    
@@ -930,9 +956,28 @@ export class TourneyService extends AbstractService {
         return t;
     }
 
+    public cleanPlayoutMeeting(t:  Tourney): Tourney {
+        for(let p of t.playoutVO.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        return t;
+    }
+    
     public cleanEliminatoryMeeting(t: Tourney): Tourney{
-        let copy = this.cloneObject(t);
-        for(let el of copy.eliminatoryLevels) {
+        // let copy = this.cloneObject(t);
+        for(let el of t.eliminatoryLevels) {
+            for( let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        return t;
+    }
+
+    public cleanEliminatoryBMeeting(t: Tourney): Tourney{
+        // let copy = this.cloneObject(t);
+        for(let el of t.eliminatoryBLevels) {
             for( let e of el.eliminatories) {
                 e.round.onewayMeetings = [];
                 e.round.roundtripMeetings = [];

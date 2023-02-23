@@ -1,9 +1,7 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Regole Eliminazioni Dirette</span>
-
-        <h2><span>Torneo: {{selectedTourney.tourneyName}}</span></h2>
-        <h3><span>Livello: {{tourneyService.selectedEliminatoryLevel.name}}</span></h3>
+        <span class="feature-title">{{tourneyService.eliminatoryTabName}}</span>        
+        <h3><span>{{tourneyService.selectedEliminatoryLevel.name}} {{selectedTourney.tourneyName}}</span></h3>
         <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>        
     </div>
 </div>

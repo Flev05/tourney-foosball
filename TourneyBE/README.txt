@@ -29,17 +29,17 @@ ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
 ###################### End    Versione PRIME NG 15 ##################################
 
 
-Copiare a manaina la cartella WEB-INF da %WEB_INF_SRC_DIR% a %WEB_CONTENT_DIR%\WEB-INF 
+Copiare a manina la cartella WEB-INF da %WEB_INF_SRC_DIR% a %WEB_CONTENT_DIR%\WEB-INF 
 
 2) Per la produzione lanciare il contenuto dello script:
 TourneyBE/deploy/build-project-prod.cmd 
 come descritto sopra
 
-3) Per produrre il .war di produzione, spostarsi sotto TourneyBE e lanciare maven:
+3) Per produrre il .war di produzione, spostarsi sotto TourneyBE e lanciare lo script:
 
-mvn clean install
+mvn8.cmd
 
-che produrrà il file TourneyBE.war sotto target
+che imposta la JVM 8, lancia mnv clean install e produrrà il file TourneyBE.war sotto target
 
 Connettersi in SSH con PUTTY al server www.erebus-soft.com
 aprire le porte 8280 e 9990 in modo che il PC veda l'Application Server WildFly installato sul server

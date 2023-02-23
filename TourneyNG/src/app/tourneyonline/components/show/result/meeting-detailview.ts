@@ -46,6 +46,10 @@ export class MeetingDetailView extends AbstractDetailView {
     teamName1CB: Combobox;
     teamName2CB: Combobox;
     teams4RoundCombobox: Combobox[]; 
+    totalScore1: number;
+    totalScore2: number;
+    qualifyingRounds: Round[];
+    roundsNotTerminated: boolean = false;
 
     constructor(
         protected location: Location,
@@ -63,16 +67,18 @@ export class MeetingDetailView extends AbstractDetailView {
     ngOnInit() {
         super.ngOnInit();
 
-        this.selectedMeetingDb  = this.meetingService.selectedMeetingDb;   
+        this.selectedMeetingDb = this.meetingService.selectedMeetingDb;   
         this.selectedMeeting = this.meetingService.selectedMeeting;   
         this.selectedMeeting.datetime = new Date(this.selectedMeeting.datetime);
 
         this.abstractRoundVO = this.meetingService.abstractRoundVO;
         this.selectedRound = this.meetingService.selectedRound;
+        this.qualifyingRounds = this.meetingService.qualifyingRounds;
         this.roundName = this.selectedRound.name;
         this.selectedDirection = this.selectedRound.direction;
         this.meetingService.goBackFromMeeting = true;
         this.meetingLabel = this.meetingService.selectedRound.label;
+        this.roundsNotTerminated = false;
 
         this.allDaysNo = this.meetingService.allDaysNo;
         if( this.selectedRound.direction == Direction.OneWay) {
@@ -106,6 +112,7 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
         this.matches = this.selectedMeeting.matches;
+        this.computeTotals();
 
         this.teams4RoundCombobox = [];
         for( let tn of this.selectedRound.teamNames) {
@@ -134,6 +141,15 @@ export class MeetingDetailView extends AbstractDetailView {
                 this.teamName2CB.value = t.id;
                 break;
             }
+        }
+    }
+
+    private computeTotals() {
+        this.totalScore1 = 0;
+        this.totalScore2 = 0;
+        for (let m of this.matches) {
+            this.totalScore1 += m.score1;
+            this.totalScore2 += m.score2;
         }
     }
 
@@ -208,6 +224,21 @@ export class MeetingDetailView extends AbstractDetailView {
         this.save(false);
     }
 
+    upper1(m: Match): void {
+        this.selectedMeeting.status = MeetingStatus.InProgress;
+        let ii = m.id;
+        this.matches[ii].status = MeetingStatus.InProgress;
+        if(this.matches[ii].score1 >= this.abstractRoundVO.pointsNeededToWin ) {
+            return;
+        }
+        if(this.matches[ii].score2 >= this.abstractRoundVO.pointsNeededToWin  ) {
+            this.matches[ii].score1 = this.abstractRoundVO.pointsNeededToWin - 1;
+        } else {
+            this.matches[ii].score1 = this.abstractRoundVO.pointsNeededToWin;
+        }
+        this.save(false);
+    }
+
     minus1(m: Match) {
         let ii = m.id;
         this.matches[ii].score1--;
@@ -232,6 +263,21 @@ export class MeetingDetailView extends AbstractDetailView {
         this.save(false);
     }
 
+    upper2(m: Match): void {
+        this.selectedMeeting.status = MeetingStatus.InProgress;
+        let ii = m.id;
+        this.matches[ii].status = MeetingStatus.InProgress;
+        if(this.matches[ii].score2 >= this.abstractRoundVO.pointsNeededToWin ) {
+            return;
+        }
+        if(this.matches[ii].score1 >= this.abstractRoundVO.pointsNeededToWin ) {
+            this.matches[ii].score2 = this.abstractRoundVO.pointsNeededToWin - 1;
+        } else {
+            this.matches[ii].score2 = this.abstractRoundVO.pointsNeededToWin;
+        }
+        this.save(false);
+    }
+
     minus2(m: Match): void {
         let ii = m.id;
         this.matches[ii].status = MeetingStatus.InProgress;
@@ -248,6 +294,7 @@ export class MeetingDetailView extends AbstractDetailView {
         }
 
         this.selectedMeeting.matches = this.matches;
+        this.computeTotals();
         this.selectedMeeting.points1 = 0;
         this.selectedMeeting.points2 = 0;
         let goals1 = 0;
@@ -306,11 +353,18 @@ export class MeetingDetailView extends AbstractDetailView {
             this.tourneyService.cleanPlayoffMeeting(this.selectedTourney);
             observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId, e => this.serverUnreachableHandler(e) );
         }
+        if( this.selectedMeetingDb.playoutId != null ) {
+            this.tourneyService.cleanPlayoutMeeting(this.selectedTourney);
+            observer = this.meetingService.savePlayoutMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoutId, e => this.serverUnreachableHandler(e) );
+        }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
             this.tourneyService.cleanEliminatoryMeeting(this.selectedTourney);
             observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId, e => this.serverUnreachableHandler(e) );
         }
-        this.serverUnreachable = false;
+        if( this.selectedMeetingDb.eliminatoryBId != null ) {
+            this.tourneyService.cleanEliminatoryBMeeting(this.selectedTourney);
+            observer = this.meetingService.saveEliminatoryBMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryBId, e => this.serverUnreachableHandler(e) );
+        }        this.serverUnreachable = false;
         if(observer != null) {            
             observer.subscribe(n => this.nextCallback(n, goback), e => this.serverUnreachableHandler(e) );      
             this.updateTourney();      
@@ -399,6 +453,12 @@ export class MeetingDetailView extends AbstractDetailView {
      */
      onTeam1Change(cb: Combobox) {
         console.log('Entering onTeam1Change(' + cb +")");
+        let terminated = this.meetingService.areAllTerminated(this.qualifyingRounds);
+        this.roundsNotTerminated = false;
+        if( !terminated ) {
+            this.roundsNotTerminated = true;
+            return;
+        }
         for(let t of this.selectedTourney.teams) {
             if(t.teamName == cb.label) {
                 if( this.selectedMeetingDb.eliminatoryId != null ) {
@@ -420,6 +480,12 @@ export class MeetingDetailView extends AbstractDetailView {
     }
     onTeam2Change(cb: Combobox) {
         console.log('Entering onTeam2Change(' + cb +")");
+        let terminated = this.meetingService.areAllTerminated(this.qualifyingRounds);
+        this.roundsNotTerminated = false;
+        if( !terminated ) {
+            this.roundsNotTerminated = true;
+            return;
+        }
         for(let t of this.selectedTourney.teams) {
             if(t.teamName == cb.label) {
                 if( this.selectedMeetingDb.eliminatoryId != null ) {

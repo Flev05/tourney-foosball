@@ -16,6 +16,7 @@ export interface Round {
     roundtripCurrentDay: number;
 
     teamNames: string[];
+    teamNo?: string;
 
     onewayMeetings?: Meeting[];
     roundtripMeetings?: Meeting[];

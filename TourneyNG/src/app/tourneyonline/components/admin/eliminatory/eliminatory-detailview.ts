@@ -196,8 +196,13 @@ export class EliminatoryDetailView extends AbstractDetailView {
         this.m1.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
         this.m1.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
-        let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
-        observer.subscribe( n => this.saveMeetingNext(n, this.m1));
+        if( this.tourneyService.selectedEliminatoryLevelIndex != null ) {
+            let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
+            observer.subscribe( n => this.saveMeetingNext(n, this.m1));
+        } else {
+            let observer = this.meetingService.saveEliminatoryBMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
+            observer.subscribe( n => this.saveMeetingNext(n, this.m1));            
+        }
 
         this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
         this.m2.datetime = this.eliminatoryFormGroup.get('meetingDate2').value;
@@ -210,9 +215,13 @@ export class EliminatoryDetailView extends AbstractDetailView {
         this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
         this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
-        observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
-        observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
-
+        if( this.tourneyService.selectedEliminatoryLevelIndex != null ) {
+            let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
+            observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
+        } else {
+            let observer = this.meetingService.saveEliminatoryBMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
+            observer.subscribe( n => this.saveMeetingNext(n, this.m2));    
+        }
         return true;
     }
 

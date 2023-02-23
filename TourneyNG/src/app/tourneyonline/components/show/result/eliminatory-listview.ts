@@ -33,14 +33,24 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     ngOnInit() {
         super.ngOnInit();
         this.meetingService.abstractRoundVO = this.tourneyService.selectedEliminatoryLevel.abstractRoundVO;
+        this.levelService.selectedTourney = this.selectedTourney;
         this.isOneway = this.meetingService.abstractRoundVO.direction == Direction.OneWay ? "true" : "false";
         this.isRoundTrip = this.isOneway == "true" ? false : true;
-
-        this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete(), e => this.serverUnreachableHandler(e));
+        if(this.tourneyService.selectedEliminatoryLevelIndex==-1) {
+            this.levelService.loadAllEliminatoryBMeetingByIdList(this.selectedTourney.eliminatoryBLevels, () => this.onEliminatoryBLoadComplete(), e => this.serverUnreachableHandler(e));
+        } else {
+            this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete(), e => this.serverUnreachableHandler(e));
+        }
     }
 
     private onEliminatoryLoadComplete(): void {
         super.onLoadComplete(this.selectedTourney.eliminatoryLevels, this.tourneyService.selectedEliminatoryLevelIndex);
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+        this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
+    }
+    
+    private onEliminatoryBLoadComplete(): void {
+        super.onLoadComplete(this.selectedTourney.eliminatoryBLevels, this.tourneyService.selectedEliminatoryBLevelIndex);
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
     }

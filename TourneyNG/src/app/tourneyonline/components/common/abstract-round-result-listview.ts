@@ -76,7 +76,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.isRoundTrip = true;
 
         this.meetingService.goBackFromMeeting = false;
-        this.onCompleteLoad();
+        this.onCompleteLoad(this.selectedTourney.roundVO.maxMatchesPerMeeting);
     }
 
     onChangeTab(e) {
@@ -88,7 +88,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
     }
 
-    private onCompleteLoad(): void {
+    private onCompleteLoad(maxMatchesPerMeeting:number): void {
         this.mdbList = this.meetingRoundService.mdbList;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound, false);
@@ -116,7 +116,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
         this.meetingService.allDaysNo = this.allDaysNo;
 
-        this.prepareRoundGuiClassification();
+        this.prepareRoundGuiClassification( maxMatchesPerMeeting);
     }
 
     protected setOnewayCurrentDay(key: number) {
@@ -157,11 +157,11 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     /**
      * Prepares the classification relatid to the selected round
      */
-    private prepareRoundGuiClassification(): void {
+    private prepareRoundGuiClassification(maxMatchesPerMeeting: number): void {
         let allMeetings = this.selectedRound.onewayMeetings.concat(this.selectedRound.roundtripMeetings);
         this.selectedRound.classification = this.tourneyService.createClassification(this.selectedRound, allMeetings);
 
-        this.classificationRows = this.tourneyService.prepareRoundsGui([this.selectedRound]);
+        this.classificationRows = this.tourneyService.prepareRoundsGui(maxMatchesPerMeeting, [this.selectedRound]);
     }
   
     onRowSelect(event) {
@@ -182,7 +182,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
             currentDay =  this.selectedRound.daysNo + this.selectedRound.roundtripCurrentDay;
         }
         this.meetingService.selectedRound.label = this.tourneyService.selectedRound.name + " - " + currentDay + "/" + this.allDaysNo;
-
         this.gotoDetailView();
     }
     

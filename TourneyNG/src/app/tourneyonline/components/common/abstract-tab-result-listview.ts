@@ -41,8 +41,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
     eliminatoryLevelCols: TableCols[];
     eliminatoryLevelRows: EliminatoryLevelVO[];
     eliminatoryBLevelRows: EliminatoryLevelVO[];
-    selctedEliminatoryLevel: EliminatoryLevelVO;
-    selctedEliminatoryBLevel: EliminatoryLevelVO;
+    selectedEliminatoryLevel: EliminatoryLevelVO;
+    selectedEliminatoryBLevel: EliminatoryLevelVO;
 
     constructor(
         protected redirect: string,
@@ -70,17 +70,19 @@ export abstract class AbstractTabResultListView extends AbstractListView {
 
         this.roundCount = 0;
         if(super.containsRound()) {
-            this.roundRows = this.selectedTourney.roundVO.rounds;
-            this.roundCount = this.roundRows.length;
-
+            
             let roundIds: number[] = [];
             for(let round of this.selectedTourney.roundVO.rounds) {
                 roundIds.push(round.id);
+                round.teamNo = "" + round.teamNames.length;
             }
+            this.roundRows = this.selectedTourney.roundVO.rounds;
+            this.roundCount = this.roundRows.length;
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
             subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );            
         } else {
             this.prepareEliminatoryLevels();
+            this.prepareEliminatoryBLevels();
         }
     }
     
@@ -108,6 +110,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                     p.teamNames += tn + ", ";
                 }
                 p.teamNames = p.teamNames.substring(0, p.teamNames.length-1);
+                p.teamNo = "" + p.round.teamNames.length;
             }
 
             const subsbr = this.meetingPlayoffService.loadPlayoffMeetings(this.selectedTourney.id, playoffIds, e => this.serverUnreachableHandler(e));
@@ -124,9 +127,10 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                         if( tn == MeetingService.SKIPING_TEAM) {
                             continue;
                         }
-                        p.teamNames += tn;
+                        p.teamNames += tn + ", ";
                     }
                     p.teamNames = p.teamNames.substring(0, p.teamNames.length-1);
+                    p.teamNo = "" + p.round.teamNames.length;
                 }
                 const subsbr = this.meetingPlayoffService.loadPlayoutMeetings(this.selectedTourney.id, playoutIds, e => this.serverUnreachableHandler(e));
                 subsbr.subscribe(t => this.onPlayoutCompleteLoad(t), e => this.onError(e));
@@ -146,6 +150,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels);
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
+        this.eliminatoryCount = this.levelService.eliminatoryLevelRows.length;
     }
 
     private prepareEliminatoryBLevels() {
@@ -156,6 +161,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
         this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels);
         this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
+        this.eliminatoryBCount = this.levelService.eliminatoryBLevelRows.length;
     }
 
     private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
@@ -175,6 +181,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             playoff.round.classification = this.tourneyService.createClassification(playoff.round, allMeetings);
         }
         this.prepareEliminatoryLevels();
+        this.prepareEliminatoryBLevels();
     }
 
     private onPlayoutCompleteLoad(mdbList: MeetingDb[]) {

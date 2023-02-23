@@ -69,16 +69,15 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         super.ngOnInit();
 
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
-        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        if(this.tourneyService.selectedPlayoff != null) {
+            this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        } else {
+            this.selectedPlayoff = this.tourneyService.selectedPlayout;
+        }
      
         this.classificationCols = this.tourneyService.classificationCols;
         this.cols = this.tourneyService.resultCols;
         this.playoffTeams = TeamService.getTeamsByNames(this.selectedTourney, this.selectedPlayoff.round.teamNames);
-
-        let playoffIds: number[] = [];
-        for(let p of this.selectedTourney.playoffVO.playoffs) {
-            playoffIds.push(p.id);
-        }
         
         this.meetingService.goBackFromMeeting = false;
         this.onPlayoffCompleteLoad();
@@ -171,7 +170,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         let allMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.selectedPlayoff.round.roundtripMeetings);
         allMeetings.forEach( m => m.containerId = playoff.id);
         this.selectedPlayoff.round.classification = this.tourneyService.createClassification(playoff.round, allMeetings);
-        this.playoffClassification = this.tourneyService.prepareRoundsGui([playoff.round]);
+        this.playoffClassification = this.tourneyService.prepareRoundsGui(this.selectedTourney.playoffVO.maxMatchesPerMeeting, [playoff.round]);
     }
 
     onChangeTab(e) {
@@ -192,7 +191,6 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingPlayoffService.selectedMeeting = this.selectedRow;
         this.meetingService.selectedMeeting = this.selectedRow;
         this.meetingService = this.meetingPlayoffService;
-        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         
         this.meetingService.abstractRoundVO = this.selectedTourney.playoffVO;
 

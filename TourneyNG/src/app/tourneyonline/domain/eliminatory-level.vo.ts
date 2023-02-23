@@ -5,4 +5,5 @@ export class EliminatoryLevelVO  {
     rowNumber: number;
     level: number;
     name: string;
+    teams: string;
 }

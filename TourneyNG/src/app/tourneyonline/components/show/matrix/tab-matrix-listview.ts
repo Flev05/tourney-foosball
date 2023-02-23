@@ -80,10 +80,10 @@ export class TabMatrixListView extends AbstractTabResultListView {
           , tourneyId: this.selectedTourney.id
           , roundId: null
           , playoffId: null
-          , eliminatoryId: this.selctedEliminatoryLevel.eliminatoryLevel.id
+          , eliminatoryId: this.selectedEliminatoryLevel.eliminatoryLevel.id
         };     
  
-        let indexOf = this.eliminatoryLevelRows.indexOf( this.selctedEliminatoryLevel );
+        let indexOf = this.eliminatoryLevelRows.indexOf( this.selectedEliminatoryLevel );
         this.tourneyService.selectedEliminatoryLevelIndex  = indexOf;
 
         this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[indexOf];

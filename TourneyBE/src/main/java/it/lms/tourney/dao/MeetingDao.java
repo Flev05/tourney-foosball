@@ -376,22 +376,22 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
 		int deletedCount = query.executeUpdate();
 
-		log.debug(logId() + "[Deleted " + deletedCount + " Meeting(s) where tourneyId=" + tourneyId + " and roundId="
-				+ roundId + "]");
+		log.debug(logId() + "[Deleted " + deletedCount + " Round Meeting(s) where tourneyId=" + tourneyId
+				+ " and roundId=" + roundId + "]");
 	}
 
 	public void deletePlayoffMeetingsByTourneyId(Integer tourneyId) {
 		Query query = getEm()
 				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoffId is not null");
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+		log.debug(logId() + "Deleted " + deletedCount + " Playoff Meeting(s)");
 	}
 
 	public void deletePlayoutMeetingsByTourneyId(Integer tourneyId) {
 		Query query = getEm()
 				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoutId is not null");
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+		log.debug(logId() + "Deleted " + deletedCount + " Playout Meeting(s)");
 	}
 
 	public void deleteEliminatoryMeetingsByTourneyId(Integer tourneyId) {
@@ -401,7 +401,7 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+		log.debug(logId() + "Deleted " + deletedCount + " Eliminatory Meeting(s)");
 	}
 
 	public void deleteEliminatoryBMeetingsByTourneyId(Integer tourneyId) {
@@ -411,6 +411,6 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 
-		log.debug(logId() + "Deleted " + deletedCount + " Meeting(s)");
+		log.debug(logId() + "Deleted " + deletedCount + " Eliminatory-B Meeting(s)");
 	}
 }

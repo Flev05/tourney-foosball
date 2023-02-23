@@ -97,6 +97,7 @@ export class MeetingRoundService extends MeetingService {
             this.cleanPlayoffMeetings(cleanRounds);
         }
     }
+
     public cleanPlayoffMeetings(cleanPlayoffs: boolean) {
         for (let p of this.selectedTourney.playoffVO.playoffs) {
             p.round.onewayMeetings = [];
@@ -104,15 +105,33 @@ export class MeetingRoundService extends MeetingService {
         }
         if (cleanPlayoffs) {
             this.selectedTourney.playoffVO.playoffs = [];
-            
+        }
+        if(this.containsPlayout()) {
+            this.cleanPlayoutMeetings(cleanPlayoffs);
         }
         if(this.containsEliminatory()) {
             this.cleanEliminatoryMeetings(cleanPlayoffs);
+            if(this.containsEliminatoryB()) {
+                this.cleanEliminatoryBMeetings(cleanPlayoffs);
+            }
+        }
+    }
+     
+    public cleanPlayoutMeetings(cleanPlayoffs: boolean) {
+        for (let p of this.selectedTourney.playoutVO.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        if (cleanPlayoffs) {
+            this.selectedTourney.playoutVO.playoffs = [];
         }
     }
      
     containsPlayoff(): boolean {
         return this.containsPhase(PhaseType.P, this.selectedTourney.phases);
+    }
+    containsPlayout(): boolean {
+        return this.containsPhase(PhaseType.O, this.selectedTourney.phases);
     }
 
     containsEliminatory(): boolean {

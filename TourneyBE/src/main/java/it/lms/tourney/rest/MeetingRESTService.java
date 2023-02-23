@@ -92,7 +92,7 @@ public class MeetingRESTService extends AbstractRESTService {
 	}
 
 	@GET
-	@Path("/loadByPlayoutId/{tourneyId:[0-9][0-9]*}/{playoffId:[0-9][0-9]*}")
+	@Path("/loadByPlayoutId/{tourneyId:[0-9][0-9]*}/{playoutId:[0-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MeetingVO> loadByPlayoutId(@PathParam("tourneyId") Integer tourneyId,
 			@PathParam("playoutId") Integer playoutId) {
@@ -110,6 +110,9 @@ public class MeetingRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MeetingVO> loadByPlayoffIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
 		log.debug(logId() + "[GET: loadByPlayoffIds(" + tourneyId + ")]");
+		if (playoffs.isEmpty()) {
+			return new ArrayList<>();
+		}
 		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoffIds(tourneyId, playoffs);
 		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
 				.collect(Collectors.toList());
@@ -121,12 +124,12 @@ public class MeetingRESTService extends AbstractRESTService {
 	@POST
 	@Path("/loadByPlayoutIds/{tourneyId:[0-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<MeetingVO> loadByPlayoutIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playoffs) {
-		if (playoffs.isEmpty()) {
+	public List<MeetingVO> loadByPlayoutIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> playouts) {
+		log.debug(logId() + "[GET: loadByPlayoutIds(" + tourneyId + ")]");
+		if (playouts.isEmpty()) {
 			return new ArrayList<>();
 		}
-		log.debug(logId() + "[GET: loadByPlayoutIds(" + tourneyId + ")]");
-		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoutIds(tourneyId, playoffs);
+		List<Meeting> meetingList = meetingDao.findMeetingsByPlayoutIds(tourneyId, playouts);
 		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
 				.collect(Collectors.toList());
 		log.debug(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", playoutId "

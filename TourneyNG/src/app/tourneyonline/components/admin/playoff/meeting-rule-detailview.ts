@@ -39,8 +39,12 @@ export class MeetingRuleDetailView extends AbstractDetailView {
         super.ngOnInit();
         
         this.selectedTourney = this.tourneyService.selectedTourney;
-
-        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        if(this.tourneyService.selectedPlayoff != null ) {
+            this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        } else {
+            this.selectedPlayoff = this.tourneyService.selectedPlayout;
+        }
+        
         this.selectedMeeting = this.meetingPlayoffService.selectedMeeting;
 
         this.selectedMeeting.datetime = new Date(this.selectedMeeting.datetime);
@@ -64,7 +68,12 @@ export class MeetingRuleDetailView extends AbstractDetailView {
             }
         }
  
-        let observer = this.meetingPlayoffService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id, this.saveMeetingErrorHandler());
+        let observer = null;
+        if(this.tourneyService.selectedPlayoff != null ) {
+            observer = this.meetingPlayoffService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id, this.saveMeetingErrorHandler());
+        } else {
+            observer = this.meetingPlayoffService.savePlayoutMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedPlayoff.id, this.saveMeetingErrorHandler());
+        }
         observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
     }
 

@@ -339,6 +339,21 @@ public class TourneyRESTService extends AbstractRESTService {
 	}
 
 	/**
+	 * Updates the received tourney after deleting all playoff meetings related to the tourney and inserting the list of
+	 * meetings received in the tourney
+	 */
+	@PUT
+	@Path("/updateTourneyPlayouts")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateTourneyPlayouts(TourneyVO tvo) {
+
+		log.debug(logId() + "PUT: updateTourneyPlayouts(" + tvo + ")");
+
+		return updateTourney(tvo, EMeetingUpdate.PLAYOUT);
+	}
+
+	/**
 	 * Updates the received tourney found in the database. Performs validation, deletes the meetings related to the
 	 * Rounds, and will return a JAX-RS response with either 200 ok, or with a map of fields, and related errors.
 	 */

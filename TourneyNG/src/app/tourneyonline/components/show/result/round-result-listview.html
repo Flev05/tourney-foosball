@@ -34,7 +34,7 @@
                         <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}} ({{onewayCurrentDay}}/{{allDaysNo}})</div>
+                        <div>{{selectedRound.name}} {{onewayCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
@@ -49,7 +49,7 @@
                     </td>
                     <td class="centralPoints">
                         <div>
-                            <span>{{rowData['datetime'] | date: 'dd/MM/y HH:mm'}}</span>
+                            <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
                         </div>
                         <div>
                             <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
@@ -82,7 +82,7 @@
                         <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})</div>
+                        <div>{{selectedRound.name}} {{roundtripCurrentDay}}/{{roundDaysNo}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>
@@ -96,7 +96,7 @@
                     </td>
                     <td class="centralPoints">
                         <div>
-                            <span>{{rowData['datetime'] | date: 'dd/MM/y HH:mm'}}</span>
+                            <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
                         </div>
                         <div>
                             <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        

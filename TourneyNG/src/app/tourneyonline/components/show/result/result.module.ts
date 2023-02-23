@@ -34,7 +34,6 @@ import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-
 import { TabResultListView } from './tab-result-listview';
 import { PlayoffResultListView } from './playoff-result-listview';
 import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
-import { EliminatoryBListView } from './eliminatory-b-listview';
 
 @NgModule({
 	imports: [
@@ -69,7 +68,6 @@ import { EliminatoryBListView } from './eliminatory-b-listview';
 		 ResultTourneyListView
         ,RoundResultListView
         ,EliminatoryListView
-        ,EliminatoryBListView
         ,MeetingDetailView
         ,TabResultListView
         ,PlayoffResultListView

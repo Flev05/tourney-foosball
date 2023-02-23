@@ -7,4 +7,5 @@ export class Playoff  {
     playoffRules: PlayoffRule[];
     playoffName?: string;
     teamNames?: string;
+    teamNo?: string;
 }

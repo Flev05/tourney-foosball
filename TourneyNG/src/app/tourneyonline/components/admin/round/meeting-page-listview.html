@@ -58,7 +58,7 @@
             <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
                     <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                    <td>{{rowData.datetime | date: 'dd/MM/y HH:mm'}}</td>
+                    <td>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</td>
                     <td>{{rowData.teamName1}}</td>
                     <td>{{rowData.teamName2}}</td>
                 </tr>
@@ -93,7 +93,7 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
                     <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                    <td>{{rowData.datetime | date: 'dd/MM/y HH:mm'}}</td>
+                    <td>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</td>
                     <td>{{rowData.teamName1}}</td>
                     <td>{{rowData.teamName2}}</td>
                 </tr>

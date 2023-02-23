@@ -40,7 +40,11 @@ export class RuleDetailView extends AbstractDetailView {
         this.positions = this.tourneyService.positionsCombobox;
         this.rounds = this.tourneyService.roundsCombobox;
 
-        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        if(this.tourneyService.selectedPlayoff != null ) {
+            this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        } else {
+            this.selectedPlayoff = this.tourneyService.selectedPlayout;
+        }
         this.playoffRules = this.selectedPlayoff.playoffRules;
 
         if(this.tourneyService.newRule) {

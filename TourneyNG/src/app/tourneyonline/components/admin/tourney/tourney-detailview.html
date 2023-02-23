@@ -1144,15 +1144,26 @@
                     Scegliere se, per ciascun girone di play off, ci sono i turni di solo andata o di andata e ritorno.
                 </p>
                 <p>
+                    Scegliere la modalità di generazione deo playoff: Automatico o Manuale.
+                </p>
+                <p>
                     Scegliere, dalla combo box Gironi, il numero di gironi di playoff che si intende impostare per il torneo.
                 </p>
                 <p>
-                    Scegliere, dalla combo box Squadre, il numero totale di squadre che passerà il turno dai gironi ai playoff.
+                    Scegliere, dalla combo box Squadre, il numero di squadre per ciascun girone di playoff.
                 </p>
                 <p>
-                    In funzione di queste 2 scelte il sistema propone una compilazione d'ufficio delle regole di 
+                    In funzione di queste scelte il sistema propone una compilazione d'ufficio delle regole di 
                     passaggio del turno dai gironi all'italiana ai playoff.
-                    Potete modificare il contenuto del girone modificando le regole presenti.
+                </p>
+                <p>
+                    Scegliere la modalità di generazione dei play off in Automatico o Manuale ha senso soprattutto nel caso 
+                    di molti gironi di provenienza e più di un girone di playoff da organizzare, se abbiamo un solo girone di play off, 
+                    non vi è alcuna differenza tra Manuale e Automatico dato che tutti giocano contro tutti. Se si hanno almeno 2
+                    gironi di play off, allora in Automatico il programma piazza le squadre
+                    nei gironi di playoff tenendo conto della classifica globale dei gironi precedenti con la regola 
+                    delle migliori, migliori seconde, ecc.
+                    In Manuale significa che potete modificare le regole di provenienza proposte dal programma.
                 </p>
             </p-accordionTab>
         </p-accordion>        
@@ -1632,7 +1643,7 @@
         </div>
     </p-tabPanel>
 
-    <p-tabPanel header="{{selectedTourney.eliminatoryTabName==null?'Eliminazioni Dirette':selectedTourney.eliminatoryTabName}}" *ngIf="containsEliminatory()">  
+    <p-tabPanel header="{{selectedTourney.eliminatoryTabName}}" *ngIf="containsEliminatory()">  
         <p-accordion>
             <p-accordionTab header="Istruzioni">                                
             <p> 
@@ -1861,7 +1872,7 @@
         </div>
     </p-tabPanel>   
 
-    <p-tabPanel header="{{selectedTourney.eliminatoryBTabName==null?'Eliminazioni Dirette B':selectedTourney.eliminatoryBTabName}}" *ngIf="containsEliminatoryB()">  
+    <p-tabPanel header="{{selectedTourney.eliminatoryBTabName}}" *ngIf="containsEliminatoryB()">  
         <p-accordion>
             <p-accordionTab header="Istruzioni">                                
                 <p> 

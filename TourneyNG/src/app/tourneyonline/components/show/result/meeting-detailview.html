@@ -28,6 +28,11 @@
     </ng-template>
 </p-table>
 
+<div *ngIf="roundsNotTerminated" style="margin-top:30px">
+    <p-message severity="error" text="Attenzione! I gironi precedenti non sono ancora terminati. Spostare le squadre solo quando tutte le partite saranno terminate.">
+    </p-message>
+</div>   
+
 <div *ngIf="isAtLeastAdmin()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <p-fieldset legend="Incontro/Calendario">
         <div class="ui-grid-row">
@@ -120,7 +125,7 @@
     <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>
-                <th colspan="5" style="text-align: center"><span>{{meetingLabel}} ({{selectedMeeting.datetime | date: 'dd/MM/y'}})</span></th>
+                <th colspan="5" style="text-align: center"><span>{{meetingLabel}} ({{selectedMeeting.datetime | date: 'EEE dd/MM/y'}})</span></th>
             </tr>
             <tr>
                 <th colspan="1" style="width: 100%; font-size: large;">P°</th>
@@ -131,44 +136,74 @@
 
         <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
             <tr>
-                <td style="font-size: 200%; font-weight: bold;text-align: center;">
+                <td style="font-size: 150%; font-weight: bold;text-align: center;">
                     {{rowIndex+1}}°
                 </td>
                 <td style="width: 10mm; text-align: center;">
                     <table>
                         <tr>
                             <td>
-                                <button pButton type="button" icon="fa fa-plus"  (click)="plus1(rowData)" [disabled]="disableButton()"></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button pButton type="button" icon="fa fa-minus" (click)="minus1(rowData)" [disabled]="disableButton()"></button>
+                                <button pButton type="button" icon="pi pi-angle-double-up" 
+                                    (click)="upper1(rowData)" 
+                                    [disabled]="disableButton()"
+                                    pTooltip="Incrementa al numero massimo di goal previsto">
+                                </button>
+                                <button pButton type="button" icon="fa fa-plus" 
+                                    (click)="plus1(rowData)" 
+                                    [disabled]="disableButton()"
+                                    pTooltip="Incrementa di un punto">
+                                </button>
+                                <button pButton type="button" icon="fa fa-minus" 
+                                    (click)="minus1(rowData)" 
+                                    [disabled]="disableButton()"
+                                    pTooltip="Decrementa di un punto">
+                                </button>
                             </td>
                         </tr>
                     </table>
                 </td>
                 <td style="text-align: center;">
-                    <span style="font-size: 500%; font-weight: bold;">{{rowData.score1}}</span>
+                    <span style="font-size: 300%; font-weight: bold;">{{rowData.score1}}</span>
                 </td>
                 <td style="text-align: center;">
-                    <span style="font-size: 500%; font-weight: bold;">{{rowData.score2}}</span>
+                    <span style="font-size: 300%; font-weight: bold;">{{rowData.score2}}</span>
                 </td>    
                 <td style="text-align: center;">
                     <table>
                         <tr>
                             <td>
-                                <button pButton type="button" icon="fa fa fa-plus" (click)="plus2(rowData)" [disabled]="disableButton()"></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button pButton type="button" icon="fa fa-minus"   (click)="minus2(rowData)" [disabled]="disableButton()"></button>
+                                <button pButton type="button" icon="pi pi-angle-double-up" 
+                                    (click)="upper2(rowData)" 
+                                    [disabled]="disableButton()"
+                                    pTooltip="Incrementa al numero massimo di goal previsto">
+                                </button>
+                                <button pButton type="button" icon="fa fa-plus" 
+                                    (click)="plus2(rowData)" 
+                                    [disabled]="disableButton()"
+                                    pTooltip="Incrementa di un punto">
+                                </button>
+                                <button pButton type="button" icon="fa fa-minus" 
+                                    (click)="minus2(rowData)" 
+                                    [disabled]="disableButton()"
+                                    pTooltip="Decrementa di un punto">
+                                </button>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="2" style="text-align: right;font-size: 150%;">Totale</td>
+                <td style="text-align: center;">
+                    <span style="font-size: 300%; font-weight: bold;">{{totalScore1}}</span>
+                </td>
+                <td style="text-align: center;">
+                    <span style="font-size: 300%; font-weight: bold;">{{totalScore2}}</span>
+                </td>
+                <td></td>
+            </tr>
+        </ng-template>        
     </p-table>
 </div>

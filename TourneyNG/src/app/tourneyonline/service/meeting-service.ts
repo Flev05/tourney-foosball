@@ -74,6 +74,7 @@ export  class MeetingService extends AbstractService {
     abstractRoundVO: AbstractRoundVO;
 
     selectedRound: Round;
+    qualifyingRounds: Round[];
     allDaysNo: number;
     mdbList: MeetingDb[];
 
@@ -111,7 +112,7 @@ export  class MeetingService extends AbstractService {
         round.onewayMeetings = [];
         round.roundtripMeetings = [];
         for (let mdb of mdbList) {
-            if(playoff.id != mdb.playoffId) {
+            if(playoff.id != mdb.playoffId && playoff.id != mdb.playoutId) {
                 continue;
             }
             let m: Meeting = JSON.parse(mdb.json);
@@ -309,23 +310,58 @@ export  class MeetingService extends AbstractService {
 
     savePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number, error: (error: any) => any): Observable<MeetingDb> {
         if(m.id == null) {
-            return this.addMeetingDb(m, tourneyId, null, playoffId, null);
+            return this.addPlayoffMeetingDb(m, tourneyId,  playoffId );
         } else {
-            return this.updateMeetingDb(m, tourneyId, null, playoffId, null, error);
+            return this.updatePlayoffMeetingDb(m, tourneyId,   playoffId,  error);
+        }
+    }
+
+    savePlayoutMeetingDb(m: Meeting, tourneyId: number, playoffId: number, error: (error: any) => any): Observable<MeetingDb> {
+        if(m.id == null) {
+            return this.addPlayoutMeetingDb(m, tourneyId,  playoffId );
+        } else {
+            return this.updatePlayoutMeetingDb(m, tourneyId,   playoffId,  error);
         }
     }
 
     saveEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number, error: (error: any) => any): Observable<MeetingDb> {
         if(m.id == null) {
-            return this.addMeetingDb(m, tourneyId, null, null, eliminatoryId);
+            return this.addEliminatoryMeetingDb(m, tourneyId, eliminatoryId);
         } else {
-            return this.updateMeetingDb(m, tourneyId, null, null, eliminatoryId, error);
+            return this.updateEliminatoryMeetingDb(m, tourneyId, eliminatoryId, error);
         }
+    }
+    
+    saveEliminatoryBMeetingDb(m: Meeting, tourneyId: number, eliminatoryBId: number, error: (error: any) => any): Observable<MeetingDb> {
+        if(m.id == null) {
+            return this.addEliminatoryBMeetingDb(m, tourneyId, eliminatoryBId);
+        } else {
+            return this.updateEliminatoryBMeetingDb(m, tourneyId, eliminatoryBId, error);
+        }
+    }
+
+    private addEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number): Observable<MeetingDb> {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, null, null, null, eliminatoryId, null);
+        return this.addMeeting(mdb);
+    }
+
+    private addEliminatoryBMeetingDb(m: Meeting, tourneyId: number, eliminatoryBId: number): Observable<MeetingDb> {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, null, null, null, null, eliminatoryBId);
+        return this.addMeeting(mdb);
     }
 
     private addMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number): Observable<MeetingDb> {
         let mdb: MeetingDb = this.prepareMdb(m, tourneyId, roundId, null, playoffId, eliminatoryId, null);
+        return this.addMeeting(mdb);
+    }
 
+    private addPlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number): Observable<MeetingDb> {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, null, playoffId, null, null, null);
+        return this.addMeeting(mdb);
+    }
+
+    private addPlayoutMeetingDb(m: Meeting, tourneyId: number, playoutId: number): Observable<MeetingDb> {
+        let mdb: MeetingDb = this.prepareMdb(m, tourneyId, null, null, playoutId, null, null);
         return this.addMeeting(mdb);
     }
 
@@ -334,6 +370,9 @@ export  class MeetingService extends AbstractService {
     }
     preparePlayoffMeetingDb(m: Meeting, tourneyId: number, playoffId: number):  MeetingDb {
         return this.prepareMdb(m, tourneyId, null, playoffId, null, null, null);
+    }
+    preparePlayoutMeetingDb(m: Meeting, tourneyId: number, playoutId: number):  MeetingDb {
+        return this.prepareMdb(m, tourneyId, null, null, playoutId, null, null);
     }
     prepareEliminatoryMeetingDb(m: Meeting, tourneyId: number, eliminatoryId: number):  MeetingDb {
         return this.prepareMdb(m, tourneyId, null, null, null, eliminatoryId, null);
@@ -387,7 +426,33 @@ export  class MeetingService extends AbstractService {
         let obs = this.updateMeetingMdb(mdb, error);
         return obs;
     }
+
+    private updateEliminatoryMeetingDb(m: Meeting, tourneyId: number,  eliminatoryId: number
+        , error: (error: any) => any ):  Observable<MeetingDb> {
+        let mdb = this.prepareMdb(m, tourneyId, null, null, null, eliminatoryId, null);
+        let obs = this.updateMeetingMdb(mdb, error);
+        return obs;
+    }
+
+    private updateEliminatoryBMeetingDb(m: Meeting, tourneyId: number,  eliminatoryBId: number
+        , error: (error: any) => any ):  Observable<MeetingDb> {
+        let mdb = this.prepareMdb(m, tourneyId, null, null, null, null, eliminatoryBId);
+        let obs = this.updateMeetingMdb(mdb, error);
+        return obs;
+    }
  
+    private updatePlayoffMeetingDb(m: Meeting, tourneyId: number,  playoffId: number, error: (error: any) => any ):  Observable<MeetingDb> {
+        let mdb = this.prepareMdb(m, tourneyId, 0, playoffId, 0, 0, 0);
+        let obs = this.updateMeetingMdb(mdb, error);
+        return obs;
+    }
+    
+    private updatePlayoutMeetingDb(m: Meeting, tourneyId: number,  playoutId: number, error: (error: any) => any ):  Observable<MeetingDb> {
+        let mdb = this.prepareMdb(m, tourneyId, 0, 0, playoutId, 0, 0);
+        let obs = this.updateMeetingMdb(mdb, error);
+        return obs;
+    }
+    
     /** PUT: update the MeetingDb on the db server */
     updateMeetingMdb (mdb: MeetingDb, error: (error: any) => any): Observable<MeetingDb> {
         let url = updateMeetingUrl;
@@ -639,17 +704,20 @@ export  class MeetingService extends AbstractService {
      * @param rounds the list of the rounds from which take the round names
      */
     public resolveAutomaticRules( m: Meeting, rounds: Round[] ): void {
-        // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
         let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(rounds);
 
         let row = m.rule1.fromRound.bandPosition;
         let col = m.rule1.fromRound.position.value;
         m.ruleName1 = m.rule1.ruleName;
 
+        let terminated: boolean = this.areAllTerminated(rounds);
+
         if( m.rule1.isDummy ) {
             m.teamName1 = m.rule1.fromRound.round.label;
         } else {
-            m.teamName1 = roundMatrix[row-1][col-1].teamName;
+            if(!terminated || m.teamName1 == "" || m.teamName1 == null) {
+                m.teamName1 = roundMatrix[row-1][col-1].teamName;
+            }
         }
 
         row = m.rule2.fromRound.bandPosition;
@@ -659,11 +727,38 @@ export  class MeetingService extends AbstractService {
         if( m.rule2.isDummy ) {
             m.teamName2 =  m.rule2.fromRound.round.label;
         } else {
-            m.teamName2 = roundMatrix[row-1][col-1].teamName;
+            if(!terminated || m.teamName2 == "" || m.teamName2 == null) {
+                m.teamName2 = roundMatrix[row-1][col-1].teamName;
+            }
         }
         m.name = m.teamName1 + " - " + m.teamName2;
     }
     
+    public areAllTerminated(rounds: Round[]) : boolean {
+        if(rounds == undefined || rounds.length == 0) {
+            return true;
+        }
+        let terminated: boolean = true;
+        for (let r of rounds) {
+            for (let m of r.onewayMeetings) {
+                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confermata) {
+                    terminated = false;
+                    break;
+                }
+            }
+            if (!terminated) {
+                break;
+            }
+            for (let m of r.roundtripMeetings) {
+                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confermata) {
+                    terminated = false;
+                    break;
+                }
+            }
+        }
+        return terminated;
+    }
+
     public sortMeeting(m1: Meeting, m2: Meeting): number {
         if( m1.day > m2.day ) {
             return 1;

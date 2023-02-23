@@ -47,9 +47,13 @@ export class RuleListView extends AbstractListView {
     ngOnInit() {
         super.ngOnInit();
         
+        if(this.tourneyService.selectedPlayoff != null ) {
+            this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+        } else {
+            this.selectedPlayoff = this.tourneyService.selectedPlayout;
+        }
         this.tourneyService.prepareDefaultComboBoxes();
         
-        this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         this.playoffRules = this.selectedPlayoff.playoffRules;
 
         this.atLeast1Rule = this.playoffRules != null && this.playoffRules.length >= 0 ? true: false;
@@ -59,6 +63,9 @@ export class RuleListView extends AbstractListView {
         this.rounds    = this.tourneyService.roundsCombobox;
 
         this.isAutoGen = this.selectedTourney.playoffVO.isPlayoffAutoGen == "true" ? true : false;
+        if(this.tourneyService.selectedPlayoff == null ) {
+            this.isAutoGen = this.selectedTourney.playoutVO.isPlayoffAutoGen == "true" ? true : false;
+        }
         if(this.isAutoGen) {
             this.playoffCols  = [
                 { field: 'ruleName',    header: 'Regola' },

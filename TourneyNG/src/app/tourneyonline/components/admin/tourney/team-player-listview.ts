@@ -26,6 +26,8 @@ export class TeamPlayerListView extends AbstractDetailView {
     playerCols: TableCols[];
     playerLabel: string;
     previousTeamName: string;
+    autoCompleteTeamName: string; 
+    filteredTeamsSingle: string[];
 
     constructor(
         protected location: Location,
@@ -45,6 +47,7 @@ export class TeamPlayerListView extends AbstractDetailView {
         this.countries = this.countryService.countries;
         this.selectedTeam = this.teamService.selectedTeam;
         this.playerCols = PlayerService.cols;
+        this.autoCompleteTeamName = this.selectedTeam.teamName;
 
         if(this.teamService.newTeam) {
             this.selectedTeam.id = null; 
@@ -61,6 +64,12 @@ export class TeamPlayerListView extends AbstractDetailView {
         if( this.previousTeamName != this.selectedTeam.teamName ) {
             if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
                 return;
+            }
+        }
+        if( this.previousTeamName != this.selectedTeam.teamName && this.selectedTourney != undefined ) {
+            let index = this.selectedTourney.teams.findIndex( t => t.teamName === this.previousTeamName);
+            if( index !== -1 ) {
+                this.selectedTourney.teams[index].teamName = this.selectedTeam.teamName;
             }
         }
         this.teamService.saveTourneyTeam(this.selectedTourney, false, this.selectedTeam, () => this.saveTeamOnComplete());
@@ -96,5 +105,25 @@ export class TeamPlayerListView extends AbstractDetailView {
         this.playerService.selectedPlayer = this.selectedPlayer;
         this.playerService.newPlayer = false;
         this.router.navigate([REDIRECT_PLAYER_DV]);
+    }
+
+    searchTeam(event) {
+        let query = event.query;
+        this.filteredTeamsSingle = this.teamService.filterTeam(query, this.selectedTourney.teams);
+        if(this.filteredTeamsSingle.length > 0) {
+            let partialTeamName = this.filteredTeamsSingle[0];
+            let index = this.selectedTourney.teams.findIndex( t => t.teamName === partialTeamName);
+            if( index !== -1 ) {
+                this.selectedTeam = this.selectedTourney.teams[index];
+            }
+        }
+    }
+
+    enableSaveButton() : string {
+        let n : String = this.autoCompleteTeamName;
+        if( n == undefined || n.trim() == "") {
+            return "disabled";
+        }
+        return "";
     }
 }

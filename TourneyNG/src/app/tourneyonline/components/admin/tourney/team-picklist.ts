@@ -23,7 +23,6 @@ export class TeamPickList extends AbstractListView {
     targetTeams: string[];
     returnLabel: string;
 
-    
     constructor( protected tourneyService: TourneyService
         , public router: Router
         , protected location: Location
@@ -64,6 +63,32 @@ export class TeamPickList extends AbstractListView {
             return 0;
         });
     }
+    
+    onTargetReorder(event) {
+        console.log("Entering onTargetReorder()");
+        this.returnLabel = "Salva e torna";
+        this.teamService.isTeamsChanged=true;
+        this.resetAll();
+        
+        let teams = [...this.selectedTourney.teams];
+        this.selectedTourney.teams = [];
+
+        for (let tn of this.targetTeams) {
+            let index = teams.findIndex(e => e.teamName === tn);
+            if( index !== -1 ) {
+                this.selectedTourney.teams.push(teams[index]);
+            }
+        }
+        let tvo: TourneyVO = {
+            id: this.selectedTourney.id,
+            tourneyName: this.selectedTourney.tourneyName,
+            country: this.selectedTourney.country,
+            clientVO: this.clientService.selectedClient,
+            json: JSON.stringify(this.selectedTourney)
+        };
+        const subscriber = this.tourneyService.saveTourney(tvo,  this.saveTourneyErrorHandler("Team update failed"));
+        subscriber.subscribe(cs => this.next(cs));
+    }
 
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
@@ -96,7 +121,6 @@ export class TeamPickList extends AbstractListView {
     }
 
     private resetAll(): void {
-        
         if( this.isRoundTabEnabled() ) {
             this.cleanRoundMeetings();
         }
@@ -106,7 +130,6 @@ export class TeamPickList extends AbstractListView {
         if( this.isEliminatoryTabEnabled() ) {
             this.cleanEliminatoryMeetings();
         }   
-
         let tvo: TourneyVO = this.prepareTourneyVOForRound();
         this.tourneyService.updateTourneyDeleteAllMeetings(tvo);
     }
@@ -178,17 +201,25 @@ export class TeamPickList extends AbstractListView {
             return;
         }
 
-        this.selectedTourney.teams = [];
         for (let tn of this.targetTeams) {
-            let t: Team = this.teamService.teamPool.find(x => x.teamName == tn);
-            if( t == undefined || t == null) {
-                continue;
+            let index = this.selectedTourney.teams.findIndex(e => e.teamName === tn);
+            if( index === -1 ) {
+                let t: Team = this.teamService.teamPool.find(e => e.teamName === tn);
+                if( t == undefined || t == null) {
+                    continue;
+                }
+                if(t.operators == undefined) {
+                    t.operators = [];
+                }
+                this.selectedTourney.teams.push(t);
             }
-            if(t.operators == undefined) {
-                t.operators = [];
-            }
-            this.selectedTourney.teams.push(t);
         }       
+        for (let tn of this.selectedTourney.teams) {
+            let index = this.targetTeams.findIndex(e => e === tn);
+            if( index === -1 ) {
+                this.selectedTourney.teams.slice();
+            }
+        }
 
         let tvo: TourneyVO = {
             id: this.selectedTourney.id,

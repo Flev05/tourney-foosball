@@ -19,69 +19,68 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Discipline;
 import it.lms.tourney.po.Discipline_;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Slf4j
 public class DisciplineDao extends BaseJPACrudDao<Discipline, Integer> {
 
-    public DisciplineDao() {
+	public DisciplineDao() {
 
-        super(Discipline.class);
-    }
+		super(Discipline.class);
+	}
 
-    public Discipline getById(Integer id) {
+	public Discipline getById(Integer id) {
 
-        return super.findById(id);
-    }
+		return super.findById(id);
+	}
 
-    public List<Discipline> findAllDisciplines() {
+	public List<Discipline> findAllDisciplines() {
 
-        log.debug(logId() + "Entering findAllDisciplines()");
+		log.debug(logId() + "Entering findAllDisciplines()");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Discipline> cq = cb.createQuery(Discipline.class);
-        Root<Discipline> root = cq.from(Discipline.class);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Discipline> cq = cb.createQuery(Discipline.class);
+		Root<Discipline> root = cq.from(Discipline.class);
 
-        cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(root.get(Discipline_.name)));
+		cq = cq.select(root);
+		cq = cq.orderBy(cb.asc(root.get(Discipline_.name)));
 
-        TypedQuery<Discipline> tq = getEm().createQuery(cq);
+		TypedQuery<Discipline> tq = getEm().createQuery(cq);
 
-        List<Discipline> resultList = tq.getResultList();
+		List<Discipline> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    public void insert(Discipline discipline) throws Exception {
+	public void insert(Discipline discipline) throws Exception {
 
-        log.debug(logId() + "Entering insert(" + discipline.getName() + ")");
+		log.debug(logId() + "Entering insert(" + discipline.getName() + ")");
 
-        super.insertPo(discipline);
-    }
+		super.insertPo(discipline);
+	}
 
-    public void update(Discipline Discipline) throws Exception {
+	public void update(Discipline Discipline) throws Exception {
 
-        log.debug(logId() + "Entering save(" + Discipline + ")");
+		log.debug(logId() + "Entering save(" + Discipline + ")");
 
-        super.updatePo(Discipline);
-    }
+		super.updatePo(Discipline);
+	}
 
-    public void delete(Discipline Discipline) throws Exception {
+	public void delete(Discipline Discipline) throws Exception {
 
-        log.debug(logId() + "Entering delete(" + Discipline + ")");
+		log.debug(logId() + "Entering delete(" + Discipline + ")");
 
-        super.deletePo(Discipline);
-    }
+		super.deletePo(Discipline);
+	}
 
 }

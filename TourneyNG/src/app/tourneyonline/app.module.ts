@@ -36,6 +36,7 @@ import { DateFormatModule } from './components/common/date-format.module';
 import { MeetingPlayoffService } from './components/admin/playoff/meeting-playoff-service';
 import { MeetingRoundService } from './components/admin/round/meeting-round-service';
 import { DateFormatPipe } from './components/common/date-format-pipe';
+import { LOCALE_ID } from '@angular/core';
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {
@@ -66,7 +67,8 @@ if (environment.inMemoryDataService) {
     , SidebarModule
   ],
   providers: [
-       { provide: LocationStrategy, useClass: HashLocationStrategy }
+        { provide: LocationStrategy, useClass: HashLocationStrategy }
+      , { provide: LOCALE_ID, useValue: 'it' }
       , DateFormatPipe
       , TourneyService
       , ClientService

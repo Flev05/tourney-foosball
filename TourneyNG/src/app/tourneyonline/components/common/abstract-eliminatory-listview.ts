@@ -255,7 +255,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         this.eliminatoryRows = [];
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
-5422
         for(let i=0; i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 

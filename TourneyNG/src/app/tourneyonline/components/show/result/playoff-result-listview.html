@@ -45,23 +45,24 @@
             <ng-template pTemplate="body" let-rowData>
                 <tr [pSelectableRow]="rowData">
                     <td class="leftTeamName">
-                        {{rowData['teamName1']}}
+                        {{rowData.teamName1}}
                     </td>
                     <td class="centralPoints">
                         <div>
-                            <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
+                            <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
                         </div>
                         <div>
-                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                            <span style="font-size: 200%; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>                        
                         </div>
-                        <div>
-                            <span>
-                                {{rowData['status']}}
-                            </span>                        
+                        <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                ,'inProgress': rowData.status === 'In Corso'
+                                ,'terminated': rowData.status === 'Terminata'
+                                ,'confirmed': rowData.status === 'Convalidata'}">
+                            {{rowData.status}}
                         </div>
                     </td>
                     <td class="rightTeamName">
-                        {{rowData['teamName2']}}
+                        {{rowData.teamName2}}
                     </td>
                 </tr>
             </ng-template>
@@ -102,10 +103,11 @@
                         <div>
                             <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
                         </div>
-                        <div>
-                            <span>
-                                {{rowData['status']}}
-                            </span>                        
+                        <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                ,'inProgress': rowData.status === 'In Corso'
+                                ,'terminated': rowData.status === 'Terminata'
+                                ,'confirmed': rowData.status === 'Convalidata'}">
+                            {{rowData.status}}
                         </div>
                     </td>
                     <td class="rightTeamName">

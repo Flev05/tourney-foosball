@@ -2,7 +2,7 @@
     <div>
         <span class="feature-title">Dettaglio squadra e giocatori che la compongono</span>        
         <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-        <h4><span>Squadra: {{selectedTeam.teamName}}</span></h4>
+        <h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
     </div>
 </div>
 
@@ -55,10 +55,10 @@
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
-            Nome*:
+            Squadra*:
         </div>
         <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
-            <input pInputText type="text" [(ngModel)]="selectedTeam.teamName"/>
+            <input pInputText type="text" [(ngModel)]="selectedTeam.teamName"/>          
         </div>
     </div>
         
@@ -107,7 +107,7 @@
         (onRowSelect)="onPlayerRowSelect($event)"
         [responsive]="true" 
         [scrollable]="true" 
-        scrollHeight="500px">
+        scrollHeight="250px">
     
         <ng-template pTemplate="caption" let-rowData>
             <div style="text-align:left">
@@ -135,7 +135,12 @@
         </ng-template>  
 
         <ng-template pTemplate="summary" let-rowData>
-            <button pButton class="ui-button-success"  (click)="saveTourneyTeam()" icon="fa fa-save" label="Salva"></button>            
+            <button class="ui-button-success" 
+                pButton (click)="saveTourneyTeam()" 
+                icon="fa fa-save" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>  
         </ng-template>      
 
     </p-table>

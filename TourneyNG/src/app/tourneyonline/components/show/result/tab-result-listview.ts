@@ -88,8 +88,8 @@ export class TabResultListView extends AbstractTabResultListView {
             , eliminatoryBId: null
         };
         let playoffRounds: Round[] = [];
-        for(let p of this.selectedTourney.playoffVO.playoffs) {
-            playoffRounds.push(p.round);
+        for(let p of this.selectedTourney.roundVO.rounds) {
+            playoffRounds.push(p);
         }
         this.meetingService.qualifyingRounds = playoffRounds;
         this.router.navigate([REDIRECT_PLAYOFF_RESULT_LV]);
@@ -113,8 +113,8 @@ export class TabResultListView extends AbstractTabResultListView {
             , eliminatoryBId: null
         };     
         let playoutRounds: Round[] = [];
-        for(let p of this.selectedTourney.playoutVO.playoffs) {
-            playoutRounds.push(p.round);
+        for(let p of this.selectedTourney.roundVO.rounds) {
+            playoutRounds.push(p);
         }
         this.meetingService.qualifyingRounds = playoutRounds;
         this.router.navigate([REDIRECT_PLAYOFF_RESULT_LV]);

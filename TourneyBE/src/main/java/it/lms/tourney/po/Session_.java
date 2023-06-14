@@ -2,8 +2,8 @@ package it.lms.tourney.po;
 
 import java.util.Date;
 
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.StaticMetamodel;
 
 @StaticMetamodel(Session.class)
 public abstract class Session_ {

@@ -729,24 +729,6 @@ export class TourneyService extends AbstractService {
         return false;
     }
 
-    /**
-     * Creates a new Classification in function of the received parameters
-     */
-    newClassification(teamName: string, initialPoints: number): Classification {
-        return {
-            id: null,
-            teamName: teamName,
-            points: initialPoints,
-            played: 0,
-            won: 0,
-            lost: 0,
-            balanced: 0,
-            penalty: 0,
-            goalsDone: 0,
-            goalsConceded: 0,
-            goalsDiff: 0
-        };
-    }
 
     /**
      * Prepares the teams classification in function of the list of all of the meetings for each team 
@@ -756,7 +738,7 @@ export class TourneyService extends AbstractService {
         let classificationMap : Map<string, Classification> = new Map<string, Classification>();
  
         for( let t of round.teamNames) {
-            let c = this.newClassification(t, 0);
+            let c = this.meetingService.newClassification(t, 0);
             classificationMap.set(t, c);
         }
 

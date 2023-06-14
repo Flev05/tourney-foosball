@@ -6,20 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import it.lms.cb.gui.vo.TeamVO;
 import it.lms.tourney.cdi.Converter;
 import it.lms.tourney.cdi.ConverterObject;
@@ -27,6 +13,19 @@ import it.lms.tourney.dao.SessionDao;
 import it.lms.tourney.dao.TeamDao;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Team;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,179 +36,176 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TeamRESTService extends AbstractRESTService {
 
-    @Inject
-    private TeamDao    teamDao;
+	@Inject
+	private TeamDao teamDao;
 
-    @Inject
-    private SessionDao sessionDao;
+	@Inject
+	private SessionDao sessionDao;
 
-    @Inject
-    @ConverterObject
-    private Converter  converter;
+	@Inject
+	@ConverterObject
+	private Converter converter;
 
-    @GET
-    @Path("/loadByClientId/{clientId:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<TeamVO> loadByClientId(@PathParam("clientId") Integer clientId) {
+	@GET
+	@Path("/loadByClientId/{clientId:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<TeamVO> loadByClientId(@PathParam("clientId") Integer clientId) {
 
-        log.debug("{}", logId() + "GET: loadByClientId(" + clientId + ")");
+		log.debug("{}", logId() + "GET: loadByClientId(" + clientId + ")");
 
-        List<Team> teamList = teamDao.findTeamsByClientId(clientId);
+		List<Team> teamList = teamDao.findTeamsByClientId(clientId);
 
-        // teamList.forEach(t -> logger.debug(t.getJson()));
+		// teamList.forEach(t -> logger.debug(t.getJson()));
 
-        return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
-    }
+		return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
+	}
 
-    @GET
-    @Path("/loadBySessionId")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<TeamVO> loadBySessionId() {
+	@GET
+	@Path("/loadBySessionId")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<TeamVO> loadBySessionId() {
 
-        log.debug(logId() + "GET: loadBySessionId()");
+		log.debug(logId() + "GET: loadBySessionId()");
 
-        String sessionId = super.getSessionId();
+		String sessionId = super.getSessionId();
 
-        List<Team> teamList = teamDao.findPlayersBySessionId(sessionId);
+		List<Team> teamList = teamDao.findPlayersBySessionId(sessionId);
 
-        // teamList.forEach(t -> logger.debug(t));
+		// teamList.forEach(t -> logger.debug(t));
 
-        return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
-    }
+		return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
+	}
 
-    @GET
-    @Path("/load/{id:[0-9][0-9]*}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Team lookupTeamById(@PathParam("id") Integer id) {
+	@GET
+	@Path("/load/{id:[0-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Team lookupTeamById(@PathParam("id") Integer id) {
 
-        log.debug(logId() + "GET: lookupTeamById(" + id + ")");
+		log.debug(logId() + "GET: lookupTeamById(" + id + ")");
 
-        Team team = teamDao.getById(id);
-        if (team == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        return team;
-    }
+		Team team = teamDao.getById(id);
+		if (team == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		return team;
+	}
 
-    /**
-     * Creates a new team from the values provided. Performs validation, and will return a JAX-RS response with either
-     * 200 ok, or with a map of fields, and related errors.
-     */
-    @POST
-    @Path("/insert")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createTeam(TeamVO tvo) {
+	/**
+	 * Creates a new team from the values provided. Performs validation, and will return a JAX-RS response with either
+	 * 200 ok, or with a map of fields, and related errors.
+	 */
+	@POST
+	@Path("/insert")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createTeam(TeamVO tvo) {
 
-        log.debug(logId() + "POST: createTeam(" + tvo + ")");
+		log.debug(logId() + "POST: createTeam(" + tvo + ")");
 
-        Map<String, String> responseObj = new HashMap<>();
-        Team foundTeam;
-        Session spo = null;
-        if (tvo.getClientId() == null) {
-            String sessionId = request.getSession().getId();
-            foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
-            spo = sessionDao.findBySessionId(sessionId);
-            String userAgent = super.getUserAgent();
-            if (spo == null) {
-                String message = logId() + "User Session doesn't exist, create a new one";
-                log.error(message);
-                spo = sessionDao.insert(null, sessionId, userAgent);
-            } else {
-                spo = sessionDao.update(spo, sessionId, userAgent);
-            }
-        } else {
-            foundTeam = teamDao.getTeamClientId(tvo.getClientId(), tvo.getTeamName());
-        }
+		Map<String, String> responseObj = new HashMap<>();
+		Team foundTeam;
+		Session spo = null;
+		if (tvo.getClientId() == null) {
+			String sessionId = request.getSession().getId();
+			foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
+			spo = sessionDao.findBySessionId(sessionId);
+			String userAgent = super.getUserAgent();
+			if (spo == null) {
+				String message = logId() + "User Session doesn't exist, create a new one";
+				log.error(message);
+				spo = sessionDao.insert(null, sessionId, userAgent);
+			} else {
+				spo = sessionDao.update(spo, sessionId, userAgent);
+			}
+		} else {
+			foundTeam = teamDao.getTeamClientId(tvo.getClientId(), tvo.getTeamName());
+		}
 
-        if (foundTeam != null) {
+		if (foundTeam != null) {
+			return updateTeam(tvo);
+			// log.error("Team found");
+			// responseObj.put("errorCode", "TeamAlreadyExists");
+			// responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
+			// Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+			// return builder.build();
+		}
 
-            log.error("Team found");
-            responseObj.put("errorCode", "TeamAlreadyExists");
-            responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
+		Team team = newTeam(tvo, spo);
 
-            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-            return builder.build();
-        }
+		tvo = converter.convertTeamPoVo(team);
 
-        Team team = newTeam(tvo, spo);
+		log.debug("{}", tvo);
 
-        tvo = converter.convertTeamPoVo(team);
+		Response.ResponseBuilder builder = Response.ok().entity(tvo);
 
-        log.debug("{}", tvo);
+		return builder.build();
+	}
 
-        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+	private Team newTeam(TeamVO tvo, Session spo) {
 
-        return builder.build();
-    }
+		Team cpo = converter.convertTeamVoPo(tvo, spo);
 
-    private Team newTeam(TeamVO tvo, Session spo) {
+		teamDao.insert(cpo);
+		return cpo;
+	}
 
-        Team cpo = converter.convertTeamVoPo(tvo, spo);
+	/**
+	 * Updates the received team found in the database. Performs validation, and will return a JAX-RS response with
+	 * either 200 ok, or with a map of fields, and related errors.
+	 */
+	@PUT
+	@Path("/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateTeam(TeamVO tvo) {
 
-        teamDao.insert(cpo);
-        return cpo;
-    }
+		log.debug(logId() + "PUT: updateTeam(" + tvo + ")");
 
-    /**
-     * Updates the received team found in the database. Performs validation, and will return a JAX-RS response with
-     * either 200 ok, or with a map of fields, and related errors.
-     */
-    @PUT
-    @Path("/update")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateTeam(TeamVO tvo) {
+		Team foundTeam;
+		Session spo = null;
+		if (tvo.getClientId() == null) {
+			String sessionId = request.getSession().getId();
+			foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
+			spo = sessionDao.findBySessionId(sessionId);
+		} else {
+			foundTeam = teamDao.getTeamClientId(tvo.getClientId(), tvo.getTeamName());
+		}
 
-        log.debug(logId() + "PUT: updateTeam(" + tvo + ")");
-        Map<String, String> responseObj = new HashMap<>();
+		if (foundTeam != null && !foundTeam.getId().equals(tvo.getId())) {
+			tvo.setId(foundTeam.getId());
+			// log.error("Team found");
+			// responseObj.put("errorCode", "TeamAlreadyExists");
+			// responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
+			// Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+			// return builder.build();
+		}
 
-        Team foundTeam;
-        Session spo = null;
-        if (tvo.getClientId() == null) {
-            String sessionId = request.getSession().getId();
-            foundTeam = teamDao.getTeamSessionId(sessionId, tvo.getTeamName());
-            spo = sessionDao.findBySessionId(sessionId);
-        } else {
-            foundTeam = teamDao.getTeamClientId(tvo.getClientId(), tvo.getTeamName());
-        }
+		Team tpo = converter.convertTeamVoPo(tvo, spo);
 
-        if (foundTeam != null && !foundTeam.getId().equals(tvo.getId())) {
+		teamDao.update(tpo);
 
-            log.error("Team found");
-            responseObj.put("errorCode", "TeamAlreadyExists");
-            responseObj.put("message", "Team " + tvo.getTeamName() + " already exists");
+		Response.ResponseBuilder builder = Response.ok().entity(tvo);
 
-            Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-            return builder.build();
-        }
+		return builder.build();
+	}
 
-        Team tpo = converter.convertTeamVoPo(tvo, spo);
+	/**
+	 * Removes a the received team from the persistent store. Return a JAX-RS response with either 200 ok, or with a map
+	 * of fields, and related errors.
+	 */
+	@DELETE
+	@Path("/delete/{id:[0-9][0-9]*}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteTeam(@PathParam("id") Integer id) {
 
-        teamDao.update(tpo);
+		log.debug(logId() + "DELETE: deleteTeam(" + id + ")");
 
-        Response.ResponseBuilder builder = Response.ok().entity(tvo);
+		Team team = teamDao.getById(id);
+		teamDao.delete(team);
 
-        return builder.build();
-    }
+		Response.ResponseBuilder builder = Response.ok();
 
-    /**
-     * Removes a the received team from the persistent store. Return a JAX-RS response with either 200 ok, or with a map
-     * of fields, and related errors.
-     */
-    @DELETE
-    @Path("/delete/{id:[0-9][0-9]*}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteTeam(@PathParam("id") Integer id) {
-
-        log.debug(logId() + "DELETE: deleteTeam(" + id + ")");
-
-        Team team = teamDao.getById(id);
-        teamDao.delete(team);
-
-        Response.ResponseBuilder builder = Response.ok();
-
-        return builder.build();
-    }
+		return builder.build();
+	}
 }

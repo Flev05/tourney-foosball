@@ -17,8 +17,8 @@
 
 package it.lms.tourney.cdi;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
 
 /**
  * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
@@ -35,21 +35,21 @@ import javax.ws.rs.core.Context;
  */
 public abstract class AbstractLogger {
 
-    // @Inject
-    // protected Logger log;
+	// @Inject
+	// protected Logger log;
 
-    @Context
-    protected HttpServletRequest request;
+	@Context
+	protected HttpServletRequest request;
 
-    protected String getSessionId() {
+	protected String getSessionId() {
 
-        String sessionID = (request == null || request.getSession() == null) ? "" : request.getSession().getId();
-        return sessionID;
-    }
+		String sessionID = (request == null || request.getSession() == null) ? "" : request.getSession().getId();
+		return sessionID;
+	}
 
-    protected String logId() {
+	protected String logId() {
 
-        return "[" + getSessionId() + "]";
-    }
+		return "[" + getSessionId() + "]";
+	}
 
 }

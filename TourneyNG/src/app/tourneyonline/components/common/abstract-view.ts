@@ -7,6 +7,9 @@ import { Country } from 'app/tourneyonline/domain/country';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
 
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
+
 export abstract class AbstractView implements OnInit {
     it: any;
     selectedTourney: Tourney;
@@ -55,6 +58,8 @@ export abstract class AbstractView implements OnInit {
         
         let invalidDate = new Date();
         invalidDate.setDate(today.getDate() - 1);
+
+        registerLocaleData(localeIt);
     }
     
     protected serverUnreachableHandler<T> (operation = 'operation', result?: T) {

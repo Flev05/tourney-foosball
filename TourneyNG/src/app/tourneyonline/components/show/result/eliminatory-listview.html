@@ -41,10 +41,11 @@
                         <div>
                             <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
                         </div>
-                        <div>
-                            <span>
-                                {{rowData['status']}}
-                            </span>                        
+                        <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                ,'inProgress': rowData.status === 'In Corso'
+                                ,'terminated': rowData.status === 'Terminata'
+                                ,'confirmed': rowData.status === 'Convalidata'}">
+                            {{rowData.status}}
                         </div>
                     </td>                  
                     <td class="rightTeamName">
@@ -74,10 +75,11 @@
                         <div>
                             <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
                         </div>
-                        <div>
-                            <span>
-                                {{rowData['status']}}
-                            </span>                        
+                        <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                ,'inProgress': rowData.status === 'In Corso'
+                                ,'terminated': rowData.status === 'Terminata'
+                                ,'confirmed': rowData.status === 'Convalidata'}">
+                            {{rowData.status}}
                         </div>
                     </td>                
                     <td class="rightTeamName">

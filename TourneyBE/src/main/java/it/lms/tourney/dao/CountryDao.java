@@ -19,88 +19,87 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Country;
 import it.lms.tourney.po.Country_;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Slf4j
 public class CountryDao extends BaseJPACrudDao<Country, Integer> {
 
-    public CountryDao() {
+	public CountryDao() {
 
-        super(Country.class);
-    }
+		super(Country.class);
+	}
 
-    public Country getById(Integer id) {
+	public Country getById(Integer id) {
 
-        return super.findById(id);
-    }
+		return super.findById(id);
+	}
 
-    public Country findByCity(String city) {
+	public Country findByCity(String city) {
 
-        log.debug(logId() + "Entering findByCity(" + city + ")");
+		log.debug(logId() + "Entering findByCity(" + city + ")");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Country> criteria = cb.createQuery(Country.class);
-        Root<Country> root = criteria.from(Country.class);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Country> criteria = cb.createQuery(Country.class);
+		Root<Country> root = criteria.from(Country.class);
 
-        Predicate p = cb.equal(root.get(Country_.city), city);
+		Predicate p = cb.equal(root.get(Country_.city), city);
 
-        criteria = criteria.select(root);
-        criteria = criteria.where(p);
+		criteria = criteria.select(root);
+		criteria = criteria.where(p);
 
-        TypedQuery<Country> cq = getEm().createQuery(criteria);
+		TypedQuery<Country> cq = getEm().createQuery(criteria);
 
-        return cq.getSingleResult();
-    }
+		return cq.getSingleResult();
+	}
 
-    public List<Country> findAllOrderedByCity() {
+	public List<Country> findAllOrderedByCity() {
 
-        log.debug(logId() + "Entering findAllOrderedByCity()");
+		log.debug(logId() + "Entering findAllOrderedByCity()");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Country> cq = cb.createQuery(Country.class);
-        Root<Country> root = cq.from(Country.class);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Country> cq = cb.createQuery(Country.class);
+		Root<Country> root = cq.from(Country.class);
 
-        cq = cq.select(root);
-        cq = cq.orderBy(cb.asc(root.get(Country_.city)));
+		cq = cq.select(root);
+		cq = cq.orderBy(cb.asc(root.get(Country_.city)));
 
-        TypedQuery<Country> tq = getEm().createQuery(cq);
+		TypedQuery<Country> tq = getEm().createQuery(cq);
 
-        List<Country> resultList = tq.getResultList();
+		List<Country> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    public void insert(Country country) throws Exception {
+	public void insert(Country country) throws Exception {
 
-        log.debug(logId() + "Entering insert(" + country.getCity() + ")");
+		log.debug(logId() + "Entering insert(" + country.getCity() + ")");
 
-        super.insertPo(country);
-    }
+		super.insertPo(country);
+	}
 
-    public void update(Country country) throws Exception {
+	public void update(Country country) throws Exception {
 
-        log.debug(logId() + "Entering save(" + country + ")");
+		log.debug(logId() + "Entering save(" + country + ")");
 
-        super.updatePo(country);
-    }
+		super.updatePo(country);
+	}
 
-    public void delete(Country country) throws Exception {
+	public void delete(Country country) throws Exception {
 
-        log.debug(logId() + "Entering delete(" + country + ")");
+		log.debug(logId() + "Entering delete(" + country + ")");
 
-        super.deletePo(country);
-    }
+		super.deletePo(country);
+	}
 
 }

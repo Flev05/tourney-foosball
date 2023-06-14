@@ -16,6 +16,7 @@ import { DateFormatPipe } from '../components/common/date-format-pipe';
 import { Playoff } from '../domain/playoff';
 import { Classification } from '../domain/classification';
 import { AbstractRoundVO } from '../domain/abstract-round-vo';
+import { TourneyService } from './tourney-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -41,7 +42,7 @@ const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsBy
 const deleteMeetingByPlayoutIdUrl       = meetingUrl + "/deletePlayoutMeetingsByTourneyId"
 
 @Injectable()
-export  class MeetingService extends AbstractService {
+export class MeetingService extends AbstractService {
     public static SKIPING_TEAM = "(Riposo)";
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
@@ -80,7 +81,7 @@ export  class MeetingService extends AbstractService {
 
     constructor( protected http: HttpClient
         , protected router: Router
-        , protected dateFormatPipe: DateFormatPipe) 
+        , protected dateFormatPipe: DateFormatPipe ) 
     { 
         super();
         console.log("Constructor of MeetingService");
@@ -678,12 +679,13 @@ export  class MeetingService extends AbstractService {
     public createRoundMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
         let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
 
-        for( let i=0; i<rounds[0].classification.length; i++ ) {
+        const teamCount = rounds[0].classification.length;
+        for( let t=0; t<teamCount; t++ ) {
             let bestClassifications: Array<Classification> = new Array<Classification>();
             for(let r of rounds) {
                 r.classification = this.sortDesc(r.classification);
-
-                bestClassifications.push(r.classification[i]);    
+                let c = r.classification[t];
+                bestClassifications.push(c);    
             }
             bestClassifications = this.sortDesc(bestClassifications);
             
@@ -695,6 +697,26 @@ export  class MeetingService extends AbstractService {
             }
         }
         return roundMatrix;
+    }
+
+    
+    /**
+     * Creates a new Classification in function of the received parameters
+     */
+    public newClassification(teamName: string, initialPoints: number): Classification {
+        return {
+            id: null,
+            teamName: teamName,
+            points: initialPoints,
+            played: 0,
+            won: 0,
+            lost: 0,
+            balanced: 0,
+            penalty: 0,
+            goalsDone: 0,
+            goalsConceded: 0,
+            goalsDiff: 0
+        };
     }
 
     /**
@@ -741,7 +763,7 @@ export  class MeetingService extends AbstractService {
         let terminated: boolean = true;
         for (let r of rounds) {
             for (let m of r.onewayMeetings) {
-                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confermata) {
+                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confirmed) {
                     terminated = false;
                     break;
                 }
@@ -750,7 +772,7 @@ export  class MeetingService extends AbstractService {
                 break;
             }
             for (let m of r.roundtripMeetings) {
-                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confermata) {
+                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confirmed) {
                     terminated = false;
                     break;
                 }

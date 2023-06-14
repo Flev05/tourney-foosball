@@ -128,14 +128,19 @@ export class OperatorDetailView extends UserDetailView {
     private updateOpList(username : string) {
         for(let t of this.teams) {
             let index = this.selectedTeams.indexOf(t);
-            if( index == -1) { // remove deselected operator
+            if( index == -1 && t.operators != undefined ) { // remove deselected operator
                 let indexOp = t.operators.indexOf(username);
                 if(indexOp!=-1) {
                     t.operators.splice(indexOp);
                 }
             }
             let indexTeam = this.selectedTeams.indexOf(t);
-            if(indexTeam != -1) {
+            if(indexTeam != -1 ) {
+                if(t.operators == undefined) {
+                    t.operators = [];
+                    t.operators.push(username); 
+                    continue;
+                }
                 let index = t.operators.indexOf(username);
                 if( index == -1 ){ // no duplicate
                     t.operators.push(username); 

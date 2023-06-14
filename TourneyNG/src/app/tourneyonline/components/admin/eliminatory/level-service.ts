@@ -559,6 +559,7 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     private processEliminatoryBTeams(teamCount: number): void {
+        console.log("Entering processEliminatoryBTeams()");
         if(teamCount==0) {
             return;
         }
@@ -677,14 +678,17 @@ export class LevelService extends AbstractEliminatoryListView {
                 e.rule2.fromRound.round   = {label: round2Label, value: round2Id};
                 e.rule2.fromPlayoff.round = {label: "", value: 0};
                 if(this.isAutomatic) {
-                    e.rule1.fromRound.bandPosition = i % roundsNo + 1;
+                    e.rule1.fromRound.bandPosition = (i + startPosition) % roundsNo + 1;
                     if( e.rule2.fromRound.position.value > 0 )  {
-                        e.rule2.fromRound.bandPosition = lastIndex % roundsNo + 1;
+                        e.rule2.fromRound.bandPosition = (lastIndex + startPosition)  % roundsNo + 1;
                     }   
                 }
                 for( let m of e.round.onewayMeetings ) {
                     m.rule1.fromRound = e.rule1.fromRound;
                     m.rule2.fromRound = e.rule2.fromRound;
+                    let rule1 = e.rule1.fromRound.bandPosition + "° delle migliori " + e.rule1.fromRound.position.value + "°";
+                    let rule2 = e.rule2.fromRound.bandPosition + "° delle migliori " + e.rule2.fromRound.position.value + "°";
+                    console.log("rule1=("+ rule1 + ") Vs rule2=(" + rule2 + ")");
                 }
                 for( let m of e.round.roundtripMeetings ) {
                     m.rule1.fromRound = e.rule1.fromRound;

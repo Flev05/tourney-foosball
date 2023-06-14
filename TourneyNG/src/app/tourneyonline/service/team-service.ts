@@ -198,9 +198,9 @@ export class TeamService {
 
     saveTourneyTeam(tourney: Tourney, savePoolTeam: boolean, st: Team, complete?: () => void) {     
         this.selectedTeam = st;
-        if( this.isTeamAlreadyExists(tourney) ) {
-            return;
-        }
+        // if( this.isTeamAlreadyExists(tourney) ) {
+        //     return;
+        // }
 
         this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
 
@@ -260,6 +260,7 @@ export class TeamService {
                 team.teamName = this.selectedTeam.teamName;
                 team.address = this.selectedTeam.address
                 team.country = this.selectedTeam.country
+                team.players = this.selectedTeam.players;
             }
         }
     }
@@ -296,11 +297,6 @@ export class TeamService {
                 this.badRequest = true;
                 return of(result as T);
             } 
-            if( res.error.errorCode == "TeamAlreadyExists" ) {
-                this.teamAlreadyExists = true;
-                return of(result as T);
-            }
-      
             return of(result as T);
         };
     }
@@ -315,5 +311,17 @@ export class TeamService {
         this.newTeam = false;
         this.isTeamsChanged = true;
         complete();
+    }
+
+    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    public filterTeam(query, teams: Team[]) : string[] {
+        let filtered : string[] = [];
+        for(let i = 0; i < teams.length; i++) {
+            let t = teams[i];
+            if(t.teamName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(t.teamName);
+            }
+        }
+        return filtered;
     }
 }

@@ -4,17 +4,16 @@ package it.lms.cb.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import it.lms.tourney.cdi.AbstractLogger;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,150 +23,153 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class BaseJPACrudDao<PO, ID extends Serializable> extends AbstractLogger {
 
-    @PersistenceContext
-    private EntityManager   em;
+	@PersistenceContext
+	private EntityManager em;
 
-    @Inject
-    private Event<PO>       clientEventSrc;
+	@Inject
+	private Event<PO> clientEventSrc;
 
-    private Class<PO>       entityClass;
-    private CriteriaBuilder cb = null;
+	private Class<PO> entityClass;
+	private CriteriaBuilder cb = null;
 
-    protected BaseJPACrudDao(Class<PO> entityClass) {
+	protected BaseJPACrudDao(Class<PO> entityClass) {
 
-        this.entityClass = entityClass;
-    }
+		this.entityClass = entityClass;
+	}
 
-    protected CriteriaBuilder getCb() {
+	protected CriteriaBuilder getCb() {
 
-        cb = em.getCriteriaBuilder();
-        return cb;
-    }
+		cb = em.getCriteriaBuilder();
+		return cb;
+	}
 
-    protected EntityManager getEm() {
+	protected EntityManager getEm() {
 
-        return em;
-    }
+		return em;
+	}
 
-    private void makePersistent(PO entity) {
+	private void makePersistent(PO entity) {
 
-        em.persist(entity);
-        clientEventSrc.fire(entity);
-    }
+		em.persist(entity);
+		clientEventSrc.fire(entity);
+	}
 
-    protected void insertPo(PO entity) {
+	protected void insertPo(PO entity) {
 
-        makePersistent(entity);
+		makePersistent(entity);
 
-        log.debug(logId() + "insert successful");
-    }
+		log.debug(logId() + "insert successful");
+	}
 
-    /**
-     * Does nothing, the JPA automatically update the PO when the transaction commits
-     * 
-     * @param entity to update
-     */
-    protected void updatePo(PO entity) {
+	/**
+	 * Does nothing, the JPA automatically update the PO when the transaction commits
+	 * 
+	 * @param entity
+	 *            to update
+	 */
+	protected void updatePo(PO entity) {
 
-        PO mpo = this.merge(entity);
+		PO mpo = this.merge(entity);
 
-        makePersistent(mpo);
+		makePersistent(mpo);
 
-        entity = mpo;
-        log.debug(logId() + "update successful");
-    }
+		entity = mpo;
+		log.debug(logId() + "update successful");
+	}
 
-    protected PO merge(PO entity) {
+	protected PO merge(PO entity) {
 
-        PO po = em.merge(entity);
-        log.debug(logId() + "merge successful");
-        return po;
-    }
+		PO po = em.merge(entity);
+		log.debug(logId() + "merge successful");
+		return po;
+	}
 
-    protected void detach(PO entity) {
+	protected void detach(PO entity) {
 
-        em.detach(entity);
-        log.debug(logId() + "detach successful");
-    }
+		em.detach(entity);
+		log.debug(logId() + "detach successful");
+	}
 
-    protected void deletePo(PO entity) {
+	protected void deletePo(PO entity) {
 
-        PO mpo = this.merge(entity);
+		PO mpo = this.merge(entity);
 
-        em.remove(mpo);
-        log.debug(logId() + "delete successful");
-    }
+		em.remove(mpo);
+		log.debug(logId() + "delete successful");
+	}
 
-    protected void refresh(PO entity) {
+	protected void refresh(PO entity) {
 
-        em.refresh(entity);
-    }
+		em.refresh(entity);
+	}
 
-    protected List<PO> findAllOrderByAsc(String fieldName) {
+	protected List<PO> findAllOrderByAsc(String fieldName) {
 
-        CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
-        Root<PO> root = cq.from(entityClass);
+		CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
+		Root<PO> root = cq.from(entityClass);
 
-        cq.select(root);
-        cq.orderBy(getCb().asc(root.get(fieldName)));
+		cq.select(root);
+		cq.orderBy(getCb().asc(root.get(fieldName)));
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+		TypedQuery<PO> nq = em.createQuery(cq);
 
-        List<PO> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
-        log.info(logId() + info);
+		List<PO> poList = nq.getResultList();
+		String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
+		log.info(logId() + info);
 
-        return poList;
-    }
+		return poList;
+	}
 
-    protected List<PO> findAllOrderByDesc(String fieldName) {
+	protected List<PO> findAllOrderByDesc(String fieldName) {
 
-        CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
-        Root<PO> root = cq.from(entityClass);
+		CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
+		Root<PO> root = cq.from(entityClass);
 
-        cq.select(root);
-        cq.orderBy(getCb().desc(root.get(fieldName)));
+		cq.select(root);
+		cq.orderBy(getCb().desc(root.get(fieldName)));
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+		TypedQuery<PO> nq = em.createQuery(cq);
 
-        List<PO> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
-        log.info(logId() + info);
+		List<PO> poList = nq.getResultList();
+		String info = "[Found " + poList.size() + " of " + entityClass + " PO(s)] ";
+		log.info(logId() + info);
 
-        return poList;
-    }
+		return poList;
+	}
 
-    /**
-     * This method has only a package visibility to allow the invocation only from the same package to get the PO and
-     * complete the DML operations
-     * 
-     * @param id the identifier to find the PO
-     * @return the found PO
-     * @throws DaoException if any error
-     */
-    protected PO getPoByPk(String pk, String name) throws DaoException {
+	/**
+	 * This method has only a package visibility to allow the invocation only from the same package to get the PO and
+	 * complete the DML operations
+	 * 
+	 * @param id
+	 *            the identifier to find the PO
+	 * @return the found PO
+	 * @throws DaoException
+	 *             if any error
+	 */
+	protected PO getPoByPk(String pk, String name) throws DaoException {
 
-        log.debug(logId() + "Entering getPoByPk(" + name + ")");
+		log.debug(logId() + "Entering getPoByPk(" + name + ")");
 
-        CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
+		CriteriaQuery<PO> cq = getCb().createQuery(entityClass);
 
-        Root<PO> root = cq.from(entityClass);
+		Root<PO> root = cq.from(entityClass);
 
-        Predicate p = getCb().equal(root.get(pk), name);
-        cq.select(root).where(p);
+		Predicate p = getCb().equal(root.get(pk), name);
+		cq.select(root).where(p);
 
-        TypedQuery<PO> nq = em.createQuery(cq);
+		TypedQuery<PO> nq = em.createQuery(cq);
 
-        List<PO> poList = nq.getResultList();
-        String info = "[Found " + poList.size() + " PO(s)] ";
-        log.info(logId() + info);
+		List<PO> poList = nq.getResultList();
+		String info = "[Found " + poList.size() + " PO(s)] ";
+		log.info(logId() + info);
 
-        PO po = poList.get(0);
-        return po;
-    }
+		PO po = poList.get(0);
+		return po;
+	}
 
-    public PO findById(ID id) {
+	public PO findById(ID id) {
 
-        return em.find(entityClass, id);
-    }
+		return em.find(entityClass, id);
+	}
 }

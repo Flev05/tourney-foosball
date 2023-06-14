@@ -19,13 +19,6 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Client_;
@@ -33,159 +26,167 @@ import it.lms.tourney.po.Player;
 import it.lms.tourney.po.Player_;
 import it.lms.tourney.po.Session;
 import it.lms.tourney.po.Session_;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Slf4j
 public class PlayerDao extends BaseJPACrudDao<Player, Integer> {
 
-    public PlayerDao() {
+	public PlayerDao() {
 
-        super(Player.class);
-    }
+		super(Player.class);
+	}
 
-    public Player getById(Integer id) {
+	public Player getById(Integer id) {
 
-        return super.findById(id);
-    }
+		return super.findById(id);
+	}
 
-    /**
-     * Finds all players associated to the received logged user id
-     * 
-     * @param clientId the player unique identifier
-     * @return the list of players related to the received client id
-     */
-    public List<Player> findPlayersByClientId(Integer clientId) {
+	/**
+	 * Finds all players associated to the received logged user id
+	 * 
+	 * @param clientId
+	 *            the player unique identifier
+	 * @return the list of players related to the received client id
+	 */
+	public List<Player> findPlayersByClientId(Integer clientId) {
 
-        log.debug(logId() + "Entering findPlayersByClientId()");
+		log.debug(logId() + "Entering findPlayersByClientId()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
-        Root<Player> root = cq.from(Player.class);
+		CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+		Root<Player> root = cq.from(Player.class);
 
-        Join<Player, Client> playerClientJoin = root.join(Player_.client);
+		Join<Player, Client> playerClientJoin = root.join(Player_.client);
 
-        Predicate p = cb.equal(playerClientJoin.get(Client_.id), clientId);
+		Predicate p = cb.equal(playerClientJoin.get(Client_.id), clientId);
 
-        cq = cq.select(root);
-        cq = cq.where(p);
+		cq = cq.select(root);
+		cq = cq.where(p);
 
-        TypedQuery<Player> tq = getEm().createQuery(cq);
+		TypedQuery<Player> tq = getEm().createQuery(cq);
 
-        List<Player> resultList = tq.getResultList();
+		List<Player> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    /**
-     * Loads the players bounded to the receives session id
-     * 
-     * @param sessionId the session the player belongs to
-     * @return the list of the players belonging to the session
-     */
-    public List<Player> findPlayersBySessionId(String sessionId) {
+	/**
+	 * Loads the players bounded to the receives session id
+	 * 
+	 * @param sessionId
+	 *            the session the player belongs to
+	 * @return the list of the players belonging to the session
+	 */
+	public List<Player> findPlayersBySessionId(String sessionId) {
 
-        log.debug(logId() + "Entering findPlayersBySessionId()");
+		log.debug(logId() + "Entering findPlayersBySessionId()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
-        Root<Player> root = cq.from(Player.class);
+		CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+		Root<Player> root = cq.from(Player.class);
 
-        Join<Player, Session> playerSessionJoin = root.join(Player_.session);
+		Join<Player, Session> playerSessionJoin = root.join(Player_.session);
 
-        Predicate p = cb.equal(playerSessionJoin.get(Session_.userSession), sessionId);
+		Predicate p = cb.equal(playerSessionJoin.get(Session_.userSession), sessionId);
 
-        cq = cq.select(root);
-        cq = cq.where(p);
+		cq = cq.select(root);
+		cq = cq.where(p);
 
-        TypedQuery<Player> tq = getEm().createQuery(cq);
+		TypedQuery<Player> tq = getEm().createQuery(cq);
 
-        List<Player> resultList = tq.getResultList();
+		List<Player> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    public Player getPlayerByClientId(Integer clientId, String playerName) {
+	public Player getPlayerByClientId(Integer clientId, String playerName) {
 
-        log.debug(logId() + "Entering getPlayerByClientId(" + playerName + ")");
+		log.debug(logId() + "Entering getPlayerByClientId(" + playerName + ")");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
-        Root<Player> root = cq.from(Player.class);
-        Join<Player, Client> playerClientJoin = root.join(Player_.client);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+		Root<Player> root = cq.from(Player.class);
+		Join<Player, Client> playerClientJoin = root.join(Player_.client);
 
-        Predicate p = cb.equal(root.get(Player_.playerName), playerName);
-        Predicate q = cb.equal(playerClientJoin.get(Client_.id), clientId);
+		Predicate p = cb.equal(root.get(Player_.playerName), playerName);
+		Predicate q = cb.equal(playerClientJoin.get(Client_.id), clientId);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
-        cq = cq.orderBy(cb.asc(root.get(Player_.playerName)));
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		cq = cq.orderBy(cb.asc(root.get(Player_.playerName)));
 
-        TypedQuery<Player> tq = getEm().createQuery(cq);
+		TypedQuery<Player> tq = getEm().createQuery(cq);
 
-        List<Player> resultList = tq.getResultList();
+		List<Player> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public Player getPlayerBySessionId(String userSession, String playerName) {
+	public Player getPlayerBySessionId(String userSession, String playerName) {
 
-        log.debug(logId() + "Entering getPlayerBySessionId(" + userSession + "," + playerName + ")");
+		log.debug(logId() + "Entering getPlayerBySessionId(" + userSession + "," + playerName + ")");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Player> cq = cb.createQuery(Player.class);
-        Root<Player> root = cq.from(Player.class);
-        Join<Player, Session> playerSessionJoin = root.join(Player_.session);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+		Root<Player> root = cq.from(Player.class);
+		Join<Player, Session> playerSessionJoin = root.join(Player_.session);
 
-        Predicate p = cb.equal(root.get(Player_.playerName), playerName);
-        Predicate q = cb.equal(playerSessionJoin.get(Session_.userSession), userSession);
+		Predicate p = cb.equal(root.get(Player_.playerName), playerName);
+		Predicate q = cb.equal(playerSessionJoin.get(Session_.userSession), userSession);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
-        cq = cq.orderBy(cb.asc(root.get(Player_.playerName)));
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		cq = cq.orderBy(cb.asc(root.get(Player_.playerName)));
 
-        TypedQuery<Player> tq = getEm().createQuery(cq);
+		TypedQuery<Player> tq = getEm().createQuery(cq);
 
-        List<Player> resultList = tq.getResultList();
+		List<Player> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Entities]");
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		log.debug(logId() + "[Found " + resultList.size() + " Entities]");
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public void insert(Player player) {
+	public void insert(Player player) {
 
-        log.debug(logId() + "Entering insert(" + player + ")");
+		log.debug(logId() + "Entering insert(" + player + ")");
 
-        super.insertPo(player);
-    }
+		super.insertPo(player);
+	}
 
-    public void update(Player player) {
+	public void update(Player player) {
 
-        log.debug(logId() + "Entering update(" + player.getId() + ")");
+		log.debug(logId() + "Entering update(" + player.getId() + ")");
 
-        super.updatePo(player);
-    }
+		super.updatePo(player);
+	}
 
-    public void delete(Player player) {
+	public void delete(Player player) {
 
-        log.debug(logId() + "Entering delete(" + player.getId() + ")");
+		log.debug(logId() + "Entering delete(" + player.getId() + ")");
 
-        super.deletePo(player);
-    }
+		super.deletePo(player);
+	}
 
 }

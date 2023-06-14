@@ -17,11 +17,11 @@
 
 package it.lms.tourney.cdi;
 
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.ws.rs.Produces;
 
 /**
  * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
@@ -38,16 +38,16 @@ import org.apache.log4j.Logger;
  */
 public class Resources {
 
-    // @Produces
-    // @PersistenceContext
-    // private EntityManager em;
+	// @Produces
+	// @PersistenceContext
+	// private EntityManager em;
 
-    @Produces
-    public Logger produceLog(InjectionPoint injectionPoint) {
+	@Produces
+	public Logger produceLog(InjectionPoint injectionPoint) {
 
-        Logger logger = LogManager.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+		Logger logger = LogManager.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
 
-        return logger;
-    }
+		return logger;
+	}
 
 }

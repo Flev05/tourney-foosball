@@ -42,7 +42,6 @@ export class PlayerListView extends AbstractListView {
 
     private onComplete(): any {
         console.log("Entering onComplete()");
-        
         this.rows = this.players = this.playerService.playerPool;    
     }
 
@@ -105,7 +104,6 @@ export class PlayerListView extends AbstractListView {
     private onDeleteComplete() {
         console.log("Entering onDeleteComplete()");
         if( !this.onDeletePlayerError ) {
-            
             let index: number = this.players.indexOf(this.deletePlayer);
             if(index > -1) {
                 this.players.splice(index, 1);

@@ -27,7 +27,7 @@ export enum Direction {
 }
 
 export enum MeetingStatus {
-    ToPlay='Da Giocare', InProgress='In Corso', Terminated='Terminata', Confermata='Confermata'
+    ToPlay='Da Giocare', InProgress='In Corso', Terminated='Terminata', Confirmed='Convalidata'
 }
 export enum ERoles {
     DEVELOPER, OWNER, ADMIN, OPERATOR, FOLLOWER

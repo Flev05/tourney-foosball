@@ -24,16 +24,22 @@
 }
 .toplay {
     text-align: center; 
-    font-size: 50%;
-    color: green;
+    font-weight: bold;
+    color: blue;
 }
 .inProgress {
     text-align: center; 
-    font-size: 50%;
+    font-weight: bold;
     color: orange;
 }
 .terminated {
     text-align: center; 
-    font-size: 50%;
+    font-weight: bold;
     color: red;
 }
+.confirmed {
+    text-align: center; 
+    font-weight: bold;
+    color: green;
+}
+  

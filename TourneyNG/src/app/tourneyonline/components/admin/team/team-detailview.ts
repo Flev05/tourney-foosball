@@ -24,7 +24,11 @@ export class TeamDetailView extends AbstractDetailView {
     selectedRound: Round;
     teamNameCB: Combobox;
     teams4RoundCombobox: Combobox[]; 
-    isRoundAutoGen: string;
+    isRoundAutoGen: string; 
+
+    autoCompleteTeamName: string; 
+    filteredTeamsSingle: string[];
+    teams: Team[];
 
     constructor(
         protected location: Location,
@@ -47,10 +51,11 @@ export class TeamDetailView extends AbstractDetailView {
         
         this.selectedRound = null;
         if(this.teamService.newTeam) {
-            this.selectedTeam={id: 0, teamName:""};
-            this.selectedTeam.players = [];
-            this.tourneyService.selectedRound = null;
+            this.prepareNewTeam();
         }
+        this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
+
+        this.autoCompleteTeamName = this.selectedTeam.teamName;
         this.previousTeamName = this.selectedTeam.teamName;
         this.teamService.teamAlreadyExists = false;
 
@@ -80,8 +85,20 @@ export class TeamDetailView extends AbstractDetailView {
             this.teamNameCB = {label: this.selectedTeam.teamName, value: this.selectedTeam.id};
         }
     }
+    
+    private prepareNewTeam() {
+        this.selectedTeam = { id: 0, teamName: "" };
+        this.selectedTeam.players = [];
+        this.tourneyService.selectedRound = null;
+    }
+
+    private onLoadTeamsComplete(): any {
+        this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+        console.log("Loaded [" + this.teams.length + "] pool teams");
+    }
 
     saveTourneyTeam() {     
+        this.selectedTeam.teamName = this.autoCompleteTeamName;
         if(this.teamService.newTeam) {
             this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
             return;
@@ -95,13 +112,14 @@ export class TeamDetailView extends AbstractDetailView {
     } 
 
     saveRoundTeam() {
-        if( this.previousTeamName != this.selectedTeam.teamName ) {
+        this.selectedTeam.teamName = this.autoCompleteTeamName;
+        if( this.previousTeamName != this.selectedTeam.teamName && this.selectedTourney != undefined ) {
             for( let r of this.selectedTourney.roundVO.rounds) {
                 if( r.name == this.selectedRound.name ) {
                     let index = r.teamNames.indexOf(this.previousTeamName);
                     r.teamNames[index] = this.selectedTeam.teamName;
                     for( let c of r.classification ) {
-                        if( c.teamName == this.previousTeamName ) {
+                        if( c.teamName === this.previousTeamName ) {
                             c.teamName = this.selectedTeam.teamName;
                             break;
                         }
@@ -111,8 +129,9 @@ export class TeamDetailView extends AbstractDetailView {
             
             let cvo = this.clientService.selectedClient;
             let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, cvo);
-            this.tourneyService.updateTourneyRoundTeams(tvo,  () => super.goBack());
+            this.tourneyService.updateTourneyRoundTeams(tvo,  () => {});
         }
+        this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
     } 
     
     /**
@@ -130,11 +149,12 @@ export class TeamDetailView extends AbstractDetailView {
     }
     
     enableSaveButton() : string {
-        let n : String = this.selectedTeam.teamName;
-        if( n == undefined ) {
-            return  "disabled";
+        let n : String = this.autoCompleteTeamName;
+        if( n == undefined || n.trim() == "") {
+            this.prepareNewTeam();
+            return "disabled";
         }
-        return  n.trim() == "" ? "disabled" : "";
+        return "";
     }
 
     onError(message:any): any {
@@ -142,5 +162,17 @@ export class TeamDetailView extends AbstractDetailView {
     }
     onComplete(message:any): any {
         super.goBack();
+    }
+
+    searchTeam(event) {
+        let query = event.query;
+        this.filteredTeamsSingle = this.teamService.filterTeam(query, this.teams);
+        if(this.filteredTeamsSingle.length > 0) {
+            let partialTeamName = this.filteredTeamsSingle[0];
+            let index = this.teams.findIndex( t => t.teamName === partialTeamName);
+            if( index !== -1 ) {
+                this.selectedTeam = this.teams[index];
+            }
+        }
     }
 }

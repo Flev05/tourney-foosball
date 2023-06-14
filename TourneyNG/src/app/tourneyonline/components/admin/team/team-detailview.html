@@ -14,7 +14,7 @@
 </p-accordion>
 </div>
 
-<h4><span>Squadra: {{selectedTeam.teamName}}</span></h4>
+<h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -57,13 +57,18 @@
         
     <div class="ui-grid-row">
         <div class="ui-grid-col-1">
-            Nome*:
+            Squadra*:
         </div>
-
         <div *ngIf="!selectedRound || isRoundAutoGen=='true'" class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
-            <input pInputText type="text" [(ngModel)]="selectedTeam.teamName"/>
-        </div>      
-        <div *ngIf="selectedRound && isRoundAutoGen=='false'" class="ui-grid-col-3" tooltipPosition="right" 
+            <p-autoComplete id="team-id" 
+                [(ngModel)]="autoCompleteTeamName" 
+                [suggestions]="filteredTeamsSingle" 
+                (completeMethod)="searchTeam($event)" 
+                placeholder="Squadra" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>            
+        <div *ngIf="selectedRound && isRoundAutoGen=='false'" class="ui-grid-col-5" tooltipPosition="right" 
                 pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
             <p-dropdown id="teamsRoundId" 
                 [options]="teams4RoundCombobox" 
@@ -74,7 +79,7 @@
                 [autoWidth]="false">
             </p-dropdown>
         </div>  
-    </div>
+    </div>      
         
     <div class="ui-grid-row">
         <div class="ui-grid-col-1">

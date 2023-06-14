@@ -61,6 +61,8 @@ export class PlayerPickList extends AbstractListView {
                 this.avalilablePlayers.push(p.playerName);
             }
         }
+        this.avalilablePlayers.sort();
+        this.targetPlayers.sort();
     }
     
     onMoveToTarget(event) {
@@ -116,6 +118,9 @@ export class PlayerPickList extends AbstractListView {
         }
  
         this.selectedTourney.teams[index] = tourneyTeam;
+        let poolIndex = this.teamService.teamPool.findIndex(t => t.teamName == this.selectedTeam.teamName);
+        this.teamService.teamPool[poolIndex] = tourneyTeam;
+
         this.teamService.selectedTeam = tourneyTeam;
 
         let tvo: TourneyVO = {

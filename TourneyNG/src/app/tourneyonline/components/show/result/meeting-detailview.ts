@@ -20,8 +20,8 @@ import { LevelService } from '../../admin/eliminatory/level-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 
-const FREEZE_RESULT_POPUP: string = "Attenzione! La confema di tale scelta congela tutti i dati dell'incontro! Confermi?"
-const ON_RESET_POPUP: string = "Attenzione! La confema di tale scelta azzera tutti i dati dell'incontro! Confermi?"
+const FREEZE_RESULT_POPUP: string = "Attenzione! La conferma di tale scelta convalida definitivamente tutti i dati dell'incontro! Confermi?"
+const ON_RESET_POPUP: string = "Attenzione! La conferma di tale scelta azzera tutti i dati dell'incontro! Solo l'aministratore lo può riabilitare. Confermi?"
 @Component({
     templateUrl: './meeting-detailview.html' 
 })
@@ -48,6 +48,8 @@ export class MeetingDetailView extends AbstractDetailView {
     teams4RoundCombobox: Combobox[]; 
     totalScore1: number;
     totalScore2: number;
+    teamScore1: number;
+    teamScore2: number;
     qualifyingRounds: Round[];
     roundsNotTerminated: boolean = false;
 
@@ -147,10 +149,22 @@ export class MeetingDetailView extends AbstractDetailView {
     private computeTotals() {
         this.totalScore1 = 0;
         this.totalScore2 = 0;
+        this.teamScore1 = 0;
+        this.teamScore2 = 0;
         for (let m of this.matches) {
             this.totalScore1 += m.score1;
             this.totalScore2 += m.score2;
+            if(m.score1 ==  this.abstractRoundVO.pointsNeededToWin ) {
+                this.teamScore1++;
+            }
+            if(m.score2 ==  this.abstractRoundVO.pointsNeededToWin ) {
+                this.teamScore2++;
+            }
         }
+    }
+
+    public atLeastOneMatch(): boolean {
+        return this.matches.length > 1;
     }
 
     isAtLeastAdmin() : boolean {
@@ -170,12 +184,13 @@ export class MeetingDetailView extends AbstractDetailView {
         return false;
     }
 
-    disableButton() : string {
+    disableButton() : boolean {
         let disOp = this.disabledOperator() ;
         return this.loginService.isFollower() 
             || this.selectedMeeting.status == MeetingStatus.Terminated 
+            || this.selectedMeeting.status == MeetingStatus.Confirmed 
             || disOp 
-            ? "disabled" : "";
+            ? true : false;
     }
 
     onResetPoundsClick() {
@@ -208,6 +223,15 @@ export class MeetingDetailView extends AbstractDetailView {
         this.selectedMeeting.status = MeetingStatus.Terminated;
         this.save(true);
     }
+    onConfirmClick() {
+        console.log("Entering onConfirmClick()");
+        if(!confirm(FREEZE_RESULT_POPUP)) {
+            return;
+        }
+        this.selectedMeeting.status = MeetingStatus.Confirmed;
+        this.save(true);
+    }
+
 
     plus1(m: Match): void {
         this.selectedMeeting.status = MeetingStatus.InProgress;
@@ -406,7 +430,15 @@ export class MeetingDetailView extends AbstractDetailView {
             this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => this.toGoBack(goback), e => this.serverUnreachableHandler(e) );
             return;
         }
+        if( this.selectedMeetingDb.playoutId != null ) {
+            let p: Playoff = this.selectedTourney.playoutVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoutId );
+            this.meetingPlayoffService.reloadPlayoutMeetings(this.selectedTourney.id, p, () => this.toGoBack(goback), e => this.serverUnreachableHandler(e) );
+            return;
+        }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
+            this.toGoBack(goback);
+        }
+        if( this.selectedMeetingDb.eliminatoryBId != null ) {
             this.toGoBack(goback);
         }
     }

@@ -725,16 +725,37 @@
                     Inserire in questa vista tutte le squadre compongono il torneo, a prescindere da come saranno suddivise in gironi.
                 </p>
                 <p>
-                    Sono disponibili 2 operazioni:
+                    Sono disponibili 3 operazioni:
                 </p>
                 <ul>
                     <li>Gestisci/Aggiungi squadre</li>
+                    <li>Rimuovi squadra dal torneo</li>
                     <li>Gestisci lista di giocatori della squadra</li>
                 </ul>   
                 <h4>Gestisci/Aggiungi squadre</h4>
                 <p>
                     Per gestire la lista delle squadre del torneo, dovete usare il bottone Gestisci Squadre che vi farà
                     accedere alla vista di gestione delle squadre come descritto nella vista corrispondente.
+                </p>
+                <p>
+                    Quando inserite una nuova squadra, il sistema verifica che il nome della squadra esista già
+                    a livello di torneo o a livello di società. Se esiste già vi propone quella già esitente così 
+                    potete modificare i dati presentati, se occorre. Se la squadra non esiste,
+                    dovete inserire tutti i dati della squadra richiesti. La squadra, se nuova, viene inserita
+                    sia a livello di torneo che di società.
+                </p>
+                <p>
+                    N.B. L'aggiunta di una squadra al torneo comporta l'annullamento dei gironi e degli incontri preesistenti.
+                </p>                
+                <h4>Rimuovi squadra dal torneo</h4>
+                <p>
+                    Si tratta di rimuovere la squadra selezionata SOLO a livello di torneo, se presente in anagrafica globale della
+                    società, rimarrà a livello di società. 
+                    Per eventuale rimozione globale, bisogna utilizzare la vista Team a livello di società. 
+                </p>
+                <p>
+                    N.B. La rimozione di una squadra dal torneo comporta l'annullamento
+                    dei gironi e degli incontri preesistenti.
                 </p>
                 <h4>Gestisci lista di giocatori della squadra</h4>
                 <p>
@@ -783,6 +804,7 @@
                         <th *ngFor="let col of columns">
                             {{col.header}}
                         </th>
+                        <th style="width: 15mm;">X</th>
                     </tr>
                 </ng-template>
         
@@ -791,6 +813,9 @@
                         <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
                         <td *ngFor="let col of columns">
                             {{rowData[col.field]}}
+                        </td>
+                        <td style="width: 15mm;">
+                            <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="deleteTeam(rowData)"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -1144,7 +1169,7 @@
                     Scegliere se, per ciascun girone di play off, ci sono i turni di solo andata o di andata e ritorno.
                 </p>
                 <p>
-                    Scegliere la modalità di generazione deo playoff: Automatico o Manuale.
+                    Scegliere la modalità di generazione dei playoff: Automatico o Manuale.
                 </p>
                 <p>
                     Scegliere, dalla combo box Gironi, il numero di gironi di playoff che si intende impostare per il torneo.

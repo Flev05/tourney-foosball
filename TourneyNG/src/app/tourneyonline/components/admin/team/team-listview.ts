@@ -9,6 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from './team-detailview';
 import { Observable, of } from 'rxjs';
+import { Table } from 'primeng/table';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -22,6 +23,8 @@ export class TeamListView extends AbstractListView {
     teams: Team[] = [];
     deleteTeam: Team;
     onDeleteTeamError: boolean;
+
+    teamNameFilter: string;
 
     constructor(
         protected tourneyService: TourneyService,

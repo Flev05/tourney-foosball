@@ -27,7 +27,7 @@ export class MeetingPlayoffService extends MeetingService {
         , protected dateFormatPipe: DateFormatPipe
         ) 
     { 
-        super( http, router, dateFormatPipe );
+        super( http, router, dateFormatPipe  );
         console.log("Constructor of MeetingPlayoffService");
     }
 
@@ -36,9 +36,13 @@ export class MeetingPlayoffService extends MeetingService {
      *  GET meetings by params. Will 404 if meetings not found 
      */
     reloadPlayoffMeetings(tourneyId: number, p: Playoff, complete: () => void, error: (error: any) => any ) : Observable<MeetingDb[]> {
-
         let obs = super.loadPlayoffMeeting(tourneyId, p.id, e => error(e));
- 
+        obs.subscribe(t => this.onPlayoffCompleteLoad(t, p, complete), e => error(e));
+        return obs;
+    }
+    
+    reloadPlayoutMeetings(tourneyId: number, p: Playoff, complete: () => void, error: (error: any) => any ) : Observable<MeetingDb[]> {
+        let obs = super.loadPlayoutMeeting(tourneyId, p.id, e => error(e));
         obs.subscribe(t => this.onPlayoffCompleteLoad(t, p, complete), e => error(e));
         return obs;
     }

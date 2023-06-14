@@ -9,7 +9,7 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">              
         <p>
-            Vista elenco di tutte le squadre che compongono il torneo
+            Vista elenco di tutte le squadre della società
         </p>
         <p>
             Da questa vista potete eseguire le seguenti operazioni:
@@ -17,12 +17,12 @@
         <ul>
             <li>Creare una nuova squadra</li>
             <li>Selezionare una squadra esistente</li>
-            <li>Rimuovere anagrafica squadra</li>
+            <li>Rimuovere una squadra esistente</li>
         </ul>
 
         <h4>Creare una nuova squadra</h4>
         <p>
-            Con il bottone Aggiungi Squadra si apre la vista di dettaglio dalla quale compilare l'anagrafica di una nuova squdra.
+            Con il bottone Aggiungi Squadra si apre la vista di dettaglio dalla quale compilare l'anagrafica di una nuova squadra.
             La squadra creata sarà disponibile per essere inserita in qualsiasi torneo.
         </p>            
         <p>        
@@ -54,14 +54,14 @@
     <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="gotoListView()" label="Elenco Tornei"></button>
 </div>   
      
-<p-table [responsive]="true" 
+<p-table #table [responsive]="true" 
     [columns]="cols" 
     [value]="teams" 
     selectionMode="single"
     [(selection)]="selectedTeam" 
     (onRowSelect)="onRowSelect($event)" 
     [scrollable]="true" 
-    scrollHeight="500px">
+    scrollHeight="250px">
 
     <ng-template pTemplate="caption">
         <div style="text-align:center">
@@ -75,10 +75,17 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th style="width: 15mm;">N°</th>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
+            <th>Nome</th>
+            <th>Indirizzo</th>
             <th style="width: 15mm;">X</th>
+        </tr>
+        <tr>
+            <th style="width: 15mm;"></th>
+            <th>
+                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'teamName', 'contains')">
+            </th>
+            <th></th>
+            <th style="width: 15mm;"></th>
         </tr>
     </ng-template>
 

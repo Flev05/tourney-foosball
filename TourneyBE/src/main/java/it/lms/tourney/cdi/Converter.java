@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import it.lms.cb.gui.vo.ClientVO;
 import it.lms.cb.gui.vo.MeetingVO;
 import it.lms.cb.gui.vo.PlayerVO;
@@ -33,6 +31,7 @@ import it.lms.tourney.po.Team;
 import it.lms.tourney.po.Tourney;
 import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
+import jakarta.inject.Inject;
 
 @ConverterObject
 public class Converter extends AbstractLogger {

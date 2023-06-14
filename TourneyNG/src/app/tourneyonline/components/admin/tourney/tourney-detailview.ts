@@ -615,6 +615,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private prepareEliminatoryB() {
         console.log("Entering prepareEliminatoryB()");
+        this.levelService.eliminatoryBLevels = [];
         this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
         if(this.selectedTourney.eliminatoryBLevels==undefined) {
             this.selectedTourney.eliminatoryBLevels = [];
@@ -632,7 +633,28 @@ export class TourneyDetailView extends AbstractDetailView {
         this.userService.selectedUser = this.selectedOperator;
         this.router.navigate([OperatorDetailView.redirect]);
     }
-    
+
+    deleteTeam(team: Team) {
+        console.log("deleteTeam(): " + team.teamName);
+        let popup = 'Sicuro di voler rimuovere il TEAM: ' + team.teamName + " a livello di torneo?";
+
+        if(confirm(popup)) {
+            this.removeTeamFromTourney(team);
+            let tvo: TourneyVO = this.prepareTourneyVO();
+            const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+             if( !this.onSaveTourneyError ) {
+                subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => {});
+            } 
+        }
+    }
+
+    private removeTeamFromTourney(team : Team): any {
+        let index = this.selectedTourney.teams.findIndex( t => t.teamName === team.teamName );
+        if( index !== -1 ) {
+            this.selectedTourney.teams.splice(index, 1); // Remove the element at index from the teams
+        }
+    }
+
     deleteOperator(uvo: UserVO) {
         console.log("Entering deleteOperator( " + uvo.username + "):");
         let popup = "Sicuro di voler rimuovere l'operatore: " + uvo.username + "?";

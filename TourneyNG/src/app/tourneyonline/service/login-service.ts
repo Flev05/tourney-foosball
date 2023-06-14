@@ -8,7 +8,6 @@ import { catchError, tap } from 'rxjs/operators';
 import { Login } from '../domain/login';
 import { RoleService } from './role-service';
 import { UserService } from './user-service';
-import { environment } from 'environments/environment';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,6 +21,7 @@ export class LoginService {
     userLogged   : Login;
     isUserLogged : boolean = false;
     blockedDocument: boolean;
+    currentYear: string;
 
     constructor(private http: HttpClient
         , private userService: UserService
@@ -29,6 +29,7 @@ export class LoginService {
         { 
         console.log("Constructor of LoginService");
         this.isUserLogged = false;
+        this.currentYear="2023";
     }
 
     isDeveloper(): boolean {

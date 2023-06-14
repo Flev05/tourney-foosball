@@ -3,15 +3,14 @@ package it.lms.tourney.rest;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import it.lms.tourney.dao.DisciplineDao;
 import it.lms.tourney.po.Discipline;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,17 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DisciplineRESTService extends AbstractRESTService {
 
-    @Inject
-    private DisciplineDao disciplineDao;
+	@Inject
+	private DisciplineDao disciplineDao;
 
-    @GET
-    @Path("/loadAll")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Discipline> loadAll() {
+	@GET
+	@Path("/loadAll")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Discipline> loadAll() {
 
-        log.debug(logId() + "GET: loadAll()");
-        List<Discipline> disciplineList = disciplineDao.findAllDisciplines();
+		log.debug(logId() + "GET: loadAll()");
+		List<Discipline> disciplineList = disciplineDao.findAllDisciplines();
 
-        return disciplineList;
-    }
+		return disciplineList;
+	}
 }

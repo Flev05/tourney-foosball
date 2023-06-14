@@ -19,13 +19,6 @@ package it.lms.tourney.dao;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Client_;
@@ -39,242 +32,253 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Slf4j
 public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
-    public TourneyDao() {
+	public TourneyDao() {
 
-        super(Tourney.class);
-    }
+		super(Tourney.class);
+	}
 
-    /**
-     * Finds all Tourneys by received its unique identifier
-     * 
-     * @param id unique identifier
-     * @return the found Tourney
-     */
-    public Tourney getById(Integer id) {
+	/**
+	 * Finds all Tourneys by received its unique identifier
+	 * 
+	 * @param id
+	 *            unique identifier
+	 * @return the found Tourney
+	 */
+	public Tourney getById(Integer id) {
 
-        return super.findById(id);
-    }
+		return super.findById(id);
+	}
 
-    /**
-     * Finds all Tourneys associated to the received logged user id
-     * 
-     * @param loggedUserId the user identifier
-     * @return the list of Tourneys related to the logged user id
-     */
-    public List<Tourney> findTourneysByClientId(Integer clientId) {
+	/**
+	 * Finds all Tourneys associated to the received logged user id
+	 * 
+	 * @param loggedUserId
+	 *            the user identifier
+	 * @return the list of Tourneys related to the logged user id
+	 */
+	public List<Tourney> findTourneysByClientId(Integer clientId) {
 
-        log.debug(logId() + "Entering findTourneysByClientId()");
+		log.debug(logId() + "Entering findTourneysByClientId()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
-        Root<Tourney> root = cq.from(Tourney.class);
+		CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+		Root<Tourney> root = cq.from(Tourney.class);
 
-        Join<Tourney, Client> tourneyClientJoin = root.join(Tourney_.client);
+		Join<Tourney, Client> tourneyClientJoin = root.join(Tourney_.client);
 
-        Predicate p = cb.equal(tourneyClientJoin.get(Client_.id), clientId);
+		Predicate p = cb.equal(tourneyClientJoin.get(Client_.id), clientId);
 
-        cq = cq.select(root);
-        cq = cq.where(p);
+		cq = cq.select(root);
+		cq = cq.where(p);
 
-        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 
-        List<Tourney> resultList = tq.getResultList();
+		List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+		log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    /**
-     * Finds all Tourneys associated to the received client id and logged user id having Operator and Follower roles
-     * 
-     * @param clientId the client identifier
-     * @param loggedUserId the user identifier
-     * @return the list of Tourneys related to the logged user id
-     */
-    public List<Tourney> findTourneysLesserThanAdmin(Integer clientId, Integer loggedUserId) {
+	/**
+	 * Finds all Tourneys associated to the received client id and logged user id having Operator and Follower roles
+	 * 
+	 * @param clientId
+	 *            the client identifier
+	 * @param loggedUserId
+	 *            the user identifier
+	 * @return the list of Tourneys related to the logged user id
+	 */
+	public List<Tourney> findTourneysLesserThanAdmin(Integer clientId, Integer loggedUserId) {
 
-        log.debug(logId() + "Entering findTourneysLesserThanAdmin()");
+		log.debug(logId() + "Entering findTourneysLesserThanAdmin()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
-        Root<User> root = cq.from(User.class);
+		CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+		Root<User> root = cq.from(User.class);
 
-        Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
-        Join<UserRoleClient, Tourney> tourneyJoin = urcJoin.join(UserRoleClient_.tourney);
-        Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
-        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+		Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+		Join<UserRoleClient, Tourney> tourneyJoin = urcJoin.join(UserRoleClient_.tourney);
+		Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
+		Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
 
-        Predicate p1 = cb.equal(root.get(User_.id), loggedUserId);
-        Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
-        Predicate p3 = roleJoin.get(Role_.name).in(Role.ROLES.OPERATOR.name(), Role.ROLES.FOLLOWER.name());
+		Predicate p1 = cb.equal(root.get(User_.id), loggedUserId);
+		Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
+		Predicate p3 = roleJoin.get(Role_.name).in(Role.ROLES.OPERATOR.name(), Role.ROLES.FOLLOWER.name());
 
-        cq = cq.select(tourneyJoin);
-        cq = cq.where(p1, p2, p3);
+		cq = cq.select(tourneyJoin);
+		cq = cq.where(p1, p2, p3);
 
-        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 
-        List<Tourney> resultList = tq.getResultList();
+		List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+		log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    /**
-     * Finds all Tourneys associated to the received logged user id
-     * 
-     * @param loggedUserId the user identifier
-     * @return the list of Tourneys related to the logged user id
-     */
-    public List<Tourney> findTourneysBySessionId(String sessionId) {
+	/**
+	 * Finds all Tourneys associated to the received logged user id
+	 * 
+	 * @param loggedUserId
+	 *            the user identifier
+	 * @return the list of Tourneys related to the logged user id
+	 */
+	public List<Tourney> findTourneysBySessionId(String sessionId) {
 
-        log.debug(logId() + "Entering findTourneysBySessionId()");
+		log.debug(logId() + "Entering findTourneysBySessionId()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
-        Root<Tourney> root = cq.from(Tourney.class);
+		CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+		Root<Tourney> root = cq.from(Tourney.class);
 
-        Join<Tourney, Session> tourneySessionJoin = root.join(Tourney_.session);
+		Join<Tourney, Session> tourneySessionJoin = root.join(Tourney_.session);
 
-        Predicate p = cb.equal(tourneySessionJoin.get(Session_.userSession), sessionId);
+		Predicate p = cb.equal(tourneySessionJoin.get(Session_.userSession), sessionId);
 
-        cq = cq.select(root);
-        cq = cq.where(p);
+		cq = cq.select(root);
+		cq = cq.where(p);
 
-        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 
-        List<Tourney> resultList = tq.getResultList();
+		List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+		log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    public Tourney getTourneyByClient(Integer clientId, String tourneyName) {
+	public Tourney getTourneyByClient(Integer clientId, String tourneyName) {
 
-        log.debug(logId() + "Entering getTourneyByClient()");
+		log.debug(logId() + "Entering getTourneyByClient()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
-        Root<Tourney> root = cq.from(Tourney.class);
+		CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+		Root<Tourney> root = cq.from(Tourney.class);
 
-        Join<Tourney, Client> tourneyClientJoin = root.join(Tourney_.client);
+		Join<Tourney, Client> tourneyClientJoin = root.join(Tourney_.client);
 
-        Predicate p = cb.equal(tourneyClientJoin.get(Client_.id), clientId);
+		Predicate p = cb.equal(tourneyClientJoin.get(Client_.id), clientId);
 
-        Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
+		Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
-        cq = cq.orderBy(cb.asc(root.get(Tourney_.tourneyName)));
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		cq = cq.orderBy(cb.asc(root.get(Tourney_.tourneyName)));
 
-        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 
-        List<Tourney> resultList = tq.getResultList();
+		List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+		log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public Tourney getTourneyBySession(String userSession, String tourneyName) {
+	public Tourney getTourneyBySession(String userSession, String tourneyName) {
 
-        log.debug(logId() + "Entering getTourneyBySession()");
+		log.debug(logId() + "Entering getTourneyBySession()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
-        Root<Tourney> root = cq.from(Tourney.class);
+		CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+		Root<Tourney> root = cq.from(Tourney.class);
 
-        Join<Tourney, Session> tourneySessionJoin = root.join(Tourney_.session);
+		Join<Tourney, Session> tourneySessionJoin = root.join(Tourney_.session);
 
-        Predicate p = cb.equal(tourneySessionJoin.get(Session_.userSession), userSession);
+		Predicate p = cb.equal(tourneySessionJoin.get(Session_.userSession), userSession);
 
-        Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
+		Predicate q = cb.equal(root.get(Tourney_.tourneyName), tourneyName);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
-        cq = cq.orderBy(cb.asc(root.get(Tourney_.tourneyName)));
+		cq = cq.select(root);
+		cq = cq.where(p, q);
+		cq = cq.orderBy(cb.asc(root.get(Tourney_.tourneyName)));
 
-        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 
-        List<Tourney> resultList = tq.getResultList();
+		List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+		log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public Tourney getByFollower(String username) {
+	public Tourney getByFollower(String username) {
 
-        log.debug(logId() + "Entering getByFollower()");
+		log.debug(logId() + "Entering getByFollower()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
-        Root<Tourney> root = cq.from(Tourney.class);
+		CriteriaQuery<Tourney> cq = cb.createQuery(Tourney.class);
+		Root<Tourney> root = cq.from(Tourney.class);
 
-        Join<Tourney, UserRoleClient> urcJoin = root.join(Tourney_.urcs);
-        Join<UserRoleClient, User> userJoin = urcJoin.join(UserRoleClient_.user);
-        Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+		Join<Tourney, UserRoleClient> urcJoin = root.join(Tourney_.urcs);
+		Join<UserRoleClient, User> userJoin = urcJoin.join(UserRoleClient_.user);
+		Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
 
-        Predicate p1 = cb.equal(userJoin.get(User_.username), username);
-        Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.FOLLOWER.name());
+		Predicate p1 = cb.equal(userJoin.get(User_.username), username);
+		Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.FOLLOWER.name());
 
-        cq = cq.select(root);
-        cq = cq.where(p1, p2);
+		cq = cq.select(root);
+		cq = cq.where(p1, p2);
 
-        TypedQuery<Tourney> tq = getEm().createQuery(cq);
+		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 
-        List<Tourney> resultList = tq.getResultList();
+		List<Tourney> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
+		log.debug(logId() + "[Found " + resultList.size() + " Tourneys]");
 
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public void insert(Tourney t) {
+	public void insert(Tourney t) {
 
-        log.debug(logId() + "Entering insert(" + t.getJson() + ")");
+		log.debug(logId() + "Entering insert(" + t.getJson() + ")");
 
-        super.insertPo(t);
-    }
+		super.insertPo(t);
+	}
 
-    public void update(Tourney t) {
+	public void update(Tourney t) {
 
-        log.debug(logId() + "Entering update(" + t.getId() + ")");
+		log.debug(logId() + "Entering update(" + t.getId() + ")");
 
-        super.updatePo(t);
-    }
+		super.updatePo(t);
+	}
 
-    public void delete(Tourney t) {
+	public void delete(Tourney t) {
 
-        log.debug(logId() + "Entering delete(" + t.getId() + ")");
+		log.debug(logId() + "Entering delete(" + t.getId() + ")");
 
-        super.deletePo(t);
-    }
+		super.deletePo(t);
+	}
 
 }

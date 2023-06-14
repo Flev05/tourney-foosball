@@ -7,13 +7,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.cb.dao.DaoException;
 import it.lms.tourney.po.Client;
@@ -26,6 +19,12 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -261,6 +260,31 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 
 		Predicate p1 = roleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name(), Role.ROLES.OWNER.name(),
 				Role.ROLES.ADMIN.name());
+
+		Predicate pAndQ = getCb().and(p1);
+		cq = cq.select(root);
+		cq = cq.where(pAndQ);
+
+		TypedQuery<User> nq = getEm().createQuery(cq);
+
+		List<User> poList = nq.getResultList();
+		String info = "[Found " + poList.size() + " User(s)] ";
+		log.info(logId() + info);
+
+		return poList;
+	}
+
+	public List<User> findAllUsersAtLeastOperator() {
+
+		CriteriaQuery<User> cq = getCb().createQuery(User.class);
+
+		Root<User> root = cq.from(User.class);
+
+		Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+		Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+
+		Predicate p1 = roleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name(), Role.ROLES.OWNER.name(),
+				Role.ROLES.ADMIN.name(), Role.ROLES.OPERATOR.name());
 
 		Predicate pAndQ = getCb().and(p1);
 		cq = cq.select(root);

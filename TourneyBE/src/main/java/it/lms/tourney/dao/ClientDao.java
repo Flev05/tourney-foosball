@@ -21,13 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import it.lms.cb.dao.BaseJPACrudDao;
 import it.lms.tourney.po.Client;
 import it.lms.tourney.po.Client_;
@@ -37,193 +30,201 @@ import it.lms.tourney.po.User;
 import it.lms.tourney.po.UserRoleClient;
 import it.lms.tourney.po.UserRoleClient_;
 import it.lms.tourney.po.User_;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Slf4j
 public class ClientDao extends BaseJPACrudDao<Client, Integer> {
 
-    public ClientDao() {
+	public ClientDao() {
 
-        super(Client.class);
-    }
+		super(Client.class);
+	}
 
-    public Client getById(Integer id) {
+	public Client getById(Integer id) {
 
-        return super.findById(id);
-    }
+		return super.findById(id);
+	}
 
-    /**
-     * Finds all clients belonging to the same user loggedUserId and having OWNER role
-     * 
-     * @param loggedUserId the logged user identifier
-     * @return the list of urc
-     */
-    public List<Client> findOwnerClients(Integer loggedUserId) {
+	/**
+	 * Finds all clients belonging to the same user loggedUserId and having OWNER role
+	 * 
+	 * @param loggedUserId
+	 *            the logged user identifier
+	 * @return the list of urc
+	 */
+	public List<Client> findOwnerClients(Integer loggedUserId) {
 
-        log.debug(logId() + "Entering findOwnerClients()");
+		log.debug(logId() + "Entering findOwnerClients()");
 
-        List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.OWNER);
+		List<Role.ROLES> roleList = Arrays.asList(Role.ROLES.OWNER);
 
-        List<UserRoleClient> urcList = findClientsByRole(loggedUserId, roleList);
+		List<UserRoleClient> urcList = findClientsByRole(loggedUserId, roleList);
 
-        List<Client> clientList = urcList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
+		List<Client> clientList = urcList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
 
-        return clientList;
-    }
+		return clientList;
+	}
 
-    public List<UserRoleClient> findClientsByRole(Integer loggedUserId, List<Role.ROLES> roleList) {
+	public List<UserRoleClient> findClientsByRole(Integer loggedUserId, List<Role.ROLES> roleList) {
 
-        log.debug(logId() + "Entering findClientsByRole()");
+		log.debug(logId() + "Entering findClientsByRole()");
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
-        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+		CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+		Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
-        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+		Join<UserRoleClient, Role> urcRoleJoin = root.join(UserRoleClient_.role);
+		Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
 
-        Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
+		Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
 
-        List<String> roles = roleList.stream().map(r -> r.name()).collect(Collectors.toList());
-        Predicate q = urcRoleJoin.get(Role_.name).in(roles);
+		List<String> roles = roleList.stream().map(r -> r.name()).collect(Collectors.toList());
+		Predicate q = urcRoleJoin.get(Role_.name).in(roles);
 
-        cq = cq.select(root);
-        cq = cq.where(p, q);
+		cq = cq.select(root);
+		cq = cq.where(p, q);
 
-        TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
+		TypedQuery<UserRoleClient> tq = getEm().createQuery(cq);
 
-        List<UserRoleClient> resultList = tq.getResultList();
+		List<UserRoleClient> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
+		log.debug(logId() + "[Found " + resultList.size() + " Clients]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    /**
-     * Finds all clients associated to the received logged user id
-     * 
-     * @param loggedUserId the user identifier
-     * @return the list of clients related to the logged user id
-     */
-    public List<Client> findClientsByUser(Integer loggedUserId) {
+	/**
+	 * Finds all clients associated to the received logged user id
+	 * 
+	 * @param loggedUserId
+	 *            the user identifier
+	 * @return the list of clients related to the logged user id
+	 */
+	public List<Client> findClientsByUser(Integer loggedUserId) {
 
-        log.debug(logId() + "Entering findClientsByUser({})", loggedUserId);
+		log.debug(logId() + "Entering findClientsByUser({})", loggedUserId);
 
-        CriteriaBuilder cb = getCb();
+		CriteriaBuilder cb = getCb();
 
-        CriteriaQuery<Client> cq = cb.createQuery(Client.class);
-        Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+		CriteriaQuery<Client> cq = cb.createQuery(Client.class);
+		Root<UserRoleClient> root = cq.from(UserRoleClient.class);
 
-        Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
-        Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+		Join<UserRoleClient, User> urcUserJoin = root.join(UserRoleClient_.user);
+		Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
 
-        Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
+		Predicate p = cb.equal(urcUserJoin.get(User_.id), loggedUserId);
 
-        cq = cq.select(clientJoin);
-        cq = cq.where(p);
-        cq = cq.distinct(true);
+		cq = cq.select(clientJoin);
+		cq = cq.where(p);
+		cq = cq.distinct(true);
 
-        TypedQuery<Client> tq = getEm().createQuery(cq);
+		TypedQuery<Client> tq = getEm().createQuery(cq);
 
-        List<Client> poList = tq.getResultList();
+		List<Client> poList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + poList.size() + " Clients]");
+		log.debug(logId() + "[Found " + poList.size() + " Clients]");
 
-        // List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
+		// List<Client> clientList = resultList.stream().map(urc -> urc.getClient()).collect(Collectors.toList());
 
-        return poList;
-    }
+		return poList;
+	}
 
-    public List<Client> findAllClients() {
+	public List<Client> findAllClients() {
 
-        log.debug(logId() + "Entering findByEmail()");
+		log.debug(logId() + "Entering findByEmail()");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
-        Root<Client> root = criteria.from(Client.class);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+		Root<Client> root = criteria.from(Client.class);
 
-        criteria = criteria.select(root);
+		criteria = criteria.select(root);
 
-        TypedQuery<Client> tq = getEm().createQuery(criteria);
+		TypedQuery<Client> tq = getEm().createQuery(criteria);
 
-        List<Client> resultList = tq.getResultList();
+		List<Client> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
+		log.debug(logId() + "[Found " + resultList.size() + " Clients]");
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    public Client findByEmail(String email) {
+	public Client findByEmail(String email) {
 
-        log.debug(logId() + "Entering findByEmail(" + email + ")");
+		log.debug(logId() + "Entering findByEmail(" + email + ")");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
-        Root<Client> root = criteria.from(Client.class);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+		Root<Client> root = criteria.from(Client.class);
 
-        Predicate p = cb.equal(root.get(Client_.email), email);
+		Predicate p = cb.equal(root.get(Client_.email), email);
 
-        criteria = criteria.select(root);
-        criteria = criteria.where(p);
+		criteria = criteria.select(root);
+		criteria = criteria.where(p);
 
-        TypedQuery<Client> tq = getEm().createQuery(criteria);
+		TypedQuery<Client> tq = getEm().createQuery(criteria);
 
-        List<Client> resultList = tq.getResultList();
+		List<Client> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		log.debug(logId() + "[Found " + resultList.size() + " Clients]");
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public Client getByBusinssName(String businessName) {
+	public Client getByBusinssName(String businessName) {
 
-        log.debug(logId() + "Entering getByBusinssName(" + businessName + ")");
+		log.debug(logId() + "Entering getByBusinssName(" + businessName + ")");
 
-        CriteriaBuilder cb = getCb();
-        CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
-        Root<Client> root = criteria.from(Client.class);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<Client> criteria = cb.createQuery(Client.class);
+		Root<Client> root = criteria.from(Client.class);
 
-        Predicate p = cb.equal(root.get(Client_.businessName), businessName);
+		Predicate p = cb.equal(root.get(Client_.businessName), businessName);
 
-        criteria = criteria.select(root);
-        criteria = criteria.where(p);
+		criteria = criteria.select(root);
+		criteria = criteria.where(p);
 
-        TypedQuery<Client> tq = getEm().createQuery(criteria);
+		TypedQuery<Client> tq = getEm().createQuery(criteria);
 
-        List<Client> resultList = tq.getResultList();
+		List<Client> resultList = tq.getResultList();
 
-        log.debug(logId() + "[Found " + resultList.size() + " Clients]");
-        if (resultList.isEmpty()) {
-            return null;
-        }
+		log.debug(logId() + "[Found " + resultList.size() + " Clients]");
+		if (resultList.isEmpty()) {
+			return null;
+		}
 
-        return resultList.get(0);
-    }
+		return resultList.get(0);
+	}
 
-    public void insert(Client client) {
+	public void insert(Client client) {
 
-        log.debug(logId() + "Entering insert(" + client + ")");
+		log.debug(logId() + "Entering insert(" + client + ")");
 
-        super.insertPo(client);
-    }
+		super.insertPo(client);
+	}
 
-    public void update(Client client) {
+	public void update(Client client) {
 
-        log.debug(logId() + "Entering update(" + client + ")");
+		log.debug(logId() + "Entering update(" + client + ")");
 
-        super.updatePo(client);
-    }
+		super.updatePo(client);
+	}
 
-    public void delete(Client client) {
+	public void delete(Client client) {
 
-        log.debug(logId() + "Entering delete(" + client + ")");
+		log.debug(logId() + "Entering delete(" + client + ")");
 
-        super.deletePo(client);
-    }
+		super.deletePo(client);
+	}
 
 }

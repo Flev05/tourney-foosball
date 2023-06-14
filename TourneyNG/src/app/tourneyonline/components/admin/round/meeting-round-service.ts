@@ -28,7 +28,7 @@ export class MeetingRoundService extends MeetingService {
         , protected clientService: ClientService
         , protected dateFormatPipe: DateFormatPipe ) 
     { 
-        super( http, router, dateFormatPipe );
+        super( http, router, dateFormatPipe  );
         console.log("Constructor of MeetingRoundService");
     }
     

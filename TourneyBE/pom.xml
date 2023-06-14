@@ -11,6 +11,10 @@
 	<description>Tournament project</description>
 
     <properties>
+        <!-- maven-compiler-plugin -->
+        <java.version>17</java.version>		   
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
 
         <!-- A base list of dependency and plug-in version used in the various quick starts. -->
         <version.wildfly.maven.plugin>1.2.0.Final</version.wildfly.maven.plugin>
@@ -28,8 +32,6 @@
         <version.server.bom>12.0.0.Final</version.server.bom>
         
         <version.jboss.spec.javaee.7.0>1.1.1.Final</version.jboss.spec.javaee.7.0>
-
-        <version.jaxws-tools-maven-plugin>1.2.0.Final</version.jaxws-tools-maven-plugin>
 
         <!-- Other dependency versions -->
         <version.ro.isdc.wro4j>1.7.9</version.ro.isdc.wro4j>
@@ -150,13 +152,22 @@
 				<version>5.0.1.Final</version>
 				<scope>provided</scope>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api -->
+			<!-- https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api 
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.1-api</artifactId>
 				<version>1.0.0.Final</version>
 				<scope>provided</scope>
 			</dependency>
+			-->
+			
+			<!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+			<dependency>
+			    <groupId>jakarta.persistence</groupId>
+			    <artifactId>jakarta.persistence-api</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
+			
 			<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -166,6 +177,68 @@
 			</dependency>    
 			<!-- END HIBERNATE SECTION -->
         
+			<dependency>
+			   <groupId>org.postgresql</groupId>
+			   <artifactId>postgresql</artifactId>
+			   <version>42.5.1</version>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api -->
+			<dependency>
+			    <groupId>jakarta.mail</groupId>
+			    <artifactId>jakarta.mail-api</artifactId>
+			    <version>2.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.mail</groupId>
+				<artifactId>jakarta.mail</artifactId>
+				<version>2.0.0-RC4</version>
+			</dependency>
+ 
+			<!-- https://mvnrepository.com/artifact/jakarta.el/jakarta.el-api -->
+			<dependency>
+			    <groupId>jakarta.el</groupId>
+			    <artifactId>jakarta.el-api</artifactId>
+			    <version>5.0.1</version>
+			</dependency>
+	
+			<!-- https://mvnrepository.com/artifact/jakarta.inject/jakarta.inject-api -->
+			<dependency>
+			    <groupId>jakarta.inject</groupId>
+			    <artifactId>jakarta.inject-api</artifactId>
+			    <version>2.0.1</version>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/jakarta.ejb/jakarta.ejb-api -->
+			<dependency>
+			    <groupId>jakarta.ejb</groupId>
+			    <artifactId>jakarta.ejb-api</artifactId>
+			    <version>4.0.1</version>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
+			<dependency>
+			    <groupId>jakarta.enterprise</groupId>
+			    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+			    <version>4.0.1</version>
+			    <scope>provided</scope>
+			</dependency>
+        
+			<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+			<dependency>
+			    <groupId>jakarta.servlet</groupId>
+			    <artifactId>jakarta.servlet-api</artifactId>
+			    <version>6.0.0</version>
+			    <scope>provided</scope>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api -->
+			<dependency>
+			    <groupId>jakarta.ws.rs</groupId>
+			    <artifactId>jakarta.ws.rs-api</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
+
         </dependencies>
     </dependencyManagement>
 	
@@ -175,33 +248,43 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-        <!-- Import the CDI API, we use provided scope as the API is included in JBoss EAP 6 -->
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
+		
+		<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
 		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>el-api</artifactId>
-			<version>2.2</version>
+		    <groupId>jakarta.enterprise</groupId>
+		    <artifactId>jakarta.enterprise.cdi-api</artifactId>
 		</dependency>
 
-		<!-- Import the injection annotations -->
+		<!-- https://mvnrepository.com/artifact/jakarta.el/jakarta.el-api -->
 		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<scope>provided</scope>
+		    <groupId>jakarta.el</groupId>
+		    <artifactId>jakarta.el-api</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/jakarta.inject/jakarta.inject-api -->
 		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
-		    <version>3.0.1</version>
-			<scope>provided</scope>
-		</dependency>		
+		    <groupId>jakarta.inject</groupId>
+		    <artifactId>jakarta.inject-api</artifactId>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
+		<dependency>
+		    <groupId>jakarta.enterprise</groupId>
+		    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+		<dependency>
+		    <groupId>jakarta.servlet</groupId>
+		    <artifactId>jakarta.servlet-api</artifactId>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api -->
+		<dependency>
+		    <groupId>jakarta.ws.rs</groupId>
+		    <artifactId>jakarta.ws.rs-api</artifactId>
+		</dependency>
+			
 		<!-- Needed for running tests (you may also use TestNG) -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -215,44 +298,26 @@
 		    <artifactId>hibernate-core</artifactId>
 		</dependency>
 
-		<!-- Bean Validation Implementation Provides portable constraints such 
-			as @Email Hibernate Validator is shipped in JBoss EAP
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		 -->
-		<!-- Annotation processor that raising compilation errors whenever constraint 
-			annotations are incorrectly used. 
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
-			<scope>provided</scope>
+		   <groupId>org.postgresql</groupId>
+		   <artifactId>postgresql</artifactId>
 		</dependency>
-		-->
-		
-		<!-- Annotation processor to generate the JPA metamodel classes for typesafe 
-			criteria queries 
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-		</dependency>
-		-->
-		
+			
 		<!-- Import the JPA API, we use provided scope as the API is included in 
-			JBoss EAP -->
+			JBoss EAP 
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+			-->
 		
+		<!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+		<dependency>
+		    <groupId>jakarta.persistence</groupId>
+		    <artifactId>jakarta.persistence-api</artifactId>
+		</dependency>
+	
 		<!-- https://mvnrepository.com/artifact/de.jpdigital/hibernate53-ddl-maven-plugin -->
 		<dependency>
 			<groupId>de.jpdigital</groupId>
@@ -261,11 +326,18 @@
 		</dependency>
 
 		<!-- Import the EJB API, we use provided scope as the API is included in 
-			JBoss EAP -->
+			JBoss EAP 
 		<dependency>
 			<groupId>org.jboss.spec.javax.ejb</groupId>
 			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
 			<scope>provided</scope>
+		</dependency>
+			-->
+
+		<!-- https://mvnrepository.com/artifact/jakarta.ejb/jakarta.ejb-api -->
+		<dependency>
+		    <groupId>jakarta.ejb</groupId>
+		    <artifactId>jakarta.ejb-api</artifactId>
 		</dependency>
 
 		<!-- Import the JPA API, we use provided scope as the API is included in 
@@ -301,12 +373,17 @@
 			<version>1.9</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
+		    <groupId>jakarta.mail</groupId>
+		    <artifactId>jakarta.mail-api</artifactId>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+		</dependency>
+		 		
 		<dependency>
 		    <groupId>commons-fileupload</groupId>
 		    <artifactId>commons-fileupload</artifactId>
@@ -361,14 +438,9 @@
 		
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-war-plugin</artifactId>
+			    <version>3.3.1</version>
 				<configuration>
 					<warSourceDirectory>WebContent</warSourceDirectory>
 				</configuration>

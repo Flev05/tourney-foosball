@@ -24,12 +24,12 @@ export class RoundResultListView extends AbstractRoundResultListView {
     
     constructor( public tourneyService: TourneyService
         , protected meetingRoundService: MeetingRoundService
-        , protected meetingService: MeetingService
+        , public meetingService: MeetingService
         , protected router: Router 
         , protected location: Location
         , protected dfp: DateFormatPipe
-        , protected teamService: TeamService,
-        public loginService: LoginService
+        , protected teamService: TeamService
+        , public loginService: LoginService
     ) {
         super(MeetingDetailView.meetingDvRedirect
             , tourneyService
@@ -46,6 +46,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
         super.ngOnInit();
         this.onewayCurrentDay = this.selectedRound.onewayCurrentDay;
         this.roundtripCurrentDay = this.selectedRound.roundtripCurrentDay;
+        this.meetingService.blockedDocument = false;
     }
 
     prevOnewayDay() : void {

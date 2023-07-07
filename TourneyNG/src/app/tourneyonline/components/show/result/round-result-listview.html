@@ -18,6 +18,8 @@
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
+<p-blockUI [blocked]="meetingService.blockedDocument"></p-blockUI>
+
 <p-tabView [activeIndex]="tourneyService.selectedRoundTabIndex"         
         (onChange)="onChangeTab($event)">
  
@@ -146,6 +148,8 @@
                 </tr>
             </ng-template>
         </p-table>
+        <p>
+            Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto. 
+        </p>            
     </p-tabPanel>
 </p-tabView>
-            

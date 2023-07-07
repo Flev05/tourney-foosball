@@ -25,7 +25,7 @@ import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { CodeHighlighterModule } from 'primeng/codehighlighter';
 import { SliderModule } from 'primeng/slider';
- 
+import { BlockUIModule } from 'primeng/blockui';
 import {ResultTourneyListView } from './tourney-listview';
 import { RoundResultListView } from './round-result-listview';
 import { EliminatoryListView } from './eliminatory-listview';
@@ -58,6 +58,7 @@ import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/lev
         ,FieldsetModule
         ,TooltipModule
         ,CalendarModule
+        ,BlockUIModule
         ,ResultRoutingModule
         ,AccordionModule
         ,PickListModule

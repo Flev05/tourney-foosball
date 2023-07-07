@@ -52,7 +52,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     constructor( protected redirect: string 
         , public tourneyService: TourneyService
         , protected meetingRoundService: MeetingRoundService
-        , protected meetingService: MeetingService
+        , public meetingService: MeetingService
         , protected router: Router
         , protected location: Location
         , protected dfp: DateFormatPipe
@@ -151,6 +151,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
         m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
         m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
+        console.log("[Status            " + m.status + "]");
         return m;
     } 
 
@@ -159,8 +160,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
      */
     private prepareRoundGuiClassification(maxMatchesPerMeeting: number): void {
         let allMeetings = this.selectedRound.onewayMeetings.concat(this.selectedRound.roundtripMeetings);
-        this.selectedRound.classification = this.tourneyService.createClassification(this.selectedRound, allMeetings);
-
+        this.tourneyService.createClassification(this.selectedRound, allMeetings);
         this.classificationRows = this.tourneyService.prepareRoundsGui(maxMatchesPerMeeting, [this.selectedRound]);
     }
   
@@ -212,7 +212,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-            round.classification = this.tourneyService.createClassification(round, allMeetings);
+            this.tourneyService.createClassification(round, allMeetings);
         }
         this.ngOnInit();
     }

@@ -729,38 +729,142 @@ export class TourneyService extends AbstractService {
         return false;
     }
 
-
     /**
      * Prepares the teams classification in function of the list of all of the meetings for each team 
      * @param meetings the list of the meetings
      */
-    public createClassification(round: Round, meetings: Meeting[]): Classification[] {
-        let classificationMap : Map<string, Classification> = new Map<string, Classification>();
- 
-        for( let t of round.teamNames) {
+    public createClassification(round: Round, meetings: Meeting[]) {
+        const teamNames : string[] = round.teamNames;
+
+        let classificationList: Classification[] = this.prepareClassificationList(teamNames, meetings, null);
+        
+        classificationList = this.correctClassification(classificationList, meetings);
+        round.classification = classificationList;
+    }
+
+    /**
+     * Prepares the classification relatid to the selected eliminaory 
+     */
+    public updateClassification(el: EliminatoryLevel): void {
+        console.log("Entering updateClassification(" + el.level +")");
+        for( let e of el.eliminatories ) {
+            let allMeetings = e.round.onewayMeetings.concat(e.round.roundtripMeetings);
+            this.createClassification(e.round, allMeetings);
+        }
+    }
+    
+    public updateEliminatoryLevelsAndGui(eliminatoryLevels : Array<EliminatoryLevel>) {
+        for (let l = 0; l < eliminatoryLevels.length; l++) {
+            let el = eliminatoryLevels[l];
+            this.updateClassification(el);
+        }
+    }
+
+    /**
+     * Correctes the classification list when there are 2 or more teams having the same number of points.
+     * In that case, it computes the saparate(avulsa) classification only on the teams having the same points. 
+     * After that, updates the original classification.
+     * 
+     * @param classificationList the origina classification list
+     * @param meetings the list of meetings of all teams in the same round
+     * @returns the new corrected classification
+     */
+    private correctClassification(classificationList:  Classification[], meetings: Meeting[]): Array<Classification>  {
+         
+        const classificationGroupByMap : Map<number, Classification[]> = this.groupBy(classificationList);
+
+        let pointsMap : Map<number,  Meeting[]> = new Map();
+        
+        for(let c of classificationList) {
+            const points = c.points;
+            let cmList : Classification[] = classificationGroupByMap.get(points);
+            for (let m of meetings) {
+                let f1 = cmList.findIndex( t => t.teamName === m.teamName1 );
+                let f2 = cmList.findIndex( t => t.teamName === m.teamName2 );
+                if(f1!=-1 && f2!=-1) {
+                    if( !pointsMap.has(points) ) {
+                        pointsMap.set(points, new Array<Meeting>())
+                    }
+                    let meetingList = pointsMap.get(points);
+                    meetingList.push(m);                        
+                }
+            }
+        }
+
+        let sortedClassification: Classification[] = [];
+        let step : number = 1;
+        for(let i=0; i < classificationList.length; i+=step) {
+            let c : Classification = classificationList[i];
+            let key = c.points;
+   
+            if(!pointsMap.has(key)) {
+                sortedClassification.push(c);
+                step=1;
+                continue;
+            }
+
+            let meetingSubList:  Meeting[] = pointsMap.get(key);
+             
+            const teamNamesSet: Set<string> = new Set();
+            for(let m of meetingSubList) {
+                teamNamesSet.add(m.teamName1);
+                teamNamesSet.add(m.teamName2);
+            }
+
+            let teamNames: string[] = Array.from(teamNamesSet);
+            let sortedSubList: Classification[] = this.prepareClassificationList(teamNames, meetingSubList, classificationList);
+             
+            let j=i;
+            for( let j=0; j<sortedSubList.length; j++ ) {
+                let sc = sortedSubList[j];
+                let fi = classificationList.findIndex(e => e.teamName === sc.teamName);
+                let originalClassification = classificationList[fi];
+                sortedClassification.push(originalClassification);
+            }
+            step = sortedSubList.length;
+        }
+
+        return sortedClassification;
+    }
+
+    private groupBy(classificationList: Array<Classification>) : Map<number, Classification[]>  {
+        const groupByMap: Map<number, Classification[]> = new Map();
+
+        for (let c of classificationList) {
+            if (!groupByMap.has(c.points)) {
+                groupByMap.set(c.points, [])
+            }
+            let cList = groupByMap.get(c.points);
+            cList.push(c);
+          }
+
+          return groupByMap;
+    }
+
+    private prepareClassificationList(teamNames: string[], meetings: Meeting[], ocList:  Classification[]): Classification[] {
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+        for (let t of teamNames) {
             let c = this.meetingService.newClassification(t, 0);
             classificationMap.set(t, c);
         }
 
-        for(let m of meetings) {
-            if( m.isSkiping ) {
-                continue;
-            }
+        for (let m of meetings) {
             let t1 = m.teamName1;
             let t2 = m.teamName2;
+            console.log("M.id="+ m.id + ": " + t1 + " Vs " + t2);
+            if ( t1=="" || t2=="" || m.isSkiping ) {
+                continue;
+            }
 
-            let key1 = t1;
-            let key2 = t2;
+            let c1: Classification = classificationMap.get(t1);
+            let c2: Classification = classificationMap.get(t2);
 
-            let c1: Classification = classificationMap.get(key1);            
-            let c2: Classification = classificationMap.get(key2);
-
-            c1.points += m.points1;            
+            c1.points += m.points1;
             c2.points += m.points2;
 
-            if(c1.points > 0 || c2.points > 0)  {
-                for( let ma of m.matches ) {
-                    if( ma.score1 > 0 || ma.score2 > 0 || m.status == MeetingStatus.Terminated) {
+            if (c1.points > 0 || c2.points > 0) {
+                for (let ma of m.matches) {
+                    if (ma.score1 > 0 || ma.score2 > 0 || m.status == MeetingStatus.Terminated) {
                         c1.played++;
                         c2.played++;
                     }
@@ -775,7 +879,7 @@ export class TourneyService extends AbstractService {
                 c2.won++;
                 c1.lost++;
             }
-            if ( m.points1 == m.points2 && m.status == MeetingStatus.Terminated) {
+            if (m.points1 == m.points2 && m.status == MeetingStatus.Terminated) {
                 c1.balanced++;
                 c2.balanced++;
             }
@@ -787,18 +891,14 @@ export class TourneyService extends AbstractService {
                 c2.goalsDone += ma.score2;
                 c2.goalsConceded += ma.score1;
             }
-            c1.goalsDiff = c1.goalsDone - c1.goalsConceded;        
-            c2.goalsDiff = c2.goalsDone - c2.goalsConceded;        
+            c1.goalsDiff = c1.goalsDone - c1.goalsConceded;
+            c2.goalsDiff = c2.goalsDone - c2.goalsConceded;
         }
 
-        let classificationList: Classification[] = [];
-        for( let c of classificationMap.values() ) {
-            classificationList.push(c);            
-        }
-
-        classificationList = this.meetingService.sortDesc(classificationList);
-
-        return classificationList;
+        let cl: Classification[] = [...classificationMap.values()];
+    
+        cl = this.meetingService.sortDesc(cl, ocList);
+        return cl;
     }
 
     /**
@@ -821,6 +921,9 @@ export class TourneyService extends AbstractService {
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.teamName;    
+                if( c.notResolveble ) {
+                    rows[row].teamName += " *";  
+                }
                 rows[row].points = c.points < 0 ? 0 : c.points;    
                 rows[row].played = c.played + " (" + played + "x" + maxMatchesPerMeeting + ")";    
                 rows[row].won = c.won;    

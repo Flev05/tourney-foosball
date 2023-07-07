@@ -401,7 +401,7 @@ export class MeetingPlayoffService extends MeetingService {
      * qualified teams from the tourney rounds
      */
     public resolveAutomaticTeams(playoff: Playoff) {
-        let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(this.selectedTourney.roundVO.rounds);
+        let roundMatrix: Array<Array<Classification>> = this.createBestGlobalClassificationTable(this.selectedTourney.roundVO.rounds);
         playoff.round.teamNames = [];
 
         for(let pr of playoff.playoffRules ) {

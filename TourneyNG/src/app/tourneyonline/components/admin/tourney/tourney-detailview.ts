@@ -886,6 +886,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         for( let r of this.selectedTourney.roundVO.rounds ) {
             this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
+            r.teamNo = "" + r.teamNames.length;
         }
 
         this.roundRows = this.selectedTourney.roundVO.rounds;

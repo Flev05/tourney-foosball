@@ -91,7 +91,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-            round.classification = this.tourneyService.createClassification(round, allMeetings);
+            this.tourneyService.createClassification(round, allMeetings);
         }
 
         this.playoffCount = 0;
@@ -178,7 +178,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             }
     
             let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);
-            playoff.round.classification = this.tourneyService.createClassification(playoff.round, allMeetings);
+            this.tourneyService.createClassification(playoff.round, allMeetings);
         }
         this.prepareEliminatoryLevels();
         this.prepareEliminatoryBLevels();
@@ -196,7 +196,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 this.meetingPlayoffService.resolveManualMeetings(playout, this.selectedTourney.roundVO.rounds);
             }
             let allMeetings = playout.round.onewayMeetings.concat(playout.round.roundtripMeetings);
-            playout.round.classification = this.tourneyService.createClassification(playout.round, allMeetings);
+            this.tourneyService.createClassification(playout.round, allMeetings);
         }
     }
  

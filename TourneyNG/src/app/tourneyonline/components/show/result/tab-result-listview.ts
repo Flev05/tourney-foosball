@@ -131,6 +131,10 @@ export class TabResultListView extends AbstractTabResultListView {
         this.tourneyService.selectedEliminatoryBLevelIndex  = -1;
 
         this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[indexOf];
+        if(!this.tourneyService.selectedEliminatoryLevel.isTopLevel) {
+            this.tourneyService.updateEliminatoryLevelsAndGui(this.selectedTourney.eliminatoryLevels);
+        }
+
         this.meetingService.qualifyingRounds = this.selectedTourney.roundVO.rounds;
         if(this.containsPlayoff) {
             let playoffRounds: Round[] = [];
@@ -163,6 +167,9 @@ export class TabResultListView extends AbstractTabResultListView {
         this.tourneyService.selectedEliminatoryLevelIndex  = -1;
 
         this.tourneyService.selectedEliminatoryLevel = this.selectedTourney.eliminatoryBLevels[indexOf];
+        if(!this.tourneyService.selectedEliminatoryLevel.isTopLevel) {
+            this.tourneyService.updateEliminatoryLevelsAndGui(this.selectedTourney.eliminatoryLevels);
+        }
 
         this.meetingService.qualifyingRounds = this.selectedTourney.roundVO.rounds;
         if(this.containsPlayoff) {

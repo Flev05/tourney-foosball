@@ -272,7 +272,6 @@ export class MeetingRoundService extends MeetingService {
 
     private makeTeamName(meetings: Meeting[]) {
         for(let m of meetings) {
-            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
             m.teamName1 = m.teamName1;
             m.teamName2 = m.teamName2;
         }

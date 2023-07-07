@@ -78,6 +78,7 @@ export class MeetingService extends AbstractService {
     qualifyingRounds: Round[];
     allDaysNo: number;
     mdbList: MeetingDb[];
+    blockedDocument: boolean = false;
 
     constructor( protected http: HttpClient
         , protected router: Router
@@ -621,7 +622,7 @@ export class MeetingService extends AbstractService {
         m.id = mdb.id;
     }
     
-    public sortDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+    public sortDesc(unsortedClassification: Array<Classification>, originalClassification: Array<Classification> ): Array<Classification>  {
         let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
 
             if( c1.teamName == "" && c2.teamName != "") {
@@ -659,11 +660,45 @@ export class MeetingService extends AbstractService {
                 return 1;
             }
 
-            return c1.teamName > c2.teamName ? 1 : -1;
+            if( originalClassification == null ) {
+                c1.notResolveble=true;
+                c2.notResolveble=true;
+                return c1.teamName > c2.teamName ? 1 : -1;
+            }
+
+            let fi1 = originalClassification.findIndex(e => e.teamName === c1.teamName);
+            let originalC1 = originalClassification[fi1];
+
+            let fi2 = originalClassification.findIndex(e => e.teamName === c2.teamName);
+            let originalC2 = originalClassification[fi2];
+
+            if( originalC1.goalsDiff > originalC2.goalsDiff ) {
+                return -1;
+            }
+            if( originalC1.goalsDiff < originalC2.goalsDiff ) {
+                return 1;
+            }
+
+            if( originalC1.goalsDone > originalC2.goalsDone ) {
+                return -1;
+            }
+            if( originalC1.goalsDone < originalC2.goalsDone ) {
+                return 1;
+            }
+
+            if( originalC1.goalsConceded < originalC2.goalsConceded ) {
+                return -1;
+            }
+            if( originalC1.goalsConceded > originalC2.goalsConceded ) {
+                return 1;
+            }
+            originalC1.notResolveble=true;
+            originalC2.notResolveble=true;
+            return originalC1.teamName > originalC2.teamName ? 1 : -1;
         });
 
         return sortedClassification;
-    } 
+    }
 
     /**
      * Creates a matrix of best classification of the teams received in the rounds parameter.
@@ -676,20 +711,39 @@ export class MeetingService extends AbstractService {
      * 
      * @param rounds the rounds containing the teams to make the matrix
      */
-    public createRoundMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
+    public createBestGlobalClassificationTable(rounds: Array<Round>): Array<Array<Classification>>  {
         let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
 
-        const teamCount = rounds[0].classification.length;
-        for( let t=0; t<teamCount; t++ ) {
-            let bestClassifications: Array<Classification> = new Array<Classification>();
+        let minTeamsPerRound : number = Number.MAX_VALUE;
+        let maxTeamsPerRound : number = Number.MIN_VALUE;
+        for( let r of rounds ) {
+            if( r.teamNames.length < minTeamsPerRound ) {
+                minTeamsPerRound = r.teamNames.length;
+            }
+            if( r.teamNames.length > maxTeamsPerRound ) {
+                maxTeamsPerRound = r.teamNames.length;
+            }
+        }
+
+        if( minTeamsPerRound < maxTeamsPerRound ) {
             for(let r of rounds) {
-                r.classification = this.sortDesc(r.classification);
+                if(r.teamNames.length == maxTeamsPerRound) {
+                    this.normalizeClassificationList(r);
+                }
+            }
+        }
+
+        const teamCount = maxTeamsPerRound;
+        for( let t=0; t<teamCount; t++ ) {
+            let bestClassifications: Classification[] = [] ;
+            for(let r of rounds) {
+                r.classification = this.sortDesc(r.classification, null);
                 let c = r.classification[t];
                 bestClassifications.push(c);    
             }
-            bestClassifications = this.sortDesc(bestClassifications);
+            bestClassifications = this.sortDesc(bestClassifications, null);
             
-            let row: Array<Classification> = new Array<Classification>();
+            let row: Classification[] = [] ;
             roundMatrix.push(row);
 
             for(let c of bestClassifications) {
@@ -699,6 +753,33 @@ export class MeetingService extends AbstractService {
         return roundMatrix;
     }
 
+    /**
+     * Normalizes the classification in the received round by reducing the points aquired by each 
+     * team vs the last team in the round.
+     * 
+     * @param round the round to verify if it has one more team
+     */
+    private normalizeClassificationList( round: Round ) {
+        let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
+        if( meetings.length == 0 ) {
+            return;
+        }
+        let lastTeam: string = round.classification[round.teamNames.length-1].teamName;
+
+        for( let t of round.teamNames ) {
+            let rc: Classification = round.classification.find( c => c.teamName === t );
+            if( t === lastTeam ) {
+                rc.points = 0;
+                continue;
+            }
+            let pointsAgainstTheLast: number = 0;
+            let m1: Meeting = meetings.find( m => m.teamName1 === t && m.teamName2 === lastTeam );
+            pointsAgainstTheLast += m1.points1;
+            let m2: Meeting = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
+            pointsAgainstTheLast += m2.points2;
+            rc.points -= pointsAgainstTheLast;
+        }
+    }
     
     /**
      * Creates a new Classification in function of the received parameters
@@ -715,7 +796,8 @@ export class MeetingService extends AbstractService {
             penalty: 0,
             goalsDone: 0,
             goalsConceded: 0,
-            goalsDiff: 0
+            goalsDiff: 0,
+            notResolveble: false
         };
     }
 
@@ -726,7 +808,7 @@ export class MeetingService extends AbstractService {
      * @param rounds the list of the rounds from which take the round names
      */
     public resolveAutomaticRules( m: Meeting, rounds: Round[] ): void {
-        let roundMatrix: Array<Array<Classification>> = this.createRoundMatrix(rounds);
+        let roundMatrix: Array<Array<Classification>> = this.createBestGlobalClassificationTable(rounds);
 
         let row = m.rule1.fromRound.bandPosition;
         let col = m.rule1.fromRound.position.value;
@@ -754,6 +836,8 @@ export class MeetingService extends AbstractService {
             }
         }
         m.name = m.teamName1 + " - " + m.teamName2;
+        // if(this.roundOf(m.teamName1) === this.roundOf(m.teamName2)) {
+        // }
     }
     
     public areAllTerminated(rounds: Round[]) : boolean {

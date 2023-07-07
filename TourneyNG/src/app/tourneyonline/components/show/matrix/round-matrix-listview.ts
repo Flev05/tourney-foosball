@@ -28,7 +28,7 @@ export class RoundMatrixListView extends AbstractRoundResultListView {
 
     constructor( public tourneyService: TourneyService
         , protected meetingRoundService: MeetingRoundService
-        , protected meetingService: MeetingService
+        , public meetingService: MeetingService
         , protected router: Router 
         , protected location: Location
         , protected dfp: DateFormatPipe

@@ -32,6 +32,8 @@
     </ng-template>
 </p-table>
 
+<p-blockUI [blocked]="meetingService.blockedDocument"></p-blockUI>
+
 <div *ngIf="roundsNotTerminated" style="margin-top:30px">
     <p-message severity="error" text="Attenzione! I gironi precedenti non sono ancora terminati. Spostare le squadre solo quando tutte le partite saranno terminate.">
     </p-message>
@@ -50,8 +52,7 @@
                     [(ngModel)]="teamName1CB"  
                     optionLabel="label"
                     (onChange)="onTeam1Change($event.value)" 
-                    placeholder="Seleziona"
-                    [autoWidth]="false">
+                    placeholder="Seleziona" >
                 </p-dropdown>
             </div>
         </div>
@@ -66,8 +67,7 @@
                     [(ngModel)]="teamName2CB"  
                     optionLabel="label"
                     (onChange)="onTeam2Change($event.value)" 
-                    placeholder="Seleziona"
-                    [autoWidth]="false">
+                    placeholder="Seleziona" >
                 </p-dropdown>
             </div>                  
         </div>
@@ -101,6 +101,7 @@
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div *ngIf="!loginService.isFollower()" class="ui-dialog-buttonpane ui-helper-clearfix"> 
+
         <button *ngIf="isAtLeastAdmin()"
             type="button"  
             label="Convalida" 
@@ -116,6 +117,7 @@
             pTooltip="Riabilita l'inserimento dei punti dell'incontro!"
             pButton (click)="onInProgressClick()" >
         </button>
+
         <button *ngIf="!disabledOperator()" type="button" 
             label="Termina" 
             class="ui-button-warning"

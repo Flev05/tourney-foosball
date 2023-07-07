@@ -11,4 +11,5 @@ export interface Classification
     goalsDone?     : number;
     goalsDiff?     : number;
     goalsConceded? : number;
+    notResolveble? : boolean;
 }

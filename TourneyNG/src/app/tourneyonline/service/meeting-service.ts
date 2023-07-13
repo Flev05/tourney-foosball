@@ -632,6 +632,7 @@ export class MeetingService extends AbstractService {
                 return -1;
             }
 
+
             if (c1.points > c2.points) {
                 return -1;
             }
@@ -658,6 +659,12 @@ export class MeetingService extends AbstractService {
             }
             if( c1.goalsConceded > c2.goalsConceded ) {
                 return 1;
+            }
+            if (c1.played > c2.played) {
+                return 1;
+            }
+            if (c1.played < c2.played) {
+                return -1;
             }
 
             if( originalClassification == null ) {
@@ -692,9 +699,16 @@ export class MeetingService extends AbstractService {
             if( originalC1.goalsConceded > originalC2.goalsConceded ) {
                 return 1;
             }
+            if (originalC1.played > originalC2.played) {
+                return 1;
+            }
+            if (originalC1.played < originalC2.played) {
+                return -1;
+            }
+
             originalC1.notResolveble=true;
             originalC2.notResolveble=true;
-            return originalC1.teamName > originalC2.teamName ? 1 : -1;
+            return 0;
         });
 
         return sortedClassification;

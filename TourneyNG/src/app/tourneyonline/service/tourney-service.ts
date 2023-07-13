@@ -922,7 +922,7 @@ export class TourneyService extends AbstractService {
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.teamName;    
                 if( c.notResolveble ) {
-                    rows[row].teamName += " *";  
+                    rows[row].teamName = c.teamName + " *";  
                 }
                 rows[row].points = c.points < 0 ? 0 : c.points;    
                 rows[row].played = c.played + " (" + played + "x" + maxMatchesPerMeeting + ")";    

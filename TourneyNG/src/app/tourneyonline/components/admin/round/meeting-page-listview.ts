@@ -72,8 +72,34 @@ export class MeetingListView extends AbstractListView {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;
+
+        // let  tempList : Meeting[] = [];
+        // let  i : number = 0;
+        // for( let m of this.selectedRound.onewayMeetings) {
+        //     let curPage = i % this.pageSize;
+        //     if( curPage == 0) {
+        //         let separator: Meeting = { datetime: m.datetime, teamName1: "Giornata " + (i / this.pageSize + 1) + "/" + this.allDaysNo, teamName2: " ----------- " };
+        //         tempList.push(separator);
+        //     }
+        //     tempList.push(m);
+        //     i++;
+        // }
+        // this.onewayMeetings = tempList;
         this.onewayMeetings = this.selectedRound.onewayMeetings;
         this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+
+        // tempList = [];
+        // i = 0;
+        // for( let m of this.selectedRound.roundtripMeetings) {
+        //     let curPage = i % this.pageSize;
+        //     if( curPage == 0) {
+        //         let separator: Meeting = {  teamName1: "Giornata " + (i / this.pageSize + 1) + "/" + this.allDaysNo, teamName2: " ----------- " };
+        //         tempList.push(separator);
+        //     }
+        //     tempList.push(m);
+        //     i++;
+        // }
+        // this.roundtripMeetings = tempList;
         this.roundtripMeetings = this.selectedRound.roundtripMeetings;
         this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
 

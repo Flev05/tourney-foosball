@@ -38,9 +38,9 @@
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
-            (onRowSelect)="onRowSelect($event)"
+            (onRowSelect)="onRowSelect($event)" 
             [paginator]="true"
-            [rows]="pageSize">
+            [rows]="pageSize">            >
 
             <ng-template pTemplate="caption">  
                 <h4><span>{{meetingRoundService.meetingsNoMsg}}</span></h4>
@@ -73,9 +73,9 @@
             [responsive]="true"
             selectionMode="single" 
             [(selection)]="selectedRow"  
-            (onRowSelect)="onRowSelect($event)"        
+            (onRowSelect)="onRowSelect($event)" 
             [paginator]="true"
-            [rows]="pageSize">
+            [rows]="pageSize">            >
             
             <ng-template pTemplate="caption">  
                 <h4><span>{{meetingRoundService.meetingsNoMsg}}</span></h4>

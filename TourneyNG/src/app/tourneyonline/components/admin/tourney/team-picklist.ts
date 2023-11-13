@@ -98,10 +98,21 @@ export class TeamPickList extends AbstractListView {
     }
 
     onMoveToSource(event) {
-        console.log("Entering onMoveToSource()");
+        console.log("Entering onMoveToSource()" );
         this.returnLabel = "Salva e torna";
         this.teamService.isTeamsChanged=true;
         this.resetAll();
+
+        let missingTeams : Team[] = [];
+        for(let at of this.avalilableTeams) {
+            let tn = this.teamService.teamPool.find(x => x.teamName == at);
+            if( tn == undefined) {
+                let tt =  this.selectedTourney.teams.find(x => x.teamName == at);
+                missingTeams.push(tt);
+                this.teamService.addMissingTeam( tt );
+                this.teamService.isTeamsChanged = true;
+            }
+        }
     }
  
     newTeam() {
@@ -213,11 +224,22 @@ export class TeamPickList extends AbstractListView {
                 }
                 this.selectedTourney.teams.push(t);
             }
-        }       
-        for (let tn of this.selectedTourney.teams) {
-            let index = this.targetTeams.findIndex(e => e === tn);
-            if( index === -1 ) {
-                this.selectedTourney.teams.slice();
+        }    
+        console.log("targetTeams.length="+this.targetTeams.length);   
+        console.log("selectedTourney.teams.length="+this.selectedTourney.teams.length);   
+        let remTeams = [...this.selectedTourney.teams];
+        for (let tn of remTeams) {
+            console.log("TourneyTeam: " + tn.teamName);
+            let found = this.targetTeams.find(e => e === tn.teamName);
+            if( found == undefined ) {
+                let index = this.selectedTourney.teams.findIndex(e => e.teamName === tn.teamName);
+                console.log("FindIndex: " + index);
+                let rt :Team[] = this.selectedTourney.teams.splice(index, 1);
+                for(let t of rt) {
+                    console.log("Removed Team: " + t.teamName);
+                }
+            } else {
+                console.log("Not Removed Team: " + tn.teamName);
             }
         }
 

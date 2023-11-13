@@ -12,7 +12,6 @@ import { TableCols } from '../domain/table-cols';
 import { TeamVO } from '../domain/team-vo';
 import { LoginService } from './login-service';
 import { Tourney } from '../domain/tourney';
-import { ɵangular_packages_platform_browser_dynamic_platform_browser_dynamic_a } from '@angular/platform-browser-dynamic';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -178,7 +177,7 @@ export class TeamService {
         return teams;
     }
 
-    isTeamNameAlreadyExists(newTeam: Team) : boolean  {
+    public isTeamNameAlreadyExists(newTeam: Team) : boolean  {
 
         let found = this.teamPool.find( t => this.whereClause(t, newTeam) );
         return found == undefined ? false : true;
@@ -228,6 +227,22 @@ export class TeamService {
         }
     } 
 
+    public addMissingTeam(st: Team ): void {
+        this.selectedTeam = st;
+        this.teamPool.push(st);
+        let tvo : TeamVO = {
+            id: null
+          , teamName: this.selectedTeam.teamName
+          , country: this.selectedTeam.country
+          , clientId: this.selectedTeam.clientId
+          , json: JSON.stringify(this.selectedTeam)
+        };
+
+        const subscriber = this.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+        subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => {});
+    }  
+
+
     private isTeamAlreadyExists(tourney: Tourney): boolean {
         this.teamAlreadyExists = false;
         if( this.isTeamNameAlreadyExists(this.selectedTeam) ) {
@@ -247,7 +262,10 @@ export class TeamService {
         console.log('Entering updateInternalTeams()');
         if(tourney != undefined) {
             if(this.newTeam) {
-                tourney.teams.push(this.selectedTeam);
+                let index = tourney.teams.findIndex( e => e.teamName === this.selectedTeam.teamName);
+                if(index === -1) {
+                    tourney.teams.push(this.selectedTeam);
+                }
             }
             var team : Team = null;
             for(let t of tourney.teams) {

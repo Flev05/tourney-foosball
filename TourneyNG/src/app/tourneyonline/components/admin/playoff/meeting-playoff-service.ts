@@ -424,12 +424,18 @@ export class MeetingPlayoffService extends MeetingService {
      * the corresponding rule present in the meeting
      */
     public resolveAutomaticMeetings(playoff: Playoff, rounds: Round[]) {
+        let roundMatrix: Array<Array<Classification>> = this.createBestGlobalClassificationTable(rounds);
+        let terminated: boolean = this.areAllTerminated(rounds);
+
+        console.log("ANDATA: " + playoff.playoffName);
         for( let m of playoff.round.onewayMeetings ) {
-            this.resolveAutomaticRules( m, rounds);
+            this.resolveAutomaticRules( m, terminated, roundMatrix );
         }
 
+        console.log("RITORNO: " + playoff.playoffName);
+
         for( let m of playoff.round.roundtripMeetings ) {
-            this.resolveAutomaticRules( m, rounds);
+            this.resolveAutomaticRules( m, terminated, roundMatrix );
         }
     }
 

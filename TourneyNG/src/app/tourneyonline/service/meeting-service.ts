@@ -118,6 +118,9 @@ export class MeetingService extends AbstractService {
                 continue;
             }
             let m: Meeting = JSON.parse(mdb.json);
+            if( m.isDummy || m.isSkiping) {
+                continue;
+            }
             m.id = mdb.id;
             if(m.direction == undefined) {
                 continue;
@@ -821,14 +824,10 @@ export class MeetingService extends AbstractService {
      * @param m the meeting the name to resolve with
      * @param rounds the list of the rounds from which take the round names
      */
-    public resolveAutomaticRules( m: Meeting, rounds: Round[] ): void {
-        let roundMatrix: Array<Array<Classification>> = this.createBestGlobalClassificationTable(rounds);
-
+    public resolveAutomaticRules( m: Meeting, terminated: boolean, roundMatrix: Array<Array<Classification>> ): void {
         let row = m.rule1.fromRound.bandPosition;
         let col = m.rule1.fromRound.position.value;
         m.ruleName1 = m.rule1.ruleName;
-
-        let terminated: boolean = this.areAllTerminated(rounds);
 
         if( m.rule1.isDummy ) {
             m.teamName1 = m.rule1.fromRound.round.label;
@@ -850,8 +849,7 @@ export class MeetingService extends AbstractService {
             }
         }
         m.name = m.teamName1 + " - " + m.teamName2;
-        // if(this.roundOf(m.teamName1) === this.roundOf(m.teamName2)) {
-        // }
+        console.log(m.name);
     }
     
     public areAllTerminated(rounds: Round[]) : boolean {

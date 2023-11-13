@@ -1,9 +1,7 @@
 
 package it.lms.tourney.rest;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import it.lms.cb.gui.vo.TeamVO;
@@ -102,7 +100,7 @@ public class TeamRESTService extends AbstractRESTService {
 
 		log.debug(logId() + "POST: createTeam(" + tvo + ")");
 
-		Map<String, String> responseObj = new HashMap<>();
+		// Map<String, String> responseObj = new HashMap<>();
 		Team foundTeam;
 		Session spo = null;
 		if (tvo.getClientId() == null) {

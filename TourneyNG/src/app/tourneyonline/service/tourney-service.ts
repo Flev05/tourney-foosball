@@ -263,12 +263,12 @@ export class TourneyService extends AbstractService {
     }
 
     sort( tourneys: Tourney[] ): Tourney[] {
-        let sortedTourneys = tourneys.sort((r1,r2) => {
-            if(r1.tourneyName < r2.tourneyName) {
-                return -1;
-            }
-            if(r1.tourneyName > r2.tourneyName) {
+        let sortedTourneys = tourneys.sort((t1,t2) => {
+            if(t1.datetime < t2.datetime) {
                 return 1;
+            }
+            if(t1.datetime > t2.datetime) {
+                return -1;
             }
             return 0;
         });
@@ -851,13 +851,18 @@ export class TourneyService extends AbstractService {
         for (let m of meetings) {
             let t1 = m.teamName1;
             let t2 = m.teamName2;
-            console.log("M.id="+ m.id + ": " + t1 + " Vs " + t2);
+            console.log("M.id="+ m.id + ": " + t1 + " <==> " + t2);
             if ( t1=="" || t2=="" || m.isSkiping ) {
                 continue;
             }
 
             let c1: Classification = classificationMap.get(t1);
             let c2: Classification = classificationMap.get(t2);
+            if( c1 == undefined || c2 == undefined ) {
+                console.log("c1=classificationMap.get("+ t1 +")");
+                console.log("c2=classificationMap.get("+ t2 +")");
+                continue;
+            }
 
             c1.points += m.points1;
             c2.points += m.points2;

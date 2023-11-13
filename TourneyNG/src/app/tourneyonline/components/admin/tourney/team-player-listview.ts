@@ -65,11 +65,13 @@ export class TeamPlayerListView extends AbstractDetailView {
             if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
                 return;
             }
-        }
-        if( this.previousTeamName != this.selectedTeam.teamName && this.selectedTourney != undefined ) {
             let index = this.selectedTourney.teams.findIndex( t => t.teamName === this.previousTeamName);
             if( index !== -1 ) {
                 this.selectedTourney.teams[index].teamName = this.selectedTeam.teamName;
+            }
+            index = this.teamService.teamPool.findIndex( t => t.teamName === this.previousTeamName);
+            if( index !== -1 ) {
+                this.teamService.teamPool[index].teamName = this.selectedTeam.teamName;
             }
         }
         this.teamService.saveTourneyTeam(this.selectedTourney, false, this.selectedTeam, () => this.saveTeamOnComplete());

@@ -18,6 +18,9 @@ import { MeetingRoundService } from '../round/meeting-round-service';
 export class TeamDetailView extends AbstractDetailView {
     public static redirect: string = "adminteam/dv";
     public static CHANGE_TEAM_NAME_POPUP: string = 'ATTENZIONE! Se si cambia il nome della squadra, si perdono tutte le impostazioni preesistenti. Confermi?';
+    public static CHECK_ALREADY_EXIST_TEAM: string = 'ATTENZIONE! Esiste già una squadra con tale nome.' 
+        + ' Usare un altro nome per una nuova squadra.' 
+        + ' Se invece si vuole cambiare il nome della squadra, bisogna farlo dalla vista elenco delle swadre.';
 
     selectedTeam: Team;
     previousTeamName: string;
@@ -98,8 +101,13 @@ export class TeamDetailView extends AbstractDetailView {
     }
 
     saveTourneyTeam() {     
-        this.selectedTeam.teamName = this.autoCompleteTeamName;
         if(this.teamService.newTeam) {
+            let found = this.teamService.teamPool.find( t => t.teamName.toUpperCase() == this.autoCompleteTeamName.toUpperCase());
+            if( found != undefined ) {
+                confirm(TeamDetailView.CHECK_ALREADY_EXIST_TEAM);
+                return;
+            }
+            this.selectedTeam.teamName = this.autoCompleteTeamName;
             this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
             return;
         }
@@ -112,7 +120,7 @@ export class TeamDetailView extends AbstractDetailView {
     } 
 
     saveRoundTeam() {
-        this.selectedTeam.teamName = this.autoCompleteTeamName;
+        // this.selectedTeam.teamName = this.autoCompleteTeamName;
         if( this.previousTeamName != this.selectedTeam.teamName && this.selectedTourney != undefined ) {
             for( let r of this.selectedTourney.roundVO.rounds) {
                 if( r.name == this.selectedRound.name ) {

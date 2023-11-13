@@ -54,6 +54,8 @@ export class OperatorPickList extends AbstractListView {
                 this.availableOperators.push(op.username);
             }
         }
+        let uniqueOperatorsSet: Set<string> = new Set(this.availableOperators);
+        this.availableOperators = [...uniqueOperatorsSet];
     }
 
     onMoveToTarget(event) {

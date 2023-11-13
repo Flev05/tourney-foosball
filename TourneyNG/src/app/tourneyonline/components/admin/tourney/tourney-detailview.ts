@@ -869,16 +869,17 @@ export class TourneyDetailView extends AbstractDetailView {
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
         let T: number;
         let randomTeams = [];
-        if(this.isRoundAutoGen=='true') {
-            T = this.selectedTourney.teams.length;
-            randomTeams = this.prepareTourneyTeams(T);
-        } else {
-            T = this.selectedTourney.selectedTeams4RoundCB.value;
-            for( let i=1; i<=T; i++ ) {
-                let tn = "Team: " + i;
-                randomTeams.push(tn);
-             }
-        }
+        randomTeams = this.prepareTourneyTeams(T);
+        // if(this.isRoundAutoGen=='true') {
+        //     T = this.selectedTourney.teams.length;
+        //     randomTeams = this.prepareTourneyTeams(T);
+        // } else {
+        //     T = this.selectedTourney.selectedTeams4RoundCB.value;
+        //     for( let i=1; i<=T; i++ ) {
+        //         let tn = "Team: " + i;
+        //         randomTeams.push(tn);
+        //      }
+        // }
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
 
@@ -1822,9 +1823,12 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.tourneyService.selectedTabIndex++;
         this.selectedTourney.wizardModeIndex = this.tourneyService.selectedTabIndex > this.selectedTourney.wizardModeIndex 
-            ? this.selectedTourney.wizardModeIndex++ 
+            ? ++this.selectedTourney.wizardModeIndex
             : this.selectedTourney.wizardModeIndex;
         this.makeButtonLabel();
+        if( this.tourneyService.selectedTabIndex == 3 && this.isRoundTabEnabled() ) {
+            this.prepareRoundsCombobox();
+        }
     }
  
     private updatePlayoffMeetings(complete: () => void) {

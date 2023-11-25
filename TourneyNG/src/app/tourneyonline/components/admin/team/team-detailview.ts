@@ -17,10 +17,10 @@ import { MeetingRoundService } from '../round/meeting-round-service';
 })
 export class TeamDetailView extends AbstractDetailView {
     public static redirect: string = "adminteam/dv";
-    public static CHANGE_TEAM_NAME_POPUP: string = 'ATTENZIONE! Se si cambia il nome della squadra, si perdono tutte le impostazioni preesistenti. Confermi?';
+    // public static CHANGE_TEAM_NAME_POPUP: string = 'ATTENZIONE! Se si cambia il nome della squadra, si perdono tutte le impostazioni preesistenti. Confermi?';
     public static CHECK_ALREADY_EXIST_TEAM: string = 'ATTENZIONE! Esiste già una squadra con tale nome.' 
         + ' Usare un altro nome per una nuova squadra.' 
-        + ' Se invece si vuole cambiare il nome della squadra, bisogna farlo dalla vista elenco delle swadre.';
+        + ' Se si conferma, non viene creata una nuova squadra ma vengono aggiornati gli altri dati.';
 
     selectedTeam: Team;
     previousTeamName: string;
@@ -100,48 +100,18 @@ export class TeamDetailView extends AbstractDetailView {
         console.log("Loaded [" + this.teams.length + "] pool teams");
     }
 
-    saveTourneyTeam() {     
-        if(this.teamService.newTeam) {
-            let found = this.teamService.teamPool.find( t => t.teamName.toUpperCase() == this.autoCompleteTeamName.toUpperCase());
-            if( found != undefined ) {
-                confirm(TeamDetailView.CHECK_ALREADY_EXIST_TEAM);
-                return;
-            }
-            this.selectedTeam.teamName = this.autoCompleteTeamName;
-            this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
-            return;
-        }
-        if( this.previousTeamName != this.selectedTeam.teamName ) {
-            if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
-                return;
-            }
-            this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
-        }
-    } 
+    saveTeam() {
+        this.teamService.saveTeam(this.selectedTeam
+            , this.autoCompleteTeamName
+            , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
+            , () => super.goBack());
+    }
 
-    saveRoundTeam() {
-        // this.selectedTeam.teamName = this.autoCompleteTeamName;
-        if( this.previousTeamName != this.selectedTeam.teamName && this.selectedTourney != undefined ) {
-            for( let r of this.selectedTourney.roundVO.rounds) {
-                if( r.name == this.selectedRound.name ) {
-                    let index = r.teamNames.indexOf(this.previousTeamName);
-                    r.teamNames[index] = this.selectedTeam.teamName;
-                    for( let c of r.classification ) {
-                        if( c.teamName === this.previousTeamName ) {
-                            c.teamName = this.selectedTeam.teamName;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            let cvo = this.clientService.selectedClient;
-            let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, cvo);
-            this.tourneyService.updateTourneyRoundTeams(tvo,  () => {});
-        }
-        this.teamService.saveTourneyTeam(this.selectedTourney, true, this.selectedTeam, () => super.goBack());
-    } 
-    
+    goBack(): void {
+        this.selectedTeam.teamName = this.autoCompleteTeamName;
+        super.goBack();
+    }
+
     /**
      * Processes the change on the number of teams for each round
      * @param cb the selected item in the combo box
@@ -159,7 +129,7 @@ export class TeamDetailView extends AbstractDetailView {
     enableSaveButton() : string {
         let n : String = this.autoCompleteTeamName;
         if( n == undefined || n.trim() == "") {
-            this.prepareNewTeam();
+            // this.prepareNewTeam();
             return "disabled";
         }
         return "";

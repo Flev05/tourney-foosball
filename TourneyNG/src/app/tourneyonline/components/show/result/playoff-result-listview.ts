@@ -12,12 +12,15 @@ import { AbstractPlayoffResultListView } from 'app/tourneyonline/components/comm
 import { ClassificationDetailView } from '../classification/classification-detailview';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './playoff-result-listview.html',
     styleUrls: ['../classification/classification-view.css']
 })
 export class PlayoffResultListView extends AbstractPlayoffResultListView {
+    addTeamEnabled = false;
+    tourneyTeams = true;
     selectedClassificationRow: Classification;
     onewayCurrentDay: number = 1;
     roundtripCurrentDay: number = 1;
@@ -30,6 +33,7 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         , protected dfp: DateFormatPipe
         , protected levelService: LevelService
         , public loginService: LoginService
+        , private teamService: TeamService
     ) {
         super(MeetingDetailView.meetingDvRedirect
             , tourneyService
@@ -46,7 +50,9 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         super.ngOnInit();
         this.onewayCurrentDay = this.selectedPlayoff.round.onewayCurrentDay;
         this.roundtripCurrentDay = this.selectedPlayoff.round.roundtripCurrentDay;
-     }
+
+        this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
+    }
 
     prevOnewayDay() : void {
         this.onewayCurrentDay--;

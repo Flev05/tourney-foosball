@@ -16,7 +16,6 @@ import { DateFormatPipe } from '../components/common/date-format-pipe';
 import { Playoff } from '../domain/playoff';
 import { Classification } from '../domain/classification';
 import { AbstractRoundVO } from '../domain/abstract-round-vo';
-import { TourneyService } from './tourney-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -43,6 +42,7 @@ const deleteMeetingByPlayoutIdUrl       = meetingUrl + "/deletePlayoutMeetingsBy
 
 @Injectable()
 export class MeetingService extends AbstractService {
+
     public static SKIPING_TEAM = "(Riposo)";
     protected deleteRoundMeetingsByTourneyIdUrl: string = meetingUrl + "/deleteRoundMeetingsByTourneyId"
     protected deleteMeetingsByRoundIdUrl: string = meetingUrl + "/deleteMeetingsByRoundId"
@@ -79,6 +79,7 @@ export class MeetingService extends AbstractService {
     allDaysNo: number;
     mdbList: MeetingDb[];
     blockedDocument: boolean = false;
+    onSaveMeetingError: boolean;
 
     constructor( protected http: HttpClient
         , protected router: Router
@@ -428,6 +429,12 @@ export class MeetingService extends AbstractService {
     private updateMeetingDb(m: Meeting, tourneyId: number, roundId: number, playoffId: number, eliminatoryId: number
         , error: (error: any) => any ):  Observable<MeetingDb> {
         let mdb = this.prepareMdb(m, tourneyId, roundId, playoffId, 0, eliminatoryId, 0);
+        let obs = this.updateMeetingMdb(mdb, error);
+        return obs;
+    }
+
+    private updateRoundMeetingDb(m: Meeting, tourneyId: number,  roundId: number, error: (error: any) => any ):  Observable<MeetingDb> {
+        let mdb = this.prepareMdb(m, tourneyId, roundId, 0, 0, 0, 0);
         let obs = this.updateMeetingMdb(mdb, error);
         return obs;
     }
@@ -905,4 +912,186 @@ export class MeetingService extends AbstractService {
         return 0;
     }
 
+    public updateOnChangeTeamName(t: Tourney, previousTeamName: string, newTeamName: string)  : void {
+        if( t == null ) {
+            return;
+        }
+        this.updateRoundMeetings(t, previousTeamName, newTeamName);
+        this.updatePlayoffMeeting(t, previousTeamName, newTeamName);
+        this.updatePlayoutMeeting(t, previousTeamName, newTeamName);
+        this.updateEliminatoryLevelMeetings(t, previousTeamName, newTeamName);
+        this.updateEliminatoryBLevelMeetings(t, previousTeamName, newTeamName);
+    }
+
+    private updateRoundMeetings(t: Tourney, previousTeamName: string, newTeamName: string)  : void {
+        if( t.roundVO == null ) {
+            return;
+        }
+        for (let r of t.roundVO.rounds) {
+            for (let m of r.onewayMeetings) {
+                if (m.teamName1 === previousTeamName) {
+                    m.teamName1 = newTeamName;
+                    let observer = this.updateRoundMeetingDb(m, t.id, r.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+                if (m.teamName2 === previousTeamName) {
+                    m.teamName2 = newTeamName;
+                    let observer = this.updateRoundMeetingDb(m, t.id, r.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+            }
+            for (let m of r.roundtripMeetings) {
+                if (m.teamName1 === previousTeamName) {
+                    m.teamName1 = newTeamName;
+                    let observer = this.updateRoundMeetingDb(m, t.id, r.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+                if (m.teamName2 === previousTeamName) {
+                    m.teamName2 = newTeamName;
+                    let observer = this.updateRoundMeetingDb(m, t.id, r.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+            }
+        }
+    }
+
+    private updatePlayoffMeeting(t: Tourney, previousTeamName: string, newTeamName: string)  : void {
+        if( t.playoffVO == null ) {
+            return;
+        }
+
+        for (let p of t.playoffVO.playoffs ) {
+            for (let m of p.round.onewayMeetings) {
+                if (m.teamName1 === previousTeamName) {
+                    m.teamName1 = newTeamName;
+                    let observer = this.updatePlayoffMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+                if (m.teamName2 === previousTeamName) {
+                    m.teamName2 = newTeamName;
+                    let observer =  this.updatePlayoffMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+            }
+            for (let m of p.round.roundtripMeetings) {
+                if (m.teamName1 === previousTeamName) {
+                    m.teamName1 = newTeamName;
+                    let observer = this.updatePlayoffMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+                if (m.teamName2 === previousTeamName) {
+                    m.teamName2 = newTeamName;
+                    let observer = this.updatePlayoffMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+            }
+        }
+    }
+    private updatePlayoutMeeting(t: Tourney, previousTeamName: string, newTeamName: string) : void {
+        if( t.playoutVO == null ) {
+            return;
+        }
+
+        for (let p of t.playoutVO.playoffs ) {
+            for (let m of p.round.onewayMeetings) {
+                if (m.teamName1 === previousTeamName) {
+                    m.teamName1 = newTeamName;
+                    let observer = this.updatePlayoutMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+                if (m.teamName2 === previousTeamName) {
+                    m.teamName2 = newTeamName;
+                    let observer = this.updatePlayoutMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+            }
+            for (let m of p.round.roundtripMeetings) {
+                if (m.teamName1 === previousTeamName) {
+                    m.teamName1 = newTeamName;
+                    let observer = this.updatePlayoutMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+                if (m.teamName2 === previousTeamName) {
+                    m.teamName2 = newTeamName;
+                    let observer = this.updatePlayoutMeetingDb(m, t.id, p.id, this.saveMeetingErrorHandler());
+                    observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                }
+            }
+        }
+    }
+    private updateEliminatoryLevelMeetings(t: Tourney, previousTeamName: string, newTeamName: string) {
+        if( t.eliminatoryLevels == null ) {
+            return;
+        }
+        for (let el of t.eliminatoryLevels ) {
+            for( let e of el.eliminatories ) {
+                for (let m of e.round.onewayMeetings) {
+                    if (m.teamName1 === previousTeamName) {
+                        m.teamName1 = newTeamName;
+                        let observer = this.updateEliminatoryMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                    if (m.teamName2 === previousTeamName) {
+                        m.teamName2 = newTeamName;
+                        let observer = this.updateEliminatoryMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                }
+                for (let m of e.round.roundtripMeetings) {
+                    if (m.teamName1 === previousTeamName) {
+                        m.teamName1 = newTeamName;
+                        let observer = this.updateEliminatoryMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                    if (m.teamName2 === previousTeamName) {
+                        m.teamName2 = newTeamName;
+                        let observer = this.updateEliminatoryMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                }
+            }
+        }
+    }
+    private updateEliminatoryBLevelMeetings(t: Tourney, previousTeamName: string, newTeamName: string) {
+        if( t.eliminatoryBLevels == null ) {
+            return;
+        }
+        for (let el of t.eliminatoryBLevels ) {
+            for( let e of el.eliminatories ) {
+                for (let m of e.round.onewayMeetings) {
+                    if (m.teamName1 === previousTeamName) {
+                        m.teamName1 = newTeamName;
+                        let observer = this.updateEliminatoryBMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                    if (m.teamName2 === previousTeamName) {
+                        m.teamName2 = newTeamName;
+                        let observer = this.updateEliminatoryBMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                }
+                for (let m of e.round.roundtripMeetings) {
+                    if (m.teamName1 === previousTeamName) {
+                        m.teamName1 = newTeamName;
+                        let observer = this.updateEliminatoryBMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                    if (m.teamName2 === previousTeamName) {
+                        m.teamName2 = newTeamName;
+                        let observer = this.updateEliminatoryBMeetingDb(m, t.id, e.id, this.saveMeetingErrorHandler());
+                        observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+                    }
+                }
+            }
+        }
+    }
+
+    protected saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
+        return (res: any): Observable<MeetingDb> => {
+            console.log("Entering saveMeetingErrorHandler()");
+            console.error(res); // log to console instead
+            this.onSaveMeetingError = true;
+            return of(result as MeetingDb);
+        };
+    }
 }

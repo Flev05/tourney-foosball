@@ -37,6 +37,7 @@ import { MeetingPlayoffService } from './components/admin/playoff/meeting-playof
 import { MeetingRoundService } from './components/admin/round/meeting-round-service';
 import { DateFormatPipe } from './components/common/date-format-pipe';
 import { LOCALE_ID } from '@angular/core';
+import { TeamModule } from './components/admin/team/team.module';
 
 const forDevelopEnvOnly: any[] = [];
 if (environment.inMemoryDataService) {
@@ -65,6 +66,7 @@ if (environment.inMemoryDataService) {
     , DateFormatModule
     , DropdownModule
     , SidebarModule
+    , TeamModule
   ],
   providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy }

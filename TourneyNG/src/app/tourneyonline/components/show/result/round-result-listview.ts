@@ -18,6 +18,8 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
     styleUrls: ['../classification/classification-view.css']
 })
 export class RoundResultListView extends AbstractRoundResultListView {
+    addTeamEnabled = false;
+    tourneyTeams = true;    
     selectedClassificationRow: Classification;
     onewayCurrentDay: number = 1;
     roundtripCurrentDay: number = 1;
@@ -47,6 +49,8 @@ export class RoundResultListView extends AbstractRoundResultListView {
         this.onewayCurrentDay = this.selectedRound.onewayCurrentDay;
         this.roundtripCurrentDay = this.selectedRound.roundtripCurrentDay;
         this.meetingService.blockedDocument = false;
+
+        this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
     }
 
     prevOnewayDay() : void {

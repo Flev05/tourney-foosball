@@ -19,7 +19,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Injectable()
 export class MeetingRoundService extends MeetingService {
-    onSaveMeetingError: boolean;
+
     isRoundAutoGen: string;
 
     constructor(protected http: HttpClient
@@ -488,17 +488,6 @@ export class MeetingRoundService extends MeetingService {
                 }
             }
         }
-    }
-
-    private saveMeetingErrorHandler<MeetingDb> (result?: MeetingDb)  {
-        return (res: any): Observable<MeetingDb> => {
-            console.log("Entering saveMeetingErrorHandler()");
-            console.error(res); // log to console instead
-      
-            this.onSaveMeetingError = true;
-
-            return of(result as MeetingDb);
-        };
     }
 
     private saveEliminatoryMeetingNext(mdb:  MeetingDb, e: Eliminatory, m: Meeting): void {

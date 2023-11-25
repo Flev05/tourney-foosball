@@ -123,10 +123,13 @@ export class LoginDetailView extends AbstractListView {
             return;
         }
 
+        this.gotoDetailView();
+    }
+
+    protected gotoDetailView(): void {
         console.log("navigate to=" + redirect);
         this.router.navigate([redirect]);
     }
-
     public onError(e:any) {
         console.error("Entering LoginDetailView.onError()");
         console.error(e);

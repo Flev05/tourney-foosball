@@ -1,6 +1,6 @@
 <div class="content-section introduction">
     <div>
-        <span class="feature-title">Anagrafica Squadra [{{selectedTeam.teamName}}]</span>
+        <span class="feature-title">Anagrafica Squadra [{{autoCompleteTeamName}}]</span>
     </div>
 </div>
 
@@ -59,26 +59,15 @@
         <div class="ui-grid-col-1">
             Squadra*:
         </div>
-        <div *ngIf="!selectedRound || isRoundAutoGen=='true'" class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
+        <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
             <p-autoComplete id="team-id" 
                 [(ngModel)]="autoCompleteTeamName" 
                 [suggestions]="filteredTeamsSingle" 
                 (completeMethod)="searchTeam($event)" 
-                placeholder="Squadra" 
+                placeholder="Nome Squadra" 
                 [minLength]="1">
             </p-autoComplete>
         </div>            
-        <div *ngIf="selectedRound && isRoundAutoGen=='false'" class="ui-grid-col-5" tooltipPosition="right" 
-                pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
-            <p-dropdown id="teamsRoundId" 
-                [options]="teams4RoundCombobox" 
-                [(ngModel)]="teamNameCB"  
-                optionLabel="label"
-                (onChange)="onTeamChange($event.value)" 
-                placeholder="Seleziona"
-                [autoWidth]="false">
-            </p-dropdown>
-        </div>  
     </div>      
         
     <div class="ui-grid-row">
@@ -117,23 +106,11 @@
     </div> 
 </div>
 
-<div *ngIf="!teamService.readOnly && teamService.newTeam" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             <button class="ui-button-success" 
-                pButton (click)="saveTourneyTeam()" 
-                icon="fa fa-group" 
-                label="Salva" 
-                [disabled]="enableSaveButton()">
-            </button>            
-        </div>
-    </div>
-</div>
-<div *ngIf="!teamService.readOnly && !teamService.newTeam" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            <button class="ui-button-success" 
-                pButton (click)="saveRoundTeam()" 
+                pButton (click)="saveTeam()" 
                 icon="fa fa-group" 
                 label="Salva" 
                 [disabled]="enableSaveButton()">

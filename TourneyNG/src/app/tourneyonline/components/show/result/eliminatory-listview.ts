@@ -11,6 +11,7 @@ import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-
 import { ClassificationDetailView } from '../classification/classification-detailview';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './eliminatory-listview.html',
@@ -18,14 +19,18 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
     
 })
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
+    addTeamEnabled = false;
+    tourneyTeams = true;
+
     constructor(
-        public tourneyService: TourneyService,
-        protected meetingService: MeetingService,
-        protected levelService: LevelService,
-        protected router: Router,
-        protected location: Location,
-        public dfp: DateFormatPipe,
-        public loginService: LoginService
+        public tourneyService: TourneyService
+        ,protected meetingService: MeetingService
+        ,protected levelService: LevelService
+        ,protected router: Router
+        ,protected location: Location
+        ,public dfp: DateFormatPipe
+        ,public loginService: LoginService
+        ,private teamService: TeamService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, meetingService, levelService, router, location, dfp)
     }
@@ -47,12 +52,14 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         super.onLoadComplete(this.selectedTourney.eliminatoryLevels, this.tourneyService.selectedEliminatoryLevelIndex);
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
+        this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
     }
     
     private onEliminatoryBLoadComplete(): void {
         super.onLoadComplete(this.selectedTourney.eliminatoryBLevels, this.tourneyService.selectedEliminatoryBLevelIndex);
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
+        this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
     }
 
     onClassifcationRowSelect(event) {

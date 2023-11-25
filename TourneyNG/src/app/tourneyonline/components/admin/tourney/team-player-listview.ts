@@ -11,6 +11,8 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 import { CountryService } from 'app/tourneyonline/service/country-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 const REDIRECT_PLAYER_PL = "admintourney/dv/playerpl";
 const REDIRECT_PLAYER_DV = "admintourney/dv/playerdv";
@@ -35,6 +37,7 @@ export class TeamPlayerListView extends AbstractDetailView {
         private   teamService: TeamService,
         public    playerService: PlayerService,
         private   router: Router,
+        private   meetingService: MeetingService,
         private   countryService: CountryService
     ) { 
         super(tourneyService, location);
@@ -61,20 +64,32 @@ export class TeamPlayerListView extends AbstractDetailView {
     }
 
     saveTourneyTeam() {     
-        if( this.previousTeamName != this.selectedTeam.teamName ) {
-            if(!confirm(TeamDetailView.CHANGE_TEAM_NAME_POPUP)) {
-                return;
-            }
-            let index = this.selectedTourney.teams.findIndex( t => t.teamName === this.previousTeamName);
+        let index = this.selectedTourney.teams.findIndex( t => t.teamName === this.previousTeamName);
+        if( index !== -1 ) {
+            this.selectedTourney.teams[index] = this.selectedTeam;
+        }
+        index = this.teamService.teamPool.findIndex( t => t.teamName === this.previousTeamName);
+        if( index !== -1 ) {
+            this.teamService.teamPool[index] = this.selectedTeam;
+        }
+
+        for( let r of this.selectedTourney.roundVO.rounds ) {
+            index = r.teamNames.findIndex( t => t === this.previousTeamName);
             if( index !== -1 ) {
-                this.selectedTourney.teams[index].teamName = this.selectedTeam.teamName;
-            }
-            index = this.teamService.teamPool.findIndex( t => t.teamName === this.previousTeamName);
-            if( index !== -1 ) {
-                this.teamService.teamPool[index].teamName = this.selectedTeam.teamName;
+                r.teamNames[index] = this.autoCompleteTeamName;
+                break;
             }
         }
-        this.teamService.saveTourneyTeam(this.selectedTourney, false, this.selectedTeam, () => this.saveTeamOnComplete());
+
+
+        this.selectedTeam.teamName = this.autoCompleteTeamName;
+        this.teamService.saveTeam( this.selectedTeam
+            , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
+            , () => this.saveTeamOnComplete());
+
+        if( this.previousTeamName !== this.autoCompleteTeamName ) {
+            this.meetingService.updateOnChangeTeamName(this.selectedTourney, this.previousTeamName, this.autoCompleteTeamName);
+        }
     } 
 
     private saveTeamOnComplete(): void {
@@ -82,7 +97,7 @@ export class TeamPlayerListView extends AbstractDetailView {
     }
 
     private onSaveTourneyComplete(): void {
-        this.selectedTourney.roundVO.rounds = [];
+        // this.selectedTourney.roundVO.rounds = [];
         super.goBack();
     }
     

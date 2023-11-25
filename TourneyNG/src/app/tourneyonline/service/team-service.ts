@@ -12,6 +12,7 @@ import { TableCols } from '../domain/table-cols';
 import { TeamVO } from '../domain/team-vo';
 import { LoginService } from './login-service';
 import { Tourney } from '../domain/tourney';
+import { Meeting } from '../domain/meeting';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -111,7 +112,7 @@ export class TeamService {
         );
     }
 
-    saveTeam (tvo: TeamVO , selector: (err: any, caught: Observable<TeamVO> ) => Observable<TeamVO> ): Observable<TeamVO> { 
+    private addUpdateTeam (tvo: TeamVO , selector: (err: any, caught: Observable<TeamVO> ) => Observable<TeamVO> ): Observable<TeamVO> { 
 
         if(tvo.id == null) {
             return this.addTeam(tvo, selector);
@@ -195,11 +196,22 @@ export class TeamService {
         return found == undefined ? false : true;
     }
 
-    saveTourneyTeam(tourney: Tourney, savePoolTeam: boolean, st: Team, complete?: () => void) {     
-        this.selectedTeam = st;
-        // if( this.isTeamAlreadyExists(tourney) ) {
-        //     return;
-        // }
+    saveTeam( newTeam : Team, newTeamName: string
+        , message : string
+        , complete?: () => void) {     
+
+        if( this.newTeam ) {
+            let foundTeam = this.teamPool.find( t => t.teamName.toUpperCase() == newTeamName.toUpperCase() );
+            if( foundTeam != undefined) {
+                if(!confirm(message)) {
+                    return;
+                }
+            }  else {
+                newTeam.id = null;
+            }
+        }
+        this.selectedTeam = newTeam;
+        this.selectedTeam.teamName = newTeamName;
 
         this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
 
@@ -210,21 +222,8 @@ export class TeamService {
           , clientId: this.selectedTeam.clientId
           , json: JSON.stringify(this.selectedTeam)
         };
-
-        this.updateInternalTeams(tourney);
-
-        this.onSaveTeamError = false;
-        if( savePoolTeam ) {
-            const subscriber = this.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
-            subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
-        } else {
-            if( tourney.teams.find( t => t.teamName == this.selectedTeam.teamName) != undefined ) {
-                const subscriber = this.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
-                subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));    
-            } else {
-                complete();
-            }
-        }
+        const subscriber = this.addUpdateTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+        subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
     } 
 
     public addMissingTeam(st: Team ): void {
@@ -238,7 +237,7 @@ export class TeamService {
           , json: JSON.stringify(this.selectedTeam)
         };
 
-        const subscriber = this.saveTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+        const subscriber = this.addUpdateTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => {});
     }  
 
@@ -258,24 +257,24 @@ export class TeamService {
         return false;
     }
 
-    private updateInternalTeams(tourney: Tourney) {
+    public updateInternalTeams(tourney: Tourney, teamName : string) : void {
         console.log('Entering updateInternalTeams()');
-        if(tourney != undefined) {
+        if(tourney != undefined && tourney != null)   {
             if(this.newTeam) {
-                let index = tourney.teams.findIndex( e => e.teamName === this.selectedTeam.teamName);
+                let index = tourney.teams.findIndex( e => e.teamName === teamName);
                 if(index === -1) {
                     tourney.teams.push(this.selectedTeam);
                 }
             }
             var team : Team = null;
             for(let t of tourney.teams) {
-                if(t.teamName == this.selectedTeam.teamName) {
+                if(t.teamName == teamName) {
                     team = t;
                     break;
                 }
             }
             if(team != null) {
-                team.teamName = this.selectedTeam.teamName;
+                team.teamName = teamName;
                 team.address = this.selectedTeam.address
                 team.country = this.selectedTeam.country
                 team.players = this.selectedTeam.players;
@@ -327,7 +326,7 @@ export class TeamService {
             }
         }
         this.newTeam = false;
-        this.isTeamsChanged = true;
+        // this.isTeamsChanged = true;
         complete();
     }
 
@@ -341,5 +340,24 @@ export class TeamService {
             }
         }
         return filtered;
+    }
+
+    public setMeetingAddress(onewayMeetings: Meeting[], roundtripMeetings: Meeting[]) {
+        for (let m of onewayMeetings) {
+            let t = this.teamPool.find(e => e.teamName === m.teamName1);
+            if (t == undefined) {
+                m.address = "";
+                continue;
+            }
+            m.address = t.address + " - " + t.country.zipCode + " " + t.country.city + " (" + t.country.provinceCode + ")";
+        }
+        for (let m of roundtripMeetings) {
+            let t = this.teamPool.find(e => e.teamName === m.teamName1);
+            if (t == undefined) {
+                m.address = "";
+                continue;
+            }
+            m.address = t.address + " - " + t.country.zipCode + " " + t.country.city + " (" + t.country.provinceCode + ")";
+        }
     }
 }

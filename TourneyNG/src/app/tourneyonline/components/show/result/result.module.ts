@@ -26,7 +26,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { CodeHighlighterModule } from 'primeng/codehighlighter';
 import { SliderModule } from 'primeng/slider';
 import { BlockUIModule } from 'primeng/blockui';
-import {ResultTourneyListView } from './tourney-listview';
+import { ResultTourneyListView } from './tourney-listview';
 import { RoundResultListView } from './round-result-listview';
 import { EliminatoryListView } from './eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
@@ -34,6 +34,7 @@ import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-
 import { TabResultListView } from './tab-result-listview';
 import { PlayoffResultListView } from './playoff-result-listview';
 import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
+import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/team-table.module';
 
 @NgModule({
 	imports: [
@@ -64,6 +65,7 @@ import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/lev
         ,PickListModule
         ,MessagesModule
         ,MessageModule
+        ,TeamTableModule
     ],
 	declarations: [
 		 ResultTourneyListView

@@ -232,7 +232,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.eliminatoryBLevelRows = [];
 
         this.tourneyService.selectedTourney = this.selectedTourney;    
-        this.teamService.isTeamsChanged = false;
+        // this.teamService.isTeamsChanged = false;
         this.selectedTourney.wizardModeIndex = 0;
         this.selectedTourney.isEliminatoryAutoGen = "true";
         this.selectedTourney.followerName = "";
@@ -314,12 +314,12 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private checkTeamsChanged() {
-        if (this.teamService.isTeamsChanged) {
-            this.teamService.isTeamsChanged = false;
-            this.turnOnWizardMode(2);
-            this.resetComboBoxes();
-            this.makeButtonLabel();
-        }
+        // if (this.teamService.isTeamsChanged) {
+        //     this.teamService.isTeamsChanged = false;
+        //     this.turnOnWizardMode(2);
+        //     this.resetComboBoxes();
+        //     this.makeButtonLabel();
+        // }
     }
 
     private turnOnWizardMode(tabIndex : number) {
@@ -1746,6 +1746,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private doSave(): void {
         console.log("Entering doSave()");
 
+        this.tourneyService.clearTourneyMeetings(this.selectedTourney);
         let tvo: TourneyVO = this.prepareTourneyVO();
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
          if( !this.onSaveTourneyError ) {

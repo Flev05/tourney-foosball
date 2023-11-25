@@ -1017,6 +1017,7 @@ export class TourneyService extends AbstractService {
         for (let r of tourney.roundVO.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
+            r.classification = [];
         }
         for (let p of tourney.playoffVO.playoffs) {
             p.round.onewayMeetings = [];

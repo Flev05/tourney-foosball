@@ -58,7 +58,13 @@
             Squadra*:
         </div>
         <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
-            <input pInputText type="text" [(ngModel)]="selectedTeam.teamName"/>          
+            <p-autoComplete id="team-id" 
+                [(ngModel)]="autoCompleteTeamName" 
+                [suggestions]="filteredTeamsSingle" 
+                (completeMethod)="searchTeam($event)" 
+                placeholder="Nome Squadra" 
+                [minLength]="1">
+            </p-autoComplete>
         </div>
     </div>
         

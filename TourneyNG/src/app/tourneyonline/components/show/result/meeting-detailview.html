@@ -137,7 +137,9 @@
     <p-table [value]="matches">        
         <ng-template pTemplate="header">
             <tr>
-                <th colspan="5" style="text-align: center"><span>{{meetingLabel}} ({{selectedMeeting.datetime | date: 'EEE dd/MM/y'}})</span></th>
+                <th colspan="5" style="text-align: center">
+                    <span>{{meetingLabel}} ({{selectedMeeting.datetime | date: 'EEE dd/MM/y'}})<br>{{selectedMeeting.address}}</span>            
+                </th>
             </tr>
             <tr>
                 <th colspan="1" style="font-size: 100%;">P°</th>

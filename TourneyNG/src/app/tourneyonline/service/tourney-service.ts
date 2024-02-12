@@ -733,12 +733,15 @@ export class TourneyService extends AbstractService {
      * Prepares the teams classification in function of the list of all of the meetings for each team 
      * @param meetings the list of the meetings
      */
-    public createClassification(round: Round, meetings: Meeting[]) {
+    public createClassification(round: Round, correct : boolean) {
         const teamNames : string[] = round.teamNames;
 
+        let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
         let classificationList: Classification[] = this.prepareClassificationList(teamNames, meetings, null);
         
-        classificationList = this.correctClassification(classificationList, meetings);
+        if( correct ) {
+            classificationList = this.correctClassification(classificationList, meetings);
+        }
         round.classification = classificationList;
     }
 
@@ -748,8 +751,7 @@ export class TourneyService extends AbstractService {
     public updateClassification(el: EliminatoryLevel): void {
         console.log("Entering updateClassification(" + el.level +")");
         for( let e of el.eliminatories ) {
-            let allMeetings = e.round.onewayMeetings.concat(e.round.roundtripMeetings);
-            this.createClassification(e.round, allMeetings);
+            this.createClassification(e.round, false);
         }
     }
     
@@ -851,7 +853,7 @@ export class TourneyService extends AbstractService {
         for (let m of meetings) {
             let t1 = m.teamName1;
             let t2 = m.teamName2;
-            console.log("M.id="+ m.id + ": " + t1 + " <==> " + t2);
+            // console.log("M.id="+ m.id + ": " + t1 + " <==> " + t2);
             if ( t1=="" || t2=="" || m.isSkiping ) {
                 continue;
             }
@@ -1017,7 +1019,7 @@ export class TourneyService extends AbstractService {
         for (let r of tourney.roundVO.rounds) {
             r.onewayMeetings = [];
             r.roundtripMeetings = [];
-            r.classification = [];
+            // r.classification = [];
         }
         for (let p of tourney.playoffVO.playoffs) {
             p.round.onewayMeetings = [];

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+ 
 import { TeamTableComponent } from './team-table.component';
 import { TableModule } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { CodeHighlighterModule } from 'primeng/codehighlighter';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [TeamTableComponent],

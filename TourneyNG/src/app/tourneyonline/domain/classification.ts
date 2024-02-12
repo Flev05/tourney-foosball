@@ -1,4 +1,4 @@
-export interface Classification
+export class Classification
 {
     id?            : number;
     teamName?      : string;

@@ -412,6 +412,8 @@ export class LevelService extends AbstractEliminatoryListView {
         
         e.round.onewayMeetings.push(m1);
         e.round.roundtripMeetings.push(m2);
+        e.round.classification.push(this.meetingService.newClassification(t1.teamName,0));
+        e.round.classification.push(this.meetingService.newClassification(t2.teamName,0));
 
         return e;
     }
@@ -431,7 +433,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
         let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList, e => error(e) );
-        abs.subscribe(mdbs => this.onLoadAllMetingListNext(false, mdbs, elList, next), e => error(e));
+        abs.subscribe(meetingList => this.onLoadAllMetingListNext(false, meetingList, elList, next), e => error(e));
     }
        
     /**

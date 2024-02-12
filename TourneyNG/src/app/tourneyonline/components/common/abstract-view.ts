@@ -1,4 +1,4 @@
-import { OnInit } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 
+@Injectable()
 export abstract class AbstractView implements OnInit {
     it: any;
     selectedTourney: Tourney;

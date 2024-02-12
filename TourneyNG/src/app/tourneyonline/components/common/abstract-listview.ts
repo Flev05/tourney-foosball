@@ -3,7 +3,9 @@ import { Location } from '@angular/common';
 import { AbstractView } from './abstract-view';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Injectable } from '@angular/core';
  
+@Injectable()
 export abstract class AbstractListView extends AbstractView {
 
     levelMap: Map<number, Eliminatory[]>;

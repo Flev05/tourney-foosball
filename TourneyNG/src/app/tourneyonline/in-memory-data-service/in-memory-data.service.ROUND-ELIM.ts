@@ -13,7 +13,7 @@ const BASE_ROUND_ID = 400;
 export class InMemoryDataServiceRoundElim  {
 static teams = TeamsPool.prepareTeams(12);
 
-private static meetingsDb: Meeting[] = [];
+private static meetingsDb: MeetingDb[] = [];
 private static counter: number = 100;
 
 // static getMeetings() : Meeting[] {

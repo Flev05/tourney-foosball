@@ -81,18 +81,18 @@ export class TeamPlayerListView extends AbstractDetailView {
             }
         }
 
-
-        this.selectedTeam.teamName = this.autoCompleteTeamName;
         this.teamService.saveTeam( this.selectedTeam
+            , this.autoCompleteTeamName
             , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
             , () => this.saveTeamOnComplete());
-
+        this.teamService.newTeam = false;
         if( this.previousTeamName !== this.autoCompleteTeamName ) {
             this.meetingService.updateOnChangeTeamName(this.selectedTourney, this.previousTeamName, this.autoCompleteTeamName);
         }
     } 
 
     private saveTeamOnComplete(): void {
+        this.selectedTeam.teamName = this.autoCompleteTeamName;
         this.tourneyService.updateTourneyWithCleanAll(this.selectedTourney, () => this.onSaveTourneyComplete());
     }
 

@@ -17,7 +17,9 @@ import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export abstract class AbstractTabResultListView extends AbstractListView {
     cols: TableCols[] ;
 
@@ -70,7 +72,6 @@ export abstract class AbstractTabResultListView extends AbstractListView {
 
         this.roundCount = 0;
         if(super.containsRound()) {
-            
             let roundIds: number[] = [];
             for(let round of this.selectedTourney.roundVO.rounds) {
                 roundIds.push(round.id);
@@ -90,8 +91,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.mdbList = t;
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
-            let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-            this.tourneyService.createClassification(round, allMeetings);
+            this.tourneyService.createClassification(round, true);
         }
 
         this.playoffCount = 0;
@@ -176,9 +176,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 this.meetingPlayoffService.resolveManualTeams(playoff);
                 this.meetingPlayoffService.resolveManualMeetings(playoff, this.selectedTourney.roundVO.rounds);
             }
-    
-            let allMeetings = playoff.round.onewayMeetings.concat(playoff.round.roundtripMeetings);
-            this.tourneyService.createClassification(playoff.round, allMeetings);
+
+            this.tourneyService.createClassification(playoff.round, true);
         }
         this.prepareEliminatoryLevels();
         this.prepareEliminatoryBLevels();
@@ -195,18 +194,28 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 this.meetingPlayoffService.resolveManualTeams(playout);
                 this.meetingPlayoffService.resolveManualMeetings(playout, this.selectedTourney.roundVO.rounds);
             }
-            let allMeetings = playout.round.onewayMeetings.concat(playout.round.roundtripMeetings);
-            this.tourneyService.createClassification(playout.round, allMeetings);
+            this.tourneyService.createClassification(playout.round, true);
         }
     }
  
     onChangeTab(e : any) {
         var index = e.index;
-        console.log(index);
+        console.log("Entering onChangeTab(" +index+ ")");
         this.meetingService.selectedResultTabIndex = index;
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
-        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Update Tourney operation'));
-        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
+        let elIndex = 0;
+        if( this.containsRound() && this.containsPlayoff() && this.containsPlayout() ) {
+            elIndex = 3;
+        } else if( this.containsRound() && this.containsPlayoff() ) {
+            elIndex = 2;
+        } else if( this.containsRound()  ) {
+            elIndex = 1;
+        } 
+        if( index === elIndex ) {
+            console.log("index === elIndex");
+        }
+        // let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        // const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Update Tourney operation'));
+        // subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {

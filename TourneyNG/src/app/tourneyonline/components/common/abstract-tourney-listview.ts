@@ -12,7 +12,9 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
-
+import { Injectable } from '@angular/core';
+ 
+@Injectable()
 export abstract class AbstractTourneyListView extends AbstractListView {
 
     tourneys: Tourney[];

@@ -196,7 +196,8 @@ export class TeamService {
         return found == undefined ? false : true;
     }
 
-    saveTeam( newTeam : Team, newTeamName: string
+    saveTeam( newTeam : Team
+        , newTeamName: string
         , message : string
         , complete?: () => void) {     
 
@@ -325,7 +326,7 @@ export class TeamService {
                 this.teamPool.push(this.selectedTeam);
             }
         }
-        this.newTeam = false;
+        // this.newTeam = false;
         // this.isTeamsChanged = true;
         complete();
     }

@@ -219,12 +219,16 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
-        // if(!confirm(FREEZE_RESULT_POPUP)) {
-        //     return;
-        // }
         this.meetingService.blockedDocument = true;
         this.selectedMeeting.status = MeetingStatus.Terminated;
-        this.save(true);
+        for(let i=0; i<this.matches.length; i++) {
+            let m = this.matches[i];
+            m.status = this.selectedMeeting.status;
+        }
+        if( this.meetingService.areAllTerminated(this.selectedTourney.roundVO.rounds) ) {
+            this.refresh();
+        }
+        this.updateMeetingAndTourney(true);
     }
 
     onConfirmClick() {
@@ -330,6 +334,7 @@ export class MeetingDetailView extends AbstractDetailView {
 
         for(let i=0; i<this.matches.length; i++) {
             let m = this.matches[i];
+            m.status = this.selectedMeeting.status;
             goals1 = m.score1;
             goals2 = m.score2;
 
@@ -372,39 +377,34 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
        
-        let observer = null;
-        if( this.selectedMeetingDb.roundId != null ) {
-            this.tourneyService.cleanRoundMeeting(this.selectedTourney);
-            observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId, e => this.serverUnreachableHandler(e) );
-        }
-        if( this.selectedMeetingDb.playoffId != null ) {
-            this.tourneyService.cleanPlayoffMeeting(this.selectedTourney);
-            observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId, e => this.serverUnreachableHandler(e) );
-        }
-        if( this.selectedMeetingDb.playoutId != null ) {
-            this.tourneyService.cleanPlayoutMeeting(this.selectedTourney);
-            observer = this.meetingService.savePlayoutMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoutId, e => this.serverUnreachableHandler(e) );
-        }
-        if( this.selectedMeetingDb.eliminatoryId != null ) {
-            this.tourneyService.cleanEliminatoryMeeting(this.selectedTourney);
-            observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId, e => this.serverUnreachableHandler(e) );
-        }
-        if( this.selectedMeetingDb.eliminatoryBId != null ) {
-            this.tourneyService.cleanEliminatoryBMeeting(this.selectedTourney);
-            observer = this.meetingService.saveEliminatoryBMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryBId, e => this.serverUnreachableHandler(e) );
-        }        this.serverUnreachable = false;
-        if(observer != null) {            
-            observer.subscribe(m => this.saveMeetingNextCallback(m, goback), e => this.serverUnreachableHandler(e) );      
-            this.updateTourney();      
-        }
+        this.updateMeetingAndTourney(goback);
     }
 
-    private updateTourney(): void {
-        console.log("Entering updateTourney()");
-
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
-        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () => {});
+    private updateMeetingAndTourney(goback: boolean) {
+        let observer = null;
+        if (this.selectedMeetingDb.roundId != null) {
+            this.tourneyService.cleanRoundMeeting(this.selectedTourney);
+            observer = this.meetingService.saveRoundMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.roundId, e => this.serverUnreachableHandler(e));
+        }
+        if (this.selectedMeetingDb.playoffId != null) {
+            this.tourneyService.cleanPlayoffMeeting(this.selectedTourney);
+            observer = this.meetingService.savePlayoffMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoffId, e => this.serverUnreachableHandler(e));
+        }
+        if (this.selectedMeetingDb.playoutId != null) {
+            this.tourneyService.cleanPlayoutMeeting(this.selectedTourney);
+            observer = this.meetingService.savePlayoutMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.playoutId, e => this.serverUnreachableHandler(e));
+        }
+        if (this.selectedMeetingDb.eliminatoryId != null) {
+            this.tourneyService.cleanEliminatoryMeeting(this.selectedTourney);
+            observer = this.meetingService.saveEliminatoryMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryId, e => this.serverUnreachableHandler(e));
+        }
+        if (this.selectedMeetingDb.eliminatoryBId != null) {
+            this.tourneyService.cleanEliminatoryBMeeting(this.selectedTourney);
+            observer = this.meetingService.saveEliminatoryBMeetingDb(this.selectedMeeting, this.selectedTourney.id, this.selectedMeetingDb.eliminatoryBId, e => this.serverUnreachableHandler(e));
+        } this.serverUnreachable = false;
+        if (observer != null) {
+            observer.subscribe(m => this.saveMeetingNextCallback(m, goback), e => this.serverUnreachableHandler(e));
+        }
     }
 
     private saveMeetingNextCallback(m: Meeting, goback: boolean) {   
@@ -426,23 +426,31 @@ export class MeetingDetailView extends AbstractDetailView {
 
     private reloadMeetings(goback: boolean): void {
         if( this.selectedMeetingDb.roundId != null ) {
-            this.meetingRoundService.reloadRoundMeeting(this.selectedTourney, this.selectedRound, () => this.toGoBack(goback) );
+            this.meetingRoundService.reloadRoundMeeting(this.selectedTourney, this.selectedRound, () => this.updateTourney(goback) );
         } else
         if( this.selectedMeetingDb.playoffId != null ) {
             let p: Playoff = this.selectedTourney.playoffVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
-            this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => this.toGoBack(goback), e => this.serverUnreachableHandler(e) );
+            this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => this.updateTourney(goback), e => this.serverUnreachableHandler(e) );
         } else
         if( this.selectedMeetingDb.playoutId != null ) {
             let p: Playoff = this.selectedTourney.playoutVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoutId );
-            this.meetingPlayoffService.reloadPlayoutMeetings(this.selectedTourney.id, p, () => this.toGoBack(goback), e => this.serverUnreachableHandler(e) );
+            this.meetingPlayoffService.reloadPlayoutMeetings(this.selectedTourney.id, p, () => this.updateTourney(goback), e => this.serverUnreachableHandler(e) );
             return;
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
-            this.toGoBack(goback);
+            this.updateTourney(goback);
         }
         if( this.selectedMeetingDb.eliminatoryBId != null ) {
-            this.toGoBack(goback);
+            this.updateTourney(goback);
         }
+    }
+    
+    private updateTourney(goback: boolean): void {
+        console.log("Entering updateTourney()");
+
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => this.toGoBack(goback), e => this.subscribeErrorHandler(e), () => {});
     }
  
     private toGoBack(goback: boolean) {
@@ -475,8 +483,7 @@ export class MeetingDetailView extends AbstractDetailView {
     private onRoundCompleteLoad(t: MeetingDb[]): void {
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, t);
-            let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-            this.tourneyService.createClassification(round, allMeetings);
+            this.tourneyService.createClassification(round, true);
         }
         this.ngOnInit();
     }

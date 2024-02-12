@@ -1,7 +1,7 @@
 import { Player } from './player';
 import { MeetingStatus } from './enumerations';
 
-export interface Match {
+export class Match {
     id?       : number;
     players1? : Player[];
     players2? : Player[];

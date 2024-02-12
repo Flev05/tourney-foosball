@@ -14,7 +14,9 @@ import { MeetingPlayoffService } from '../admin/playoff/meeting-playoff-service'
 import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Injectable } from '@angular/core';
  
+@Injectable()
 export abstract class AbstractPlayoffResultListView extends AbstractRuleListView {
     cols: TableCols[] ;
     
@@ -167,10 +169,8 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
      * Prepares the classification relatid to the selected playoff
      */
     private preparePlayoffClassification(playoff : Playoff): void {
-        let allMeetings = this.selectedPlayoff.round.onewayMeetings.concat(this.selectedPlayoff.round.roundtripMeetings);
-        allMeetings.forEach( m => m.containerId = playoff.id);
         this.selectedPlayoff.round = playoff.round;
-        this.tourneyService.createClassification(this.selectedPlayoff.round, allMeetings);
+        this.tourneyService.createClassification(this.selectedPlayoff.round, true );
         this.playoffClassification = this.tourneyService.prepareRoundsGui(this.selectedTourney.playoffVO.maxMatchesPerMeeting, [playoff.round]);
     }
 

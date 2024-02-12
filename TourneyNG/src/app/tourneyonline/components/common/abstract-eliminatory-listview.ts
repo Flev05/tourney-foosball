@@ -18,7 +18,9 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { Tourney } from 'app/tourneyonline/domain/tourney';
 import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
-
+import { Injectable } from '@angular/core';
+ 
+@Injectable()
 export abstract class AbstractEliminatoryListView extends AbstractListView {
          
     eliminatoryLevelCols: TableCols[] ;
@@ -107,8 +109,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         this.isOneway =  this.tourneyService.selectedEliminatoryLevel.abstractRoundVO.direction == Direction.OneWay ? "true" : "false"
         if (this.isStandalone) {
             this.prepareStandaloneGui();
-        }
-        else {
+        } else {
             this.prepareNotStandaloneGui();
         }
     }

@@ -2,7 +2,7 @@ import { Classification } from './classification';
 import { Meeting } from './meeting';
 import { RoundType, Direction } from './enumerations';
 
-export interface Round {
+export class Round {
     id: number;
     
     direction: Direction;

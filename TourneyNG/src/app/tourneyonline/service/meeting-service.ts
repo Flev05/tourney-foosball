@@ -100,8 +100,7 @@ export class MeetingService extends AbstractService {
             m.id = mdb.id;
             if (m.direction == Direction.OneWay) {
                 round.onewayMeetings.push(m);
-            }
-            else {
+            } else {
                 round.roundtripMeetings.push(m);
             }
         }
@@ -642,7 +641,6 @@ export class MeetingService extends AbstractService {
                 return -1;
             }
 
-
             if (c1.points > c2.points) {
                 return -1;
             }
@@ -726,16 +724,17 @@ export class MeetingService extends AbstractService {
 
     /**
      * Creates a matrix of best classification of the teams received in the rounds parameter.
-     * The matrix contains in the first row the best first classification teams, in the seconds
-     * row the second best classification teams and so on.
+     * The matrix is a table (NxM), where N=max number of teams in a round
+     * and M=number of round. It contains in the first row the best first classification teams, 
+     * in the seconds row the second best classification teams and so on.
      * 
-     * The matrix has to accessed by 2 indexes:
-     * - the band position to select the row
-     * - tne position to select the team in the row
+     * The matrix has to be accessed by 2 indexes:
+     * - the row index to select the band position of a team: 1°, 2°,...
+     * - tne column position to select the round the team belongs to
      * 
-     * @param rounds the rounds containing the teams to make the matrix
+     * @param rounds the rounds containing the teams making the matrix
      */
-    public createBestGlobalClassificationTable(rounds: Array<Round>): Array<Array<Classification>>  {
+    public createBestGlobalClassificationMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
         let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
 
         let minTeamsPerRound : number = Number.MAX_VALUE;
@@ -777,9 +776,28 @@ export class MeetingService extends AbstractService {
         return roundMatrix;
     }
 
+    public sortedGlobalClassification( roundMatrix: Array<Array<Classification>>, maxClassificationLen: number):  Array<Classification>  {
+        let sortedGlobalClassification :  Array<Classification> = [];       
+        for(let r=0; r<roundMatrix.length; r++) {
+            for(let c=0; c<roundMatrix[r].length; c++) {
+                sortedGlobalClassification.push(roundMatrix[r][c]);
+                if( --maxClassificationLen === 0 ) {
+                    return sortedGlobalClassification;
+                }
+            }
+        }
+        while( maxClassificationLen-- > 0 ) {
+            let prelimiare = "Fittizio-" + (maxClassificationLen+1);
+            let c : Classification = this.newClassification(prelimiare, -(maxClassificationLen+1));
+            sortedGlobalClassification.push(c);
+        }
+        return sortedGlobalClassification;
+    }
+
     /**
      * Normalizes the classification in the received round by reducing the points aquired by each 
-     * team vs the last team in the round.
+     * team vs the last team in the round, paying attention if the final difference is 
+     * not less or equals to the points of the last team in the round
      * 
      * @param round the round to verify if it has one more team
      */
@@ -789,6 +807,7 @@ export class MeetingService extends AbstractService {
             return;
         }
         let lastTeam: string = round.classification[round.teamNames.length-1].teamName;
+        let lastTeamClassification: Classification = round.classification.find( c => c.teamName === lastTeam );
 
         for( let t of round.teamNames ) {
             let rc: Classification = round.classification.find( c => c.teamName === t );
@@ -801,7 +820,9 @@ export class MeetingService extends AbstractService {
             pointsAgainstTheLast += m1.points1;
             let m2: Meeting = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
             pointsAgainstTheLast += m2.points2;
-            rc.points -= pointsAgainstTheLast;
+            if( rc.points - pointsAgainstTheLast > lastTeamClassification.points ) {
+                rc.points -= pointsAgainstTheLast;
+            }
         }
     }
     

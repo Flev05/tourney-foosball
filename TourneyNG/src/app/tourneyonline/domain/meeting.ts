@@ -3,9 +3,9 @@ import { Match } from './match';
 import { PlayoffRule } from './playoff-rule';
 import { MeetingStatus, Direction } from './enumerations';
 
-export interface Meeting
+export class Meeting
 {
-    id?             : number;
+    id              : number;
     containerId?    : number;
     isDummy?        : boolean;
     isSkiping?      : boolean;

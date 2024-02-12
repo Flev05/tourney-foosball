@@ -35,7 +35,7 @@ export class MatchListView extends AbstractListView {
     }    
 
     ngOnInit() {
-        this.selectedMeeting = this.meetingService.selectedMeetingDb;
+        this.selectedMeeting = this.meetingService.selectedMeeting;
         this.matches = this.selectedMeeting.matches;
 
         let t1, t2: string;

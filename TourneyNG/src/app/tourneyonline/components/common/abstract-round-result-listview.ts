@@ -16,6 +16,9 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 
+import { Injectable } from '@angular/core';
+ 
+@Injectable()
 export abstract class  AbstractRoundResultListView extends AbstractListView {
     cols: TableCols[];
     
@@ -159,8 +162,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
      * Prepares the classification relatid to the selected round
      */
     private prepareRoundGuiClassification(maxMatchesPerMeeting: number): void {
-        let allMeetings = this.selectedRound.onewayMeetings.concat(this.selectedRound.roundtripMeetings);
-        this.tourneyService.createClassification(this.selectedRound, allMeetings);
+        this.tourneyService.createClassification(this.selectedRound, true);
         this.classificationRows = this.tourneyService.prepareRoundsGui(maxMatchesPerMeeting, [this.selectedRound]);
     }
   
@@ -211,8 +213,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.mdbList = t;
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
-            let allMeetings = round.onewayMeetings.concat(round.roundtripMeetings);
-            this.tourneyService.createClassification(round, allMeetings);
+            this.tourneyService.createClassification(round, true);
         }
         this.ngOnInit();
     }

@@ -135,20 +135,19 @@ static prepareDefaultMeeting(r : Round  )  {
 
       for(let j=i+1; j < teams.length; j++) {
         let t2 = teams[j];
+        let m = new Meeting();
 
-        let m : Meeting =  {
-            id: InMemoryDataServiceRoundElim.counter
-          , name: t1.teamName + " - " + t2.teamName
-          , datetime: new Date(2018, 11, 22, 21, 0)
-          , address: t1.address
-          , country: t1.country
-          , status: MeetingStatus.InProgress
-          , teamName1: t1.teamName
-          , teamName2: t2.teamName
-          , points1: 0
-          , points2: 0
-          , matches: []
-        };
+        m.id= InMemoryDataServiceRoundElim.counter;
+        m.name= t1.teamName + " - " + t2.teamName;
+        m.datetime= new Date(2018, 11, 22, 21, 0);
+        m.address= t1.address;
+        m.country= t1.country;
+        m.status= MeetingStatus.InProgress;
+        m.teamName1= t1.teamName;
+        m.teamName2= t2.teamName;
+        m.points1= 0;
+        m.points2= 0;
+        m.matches= [];
 
         let mdb : MeetingDb =  {
             id: InMemoryDataServiceRoundElim.counter++

@@ -5,27 +5,27 @@ import { MeetingStatus, Direction } from './enumerations';
 
 export class Meeting
 {
-    id              : number;
-    containerId?    : number;
-    isDummy?        : boolean;
-    isSkiping?      : boolean;
-    name?           : string;
-    direction?      : Direction
-    datetime?       : Date;
-    address?        : string;
+    id              : number = 0;
+    containerId     : number = 0;
+    isDummy         : boolean = false;
+    isSkiping       : boolean = false;
+    name            : string = "";
+    direction       : Direction = Direction.OneWay
+    datetime?       : Date = new Date();
+    address         : string = "";
     country?        : Country;
-    teamName1?      : string;
-    teamName2?      : string;
-    day?            : number;
-    status?         : MeetingStatus;
-    points1?        : number;
-    points2?        : number;
-    vpoints1?       : number;
-    vpoints2?       : number;
-    matches?        : Match[];
+    teamName1       : string = "";
+    teamName2       : string = "";
+    day             : number = 1;
+    status          : MeetingStatus;
+    points1         : number = 0;
+    points2         : number = 0;
+    vpoints1        : number = 0;
+    vpoints2        : number = 0;
+    matches         : Match[] = [];
     rule1?          : PlayoffRule;
-    ruleName1?      : string;
     rule2?          : PlayoffRule;
-    ruleName2?      : string;
-    ruleName?       : string;
+    ruleName1       : string = "";
+    ruleName2       : string = "";
+    ruleName        : string = "";
 }

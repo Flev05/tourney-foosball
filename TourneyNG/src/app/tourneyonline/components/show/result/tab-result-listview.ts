@@ -56,6 +56,10 @@ export class TabResultListView extends AbstractTabResultListView {
     onRoundRowSelect(event) {
         console.log(event.data);
 
+        for(let i=0;i<this.selectedRound.teamNames.length; i++ ) {
+            this.selectedRound.teamNames[i] = this.selectedRound.teamNames[i].replace(/\(\d+\)/g, '');
+        }
+
         this.tourneyService.selectedRound = this.selectedRound;
         this.meetingService.selectedRound = this.selectedRound;
         

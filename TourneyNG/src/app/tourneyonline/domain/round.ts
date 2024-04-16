@@ -16,6 +16,7 @@ export class Round {
     roundtripCurrentDay: number;
 
     teamNames: string[];
+    classificatedTeamNames?: string[];
     teamNo?: string;
 
     onewayMeetings?: Meeting[];

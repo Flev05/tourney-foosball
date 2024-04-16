@@ -597,26 +597,25 @@ export class MeetingService extends AbstractService {
 
         let ruleName = this.makeRuleName(pr1, pr2);
         
-        let m : Meeting = {
-            id: null,
-            name: name,
-            isDummy: pr1 == null ? true : pr1.isDummy || pr2 == null ? true :  pr2.isDummy,
-            isSkiping: skiping,
-            direction: d,
-            datetime: this.selectedTourney.datetime,
-            address:  this.selectedTourney.address,
-            country:  this.selectedTourney.country,
-            day: day,
-            teamName1: t1,
-            teamName2: t2,
-            points1: skiping ? -1 : 0,
-            points2: skiping ? -1 : 0,
-            rule1: pr1,
-            rule2: pr2,
-            ruleName: ruleName,
-            status: skiping ? MeetingStatus.Terminated :  MeetingStatus.ToPlay,
-            matches: matches
-        };
+        let m = new Meeting();
+        m.id = null;
+        m.name = name;
+        m.isDummy = pr1 == null ? true : pr1.isDummy || pr2 == null ? true :  pr2.isDummy;
+        m.isSkiping = skiping;
+        m.direction = d;
+        m.datetime = this.selectedTourney.datetime;
+        m.address =  this.selectedTourney.address;
+        m.country =  this.selectedTourney.country;
+        m.day = day;
+        m.teamName1 = t1;
+        m.teamName2 = t2;
+        m.points1 = skiping ? -1 : 0;
+        m.points2 = skiping ? -1 : 0;
+        m.rule1 = pr1;
+        m.rule2 = pr2;
+        m.ruleName = ruleName;
+        m.status = skiping ? MeetingStatus.Terminated :  MeetingStatus.ToPlay;
+        m.matches = matches;
 
         return m;
     }
@@ -630,222 +629,10 @@ export class MeetingService extends AbstractService {
         console.log(mdb);
         m.id = mdb.id;
     }
+
+
+
     
-    public sortDesc(unsortedClassification: Array<Classification>, originalClassification: Array<Classification> ): Array<Classification>  {
-        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
-
-            if( c1.teamName == "" && c2.teamName != "") {
-                return 1;
-            }
-            if( c1.teamName != "" && c2.teamName == "") {
-                return -1;
-            }
-
-            if (c1.points > c2.points) {
-                return -1;
-            }
-            if (c1.points < c2.points) {
-                return 1;
-            }
-        
-            if( c1.goalsDiff > c2.goalsDiff ) {
-                return -1;
-            }
-            if( c1.goalsDiff < c2.goalsDiff ) {
-                return 1;
-            }
-
-            if( c1.goalsDone > c2.goalsDone ) {
-                return -1;
-            }
-            if( c1.goalsDone < c2.goalsDone ) {
-                return 1;
-            }
-
-            if( c1.goalsConceded < c2.goalsConceded ) {
-                return -1;
-            }
-            if( c1.goalsConceded > c2.goalsConceded ) {
-                return 1;
-            }
-            if (c1.played > c2.played) {
-                return 1;
-            }
-            if (c1.played < c2.played) {
-                return -1;
-            }
-
-            if( originalClassification == null ) {
-                c1.notResolveble=true;
-                c2.notResolveble=true;
-                return c1.teamName > c2.teamName ? 1 : -1;
-            }
-
-            let fi1 = originalClassification.findIndex(e => e.teamName === c1.teamName);
-            let originalC1 = originalClassification[fi1];
-
-            let fi2 = originalClassification.findIndex(e => e.teamName === c2.teamName);
-            let originalC2 = originalClassification[fi2];
-
-            if( originalC1.goalsDiff > originalC2.goalsDiff ) {
-                return -1;
-            }
-            if( originalC1.goalsDiff < originalC2.goalsDiff ) {
-                return 1;
-            }
-
-            if( originalC1.goalsDone > originalC2.goalsDone ) {
-                return -1;
-            }
-            if( originalC1.goalsDone < originalC2.goalsDone ) {
-                return 1;
-            }
-
-            if( originalC1.goalsConceded < originalC2.goalsConceded ) {
-                return -1;
-            }
-            if( originalC1.goalsConceded > originalC2.goalsConceded ) {
-                return 1;
-            }
-            if (originalC1.played > originalC2.played) {
-                return 1;
-            }
-            if (originalC1.played < originalC2.played) {
-                return -1;
-            }
-
-            originalC1.notResolveble=true;
-            originalC2.notResolveble=true;
-            return 0;
-        });
-
-        return sortedClassification;
-    }
-
-    /**
-     * Creates a matrix of best classification of the teams received in the rounds parameter.
-     * The matrix is a table (NxM), where N=max number of teams in a round
-     * and M=number of round. It contains in the first row the best first classification teams, 
-     * in the seconds row the second best classification teams and so on.
-     * 
-     * The matrix has to be accessed by 2 indexes:
-     * - the row index to select the band position of a team: 1°, 2°,...
-     * - tne column position to select the round the team belongs to
-     * 
-     * @param rounds the rounds containing the teams making the matrix
-     */
-    public createBestGlobalClassificationMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
-        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
-
-        let minTeamsPerRound : number = Number.MAX_VALUE;
-        let maxTeamsPerRound : number = Number.MIN_VALUE;
-        for( let r of rounds ) {
-            if( r.teamNames.length < minTeamsPerRound ) {
-                minTeamsPerRound = r.teamNames.length;
-            }
-            if( r.teamNames.length > maxTeamsPerRound ) {
-                maxTeamsPerRound = r.teamNames.length;
-            }
-        }
-
-        if( minTeamsPerRound < maxTeamsPerRound ) {
-            for(let r of rounds) {
-                if(r.teamNames.length == maxTeamsPerRound) {
-                    this.normalizeClassificationList(r);
-                }
-            }
-        }
-
-        const teamCount = maxTeamsPerRound;
-        for( let t=0; t<teamCount; t++ ) {
-            let bestClassifications: Classification[] = [] ;
-            for(let r of rounds) {
-                r.classification = this.sortDesc(r.classification, null);
-                let c = r.classification[t];
-                bestClassifications.push(c);    
-            }
-            bestClassifications = this.sortDesc(bestClassifications, null);
-            
-            let row: Classification[] = [] ;
-            roundMatrix.push(row);
-
-            for(let c of bestClassifications) {
-                row.push(c);
-            }
-        }
-        return roundMatrix;
-    }
-
-    public sortedGlobalClassification( roundMatrix: Array<Array<Classification>>, maxClassificationLen: number):  Array<Classification>  {
-        let sortedGlobalClassification :  Array<Classification> = [];       
-        for(let r=0; r<roundMatrix.length; r++) {
-            for(let c=0; c<roundMatrix[r].length; c++) {
-                sortedGlobalClassification.push(roundMatrix[r][c]);
-                if( --maxClassificationLen === 0 ) {
-                    return sortedGlobalClassification;
-                }
-            }
-        }
-        while( maxClassificationLen-- > 0 ) {
-            let prelimiare = "Fittizio-" + (maxClassificationLen+1);
-            let c : Classification = this.newClassification(prelimiare, -(maxClassificationLen+1));
-            sortedGlobalClassification.push(c);
-        }
-        return sortedGlobalClassification;
-    }
-
-    /**
-     * Normalizes the classification in the received round by reducing the points aquired by each 
-     * team vs the last team in the round, paying attention if the final difference is 
-     * not less or equals to the points of the last team in the round
-     * 
-     * @param round the round to verify if it has one more team
-     */
-    private normalizeClassificationList( round: Round ) {
-        let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
-        if( meetings.length == 0 ) {
-            return;
-        }
-        let lastTeam: string = round.classification[round.teamNames.length-1].teamName;
-        let lastTeamClassification: Classification = round.classification.find( c => c.teamName === lastTeam );
-
-        for( let t of round.teamNames ) {
-            let rc: Classification = round.classification.find( c => c.teamName === t );
-            if( t === lastTeam ) {
-                rc.points = 0;
-                continue;
-            }
-            let pointsAgainstTheLast: number = 0;
-            let m1: Meeting = meetings.find( m => m.teamName1 === t && m.teamName2 === lastTeam );
-            pointsAgainstTheLast += m1.points1;
-            let m2: Meeting = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
-            pointsAgainstTheLast += m2.points2;
-            if( rc.points - pointsAgainstTheLast > lastTeamClassification.points ) {
-                rc.points -= pointsAgainstTheLast;
-            }
-        }
-    }
-    
-    /**
-     * Creates a new Classification in function of the received parameters
-     */
-    public newClassification(teamName: string, initialPoints: number): Classification {
-        return {
-            id: null,
-            teamName: teamName,
-            points: initialPoints,
-            played: 0,
-            won: 0,
-            lost: 0,
-            balanced: 0,
-            penalty: 0,
-            goalsDone: 0,
-            goalsConceded: 0,
-            goalsDiff: 0,
-            notResolveble: false
-        };
-    }
-
     /**
      * Resolves, for the automatic playoff mode, the team names of the received meeting and round list applying the rule in the same meeting
      * 
@@ -906,6 +693,12 @@ export class MeetingService extends AbstractService {
     }
 
     public sortMeeting(m1: Meeting, m2: Meeting): number {
+        if( m1.name.indexOf ('(Riposo)') != -1 ) {
+            return -1;
+        }
+        if( m2.name.indexOf ('(Riposo)') != -1 ) {
+            return 1;
+        }
         if( m1.day > m2.day ) {
             return 1;
         }

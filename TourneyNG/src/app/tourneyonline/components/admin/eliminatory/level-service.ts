@@ -412,8 +412,8 @@ export class LevelService extends AbstractEliminatoryListView {
         
         e.round.onewayMeetings.push(m1);
         e.round.roundtripMeetings.push(m2);
-        e.round.classification.push(this.meetingService.newClassification(t1.teamName,0));
-        e.round.classification.push(this.meetingService.newClassification(t2.teamName,0));
+        e.round.classification.push(this.tourneyService.newClassification(t1.teamName,0));
+        e.round.classification.push(this.tourneyService.newClassification(t2.teamName,0));
 
         return e;
     }
@@ -433,7 +433,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
         let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList, e => error(e) );
-        abs.subscribe(meetingList => this.onLoadAllMetingListNext(false, meetingList, elList, next), e => error(e));
+        abs.subscribe(meetingList => this.onLoadAllMeetingListNext(false, meetingList, elList, next), e => error(e));
     }
        
     /**
@@ -451,7 +451,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
         let abs = this.meetingService.loadEliminatoryBMeetingByIdList(this.selectedTourney.id, idList, e => error(e) );
-        abs.subscribe(mdbs => this.onLoadAllMetingListNext(true, mdbs, elList, next), e => error(e));
+        abs.subscribe(meetingList => this.onLoadAllMeetingListNext(true, meetingList, elList, next), e => error(e));
     }
 
     /**
@@ -460,45 +460,67 @@ export class LevelService extends AbstractEliminatoryListView {
      * @param elList the list of the eliminatory levels
      * @param complete callback methodo called when the load will finish
      */
-    private onLoadAllMetingListNext(isEb: boolean, meetingList: MeetingDb[], elList: EliminatoryLevel[], next: () => void): void {
+    private onLoadAllMeetingListNext(isEb: boolean, meetingDbList: MeetingDb[], elList: EliminatoryLevel[], next: () => void): void {
         for( let el of elList) {
             for (let e of el.eliminatories) {
                 e.round.onewayMeetings = [];
                 e.round.roundtripMeetings = [];
             }
         }
-        // this.meetingList = meetingList;
+
+        let meetingList : Meeting [] = [];
+        for( let  mdb of  meetingDbList) {
+            let m : Meeting = JSON.parse(mdb.json);
+            m.id = mdb.id;
+            m.containerId = mdb.eliminatoryId;
+            if( isEb ) {
+                m.containerId = mdb.eliminatoryBId;
+            }
+            meetingList.push(m);
+        }
+
         for( let el of elList) {
             for (let e of el.eliminatories) {
-                let found : boolean = false;
-                for( let  mdb of  meetingList) {
-                    let m : Meeting = JSON.parse(mdb.json);
-                    let ok : boolean = false;
-                    if( isEb ) {
-                        if( mdb.eliminatoryBId == e.id ) {
-                            ok = true;
-                        }
-                    } else {
-                        if( mdb.eliminatoryId == e.id ) {
-                            ok = true;
-                        }
-                    }
-                    if( ok ) {
-                        found = true;
-                        m.id = mdb.id;
-                        if( m.direction == Direction.OneWay ) {
-                            e.round.onewayMeetings.push(m);
-                        } else {
-                            e.round.roundtripMeetings.push(m);
-                        }
-                    }
-                }
-                if( !found ) {
-                    console.error("No meeting found for eliminatory id = [" + e.id + "]");
-                }
+                
+                let m1 : Meeting = this.findMeetingsOf(e.id, Direction.OneWay, meetingList);
+                e.round.onewayMeetings.push(m1);
+                let m2 : Meeting = this.findMeetingsOf(e.id, Direction.RoundTrip, meetingList);
+                e.round.roundtripMeetings.push(m2);
+
+                // let found : boolean = false;
+                // for( let  mdb of  meetingList) {
+                //     let m : Meeting = JSON.parse(mdb.json);
+                //     let ok : boolean = false;
+                //     if( isEb ) {
+                //         if( mdb.eliminatoryBId == e.id ) {
+                //             ok = true;
+                //         }
+                //     } else {
+                //         if( mdb.eliminatoryId == e.id ) {
+                //             ok = true;
+                //         }
+                //     }
+                //     if( ok ) {
+                //         found = true;
+                //         m.id = mdb.id;
+                //         if( m.direction == Direction.OneWay ) {
+                //             e.round.onewayMeetings.push(m);
+                //         } else {
+                //             e.round.roundtripMeetings.push(m);
+                //         }
+                //     }
+                // }
+                // if( !found ) {
+                //     console.error("No meeting found for eliminatory id = [" + e.id + "]");
+                // }
             }
         }
         next();
+    }
+   
+    private findMeetingsOf(eliminatoryId : number, d : Direction, meetingList: Meeting[]): Meeting {
+        let ms : Meeting[] = meetingList.filter( m => m.containerId === eliminatoryId &&  m.direction === d );
+        return ms[0];
     }
  
     onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {

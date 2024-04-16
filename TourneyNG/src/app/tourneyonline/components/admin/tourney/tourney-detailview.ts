@@ -867,7 +867,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onRoundTeamsChangeNoConfirm(cb: Combobox) {
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
-        let T: number;
+        let T: number = this.selectedTourney.teams.length;
         let randomTeams = [];
         randomTeams = this.prepareTourneyTeams(T);
         // if(this.isRoundAutoGen=='true') {

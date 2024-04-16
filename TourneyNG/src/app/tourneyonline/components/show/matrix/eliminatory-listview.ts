@@ -8,6 +8,7 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
 import { AbstractResultEliminatoryListView } from 'app/tourneyonline/components/common/abstract-result-eliminatory-listview';
 import { MatrixService } from './matrix-service';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 const matrixDvRedirect: string = "matrix/lv/dv";
 @Component({
@@ -17,14 +18,15 @@ const matrixDvRedirect: string = "matrix/lv/dv";
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
     constructor(
-        public tourneyService: TourneyService,
-        protected meetingService: MeetingService,
-        protected levelService: LevelService,
-        protected router: Router,
-        protected location: Location,
-        public dfp: DateFormatPipe 
+        public tourneyService: TourneyService
+        ,protected meetingService: MeetingService
+        , protected levelService: LevelService
+        , protected clientService: ClientService
+        ,protected router: Router
+        ,protected location: Location
+        ,public dfp: DateFormatPipe 
     ) {
-        super(matrixDvRedirect, tourneyService, meetingService, levelService, router, location, dfp)
+        super(matrixDvRedirect, tourneyService, meetingService, levelService, clientService, router, location, dfp)
     } 
     
     ngOnInit() {
@@ -33,7 +35,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     }
 
     private onEliminatoryLoadComplete(): void {
-        super.onLoadComplete(this.selectedTourney.eliminatoryLevels, this.tourneyService.selectedEliminatoryLevelIndex);
+        super.onLoadComplete(this.selectedTourney.eliminatoryLevels, false);
         this.prepareEliminatoryGui();
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationReducedCols);
     }

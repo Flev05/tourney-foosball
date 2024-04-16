@@ -346,7 +346,7 @@ export class TeamService {
     public setMeetingAddress(onewayMeetings: Meeting[], roundtripMeetings: Meeting[]) {
         for (let m of onewayMeetings) {
             let t = this.teamPool.find(e => e.teamName === m.teamName1);
-            if (t == undefined) {
+            if (t == undefined || t.country == undefined) {
                 m.address = "";
                 continue;
             }
@@ -354,7 +354,7 @@ export class TeamService {
         }
         for (let m of roundtripMeetings) {
             let t = this.teamPool.find(e => e.teamName === m.teamName1);
-            if (t == undefined) {
+            if (t == undefined || t.country == undefined) {
                 m.address = "";
                 continue;
             }

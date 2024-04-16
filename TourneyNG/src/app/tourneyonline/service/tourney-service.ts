@@ -27,6 +27,7 @@ import { MeetingDb } from '../domain/meeting-db';
 import { UserVO } from '../domain/user-vo';
 import { OperatorsVO } from '../domain/operators-vo';
 import { PlayoffVO } from '../domain/playoff-vo';
+import { Match } from '../domain/match';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -55,6 +56,7 @@ const classificationLabel = "°";
 
 @Injectable()
 export class TourneyService extends AbstractService {
+
     public FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
 
     tourneys: Tourney[];
@@ -104,7 +106,7 @@ export class TourneyService extends AbstractService {
     static roundCols: TableCols[] = [
         { field: 'name',        header: 'Gironi' },
         { field: 'teamNo',      header: 'N° Squadre' },
-        { field: 'teamNames',   header: 'Squadre' },
+        { field: 'classificatedTeamNames',  header: 'Squadre' },
     ];
 
     static playoffCols: TableCols[] = [
@@ -730,6 +732,275 @@ export class TourneyService extends AbstractService {
     }
 
     /**
+     * Creates a matrix of best classification of the teams received in the rounds parameter.
+     * The matrix is a table (NxM), where N=max number of teams in a round
+     * and M=number of round. It contains in the first row the best first classification teams, 
+     * in the seconds row the second best classification teams and so on.
+     * 
+     * The matrix has to be accessed by 2 indexes:
+     * - the row index to select the band position of a team: 1°, 2°,...
+     * - tne column position to select the round the team belongs to
+     * 
+     * @param rounds the rounds containing the teams making the matrix
+     * @returns the global classification matrix of the teams
+     */
+    public createBestGlobalClassificationMatrix(rounds: Array<Round>): Array<Array<Classification>>  {
+
+        let minTeamsPerRound : number = Number.MAX_VALUE;
+        let maxTeamsPerRound : number = Number.MIN_VALUE;
+        for( let r of rounds ) {
+            if( r.teamNames.length < minTeamsPerRound ) {
+                minTeamsPerRound = r.teamNames.length;
+            }
+            if( r.teamNames.length > maxTeamsPerRound ) {
+                maxTeamsPerRound = r.teamNames.length;
+            }
+        }
+
+        for(let r of rounds) {
+            r.classification = this.sortDesc(r.classification, null);
+        }
+        if( minTeamsPerRound < maxTeamsPerRound ) {
+            for(let r of rounds) {
+                if(r.teamNames.length == maxTeamsPerRound) {
+                    this.normalizeClassificationList(r);
+                }
+            }
+        }
+
+        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
+        // t=0, the first team in its round. t=1 the second team in its round and so on... 
+        for( let t=0; t<maxTeamsPerRound; t++ ) { 
+            let bandClassificationList: Classification[] = [] ;
+            for(let r of rounds) {
+                let c = r.classification[t];
+                bandClassificationList.push(c);    
+            }
+            bandClassificationList = this.sortDesc(bandClassificationList, null);
+            
+            let row: Classification[] = [] ;
+            roundMatrix.push(row);
+
+            for(let c of bandClassificationList) {
+                row.push(c);
+            }
+        }
+        return roundMatrix;
+    }
+
+    public shiftLevelBMatrix(roundMatrix: Classification[][], levelATeams: number): Classification[][] {
+        let newMatrix :  Classification[][] = [];
+        
+        let counter : number = 0;
+        for(let r=0; r<roundMatrix.length; r++) {
+            let classificationCols:  Classification[] = [];
+            for(let c=0; c<roundMatrix[r].length; c++) {
+                if( counter++ < levelATeams ) {
+                    continue;
+                }
+                classificationCols.push(roundMatrix[r][c]);
+            }
+            if( counter < levelATeams ) {
+                continue;
+            }
+
+            let row: Classification[] = [] ;
+            newMatrix.push(row);
+            for(let c of classificationCols) {
+                row.push(c);
+            }
+        }
+        return newMatrix;
+    }
+
+    public sortTeamsDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        return this.sortDesc(unsortedClassification, null);
+    }
+
+    public sortDesc(unsortedClassification: Array<Classification>, originalClassification: Array<Classification> ): Array<Classification>  {
+        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+
+            if( c1.teamName == "" && c2.teamName != "") {
+                return 1;
+            }
+            if( c1.teamName != "" && c2.teamName == "") {
+                return -1;
+            }
+
+            if (c1.points > c2.points) {
+                return -1;
+            }
+            if (c1.points < c2.points) {
+                return 1;
+            }
+            if (c1.played > c2.played) {
+                return 1;
+            }
+            if (c1.played < c2.played) {
+                return -1;
+            }
+            if( c1.goalsDiff > c2.goalsDiff ) {
+                return -1;
+            }
+            if( c1.goalsDiff < c2.goalsDiff ) {
+                return 1;
+            }
+
+            if( c1.goalsDone > c2.goalsDone ) {
+                return -1;
+            }
+            if( c1.goalsDone < c2.goalsDone ) {
+                return 1;
+            }
+
+            if( c1.goalsConceded < c2.goalsConceded ) {
+                return -1;
+            }
+            if( c1.goalsConceded > c2.goalsConceded ) {
+                return 1;
+            }
+
+
+            if( originalClassification == null ) {
+                c1.notResolveble=true;
+                c2.notResolveble=true;
+                return c1.teamName > c2.teamName ? 1 : -1;
+            }
+
+            let fi1 = originalClassification.findIndex(e => e.teamName === c1.teamName);
+            let originalC1 = originalClassification[fi1];
+
+            let fi2 = originalClassification.findIndex(e => e.teamName === c2.teamName);
+            let originalC2 = originalClassification[fi2];
+
+            if( originalC1.played > originalC2.played ) {
+                return 1;
+            }
+            if( originalC1.played < originalC2.played ) {
+                return -1;
+            }
+
+            if( originalC1.goalsDiff > originalC2.goalsDiff ) {
+                return -1;
+            }
+            if( originalC1.goalsDiff < originalC2.goalsDiff ) {
+                return 1;
+            }
+
+            if( originalC1.goalsDone > originalC2.goalsDone ) {
+                return -1;
+            }
+            if( originalC1.goalsDone < originalC2.goalsDone ) {
+                return 1;
+            }
+
+            if( originalC1.goalsConceded < originalC2.goalsConceded ) {
+                return -1;
+            }
+            if( originalC1.goalsConceded > originalC2.goalsConceded ) {
+                return 1;
+            }
+            if (originalC1.played > originalC2.played) {
+                return 1;
+            }
+            if (originalC1.played < originalC2.played) {
+                return -1;
+            }
+
+            originalC1.notResolveble=true;
+            originalC2.notResolveble=true;
+            return 0;
+        });
+
+        return sortedClassification;
+    }
+    /**
+     * Converts in a sorted list the received classification matrix.
+     * The powerOf2TopLevelLen is to manage the NO power of 2 use case when all 
+     * teams in any round are qualified, the number of teams in the matrix is 
+     * not a power of 2. If the matrix is not a pwer of 2, the returned list will filled
+     * with a dummy team having progressive negative points
+     * 
+     * @param roundMatrix the classification matrix to convert in the list
+     * @param powerOf2TopLevelLen the length of top elimiatory level, always a power of 2
+     * @returns the sorted classification list of the teams, always a power of 2
+     */
+    public sortedGlobalClassification( roundMatrix: Array<Array<Classification>>, powerOf2TopLevelLen: number):  Array<Classification>  {
+        let sortedGlobalClassification :  Array<Classification> = [];       
+        for(let r=0; r<roundMatrix.length; r++) {
+            for(let c=0; c<roundMatrix[r].length; c++) {
+                sortedGlobalClassification.push(roundMatrix[r][c]);
+                if( --powerOf2TopLevelLen === 0 ) {
+                    return sortedGlobalClassification;
+                }
+            }
+        }
+        let f : number = 1;
+        while( powerOf2TopLevelLen-- > 0 ) {
+            let fake = "Fittizio-" + f;
+            let c : Classification = this.newClassification(fake, -(f++));
+            sortedGlobalClassification.push(c);
+        }
+        for( let c of sortedGlobalClassification) {
+            console.log(c.teamName + "(" + c.points +")");
+        }
+
+        return sortedGlobalClassification;
+    }
+
+    /**
+     * Normalizes the classification in the received round by reducing the points aquired by each 
+     * team vs the last team in the round, paying attention if the final difference is 
+     * not less or equals to the points of the last team in the round
+     * 
+     * @param round the round to verify if it has one more team
+     */
+    private normalizeClassificationList( round: Round ) {
+        let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
+        if( meetings.length == 0 ) {
+            return;
+        }
+        let lastTeam: string = round.classification[round.teamNames.length-1].teamName;
+        let lastTeamClassification: Classification = round.classification.find( c => c.teamName === lastTeam );
+
+        for( let t of round.teamNames ) {
+            let rc: Classification = round.classification.find( c => c.teamName === t );
+            if( t === lastTeam ) {
+                rc.points = 0;
+                continue;
+            }
+            let pointsAgainstTheLast: number = 0;
+            let m1: Meeting = meetings.find( m => m.teamName1 === t && m.teamName2 === lastTeam );
+            pointsAgainstTheLast += m1.points1;
+            let m2: Meeting = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
+            pointsAgainstTheLast += m2.points2;
+            if( rc.points - pointsAgainstTheLast > lastTeamClassification.points ) {
+                rc.points -= pointsAgainstTheLast;
+            }
+        }
+    }
+
+    /**
+     * Creates a new Classification in function of the received parameters
+     */
+    public newClassification(teamName: string, initialPoints: number): Classification {
+        return {
+            id: null,
+            teamName: teamName,
+            points: initialPoints,
+            played: 0,
+            won: 0,
+            lost: 0,
+            balanced: 0,
+            penalty: 0,
+            goalsDone: 0,
+            goalsConceded: 0,
+            goalsDiff: 0,
+            notResolveble: false
+        };
+    }
+
+    /**
      * Prepares the teams classification in function of the list of all of the meetings for each team 
      * @param meetings the list of the meetings
      */
@@ -743,6 +1014,117 @@ export class TourneyService extends AbstractService {
             classificationList = this.correctClassification(classificationList, meetings);
         }
         round.classification = classificationList;
+    }
+
+    public cloneRounds(rounds: Round[]): Round[] {
+        let clonedRounds: Array<Round> = new Array<Round>();
+        for(let r of rounds) {
+            let newRound = this.cloneRound(r);
+            clonedRounds.push(newRound);
+        }
+        return clonedRounds;
+    }
+
+    public cloneRound(r: Round) : Round {
+        let newRound : Round = { direction: r.direction
+        , id: r.id
+        , name: r.name
+        , label: r.label
+        , type: r.type
+        , pageSize: r.pageSize
+        , daysNo: r.daysNo
+        , onewayCurrentDay: r.onewayCurrentDay
+        , roundtripCurrentDay: r.roundtripCurrentDay
+        , teamNames: [...r.teamNames]
+        , teamNo: r.teamNo
+        , onewayMeetings: this.cloneMeetings(r.onewayMeetings)
+        , roundtripMeetings: this.cloneMeetings(r.roundtripMeetings)
+        , classification: this.cloneClassifications(r.classification)
+        };
+        return newRound;
+    }
+  
+    private cloneMeetings(mts: Meeting[]): Meeting[] {
+        let nms : Meeting[] = [];
+        for(let m of mts) {
+            let nm = this.cloneMeeting(m);
+            nms.push(nm);
+        }
+        return nms;
+    }
+
+    private cloneMeeting(m: Meeting): Meeting {
+        let mr : Meeting = new Meeting();
+        mr.address=m.address;
+        mr.containerId = m.containerId;
+        mr.country = m.country;
+        mr.datetime = m.datetime;
+        mr.day = m.day;
+        mr.direction = m.direction;
+        mr.id = m.id;
+        mr.isDummy = m.isDummy;
+        mr.isSkiping = m.isSkiping;
+        mr.matches = this.cloneMatches(m.matches);
+        mr.name = m.name;
+        mr.points1 = m.points1;
+        mr.points2 = m.points2
+        mr.rule1 = m.rule1;
+        mr.rule2 = m.rule2;
+        mr.ruleName1 = m.ruleName1;
+        mr.ruleName2 = m.ruleName1;
+        mr.ruleName = m.ruleName;
+        mr.status = m.status;
+        mr.teamName1 = m.teamName1;
+        mr.teamName2 = m.teamName2;
+        mr.vpoints1 = m.vpoints1;
+        mr.vpoints2 = m.vpoints2;
+        return mr;
+    }
+        
+    private cloneMatches(matches:  Match[]):  Match[] {
+        let nms : Match[] = [];
+        for( let m of matches ) {
+            let nm = this.cloneMatch(m);
+            nms.push(nm);
+        }
+        return nms;
+    }
+    private cloneMatch(m: Match) : Match {
+        let nm = new Match();
+        nm.id = m.id;
+        nm.players1 = m.players1;
+        nm.players2 = m.players2;
+        nm.score1 = m.score1;
+        nm.score2 = m.score2;
+        nm.status = m.status;
+        return nm;
+    }
+    private cloneClassifications(classifications: Classification[]): Classification[] {
+        let cloneClassifications: Array<Classification> = new Array<Classification>();
+        for(let c of classifications) {
+            let nc = this.cloneClassification(c);
+            cloneClassifications.push(nc);
+        }
+        return cloneClassifications; 
+    }
+
+    public cloneClassification(c: Classification) : Classification {
+        let nc : Classification = new Classification();
+        nc.id = c.id;
+        nc.balanced = c.balanced;
+        nc.teamName = c.teamName;
+        nc.points = c.points;
+        nc.played = c.played;
+        nc.won = c.won;
+        nc.lost = c.lost;
+        nc.balanced = c.balanced;
+        nc.penalty = c.penalty;
+        nc.goalsDone = c.goalsDone;
+        nc.goalsDiff = c.goalsDiff;
+        nc.goalsConceded = c.goalsConceded;
+        nc.notResolveble = c.notResolveble;
+        
+        return nc;
     }
 
     /**
@@ -764,7 +1146,7 @@ export class TourneyService extends AbstractService {
 
     /**
      * Correctes the classification list when there are 2 or more teams having the same number of points.
-     * In that case, it computes the saparate(avulsa) classification only on the teams having the same points. 
+     * In that case, it computes the separate(avulsa) classification only on the teams having the same points. 
      * After that, updates the original classification.
      * 
      * @param classificationList the origina classification list
@@ -815,8 +1197,7 @@ export class TourneyService extends AbstractService {
 
             let teamNames: string[] = Array.from(teamNamesSet);
             let sortedSubList: Classification[] = this.prepareClassificationList(teamNames, meetingSubList, classificationList);
-             
-            let j=i;
+
             for( let j=0; j<sortedSubList.length; j++ ) {
                 let sc = sortedSubList[j];
                 let fi = classificationList.findIndex(e => e.teamName === sc.teamName);
@@ -846,7 +1227,7 @@ export class TourneyService extends AbstractService {
     private prepareClassificationList(teamNames: string[], meetings: Meeting[], ocList:  Classification[]): Classification[] {
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
         for (let t of teamNames) {
-            let c = this.meetingService.newClassification(t, 0);
+            let c = this.newClassification(t, 0);
             classificationMap.set(t, c);
         }
 
@@ -904,7 +1285,7 @@ export class TourneyService extends AbstractService {
 
         let cl: Classification[] = [...classificationMap.values()];
     
-        cl = this.meetingService.sortDesc(cl, ocList);
+        cl = this.sortDesc(cl, ocList);
         return cl;
     }
 
@@ -920,8 +1301,9 @@ export class TourneyService extends AbstractService {
 
         for (let round of rounds) {
             let r = 0;
-            for (let c of round.classification) {
+            for (let oc of round.classification) {
 
+                let c = this.cloneClassification(oc);
                 rows.push(c);
 
                 let played = c.played / maxMatchesPerMeeting;

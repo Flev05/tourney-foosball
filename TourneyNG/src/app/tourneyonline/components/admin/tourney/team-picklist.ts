@@ -19,8 +19,8 @@ export class TeamPickList extends AbstractListView {
 
     teamCols: TableCols[] = TeamService.cols;
 
-    availableTeams: string[];
-    targetTeams: string[];
+    availableTeams: string[] = [];
+    targetTeams: string[] = [];
     returnLabel: string;
 
     constructor( protected tourneyService: TourneyService
@@ -41,23 +41,26 @@ export class TeamPickList extends AbstractListView {
     }
     
     private prepareAvailableTeams(): void {
-        if( this.teamService.newTeam ) {
-            let tn = this.selectedTourney.teams.find(x => x.teamName == this.teamService.selectedTeam.teamName );
-            if( tn == undefined) {
+        if( this.teamService.newTeam && this.teamService.selectedTeam != undefined ) {
+            let tn = this.selectedTourney.teams.find(x => x.teamName.trim() == this.teamService.selectedTeam.teamName.trim() );
+            if( tn == undefined && this.teamService.selectedTeam != undefined) {
                 this.selectedTourney.teams.push(this.teamService.selectedTeam);
             }
         }
+
         this.teamService.newTeam = false;
         this.targetTeams = [];
         for(let t of this.selectedTourney.teams) {
-            this.targetTeams.push(t.teamName);
+            this.targetTeams.push(t.teamName.trim());
         }
-        
+        let targetTeamsSet: Set<string> = new Set(this.targetTeams);
+        this.targetTeams = Array.from(targetTeamsSet);
+
         this.availableTeams = [];
         for(let t of this.teamService.teamPool) {
-            let tn = this.targetTeams.find(x => x == t.teamName);
+            let tn = this.targetTeams.find(x => x.trim() == t.teamName.trim());
             if( tn == undefined) {
-                this.availableTeams.push(t.teamName);
+                this.availableTeams.push(t.teamName.trim());
             }
         }
         let uniqueTeamsSet: Set<string> = new Set(this.availableTeams);

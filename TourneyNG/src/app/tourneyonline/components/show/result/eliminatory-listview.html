@@ -39,7 +39,7 @@
                             <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
                         </div>
                         <div>
-                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                            <span style="text-align: center; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
                         </div>
                         <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
                                 ,'inProgress': rowData.status === 'In Corso'
@@ -73,7 +73,7 @@
                             <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
                         </div>
                         <div>
-                            <span style="font-size: 200%; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
+                            <span style="text-align: center; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>                        
                         </div>
                         <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
                                 ,'inProgress': rowData.status === 'In Corso'
@@ -115,8 +115,9 @@
                 </tr>
             </ng-template>
         </p-table>
-    </p-tabPanel>    
+    </p-tabPanel>
+
     <p-tabPanel header="Teams"  >   
-        <app-team-table [addTeamEnabled]="addTeamEnabled"></app-team-table>
+        <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
     </p-tabPanel>    
 </p-tabView>

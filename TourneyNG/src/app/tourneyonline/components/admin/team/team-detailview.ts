@@ -9,7 +9,6 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { MeetingRoundService } from '../round/meeting-round-service';
 
 @Component({

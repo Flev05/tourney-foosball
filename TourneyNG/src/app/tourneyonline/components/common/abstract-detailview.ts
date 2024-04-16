@@ -4,7 +4,9 @@ import { AbstractView } from './abstract-view';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export abstract class AbstractDetailView extends AbstractView {
 
     blockedDocument: boolean = false;

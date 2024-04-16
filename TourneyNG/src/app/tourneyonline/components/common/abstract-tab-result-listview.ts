@@ -15,9 +15,9 @@ import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { MeetingPlayoffService } from '../admin/playoff/meeting-playoff-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
-import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Injectable } from '@angular/core';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 @Injectable()
 export abstract class AbstractTabResultListView extends AbstractListView {
@@ -78,6 +78,18 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 round.teamNo = "" + round.teamNames.length;
             }
             this.roundRows = this.selectedTourney.roundVO.rounds;
+            for( let r of this.roundRows ) {
+                r.classification = this.tourneyService.sortTeamsDesc(r.classification);
+                r.classificatedTeamNames = [];
+                for(let i=0;i<r.teamNames.length; i++) {
+                    let tn = r.teamNames[i];
+                    tn = tn.replace(/\(\d+\)/g, '');
+                    if( r.classification.length > 0 && i < r.classification.length) {
+                        tn = tn + "(" + r.classification[i].points+ ")";
+                    }
+                    r.classificatedTeamNames.push(tn);
+                }
+            }
             this.roundCount = this.roundRows.length;
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
             subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );            
@@ -93,7 +105,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
         }
-
+ 
         this.playoffCount = 0;
         this.mdbList = [];
         if(super.containsPlayoff()) {
@@ -223,7 +235,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         let row : number = 0;
         let rows: any[] = [];
 
-        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+        let classificationMap: Map<string, Meeting> = new Map<string, Meeting>();
 
         for (let round of rounds) {
             row = this.prepareRoundPlayoffMeetingGui(null, round, rows, row, classificationMap);
@@ -236,10 +248,10 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         let row : number = 0;
         let rows: any[] = [];
 
-        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+        let meetingMap: Map<string, Meeting> = new Map<string, Meeting>();
 
         for (let p of playoffs) {
-            row = this.prepareRoundPlayoffMeetingGui(p, p.round, rows, row, classificationMap);
+            row = this.prepareRoundPlayoffMeetingGui(p, p.round, rows, row, meetingMap);
         }
 
         return rows;
@@ -259,7 +271,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         <td>{{rowData.points2}}</td>        
      * @param rounds 
      */
-    private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, classificationMap: Map<string, Classification>) {
+    private prepareRoundPlayoffMeetingGui(p: Playoff, round: Round, rows: any[], row: number, meetingMap: Map<string, Meeting>) {
         
         this.cols = this.levelService.prepareResultRoundPlayoffColums();
 
@@ -293,9 +305,9 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             }
 
             let currentKey = round.name;
-            if (!classificationMap.has(currentKey)) {
+            if (!meetingMap.has(currentKey)) {
                 let len = round.onewayMeetings.length;
-                classificationMap.set(currentKey, m);
+                meetingMap.set(currentKey, m);
                 rows[row].rowspanSize = len;
             } else {
                 rows[row].rowspanSize = undefined;

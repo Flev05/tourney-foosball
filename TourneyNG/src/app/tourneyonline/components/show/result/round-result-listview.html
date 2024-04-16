@@ -102,7 +102,7 @@
                             <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
                         </div>
                         <div>
-                            <span style="font-size: 200%; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>                        
+                            <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>                        
                         </div>
                         <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
                                 ,'inProgress': rowData.status === 'In Corso'

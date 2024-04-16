@@ -12,10 +12,11 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { AbstractEliminatoryListView } from './abstract-eliminatory-listview';
 import { LevelService } from '../admin/eliminatory/level-service';
 import { DateFormatPipe } from './date-format-pipe';
-import { Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
+import { MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { Injectable } from '@angular/core';
 import { Match } from '../../domain/match';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
  
 @Injectable()
 export abstract class AbstractResultEliminatoryListView extends AbstractEliminatoryListView {
@@ -29,13 +30,14 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     roundtripMeetings: Meeting[];
     isRoundTrip: boolean = false;
     selectedClassificationRow: Classification;
-    selectedEliminatoryLevelIndex: number;
+    isLevelB: boolean = false;
 
     constructor(
         public redirect: string,
         public tourneyService: TourneyService,
         protected meetingService: MeetingService,
         protected levelService: LevelService,
+        protected clientService: ClientService,
         protected router: Router,
         protected location: Location,
         public dfp: DateFormatPipe
@@ -61,39 +63,43 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         // this.prepareEliminatoryGuiLevels(this.eliminatoryLevels, this.selectedEliminatoryLevelIndex);
     }
 
-    protected onLoadComplete(eliminatoryLevels : Array<EliminatoryLevel>, selectedEliminatoryLevelIndex : number): void {
+    protected onLoadComplete(eliminatoryLevels : Array<EliminatoryLevel>, isLevelB : boolean): void {
         this.cols = this.tourneyService.resultCols;
 
         this.eliminatoryLevels = eliminatoryLevels;
-        this.selectedEliminatoryLevelIndex = selectedEliminatoryLevelIndex;
+        this.isLevelB = isLevelB;
         
-        for( let l=0; l < eliminatoryLevels.length; l++ ) {
+        for( let l=0; l < this.eliminatoryLevels.length; l++ ) {
             let el = eliminatoryLevels[l];
             if( this.isStandAlone(this.selectedTourney) ) {
                 if( el.isTopLevel ) {
                     this.resolveStandaloneTopLevel(el);
                 } else {
-                    this.resolveNextLevel(this.eliminatoryLevels, l, selectedEliminatoryLevelIndex, el);
+                    this.compileNextLevel(this.eliminatoryLevels, l, el);
                 }
             } else {
                 if( el.isTopLevel ) {
                     this.resolveNotStandaloneTopLevelRules( el );
                 } else {
-                    this.resolveNextLevel(this.eliminatoryLevels, l, selectedEliminatoryLevelIndex, el);
+                    this.compileNextLevel(this.eliminatoryLevels, l,  el);
                 }
             }
         }
 
         this.tourneyService.updateEliminatoryLevelsAndGui(this.eliminatoryLevels);
-        this.prepareEliminatoryGuiLevels(this.eliminatoryLevels, selectedEliminatoryLevelIndex);
+        this.prepareEliminatoryGuiLevels(this.eliminatoryLevels);
     }
 
-    private prepareEliminatoryGuiLevels(eliminatoryLevels: EliminatoryLevel[], selectedEliminatoryLevelIndex: number) {
+    private prepareEliminatoryGuiLevels(eliminatoryLevels: EliminatoryLevel[] ) {
         this.onewayMeetings = [];
         this.roundtripMeetings = [];
         this.eliminatoryClassification = [];
 
-        let sel = eliminatoryLevels[selectedEliminatoryLevelIndex];
+        let levelIndex = this.tourneyService.selectedEliminatoryLevelIndex;
+        if( levelIndex == -1 ) {
+            levelIndex = this.tourneyService.selectedEliminatoryBLevelIndex;
+        }
+        let sel = eliminatoryLevels[levelIndex];
 
         for (let level = 0; level < sel.eliminatories.length; level++) {
             let e = sel.eliminatories[level];
@@ -154,130 +160,213 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         let rounds: Array<Round>;
         if( this.isPlayoff ) {
-            rounds = this.cloneRounds(this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;}));
+            rounds = this.tourneyService.cloneRounds(this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;}));
         } else {
-            rounds = this.cloneRounds(this.selectedTourney.roundVO.rounds);
+            rounds = this.tourneyService.cloneRounds(this.selectedTourney.roundVO.rounds);
         }
 
         this.meetingService.qualifyingRounds = rounds;
-        let roundMatrix : Array<Array<Classification>> = this.meetingService.createBestGlobalClassificationMatrix(rounds);        
-        let sortedGlobalClassification : Array<Classification> = this.meetingService.sortedGlobalClassification( roundMatrix, topEl.eliminatories.length*2);
- 
-        let inTheBigTableList : Array<Classification> = [];
+        let roundMatrix : Array<Array<Classification>> = this.tourneyService.createBestGlobalClassificationMatrix(rounds);
+        if(this.isLevelB) {
+            roundMatrix = this.tourneyService.shiftLevelBMatrix(roundMatrix, this.selectedTourney.selectedEliminatoryTeamsCB.value);
+        }
+
+        let sortedGlobalClassification : Array<Classification> = this.tourneyService.sortedGlobalClassification( roundMatrix, topEl.eliminatories.length*2);
+
+        let sortedEliminatories: Eliminatory[] = [];
+        let alreadyInTheBigTableList : Array<Classification> = [];
         for(let i=0; i<topEl.eliminatories.length; i++ ) {
-            let e : Eliminatory = topEl.eliminatories[i];
             let c: Classification = sortedGlobalClassification[i];
-            this.compileEliminatory(e
+            let e = topEl.eliminatories[i];
+            
+            let ne = this.compileEliminatory(topEl 
+                , e
                 , c
                 , sortedGlobalClassification
                 , rounds
-                , inTheBigTableList
-                , topEl.abstractRoundVO.matchWinnerScores);
-            inTheBigTableList = inTheBigTableList.concat(e.round.classification);
-        }
+                , alreadyInTheBigTableList );
 
-        let clonedEliminatories: Eliminatory[] = this.cloneEliminatories(topEl);
-        this.placeOnTwoBigTables(topEl, clonedEliminatories);
+            sortedEliminatories.push(ne);
+            alreadyInTheBigTableList = alreadyInTheBigTableList.concat(ne.round.classification);
+        }
+ 
+        this.placeOnTwoBigTables(topEl, sortedEliminatories);
     }
 
     /**
-     * Compiles the received Eliminatory parameter in function of the received Classification, the rounds
+     * Create a new Eliminatory in function of: the received Classification, the rounds
      * and the list of classification teams to remove because already placed in the 2 Big Tables.
-     * It places the received Classification as the first team in the Eliminatory. Then
-     * it also checks the teams in the rounds to remove the teams in some round as c.teamName.
-     * The remaining sorted list is used to peekup the last Classification team as second team in the Eliminatory
+     * It also checks the teams in the rounds to remove the teams played in same round.
      * 
-     * @param i the same index in the topEl.eliminatories and sortedGlobalClassification
-     * @param topEl the top level eliminatory to compile
+     * The remaining sorted list is used to peekup the last Classification team as second team in the Eliminatory
+     * The first team, in the new Eliminatory, is the one in the received Classification, 
+     * the second is the last in the final purged List 
+     * 
+     * @param e the selected Eliminatory and sortedGlobalClassification
+     * @param c the selected Classification
      * @param sortedGlobalClassification the original full sorted Classification list
      * @param rounds contains the team Classification to remove from the sortedGlobalClassification
-     * @param inTheBigTableList the list of the teams already put in the 2 Big Tables
+     * @param alreadyInTheBigTableList the list of the teams already put in the 2 Big Tables
      * @param matchWinnerScores the scores to win the match
      */
-    private compileEliminatory(e : Eliminatory
+    private compileEliminatory( topEl : EliminatoryLevel 
+        , e: Eliminatory
         , c: Classification
         , sortedGlobalClassification: Classification[]
         , rounds: Round[]
-        , inTheBigTableList : Array<Classification>
-        , matchWinnerScores: number)  
+        , alreadyInTheBigTableList : Array<Classification> ) : Eliminatory
     {
-
-        let finalSortedList : Classification[]  = [];
-
+        let purgedSortedList : Classification[]  = [];
+        let eliminatories : Eliminatory[] = topEl.eliminatories;
+        let pointsNeededToWin: number = topEl.abstractRoundVO.pointsNeededToWin;
         let teamNamesInTheSameRound = [];
-        for( let r of rounds ) {
-            let rt = r.teamNames.find( e => e === c.teamName);
-            if( rt != undefined ) {
-                teamNamesInTheSameRound = r.teamNames;
-                break;
+        if( rounds.length > 1 ) {
+            for( let r of rounds ) {
+                let rt = r.teamNames.find( e => e === c.teamName);
+                if( rt != undefined ) {
+                    teamNamesInTheSameRound = r.teamNames;
+                    break;
+                }
             }
         }
 
-        let toRemoveList : Classification[]  = inTheBigTableList;
+        let toRemoveList : Classification[]  = alreadyInTheBigTableList;
         for( let tn of teamNamesInTheSameRound ) {
             let intersectionList = sortedGlobalClassification.filter( e => e.teamName === tn );
             toRemoveList = toRemoveList.concat(intersectionList);
         }
-        finalSortedList = sortedGlobalClassification.filter(
+        purgedSortedList = sortedGlobalClassification.filter(
             (item) => !toRemoveList.some((e) => e.teamName === item.teamName)
         );
  
         let teamName1 = c.teamName;
-        const c2 = finalSortedList[finalSortedList.length - 1];
+        const c2 = purgedSortedList[purgedSortedList.length - 1];
         let teamName2 = c2.teamName;
 
-        e.round.teamNames = [teamName1, teamName2];
-        e.round.classification[0].teamName = teamName1;
-        e.round.classification[0].played = 0;
-        e.round.classification[1].teamName = teamName2;
-        e.round.classification[1].played = 0;
+        let ne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
+        if( ne == undefined ) {
+            ne = this.resetEliminatory(e, teamName1, teamName2);
+        }
+        ne = this.cloneEliminatory(ne);
+        let r = ne.round;
+        r.teamNames[0] = teamName1;
+        r.teamNames[1] = teamName2;
 
-        let om = e.round.onewayMeetings[0];
+        const om = ne.round.onewayMeetings[0];
+        om.containerId = r.id;
         om.teamName1 = teamName1;
         om.teamName2 = teamName2;
         om.name = om.teamName1 + " - " + om.teamName2;
 
-        let rm = e.round.roundtripMeetings[0];
-        rm.teamName1 = om.teamName2;
-        rm.teamName2 = om.teamName1;
+        const rm = ne.round.roundtripMeetings[0];
+        rm.containerId = r.id;
+        rm.teamName1 = teamName2;
+        rm.teamName2 = teamName1;
         rm.name = rm.teamName1 + " - " + rm.teamName2;
+
         if( c2.points < 0 ) {
-            e.isSkiping = true;
-            om.isSkiping = true;
+            let matchWinnerScores: number = topEl.abstractRoundVO.matchWinnerScores;
+            ne.round.classification[0].points = matchWinnerScores;
+            ne.round.classification[1].points = 0;
+            om.isSkiping = false;
+            om.isDummy = true;
             om.status = MeetingStatus.Terminated;
-            om.points1 = matchWinnerScores;
+            om.points1 = pointsNeededToWin;
             om.points2 = 0;
-            rm.isSkiping = true;
+            om.matches[0].score1 = pointsNeededToWin;
+            om.matches[0].score2 = 0;
+
+            rm.isSkiping = false;
+            rm.isDummy = true;
             rm.status = MeetingStatus.Terminated;
             rm.points1 = 0;
-            rm.points2 = matchWinnerScores;
+            rm.points2 = pointsNeededToWin;
+            rm.matches[0].score1 = 0;
+            rm.matches[0].score2 = pointsNeededToWin;
+        } else {
+            let nne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
+            const previousOm = e.round.onewayMeetings[0];
+            if( nne == undefined && previousOm.isDummy ) {
+                // ne = this.resetEliminatory(e, teamName1, teamName2);
+                ne.round.classification[0].points = 0;
+                ne.round.classification[1].points = 0;
+                om.isSkiping = false;
+                om.isDummy = false;
+                om.status = MeetingStatus.ToPlay;
+                om.points1 = 0;
+                om.points2 = 0;
+                om.matches[0].score1 = 0;
+                om.matches[0].score2 = 0;
+                rm.isSkiping = false;
+                rm.isDummy = false;
+                rm.status = MeetingStatus.ToPlay;
+                rm.points1 = 0;
+                rm.points2 = 0;
+                rm.matches[0].score1 = 0;
+                rm.matches[0].score2 = 0;
+            }    
         }
+
         om.vpoints1 = om.matches.length==1 ? om.matches[0].score1 : om.points1;
         om.vpoints2 = om.matches.length==1 ? om.matches[0].score2 : om.points2;
         rm.vpoints1 = rm.matches.length==1 ? rm.matches[0].score1 : rm.points1;
         rm.vpoints2 = rm.matches.length==1 ? rm.matches[0].score2 : rm.points2;
+
+        this.tourneyService.createClassification(ne.round, false);
+
+        return ne;
+    }
+
+    private resetEliminatory(e: Eliminatory, teamName1 : string, teamName2 : string): Eliminatory {
+        let ne = this.cloneEliminatory(e);
+        let r = ne.round;
+        r.teamNames[0] = teamName1;
+        r.teamNames[1] = teamName2;
+        this.tourneyService.newClassification(teamName1, 0);
+        this.tourneyService.newClassification(teamName2, 0);
+        const om = ne.round.onewayMeetings[0];
+        om.points1 = 0;
+        om.vpoints1 = 0;
+        om.points2 = 0;
+        om.vpoints2 = 0;
+        om.isDummy = false;
+        om.status = MeetingStatus.ToPlay;
+        om.matches[0].score1 = 0;
+        om.matches[0].score2 = 0;
+
+        const rm = ne.round.roundtripMeetings[0];
+        rm.points1 = 0;
+        rm.vpoints1 = 0;
+        rm.points2 = 0;
+        rm.vpoints2 = 0;
+        rm.isDummy = false;
+        rm.status = MeetingStatus.ToPlay;
+        rm.matches[0].score1 = 0;
+        rm.matches[0].score2 = 0;
+
+        return ne;
     }
 
     /**
-     * Creates the 2 big tables in the topEliminatory from the received clonedEliminatories list.
+     * Creates the 2 big tables in the topEliminatoryLevel from the received sortedEliminatories list.
      * The 4 first position are built from the 4 first position of the sortedEliminatories.
      * The remaining positions are built starting from the last postions of the sortedEliminatories
      * down to the 5° position.
      * 
-     * @param topEliminatory the top ElementaryLevel to organize as a two big tables
-     * @param clonedEliminatories the sorted Eliminatory list from which take the team couples 
+     * @param topEl the top ElementaryLevel to organize as a two big tables
+     * @param sortedEliminatories the sorted Eliminatory list from which take the team couples 
      */
-    private placeOnTwoBigTables(topEliminatory: EliminatoryLevel, clonedEliminatories : Eliminatory[] ) {
+    private placeOnTwoBigTables(topEl: EliminatoryLevel, sortedEliminatories : Eliminatory[] ) {
         console.log("Entering placeOnTwoBigTables()");
 
         let p1: number = 0;
-        let p2: number = topEliminatory.eliminatories.length / 2;
-        let p3: number = topEliminatory.eliminatories.length - 1;
+        let p2: number = topEl.eliminatories.length / 2;
+        let p3: number = topEl.eliminatories.length - 1;
         let p4: number = p2 - 1;
         
         let p : number=0;
-        let li = clonedEliminatories.length - 1;
-        for( let i=0; i<topEliminatory.eliminatories.length; i++ ) {
+        let li = sortedEliminatories.length - 1;
+        for( let i=0; i<topEl.eliminatories.length; i++ ) {
             if( i % 4 == 0 ) {
                 p = p1++;
             }
@@ -290,25 +379,26 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             if( i % 4 == 3 ) {
                 p = p4--;
             }
-            let e = topEliminatory.eliminatories[p];
             if( i < 4 ) {
-                e = clonedEliminatories[i];
+                topEl.eliminatories[p] = sortedEliminatories[i];
             } else {
-                e = clonedEliminatories[li--];
+                topEl.eliminatories[p] = sortedEliminatories[li--];
             }
+            const e = topEl.eliminatories[p];
             for(let m of e.round.onewayMeetings ) {
                 this.saveMeeting(e, m);
             }
             for(let m of e.round.roundtripMeetings ) {
                 this.saveMeeting(e, m);
             }
-        }
+        }       
+    }
 
-        // console.log("topEliminatory.eliminatories:");
-        // for( let p=0; p<topEliminatory.eliminatories.length; p++ ) {
-        //     let r = topEliminatory.eliminatories[p].round;
-        //     console.log(r.teamNames +", id="+ r.onewayMeetings[0].id +","+" " + r.onewayMeetings[0].vpoints1 + "-" + r.onewayMeetings[0].vpoints2);
-        // }
+    private updateTourney( ): void {
+        console.log("Entering updateTourney()");
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }
     
     private saveMeeting(e : Eliminatory, m: Meeting) {
@@ -330,314 +420,17 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     }
     
     private saveMeetingNextCallback(m: Meeting ) {   
-        console.log("Entering saveMeetingNextCallback("+m+")");  
-        // this.tourneyService.updateTourneyWithCleanAll(this.selectedTourney, () => {});
+        this.updateTourney();
     }
-    
-    private cloneEliminatories(el: EliminatoryLevel ) : Eliminatory[] {
-        let eliminatories: Eliminatory[] = [];
-        for (let e of el.eliminatories) {
-            let ec = this.cloneEliminatory(e);
-            eliminatories.push(ec);
-        }
-        return eliminatories;
-    }
-
-    private swapIfFromSameRound(el: EliminatoryLevel, rounds: Round[]) {
-        if (this.selectedTourney.isEliminatoryAutoGen) {
-            for (let i = 1; i < el.eliminatories.length; i++) {
-                let e1: Eliminatory = el.eliminatories[i - 1];
-                let e2: Eliminatory = el.eliminatories[i];
-                if (this.cameFromSameRound(rounds, e1.round.teamNames[0], e1.round.teamNames[1])) {
-                    this.swapEliminatory(e1, e2);
-                }
-            }
-            let e2 = el.eliminatories[el.eliminatories.length - 1];
-            if (this.cameFromSameRound(rounds, e2.round.teamNames[0], e2.round.teamNames[1])) {
-                let e1 = el.eliminatories[el.eliminatories.length - 2];
-                this.swapEliminatory(e1, e2);
-            }
-        }
-    }
-
-    // Controlla se il bit di segno è l'unico bit impostato
-    private isPowerOf2(num: number) : boolean {
-        if (num <= 0) {
-            return false;
-        }
-        return (num & (num - 1)) === 0;
-    }
-
-    private cloneRounds(rounds: Round[]): Round[] {
-        let clonedRounds: Array<Round> = new Array<Round>();
-        for(let r of rounds) {
-            let newRound = this.cloneRound(r);
-            clonedRounds.push(newRound);
-        }
-        return clonedRounds;
-    }
-
-    private cloneRound(r: Round) : Round {
-        let newRound : Round = { direction: r.direction
-        , id: r.id
-        , name: r.name
-        , label: r.label
-        , type: r.type
-        , pageSize: r.pageSize
-        , daysNo: r.daysNo
-        , onewayCurrentDay: r.onewayCurrentDay
-        , roundtripCurrentDay: r.roundtripCurrentDay
-        , teamNames: [...r.teamNames]
-        , teamNo: r.teamNo
-        , onewayMeetings: this.cloneMeetings(r.onewayMeetings)
-        , roundtripMeetings: this.cloneMeetings(r.roundtripMeetings)
-        , classification: this.cloneClassifications(r.classification)
-        };
-        return newRound;
-    }
-    
-    private cloneMeetings(mts: Meeting[]): Meeting[] {
-        let nms : Meeting[] = [];
-        for(let m of mts) {
-            let nm = this.cloneMeeting(m);
-            nms.push(nm);
-        }
-        return nms;
-    }
-
-    private cloneClassifications(classifications: Classification[]): Classification[] {
-        let cloneClassifications: Array<Classification> = new Array<Classification>();
-        for(let c of classifications) {
-            let nc = this.cloneClassification(c);
-            cloneClassifications.push(nc);
-        }
-        return cloneClassifications; 
-    }
-
-    private cloneClassification(c: Classification) : Classification {
-        let nc : Classification = new Classification();
-        nc.id = c.id;
-        nc.balanced = c.balanced;
-        nc.teamName = c.teamName;
-        nc.points = c.points;
-        nc.played = c.played;
-        nc.won = c.won;
-        nc.lost = c.lost;
-        nc.balanced = c.balanced;
-        nc.penalty = c.penalty;
-        nc.goalsDone = c.goalsDone;
-        nc.goalsDiff = c.goalsDiff;
-        nc.goalsConceded = c.goalsConceded;
-        nc.notResolveble = c.notResolveble;
-        
-        return nc;
-    }
-    
-    private swapEliminatory(e1 : Eliminatory, e2 : Eliminatory) {
-        for( let m of e1.round.onewayMeetings ) {
-            m.teamName2 = e2.round.teamNames[1];
-        }
-        for( let m of e2.round.onewayMeetings ) {
-            m.teamName2 = e1.round.teamNames[1];
-        }
-
-        for( let m of e1.round.roundtripMeetings ) {
-            m.teamName1 = e2.round.teamNames[1];
-        }
-        for( let m of e2.round.roundtripMeetings ) {
-            m.teamName1 = e1.round.teamNames[1];
-        }        
-
-        let tempE: string[] = [...e1.round.teamNames];
-        e1.round.teamNames[1] = e2.round.teamNames[1];
-        e2.round.teamNames[1] = tempE[1];
-    } 
-
-    /**
-     * Resolves the rules defined in the received Eliminatory configurated in automatic mode.
-     * In function of the classification reached in the previous rounds or playoffs, the method
-     * finds the teams that gained the right for the direct eliminations. 
-     * It creates and returns a new resolved Eliminatory without update the original Eliminatory object
-     */
-    private resolveToplevelAutomatic(e: Eliminatory, matchWinnerScores : number, roundMatrix: Array<Array<Classification>>
-        , terminated: boolean )   {
-        let row1 = this.isPlayoff ? e.rule1.fromPlayoff.position.value : e.rule1.fromRound.position.value;
-        let col1 = this.isPlayoff ? e.rule1.fromPlayoff.bandPosition   : e.rule1.fromRound.bandPosition;
-
-        let row2 = this.isPlayoff ? e.rule2.fromPlayoff.position.value : e.rule2.fromRound.position.value;  
-        let col2 = this.isPlayoff ? e.rule2.fromPlayoff.bandPosition   : e.rule2.fromRound.bandPosition;
-
-        this.resolveMeetingsRules(matchWinnerScores, e, terminated, roundMatrix, row1, col1, row2, col2);
-        
-        // for (let m of e.round.onewayMeetings) {
-        // }
-        // for (let m of e.round.roundtripMeetings) {
-        //     this.resolveMeetingsRules(matchWinnerScores, e, m, terminated, roundMatrix, row2, col2, row1, col1);
-        //     e.round.teamNames = [m.teamName2, m.teamName1];
-        // }
-        // for( let i=0; i<e.round.roundtripMeetings.length; i++ ) {
-        //     resolvedE.round.roundtripMeetings[i].teamName2 = e.round.onewayMeetings[i].teamName1;
-        //     resolvedE.round.roundtripMeetings[i].teamName1 = e.round.onewayMeetings[i].teamName2;
-        // }
-    }
-
-    private cameFromSameRound(rounds: Round[], t1: string, t2: string): boolean {
-        let r1: Round = null;
-        let r2: Round = null;
-        for( let r of rounds ) {
-            let index1 = r.teamNames.findIndex(e=>e==t1);
-            if( index1 != -1 ) {
-                r1 = r;
-            }
-            let index2 = r.teamNames.findIndex(e=>e==t2);
-            if( index2 != -1 ) {
-                r2 = r;
-            }
-        }
-        if( r1 == null || r2 == null) {
-            return false;
-        }
-
-        return r1.name === r2.name;
-    }
-
-    private isRoundsTerminated(rounds: Round[]) {
-        let terminated: boolean = true;
-        for (let r of rounds) {
-            for (let m of r.onewayMeetings) {
-                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confirmed ) {
-                    terminated = false;
-                    break;
-                }
-            }
-            if (!terminated) {
-                break;
-            }
-            for (let m of r.roundtripMeetings) {
-                if (m.status != MeetingStatus.Terminated && m.status != MeetingStatus.Confirmed) {
-                    terminated = false;
-                    break;
-                }
-            }
-        }
-        return terminated;
-    }
-
-    private resolveMeetingsRules(matchWinnerScores : number
-            , e: Eliminatory
-            , terminated : boolean
-            , roundMatrix: Classification[][]
-            , row1: number
-            , col1: number
-            , row2: number
-            , col2: number)  {
-        let m : Meeting = e.round.onewayMeetings[0];
-        if (row1 <= 0 || m.isDummy) {
-            m.teamName1 = "";
-            m.isSkiping = true;
-        } else {
-            if(!terminated || m.teamName1 == "") {
-                m.teamName1 = roundMatrix[row1 - 1][col1 - 1].teamName;
-            }
-            m.isSkiping = false;
-        }
-        if (row2 <= 0 || m.isDummy) {
-            m.teamName2 = "";
-            m.isSkiping = true;
-        } else {
-            if(!terminated || m.teamName2 == "") {
-                m.teamName2 = roundMatrix[row2 - 1][col2 - 1].teamName;
-            }
-            m.isSkiping = false;
-        }
-        e.round.teamNames = [m.teamName1, m.teamName2];
-        m.name = m.teamName1 + " - " + m.teamName2;
-        let c1 : Classification = e.round.classification[0];
-        let c2 : Classification = e.round.classification[1];
-        c1.played = 0;
-        c2.played = 0;
-        c1.teamName = m.teamName1;
-        c2.teamName = m.teamName2;
-        if( m.isSkiping ) {
-            c2.notResolveble = false;
-            c1.notResolveble = false;
-            if( m.teamName1 == "" ) {
-                m.points1 = 0;
-                m.points2 = matchWinnerScores;
-                c2.points = m.points2 ;
-                m.status = MeetingStatus.Terminated;
-            }
-            if( m.teamName2 == "" ) {
-                m.points1 = matchWinnerScores;
-                c1.points = m.points1 ;
-                m.points2 = 0;
-                m.status = MeetingStatus.Terminated;
-            }
-        }
-        m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
-        m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
-
-        let mr : Meeting = this.cloneMeeting(m);
-        mr.teamName1 = m.teamName2;
-        mr.teamName2 = m.teamName1;
-        e.round.roundtripMeetings[0] = mr;
-    }
-
+  
     private cloneEliminatory(e: Eliminatory): Eliminatory {
         let ne : Eliminatory = new Eliminatory();
         ne.id = e.id;
         ne.isSkiping = e.isSkiping;
-        ne.round = this.cloneRound(e.round);
+        ne.round = this.tourneyService.cloneRound(e.round);
         ne.rule1 = e.rule1;
         ne.rule2 = e.rule2;
         return ne;
-    }
-
-    private cloneMeeting(m: Meeting): Meeting {
-        let mr : Meeting = new Meeting();
-        mr.address=m.address;
-        mr.containerId = m.containerId;
-        mr.country = m.country;
-        mr.datetime = m.datetime;
-        mr.day = m.day;
-        mr.direction = m.direction;
-        mr.id = m.id;
-        mr.isDummy = m.isDummy;
-        mr.isSkiping = m.isSkiping;
-        mr.matches = this.cloneMatches(m.matches);
-        mr.name = m.name;
-        mr.points1 = m.points1;
-        mr.points2 = m.points2
-        mr.rule1 = m.rule1;
-        mr.rule2 = m.rule2;
-        mr.ruleName1 = m.ruleName1;
-        mr.ruleName2 = m.ruleName1;
-        mr.ruleName = m.ruleName;
-        mr.status = m.status;
-        mr.teamName1 = m.teamName1;
-        mr.teamName2 = m.teamName2;
-        mr.vpoints1 = m.vpoints1;
-        mr.vpoints2 = m.vpoints2;
-        return mr;
-    }
-    
-    private cloneMatches(matches:  Match[]):  Match[] {
-        let nms : Match[] = [];
-        for( let m of matches ) {
-            let nm = this.cloneMatch(m);
-            nms.push(nm);
-        }
-        return nms;
-    }
-    private cloneMatch(m: Match) : Match {
-        let nm = new Match();
-        nm.id = m.id;
-        nm.players1 = m.players1;
-        nm.players2 = m.players2;
-        nm.score1 = m.score1;
-        nm.score2 = m.score2;
-        nm.status = m.status;
-        return nm;
     }
 
     /**
@@ -738,16 +531,17 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     /**
      * Updates the next lower level in function of the default position found in received current level
      * 
+     * @param eliminatoryLevels the list of eliminatory levels
      * @param l  the current eliminatory level index
-     * @param el the current eliminatory object
+     * @param el the current eliminatory object to compile
      */
-    private resolveNextLevel(eliminatoryLevels: Array<EliminatoryLevel>, l: number, selectedEliminatoryLevelIndex : number, el: EliminatoryLevel) {
+    private compileNextLevel(eliminatoryLevels: Array<EliminatoryLevel>, l: number,  el: EliminatoryLevel) {
 
-        if(selectedEliminatoryLevelIndex != 0) {
+        if(this.isLevelB) {
             this.meetingService.qualifyingRounds = [];
         }
         if(el.isOptional) { // for 3° and 4° classification position
-            this.execute3And4Position(el, l, eliminatoryLevels, selectedEliminatoryLevelIndex);
+            this.compile3And4Position(el, l, eliminatoryLevels);
             return;
         }
 
@@ -755,7 +549,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let previousEliminatoryLevel: Array<Eliminatory> = new Array<Eliminatory>();
         for( let e of eliminatoryLevels[prevIndex].eliminatories ) {
             previousEliminatoryLevel.push(e);
-            if(selectedEliminatoryLevelIndex != 0) {
+            if(this.isLevelB) {
                 this.meetingService.qualifyingRounds.push(e.round);
             }
         }
@@ -793,17 +587,19 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
 
             previousEliminatoryIndex += 2;
+            
+            this.tourneyService.createClassification(e.round, false);
         }
     }
     
-    private execute3And4Position(el: EliminatoryLevel, l: number, eliminatoryLevels: EliminatoryLevel[], selectedEliminatoryLevelIndex: number) {
+    private compile3And4Position(el: EliminatoryLevel, l: number, eliminatoryLevels: EliminatoryLevel[]) {
         let e = el.eliminatories[0];
 
         let prevIndex: number = l - 2;
         let semifinalLevel: Array<Eliminatory> = new Array<Eliminatory>();
         for (let e of eliminatoryLevels[prevIndex].eliminatories) {
             semifinalLevel.push(e);
-            if (selectedEliminatoryLevelIndex != 0) {
+            if (this.isLevelB) {
                 this.meetingService.qualifyingRounds.push(e.round);
             }
         }
@@ -847,7 +643,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         this.meetingService.selectedMeeting = this.selectedRow;
         
-        if( this.selectedRow.isSkiping ) {
+        if( this.selectedRow.teamName2.includes('Fittizio') ) {
             return;
         }
         if(this.tourneyService.selectedEliminatoryLevelIndex==-1) {
@@ -856,7 +652,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             this.meetingService.selectedMeetingDb.eliminatoryId = this.selectedRow.containerId
         }
 
-        let el : Eliminatory  = this.eliminatories.find( e => e.id == this.selectedRow.containerId );
+        let el : Eliminatory  = this.eliminatories.find(e => e.round.teamNames[0] === this.selectedRow.teamName1 && e.round.teamNames[1] === this.selectedRow.teamName2);
+        // let el : Eliminatory  = this.eliminatories.find( e => e.id == this.selectedRow.containerId );
         this.meetingService.selectedRound = el.round;
 
         this.meetingService.selectedRound.label = this.makeEliminatoryLabel();

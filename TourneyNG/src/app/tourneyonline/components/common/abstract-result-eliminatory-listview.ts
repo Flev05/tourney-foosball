@@ -189,6 +189,21 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             sortedEliminatories.push(ne);
             alreadyInTheBigTableList = alreadyInTheBigTableList.concat(ne.round.classification);
         }
+
+        for( let i=0; i<sortedEliminatories.length; i++ ) {
+            let e = sortedEliminatories[i];
+            let r = e.round;
+            let om = r.onewayMeetings[0];
+            let rm = r.roundtripMeetings[0];
+            console.log("P: "+ i + ", e.id: "+ e.id + ", r.id: " + r.id + ", OM.ontainerId: " 
+                + om.containerId + ", RM.ontainerId: " + rm.containerId 
+                + ", OM.status="+om.status
+                + ", OM.datetime: " +  om.datetime  
+                + ", RM.status="+rm.status
+                + ", RM.datetime: " +  rm.datetime  
+                + ", T: " +  r.teamNames  
+            );
+        }
  
         this.placeOnTwoBigTables(topEl, sortedEliminatories);
     }
@@ -243,26 +258,38 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         const c2 = purgedSortedList[purgedSortedList.length - 1];
         let teamName2 = c2.teamName;
 
-        let ne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
-        if( ne == undefined ) {
-            ne = this.resetEliminatory(e, teamName1, teamName2);
-        }
-        ne = this.cloneEliminatory(ne);
+        // let ne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
+        // if( ne == undefined ) {
+        //     ne = this.resetEliminatory(e, teamName1, teamName2);
+        // }
+        let ne = this.resetEliminatory(e, teamName1, teamName2);
+        
+        // let ne = this.cloneEliminatory(e);
         let r = ne.round;
-        r.teamNames[0] = teamName1;
-        r.teamNames[1] = teamName2;
+        // r.teamNames[0] = teamName1;
+        // r.teamNames[1] = teamName2;
 
-        const om = ne.round.onewayMeetings[0];
-        om.containerId = r.id;
-        om.teamName1 = teamName1;
-        om.teamName2 = teamName2;
-        om.name = om.teamName1 + " - " + om.teamName2;
+        const om = r.onewayMeetings[0];
+        // om.containerId = r.id;
+        // om.teamName1 = teamName1;
+        // om.teamName2 = teamName2;
+        // om.name = om.teamName1 + " - " + om.teamName2;
 
-        const rm = ne.round.roundtripMeetings[0];
-        rm.containerId = r.id;
-        rm.teamName1 = teamName2;
-        rm.teamName2 = teamName1;
-        rm.name = rm.teamName1 + " - " + rm.teamName2;
+        const rm = r.roundtripMeetings[0];
+        // rm.containerId = r.id;
+        // rm.teamName1 = teamName2;
+        // rm.teamName2 = teamName1;
+        // rm.name = rm.teamName1 + " - " + rm.teamName2;
+
+        let ene = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
+        if( ene != undefined ) {
+            om.matches = [...ene.round.onewayMeetings[0].matches];
+            om.status = ene.round.onewayMeetings[0].status;
+            om.datetime = ene.round.onewayMeetings[0].datetime;
+            rm.matches = [...ene.round.roundtripMeetings[0].matches];
+            rm.status = ene.round.roundtripMeetings[0].status;
+            rm.datetime = ene.round.roundtripMeetings[0].datetime;
+        }
 
         if( c2.points < 0 ) {
             let matchWinnerScores: number = topEl.abstractRoundVO.matchWinnerScores;
@@ -284,27 +311,27 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             rm.matches[0].score1 = 0;
             rm.matches[0].score2 = pointsNeededToWin;
         } else {
-            let nne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
-            const previousOm = e.round.onewayMeetings[0];
-            if( nne == undefined && previousOm.isDummy ) {
-                // ne = this.resetEliminatory(e, teamName1, teamName2);
-                ne.round.classification[0].points = 0;
-                ne.round.classification[1].points = 0;
-                om.isSkiping = false;
-                om.isDummy = false;
-                om.status = MeetingStatus.ToPlay;
-                om.points1 = 0;
-                om.points2 = 0;
-                om.matches[0].score1 = 0;
-                om.matches[0].score2 = 0;
-                rm.isSkiping = false;
-                rm.isDummy = false;
-                rm.status = MeetingStatus.ToPlay;
-                rm.points1 = 0;
-                rm.points2 = 0;
-                rm.matches[0].score1 = 0;
-                rm.matches[0].score2 = 0;
-            }    
+            // let nne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
+            // const previousOm = e.round.onewayMeetings[0];
+            // if( nne == undefined && previousOm.isDummy ) {
+            //     // ne = this.resetEliminatory(e, teamName1, teamName2);
+            //     ne.round.classification[0].points = 0;
+            //     ne.round.classification[1].points = 0;
+            //     om.isSkiping = false;
+            //     om.isDummy = false;
+            //     om.status = MeetingStatus.ToPlay;
+            //     om.points1 = 0;
+            //     om.points2 = 0;
+            //     om.matches[0].score1 = 0;
+            //     om.matches[0].score2 = 0;
+            //     rm.isSkiping = false;
+            //     rm.isDummy = false;
+            //     rm.status = MeetingStatus.ToPlay;
+            //     rm.points1 = 0;
+            //     rm.points2 = 0;
+            //     rm.matches[0].score1 = 0;
+            //     rm.matches[0].score2 = 0;
+            // }    
         }
 
         om.vpoints1 = om.matches.length==1 ? om.matches[0].score1 : om.points1;
@@ -322,8 +349,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let r = ne.round;
         r.teamNames[0] = teamName1;
         r.teamNames[1] = teamName2;
-        this.tourneyService.newClassification(teamName1, 0);
-        this.tourneyService.newClassification(teamName2, 0);
+        r.classification[0] = this.tourneyService.newClassification(teamName1, 0);
+        r.classification[1] = this.tourneyService.newClassification(teamName2, 0);
         const om = ne.round.onewayMeetings[0];
         om.points1 = 0;
         om.vpoints1 = 0;
@@ -331,8 +358,13 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         om.vpoints2 = 0;
         om.isDummy = false;
         om.status = MeetingStatus.ToPlay;
-        om.matches[0].score1 = 0;
-        om.matches[0].score2 = 0;
+        om.teamName1 = teamName1;
+        om.teamName2 = teamName2;
+        om.name = om.teamName1 + " - " + om.teamName2;
+        for( let i=0;i<om.matches.length; i++ ) {
+            om.matches[i].score1 = 0;
+            om.matches[i].score2 = 0;
+        }
 
         const rm = ne.round.roundtripMeetings[0];
         rm.points1 = 0;
@@ -341,9 +373,14 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         rm.vpoints2 = 0;
         rm.isDummy = false;
         rm.status = MeetingStatus.ToPlay;
-        rm.matches[0].score1 = 0;
-        rm.matches[0].score2 = 0;
-
+        rm.teamName1 = teamName2;
+        rm.teamName2 = teamName1;
+        rm.name = rm.teamName1 + " - " + rm.teamName2;
+        for( let i=0;i<rm.matches.length; i++ ) {
+            rm.matches[i].score1 = 0;
+            rm.matches[i].score2 = 0;
+        }
+         
         return ne;
     }
 
@@ -392,6 +429,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 this.saveMeeting(e, m);
             }
         }       
+        this.updateTourney();
     }
 
     private updateTourney( ): void {
@@ -420,7 +458,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     }
     
     private saveMeetingNextCallback(m: Meeting ) {   
-        this.updateTourney();
+        // this.updateTourney();
     }
   
     private cloneEliminatory(e: Eliminatory): Eliminatory {

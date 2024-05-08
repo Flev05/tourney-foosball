@@ -757,9 +757,9 @@ export class TourneyService extends AbstractService {
             }
         }
 
-        for(let r of rounds) {
-            r.classification = this.sortDesc(r.classification, null);
-        }
+        // for(let r of rounds) {
+        //     r.classification = this.sortDesc(r.classification, null);
+        // }
         if( minTeamsPerRound < maxTeamsPerRound ) {
             for(let r of rounds) {
                 if(r.teamNames.length == maxTeamsPerRound) {

@@ -160,8 +160,14 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         let rounds: Array<Round>;
         if( this.isPlayoff ) {
+            if(this.selectedTourney.terminatedPlayoffs.length > 0) {
+                return;
+            }
             rounds = this.tourneyService.cloneRounds(this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;}));
         } else {
+            if(this.selectedTourney.terminatedRounds.length > 0) {
+                return;
+            }
             rounds = this.tourneyService.cloneRounds(this.selectedTourney.roundVO.rounds);
         }
 
@@ -235,7 +241,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let eliminatories : Eliminatory[] = topEl.eliminatories;
         let pointsNeededToWin: number = topEl.abstractRoundVO.pointsNeededToWin;
         let teamNamesInTheSameRound = [];
-        if( rounds.length > 1 ) {
+        if( rounds.length > 1 && alreadyInTheBigTableList.length < sortedGlobalClassification.length - 2) {
             for( let r of rounds ) {
                 let rt = r.teamNames.find( e => e === c.teamName);
                 if( rt != undefined ) {
@@ -247,7 +253,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         let toRemoveList : Classification[]  = alreadyInTheBigTableList;
         for( let tn of teamNamesInTheSameRound ) {
-            let intersectionList = sortedGlobalClassification.filter( e => e.teamName === tn );
+            let intersectionList = sortedGlobalClassification.filter( ee => ee.teamName === tn );
             toRemoveList = toRemoveList.concat(intersectionList);
         }
         purgedSortedList = sortedGlobalClassification.filter(
@@ -281,14 +287,32 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         // rm.teamName2 = teamName1;
         // rm.name = rm.teamName1 + " - " + rm.teamName2;
 
-        let ene = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
-        if( ene != undefined ) {
-            om.matches = [...ene.round.onewayMeetings[0].matches];
-            om.status = ene.round.onewayMeetings[0].status;
-            om.datetime = ene.round.onewayMeetings[0].datetime;
-            rm.matches = [...ene.round.roundtripMeetings[0].matches];
-            rm.status = ene.round.roundtripMeetings[0].status;
-            rm.datetime = ene.round.roundtripMeetings[0].datetime;
+        let prevA = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
+        if( prevA != undefined ) {
+            om.matches = [...prevA.round.onewayMeetings[0].matches];
+            om.status = prevA.round.onewayMeetings[0].status;
+            om.datetime = prevA.round.onewayMeetings[0].datetime;
+            om.points1 = prevA.round.onewayMeetings[0].points1;
+            om.points2 = prevA.round.onewayMeetings[0].points2;
+            om.vpoints1 = prevA.round.onewayMeetings[0].vpoints1;
+            om.vpoints2 = prevA.round.onewayMeetings[0].vpoints2;
+            rm.matches = [...prevA.round.roundtripMeetings[0].matches];
+            rm.status = prevA.round.roundtripMeetings[0].status;
+            rm.datetime = prevA.round.roundtripMeetings[0].datetime;
+            rm.points1 = prevA.round.onewayMeetings[0].points1;
+            rm.points2 = prevA.round.onewayMeetings[0].points2;
+            rm.vpoints1 = prevA.round.onewayMeetings[0].vpoints1;
+            om.vpoints2 = prevA.round.onewayMeetings[0].vpoints2;
+        }
+        let prevR = eliminatories.find(e => e.round.teamNames[0] === teamName2 && e.round.teamNames[1] === teamName1);
+        if( prevR != undefined ) {
+            rm.matches = [...prevR.round.roundtripMeetings[0].matches];
+            rm.status = prevR.round.roundtripMeetings[0].status;
+            rm.datetime = prevR.round.roundtripMeetings[0].datetime;
+            rm.points1 = prevR.round.onewayMeetings[0].points1;
+            rm.points2 = prevR.round.onewayMeetings[0].points2;
+            rm.vpoints1 = prevR.round.onewayMeetings[0].vpoints1;
+            om.vpoints2 = prevR.round.onewayMeetings[0].vpoints2;
         }
 
         if( c2.points < 0 ) {

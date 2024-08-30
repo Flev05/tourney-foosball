@@ -18,8 +18,6 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
     styleUrls: ['../classification/classification-view.css']
 })
 export class RoundResultListView extends AbstractRoundResultListView {
-    addTeamEnabled = false;
-    tourneyTeams = true;    
     selectedClassificationRow: Classification;
     onewayCurrentDay: number = 1;
     roundtripCurrentDay: number = 1;

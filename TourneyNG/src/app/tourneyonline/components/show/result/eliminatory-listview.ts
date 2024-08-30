@@ -20,9 +20,6 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
     
 })
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
-    addTeamEnabled = true;
-    tourneyTeams = true;
-
     constructor(
         public tourneyService: TourneyService
         ,protected meetingService: MeetingService

@@ -778,7 +778,7 @@
         </div>    
 
         <div *ngIf="teamTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <p-table [columns]="teamCols"
+            <p-table #table [columns]="teamCols"
                     [value]="selectedTourney.teams"
                     [responsive]="true"
                     selectionMode="single" 
@@ -801,11 +801,21 @@
                 <ng-template pTemplate="header" let-columns>
                     <tr>
                         <th style="width: 15mm;">N°</th>
-                        <th *ngFor="let col of columns">
-                            {{col.header}}
+                        <th>Squadra</th>
+                        <th>Giocatori</th>
+                        <th style="width: 15mm;">X</th>
+                    </tr>
+                    <tr>
+                        <th style="width: 15mm;"></th>
+                        <th>
+                            <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'teamName', 'contains')">
+                        </th>
+                        <th>
+                            <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'address', 'contains')">
                         </th>
                         <th style="width: 15mm;">X</th>
                     </tr>
+            
                 </ng-template>
         
                 <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    

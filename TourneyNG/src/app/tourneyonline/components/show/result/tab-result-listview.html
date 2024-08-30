@@ -14,7 +14,7 @@
 </div>   
 
 <p-tabView [activeIndex]="meetingService.selectedResultTabIndex" (onChange)="onChangeTab($event)">
-    <p-tabPanel  *ngIf="containsRound()" header="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})" >    
+    <p-tabPanel  *ngIf="containsRound()" header="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})" >      
         <p-table [columns]="roundCols"
                     [value]="roundRows"
                     [responsive]="true"
@@ -43,7 +43,16 @@
                     </td>           
                 </tr>
             </ng-template>
-        </p-table>
+            <ng-template pTemplate="summary">
+                <p-checkbox name="terminatedRoundsGroupname" 
+                    label="Gironi terminati" 
+                    pTooltip="Selezionare solo quando tutti i gironi sono terminati ed avete generato le eliminatorie"
+                    value="terminatedRounds" 
+                    [(ngModel)]="selectedTourney.terminatedRounds" 
+                    (onChange)="onTerminateRoundChange($event)">
+                </p-checkbox>
+            </ng-template>            
+        </p-table>   
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsPlayoff()" header="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}({{playoffCount}})" >    
@@ -75,6 +84,15 @@
                 </tr>
             </ng-template>
         </p-table>
+        <div class="ui-g-2" tooltipPosition="left"
+            pTooltip="Selezionare solo quando tutti i gironi di playoff sono terminati ed avete generato le eliminatorie">
+            <p-checkbox name="terminatedPlayoffsGroupname" 
+                label="Playoff terminati" 
+                value="terminatedRounds" 
+                [(ngModel)]="selectedTourney.terminatedPlayoffs" 
+                (onChange)="onTerminatePlayoffChange($event)">
+            </p-checkbox>
+        </div>          
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsPlayout()" header="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}({{playoutCount}})" >    
@@ -147,7 +165,7 @@
     </p-tabPanel>
     
     <p-tabPanel *ngIf="containsEliminatoryB()" 
-        header="{{selectedTourney.eliminatoryBTabName}}({{eliminatoryBCount}})"  >   
+        header="{{selectedTourney.eliminatoryBTabName}}({{eliminatoryBCount}})"  >  
         <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryBLevelRows" 
                 selectionMode="single" 
@@ -183,6 +201,9 @@
             </ng-template>
         </p-table>
     </p-tabPanel>
-
+    
+    <p-tabPanel header="Teams"  >   
+        <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
+    </p-tabPanel>
 </p-tabView>        
     

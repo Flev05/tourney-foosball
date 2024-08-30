@@ -106,6 +106,8 @@
     </div> 
 </div>
 
+<app-player-table [playerLv]="playerLv" [addPlayerEnabled]="addPlayerEnabled"></app-player-table>
+
 <div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">

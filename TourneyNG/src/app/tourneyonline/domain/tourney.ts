@@ -28,6 +28,8 @@ export interface Tourney {
     datetime?       : Date;
 
     wizardModeIndex?            : number;
+    terminatedRounds?           : string[];
+    terminatedPlayoffs?         : string[];
 
     selectedTeams4RoundCB?      : Combobox;
     selectedTeams4PlayoffsCB?   : Combobox;

@@ -1,0 +1,58 @@
+<p-table #table [columns]="cols" 
+    [value]="rows" 
+    [responsive]="true" 
+    selectionMode="single"
+    [(selection)]="selectedRow" 
+    (onRowSelect)="onRowSelect($event)" 
+    [scrollable]="true" 
+    scrollHeight="250px">
+
+    <ng-template *ngIf="addPlayerEnabled" pTemplate="caption">
+        <div style="text-align:left">
+            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 15mm;">N°</th>
+            <th>Nome</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th *ngIf="addPlayerEnabled" style="width: 15mm;"></th>
+        </tr>
+        <tr>
+            <th style="width: 15mm;"></th>
+            <th>
+                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'playerName', 'contains')">
+            </th>
+            <th></th>
+            <th></th>
+            <th *ngIf="addPlayerEnabled" style="width: 15mm;"></th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+            <td *ngFor="let col of columns">
+                <span class="ui-column-title">{{col.header}}</span>
+                {{rowData[col.field]}}
+            </td>
+            <td *ngIf="addPlayerEnabled" style="width: 15mm; text-align: center;">
+                <button class="ui-button-danger" pButton icon="fa fa-close" (click)="doDelete(rowData)"></button>
+            </td>        
+        </tr>
+    </ng-template>  
+
+    <ng-template *ngIf="addPlayerEnabled" pTemplate="summary">
+        <div style="text-align:left">
+            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+        </div>
+    </ng-template>
+</p-table>
+
+<div *ngIf="onDeletePlayerError" style="margin-top:30px">
+    <p-message severity="error" text="Impossibile rimuore il giocatore {{selectedPlayer.playerName}} perchè ancora in uso!"></p-message>
+</div>    
+ 

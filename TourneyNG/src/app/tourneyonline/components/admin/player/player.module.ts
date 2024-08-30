@@ -28,6 +28,7 @@ import {PlayerListView} from './player-listview';
 import {PlayerDetailView} from './player-detailview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import {PlayerRoutingModule} from './player-routing.module';
+import { PlayerTableModule } from '../player-table/player-table.module';
 
 @NgModule({
 	imports: [
@@ -56,6 +57,7 @@ import {PlayerRoutingModule} from './player-routing.module';
         ,MessageModule
         ,PlayerRoutingModule
         ,AccordionModule
+        ,PlayerTableModule
     ],
 	declarations: [
         PlayerListView,

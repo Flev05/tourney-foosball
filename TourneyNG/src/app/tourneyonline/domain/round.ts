@@ -1,6 +1,6 @@
 import { Classification } from './classification';
 import { Meeting } from './meeting';
-import { RoundType, Direction } from './enumerations';
+import { MeetingStatus, RoundType, Direction } from './enumerations';
 
 export class Round {
     id: number;

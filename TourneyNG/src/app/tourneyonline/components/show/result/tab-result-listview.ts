@@ -14,6 +14,7 @@ import { TourneyResultListView } from '../tourney/tourney-listview';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Round } from 'app/tourneyonline/domain/round';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
@@ -23,7 +24,10 @@ const REDIRECT_ELIMINATORY       = 'result/lv/eliminatoryLv/dv';
     templateUrl: './tab-result-listview.html'
 })
 export class TabResultListView extends AbstractTabResultListView {
-
+    addTeamEnabled = false;
+    tourneyTeams = true;    
+    teamCount : number = 0;
+    
     constructor(
         public tourneyService: TourneyService,
         public meetingService: MeetingService,
@@ -197,12 +201,37 @@ export class TabResultListView extends AbstractTabResultListView {
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 
+    onTerminateRoundChange(event) {
+        console.log("Entering onTerminateRoundChange()");
+        this.updateTourney();
+     }
+
+     onTerminatePlayoffChange(event) {
+        console.log("Entering onTerminatePlayoffChange()");
+        this.updateTourney();
+     }
+
+     private updateTourney(): void {
+        console.log("Entering updateTourney()");
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
+    }
+
     goBack(): void {        
         this.router.navigate([TourneyResultListView.REDIRECT_TOURNEY_LV]);
     }
 
     refresh(): void {        
         this.ngOnInit();
+    }
+
+    regenerate(event) {
+        console.log("Entering regenerate()");
+    }
+
+    regenerateB(event) {
+        console.log("Entering regenerateB()");
     }
 }
 

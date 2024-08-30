@@ -28,6 +28,7 @@ export class TeamTableComponent extends AbstractListView {
   onDeleteTeamError: boolean;
 
   teamNameFilter: string;
+  teamCount : number = 0;
 
   constructor(
       protected tourneyService: TourneyService,
@@ -44,14 +45,15 @@ export class TeamTableComponent extends AbstractListView {
       this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
   }
   
-  private onLoadTeamsComplete(): any {
-      this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
-      console.log("Loaded [" + this.teams.length + "] pool teams");
+    private onLoadTeamsComplete(): any {
+        this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+        console.log("Loaded [" + this.teams.length + "] pool teams");
 
-      if( this.tourneyTeams ) {
-          this.teams = this.tourneyService.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
-      }
-  }
+        if( this.tourneyTeams ) {
+            this.teams = this.tourneyService.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+        }
+        this.teamCount = this.teams.length;
+    }
   
   public gotoListView() {
       this.router.navigate([REDIRECT_TOURNEY_LV]);

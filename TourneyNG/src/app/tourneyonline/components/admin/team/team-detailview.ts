@@ -31,6 +31,8 @@ export class TeamDetailView extends AbstractDetailView {
     autoCompleteTeamName: string; 
     filteredTeamsSingle: string[];
     teams: Team[];
+    playerLv: boolean = true;
+    addPlayerEnabled : boolean = false;
 
     constructor(
         protected location: Location,

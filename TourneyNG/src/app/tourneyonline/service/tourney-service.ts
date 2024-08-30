@@ -929,7 +929,11 @@ export class TourneyService extends AbstractService {
         let sortedGlobalClassification :  Array<Classification> = [];       
         for(let r=0; r<roundMatrix.length; r++) {
             for(let c=0; c<roundMatrix[r].length; c++) {
-                sortedGlobalClassification.push(roundMatrix[r][c]);
+                const cell = roundMatrix[r][c];
+                if( cell == undefined ) {
+                    continue;
+                }
+                sortedGlobalClassification.push(cell);
                 if( --powerOf2TopLevelLen === 0 ) {
                     return sortedGlobalClassification;
                 }

@@ -33,11 +33,48 @@
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
-<p>
-    I campi contrassegnati con * sono obbligatori!
-</p>
+
+<div *ngIf="teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Nome:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.playerName}}
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8">
+            {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+            + " (" + selectedPlayer.country.provinceCode +")" : "" }}
+        </div>
+    </div> 
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Telefono:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.phoneNumber}}
+        </div>
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Email:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.email}}
+        </div>
+    </div>
+</div>
     
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p>
+        I campi contrassegnati con * sono obbligatori!
+    </p>
     <div class="ui-grid-row">
         <div class="ui-grid-col-3">
             Nominativo*:
@@ -101,7 +138,7 @@
     </div>
 </div>
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             <button class="ui-button-success" 

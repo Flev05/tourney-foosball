@@ -36,7 +36,8 @@
                         <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}} {{onewayCurrentDay}}/{{allDaysNo}}</div>
+                        <div>{{getHeaderOneway()}}</div>
+                        <div>{{getWeekOneway()}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
@@ -85,7 +86,8 @@
                         <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
-                        <div>{{selectedRound.name}} {{roundtripCurrentDay}}/{{roundDaysNo}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})</div>
+                        <div>{{getHeaderRoundtrip()}}</div>
+                        <div>{{getWeekRoundtrip()}}</div>
                     </td>
                     <td style="text-align: right;">
                         <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>

@@ -12,6 +12,12 @@ import { MeetingRoundService } from './meeting-round-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
+import * as XLSX from 'xlsx';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDto } from './meeting-dto';
+import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 const ROUND_CHANGE_TEAMS_POPUP = "ATTENZIONE! L'operazione ricrea tutti gli incontri fra le squadre del girone facendo perdere tutte le impostazioni preesistenti. Confermi?";
 
@@ -35,7 +41,9 @@ export class RoundListView extends AbstractListView {
         protected tourneyService: TourneyService,
         protected meetingRoundService: MeetingRoundService,
         public teamService: TeamService,
-        private clientService: ClientService
+        private clientService: ClientService,
+        public meetingService: MeetingService,
+        protected dateFormatPipe: DateFormatPipe
     ) { 
         super(TeamDetailView.redirect, tourneyService, router, location);
     }
@@ -85,6 +93,65 @@ export class RoundListView extends AbstractListView {
                 ,()    => {this.goMeeting();}
             );
         }
+    }
+
+    private getOnewayMeetingsOfDay(md: number) : Meeting[] {
+        let onewayMeetingDaysMap = this.meetingRoundService.onewayMeetingDaysMap;
+        let onewayMeetings = onewayMeetingDaysMap.get(md);
+        onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
+        return onewayMeetings;
+    }
+
+    private getRoundtripMeetingsOfDay(md: number) : Meeting[]{
+        let roundtripMeetingDaysMap = this.meetingRoundService.roundtripMeetingDaysMap;
+        let roundtripMeetings = roundtripMeetingDaysMap.get(md);
+        roundtripMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
+        return roundtripMeetings;
+    }
+
+    public printExcelMeeting() {    
+        const workbook = XLSX.utils.book_new();
+        let meetings : MeetingDto[] = [];
+        for( let r of this.selectedTourney.roundVO.rounds ) {
+            this.meetingRoundService.prepareMeetingsMap(r, false); 
+            for( let md = 1; md <= r.daysNo; md ++ ) {
+                let ms = this.getOnewayMeetingsOfDay(md);
+                let newDate = new Date(ms[0].datetime);
+                let range = this.meetingService.getWeekDaysRange(newDate);
+                let dto: MeetingDto = {direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                meetings.push(dto);
+                for( let m of ms ) {
+                    let dto = {direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                    meetings.push(dto);
+                }
+            } 
+            for( let md = 1; md <= r.daysNo; md ++ ) {
+                let ms = this.getRoundtripMeetingsOfDay(md);
+                let newDate = new Date(ms[0].datetime);
+                let range = this.meetingService.getWeekDaysRange(newDate);
+                let dto: MeetingDto = {direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                meetings.push(dto);
+                for( let m of ms ) {
+                    let dto = {direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                    meetings.push(dto);
+                }
+            } 
+        }
+        const workSheetData = meetings.map((dto) => {
+            if( dto.separator ) {
+                return {
+                    Giornata: dto.direction + " Settimana " + dto.weekRange + ", Giornata " + dto.md + "/" + dto.days
+                };    
+            }
+            return {
+                "In Casa": dto.meeting.teamName1,
+                Data:  this.dateFormatPipe.transformWeek(dto.meeting.datetime),
+                "In Trasferta": dto.meeting.teamName2,
+            };
+        })
+        const worksheet = XLSX.utils.json_to_sheet(workSheetData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Meetings" );
+        XLSX.writeFile(workbook, this.selectedTourney.tourneyName + "-Meetings.xlsx");
     }
 
     goBack(): void {

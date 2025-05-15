@@ -48,7 +48,58 @@ export class RoundResultListView extends AbstractRoundResultListView {
         this.roundtripCurrentDay = this.selectedRound.roundtripCurrentDay;
         this.meetingService.blockedDocument = false;
 
-        this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
+        this.teamService.setMeetingAddress(this.onewayMeetings, this.roundtripMeetings);
+    }
+
+    public getWeekOneway() : string {
+        if( this.onewayMeetings.length == 0 ) {
+            return "";
+        }
+        let ii = 0;
+        if( this.onewayMeetings[0].isSkiping) {
+            if( this.onewayMeetings.length <= 1 ) {
+                return "";
+            }
+            ii = 1;
+        }
+        let day : Date = new Date(this.onewayMeetings[ii].datetime);
+        return this.meetingService.getWeekDaysRange(day);
+    }
+
+    public getWeekRoundtrip() : string {
+        if( this.roundtripMeetings.length == 0 ) {
+            return "";
+        }
+        let ii = 0;
+        if( this.roundtripMeetings[0].isSkiping) {
+            if( this.roundtripMeetings.length <= 1 ) {
+                return "";
+            }
+            ii = 1;
+        }
+        let day : Date = new Date(this.roundtripMeetings[ii].datetime);
+        return this.meetingService.getWeekDaysRange(day);
+    }
+
+    /**
+     * Shows this token composition:
+     * 
+     * @returns {{selectedRound.name}} {{onewayCurrentDay}}/{{allDaysNo}} 
+     */
+    public getHeaderOneway() : string {
+        let rn = this.selectedRound.name + " ";
+        // return rn + this.onewayCurrentDay + "/" + this.allDaysNo;
+        return rn + this.onewayCurrentDay + "/" + this.roundDaysNo + "(" + (this.onewayCurrentDay ) + "/" + this.allDaysNo + ")";
+    }
+
+    /**
+     * Shows this token composition:
+     * 
+     * @returns {{selectedRound.name}} {{roundtripCurrentDay}}/{{roundDaysNo}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})
+     */
+    public getHeaderRoundtrip() : string {
+        let rn = this.selectedRound.name + " ";
+        return rn + this.roundtripCurrentDay + "/" + this.roundDaysNo + "(" + (this.roundDaysNo + this.roundtripCurrentDay) + "/" + this.allDaysNo + ")";
     }
 
     prevOnewayDay() : void {
@@ -60,7 +111,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
     }
     nextOnewayDay() : void {
         this.onewayCurrentDay++;
-        if( this.onewayCurrentDay > this.selectedRound.daysNo  ) {
+        if( this.onewayCurrentDay > this.selectedRound.daysNo ) {
             this.onewayCurrentDay = this.selectedRound.daysNo;
         }
         this.setOnewayCurrentDay(this.onewayCurrentDay);
@@ -75,7 +126,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
     }
     nextRoundtripDay() : void {
         this.roundtripCurrentDay++;
-        if( this.roundtripCurrentDay > this.selectedRound.daysNo  ) {
+        if( this.roundtripCurrentDay > this.selectedRound.daysNo ) {
             this.roundtripCurrentDay = this.selectedRound.daysNo;
         }
         this.setRoundtripCurrentDay(this.roundtripCurrentDay);

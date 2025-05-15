@@ -19,7 +19,7 @@
 
 -- Server Centos Linux
 -- \set TS_DATA_LOCATION  '\'/data/tourney/tourneydbtest/data\''
--- \set TS_INDEX_LOCATION '\'/data/tourney/tourneydbtest//index\''
+-- \set TS_INDEX_LOCATION '\'/data/tourney/tourneydbtest/index\''
 
 \i ../../DatabaseCommons/DatabaseCreation/create_tablespaces.sql
 

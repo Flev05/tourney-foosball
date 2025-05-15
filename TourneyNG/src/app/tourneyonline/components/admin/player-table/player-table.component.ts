@@ -41,10 +41,8 @@ export class PlayerTableComponent extends AbstractListView {
 
   ngOnInit() {
       super.ngOnInit();
-    
       this.cols = PlayerService.cols;
       this.onDeletePlayerError = false;
-
       this.playerService.loadAllPlayers( () => this.onComplete() );
   }
 

@@ -190,21 +190,15 @@ public class Converter extends AbstractLogger {
 	}
 
 	public TourneyVO convertTourneyPoVo(Tourney tpo) {
-
 		TourneyVO tvo = new TourneyVO();
-
 		ClientVO cvo = convertClientPoVo(tpo.getClient());
-
 		tvo.setClientVO(cvo);
 		tvo.setId(tpo.getId());
 		tvo.setJson(tpo.getJson());
 		tvo.setTourneyName(tpo.getTourneyName());
-
 		User fupo = userDao.getFollowerByTourneyID(tpo.getId(), tvo.getClientVO().getId());
-
 		tvo.setFollowerName(fupo == null ? "" : fupo.getUsername());
 		tvo.setCountry(tpo.getCountry());
-
 		return tvo;
 	}
 
@@ -225,14 +219,11 @@ public class Converter extends AbstractLogger {
 	}
 
 	public PlayerVO convertPlayerPoVo(Player ppo) {
-
 		PlayerVO pvo = new PlayerVO();
-
 		if (ppo.getClient() != null) {
 			ClientVO cvo = convertClientPoVo(ppo.getClient());
 			pvo.setClientId(cvo.getId());
 		}
-
 		if (ppo.getCountry() != null) {
 			Country country = countryDao.getById(ppo.getCountry().getId());
 			pvo.setCountry(country);
@@ -241,14 +232,11 @@ public class Converter extends AbstractLogger {
 		pvo.setId(ppo.getId());
 		pvo.setJson(ppo.getJson());
 		pvo.setPlayerName(ppo.getPlayerName());
-
 		return pvo;
 	}
 
 	public TeamVO convertTeamPoVo(Team tpo) {
-
 		TeamVO tvo = new TeamVO();
-
 		if (tpo.getClient() != null) {
 			ClientVO cvo = convertClientPoVo(tpo.getClient());
 			tvo.setClientId(cvo.getId());

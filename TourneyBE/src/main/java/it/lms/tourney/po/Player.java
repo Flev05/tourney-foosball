@@ -50,7 +50,6 @@ public class Player extends AbstractPO {
 
 	@Override
 	public boolean equals(Object obj) {
-
 		if (!super.equals(obj)) {
 			return false;
 		}
@@ -66,7 +65,6 @@ public class Player extends AbstractPO {
 
 	@Override
 	public String toString() {
-
 		return super.toString() + " Player [playerName=" + playerName + ", client=" + client + ", session=" + session
 				+ ", country=" + country + ", json=" + json + "]";
 	}

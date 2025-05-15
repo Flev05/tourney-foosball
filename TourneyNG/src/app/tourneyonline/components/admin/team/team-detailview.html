@@ -29,15 +29,6 @@
             {{selectedTeam.teamName}}
         </div>
     </div>
-        
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
-            Via:
-        </div>
-        <div class="ui-grid-col-5">
-            {{selectedTeam.address}}
-        </div>
-    </div>
 
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
@@ -69,16 +60,7 @@
             </p-autoComplete>
         </div>            
     </div>      
-        
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1">
-            Via:
-        </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire la via della squadra.">
-            <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
-        </div>
-    </div>
-
+ 
     <div class="ui-grid-row">
         <div class="ui-grid-col-1">
             <label for="country-id">Comune:</label>

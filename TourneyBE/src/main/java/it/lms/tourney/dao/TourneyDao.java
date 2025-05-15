@@ -123,6 +123,7 @@ public class TourneyDao extends BaseJPACrudDao<Tourney, Integer> {
 
 		cq = cq.select(tourneyJoin);
 		cq = cq.where(p1, p2, p3);
+		cq = cq.orderBy(cb.desc(tourneyJoin.get(Tourney_.id)));
 
 		TypedQuery<Tourney> tq = getEm().createQuery(cq);
 

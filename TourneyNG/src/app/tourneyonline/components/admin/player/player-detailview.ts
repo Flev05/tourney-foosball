@@ -9,6 +9,8 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './player-detailview.html',
@@ -27,6 +29,7 @@ export class PlayerDetailView extends AbstractDetailView {
         protected tourneyService: TourneyService,
         protected clientService: ClientService,
         protected countryService: CountryService,
+        public teamService: TeamService,
         private   playerService: PlayerService
     ) { 
         super(tourneyService, location);
@@ -60,10 +63,10 @@ export class PlayerDetailView extends AbstractDetailView {
 
         this.newPlayerVO = {
             id: this.selectedPlayer.id
-          , playerName: this.selectedPlayer.playerName
-          , country: this.selectedPlayer.country
-          , clientId: this.selectedPlayer.clientId
-          , json: JSON.stringify(this.selectedPlayer)
+            , playerName: this.selectedPlayer.playerName
+            , country: this.selectedPlayer.country
+            , clientId: this.selectedPlayer.clientId
+            , json: JSON.stringify(this.selectedPlayer)
         };
 
         this.playerAlreadyExists = false;
@@ -71,11 +74,28 @@ export class PlayerDetailView extends AbstractDetailView {
 
         const subscriber = this.playerService.savePlayer(this.newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
         subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
+        this.updateTourney();
     }
  
+    private updateTourney(): void {
+        console.log("Entering updateTourney()");
+
+        for( let t of this.selectedTourney.teams ) {
+            for( let p of t.players ) {
+                if( p.id == this.selectedPlayer.id ) {
+                    p = this.selectedPlayer;
+                }
+            }
+        }
+
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Save Tourney operation'));
+        subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
+    }
+    
     private newPlayerNext(tvo:PlayerVO) {
         console.log("newPlayerNext()");
-        console.log(tvo);
+        console.log(tvo.json);
         this.selectedPlayer.id = tvo.id;
     }
 

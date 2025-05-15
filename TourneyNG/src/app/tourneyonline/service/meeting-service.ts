@@ -908,4 +908,35 @@ export class MeetingService extends AbstractService {
             return of(result as MeetingDb);
         };
     }
+
+    /**
+     * Finds the first and the last days of the week containing the received weekDay date
+     * 
+     * @returns the concatenation of the first and last above days
+     */
+    public getWeekDaysRange( weekDay : Date ) : string {
+        // Calculate the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+        const dayOfWeek = weekDay.getDay();
+
+        // Determine the distance to the Monday (1) and Sunday (0)
+        const distanceToMonday = (dayOfWeek + 6) % 7; // Adjust for Monday being the start
+        const distanceToFriday = 4 - distanceToMonday; // 6 days from Monday to Sunday
+
+        // Calculate the start and end of the week
+        const monday = new Date(weekDay);
+        monday.setDate(weekDay.getDate() - distanceToMonday);
+
+        const sunday = new Date(weekDay);
+        sunday.setDate(weekDay.getDate() + distanceToFriday);
+
+        // Format the dates as DD/MM/YYYY
+        const formatDate = (d: Date): string => {
+            const day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate().toString();
+            const month = (d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1).toString();
+            return `${day}/${month}/${d.getFullYear()}`;
+          };
+
+        // Return the range as a formatted string
+        return `dal ${formatDate(monday)} al ${formatDate(sunday)}`;
+    }
 }

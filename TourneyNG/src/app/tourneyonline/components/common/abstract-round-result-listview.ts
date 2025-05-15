@@ -128,7 +128,6 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.onewayMeetings = this.onewayMeetings.map((m, index, ms) => this.mapCallback(m, index, ms));
         this.onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
         this.selectedRound.onewayCurrentDay = key;
-        return key;
     }
 
     protected setRoundtripCurrentDay(key: number) {

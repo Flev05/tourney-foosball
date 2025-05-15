@@ -23,6 +23,7 @@ import { ClassificationTourneyListView } from './tourney-listview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { ClassificationEliminatoryListView } from './eliminatory-listview';
 import { ClassificationDetailView } from './classification-detailview';
+import { PlayerTableModule } from '../../admin/player-table/player-table.module';
 
 @NgModule({
         imports: [
@@ -45,6 +46,7 @@ import { ClassificationDetailView } from './classification-detailview';
         ,ClassificationRoutingModule
         ,MessagesModule
         ,MessageModule
+        ,PlayerTableModule
 	],
 	declarations: [
                 ClassificationTourneyListView

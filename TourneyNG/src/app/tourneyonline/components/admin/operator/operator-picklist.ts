@@ -9,7 +9,6 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Observable, of } from 'rxjs';
 import { UserVO } from 'app/tourneyonline/domain/user-vo';
-import { OperatorListView } from './operator-listview';
 import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
 import { UrcService } from 'app/tourneyonline/service/urc-service';
 import { OperatorDetailView } from './operator-detailview';
@@ -21,7 +20,7 @@ export class OperatorPickList extends AbstractListView {
     availableOperators: string[];
     targetOperators: string[];
     returnLabel: string;
-    operatorVo: OperatorsVO;
+    // operatorVo: OperatorsVO;
     
     constructor( protected tourneyService: TourneyService
         , public router: Router

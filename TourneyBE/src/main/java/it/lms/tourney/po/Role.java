@@ -2,6 +2,7 @@
 package it.lms.tourney.po;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -24,7 +25,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Role extends AbstractPO {
-
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -42,7 +42,6 @@ public class Role extends AbstractPO {
 	private Set<UserRoleClient> urcSet;
 
 	public enum ROLES {
-
 						DEVELOPER(5),
 						OWNER(4),
 						ADMIN(3),
@@ -73,13 +72,31 @@ public class Role extends AbstractPO {
 	}
 
 	public Role() {
-
 		urcSet = new HashSet<>();
 	}
 
 	@Override
 	public String toString() {
-
 		return super.toString() + " Role [name=" + name + ", description=" + description + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(name);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Role other = (Role) obj;
+		return Objects.equals(name, other.name);
 	}
 }

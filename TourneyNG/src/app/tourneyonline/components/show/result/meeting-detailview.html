@@ -101,37 +101,52 @@
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div *ngIf="!loginService.isFollower()" class="ui-dialog-buttonpane ui-helper-clearfix"> 
-
-        <button *ngIf="isAtLeastAdmin()"
-            type="button"  
-            label="Convalida" 
-            class="ui-button-success"
-            icon="pi pi-check"
-            pTooltip="Convalida in modo definitivo il risultato dell'incontro!"
-            pButton (click)="onConfirmClick()" >
-        </button>
-        <button *ngIf="isAtLeastAdmin()"
-            type="button"  
-            label="In corso" 
-            icon="pi pi-check"
-            pTooltip="Riabilita l'inserimento dei punti dell'incontro!"
-            pButton (click)="onInProgressClick()" >
-        </button>
-
-        <button *ngIf="!disabledOperator()" type="button" 
-            label="Termina" 
-            class="ui-button-warning"
-            icon="pi pi-times" 
-            pTooltip="Transita lo stato dell'incontro in Terminato, deve essere poi convalidato dall'amministratore del torneo!"
-            pButton (click)="onTerminatedClick()">
-        </button>
-        <button *ngIf="!disabledOperator()" type="button" 
-            class="ui-button-danger"
-            label="Azzera" 
-            icon="pi pi-times" 
-            pButton (click)="onResetPoundsClick()" 
-            pTooltip="Azzera tutti i dati dell'incontro, quelli precedentemente inseriri saranno irrimediabilmente perduti!">
-        </button>
+        <p-table>
+            <ng-template pTemplate="header">
+                <tr *ngIf="!disabledOperator()" >
+                    <td>
+                        <button type="button" 
+                            class="ui-button-danger"
+                            label="Azzera" 
+                            icon="pi pi-times" 
+                            pButton (click)="onResetPoundsClick()" 
+                            pTooltip="Azzera tutti i dati dell'incontro, quelli precedentemente inseriri saranno irrimediabilmente perduti!">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" 
+                            label="Termina" 
+                            class="ui-button-warning"
+                            icon="pi pi-times" 
+                            pTooltip="Transita lo stato dell'incontro in Terminato, deve essere poi convalidato dall'amministratore del torneo!"
+                            pButton (click)="onTerminatedClick()">
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="isAtLeastAdmin()">
+                    <td>
+                        <button
+                            type="button"  
+                            class="ui-button-info"
+                            label="In corso" 
+                            icon="pi pi-check"
+                            pTooltip="Riabilita l'inserimento dei punti dell'incontro!"
+                            pButton (click)="onInProgressClick()" >
+                        </button>
+                    </td>                    
+                    <td>
+                        <button
+                            type="button"  
+                            label="Convalida" 
+                            class="ui-button-success"
+                            icon="pi pi-check"
+                            pTooltip="Convalida in modo definitivo il risultato dell'incontro!"
+                            pButton (click)="onConfirmClick()" >
+                        </button>
+                    </td>
+                </tr>      
+            </ng-template>      
+        </p-table>
     </div>
 
     <p-table [value]="matches">        

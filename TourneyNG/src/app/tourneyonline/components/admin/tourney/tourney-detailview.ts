@@ -299,6 +299,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private onLoadNext(op: OperatorsVO): void {
         this.operatorVo = op;
         this.operators = op.selectedOperators;
+        this.tourneyService.operatorVo = this.operatorVo;
     }
     
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
@@ -697,6 +698,7 @@ export class TourneyDetailView extends AbstractDetailView {
     onTeamRowSelect(event) {
         console.log(event.data);
         this.teamService.selectedTeam = this.cloneObject(this.selectedTeam);
+        this.teamService.readOnly = false;
         this.router.navigate([REDIRECT_TEAM_DV]);
     }
      
@@ -870,16 +872,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let T: number = this.selectedTourney.teams.length;
         let randomTeams = [];
         randomTeams = this.prepareTourneyTeams(T);
-        // if(this.isRoundAutoGen=='true') {
-        //     T = this.selectedTourney.teams.length;
-        //     randomTeams = this.prepareTourneyTeams(T);
-        // } else {
-        //     T = this.selectedTourney.selectedTeams4RoundCB.value;
-        //     for( let i=1; i<=T; i++ ) {
-        //         let tn = "Team: " + i;
-        //         randomTeams.push(tn);
-        //      }
-        // }
+
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
 

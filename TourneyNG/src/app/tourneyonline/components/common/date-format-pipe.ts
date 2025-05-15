@@ -12,4 +12,7 @@ export class DateFormatPipe extends DatePipe implements PipeTransform {
         }
         return super.transform(value, "dd/MM/yyyy HH:mm");
     }
+    transformWeek(value: any): any {
+         return super.transform(value, "EEE dd/MM/yyyy HH:mm");
+    }
 }

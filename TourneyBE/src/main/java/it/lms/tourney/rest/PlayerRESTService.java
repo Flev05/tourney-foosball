@@ -121,11 +121,9 @@ public class PlayerRESTService extends AbstractRESTService {
 		}
 
 		if (foundPlayer != null) {
-
 			log.error("Player found");
 			responseObj.put("errorCode", "PlayerAlreadyExists");
 			responseObj.put("message", "Player " + tvo.getPlayerName() + " already exists");
-
 			Response.ResponseBuilder builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
 			return builder.build();
 		}

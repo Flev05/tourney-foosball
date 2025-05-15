@@ -909,7 +909,7 @@ export class TourneyService extends AbstractService {
 
             originalC1.notResolveble=true;
             originalC2.notResolveble=true;
-            return 0;
+            return c1.teamName > c2.teamName ? 1 : -1;
         });
 
         return sortedClassification;

@@ -126,8 +126,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     m.points1 = el.abstractRoundVO.matchWinnerScores;
                     m.points2 = 0;
                 }
-                m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
-                m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;        
+                this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
             }
             for (let m of e.round.roundtripMeetings) {
                 if (m.teamName1 == "") {
@@ -138,8 +137,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     m.points1 = el.abstractRoundVO.matchWinnerScores;
                     m.points2 = 0;
                 }
-                m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
-                m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;
+                this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
             }
         }
     }
@@ -165,7 +163,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
             rounds = this.tourneyService.cloneRounds(this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;}));
         } else {
-            if(this.selectedTourney.terminatedRounds.length > 0) {
+            if(this.selectedTourney.terminatedRounds.length == 0) {
                 return;
             }
             rounds = this.tourneyService.cloneRounds(this.selectedTourney.roundVO.rounds);
@@ -334,38 +332,27 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             rm.points2 = pointsNeededToWin;
             rm.matches[0].score1 = 0;
             rm.matches[0].score2 = pointsNeededToWin;
-        } else {
-            // let nne = eliminatories.find(e => e.round.teamNames[0] === teamName1 && e.round.teamNames[1] === teamName2);
-            // const previousOm = e.round.onewayMeetings[0];
-            // if( nne == undefined && previousOm.isDummy ) {
-            //     // ne = this.resetEliminatory(e, teamName1, teamName2);
-            //     ne.round.classification[0].points = 0;
-            //     ne.round.classification[1].points = 0;
-            //     om.isSkiping = false;
-            //     om.isDummy = false;
-            //     om.status = MeetingStatus.ToPlay;
-            //     om.points1 = 0;
-            //     om.points2 = 0;
-            //     om.matches[0].score1 = 0;
-            //     om.matches[0].score2 = 0;
-            //     rm.isSkiping = false;
-            //     rm.isDummy = false;
-            //     rm.status = MeetingStatus.ToPlay;
-            //     rm.points1 = 0;
-            //     rm.points2 = 0;
-            //     rm.matches[0].score1 = 0;
-            //     rm.matches[0].score2 = 0;
-            // }    
-        }
+        }  
 
-        om.vpoints1 = om.matches.length==1 ? om.matches[0].score1 : om.points1;
-        om.vpoints2 = om.matches.length==1 ? om.matches[0].score2 : om.points2;
-        rm.vpoints1 = rm.matches.length==1 ? rm.matches[0].score1 : rm.points1;
-        rm.vpoints2 = rm.matches.length==1 ? rm.matches[0].score2 : rm.points2;
+        this.updateVPoints(om, topEl.abstractRoundVO.pointsNeededToWin);
+        this.updateVPoints(rm, topEl.abstractRoundVO.pointsNeededToWin);
 
         this.tourneyService.createClassification(ne.round, false);
 
         return ne;
+    }
+
+    private updateVPoints(om: Meeting, pointsNeededToWin : Number) {
+        om.vpoints1 = 0;
+        om.vpoints2 = 0;
+        for (let m of om.matches) {
+            if(m.score1 == pointsNeededToWin ) {
+                om.vpoints1++;
+            }
+            if(m.score2 == pointsNeededToWin ) {
+                om.vpoints2++;
+            }
+        }
     }
 
     private resetEliminatory(e: Eliminatory, teamName1 : string, teamName2 : string): Eliminatory {
@@ -583,11 +570,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             m2.points1 = el.abstractRoundVO.matchWinnerScores;
             m2.points2 = 0;
         }
-        m1.vpoints1 = m1.matches.length==1 ? m1.matches[0].score1 : m1.points1;
-        m1.vpoints2 = m1.matches.length==1 ? m1.matches[0].score2 : m1.points2;
-
-        m2.vpoints1 = m2.matches.length==1 ? m2.matches[0].score1 : m2.points1;
-        m2.vpoints2 = m2.matches.length==1 ? m2.matches[0].score2 : m2.points2;
+        this.updateVPoints(m1, el.abstractRoundVO.pointsNeededToWin);
+        this.updateVPoints(m2, el.abstractRoundVO.pointsNeededToWin);
     }
 
     /**
@@ -641,12 +625,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             e.round.roundtripMeetings[0].name = team2 + " - " + team1;
 
             let m = e.round.onewayMeetings[0];
-            m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-            m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+            this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
 
             m = e.round.roundtripMeetings[0];
-            m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-            m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+            this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
 
             previousEliminatoryIndex += 2;
             
@@ -687,12 +669,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         e.round.roundtripMeetings[0].name = team2 + " - " + team1;
 
         let m = e.round.onewayMeetings[0];
-        m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-        m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+        this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
 
         m = e.round.roundtripMeetings[0];
-        m.vpoints1 = m.matches.length == 1 ? m.matches[0].score1 : m.points1;
-        m.vpoints2 = m.matches.length == 1 ? m.matches[0].score2 : m.points2;
+        this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
     }
 
     private fromClassification(e: Eliminatory, position: number): string {

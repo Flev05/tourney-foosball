@@ -1,6 +1,8 @@
 
 package it.lms.tourney.po;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,8 +53,28 @@ public class UserRoleClient extends AbstractPO {
 
 	@Override
 	public String toString() {
-
 		return super.toString() + " UserRoleClient [user=" + user.getUsername() + ", role=" + role.getName()
 				+ ", client=" + client.getBusinessName() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(client, role, user);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserRoleClient other = (UserRoleClient) obj;
+		return Objects.equals(client, other.client) && Objects.equals(role, other.role)
+				&& Objects.equals(user, other.user);
 	}
 }

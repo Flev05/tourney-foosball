@@ -204,6 +204,28 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		return urcList;
 	}
 
+	public List<User> findDistinctOperators(Integer clientId, Integer tourneyId) {
+		log.debug(logId() + "Entering findDistinctOperators()");
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<User> cq = cb.createQuery(User.class);
+		Root<User> root = cq.from(User.class);
+		Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
+		Join<UserRoleClient, Tourney> tourneyJoin = urcJoin.join(UserRoleClient_.tourney);
+		Join<UserRoleClient, Client> clientJoin = urcJoin.join(UserRoleClient_.client);
+		Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
+		Predicate p2 = cb.equal(tourneyJoin.get(Tourney_.id), tourneyId);
+		Predicate p3 = cb.equal(clientJoin.get(Client_.id), clientId);
+		Predicate p4 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+		cq = cq.select(root);
+		cq = cq.where(p2, p3, p4);
+		cq = cq.distinct(true);
+		TypedQuery<User> nq = getEm().createQuery(cq);
+		List<User> urcList = nq.getResultList();
+		String info = "[Found " + urcList.size() + " User(s)] ";
+		log.info(logId() + info);
+		return urcList;
+	}
+
 	/**
 	 * Finds all the URC operators in function of the received parameters
 	 * 

@@ -1,13 +1,21 @@
-<div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
-            <button *ngIf="!loginService.isFollower()" type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
-        </div>
-        <div class="ui-grid-col-8">
-            <span style="font-weight: bold; text-align: center;">{{selectedTourney.tourneyName}}</span>
-        </div>
-    </div>
-</div>     
+
+
+<p-table *ngIf="!loginService.isFollower()" >
+    <ng-template pTemplate="header">
+        <tr>
+            <td>
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+            </td>
+            <td>
+                <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
+            </td>
+            <td style="text-align: right;">
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
 
 <div *ngIf="serverUnreachable" style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibile. Riprovare più tardi."></p-message>
@@ -202,7 +210,7 @@
         </p-table>
     </p-tabPanel>
     
-    <p-tabPanel header="Teams"  >   
+    <p-tabPanel header="Teams">   
         <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
     </p-tabPanel>
 </p-tabView>        

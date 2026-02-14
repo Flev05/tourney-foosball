@@ -136,31 +136,22 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 	 *            the logged user identifier
 	 * @return the list of URC
 	 */
-	public List<UserRoleClient> findOperatorsUrcByClientId(Integer clientId) {
-
-		log.debug(logId() + "Entering findOperatorsUrcByClientId()");
-
+	public List<User> findOperatorsUrcByClientId(Integer clientId) {
+		log.debug(logId() + "Entering findOperatorsUrcByClientId({})", clientId);
 		CriteriaBuilder cb = getCb();
-		CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
-
+		CriteriaQuery<User> cq = cb.createQuery(User.class);
 		Root<UserRoleClient> root = cq.from(UserRoleClient.class);
-
 		Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
 		Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
-
+		Join<UserRoleClient, User> userJoin = root.join(UserRoleClient_.user);
 		Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
 		Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
-
-		cq = cq.select(root);
+		cq = cq.select(userJoin);
 		cq = cq.where(p2, p3);
 		cq = cq.distinct(true);
-
-		TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
-
-		List<UserRoleClient> urcList = nq.getResultList();
-		String info = "[Found " + urcList.size() + " Entity(ies)] ";
-		log.info(logId() + info);
-
+		TypedQuery<User> nq = getEm().createQuery(cq);
+		List<User> urcList = nq.getResultList();
+		log.info("{} Found {} User(s) where clientId={}, Role=OPERATOR", logId(), urcList.size(), clientId);
 		return urcList;
 	}
 
@@ -221,8 +212,8 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		cq = cq.distinct(true);
 		TypedQuery<User> nq = getEm().createQuery(cq);
 		List<User> urcList = nq.getResultList();
-		String info = "[Found " + urcList.size() + " User(s)] ";
-		log.info(logId() + info);
+		log.info(logId() + " Found {} OPERATOR(s)] where clientId={}, tourneyId={}", urcList.size(), clientId,
+				tourneyId);
 		return urcList;
 	}
 
@@ -261,7 +252,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
 
 		List<UserRoleClient> urcList = nq.getResultList();
-		String info = "[Found " + urcList.size() + " UserRoleClient(ies)] ";
+		String info = "[Found " + urcList.size() + " available OPERATOR(s)] ";
 		log.info(logId() + info);
 
 		return urcList;
@@ -372,11 +363,9 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 	}
 
 	public List<User> findFollowerByTourneyId(Integer tourneyId) {
-
 		log.debug(logId() + "Entering findByTourneyId()");
 
 		CriteriaBuilder cb = getCb();
-
 		CriteriaQuery<User> cq = cb.createQuery(User.class);
 
 		Root<UserRoleClient> root = cq.from(UserRoleClient.class);
@@ -391,11 +380,9 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		cq = cq.where(p1, p2);
 
 		TypedQuery<User> tq = getEm().createQuery(cq);
-
 		List<User> poList = tq.getResultList();
 
-		log.debug(logId() + "[Found " + poList.size() + " User(s)]");
-
+		log.info(logId() + " Found {} FOLLOWER(s) where tourneyId={}", poList.size(), tourneyId);
 		return poList;
 	}
 
@@ -556,7 +543,6 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 	 * @return the list of URC selected
 	 */
 	public List<UserRoleClient> getOperatorsBy(String username, Integer clientId) {
-
 		CriteriaBuilder cb = getCb();
 
 		CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
@@ -578,7 +564,7 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 
 		List<UserRoleClient> resultList = tq.getResultList();
 
-		log.debug(logId() + "[Found " + resultList.size() + " UserRoleClient]");
+		log.debug(logId() + "Found " + resultList.size() + " OPERATOR(s)");
 		return resultList;
 	}
 
@@ -631,8 +617,11 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 	}
 
 	public UserRoleClient newFollowerUrc(User upo, Client cpo, Tourney tpo) {
-
-		UserRoleClient urc = new UserRoleClient();
+		UserRoleClient urc = getOperator(upo.getUsername(), cpo.getId(), tpo.getId());
+		if (urc != null) {
+			return urc;
+		}
+		urc = new UserRoleClient();
 		urc.setUser(upo);
 		urc.setClient(cpo);
 		urc.setTourney(tpo);
@@ -643,8 +632,11 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 	}
 
 	public UserRoleClient newUrcAvailableOperator(User upo, Client cpo, Tourney tpo) {
-
-		UserRoleClient urc = new UserRoleClient();
+		UserRoleClient urc = getOperator(upo.getUsername(), cpo.getId(), tpo.getId());
+		if (urc != null) {
+			return urc;
+		}
+		urc = new UserRoleClient();
 		urc.setAvailable(true);
 		urc.setUser(upo);
 		urc.setClient(cpo);

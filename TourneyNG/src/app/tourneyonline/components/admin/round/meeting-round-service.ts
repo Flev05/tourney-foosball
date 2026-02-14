@@ -348,7 +348,7 @@ export class MeetingRoundService extends MeetingService {
                     let t1: string = home[j];
                     let t2: string = away[j];
                     let day = j + 1;
-                    console.log( day + " " + t1  + " - " + t2 );
+                    // console.log( day + " " + t1  + " - " + t2 );
 
                     let mfound = round.onewayMeetings.find( m => this.whereCondition(m, t1, t2));
 
@@ -416,7 +416,7 @@ export class MeetingRoundService extends MeetingService {
 
             round.onewayMeetings = round.onewayMeetings.concat(onewayMeetings);
         }
-        
+         
         round.roundtripMeetings = [];
         for (let key of this.roundtripMeetingDaysMap.keys()) {
             let dayList = this.roundtripMeetingDaysMap.get(key);
@@ -459,19 +459,19 @@ export class MeetingRoundService extends MeetingService {
 
     public shiftOnewayDay( currentDay : number) : any[] {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
-        for( let d of this.onewayDays ) {
-            d.teamName1 = d.teamName1;
-            d.teamName2 = d.teamName2;
-        }
+        // for( let d of this.onewayDays ) {
+        //     d.teamName1 = d.teamName1;
+        //     d.teamName2 = d.teamName2;
+        // }
         return this.onewayDays;
     }
 
     public shiftRoundtripDay( currentDay : number ) : any[] {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
-        for( let d of this.roundtripDays ) {
-            d.teamName1 = d.teamName1;
-            d.teamName2 = d.teamName2;
-        }
+        // for( let d of this.roundtripDays ) {
+        //     d.teamName1 = d.teamName1;
+        //     d.teamName2 = d.teamName2;
+        // }
         return this.roundtripDays;
     }
 

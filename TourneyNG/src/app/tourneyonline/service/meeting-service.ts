@@ -630,9 +630,6 @@ export class MeetingService extends AbstractService {
         m.id = mdb.id;
     }
 
-
-
-    
     /**
      * Resolves, for the automatic playoff mode, the team names of the received meeting and round list applying the rule in the same meeting
      * 
@@ -664,7 +661,7 @@ export class MeetingService extends AbstractService {
             }
         }
         m.name = m.teamName1 + " - " + m.teamName2;
-        console.log(m.name);
+        // console.log(m.name);
     }
     
     public areAllTerminated(rounds: Round[]) : boolean {
@@ -934,7 +931,7 @@ export class MeetingService extends AbstractService {
             const day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate().toString();
             const month = (d.getMonth() + 1) < 10 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1).toString();
             return `${day}/${month}/${d.getFullYear()}`;
-          };
+        };
 
         // Return the range as a formatted string
         return `dal ${formatDate(monday)} al ${formatDate(sunday)}`;

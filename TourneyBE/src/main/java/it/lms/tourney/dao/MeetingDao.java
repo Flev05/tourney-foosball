@@ -380,36 +380,30 @@ public class MeetingDao extends BaseJPACrudDao<Meeting, Integer> {
 	}
 
 	public void deletePlayoffMeetingsByTourneyId(Integer tourneyId) {
-		Query query = getEm()
-				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoffId is not null");
+		Query query = getEm().createQuery("DELETE FROM Meeting m WHERE " + "m.tourney.id = :tourneyId "
+				+ "and m.playoffId is not null and m.playoffId != 0 ");
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 		log.debug(logId() + "Deleted " + deletedCount + " Playoff Meeting(s)");
 	}
 
 	public void deletePlayoutMeetingsByTourneyId(Integer tourneyId) {
-		Query query = getEm()
-				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.playoutId is not null");
+		Query query = getEm().createQuery("DELETE FROM Meeting m " + "WHERE m.tourney.id = :tourneyId "
+				+ "and m.playoutId is not null and m.playoutId != 0");
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
 		log.debug(logId() + "Deleted " + deletedCount + " Playout Meeting(s)");
 	}
 
 	public void deleteEliminatoryMeetingsByTourneyId(Integer tourneyId) {
-
-		Query query = getEm()
-				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryId is not null");
-
+		Query query = getEm().createQuery("DELETE FROM Meeting m "
+				+ "WHERE m.tourney.id = :tourneyId and m.eliminatoryId is not null " + "and m.eliminatoryId != 0");
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-
 		log.debug(logId() + "Deleted " + deletedCount + " Eliminatory Meeting(s)");
 	}
 
 	public void deleteEliminatoryBMeetingsByTourneyId(Integer tourneyId) {
-
-		Query query = getEm()
-				.createQuery("DELETE FROM Meeting m WHERE m.tourney.id = :tourneyId and m.eliminatoryBId is not null");
-
+		Query query = getEm().createQuery("DELETE FROM Meeting m "
+				+ "WHERE m.tourney.id = :tourneyId and m.eliminatoryBId is not null" + " and m.eliminatoryBId != 0");
 		int deletedCount = query.setParameter("tourneyId", tourneyId).executeUpdate();
-
 		log.debug(logId() + "Deleted " + deletedCount + " Eliminatory-B Meeting(s)");
 	}
 }

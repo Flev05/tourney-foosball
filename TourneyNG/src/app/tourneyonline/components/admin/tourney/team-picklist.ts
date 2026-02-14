@@ -22,6 +22,7 @@ export class TeamPickList extends AbstractListView {
     availableTeams: string[] = [];
     targetTeams: string[] = [];
     returnLabel: string;
+    isTeamsOrderedGroupname : boolean = false;
 
     constructor( protected tourneyService: TourneyService
         , public router: Router

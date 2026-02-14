@@ -200,14 +200,12 @@ public class PlayerRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePlayer(@PathParam("id") Integer id) {
-
 		log.debug(logId() + "DELETE: deletePlayer(" + id + ")");
-
 		Player player = playerDao.getById(id);
-		playerDao.delete(player);
-
+		if (player != null) {
+			playerDao.delete(player);
+		}
 		Response.ResponseBuilder builder = Response.ok();
-
 		return builder.build();
 	}
 }

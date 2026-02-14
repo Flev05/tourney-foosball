@@ -52,12 +52,25 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="summary">
-                <p-checkbox name="terminatedRoundsGroupname" 
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pButton (click)="printPdfMeeting()" 
+                    label="Incontri" 
+                    class="ui-button-success">
+                </button>
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pButton (click)="printPdfClassification()" 
+                    label="Classifica" 
+                    class="ui-button-success"
+                    style="margin-left: 5mm;">
+                </button>
+                <p-checkbox *ngIf="loginService.isUserAllowed()" name="terminatedRoundsGroupname" 
                     label="Gironi terminati" 
-                    pTooltip="Selezionare solo quando tutti i gironi sono terminati ed avete generato le eliminatorie"
+                    pTooltip="Selezionare solo quando tutti i gironi sono terminati"
                     value="terminatedRounds" 
                     [(ngModel)]="selectedTourney.terminatedRounds" 
-                    (onChange)="onTerminateRoundChange($event)">
+                    (onChange)="onTerminateRoundChange($event)" >
                 </p-checkbox>
             </ng-template>            
         </p-table>   
@@ -91,16 +104,18 @@
                     </td>
                 </tr>
             </ng-template>
+
+            <ng-template *ngIf="loginService.isUserAllowed()" pTemplate="summary">
+                <p-checkbox name="terminatedPlayoffsGroupname" 
+                    label="Playoff terminati" 
+                    pTooltip="Selezionare solo quando tutti i gironi di PLAYOFF sono terminati"
+                    value="terminatedRounds" 
+                    [(ngModel)]="selectedTourney.terminatedPlayoffs" 
+                    (onChange)="onTerminatePlayoffChange($event)">
+                </p-checkbox>                
+            </ng-template>      
+
         </p-table>
-        <div class="ui-g-2" tooltipPosition="left"
-            pTooltip="Selezionare solo quando tutti i gironi di playoff sono terminati ed avete generato le eliminatorie">
-            <p-checkbox name="terminatedPlayoffsGroupname" 
-                label="Playoff terminati" 
-                value="terminatedRounds" 
-                [(ngModel)]="selectedTourney.terminatedPlayoffs" 
-                (onChange)="onTerminatePlayoffChange($event)">
-            </p-checkbox>
-        </div>          
     </p-tabPanel>
 
     <p-tabPanel *ngIf="containsPlayout()" header="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}({{playoutCount}})" >    
@@ -153,6 +168,12 @@
                     <th>
                         Squadre
                     </th>
+                    <th style="width: 20mm; text-align: center;">
+                        Gra.
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        Doc.
+                    </th>
                 </tr>
             </ng-template>
 
@@ -166,6 +187,12 @@
                     </td>
                     <td>
                         {{rowData['teams']}}
+                    </td>
+                    <td>
+                        <button class="ui-button-success" pButton icon="fa fa-file-excel-o" (click)="printPdfTopLevelMeeting(rowIndex)"></button>
+                    </td>
+                    <td>
+                        <button class="ui-button-success" pButton icon="fa fa-file-excel-o" (click)="printTennisBracket(rowIndex)"></button>
                     </td>
                 </tr>
             </ng-template>

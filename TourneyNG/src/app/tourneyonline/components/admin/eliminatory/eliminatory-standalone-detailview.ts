@@ -13,7 +13,6 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
-import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './eliminatory-standalone-detailview.html',

@@ -51,7 +51,7 @@
     <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Utente"></button>
 </div>
 
-<p-table [columns]="cols" 
+<p-table #table [columns]="cols" 
     [value]="users" 
     [responsive]="true"
     selectionMode="single" 
@@ -61,10 +61,28 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th style="width: 15mm;">N°</th>
-            <th *ngFor="let col of columns">
-                {{col.header}}
+            <th>Username</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
+            <th style="width: 15mm;">X</th>
+        </tr>
+
+        <tr>
+            <th style="width: 15mm;"></th>
+            <th>
+                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per Username" (input)="table.filter($event.target.value, 'username', 'contains')">
             </th>
-            <th class="deleteColSize">X</th>          
+            <th>
+                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per Nome" (input)="table.filter($event.target.value, 'firstname', 'contains')">
+            </th>
+            <th>
+                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per Cognome" (input)="table.filter($event.target.value, 'lastname', 'contains')">
+            </th>
+            <th>
+                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per Email" (input)="table.filter($event.target.value, 'email', 'contains')">
+            </th>
+            <th style="width: 15mm;"></th>          
         </tr>
     </ng-template>
 
@@ -74,11 +92,9 @@
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>
-            <td class="deleteColSize">
+            <td style="width: 15mm;">
                 <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
             </td>
         </tr>
     </ng-template>
 </p-table>
- 
- 

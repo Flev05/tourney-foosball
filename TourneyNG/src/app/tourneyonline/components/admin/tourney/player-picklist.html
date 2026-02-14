@@ -50,9 +50,9 @@
 </div>
 
 <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <p-pickList  [source]="avalilablePlayers" 
+    <p-pickList  [source]="availablePlayers" 
         [target]="targetPlayers" 
-        sourceHeader="Disponibili {{avalilablePlayers.length}}" 
+        sourceHeader="Disponibili {{availablePlayers.length}}" 
         targetHeader="Selezionati {{targetPlayers.length}}" 
         [responsive]="true"
         dragdrop="true" 
@@ -67,8 +67,6 @@
                 <div>{{player}}</div>
             </div>
         </ng-template>
-    </p-pickList>  
-    
-
+    </p-pickList>
 </div>
 

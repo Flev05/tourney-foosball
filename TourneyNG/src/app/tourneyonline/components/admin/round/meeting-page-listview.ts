@@ -86,7 +86,7 @@ export class MeetingListView extends AbstractListView {
         // }
         // this.onewayMeetings = tempList;
         this.onewayMeetings = this.selectedRound.onewayMeetings;
-        this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+        // this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
 
         // tempList = [];
         // i = 0;
@@ -101,7 +101,7 @@ export class MeetingListView extends AbstractListView {
         // }
         // this.roundtripMeetings = tempList;
         this.roundtripMeetings = this.selectedRound.roundtripMeetings;
-        this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
+        // this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
 
         console.log("[Meetings " + this.onewayMeetings.length + "]");
         console.log("[Days     " + this.allDaysNo + "]");

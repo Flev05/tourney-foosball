@@ -12,4 +12,5 @@ export class Classification
     goalsDiff?     : number;
     goalsConceded? : number;
     notResolveble? : boolean;
+    roundIndex?    : number;
 }

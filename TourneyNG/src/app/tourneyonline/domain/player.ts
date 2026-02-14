@@ -5,6 +5,7 @@ export interface Player
     id?             : number;
     clientId?       : number;
     playerName?     : string;
+    code?           : string;
     address?        : string;
     phoneNumber?    : string;
     email?          : string;

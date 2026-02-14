@@ -217,9 +217,7 @@ export class UserDetailView extends AbstractDetailView {
         msg += "\nSe si tratta della stessa persona, rispondere OK, usare un'altra username e salvare l'utente."
         msg += "\nAltrimenti premere Annulla e rimuovere l'utente con il bottone X dalla vista elenco."
 
-        if(confirm(msg)) {
-            this.selectedUser.username = this.oldUsername;
-        } else {
+        if(!confirm(msg)) {
             this.goBack();
         }
     }

@@ -36,6 +36,7 @@ export class TeamService {
     static cols: TableCols[] = [
         { field: 'teamName',   header: 'Nome' },
         { field: 'address',    header: 'Indirizzo' },
+        { field: 'asd',    header: 'ASD' }
     ];
     teamPool: Team[] = [];
     isTeamsChanged: any;

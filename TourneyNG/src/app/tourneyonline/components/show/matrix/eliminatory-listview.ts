@@ -7,7 +7,6 @@ import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
 import { AbstractResultEliminatoryListView } from 'app/tourneyonline/components/common/abstract-result-eliminatory-listview';
-import { MatrixService } from './matrix-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 
 const matrixDvRedirect: string = "matrix/lv/dv";

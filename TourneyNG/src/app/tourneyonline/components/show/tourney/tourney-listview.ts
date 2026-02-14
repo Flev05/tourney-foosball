@@ -55,4 +55,8 @@ export class TourneyResultListView extends AbstractTourneyListView {
             this.router.navigate([MAXTRIX_LV]);
         }
     }
+
+    openPdf(url: string) {
+        window.open(url, '_blank');
+    }
 }

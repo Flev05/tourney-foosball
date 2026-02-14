@@ -243,9 +243,9 @@ public class TourneyRESTService extends AbstractRESTService {
 		upo.getUrcSet().add(urcFollower);
 		urcSet.add(urcFollower);
 
-		List<UserRoleClient> opList = urcDao.findOperatorsUrcByClientId(clientId);
-		for (UserRoleClient urc : opList) {
-			UserRoleClient urcOp = urcDao.newUrcAvailableOperator(urc.getUser(), urc.getClient(), tpo);
+		List<User> operatorList = urcDao.findOperatorsUrcByClientId(clientId);
+		for (User op : operatorList) {
+			UserRoleClient urcOp = urcDao.newUrcAvailableOperator(op, cpo, tpo);
 			urcSet.add(urcOp);
 			upo.getUrcSet().add(urcOp);
 		}
@@ -269,6 +269,7 @@ public class TourneyRESTService extends AbstractRESTService {
 		}
 
 		tpo.setTourneyName(tvo.getTourneyName());
+		tpo.setCalendar(tvo.getCalendar());
 		tpo.setId(tvo.getId());
 		tpo.setJson(tvo.getJson());
 
@@ -444,13 +445,10 @@ public class TourneyRESTService extends AbstractRESTService {
 	}
 
 	private Tourney prepareTourneyForUpdate(TourneyVO tvo, Session spo) {
-
 		Tourney tpo = tourneyDao.findById(tvo.getId());
-
 		if (spo != null) {
 			tpo.setSession(spo);
 		} else {
-
 			boolean found = false;
 			for (UserRoleClient urc : tpo.getUrcs()) {
 				Role r = urc.getRole();
@@ -493,13 +491,13 @@ public class TourneyRESTService extends AbstractRESTService {
 		}
 
 		tpo.setTourneyName(tvo.getTourneyName());
+		tpo.setCalendar(tvo.getCalendar());
 		tpo.setJson(tvo.getJson());
 
 		return tpo;
 	}
 
 	private void insertMeetings(TourneyVO tvo) {
-
 		List<MeetingVO> mdbs = tvo.getMdbs();
 		if (mdbs == null) {
 			return;

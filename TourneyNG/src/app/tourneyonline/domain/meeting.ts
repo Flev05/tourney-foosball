@@ -3,8 +3,7 @@ import { Match } from './match';
 import { PlayoffRule } from './playoff-rule';
 import { MeetingStatus, Direction } from './enumerations';
 
-export class Meeting
-{
+export class Meeting {
     id              : number = 0;
     containerId     : number = 0;
     isDummy         : boolean = false;

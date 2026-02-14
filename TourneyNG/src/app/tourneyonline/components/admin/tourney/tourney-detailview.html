@@ -777,6 +777,8 @@
             </p-message>
         </div>    
 
+        <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
+        
         <div *ngIf="teamTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
             <p-table #table [columns]="teamCols"
                     [value]="selectedTourney.teams"

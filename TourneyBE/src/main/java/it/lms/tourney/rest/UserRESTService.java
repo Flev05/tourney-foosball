@@ -89,7 +89,7 @@ public class UserRESTService extends AbstractRESTService {
 	public OperatorsVO loadOperatorsBy(@PathParam("clientId") Integer clientId,
 			@PathParam("tourneyId") Integer tourneyId) {
 
-		log.debug(logId() + "GET: loadOperatorsBy(" + clientId + "/" + tourneyId + ")");
+		log.info(logId() + "GET: loadOperatorsBy(" + clientId + "/" + tourneyId + ")");
 
 		OperatorsVO ovo = new OperatorsVO();
 		ovo.setClientId(clientId);

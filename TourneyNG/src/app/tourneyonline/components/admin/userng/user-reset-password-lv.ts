@@ -43,9 +43,10 @@ export class UserResetPasswordLv extends AbstractListView  {
         subscriber.subscribe(cs => this.users = cs, e => this.onError(e), () => this.onComplete());
         this.userService.newUser = false;
         this.cols = [
-            { field: 'username',    header: 'username' },
-            { field: 'firstname',   header: 'Nome' },
-            { field: 'lastname',    header: 'Cognome' },
+            { field: 'username',    header: '' },
+            { field: 'firstname',   header: '' },
+            { field: 'lastname',    header: '' },
+            { field: 'email',       header: '' },
         ];
     }
 

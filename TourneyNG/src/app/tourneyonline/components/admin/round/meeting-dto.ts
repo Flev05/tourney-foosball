@@ -1,8 +1,8 @@
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 export class MeetingDto
 {
+    round     : string;
     direction : string;
     separator : boolean = false;
     md        : number = 0;

@@ -1,26 +1,21 @@
 import { Classification } from './classification';
 import { Meeting } from './meeting';
-import { MeetingStatus, RoundType, Direction } from './enumerations';
+import { RoundType, Direction } from './enumerations';
 
 export class Round {
     id: number;
-    
-    direction: Direction;
-    name: string;
-    label?: string;
-    type: RoundType;
-
-    pageSize: number;
-    daysNo: number;
+    direction:  Direction;
+    name:       string;
+    label?:     string;
+    type:       RoundType;
+    pageSize:   number;
+    daysNo:     number;
     onewayCurrentDay: number;
     roundtripCurrentDay: number;
-
-    teamNames: string[];
+    teamNames:              string[];
     classificatedTeamNames?: string[];
-    teamNo?: string;
-
-    onewayMeetings?: Meeting[];
+    teamNo?:            string;
+    onewayMeetings?:    Meeting[];
     roundtripMeetings?: Meeting[];
-
-    classification?: Classification[];
+    classification?:    Classification[];
 }

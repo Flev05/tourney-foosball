@@ -21,6 +21,7 @@
             <th style="width: 15mm;">{{teamCount}}</th>
             <th>Nome</th>
             <th>Indirizzo</th>
+            <th>ASD</th>
             <th *ngIf="addTeamEnabled" style="width: 15mm;"></th>
         </tr>
         <tr>
@@ -28,6 +29,7 @@
             <th>
                 <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'teamName', 'contains')">
             </th>
+            <th></th>
             <th></th>
             <th *ngIf="addTeamEnabled" style="width: 15mm;"></th>
         </tr>

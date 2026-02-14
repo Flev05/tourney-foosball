@@ -30,9 +30,11 @@ export class PlayerService {
     playerPool: Player[];
     selectedPlayer : Player;
     newPlayer : boolean = false;
+    readOnly : boolean = false;
     
     static cols: TableCols[]  = [
-        { field: 'playerName',   header: 'Nome' },
+        { field: 'playerName',  header: 'Nome' },
+        { field: 'code',        header: 'Tessera' },
         { field: 'phoneNumber', header: 'Telefono' },
         { field: 'email',       header: 'Email' }
     ];

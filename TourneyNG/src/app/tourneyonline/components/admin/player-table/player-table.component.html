@@ -17,6 +17,7 @@
         <tr>
             <th style="width: 15mm;">N°</th>
             <th>Nome</th>
+            <th>Tessera</th>
             <th>Telefono</th>
             <th>Email</th>
             <th *ngIf="addPlayerEnabled" style="width: 15mm;"></th>
@@ -26,6 +27,7 @@
             <th>
                 <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'playerName', 'contains')">
             </th>
+            <th></th>
             <th></th>
             <th></th>
             <th *ngIf="addPlayerEnabled" style="width: 15mm;"></th>

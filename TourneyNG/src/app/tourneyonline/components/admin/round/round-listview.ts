@@ -17,7 +17,6 @@ import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDto } from './meeting-dto';
 import { DateFormatPipe } from '../../common/date-format-pipe';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 const ROUND_CHANGE_TEAMS_POPUP = "ATTENZIONE! L'operazione ricrea tutti gli incontri fra le squadre del girone facendo perdere tutte le impostazioni preesistenti. Confermi?";
 
@@ -118,10 +117,10 @@ export class RoundListView extends AbstractListView {
                 let ms = this.getOnewayMeetingsOfDay(md);
                 let newDate = new Date(ms[0].datetime);
                 let range = this.meetingService.getWeekDaysRange(newDate);
-                let dto: MeetingDto = {direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
                 meetings.push(dto);
                 for( let m of ms ) {
-                    let dto = {direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                    let dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
                     meetings.push(dto);
                 }
             } 
@@ -129,10 +128,10 @@ export class RoundListView extends AbstractListView {
                 let ms = this.getRoundtripMeetingsOfDay(md);
                 let newDate = new Date(ms[0].datetime);
                 let range = this.meetingService.getWeekDaysRange(newDate);
-                let dto: MeetingDto = {direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
                 meetings.push(dto);
                 for( let m of ms ) {
-                    let dto = {direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                    let dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
                     meetings.push(dto);
                 }
             } 
@@ -140,7 +139,7 @@ export class RoundListView extends AbstractListView {
         const workSheetData = meetings.map((dto) => {
             if( dto.separator ) {
                 return {
-                    Giornata: dto.direction + " Settimana " + dto.weekRange + ", Giornata " + dto.md + "/" + dto.days
+                    Giornata: dto.round + ": " + dto.direction + " Settimana " + dto.weekRange + ", Giornata " + dto.md + "/" + dto.days
                 };    
             }
             return {

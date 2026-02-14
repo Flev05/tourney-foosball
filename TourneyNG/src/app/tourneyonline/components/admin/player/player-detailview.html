@@ -9,7 +9,7 @@
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
         <p>Vista di dettaglio anagrafica giocatore.
-            Da questa vista potete creare, modificare o rimuovere l'anagrafica di un giocatore.
+            Da questa vista potete creare o modificare ma non rimuovere l'anagrafica di un giocatore, la rimozione va fatta nella list view.
         </p>
 
         <h4>Creare una nuova anagrafica giocatore</h4>
@@ -34,7 +34,7 @@
     <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
 
-<div *ngIf="teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             Nome:
@@ -43,7 +43,14 @@
             {{selectedPlayer.playerName}}
         </div>
     </div>
-
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Tessera:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.code}}
+        </div>
+    </div>
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             Indirizzo:
@@ -53,6 +60,7 @@
             + " (" + selectedPlayer.country.provinceCode +")" : "" }}
         </div>
     </div> 
+
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             Telefono:
@@ -71,7 +79,7 @@
     </div>
 </div>
     
-<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <p>
         I campi contrassegnati con * sono obbligatori!
     </p>
@@ -83,9 +91,17 @@
             <input pInputText type="text" [(ngModel)]="selectedPlayer.playerName"/>
         </div>
     </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Tessera:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Inserire il codice della tessera del giocatore.">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.code"/>
+        </div>
+    </div>    
         
     <div class="ui-grid-row">
-        <div class="ui-grid-col-3" pTooltip="Inserire la via del giocatore.">
+        <div class="ui-grid-col-3" pTooltip="Inserire la via di residenza del giocatore.">
             Via:
         </div>
         <div class="ui-grid-col-5">
@@ -138,7 +154,7 @@
     </div>
 </div>
 
-<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
     <div class="ui-grid-row">
         <div class="ui-grid-col-2">
             <button class="ui-button-success" 

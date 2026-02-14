@@ -20,7 +20,7 @@ export class PlayerPickList extends AbstractListView {
 
     selectedTeam: Team;
 
-    avalilablePlayers: string[];
+    availablePlayers: string[];
     targetPlayers: string[];
     returnLabel: string;
     isPlayersChanged: boolean;
@@ -47,21 +47,22 @@ export class PlayerPickList extends AbstractListView {
         this.selectedTeam = this.teamService.selectedTeam;
         this.isPlayersChanged = false;
 
-        this.targetPlayers  = this.selectedTeam.players.map( p => p.playerName );
+        this.targetPlayers  = this.selectedTeam.players.filter( p => p != null) .map( p =>   p.playerName );
 
         let usedPlayers: Array<Player> = new Array<Player>();
         for(let t of this.selectedTourney.teams) {
             usedPlayers = usedPlayers.concat(t.players);
         }
 
-        this.avalilablePlayers = [];
+        this.availablePlayers = [];
         for(let p of this.playerService.playerPool) {
-            let pl = usedPlayers.find(x => x.playerName == p.playerName);
-            if(pl == undefined) {
-                this.avalilablePlayers.push(p.playerName);
+            let upl = usedPlayers.find(x => x==null || x.playerName == p.playerName);
+            let tpl =  this.targetPlayers.find(x => x==null || x == p.playerName);
+            if(upl == undefined && tpl == undefined) {
+                this.availablePlayers.push(p.playerName);
             }
         }
-        this.avalilablePlayers.sort();
+        this.availablePlayers.sort();
         this.targetPlayers.sort();
     }
     
@@ -114,6 +115,9 @@ export class PlayerPickList extends AbstractListView {
         tourneyTeam.players = [];
         for (let pn of this.targetPlayers) {
             let p: Player = this.playerService.playerPool.find(x => x.playerName == pn);
+            if( p == null || p == undefined ){
+                continue;
+            }
             tourneyTeam.players.push(p);
         }
  

@@ -18,6 +18,8 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { FromRound } from 'app/tourneyonline/domain/from-round';
 import { Round } from 'app/tourneyonline/domain/round';
 import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { AbstractRoundVO } from 'app/tourneyonline/domain/abstract-round-vo';
+import { RoundVO } from "app/tourneyonline/domain/round-vo";
 
 @Injectable()
 export class LevelService extends AbstractEliminatoryListView {
@@ -26,7 +28,6 @@ export class LevelService extends AbstractEliminatoryListView {
 
     static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
     static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
-    // private meetingList:   MeetingDb[];
     private selectedTeams:  Team[];
 
     constructor(
@@ -44,6 +45,28 @@ export class LevelService extends AbstractEliminatoryListView {
         super.ngOnInit();
     }
  
+    public onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
+        this.cleanEliminatoryMeetings( );        
+        this.processEliminatoryTeams(teamNo);
+        return this.eliminatoryLevelRows;
+    } 
+    
+    private processEliminatoryTeams(teamCount: number): void {
+        if( teamCount < 2 ) {
+            this.eliminatoryLevels = [];
+            return;
+        }
+        this.eliminatoryLevels = this.prepareEliminationTree(teamCount);
+        this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
+
+        if( !this.isStandAlone(this.selectedTourney) ) {
+            let startPosition: number = 0;
+            // We would to skip it unless configured to have the unique big classification on all rounds... like the new champions league
+            // this.prepareAutomaticEliminatoryRules(this.eliminatoryLevels, teamCount, startPosition);
+        }
+        this.eliminatoryLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryLevels, teamCount);
+    }
+
     /**
      * Prepares elimination tree of the desired levels in function of the user selected 
      * number of teams to begin the minimum top elimination phase containing the selected
@@ -51,123 +74,105 @@ export class LevelService extends AbstractEliminatoryListView {
      * 
      * @param teamsNo the number of teams to allocate on the top eliminatory level
      */
-    private prepareEliminationTree(eliminatoryLevels: Array<EliminatoryLevel>, teamsNo: number): Array<EliminatoryLevel> {
-        console.log("Entering prepareEliminationTree("+teamsNo+")");
-
+    private prepareEliminationTree(topLevelTeamNo: number ): Array<EliminatoryLevel> {
+        console.log("Entering prepareEliminationTree("+topLevelTeamNo+")");
         this.isOneway = "false";
-
-        let levelsCombobox: Combobox[] =  this.prepareLevelCombobox(teamsNo);
-        let selectedLevel = levelsCombobox[0].value;
-        let maxCurrentLevel : number = 0;
-
-        if(selectedLevel == maxCurrentLevel) {
-            if( this.isStandAlone(this.selectedTourney) ) {
-                let topLevel: EliminatoryLevel = this.eliminatoryLevels[0];
-                this.prepareStandaloneTopLevel(topLevel);
-            }
+        let levelsCombobox: Combobox[] =  this.prepareLevelCombobox(topLevelTeamNo );
+        let eliminatoryLevels: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
+        for(let i = 0; i < levelsCombobox.length; i++ ) { // from 0 to 5...
+            let lcb = levelsCombobox[i]; // levelsCombobox[i].value: from 5 to 1
+            const topLevel : boolean = i == 0 ? true : false; // top level when i=0
+            let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, topLevel, topLevelTeamNo);   
+            eliminatoryLevels.push(el);
         }
-
-        if(selectedLevel > maxCurrentLevel) {
-            if( eliminatoryLevels.length > 0 ) {
-                let el: EliminatoryLevel = eliminatoryLevels[0];
-                this.cleanExTopLevel(el);
-                el.isTopLevel = false;
-            }
-
-            let tempElimList: Array<EliminatoryLevel> = new Array<EliminatoryLevel>();
-            
-            for(let i = 0; i < levelsCombobox.length; i++ ) {
-                let lcb = levelsCombobox[i];
-
-                if( lcb.value <= maxCurrentLevel ) {
-                    break;
-                }
-
-                let topLevel: EliminatoryLevel = this.newEliminatoryLevel(lcb, i);    
-                tempElimList.push(topLevel);
-            }
-
-            if( eliminatoryLevels.length==0 ) {
-                eliminatoryLevels = tempElimList;
-            } else {
-                eliminatoryLevels = tempElimList.concat(eliminatoryLevels);
-            }
-            let topLevel: EliminatoryLevel = eliminatoryLevels[0];
-            if( this.isStandAlone(this.selectedTourney) ) {
-                this.prepareStandaloneTopLevel(topLevel);
-            }
-        } 
-        
-        if(selectedLevel < maxCurrentLevel) {
-            let lcb = levelsCombobox[0];
-            let topLevel: EliminatoryLevel = this.newEliminatoryLevel(lcb, 0);
-            if( this.isStandAlone(this.selectedTourney) ) {
-                this.prepareStandaloneTopLevel(topLevel);
-            }
-            eliminatoryLevels[0] = topLevel;
+        if( this.isStandAlone(this.selectedTourney) ) {
+            let topEL: EliminatoryLevel = eliminatoryLevels[0];
+            this.prepareStandaloneTopLevel(topEL);
         }
-
-        if(selectedLevel == 1) {
-            if(eliminatoryLevels.length == 2) {
-                eliminatoryLevels.splice(1, 1);
-            }
-        } else {
-            let found: boolean = false;
-            for(let e of eliminatoryLevels) {
-                if(e.level == -1) {
-                    found = true;
-                    break;
-                }
-            }
-            if(!found) {
-                this.addOptionalLevel(eliminatoryLevels);            
-            }
+        if ( topLevelTeamNo >= 4 ) { // if we have at least 4 teams we can create a match for 3° and 4° position
+            this.addOptionalLevel(eliminatoryLevels);            
         }
         return eliminatoryLevels;
     }    
-    
-    private prepareLevelCombobox(teamsNo: number) : Array<Combobox> {
+
+    private newEliminatoryLevel(lcb: Combobox, isTopLevel : boolean, topLevelTeamNo : number): EliminatoryLevel {
+        const pow2LE : number =  this.highestPowerOf2LE(topLevelTeamNo); // if 18, pow2 = 16
+        const playoffNo = topLevelTeamNo - pow2LE; // 18 - 16 = 2
+        
+        let els = new Array<Eliminatory>();
+        if( isTopLevel ) {
+            if( playoffNo > 0 ) { 
+                for( let i = 0; i < playoffNo; i++ ) {
+                    let e: Eliminatory = this.newEliminatory("P." + (i+1));
+                    els.push(e);
+                }
+            } else {
+                const pow2 = Math.pow(2, lcb.value-1); // the minimum value of pow2 is 2^(lcb.value-1)=2^(1-1)=2^0=1
+                for(let i=0; i<pow2; i++ ) {
+                    let e: Eliminatory = this.newEliminatory( "E." + (i+1));
+                    els.push(e);
+                }
+            }
+        } else {
+            const pow2 = Math.pow(2, lcb.value-1); // the minimum value of pow2 is 2^(lcb.value-1)=2^(1-1)=2^0=1
+            for(let i=0; i<pow2; i++ ) {
+                let e: Eliminatory = this.newEliminatory( "E." + (i+1));
+                els.push(e);
+            }
+        }
+
+        const arVO = this.newAbstractRoundVO();
+        let el : EliminatoryLevel = {
+              id: lcb.value
+            , name:  lcb.label
+            , level: lcb.value
+            , isTopLevel: isTopLevel
+            , direction: Direction.OneWay
+            , eliminatories: els
+            , isOptional: false
+            , topLevelTeamNo : topLevelTeamNo
+            , abstractRoundVO : arVO
+        };
+        return el;
+    }
+
+    private prepareLevelCombobox(teamsNo: number ) : Array<Combobox> {
         this.selectedTeams = [];
         for(let i=0; i<teamsNo; i++) {
             let t = this.selectedTourney.teams[i];
             this.selectedTeams.push(t);
         }
-
-        return this.prepareCombobox(teamsNo);
+        return this.prepareCombobox(teamsNo );
     }
 
-    private prepareLevelBCombobox(teamsNo: number) : Array<Combobox> {
-        teamsNo = this.selectedTourney.teams.length - teamsNo;
-        this.selectedTeams = [];
-        for(let i=0; i<teamsNo; i++) {
-            let t = this.selectedTourney.teams[i];
-            this.selectedTeams.push(t);
-        }
-        return this.prepareCombobox(teamsNo);
-    }
-
-    private prepareCombobox(teamsNo: number) : Array<Combobox> {
- 
-        let levelNo = Math.ceil(Math.log2(teamsNo));
+    private prepareCombobox(topLevelTeamNo: number) : Array<Combobox> {
+        let levelNo = Math.ceil(Math.log2(topLevelTeamNo)); // minimum value of levelNo is 1 when teamsNo = 2
         let levelsCombobox = new Array<Combobox>();
-        for (let l = levelNo; l > 0 ; l--) {
-            let lev = "";
+        const pow2LE : number =  this.highestPowerOf2LE(topLevelTeamNo);
+        const isPlayoff : boolean = topLevelTeamNo != pow2LE ? true : false;
+        if( isPlayoff ) {
+            let si: Combobox = { label: "Playoff", value: levelNo };
+            levelsCombobox.push(si);
+            levelNo--;
+        }
+        for (let l = levelNo; l > 0 ; l--) { // range from 5 to 1, never it is 0 neither -1
+            let label = "";
             if (l >= 5) {
-                lev = Math.pow(2, l-1) + "-esimi di finale";
+                label = Math.pow(2, l-1) + "-esimi di finale";
             }
             if (l == 4) {
-                lev = "Ottavi di finale";
+                label = "Ottavi di finale";
             }
             if (l == 3) {
-                lev = "Quarti di finale";
+                label = "Quarti di finale";
             }
             if (l == 2) {
-                lev = "Semi finale";
+                label = "Semi finale";
             }
             if (l == 1) {
-                lev = "Finalissima 1° e 2° posto";
+                label = "Finalissima 1° e 2° posto";
             }
-            let si: Combobox = { label: lev, value: l };
+            let si: Combobox = { label: label, value: l };
             levelsCombobox.push(si);
         }
         return levelsCombobox;
@@ -304,40 +309,67 @@ export class LevelService extends AbstractEliminatoryListView {
 
         return tmpTeams;
     }
-
    
     private addOptionalLevel(els: Array<EliminatoryLevel>) {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
-        let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, -1);
+        let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, false, 4);
         el.level = 1;
         el.isOptional = true;
         els.push(el);
     }
- 
-    private newEliminatoryLevel(lcb: Combobox, top : number): EliminatoryLevel {
-        let els = new Array<Eliminatory>();
-        
-        let pow2 = Math.pow(2, lcb.value-1);
 
-        for(let i=0; i<pow2; i++ ) {
-            let e: Eliminatory = this.newEliminatory(i+1);
-            els.push(e);
-        }
-
-        let el : EliminatoryLevel = {
-              id: lcb.value
-            , name:  lcb.label
-            , level: lcb.value
-            , isTopLevel: top == 0 ? true : false
-            , direction: Direction.OneWay
-            , eliminatories: els
-            , isOptional: false
+    private newAbstractRoundVO(overrides: Partial<AbstractRoundVO> = {}): AbstractRoundVO {
+        const defaults: AbstractRoundVO = {
+            direction: Direction.OneWay
+            ,matchBalanceScores:1
+            ,matchWinnerScores:3
+            ,pointsNeededToWin:9
+            ,pointsGoldenGoalTieBreakWin:2
+            ,pointsGoldenGoalTieBreakDefeat:1
+            ,maxMatchesPerMeeting : 1
+            ,isAllMatches : "true"
+            ,allMatchesEnabled: true 
         };
-
-        return el;
+        // This merges defaults with any specific values you pass in
+        return { ...defaults, ...overrides };
     }
 
-    private newEliminatory(index : number): Eliminatory {
+    /**
+     * A RoundVO factory
+     * 
+     * @param teamsForPlayoff how many teams for playoff we have
+     * @param overrides if any, override the some attributes
+     * @returns the new RoundVO instance 
+     */
+    private newRoundVO(  overrides: Partial<RoundVO> = {}): RoundVO {
+        const arVO = this.newAbstractRoundVO();
+        const rounds =   [];
+        const defaults : RoundVO = {
+                direction: arVO.direction,
+                matchBalanceScores: arVO.matchBalanceScores,
+                matchWinnerScores: arVO.matchWinnerScores,
+                pointsNeededToWin: arVO.pointsNeededToWin,
+                pointsGoldenGoalTieBreakWin: arVO.pointsGoldenGoalTieBreakWin,
+                pointsGoldenGoalTieBreakDefeat: arVO.pointsGoldenGoalTieBreakDefeat,
+                maxMatchesPerMeeting: arVO.maxMatchesPerMeeting,
+                isAllMatches: arVO.isAllMatches,
+                isRoundAutoGen: "true",
+                allMatchesEnabled: true,
+                rounds: rounds
+            }
+        // This merges defaults with any specific values you pass in
+        return { ...defaults, ...overrides };
+    }
+
+    
+    public highestPowerOf2LE(n: number): number {
+        if (n < 1) {
+            return 0; // or throw, depending on your needs
+        }
+        return 1 << (31 - Math.clz32(n));
+    }
+
+    public newEliminatory(eName : string): Eliminatory {
         let t1: Team = this.newDummyTeam();
         let t2: Team = this.newDummyTeam();
         
@@ -383,7 +415,7 @@ export class LevelService extends AbstractEliminatoryListView {
             id: elid
             , isSkiping: false
             , round:{id: elid
-                , name: "" + index
+                , name: eName
                 , onewayCurrentDay: 1
                 , roundtripCurrentDay: 1
                 , type: RoundType.E
@@ -424,7 +456,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * @param elList the list of the eliminatory levels
      * @param complete callback method called when load will finish
      */
-    public loadAllEliminatoryMeetingByIdList(elList: EliminatoryLevel[], next: () => void, error: (error: any) => void) {
+    public loadAllEliminatoryMeetingByIdList(elList: EliminatoryLevel[], onComplete: () => void, error: (error: any) => void) {
         let idList: number [] = [];
 
         for( let el of elList) {
@@ -433,7 +465,7 @@ export class LevelService extends AbstractEliminatoryListView {
             }
         }
         let abs = this.meetingService.loadEliminatoryMeetingByIdList(this.selectedTourney.id, idList, e => error(e) );
-        abs.subscribe(meetingList => this.onLoadAllMeetingListNext(false, meetingList, elList, next), e => error(e));
+        abs.subscribe(meetingList => this.onLoadAllMeetingListNext(false, meetingList, elList, onComplete), e => error(e));
     }
        
     /**
@@ -460,7 +492,7 @@ export class LevelService extends AbstractEliminatoryListView {
      * @param elList the list of the eliminatory levels
      * @param complete callback methodo called when the load will finish
      */
-    private onLoadAllMeetingListNext(isEb: boolean, meetingDbList: MeetingDb[], elList: EliminatoryLevel[], next: () => void): void {
+    private onLoadAllMeetingListNext(isEb: boolean, meetingDbList: MeetingDb[], elList: EliminatoryLevel[], onComplete: () => void): void {
         for( let el of elList) {
             for (let e of el.eliminatories) {
                 e.round.onewayMeetings = [];
@@ -481,54 +513,20 @@ export class LevelService extends AbstractEliminatoryListView {
 
         for( let el of elList) {
             for (let e of el.eliminatories) {
-                
                 let m1 : Meeting = this.findMeetingsOf(e.id, Direction.OneWay, meetingList);
                 e.round.onewayMeetings.push(m1);
                 let m2 : Meeting = this.findMeetingsOf(e.id, Direction.RoundTrip, meetingList);
                 e.round.roundtripMeetings.push(m2);
-
-                // let found : boolean = false;
-                // for( let  mdb of  meetingList) {
-                //     let m : Meeting = JSON.parse(mdb.json);
-                //     let ok : boolean = false;
-                //     if( isEb ) {
-                //         if( mdb.eliminatoryBId == e.id ) {
-                //             ok = true;
-                //         }
-                //     } else {
-                //         if( mdb.eliminatoryId == e.id ) {
-                //             ok = true;
-                //         }
-                //     }
-                //     if( ok ) {
-                //         found = true;
-                //         m.id = mdb.id;
-                //         if( m.direction == Direction.OneWay ) {
-                //             e.round.onewayMeetings.push(m);
-                //         } else {
-                //             e.round.roundtripMeetings.push(m);
-                //         }
-                //     }
-                // }
-                // if( !found ) {
-                //     console.error("No meeting found for eliminatory id = [" + e.id + "]");
-                // }
             }
         }
-        next();
+        onComplete();
     }
    
     private findMeetingsOf(eliminatoryId : number, d : Direction, meetingList: Meeting[]): Meeting {
         let ms : Meeting[] = meetingList.filter( m => m.containerId === eliminatoryId &&  m.direction === d );
         return ms[0];
     }
- 
-    onEliminatoryTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
-        this.cleanEliminatoryMeetings( );        
-        this.processEliminatoryTeams(teamNo);
-        return this.eliminatoryLevelRows;
-    } 
-    
+
     onEliminatoryBTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
         this.cleanEliminatoryBMeetings( );        
         this.processEliminatoryBTeams(teamNo);
@@ -566,33 +564,20 @@ export class LevelService extends AbstractEliminatoryListView {
         this.eliminatoryBLevelRows = [];
     }
 
-    private processEliminatoryTeams(teamCount: number): void {
-        if( teamCount==0 ) {
-            this.eliminatoryLevels = [];
-            return;
-        }
-        this.eliminatoryLevels = this.prepareEliminationTree(this.eliminatoryLevels, teamCount);
-        this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
-
-        if( !this.isStandAlone(this.selectedTourney) ) {
-            let startPosition: number = 0;
-            this.prepareAutomaticEliminatoryRules(this.eliminatoryLevels, teamCount, startPosition);
-        }
-
-        this.eliminatoryLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryLevels);
-    }
-
     private processEliminatoryBTeams(teamCount: number): void {
         console.log("Entering processEliminatoryBTeams()");
-        if(teamCount==0) {
+        if( teamCount < 2 ) {
             return;
         }
         let teamNo: number = this.selectedTourney.teams.length - teamCount;
-        this.eliminatoryBLevels = this.prepareEliminationTree(this.eliminatoryBLevels, teamNo);
+        if( teamNo < 2 ) {
+            return;
+        }
+        this.eliminatoryBLevels = this.prepareEliminationTree( teamNo);
         this.selectedTourney.eliminatoryBLevels = this.eliminatoryBLevels;
-        let startPosition: number = teamCount;
-        this.prepareAutomaticEliminatoryRules(this.eliminatoryBLevels, teamNo, startPosition);
-        this.eliminatoryBLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryBLevels);
+        // We would to skip it unless configured to have the unique big classification on all rounds... like the new champions league
+        // this.prepareAutomaticEliminatoryRules(this.eliminatoryBLevels, teamNo, startPosition);
+        this.eliminatoryBLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryBLevels, teamNo);
     }
 
     /**
@@ -722,9 +707,12 @@ export class LevelService extends AbstractEliminatoryListView {
         }
     }
 
-    public prepareEliminatoryLevelsGui(eliminatoryLevels: Array<EliminatoryLevel> ): EliminatoryLevelVO[]  {
+    public prepareEliminatoryLevelsGui(eliminatoryLevels: Array<EliminatoryLevel>, topLevelTeamNo : number ): EliminatoryLevelVO[]  {
         this.eliminatoryLevelCols = super.prepareELCols();
-        
+        const pow2LE : number =  this.highestPowerOf2LE(topLevelTeamNo); // if 18, pow2 = 16
+        const playoffNo = topLevelTeamNo - pow2LE; // 18 - 16 = 2
+        const isPlayoff = playoffNo > 0;
+
         let eliminatoryLevelRows :EliminatoryLevelVO [] = [];
         for (let i = 0; i < eliminatoryLevels.length; i++) {
             let el = eliminatoryLevels[i];
@@ -737,7 +725,7 @@ export class LevelService extends AbstractEliminatoryListView {
                 eliminatoryLevel : el
                 ,rowNumber: i+1
                 ,name: el.name
-                ,level: this.pow2(el.level)
+                ,level: isPlayoff && el.isTopLevel ? playoffNo*2 : this.pow2(el.level)
                 ,teams: teams
             }
             eliminatoryLevelRows.push(elvo);

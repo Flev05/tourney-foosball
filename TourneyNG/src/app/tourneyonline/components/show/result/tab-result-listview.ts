@@ -16,6 +16,15 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
+import { MeetingDto } from '../../admin/round/meeting-dto';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
 const REDIRECT_ELIMINATORY       = 'result/lv/eliminatoryLv/dv';
@@ -232,6 +241,360 @@ export class TabResultListView extends AbstractTabResultListView {
 
     regenerateB(event) {
         console.log("Entering regenerateB()");
+    }
+
+    private getOnewayMeetingsOfDay(md: number) : Meeting[] {
+        let onewayMeetingDaysMap = this.meetingRoundService.onewayMeetingDaysMap;
+        let onewayMeetings = onewayMeetingDaysMap.get(md);
+        onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
+        return onewayMeetings;
+    }
+
+    private getRoundtripMeetingsOfDay(md: number) : Meeting[]{
+        let roundtripMeetingDaysMap = this.meetingRoundService.roundtripMeetingDaysMap;
+        let roundtripMeetings = roundtripMeetingDaysMap.get(md);
+        roundtripMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
+        return roundtripMeetings;
+    }
+
+    public printPdfMeeting() {
+        const doc = new jsPDF();
+        let isFirstRound = true;
+        for (let r of this.selectedTourney.roundVO.rounds) {
+            // 1. If it's not the first round, add a new page
+            if (!isFirstRound) {
+                doc.addPage();
+            }
+            isFirstRound = false;
+            // 2. Prepare the data just for THIS specific round
+            this.meetingRoundService.prepareMeetingsMap(r, false);
+            let meetings: any[] = [];
+            // ... Your loops for getOnewayMeetingsOfDay and getRoundtripMeetingsOfDay ...
+            // (Populate roundMeetings instead of a global meetings array)  
+            for( let md = 1; md <= r.daysNo; md ++ ) {
+                let ms = this.getOnewayMeetingsOfDay(md);
+                let newDate = new Date(ms[0].datetime);
+                let range = this.dfp.transform(newDate);
+                let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                meetings.push(dto);
+                for( let m of ms ) {
+                    let dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                    meetings.push(dto);
+                }
+            } 
+            for( let md = 1; md <= r.daysNo; md ++ ) {
+                let ms = this.getRoundtripMeetingsOfDay(md);
+                let newDate = new Date(ms[0].datetime);
+                let range = this.dfp.transform(newDate);
+                let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                meetings.push(dto);
+                for( let m of ms ) {
+                    let dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                    meetings.push(dto);
+                }
+            } 
+            // 3. Add a Title for this specific Round page
+            doc.setFontSize(16);
+            doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, 15);
+            // 4. Draw the table starting slightly below the text
+            autoTable(doc, {
+                head: [["In Casa", "P1", "P2", "Fuori Casa"]],
+                body: this.formatRoundData(meetings),
+                startY: 25,
+                theme: 'striped',
+                columnStyles: {
+                    0: { halign: 'right', cellWidth: 'auto' }, // "In Casa" right-aligned
+                    1: { halign: 'center', cellWidth: 15 },    // P1 centered
+                    2: { halign: 'center', cellWidth: 15 },    // P2 centered
+                    3: { halign: 'left', cellWidth: 'auto' }   // "Fuori Casa" left-aligned (default)
+                },
+                styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
+                didDrawCell: (data) => {
+                    // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
+                    if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
+                        // Only draw if the content is empty (which means points were 0)
+                        if (data.cell.text[0] === '') {
+                            const boxSize = 10; // 10mm                            
+                            // Calculate center of the cell to place the box
+                            const posX = data.cell.x + (data.cell.width - boxSize) / 2;
+                            const posY = data.cell.y + (data.cell.height - boxSize) / 2;
+                            // Draw the rectangle (x, y, width, height, style)
+                            doc.setDrawColor(0); // Black border
+                            doc.rect(posX, posY, boxSize, boxSize, 'S'); // 'S' means Stroke (outline)
+                        }
+                    }
+                }
+            });
+        }
+        doc.save(`${this.selectedTourney.tourneyName}-Meetings.pdf`);
+    }
+    
+    public printPdfClassification() {
+        const doc = new jsPDF('p', 'mm', 'a4');
+        let currentY = 15; // Track the vertical position manually
+        for (let r of this.selectedTourney.roundVO.rounds) {
+            // 1. Check if we have enough space for at least the Title + 3 rows (approx 40mm)
+            // If not, start a new page before printing the next Round
+            if (currentY > 250) { 
+                doc.addPage();
+                currentY = 15;
+            }
+            // 2. Print Round Title
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text(`Classifica ${this.selectedTourney.tourneyName}: ${r.name}`, 14, currentY);
+            const head = [["Pos", "Squadra", "PG", "PT", "V", "P", "GF", "GS", "DR"]];
+            const body = r.classification
+                .map((c, index) => [
+                    index + 1,
+                    c.teamName || '',
+                    c.played || 0,
+                    c.points || 0,
+                    c.won || 0,
+                    c.lost || 0,
+                    c.goalsDone || 0,
+                    c.goalsConceded || 0,
+                    c.goalsDiff || 0
+                ]);
+
+            // 3. Render the Table
+            autoTable(doc, {
+                head: head,
+                body: body,
+                startY: currentY + 5, // Start slightly below the title
+                theme: 'striped',
+                headStyles: { fillColor: [44, 62, 80] },
+                styles: { fontSize: 8 },
+                margin: { bottom: 20 }, // Ensure a little buffer at page end
+                didDrawPage: (data) => {
+                    // Update currentY to the end of the table on the current page
+                    currentY = data.cursor.y + 15; 
+                }
+            });
+            // 4. Update currentY for the next Round in the loop
+            // We use doc.lastAutoTable.finalY to find where the table actually ended
+            currentY = (doc as any).lastAutoTable.finalY + 15;
+        }
+        doc.save(`${this.selectedTourney.tourneyName}-Classifiche.pdf`);
+    }
+
+    public printTennisBracket(rowIndex: number) {
+        const doc = new jsPDF('l', 'mm', 'a4');
+        const pageWidth = 297;
+        const pageHeight = 210;
+        
+        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[rowIndex];
+        
+        // 1. Gather all "Matches" from the classification lists
+        // Each pair in the classification array is one match
+        let initialMatches: {team1: string, team2: string}[] = [];
+        
+        for (let e of el.eliminatories) {
+            const r : Round = e.round;
+            const t1 : string = r.teamNames[0];
+            const t2 : string = r.teamNames[1];
+            initialMatches.push({
+                team1: t1 || '---',
+                team2: t2 || '---'
+            });
+        }
+
+        const matchesPerSide = initialMatches.length / 2;
+        const leftMatches = initialMatches.slice(0, matchesPerSide);
+        const rightMatches = initialMatches.slice(matchesPerSide);
+
+        // 2. Configuration
+        const boxW = 40; 
+        const boxH = 20;
+        const padding = 3;
+        
+        // Determine how many rounds/columns we need (e.g., 8 matches -> 3 rounds to reach semi)
+        const roundsPerSide = Math.log2(matchesPerSide) + 1; 
+        const colSpacing = (pageWidth / 2 - 20) / roundsPerSide;
+
+        // --- ROUND LABELS ---
+        // We create an array of labels. We'll use the index to pick the right one.
+        const roundLabels = ["8° di Finale", "4° di Finale", "Semifinale", "Finale"];
+        
+        // 3. Draw Sides
+        this.drawSide(doc, leftMatches, roundsPerSide, colSpacing, padding, boxW, boxH, 'left', pageHeight, roundLabels);
+        this.drawSide(doc, rightMatches, roundsPerSide, colSpacing, pageWidth - padding - boxW, boxW, boxH, 'right', pageHeight, roundLabels);
+
+        // 4. Central Final Box
+        const finalY = pageHeight / 2 - 30;
+        const finalX = pageWidth / 2 - 25;
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.5);
+        doc.rect(finalX, finalY, 50, 20);
+        doc.setFontSize(12);
+        doc.text("FINALE", pageWidth / 2, finalY + - 1, { align: 'center' });
+
+        // 5. 3° and 4° Central Final Box
+        const final2Y = pageHeight / 2 + 30;
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.5);
+        doc.rect(finalX, final2Y, 50, 20);
+        doc.setFontSize(12);
+        doc.text("3° e 4° Posto", pageWidth / 2, final2Y - 1, { align: 'center' });
+
+        doc.save(`Tabellone-${this.selectedTourney.tourneyName}.pdf`);
+    }
+
+    private drawSide(doc: any, matches: any[], totalRounds: number, spacing: number, startX: number, w: number, h: number
+        , side: 'left' | 'right', pageH: number, labels: string[]
+    ) {
+        let currentMatchesCount = matches.length;
+        let x = startX;
+
+        for (let r = 0; r < totalRounds; r++) {
+            // --- DRAW COLUMN LABEL ---
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            // Place the label about 25mm from the top
+            doc.text(labels[r] || `Round ${r+1}`, x + (w / 2), 40, { align: 'center' });
+                        
+            const verticalGap = (pageH - 40) / currentMatchesCount;
+            const firstY = 30 + (verticalGap / 2);
+
+            for (let i = 0; i < currentMatchesCount; i++) {
+
+                const y = firstY + (i * verticalGap) - (h / 2);
+                
+                // Draw the box
+                doc.setDrawColor(0);
+                doc.setLineWidth(0.2);
+                doc.rect(x, y, w, h);
+                doc.line(x, y + h/2, x + w, y + h/2);
+
+                // Only draw names for the first round (the classification data)
+                if (r === 0) {
+                    doc.setFontSize(7);
+                    doc.text(matches[i].team1.substring(0, 18), x + 1, y + 8);
+                    doc.text(matches[i].team2.substring(0, 18), x + 1, y + 14);
+                }
+
+                // Draw Score Boxes
+                const sSize = 9;
+                doc.rect(x + w - sSize - 1, y + (h/4) - (sSize/2), sSize, sSize); 
+                doc.rect(x + w - sSize - 1, y + (3*h/4) - (sSize/2), sSize, sSize);
+
+                // Draw Connector Lines to next round
+                const nextX = (side === 'left') ? x + w : x;
+                const direction = (side === 'left') ? 1 : -1;
+                const lineLen = spacing - w;
+
+                // Horizontal line out
+                doc.line(nextX, y + h/2, nextX + (lineLen / 2) * direction, y + h/2 );
+                
+                // Vertical connection line (every pair)
+                if (i % 2 === 0 && currentMatchesCount > 1) {
+                    const bottomY = y + h/2 + verticalGap;
+                    doc.line(nextX + (lineLen / 2) * direction, y + h/2, nextX + (lineLen / 2) * direction, bottomY);
+                    // Horizontal line into next round box
+                    doc.line(nextX + (lineLen / 2) * direction, (y + h/2 + bottomY) / 2, nextX + lineLen * direction, (y + h/2 + bottomY) / 2);
+                }
+            }
+
+            // Move to next column
+            x = (side === 'left') ? x + spacing : x - spacing;
+            currentMatchesCount /= 2;
+        }
+    }
+
+    public printPdfTopLevelMeeting(rowIndex: number) {
+        console.log("rowIndex=" + rowIndex);
+        const doc = new jsPDF();
+        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[rowIndex];
+        // We use currentY to track our vertical position on the page
+        let currentY = 15; 
+        for (let i = 0; i < el.eliminatories.length; i++) {
+            const e : Eliminatory = el.eliminatories[i];
+            const r : Round = e.round;
+            const cList : Classification[] = r.classification;
+            
+            // 1. Prepare the data for this specific round
+            this.meetingRoundService.prepareMeetingsMap(r, false);
+            let meetings: any[] = [];
+            for (let md = 1; md <= r.daysNo; md++) {
+                let ms = this.getOnewayMeetingsOfDay(md);
+                if (ms && ms.length > 0) {
+                    let newDate = new Date(ms[0].datetime);
+                    let range = this.dfp.transform(newDate);
+                    let dto: MeetingDto = { round: r.name, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range };
+                    meetings.push(dto);
+                    for (let m of ms) {
+                        let matchDto = { round: r.name, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m };
+                        meetings.push(matchDto);
+                    }
+                }
+            }
+            // 2. CHECK SPACE: If we are near the bottom (e.g., past 240mm), 
+            // start a new page for the next round title and table.
+            if (currentY > 240) {
+                doc.addPage();
+                currentY = 15;
+            }
+            // 3. Draw the Round Title
+            doc.setFontSize(14);
+            doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, currentY);
+            // 4. Draw the table starting slightly below the text
+            autoTable(doc, {
+                head: [["In Casa", "P1", "P2", "Fuori Casa"]],
+                body: this.formatRoundData(meetings),
+                startY: currentY + 5,
+                theme: 'striped',
+                columnStyles: {
+                    0: { halign: 'right', cellWidth: 'auto' }, // "In Casa" right-aligned
+                    1: { halign: 'center', cellWidth: 15 },    // P1 centered
+                    2: { halign: 'center', cellWidth: 15 },    // P2 centered
+                    3: { halign: 'left', cellWidth: 'auto' }   // "Fuori Casa" left-aligned (default)
+                },
+                styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
+                didDrawCell: (data) => {
+                    // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
+                    if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
+                        // Only draw if the content is empty (which means points were 0)
+                        if (data.cell.text[0] === '') {
+                            const boxSize = 10; // 10mm                            
+                            // Calculate center of the cell to place the box
+                            const posX = data.cell.x + (data.cell.width - boxSize) / 2;
+                            const posY = data.cell.y + (data.cell.height - boxSize) / 2;
+                            // Draw the rectangle (x, y, width, height, style)
+                            doc.setDrawColor(0); // Black border
+                            doc.rect(posX, posY, boxSize, boxSize, 'S'); // 'S' means Stroke (outline)
+                        }
+                    }
+                }
+            });
+            // 5. Update currentY for the NEXT round in the loop
+            // We find where the table ended and add a 10mm gap
+            currentY = (doc as any).lastAutoTable.finalY + 15;
+        }
+        doc.save(`${this.selectedTourney.tourneyName}-Eliminations.pdf`);
+    }
+
+    private formatRoundData(meetings: MeetingDto[]): any[] {
+        return meetings.map((dto) => {
+            if (dto.separator) {
+                return [
+                    {
+                        content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
+                        colSpan: 4,
+                        styles: { 
+                            halign: 'center', 
+                            fillColor: [220, 220, 200, 220] as [number, number, number, number], // Cast as a Tuple
+                            fontStyle: 'bold' 
+                        }
+                    }
+                ];
+            }
+            return [
+                dto.meeting.teamName1,
+                dto.meeting.points1 === 0 ? '' : dto.meeting.points1,
+                dto.meeting.points2 === 0 ? '' : dto.meeting.points2,
+                dto.meeting.teamName2
+            ];
+        });
     }
 }
 

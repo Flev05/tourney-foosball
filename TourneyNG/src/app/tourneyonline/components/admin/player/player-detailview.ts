@@ -10,6 +10,8 @@ import { Observable, of } from 'rxjs';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { LoginService } from 'app/tourneyonline/service/login-service';
+import { Team } from 'app/tourneyonline/domain/team';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
@@ -29,8 +31,9 @@ export class PlayerDetailView extends AbstractDetailView {
         protected tourneyService: TourneyService,
         protected clientService: ClientService,
         protected countryService: CountryService,
-        public teamService: TeamService,
-        private   playerService: PlayerService
+        protected loginService: LoginService,
+        protected teamService: TeamService,
+        public playerService: PlayerService
     ) { 
         super(tourneyService, location);
     }
@@ -49,6 +52,22 @@ export class PlayerDetailView extends AbstractDetailView {
         }
     }
 
+    enabledModify() : boolean {
+        if(this.loginService.isOperator()) {
+            let un = this.loginService.userLogged.username;
+            let tn = this.teamService.selectedTeam.teamName;
+            let team : Team = this.selectedTourney.teams.find(t => t.teamName == tn);
+            let index = team.operators.indexOf(un);
+            if( index != -1) {
+                return true;
+            }
+        }
+        if( this.playerService.readOnly ) {
+            return false;
+        }
+        return true;
+    }
+
     enableSaveButton() : string {
         let n : String = this.selectedPlayer.playerName;
         if( n == undefined  ) {
@@ -58,9 +77,7 @@ export class PlayerDetailView extends AbstractDetailView {
     }
 
     onSubmit() {
-
         this.selectedPlayer.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
-
         this.newPlayerVO = {
             id: this.selectedPlayer.id
             , playerName: this.selectedPlayer.playerName
@@ -68,10 +85,8 @@ export class PlayerDetailView extends AbstractDetailView {
             , clientId: this.selectedPlayer.clientId
             , json: JSON.stringify(this.selectedPlayer)
         };
-
         this.playerAlreadyExists = false;
         this.onSavePlayerError = false;
-
         const subscriber = this.playerService.savePlayer(this.newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
         subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
         this.updateTourney();
@@ -79,7 +94,6 @@ export class PlayerDetailView extends AbstractDetailView {
  
     private updateTourney(): void {
         console.log("Entering updateTourney()");
-
         for( let t of this.selectedTourney.teams ) {
             for( let p of t.players ) {
                 if( p.id == this.selectedPlayer.id ) {
@@ -87,7 +101,6 @@ export class PlayerDetailView extends AbstractDetailView {
                 }
             }
         }
-
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Save Tourney operation'));
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
@@ -104,9 +117,7 @@ export class PlayerDetailView extends AbstractDetailView {
             console.log("Entering subscribeErrorHandler()");
             this.onSavePlayerError = true;
             console.error(error); // log to console instead
-
             console.log(`${operation} failed: ${error.message}`);
-      
             return of(result as T);
         };
     }
@@ -115,12 +126,10 @@ export class PlayerDetailView extends AbstractDetailView {
         console.log("Entering onSaveComplete()");
         if( !this.onSavePlayerError ) {
             if(this.playerService.newPlayer) {
-
                 let ppo: Player = JSON.parse(this.newPlayerVO.json);
                 ppo.country = this.newPlayerVO.country;
                 ppo.clientId = this.newPlayerVO.clientId;
                 ppo.playerName = this.newPlayerVO.playerName;
-    
                 this.playerService.playerPool.push(ppo);
             }
             this.playerService.newPlayer = false;
@@ -133,9 +142,7 @@ export class PlayerDetailView extends AbstractDetailView {
             console.log("Entering savePlayerErrorHandler()");
             console.log(`${operation} failed!`);
             console.error(res); // log to console instead
-      
             this.onSavePlayerError = true;
-
             if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
                 this.badRequest = true;
                 return of(result as T);
@@ -144,7 +151,6 @@ export class PlayerDetailView extends AbstractDetailView {
                 this.playerAlreadyExists = true;
                 return of(result as T);
             }
-      
             return of(result as T);
         };
     }

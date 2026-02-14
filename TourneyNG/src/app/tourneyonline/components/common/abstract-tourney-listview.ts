@@ -69,6 +69,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
             let t: Tourney = {};
             t.id = tvo.id;
             t.tourneyName = tvo.tourneyName;
+            t.calendar = tvo.calendar;
             t.country = tvo.country;
             t.clientVO = tvo.clientVO;
             this.tourneys.push(t);
@@ -90,7 +91,11 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         this.rows = [];
         for(let i=0;i<this.tourneys.length; i++) {
             let t = this.tourneys[i];
-            this.rows.push({id: t.id, tourneyName: t.tourneyName, location: t.country==null ? emptyCountry : t.country.city});
+            this.rows.push({id: t.id
+                , tourneyName: t.tourneyName
+                , location: t.country==null ? emptyCountry : t.country.city
+                , calendar: t.calendar==null ? "No PDF" : t.calendar
+            });
         }
     }
 

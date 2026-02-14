@@ -17,6 +17,7 @@ public class TourneyVO extends AbstractVO {
 	private static final long serialVersionUID = 1L;
 
 	private String tourneyName;
+	private String calendar;
 	private String followerName;
 	private ClientVO clientVO;
 	private Country country;

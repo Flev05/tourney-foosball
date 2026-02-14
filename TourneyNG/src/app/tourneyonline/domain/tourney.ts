@@ -17,6 +17,7 @@ export interface Tourney {
     id?: number;
     
     tourneyName?    : string;
+    calendar?       : string;
     roundTabName?   : string;
     playoffTabName? : string;
     playoutTabName? : string;

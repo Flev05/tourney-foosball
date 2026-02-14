@@ -36,6 +36,9 @@ public class Tourney extends AbstractPO {
 	@Column(name = "tourney_name")
 	private String tourneyName;
 
+	@Column(name = "calendar")
+	private String calendar;
+
 	// bi-directional many-to-one association to Client
 	@ManyToOne
 	@JoinColumn(name = "client_id")

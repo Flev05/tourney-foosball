@@ -87,9 +87,8 @@ export class RoundResultListView extends AbstractRoundResultListView {
      * @returns {{selectedRound.name}} {{onewayCurrentDay}}/{{allDaysNo}} 
      */
     public getHeaderOneway() : string {
-        let rn = this.selectedRound.name + " ";
-        // return rn + this.onewayCurrentDay + "/" + this.allDaysNo;
-        return rn + this.onewayCurrentDay + "/" + this.roundDaysNo + "(" + (this.onewayCurrentDay ) + "/" + this.allDaysNo + ")";
+        let rn = this.selectedRound.name;
+        return this.onewayCurrentDay + "/" + this.roundDaysNo + "(" + (this.onewayCurrentDay ) + "/" + this.allDaysNo + ") " + rn;
     }
 
     /**
@@ -98,8 +97,8 @@ export class RoundResultListView extends AbstractRoundResultListView {
      * @returns {{selectedRound.name}} {{roundtripCurrentDay}}/{{roundDaysNo}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})
      */
     public getHeaderRoundtrip() : string {
-        let rn = this.selectedRound.name + " ";
-        return rn + this.roundtripCurrentDay + "/" + this.roundDaysNo + "(" + (this.roundDaysNo + this.roundtripCurrentDay) + "/" + this.allDaysNo + ")";
+        let rn = this.selectedRound.name;
+        return this.roundtripCurrentDay + "/" + this.roundDaysNo + "(" + (this.roundDaysNo + this.roundtripCurrentDay) + "/" + this.allDaysNo + ") " + rn;
     }
 
     prevOnewayDay() : void {
@@ -108,6 +107,9 @@ export class RoundResultListView extends AbstractRoundResultListView {
             this.onewayCurrentDay = 1;
         }
         this.setOnewayCurrentDay(this.onewayCurrentDay);
+        if( this.onewayMeetings[0].name.indexOf ('(Riposo)') != -1 ) {
+            this.onewayMeetings[0].datetime = this.onewayMeetings[1].datetime;
+        }
     }
     nextOnewayDay() : void {
         this.onewayCurrentDay++;
@@ -115,6 +117,9 @@ export class RoundResultListView extends AbstractRoundResultListView {
             this.onewayCurrentDay = this.selectedRound.daysNo;
         }
         this.setOnewayCurrentDay(this.onewayCurrentDay);
+        if( this.onewayMeetings[0].name.indexOf ('(Riposo)') != -1 ) {
+            this.onewayMeetings[0].datetime = this.onewayMeetings[1].datetime;
+        }
     }
 
     prevRoundtripDay() : void {
@@ -123,6 +128,9 @@ export class RoundResultListView extends AbstractRoundResultListView {
             this.roundtripCurrentDay = 1;
         }
         this.setRoundtripCurrentDay(this.roundtripCurrentDay);
+         if( this.roundtripMeetings[0].name.indexOf ('(Riposo)') != -1 ) {
+            this.roundtripMeetings[0].datetime = this.roundtripMeetings[1].datetime;
+        }
     }
     nextRoundtripDay() : void {
         this.roundtripCurrentDay++;
@@ -130,12 +138,15 @@ export class RoundResultListView extends AbstractRoundResultListView {
             this.roundtripCurrentDay = this.selectedRound.daysNo;
         }
         this.setRoundtripCurrentDay(this.roundtripCurrentDay);
+         if( this.roundtripMeetings[0].name.indexOf ('(Riposo)') != -1 ) {
+            this.roundtripMeetings[0].datetime = this.roundtripMeetings[1].datetime;
+        }
     }
 
     onClassifcationRowSelect(event) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedRound.name);
         this.router.navigate([ClassificationDetailView.redirect]);
-    }
+    }  
 }
 

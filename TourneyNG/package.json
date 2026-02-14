@@ -63,12 +63,15 @@
     "tslib": "^1.9.0",
     "tslint": "~5.11.0",
     "typescript": "~3.1.6",
+    "vitest": "^4.0.18",
     "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.26"
   },
   "dependencies": {
     "@angular/animation": "^4.0.0-beta.8",
     "angular-in-memory-web-api": "^0.8.0",
+    "jspdf": "^2.3.1",
+    "jspdf-autotable": "^5.0.7",
     "md5-typescript": "^1.0.5",
     "moment": "^2.23.0",
     "primeng": "^7.1.3",

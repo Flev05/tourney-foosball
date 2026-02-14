@@ -6,18 +6,22 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th style="width: 10mm;">N°</th>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-        </tr>
+            <th style="width: 15mm;">N°</th>
+            <th>Torneo</th>
+            <th>Calendar</th>
+        </tr>        
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
+            <td>
+                {{rowData['tourneyName']}}
+            </td>
+            <td>
+                <a href="{{rowData['calendar']}}" pButton target="_blank">
+                    <span pButtonLabel>PDF</span>
+                </a>
             </td>
         </tr>
     </ng-template>

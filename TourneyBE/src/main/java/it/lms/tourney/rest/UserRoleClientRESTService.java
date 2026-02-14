@@ -197,9 +197,9 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 		urcpo.setRole(rpo);
 		urcDao.insert(urcpo);
 
-		tpo.getUrcs().add(urcpo);
-		upo.getUrcSet().add(urcpo);
-		rpo.getUrcSet().add(urcpo);
+		// tpo.getUrcs().add(urcpo);
+		// upo.getUrcSet().add(urcpo);
+		// rpo.getUrcSet().add(urcpo);
 
 		Response.ResponseBuilder builder = Response.ok(urcvo);
 

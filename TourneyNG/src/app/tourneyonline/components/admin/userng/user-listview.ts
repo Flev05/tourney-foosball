@@ -44,14 +44,9 @@ export class UserListView extends AbstractListView {
 
     ngOnInit() {
         console.log("UserListView.ngOnInit()");
-
         this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
-
         this.userService.newUser = false;
-
-
         this.onLoadUserError = false;
-
         let loggedUserId = this.loginService.userLogged.id;
         this.loggedUsername = this.loginService.userLogged.username;
         const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
@@ -74,12 +69,9 @@ export class UserListView extends AbstractListView {
 
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
             this.onLoadUserError = true;
             console.log(`${operation} failed`);
-
             console.error(error); // log to console instead     
-      
             return of(result as T);
         };
     }
@@ -108,9 +100,7 @@ export class UserListView extends AbstractListView {
             return;
         }
         if(confirm(popup)) {
-
             const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('deleteUser()'));
-
             subscr.subscribe(n => super.next(n), e => this.onError(e), () => this.onDeleteComplete());
         }
     }
@@ -122,7 +112,6 @@ export class UserListView extends AbstractListView {
 
         for( let i=0; i<this.users.length; i++ ) {
             let uvo = this.users[i];
-
             if( uvo.id == this.selectedUser.id ) {
                 index = i;
                 break;
@@ -136,13 +125,9 @@ export class UserListView extends AbstractListView {
 
     private deleteErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
             this.onDeleteError = true;
-            
             console.log(`${operation} failed!`);
-
             console.error(error); // log to console instead
-      
             // Let the app keep running by returning an empty result.
             return of(result as T);
         };
@@ -151,7 +136,6 @@ export class UserListView extends AbstractListView {
     onError(e:any) {
         console.log("onError()");
         console.log(e);
-
         this.onLoadUserError = true;
     }
  }

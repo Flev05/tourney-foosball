@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
@@ -47,7 +46,6 @@ export class TeamDetailView extends AbstractDetailView {
 
     ngOnInit() {
         console.log("TeamDetailView.ngOnInit() ");
-
         super.ngOnInit();
         this.countries = this.countryService.countries;
         this.selectedTeam = this.teamService.selectedTeam;
@@ -99,6 +97,8 @@ export class TeamDetailView extends AbstractDetailView {
     private onLoadTeamsComplete(): any {
         this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
         console.log("Loaded [" + this.teams.length + "] pool teams");
+        // this.teamService.addPlayerEnabled = !this.teamService.readOnly;
+        this.addPlayerEnabled = !this.teamService.readOnly;
     }
 
     saveTeam() {

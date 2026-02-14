@@ -159,7 +159,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         }
             
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels);
+        const tNo = this.selectedTourney.eliminatoryLevels[0].topLevelTeamNo;
+        this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels, tNo);
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
         this.eliminatoryCount = this.levelService.eliminatoryLevelRows.length;
@@ -171,7 +172,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         }
             
         this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
-        this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels);
+        const tNo = this.levelService.eliminatoryBLevels[0].topLevelTeamNo;
+        this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels, tNo);
         this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
         this.eliminatoryBCount = this.levelService.eliminatoryBLevelRows.length;
     }

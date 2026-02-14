@@ -114,6 +114,9 @@ export class TourneyListView extends AbstractTourneyListView {
     private onLoadPlayerComplete(): void {
         for( let team of this.selectedTourney.teams ) {
             for( let player of team.players ) {
+                if(player == null) {
+                    continue;
+                }
                 let playerFound = this.playerService.playerPool.find( p => p.playerName == player.playerName );
                 if( playerFound != undefined ) {
                     player = this.copyPlayer(player, playerFound);

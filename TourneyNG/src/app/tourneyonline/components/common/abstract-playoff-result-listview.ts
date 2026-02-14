@@ -146,9 +146,9 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         if( !this.containsEliminatory() ) {
             return;
         }
-            
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
-        this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels);
+        const tNo = this.selectedTourney.eliminatoryLevels[0].topLevelTeamNo;
+        this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels, tNo);
     }
 
     private mapCallback(m: Meeting, index: number, ms: Meeting[]): Meeting {

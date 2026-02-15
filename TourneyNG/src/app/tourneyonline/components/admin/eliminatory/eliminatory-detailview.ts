@@ -108,11 +108,10 @@ export class EliminatoryDetailView extends AbstractDetailView {
 
         this.isDoubleSelection = false;
 
-        this.position1 = this.selectedEliminatory.rule1.fromRound.position.value > 0 ?
-            this.selectedEliminatory.rule1.fromRound.position : this.selectedEliminatory.rule1.fromPlayoff.position;
-
-        this.position2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
-            this.selectedEliminatory.rule2.fromRound.position : this.selectedEliminatory.rule2.fromPlayoff.position;
+        // this.position1 = this.selectedEliminatory.rule1.fromRound.position.value > 0 ?
+        //     this.selectedEliminatory.rule1.fromRound.position : this.selectedEliminatory.rule1.fromPlayoff.position;
+        // this.position2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
+        //     this.selectedEliminatory.rule2.fromRound.position : this.selectedEliminatory.rule2.fromPlayoff.position;
 
 
         this.eliminatoryFormGroup = this.fb.group({
@@ -129,13 +128,12 @@ export class EliminatoryDetailView extends AbstractDetailView {
             'rounds':  new FormControl(this.rounds),
             'playoffs':  new FormControl(this.playoffs),
 
-            'position1':  new FormControl(this.position1),
-            'round1':  new FormControl(this.selectedEliminatory.rule1.fromRound.round),
-            'playoff1':  new FormControl(this.selectedEliminatory.rule1.fromPlayoff.round),
-
-            'position2':  new FormControl(this.position2),            
-            'round2':  new FormControl(this.selectedEliminatory.rule2.fromRound.round),
-            'playoff2':  new FormControl(this.selectedEliminatory.rule2.fromPlayoff.round),            
+            // 'position1':  new FormControl(this.position1),
+            // 'round1':  new FormControl(this.selectedEliminatory.rule1.fromRound.round),
+            // 'playoff1':  new FormControl(this.selectedEliminatory.rule1.fromPlayoff.round),
+            // 'position2':  new FormControl(this.position2),            
+            // 'round2':  new FormControl(this.selectedEliminatory.rule2.fromRound.round),
+            // 'playoff2':  new FormControl(this.selectedEliminatory.rule2.fromPlayoff.round),            
 
             'availableTeams': new FormControl(this.availableTeams),    
 
@@ -177,9 +175,9 @@ export class EliminatoryDetailView extends AbstractDetailView {
             return false;
         }
 
-        this.selectedEliminatory.rule1.fromRound.position = p1;
-        this.selectedEliminatory.rule1.fromRound.round    = r1;
-        this.selectedEliminatory.rule1.fromPlayoff.round  = po1;
+        // this.selectedEliminatory.rule1.fromRound.position = p1;
+        // this.selectedEliminatory.rule1.fromRound.round    = r1;
+        // this.selectedEliminatory.rule1.fromPlayoff.round  = po1;
 
         let r2:  Combobox = this.eliminatoryFormGroup.get('round2').value;
         let po2: Combobox = this.eliminatoryFormGroup.get('playoff2').value;
@@ -190,11 +188,11 @@ export class EliminatoryDetailView extends AbstractDetailView {
             return false;
         }
         
-        this.selectedEliminatory.rule2.fromRound.position = p2;
-        this.selectedEliminatory.rule2.fromRound.round    = r2;
-        this.selectedEliminatory.rule2.fromPlayoff.round  = po2;
-        this.m1.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
-        this.m1.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
+        // this.selectedEliminatory.rule2.fromRound.position = p2;
+        // this.selectedEliminatory.rule2.fromRound.round    = r2;
+        // this.selectedEliminatory.rule2.fromPlayoff.round  = po2;
+        // this.m1.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
+        // this.m1.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
         if( this.tourneyService.selectedEliminatoryLevelIndex != null ) {
             let observer = this.meetingService.saveEliminatoryMeetingDb(this.m1, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));
@@ -212,8 +210,8 @@ export class EliminatoryDetailView extends AbstractDetailView {
         this.m2.address = this.eliminatoryFormGroup.get('address2').value;
         this.m2.country = this.eliminatoryFormGroup.get('country2').value;
 
-        this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
-        this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
+        // this.m2.rule1.fromRound = r1.value == 0 ? this.selectedEliminatory.rule1.fromRound : this.selectedEliminatory.rule1.fromPlayoff;
+        // this.m2.rule2.fromRound = r2.value == 0 ? this.selectedEliminatory.rule2.fromRound : this.selectedEliminatory.rule2.fromPlayoff;
 
         if( this.tourneyService.selectedEliminatoryLevelIndex != null ) {
             let observer = this.meetingService.saveEliminatoryMeetingDb(this.m2, this.selectedTourney.id, this.selectedEliminatory.id, e => this.serverUnreachableHandler(e));

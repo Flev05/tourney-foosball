@@ -9,6 +9,7 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from '../round/meeting-round-service';
+import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -32,6 +33,8 @@ export class TeamDetailView extends AbstractDetailView {
     teams: Team[];
     playerLv: boolean = true;
     addPlayerEnabled : boolean = false;
+    
+    currentTeam: any;
 
     constructor(
         protected location: Location,
@@ -97,7 +100,6 @@ export class TeamDetailView extends AbstractDetailView {
     private onLoadTeamsComplete(): any {
         this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
         console.log("Loaded [" + this.teams.length + "] pool teams");
-        // this.teamService.addPlayerEnabled = !this.teamService.readOnly;
         this.addPlayerEnabled = !this.teamService.readOnly;
     }
 
@@ -105,10 +107,23 @@ export class TeamDetailView extends AbstractDetailView {
         this.teamService.saveTeam(this.selectedTeam
             , this.autoCompleteTeamName
             , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
-            , () => super.goBack());
+            , () => this.goBack());
     }
 
     goBack(): void {
+        if(this.teamService.newTeam) {
+            if( this.selectedTeam.teamName.trim() != "") {
+                let foundTeam = this.tourneyService.selectedTourney.teams.find( t => t.teamName.toUpperCase() == this.selectedTeam.teamName.toUpperCase() );
+                if( foundTeam == undefined) {
+                    this.tourneyService.selectedTourney.teams.push(this.teamService.selectedTeam);
+                    this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+                }
+            }
+        } else {
+            if( this.selectedTeam.teamName != this.autoCompleteTeamName ) {
+                this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+            }
+        }
         this.selectedTeam.teamName = this.autoCompleteTeamName;
         super.goBack();
     }

@@ -9,6 +9,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 import { Observable, of } from 'rxjs';
+import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -41,14 +42,13 @@ export class TeamTableComponent extends AbstractListView {
 
     ngOnInit() {
         super.ngOnInit();
-        this.teamService.readOnly = !this.addTeamEnabled;
+        this.addTeamEnabled = !this.teamService.readOnly;
         this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
     }
   
     private onLoadTeamsComplete(): any {
         this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
         console.log("Loaded [" + this.teams.length + "] pool teams");
-
         if( this.tourneyTeams ) {
             this.teams = this.tourneyService.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
         }
@@ -57,6 +57,13 @@ export class TeamTableComponent extends AbstractListView {
   
     public gotoListView() {
         this.router.navigate([REDIRECT_TOURNEY_LV]);
+    }
+
+    create() {
+        this.selectedTeam={id: null, teamName: ""};
+        this.teamService.selectedTeam = this.selectedTeam;
+        this.teamService.newTeam = true;
+        this.gotoDetailView();
     }
 
     onRowSelect(event) {
@@ -71,19 +78,20 @@ export class TeamTableComponent extends AbstractListView {
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName ;
         this.deleteTeam = team;
         if(confirm(popup)) {
+            if( this.tourneyTeams ) {
+                let index: number = this.teams.indexOf(this.deleteTeam);
+                if(index > -1) {
+                    this.teams.splice(index, 1);
+                    this.teamService.onTeamOperationChange(ETeamOperation.DELETE);
+                }
+                return;
+            }
             let index: number = this.teams.indexOf(team);
             if(index > -1) {
                 const observer = this.teamService.deleteTeam(team, this.deleteTeamErrorHandler("Team player operation"));
                 observer.subscribe(n => this.next(n), e => this.subscribeErrorHandler(e), () => this.onDeleteComplete());
             }
         }
-    }
-
-    create() {
-        this.selectedTeam={id: null, teamName: ""};
-        this.teamService.selectedTeam = this.selectedTeam;
-        this.teamService.newTeam = true;
-        this.gotoDetailView();
     }
 
     private deleteTeamErrorHandler<T> (operation = 'operation', result?: T) {

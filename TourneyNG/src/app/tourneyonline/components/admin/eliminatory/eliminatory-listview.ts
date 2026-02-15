@@ -44,13 +44,15 @@ export class EliminatoryListView extends AbstractListView {
     }
  
     getPosition1(e: Eliminatory): string {
-        let position1 = e.rule1.fromRound.position.value > 0 ? e.rule1.fromRound.position.label : e.rule1.fromPlayoff.position.label;
-        return position1;
+        // let position1 = e.rule1.fromRound.position.value > 0 ? e.rule1.fromRound.position.label : e.rule1.fromPlayoff.position.label;
+        // return position1;
+        return "0";
     }
 
     getPosition2(e: Eliminatory): string {
-        let position2 = e.rule2.fromRound.position.value > 0 ? e.rule2.fromRound.position.label : e.rule2.fromPlayoff.position.label;
-        return position2;
+        // let position2 = e.rule2.fromRound.position.value > 0 ? e.rule2.fromRound.position.label : e.rule2.fromPlayoff.position.label;
+        // return position2;
+        return "0";
     }
 
     onEliminatoryRowSelect(event) {

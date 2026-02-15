@@ -215,12 +215,12 @@ export class TabResultListView extends AbstractTabResultListView {
         this.updateTourney();
      }
 
-     onTerminatePlayoffChange(event) {
+    onTerminatePlayoffChange(event) {
         console.log("Entering onTerminatePlayoffChange()");
         this.updateTourney();
-     }
+    }
 
-     private updateTourney(): void {
+    private updateTourney(): void {
         console.log("Entering updateTourney()");
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
@@ -260,6 +260,7 @@ export class TabResultListView extends AbstractTabResultListView {
     public printPdfMeeting() {
         const doc = new jsPDF();
         let isFirstRound = true;
+
         for (let r of this.selectedTourney.roundVO.rounds) {
             // 1. If it's not the first round, add a new page
             if (!isFirstRound) {
@@ -269,7 +270,6 @@ export class TabResultListView extends AbstractTabResultListView {
             // 2. Prepare the data just for THIS specific round
             this.meetingRoundService.prepareMeetingsMap(r, false);
             let meetings: any[] = [];
-            // ... Your loops for getOnewayMeetingsOfDay and getRoundtripMeetingsOfDay ...
             // (Populate roundMeetings instead of a global meetings array)  
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getOnewayMeetingsOfDay(md);
@@ -278,10 +278,26 @@ export class TabResultListView extends AbstractTabResultListView {
                 let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
                 meetings.push(dto);
                 for( let m of ms ) {
-                    let dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                    meetings.push(dto);
+                    if( m.points1 >= 0 ) {
+                        let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                        meetings.push(dto);
+                        dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                        meetings.push(dto);
+                    }
                 }
             } 
+            this.printMeetingsByDirection(doc, r, meetings);
+        }
+
+        for (let r of this.selectedTourney.roundVO.rounds) {
+            // 1. If it's not the first round, add a new page
+            if (!isFirstRound) {
+                doc.addPage();
+            }
+            isFirstRound = false;
+            // 2. Prepare the data just for THIS specific round
+            this.meetingRoundService.prepareMeetingsMap(r, false);
+            let meetings: any[] = [];
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getRoundtripMeetingsOfDay(md);
                 let newDate = new Date(ms[0].datetime);
@@ -289,46 +305,67 @@ export class TabResultListView extends AbstractTabResultListView {
                 let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
                 meetings.push(dto);
                 for( let m of ms ) {
-                    let dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                    meetings.push(dto);
-                }
-            } 
-            // 3. Add a Title for this specific Round page
-            doc.setFontSize(16);
-            doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, 15);
-            // 4. Draw the table starting slightly below the text
-            autoTable(doc, {
-                head: [["In Casa", "P1", "P2", "Fuori Casa"]],
-                body: this.formatRoundData(meetings),
-                startY: 25,
-                theme: 'striped',
-                columnStyles: {
-                    0: { halign: 'right', cellWidth: 'auto' }, // "In Casa" right-aligned
-                    1: { halign: 'center', cellWidth: 15 },    // P1 centered
-                    2: { halign: 'center', cellWidth: 15 },    // P2 centered
-                    3: { halign: 'left', cellWidth: 'auto' }   // "Fuori Casa" left-aligned (default)
-                },
-                styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
-                didDrawCell: (data) => {
-                    // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
-                    if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
-                        // Only draw if the content is empty (which means points were 0)
-                        if (data.cell.text[0] === '') {
-                            const boxSize = 10; // 10mm                            
-                            // Calculate center of the cell to place the box
-                            const posX = data.cell.x + (data.cell.width - boxSize) / 2;
-                            const posY = data.cell.y + (data.cell.height - boxSize) / 2;
-                            // Draw the rectangle (x, y, width, height, style)
-                            doc.setDrawColor(0); // Black border
-                            doc.rect(posX, posY, boxSize, boxSize, 'S'); // 'S' means Stroke (outline)
-                        }
+                    if( m.points1 >= 0 ) {
+                        dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                        meetings.push(dto);
+                        dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                        meetings.push(dto);
                     }
                 }
-            });
+            } 
+            this.printMeetingsByDirection(doc, r, meetings);
         }
-        doc.save(`${this.selectedTourney.tourneyName}-Meetings.pdf`);
+        doc.save(`Meetings-${this.selectedTourney.tourneyName}.pdf`);
     }
     
+    // 3. Add a Title for this specific Round page
+    private printMeetingsByDirection(doc: jsPDF, r: Round, meetings: any[]) {
+        doc.setFontSize(16);
+        doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, 15);
+        // 4. Draw the table starting slightly below the text
+        autoTable(doc, {
+            head: [["In Casa", "P1", "P2", "Fuori Casa"]],
+            body: this.formatRoundData(meetings),
+            startY: 20,
+            theme: 'striped',
+            columnStyles: {
+                0: { halign: 'right', cellWidth: 'auto' },
+                1: { halign: 'center', cellWidth: 15 },
+                2: { halign: 'center', cellWidth: 15 },
+                3: { halign: 'left', cellWidth: 'auto' }
+            },
+            didParseCell: (data) => {
+                // Only apply this logic to the header row
+                if (data.section === 'head') {
+                    // 1. Shrink the height/area
+                    data.cell.styles.fontSize = 10;      // Smaller font (default is usually 10)
+                    data.cell.styles.cellPadding = 1;    // Minimum padding to tighten the area
+                    data.cell.styles.minCellHeight = 8;  // Explicitly force a smaller height                    
+                    if (data.column.index === 0) data.cell.styles.halign = 'right';
+                    if (data.column.index === 1) data.cell.styles.halign = 'center';
+                    if (data.column.index === 2) data.cell.styles.halign = 'center';
+                    if (data.column.index === 3) data.cell.styles.halign = 'left';
+                }
+            },
+            styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
+            didDrawCell: (data) => {
+                // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
+                if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
+                    // Only draw if the content is empty (which means points were 0)
+                    const boxSize = 10; // 10mm
+                    if (data.cell.text[0] === '') {0
+                        // Calculate center of the cell to place the box
+                        const posX = data.cell.x + (data.cell.width - boxSize) / 2;
+                        const posY = data.cell.y + (data.cell.height - boxSize) / 2;
+                        // Draw the rectangle (x, y, width, height, style)
+                        doc.setDrawColor(0); // Black border
+                        doc.rect(posX, posY, boxSize, boxSize, 'S');
+                    }
+                }
+            }
+        });
+    }
+
     public printPdfClassification() {
         const doc = new jsPDF('p', 'mm', 'a4');
         let currentY = 15; // Track the vertical position manually
@@ -375,7 +412,7 @@ export class TabResultListView extends AbstractTabResultListView {
             // We use doc.lastAutoTable.finalY to find where the table actually ended
             currentY = (doc as any).lastAutoTable.finalY + 15;
         }
-        doc.save(`${this.selectedTourney.tourneyName}-Classifiche.pdf`);
+        doc.save(`Classifica-${this.selectedTourney.tourneyName}.pdf`);
     }
 
     public printTennisBracket(rowIndex: number) {
@@ -441,8 +478,8 @@ export class TabResultListView extends AbstractTabResultListView {
     }
 
     private drawSide(doc: any, matches: any[], totalRounds: number, spacing: number, startX: number, w: number, h: number
-        , side: 'left' | 'right', pageH: number, labels: string[]
-    ) {
+        , side: 'left' | 'right', pageH: number, labels: string[] ) 
+    {
         let currentMatchesCount = matches.length;
         let x = startX;
 
@@ -457,9 +494,7 @@ export class TabResultListView extends AbstractTabResultListView {
             const firstY = 30 + (verticalGap / 2);
 
             for (let i = 0; i < currentMatchesCount; i++) {
-
                 const y = firstY + (i * verticalGap) - (h / 2);
-                
                 // Draw the box
                 doc.setDrawColor(0);
                 doc.setLineWidth(0.2);
@@ -510,7 +545,6 @@ export class TabResultListView extends AbstractTabResultListView {
         for (let i = 0; i < el.eliminatories.length; i++) {
             const e : Eliminatory = el.eliminatories[i];
             const r : Round = e.round;
-            const cList : Classification[] = r.classification;
             
             // 1. Prepare the data for this specific round
             this.meetingRoundService.prepareMeetingsMap(r, false);
@@ -520,11 +554,13 @@ export class TabResultListView extends AbstractTabResultListView {
                 if (ms && ms.length > 0) {
                     let newDate = new Date(ms[0].datetime);
                     let range = this.dfp.transform(newDate);
-                    let dto: MeetingDto = { round: r.name, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range };
+                    let dto: MeetingDto = { round: r.name, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range, signLine: false};
                     meetings.push(dto);
                     for (let m of ms) {
-                        let matchDto = { round: r.name, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m };
+                        let matchDto: MeetingDto = { round: r.name, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m };
                         meetings.push(matchDto);
+                        let signLineDto: MeetingDto = { round: r.name, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range, signLine: true };
+                        meetings.push(signLineDto);
                     }
                 }
             }
@@ -544,10 +580,19 @@ export class TabResultListView extends AbstractTabResultListView {
                 startY: currentY + 5,
                 theme: 'striped',
                 columnStyles: {
-                    0: { halign: 'right', cellWidth: 'auto' }, // "In Casa" right-aligned
-                    1: { halign: 'center', cellWidth: 15 },    // P1 centered
-                    2: { halign: 'center', cellWidth: 15 },    // P2 centered
-                    3: { halign: 'left', cellWidth: 'auto' }   // "Fuori Casa" left-aligned (default)
+                    0: { halign: 'right', cellWidth: 'auto' },
+                    1: { halign: 'center', cellWidth: 15 },
+                    2: { halign: 'center', cellWidth: 15 },
+                    3: { halign: 'left', cellWidth: 'auto' }
+                },
+                didParseCell: (data) => {
+                    // Only apply this logic to the header row
+                    if (data.section === 'head') {
+                        if (data.column.index === 0) data.cell.styles.halign = 'right';
+                        if (data.column.index === 1) data.cell.styles.halign = 'center';
+                        if (data.column.index === 2) data.cell.styles.halign = 'center';
+                        if (data.column.index === 3) data.cell.styles.halign = 'left';
+                    }
                 },
                 styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
                 didDrawCell: (data) => {
@@ -570,17 +615,17 @@ export class TabResultListView extends AbstractTabResultListView {
             // We find where the table ended and add a 10mm gap
             currentY = (doc as any).lastAutoTable.finalY + 15;
         }
-        doc.save(`${this.selectedTourney.tourneyName}-Eliminations.pdf`);
+        doc.save(`Eliminations-${this.selectedTourney.tourneyName}.pdf`);
     }
 
     private formatRoundData(meetings: MeetingDto[]): any[] {
         return meetings.map((dto) => {
             if (dto.separator) {
-                return [
-                    {
+                return [{
                         content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
                         colSpan: 4,
                         styles: { 
+                            minCellHeight: 5,
                             halign: 'center', 
                             fillColor: [220, 220, 200, 220] as [number, number, number, number], // Cast as a Tuple
                             fontStyle: 'bold' 
@@ -588,13 +633,83 @@ export class TabResultListView extends AbstractTabResultListView {
                     }
                 ];
             }
-            return [
+            if (dto.signLine) {
+                // 3. The "Line Row" (This creates the 10mm gap + the line)
+                const spacerRow = [{
+                    content: '', // Empty content
+                    colSpan: 4,
+                    styles: { 
+                        minCellHeight: 10,             // Your 10mm gap
+                        lineColor: [0, 0, 0],          // Black line (use lineColor for the border)
+                        lineWidth: { 
+                            bottom: 1.0,               // 1.0 is a strong bold line; try 1.5 for extra bold
+                            top: 0, 
+                            left: 0, 
+                            right: 0 
+                        }
+                    }
+                }];
+                return spacerRow;
+            }
+
+            // 2. The Meeting Row
+            const meetingRow = [
                 dto.meeting.teamName1,
-                dto.meeting.points1 === 0 ? '' : dto.meeting.points1,
-                dto.meeting.points2 === 0 ? '' : dto.meeting.points2,
+                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points1,
+                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points2,
                 dto.meeting.teamName2
             ];
+
+            return meetingRow;
         });
+    }
+
+    /**
+     * Creates the 2 big tables in the topEliminatoryLevel from the received sortedEliminatories list.
+     * The 4 first position are built from the 4 first position of the sortedEliminatories.
+     * The remaining positions are built starting from the last postions of the sortedEliminatories
+     * down to the 5° position.
+     * 
+     * @param topEl the top ElementaryLevel to organize as a two big tables
+     * @param sortedEliminatories the sorted Eliminatory list from which take the team couples 
+     */
+    private placeOnTwoBigTables(topEl: EliminatoryLevel, sortedEliminatories : Eliminatory[] ) {
+        console.log("Entering placeOnTwoBigTables()");
+
+        let p1: number = 0;
+        let p2: number = topEl.eliminatories.length / 2;
+        let p3: number = topEl.eliminatories.length - 1;
+        let p4: number = p2 - 1;
+        
+        let p : number=0;
+        let li = sortedEliminatories.length - 1;
+        for( let i=0; i<topEl.eliminatories.length; i++ ) {
+            if( i % 4 == 0 ) {
+                p = p1++;
+            }
+            if( i % 4 == 1 ) {
+                p = p2++;
+            }
+            if( i % 4 == 2 ) {
+                p = p3--;
+            }
+            if( i % 4 == 3 ) {
+                p = p4--;
+            }
+            if( i < 4 ) {
+                topEl.eliminatories[p] = sortedEliminatories[i];
+            } else {
+                topEl.eliminatories[p] = sortedEliminatories[li--];
+            }
+            const e = topEl.eliminatories[p];
+            for(let m of e.round.onewayMeetings ) {
+                // this.saveMeeting(e, m);
+            }
+            for(let m of e.round.roundtripMeetings ) {
+                // this.saveMeeting(e, m);
+            }
+        }       
+        // this.updateTourney();
     }
 }
 

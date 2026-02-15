@@ -60,6 +60,15 @@
             </p-autoComplete>
         </div>            
     </div>      
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1" pTooltip="Inserire la via di residenza della squadra.">
+            Via:
+        </div>
+        <div class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
+        </div>
+    </div>    
  
     <div class="ui-grid-row">
         <div class="ui-grid-col-1">
@@ -94,6 +103,19 @@
             <input pInputText type="text" [(ngModel)]="selectedTeam.asd"/>
         </div>
     </div> 
+</div>
+
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <button class="ui-button-success" 
+                pButton (click)="saveTeam()" 
+                icon="fa fa-group" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>            
+        </div>
+    </div>
 </div>
 
 <app-player-table [playerLv]="playerLv" [addPlayerEnabled]="addPlayerEnabled"></app-player-table>

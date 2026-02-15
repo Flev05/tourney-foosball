@@ -39,6 +39,7 @@ import { PlayerModule } from 'app/tourneyonline/components/admin/player/player.m
 import { PlayerPickList } from './player-picklist';
 import { TeamModule } from 'app/tourneyonline/components/admin/team/team.module';
 import { NewTourneyDetailView } from './new-tourney-detailview';
+import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/team-table.module';
 
 @NgModule({
 	imports: [
@@ -74,6 +75,7 @@ import { NewTourneyDetailView } from './new-tourney-detailview';
         ,PlayoffModule
         ,PlayerModule
         ,TeamModule
+        ,TeamTableModule
 	],
 	declarations: [
         TourneyListView

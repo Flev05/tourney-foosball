@@ -27,21 +27,25 @@
         <tr>
             <th style="width: 15mm;">N°</th>
             <th>
-                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'teamName', 'contains')">
+                <input 
+                    style="width: 100%;" 
+                    type="text" 
+                    pInputText 
+                    placeholder="Cerca per nome" 
+                    (input)="table.filter($any($event.target).value.trim(), 'teamName', 'contains')">
             </th>
             <th></th>
             <th></th>
-            <th *ngIf="addTeamEnabled" style="width: 15mm;"></th>
+            <th *ngIf="addTeamEnabled" style="width: 15mm;">X</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-            <td *ngFor="let col of columns">
-                <span class="ui-column-title">{{col.header}}</span>
-                {{rowData[col.field]}}
-            </td>
+            <td style="text-align: center;">{{rowData['teamName']}}</td>
+            <td style="text-align: center;">{{rowData['address']}} - {{rowData.country?.zipCode}} - {{ rowData.country?.city }} ({{ rowData.country?.provinceCode }})</td>
+            <td style="text-align: center;">{{rowData['asd']}}</td>            
             <td *ngIf="addTeamEnabled" style="width: 15mm; text-align: center;">
                 <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
             </td>                

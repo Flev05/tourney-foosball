@@ -13,6 +13,7 @@ import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './eliminatory-listview.html',
@@ -52,6 +53,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
         this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
+        this.updateTourney();
     }
     
     private onEliminatoryBLoadComplete(): void {
@@ -59,12 +61,19 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationCols);
         this.teamService.setMeetingAddress(this.onewayMeetings,this.roundtripMeetings);
+        this.updateTourney();
+    }
+
+    private updateTourney(): void {
+        console.log("Entering updateTourney()");
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }
 
     onClassifcationRowSelect(event) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.tourneyService.selectedEliminatoryLevel.name);
-
         this.router.navigate([ClassificationDetailView.redirect]);
     }
 }

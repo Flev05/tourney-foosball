@@ -35,3 +35,6 @@ export enum ERoles {
 export enum EResultTool {
     R='Reduced', C='Complete'
 }
+export enum ETeamOperation {
+    INSERT, UPDATE, DELETE
+}

@@ -43,7 +43,6 @@
                     </th>
                 </tr>
             </ng-template>
-
             <ng-template pTemplate="body" let-rowData let-columns="columns">                    
                 <tr [pSelectableRow]="rowData">
                     <td *ngFor="let col of columns">
@@ -52,6 +51,13 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="summary">
+                <p-checkbox *ngIf="loginService.isUserAllowed()" name="terminatedRoundsGroupname" 
+                    label="Gironi terminati" 
+                    pTooltip="Selezionare solo quando tutti i gironi sono terminati"
+                    value="terminatedRounds" 
+                    [(ngModel)]="selectedTourney.terminatedRounds" 
+                    (onChange)="onTerminateRoundChange($event)" >
+                </p-checkbox>
                 <button type="button" 
                     icon="fa fa-file-excel-o" 
                     pButton (click)="printPdfMeeting()" 
@@ -65,14 +71,7 @@
                     class="ui-button-success"
                     style="margin-left: 5mm;">
                 </button>
-                <p-checkbox *ngIf="loginService.isUserAllowed()" name="terminatedRoundsGroupname" 
-                    label="Gironi terminati" 
-                    pTooltip="Selezionare solo quando tutti i gironi sono terminati"
-                    value="terminatedRounds" 
-                    [(ngModel)]="selectedTourney.terminatedRounds" 
-                    (onChange)="onTerminateRoundChange($event)" >
-                </p-checkbox>
-            </ng-template>            
+            </ng-template>
         </p-table>   
     </p-tabPanel>
 
@@ -81,8 +80,7 @@
             [value]="playoffRows"
             selectionMode="single" 
             [(selection)]="selectedPlayoff"
-            (onRowSelect)="onPlayoffRowSelect($event)">
-
+            (onRowSelect)="onPlayoffRowSelect($event)">s
             <ng-template pTemplate="header">
                 <tr>
                     <th style="width: 40mm; text-align: center;">
@@ -169,10 +167,10 @@
                         Squadre
                     </th>
                     <th style="width: 20mm; text-align: center;">
-                        Gra.
+                        Lista
                     </th>
                     <th style="width: 20mm; text-align: center;">
-                        Doc.
+                        T.one
                     </th>
                 </tr>
             </ng-template>
@@ -189,10 +187,18 @@
                         {{rowData['teams']}}
                     </td>
                     <td>
-                        <button class="ui-button-success" pButton icon="fa fa-file-excel-o" (click)="printPdfTopLevelMeeting(rowIndex)"></button>
+                        <button class="ui-button-success" 
+                            pButton icon="fa fa-file-excel-o" 
+                            pTooltip="Stampa la lista degli incontri di eliminazione diretta"
+                            (click)="printPdfTopLevelMeeting(rowIndex)">
+                        </button>
                     </td>
                     <td>
-                        <button class="ui-button-success" pButton icon="fa fa-file-excel-o" (click)="printTennisBracket(rowIndex)"></button>
+                        <button class="ui-button-success" 
+                            pButton icon="fa fa-file-excel-o" 
+                            pTooltip="Stampa il tabellone degli incontri di eliminazione diretta"
+                            (click)="printTennisBracket(rowIndex)">
+                        </button>
                     </td>
                 </tr>
             </ng-template>

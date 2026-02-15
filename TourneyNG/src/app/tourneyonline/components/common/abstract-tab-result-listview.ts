@@ -218,10 +218,13 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         this.meetingService.selectedResultTabIndex = index;
         let elIndex = 0;
         if( this.containsRound() && this.containsPlayoff() && this.containsPlayout() ) {
+            this.roundRows = this.selectedTourney.roundVO.rounds;
             elIndex = 3;
         } else if( this.containsRound() && this.containsPlayoff() ) {
+            this.roundRows = this.selectedTourney.roundVO.rounds;
             elIndex = 2;
         } else if( this.containsRound()  ) {
+            this.roundRows = this.selectedTourney.roundVO.rounds;
             elIndex = 1;
         } 
         if( index === elIndex ) {

@@ -1,12 +1,11 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Message } from 'primeng/api';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-import {  PhaseType, Direction } from 'app/tourneyonline/domain/enumerations';
+import { PhaseType, Direction } from 'app/tourneyonline/domain/enumerations';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { Team } from 'app/tourneyonline/domain/team';
@@ -22,7 +21,6 @@ import { Injectable } from '@angular/core';
  
 @Injectable()
 export abstract class AbstractEliminatoryListView extends AbstractListView {
-         
     eliminatoryLevelCols: TableCols[] ;
     eliminatoryLevelSelectedRow: EliminatoryLevelVO;
     eliminatoryLevelBSelectedRow: EliminatoryLevelVO;
@@ -42,12 +40,9 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     eliminatories: Eliminatory[];
 
     isPlayoff: boolean;
-
     isAutomatic: boolean;
-
     isOneway: string;
     private isStandalone: boolean;
-
     selectedLevelCombobox: Combobox;
   
     elHttpCounter: number;
@@ -261,13 +256,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
             let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
             let position1       = this.getPosition1(e);
-            let fromRound1      = this.isAutomatic ? "" : e.rule1.fromRound.round.label
-            let fromPlayoff1    = e.rule1.fromPlayoff.round.label
-
             let position2       = this.getPosition2(e);
-            let fromRound2      = this.isAutomatic ? "" : e.rule2.fromRound.round.label
-            let fromPlayoff2    = e.rule2.fromPlayoff.round.label
-
             let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
 
             let evo: EliminatoryVO = {eliminatory:e
@@ -276,12 +265,12 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 , teamName2: ""
                 , onewayDatetime: onewayDatetime
                 , position1: position1
-                , fromRound1: fromRound1
-                , fromPlayoff1: fromPlayoff1
+                , fromRound1: "" // fromRound1
+                , fromPlayoff1: "" // fromPlayoff1
                 , versus: "<==>"
                 , position2: position2
-                , fromRound2: fromRound2
-                , fromPlayoff2: fromPlayoff2
+                , fromRound2: "" // fromRound2
+                , fromPlayoff2: "" // fromPlayoff2
                 , roundtripDatetime: roundtripDatetime
             };
             this.eliminatoryRows.push(evo);
@@ -290,52 +279,11 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
     getPosition1(e: Eliminatory): string {
         let pos1 = "";
-        if(this.containsPlayoff()) {
-            let rule = e.rule1.fromPlayoff.bandPosition + "° delle migliori " + e.rule1.fromPlayoff.position.value + "°";
-            if( this.selectedTourney.playoffVO.playoffs.length == 1 ) {
-                rule = e.rule1.fromPlayoff.position.value + "°";
-            }
-            pos1 = this.isAutomatic 
-                ? rule
-                : e.rule1.fromPlayoff.position.value + "°";
-        } else {
-            let rule = e.rule1.fromRound.bandPosition + "° delle migliori " + e.rule1.fromRound.position.value + "°";
-            if( this.selectedTourney.roundVO.rounds.length == 1 ) {
-                rule = e.rule1.fromRound.position.value + "°";
-            }
-            pos1 = this.isAutomatic 
-                ? rule
-                : e.rule1.fromRound.position.value + "°";
-        }   
         return pos1;
     }
     
     getPosition2(e: Eliminatory): string {
         let pos2 = "";
-        if(this.containsPlayoff()) {
-            let rule = e.rule2.fromPlayoff.bandPosition + "° delle migliori " + e.rule2.fromPlayoff.position.value + "°";
-            if( this.selectedTourney.playoffVO.playoffs.length == 1 ) {
-                rule = e.rule2.fromPlayoff.position.value + "°";
-            }
-            let pos = e.rule2.fromPlayoff.position.value + "°";
-            if( e.rule2.fromPlayoff.position.value == 0 ) {
-                rule = "";
-                pos  = "";
-            }
-            pos2 = this.isAutomatic ? rule : pos;
-        } else {
-            let rule = e.rule2.fromRound.bandPosition + "° delle migliori " + e.rule2.fromRound.position.value + "°" ;
-            if( this.selectedTourney.roundVO.rounds.length == 1 ) {
-                rule = e.rule2.fromRound.position.value + "°" ;
-            }
-            let pos = e.rule2.fromRound.position.value + "°";
-
-            if( e.rule2.fromRound.position.value == 0 ) {
-                rule = "";
-                pos  = "";
-            }
-            pos2 = this.isAutomatic ? rule : pos;
-        }
         return pos2;
     }
 
@@ -355,7 +303,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
 
         let row : number = 0;
         let rows: any[] = [];
-
         let raoundMap: Map<string, Round> = new Map<string, Round>();
 
         for (let round of rounds) {
@@ -382,7 +329,6 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
                 row++;                
             }
         }
-
         return rows;
     }
 }

@@ -24,9 +24,18 @@ const loadTeamUrl   = teamUrl +'/load';
 const insertTeamUrl = teamUrl +'/insert';
 const updateTeamUrl = teamUrl +'/update';
 const deleteTeamUrl = teamUrl +'/delete';
+import { BehaviorSubject } from 'rxjs';
+import { ETeamOperation } from '../domain/enumerations';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TeamService {
+    // 1. The private 'Source' (The Publisher)
+    private teamSource = new BehaviorSubject<ETeamOperation>(null);
+
+    // 2. The public 'Observable' (The Subscription)
+    team$ = this.teamSource.asObservable();
 
     selectedTeam : Team;
     newTeam : boolean = false;
@@ -34,9 +43,9 @@ export class TeamService {
     selectedTabIndex: number = 0; 
 
     static cols: TableCols[] = [
-        { field: 'teamName',   header: 'Nome' },
-        { field: 'address',    header: 'Indirizzo' },
-        { field: 'asd',    header: 'ASD' }
+        { field: 'teamName',    header: 'Nome' },
+        { field: 'address',     header: 'Indirizzo' },
+        { field: 'asd',         header: 'ASD' }
     ];
     teamPool: Team[] = [];
     isTeamsChanged: any;
@@ -48,19 +57,22 @@ export class TeamService {
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }
+    
+    // 3. The Method to change the value
+    public onTeamOperationChange(teamData: ETeamOperation) {
+        this.teamSource.next(teamData);
+    }
 
     loadAllTeams (complete?: () => void): void {
         let url = loadTeamBySessionIdUrl;
         if(this.loginService.isUserLogged) {
             url = loadTeamByClientIdUrl + "/" + this.clientService.selectedClient.id;
         }
-
         let observer :  Observable<TeamVO[]>  = this.http.get<TeamVO[]>(url)
         .pipe(
             tap(_ => this.log(`fetched all teams`)),
             catchError(this.handleError('loadAllTeams', []))
         );
-
         observer.subscribe(t => this.teamNext(t, complete), e => this.onError(e));
     }
     
@@ -83,7 +95,6 @@ export class TeamService {
     /** GET hero by id. Will 404 if id not found */
     getTeam(id: number): Observable<Team> {
         const url = `${loadTeamUrl}/${id}`;
-
         return this.http.get<Team>(url).pipe(
             tap(_ => this.log(`fetched Team url=` + url)),
             catchError(this.handleError<Team>(`getTeam id=${id}`))
@@ -92,9 +103,7 @@ export class TeamService {
 
     /** POST: add a new Team to the server */
     private addTeam (team: TeamVO, selector: (err: any, caught: Observable<TeamVO> ) => Observable<TeamVO> ): Observable<TeamVO> {
-
         let url = insertTeamUrl;
-
         return this.http.post<TeamVO>(url, team, httpOptions).pipe(
             tap((team: TeamVO) => this.log(`added Team w/ id=${team.id}`)),
             catchError(selector)
@@ -104,9 +113,7 @@ export class TeamService {
     /** PUT: update the Team on the server */
     private updateTeam (team: TeamVO, selector: (err: any, caught: Observable<TeamVO> ) => Observable<TeamVO> ): Observable<TeamVO>  {
         let url = updateTeamUrl;
-        
         console.log(team);
-
         return this.http.put(url, team, httpOptions).pipe(
             tap(_ => this.log(`updated Team id=${team.id}`)),
             catchError(selector)
@@ -114,7 +121,6 @@ export class TeamService {
     }
 
     private addUpdateTeam (tvo: TeamVO , selector: (err: any, caught: Observable<TeamVO> ) => Observable<TeamVO> ): Observable<TeamVO> { 
-
         if(tvo.id == null) {
             return this.addTeam(tvo, selector);
         }
@@ -125,7 +131,6 @@ export class TeamService {
     deleteTeam (team: Team , selector: (err: any, caught: Observable<Team> ) => Observable<Team>) : Observable<Team> {
         const id = team.id;
         let url = deleteTeamUrl + "/" + id;
-
         return this.http.delete<Team>(url, httpOptions).pipe(
             tap(_ => this.log(`deleted Team id=` + id)),
             catchError(selector)
@@ -169,7 +174,6 @@ export class TeamService {
 
     static getTeamsByNames(st: Tourney, teamNames: string[]): Team[] {
         let teams: Team[] = [];
-        
         for(let t of st.teams ) {
             let foundTeam = teamNames.find( x => x == t.teamName);
             if( foundTeam != undefined ) {
@@ -180,7 +184,6 @@ export class TeamService {
     }
 
     public isTeamNameAlreadyExists(newTeam: Team) : boolean  {
-
         let found = this.teamPool.find( t => this.whereClause(t, newTeam) );
         return found == undefined ? false : true;
     }
@@ -208,10 +211,10 @@ export class TeamService {
                 if(!confirm(message)) {
                     return;
                 }
-            }  else {
-                newTeam.id = null;
-            }
+            }  
+            newTeam.id = null;
         }
+
         this.selectedTeam = newTeam;
         this.selectedTeam.teamName = newTeamName;
 
@@ -242,7 +245,6 @@ export class TeamService {
         const subscriber = this.addUpdateTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => {});
     }  
-
 
     private isTeamAlreadyExists(tourney: Tourney): boolean {
         this.teamAlreadyExists = false;

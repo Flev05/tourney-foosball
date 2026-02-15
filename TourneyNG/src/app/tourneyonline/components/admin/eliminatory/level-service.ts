@@ -427,16 +427,16 @@ export class LevelService extends AbstractEliminatoryListView {
                 , onewayMeetings: []
                 , roundtripMeetings: []
             },
-            rule1: {
-                id: this.tourneyService.getSequenceNumber(),
-                fromRound: fr1,
-                fromPlayoff: pfr1
-            },
-            rule2: {
-                id: this.tourneyService.getSequenceNumber(),
-                fromRound: fr2,
-                fromPlayoff: pfr2
-            }
+            // rule1: {
+            //     id: this.tourneyService.getSequenceNumber(),
+            //     fromRound: fr1,
+            //     fromPlayoff: pfr1
+            // },
+            // rule2: {
+            //     id: this.tourneyService.getSequenceNumber(),
+            //     fromRound: fr2,
+            //     fromPlayoff: pfr2
+            // }
         };
 
         let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, pr1, pr2, 1, Direction.OneWay, false);
@@ -642,8 +642,8 @@ export class LevelService extends AbstractEliminatoryListView {
 
             let label = up.round.value == 0 ? "" : up.round.value  + "°";
             
-            e.rule1.fromRound.position   = {label: label, value: up.position.value};
-            e.rule1.fromPlayoff.position = {label: label, value: up.position.value};
+            // e.rule1.fromRound.position   = {label: label, value: up.position.value};
+            // e.rule1.fromPlayoff.position = {label: label, value: up.position.value};
 
             let round1 = rounds.find(r => r.name == up.round.label);
 
@@ -652,58 +652,57 @@ export class LevelService extends AbstractEliminatoryListView {
 
             label = down.position.value == 0 ? "" : down.position.value  + "°";
             
-            e.rule2.fromRound.position   = {label: label, value: down.position.value};            
-            e.rule2.fromPlayoff.position = {label: label, value: down.position.value};            
-
-            e.rule1.fromRound.bandPosition = 0;
-            e.rule2.fromRound.bandPosition = 0;
+            // e.rule2.fromRound.position   = {label: label, value: down.position.value};            
+            // e.rule2.fromPlayoff.position = {label: label, value: down.position.value};            
+            // e.rule1.fromRound.bandPosition = 0;
+            // e.rule2.fromRound.bandPosition = 0;
 
             let round2      = rounds.find(r => r.name == down.round.label);
             let round2Id    = round2==undefined ? 0 : round2.id;
             let round2Label = round2==undefined ? "" : down.round.label;
 
-            if(this.containsPlayoff()) {
-                e.rule1.fromPlayoff.round = {label: up.round.label, value: round1.id};
-                e.rule1.fromRound.round   = {label: "", value: 0};
-                e.rule2.fromPlayoff.round = {label: round2Label, value: round2Id};
-                e.rule2.fromRound.round   = {label: "", value: 0};
-                if(this.isAutomatic) {
-                    e.rule1.fromPlayoff.bandPosition = i % roundsNo + 1;
-                    if( e.rule2.fromPlayoff.position.value > 0 )  {
-                        e.rule2.fromPlayoff.bandPosition = lastIndex % roundsNo + 1;
-                    }    
-                }
-                for( let m of e.round.onewayMeetings ) {
-                    m.rule1.fromRound = e.rule1.fromPlayoff;
-                    m.rule2.fromRound = e.rule2.fromPlayoff;
-                }
-                for( let m of e.round.roundtripMeetings ) {
-                    m.rule1.fromRound = e.rule1.fromPlayoff;
-                    m.rule2.fromRound = e.rule2.fromPlayoff;
-                }
-            } else {
-                e.rule1.fromRound.round   = {label: up.round.label, value: round1.id};
-                e.rule1.fromPlayoff.round = {label: "", value: 0};
-                e.rule2.fromRound.round   = {label: round2Label, value: round2Id};
-                e.rule2.fromPlayoff.round = {label: "", value: 0};
-                if(this.isAutomatic) {
-                    e.rule1.fromRound.bandPosition = (i + startPosition) % roundsNo + 1;
-                    if( e.rule2.fromRound.position.value > 0 )  {
-                        e.rule2.fromRound.bandPosition = (lastIndex + startPosition)  % roundsNo + 1;
-                    }   
-                }
-                for( let m of e.round.onewayMeetings ) {
-                    m.rule1.fromRound = e.rule1.fromRound;
-                    m.rule2.fromRound = e.rule2.fromRound;
-                    let rule1 = e.rule1.fromRound.bandPosition + "° delle migliori " + e.rule1.fromRound.position.value + "°";
-                    let rule2 = e.rule2.fromRound.bandPosition + "° delle migliori " + e.rule2.fromRound.position.value + "°";
-                    console.log("rule1=("+ rule1 + ") Vs rule2=(" + rule2 + ")");
-                }
-                for( let m of e.round.roundtripMeetings ) {
-                    m.rule1.fromRound = e.rule1.fromRound;
-                    m.rule2.fromRound = e.rule2.fromRound;
-                }
-            }
+            // if(this.containsPlayoff()) {
+            //     e.rule1.fromPlayoff.round = {label: up.round.label, value: round1.id};
+            //     e.rule1.fromRound.round   = {label: "", value: 0};
+            //     e.rule2.fromPlayoff.round = {label: round2Label, value: round2Id};
+            //     e.rule2.fromRound.round   = {label: "", value: 0};
+            //     if(this.isAutomatic) {
+            //         e.rule1.fromPlayoff.bandPosition = i % roundsNo + 1;
+            //         if( e.rule2.fromPlayoff.position.value > 0 )  {
+            //             e.rule2.fromPlayoff.bandPosition = lastIndex % roundsNo + 1;
+            //         }    
+            //     }
+            //     for( let m of e.round.onewayMeetings ) {
+            //         m.rule1.fromRound = e.rule1.fromPlayoff;
+            //         m.rule2.fromRound = e.rule2.fromPlayoff;
+            //     }
+            //     for( let m of e.round.roundtripMeetings ) {
+            //         m.rule1.fromRound = e.rule1.fromPlayoff;
+            //         m.rule2.fromRound = e.rule2.fromPlayoff;
+            //     }
+            // } else {
+            //     e.rule1.fromRound.round   = {label: up.round.label, value: round1.id};
+            //     e.rule1.fromPlayoff.round = {label: "", value: 0};
+            //     e.rule2.fromRound.round   = {label: round2Label, value: round2Id};
+            //     e.rule2.fromPlayoff.round = {label: "", value: 0};
+            //     if(this.isAutomatic) {
+            //         e.rule1.fromRound.bandPosition = (i + startPosition) % roundsNo + 1;
+            //         if( e.rule2.fromRound.position.value > 0 )  {
+            //             e.rule2.fromRound.bandPosition = (lastIndex + startPosition)  % roundsNo + 1;
+            //         }   
+            //     }
+            //     for( let m of e.round.onewayMeetings ) {
+            //         m.rule1.fromRound = e.rule1.fromRound;
+            //         m.rule2.fromRound = e.rule2.fromRound;
+            //         let rule1 = e.rule1.fromRound.bandPosition + "° delle migliori " + e.rule1.fromRound.position.value + "°";
+            //         let rule2 = e.rule2.fromRound.bandPosition + "° delle migliori " + e.rule2.fromRound.position.value + "°";
+            //         console.log("rule1=("+ rule1 + ") Vs rule2=(" + rule2 + ")");
+            //     }
+            //     for( let m of e.round.roundtripMeetings ) {
+            //         m.rule1.fromRound = e.rule1.fromRound;
+            //         m.rule2.fromRound = e.rule2.fromRound;
+            //     }
+            // }
         }
     }
 

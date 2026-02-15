@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool } from '../../../domain/enumerations';
+import { PhaseType, EliminatoryMode, AccessMode, TourneyType, TeamSortType, RoundType, Direction, EResultTool, ETeamOperation } from '../../../domain/enumerations';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
@@ -150,6 +150,21 @@ export class TourneyDetailView extends AbstractDetailView {
         public urcService: UrcService 
     ) { 
         super(tourneyService, location);
+
+        this.teamService.team$.subscribe(data => {
+            console.log("ETeamOperation=" + data) ;
+            if( data == null ) {
+                return;
+            }
+            let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+            this.doOnRoundNumChange(cb);
+            if( data == ETeamOperation.INSERT ) {
+            }
+            if( data == ETeamOperation.UPDATE ) {
+            }
+            if( data == ETeamOperation.DELETE ) {
+            }
+        });
     }
 
     ngOnInit() {
@@ -842,19 +857,24 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
 
         this.blockDocument();
+
+        this.doOnRoundNumChange(cb);
+    }
+
+    private doOnRoundNumChange(cb: Combobox) {
         this.selectedTourney.selectedRoundsNumCB = cb;
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
 
         this.tabChangedIndex = 3;
-        if( this.containsPlayoff() ) {
+        if (this.containsPlayoff()) {
             this.tabChangedIndex = 4;
             this.playoffsCombobox = [];
             let firstRow: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
             this.playoffsCombobox.push(firstRow);
-    
-            let P = Math.floor( this.selectedTourney.teams.length / 2 );
-            for (let r=1; r <= P; r++ ) {
+
+            let P = Math.floor(this.selectedTourney.teams.length / 2);
+            for (let r = 1; r <= P; r++) {
                 let cb: Combobox = { label: "" + r, value: r };
                 this.playoffsCombobox.push(cb);
             }
@@ -869,10 +889,10 @@ export class TourneyDetailView extends AbstractDetailView {
         this.eliminatoryBLevelRows = [];
         let tvo: TourneyVO = this.meetingRoundService.prepareTourneyVOForRound(true);
         this.tourneyService.updateTourneyDeleteAllMeetings(tvo);
-       
+
         this.resetNoRoundComboBoxes();
 
-        if(this.isRoundAutoGen == 'true') {
+        if (this.isRoundAutoGen == 'true') {
             this.onRoundTeamsChangeNoConfirm(cb);
         }
     }

@@ -162,7 +162,7 @@ public class TourneyRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createTourney(TourneyVO tvo) {
 
-		log.debug(logId() + "POST: createTourney(" + tvo + ")");
+		log.info(logId() + "POST: createTourney(" + tvo + ")");
 
 		Map<String, String> responseObj = new HashMap<>();
 
@@ -218,7 +218,6 @@ public class TourneyRESTService extends AbstractRESTService {
 	 * @return the new tourney entity
 	 */
 	private Tourney newTourney(TourneyVO tvo, Session spo) {
-
 		Tourney tpo = prepareNewTourney(tvo, spo);
 		if (spo == null) {
 			insertFollowerUserAndAvailableOperators(tvo, tpo);
@@ -227,7 +226,6 @@ public class TourneyRESTService extends AbstractRESTService {
 	}
 
 	private void insertFollowerUserAndAvailableOperators(TourneyVO tvo, Tourney tpo) {
-
 		String followerUserName = tvo.getFollowerName();
 		Integer clientId = tvo.getClientVO().getId();
 
@@ -243,19 +241,25 @@ public class TourneyRESTService extends AbstractRESTService {
 		upo.getUrcSet().add(urcFollower);
 		urcSet.add(urcFollower);
 
-		List<User> operatorList = urcDao.findOperatorsUrcByClientId(clientId);
-		for (User op : operatorList) {
-			UserRoleClient urcOp = urcDao.newUrcAvailableOperator(op, cpo, tpo);
-			urcSet.add(urcOp);
-			upo.getUrcSet().add(urcOp);
+		if (tvo.getClonedFromTourneyName() == null) {
+			List<User> operatorList = urcDao.findOperatorsUrcByClientId(clientId);
+			for (User op : operatorList) {
+				UserRoleClient urcOp = urcDao.newUrcAvailableOperator(op, cpo, tpo);
+				urcSet.add(urcOp);
+				upo.getUrcSet().add(urcOp);
+			}
+		} else {
+			List<UserRoleClient> operatorUrcList = urcDao.findUrcBy(clientId, tvo.getClonedFromTourneyName());
+			for (UserRoleClient urc : operatorUrcList) {
+				UserRoleClient urcOp = urcDao.cloneUrcAvailableOperator(urc, tpo);
+				urcSet.add(urcOp);
+				upo.getUrcSet().add(urcOp);
+			}
 		}
-
 	}
 
 	private Tourney prepareNewTourney(TourneyVO tvo, Session spo) {
-
 		Tourney tpo = new Tourney();
-
 		if (spo == null) {
 			Client cpo = clientDao.findById(tvo.getClientVO().getId());
 			tpo.setClient(cpo);

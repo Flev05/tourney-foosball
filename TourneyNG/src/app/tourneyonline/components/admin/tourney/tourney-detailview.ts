@@ -720,7 +720,6 @@ export class TourneyDetailView extends AbstractDetailView {
     onTeamRowSelect(event) {
         console.log(event.data);
         this.teamService.selectedTeam = this.cloneObject(this.selectedTeam);
-        this.teamService.readOnly = false;
         this.playerService.readOnly = false;
         this.router.navigate([REDIRECT_TEAM_DV]);
     }

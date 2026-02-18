@@ -18,12 +18,12 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 import { MeetingDto } from '../../admin/round/meeting-dto';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Classification } from 'app/tourneyonline/domain/classification';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
@@ -42,6 +42,7 @@ export class TabResultListView extends AbstractTabResultListView {
         public meetingService: MeetingService,
         protected meetingRoundService: MeetingRoundService,
         protected meetingPlayoffService: MeetingPlayoffService,
+        protected teamService: TeamService,
         protected router: Router,
         protected location: Location,
         protected dfp: DateFormatPipe,
@@ -68,7 +69,6 @@ export class TabResultListView extends AbstractTabResultListView {
      
     onRoundRowSelect(event) {
         console.log(event.data);
-
         for(let i=0;i<this.selectedRound.teamNames.length; i++ ) {
             this.selectedRound.teamNames[i] = this.selectedRound.teamNames[i].replace(/\(\d+\)/g, '');
         }
@@ -139,7 +139,6 @@ export class TabResultListView extends AbstractTabResultListView {
     
     onEliminatoryRowSelect(event) {
         console.log("Entering onEliminatoryRowSelect()");
-    
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
         
@@ -175,7 +174,6 @@ export class TabResultListView extends AbstractTabResultListView {
         
     onEliminatoryBRowSelect(event) {
         console.log("Entering onEliminatoryBRowSelect()");
-
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
         
@@ -269,7 +267,7 @@ export class TabResultListView extends AbstractTabResultListView {
             isFirstRound = false;
             // 2. Prepare the data just for THIS specific round
             this.meetingRoundService.prepareMeetingsMap(r, false);
-            let meetings: any[] = [];
+            let meetings: MeetingDto[] = [];
             // (Populate roundMeetings instead of a global meetings array)  
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getOnewayMeetingsOfDay(md);
@@ -289,31 +287,33 @@ export class TabResultListView extends AbstractTabResultListView {
             this.printMeetingsByDirection(doc, r, meetings);
         }
 
-        for (let r of this.selectedTourney.roundVO.rounds) {
-            // 1. If it's not the first round, add a new page
-            if (!isFirstRound) {
-                doc.addPage();
-            }
-            isFirstRound = false;
-            // 2. Prepare the data just for THIS specific round
-            this.meetingRoundService.prepareMeetingsMap(r, false);
-            let meetings: any[] = [];
-            for( let md = 1; md <= r.daysNo; md ++ ) {
-                let ms = this.getRoundtripMeetingsOfDay(md);
-                let newDate = new Date(ms[0].datetime);
-                let range = this.dfp.transform(newDate);
-                let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
-                meetings.push(dto);
-                for( let m of ms ) {
-                    if( m.points1 >= 0 ) {
-                        dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                        meetings.push(dto);
-                        dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
-                        meetings.push(dto);
-                    }
+        if (this.selectedTourney.isOnewayRound != "true") {
+            for (let r of this.selectedTourney.roundVO.rounds) {
+                // 1. If it's not the first round, add a new page
+                if (!isFirstRound) {
+                    doc.addPage();
                 }
-            } 
-            this.printMeetingsByDirection(doc, r, meetings);
+                isFirstRound = false;
+                // 2. Prepare the data just for THIS specific round
+                this.meetingRoundService.prepareMeetingsMap(r, false);
+                let meetings: MeetingDto[] = [];
+                for( let md = 1; md <= r.daysNo; md ++ ) {
+                    let ms = this.getRoundtripMeetingsOfDay(md);
+                    let newDate = new Date(ms[0].datetime);
+                    let range = this.dfp.transform(newDate);
+                    let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
+                    meetings.push(dto);
+                    for( let m of ms ) {
+                        if( m.points1 >= 0 ) {
+                            dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                            meetings.push(dto);
+                            dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                            meetings.push(dto);
+                        }
+                    }
+                } 
+                this.printMeetingsByDirection(doc, r, meetings);
+            }
         }
         doc.save(`Meetings-${this.selectedTourney.tourneyName}.pdf`);
     }

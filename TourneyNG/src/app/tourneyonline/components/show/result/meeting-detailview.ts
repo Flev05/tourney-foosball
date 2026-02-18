@@ -178,6 +178,9 @@ export class MeetingDetailView extends AbstractDetailView {
             let un = this.loginService.userLogged.username;
             let tn : string = this.selectedMeeting.teamName1;
             let team : Team = this.selectedTourney.teams.find(t => t.teamName == tn);
+            if( team == undefined || team.operators == undefined) {
+                return true;
+            }
             let index = team.operators.indexOf(un);
             if( index == -1) {
                 return true;

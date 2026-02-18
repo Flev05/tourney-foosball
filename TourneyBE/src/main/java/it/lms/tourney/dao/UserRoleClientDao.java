@@ -144,14 +144,49 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
 		Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
 		Join<UserRoleClient, User> userJoin = root.join(UserRoleClient_.user);
-		Predicate p2 = cb.equal(clientJoin.get(Client_.id), clientId);
-		Predicate p3 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+
+		List<Predicate> pList = new ArrayList<>();
+		Predicate p1 = cb.equal(clientJoin.get(Client_.id), clientId);
+		pList.add(p1);
+		Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+		pList.add(p2);
+
 		cq = cq.select(userJoin);
-		cq = cq.where(p2, p3);
+		cq = cq.where(pList.toArray(new Predicate[0]));
 		cq = cq.distinct(true);
 		TypedQuery<User> nq = getEm().createQuery(cq);
 		List<User> urcList = nq.getResultList();
 		log.info("{} Found {} User(s) where clientId={}, Role=OPERATOR", logId(), urcList.size(), clientId);
+		return urcList;
+	}
+
+	public List<UserRoleClient> findUrcBy(Integer clientId, String clonedFromTourneyName) {
+		log.debug(logId() + "Entering findUrcBy({},clonedFromTourneyName={})", clientId, clonedFromTourneyName);
+		CriteriaBuilder cb = getCb();
+		CriteriaQuery<UserRoleClient> cq = cb.createQuery(UserRoleClient.class);
+		Root<UserRoleClient> root = cq.from(UserRoleClient.class);
+		Join<UserRoleClient, Client> clientJoin = root.join(UserRoleClient_.client);
+		Join<UserRoleClient, Role> roleJoin = root.join(UserRoleClient_.role);
+		Join<UserRoleClient, Tourney> tourneyJoin = root.join(UserRoleClient_.tourney);
+
+		List<Predicate> pList = new ArrayList<>();
+		Predicate p1 = cb.equal(clientJoin.get(Client_.id), clientId);
+		pList.add(p1);
+		Predicate p2 = cb.equal(roleJoin.get(Role_.name), Role.ROLES.OPERATOR.name());
+		pList.add(p2);
+		Predicate p3 = cb.equal(tourneyJoin.get(Tourney_.tourneyName), clonedFromTourneyName);
+		pList.add(p3);
+
+		cq = cq.select(root);
+		cq = cq.where(pList.toArray(new Predicate[0]));
+		cq = cq.distinct(true);
+		TypedQuery<UserRoleClient> nq = getEm().createQuery(cq);
+		List<UserRoleClient> urcList = nq.getResultList();
+		log.info("{} Found {} UserRoleClient(s) where clientId={}, Role=OPERATOR, TourneyName={}", logId(),
+				urcList.size(), clientId, clonedFromTourneyName);
+		for (UserRoleClient urc : urcList) {
+			log.info("{}", urc);
+		}
 		return urcList;
 	}
 
@@ -644,6 +679,18 @@ public class UserRoleClientDao extends BaseJPACrudDao<UserRoleClient, Integer> {
 		Role rpo = roleDao.getOperatorRole();
 		urc.setRole(rpo);
 		insert(urc);
+		return urc;
+	}
+
+	public UserRoleClient cloneUrcAvailableOperator(UserRoleClient urc, Tourney tpo) {
+		UserRoleClient clonedUrc = new UserRoleClient();
+		clonedUrc.setAvailable(urc.getAvailable());
+		clonedUrc.setUser(urc.getUser());
+		clonedUrc.setClient(urc.getClient());
+		clonedUrc.setTourney(tpo);
+		Role rpo = roleDao.getOperatorRole();
+		clonedUrc.setRole(rpo);
+		insert(clonedUrc);
 		return urc;
 	}
 

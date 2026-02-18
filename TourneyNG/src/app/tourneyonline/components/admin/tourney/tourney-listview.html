@@ -251,6 +251,7 @@
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
+            <th style="width: 15mm;">Clone</th>
             <th style="width: 15mm;">X</th>
         </tr>
     </ng-template>
@@ -263,7 +264,18 @@
                 {{rowData[col.field]}}
             </td>
             <td style="width: 15mm;">
-                <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
+                <button class="ui-button-success" 
+                    pButton icon="fa fa-copy" 
+                    pTooltip="Clona il torneo selezionato."
+                    (click)="doClone(rowData)">
+                </button>
+            </td>
+            <td style="width: 15mm;">
+                <button class="ui-button-danger" 
+                    pButton icon="fa fa-remove" 
+                    pTooltip="Rimuove il torneo selezionato."
+                    (click)="doDelete(rowData)">
+                </button>
             </td>
         </tr>
     </ng-template>
@@ -275,4 +287,22 @@
     </ng-template>        
 </p-table>
  
- 
+ <p-dialog header="Clone Tournament" [(visible)]="displayCloneDialog" [modal]="true" [width]="400">
+    <div class="ui-g ui-fluid" *ngIf="selectedTourney">
+        <div class="ui-g-12">
+            <label>Original Name:</label>
+            <div style="font-weight: bold; margin-bottom: 10px;">
+                {{selectedTourney.tourneyName}}
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <label for="newName">New Tournament Name:</label>
+            <input type="text" pInputText id="newName" [(ngModel)]="newTourneyName" />
+        </div>
+    </div>
+    
+    <p-footer>
+        <button type="button" pButton icon="fa fa-check" (click)="saveClone()" label="Clone"></button>
+        <button type="button" pButton icon="fa fa-close" (click)="displayCloneDialog=false" label="Cancel" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>

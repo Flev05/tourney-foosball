@@ -159,14 +159,11 @@ export class RoundListView extends AbstractListView {
  
     onRowSelect(event) {
         console.log(event.data);
-
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = false;
         if(this.isRoundAutoGen == 'true') {
-            this.teamService.readOnly = true;
             this.teamService.isRoundAutoGen = 'true';
         } else {
-            this.teamService.readOnly = false;
             this.teamService.isRoundAutoGen = 'false';
         }
         this.gotoDetailView();

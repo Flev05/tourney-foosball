@@ -54,7 +54,7 @@ public class UserRoleClient extends AbstractPO {
 	@Override
 	public String toString() {
 		return super.toString() + " UserRoleClient [user=" + user.getUsername() + ", role=" + role.getName()
-				+ ", client=" + client.getBusinessName() + "]";
+				+ ", client=" + client.getBusinessName() + ", available=" + available + "]";
 	}
 
 	@Override

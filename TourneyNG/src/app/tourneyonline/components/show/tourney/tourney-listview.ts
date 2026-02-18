@@ -44,7 +44,7 @@ export class TourneyResultListView extends AbstractTourneyListView {
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
         console.log(event.data);
-        
+        this.teamService.readOnly = true;
         this.tourneyService.loadTourneyById(event.data.id, () => this.onTourneyLoadComplete(), e => this.serverUnreachableHandler(e));
     }
 

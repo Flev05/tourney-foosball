@@ -13,10 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TourneyVO extends AbstractVO {
-
 	private static final long serialVersionUID = 1L;
 
 	private String tourneyName;
+	private String clonedFromTourneyName;
 	private String calendar;
 	private String followerName;
 	private ClientVO clientVO;
@@ -25,12 +25,11 @@ public class TourneyVO extends AbstractVO {
 	private List<MeetingVO> mdbs;
 
 	public TourneyVO() {
-
+		clonedFromTourneyName = null;
 	}
 
 	@Override
 	public String toString() {
-
 		return super.toString() + " TourneyVO [tourneyName=" + tourneyName + ", clientVO=" + clientVO + ", json=" + json
 				+ ", country=" + country + "]";
 	}

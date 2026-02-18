@@ -19,6 +19,7 @@ import { DisciplineService } from 'app/tourneyonline/service/discipline-service'
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Player } from 'app/tourneyonline/domain/player';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './tourney-listview.html'
@@ -33,6 +34,10 @@ export class TourneyListView extends AbstractTourneyListView {
     onDeleteTourneyError: boolean;
 
     username: string = "";
+
+    // Dialog state
+    displayCloneDialog: boolean = false;
+    newTourneyName: string = ''; // The draft name
 
     constructor(private fb: FormBuilder
         , protected tourneyService: TourneyService
@@ -71,9 +76,8 @@ export class TourneyListView extends AbstractTourneyListView {
     onRowSelect(event) {
         console.log("Entering onRowSelect()");
         console.log(event.data);
-
         this.tourneyService.newTourney = false;
-        
+        this.teamService.readOnly = false;
         this.tourneyService.loadTourneyById(event.data.id, () => this.onLoadTourneyComplete(), e => this.serverUnreachableHandler(e));
     }
 
@@ -150,15 +154,12 @@ export class TourneyListView extends AbstractTourneyListView {
     doDelete(tourney: any) {
         console.log("doDelete(): " + tourney.tourneyName);
         let popup = 'Sicuro di voler rimuovere il torneo: ' + tourney.tourneyName + "?";
-
         this.onDeleteTourneyError = false;
-
         if(confirm(popup)) {
             const observer = this.tourneyService.deleteTourney(tourney, this.deleteTourneyErrorHandler("Delete tourney operation"));
             observer.subscribe(n => this.next(n), e => this.onError(e), () => this.doDeleteComplete(tourney));
         }
     }
-
     doDeleteComplete(tourney : Tourney): any {
         let deletedTourney = this.tourneys.find( t => t.tourneyName == tourney.tourneyName );
         if( deletedTourney != undefined ) {
@@ -184,5 +185,35 @@ export class TourneyListView extends AbstractTourneyListView {
 
     protected filter(tourneys: Tourney[]): Tourney[] {
         return tourneys;
+    }
+    
+    doClone( tourney: Tourney ) {
+        console.log("doClone(): " + tourney.tourneyName);
+        this.selectedTourney = tourney;
+        this.newTourneyName = `${tourney.tourneyName} (Copy)`; 
+        this.displayCloneDialog = true;
+    }
+
+    saveClone() {
+        if (this.newTourneyName.trim()) {
+            this.displayCloneDialog = false;
+            this.tourneyService.loadTourneyById(this.selectedTourney.id, () => this.onLoadTourneyForCloneComplete(), e => this.serverUnreachableHandler(e));
+        } 
+    }
+
+    onLoadTourneyForCloneComplete(): void {
+        this.selectedTourney = this.tourneyService.selectedTourney;
+        const clonedFromTourneyName : string = this.selectedTourney.tourneyName;
+        this.selectedTourney.id = null;
+        this.selectedTourney.tourneyName = this.newTourneyName;
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        tvo.clonedFromTourneyName = clonedFromTourneyName;
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => {});
+    }
+
+    private saveTourneyNext(cs: TourneyVO): void {
+        this.selectedTourney = null;
+        this.ngOnInit();
     }
 }

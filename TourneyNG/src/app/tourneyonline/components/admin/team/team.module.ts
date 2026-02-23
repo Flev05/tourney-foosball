@@ -30,7 +30,7 @@ import {TeamDetailView} from './team-detailview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { TeamRoutingModule } from './team-routing.module';
 import { TeamTableModule } from '../team-table/team-table.module';
-import { PlayerTableModule } from '../player-table/player-table.module';
+import { PlayerTableModule } from '../player/player-table/player-table.module';
 
 @NgModule({
 	imports: [

@@ -48,20 +48,21 @@ export class TeamService {
         { field: 'asd',         header: 'ASD' }
     ];
     teamPool: Team[] = [];
-    isTeamsChanged: any;
+    // isTeamsChanged: any;
     onSaveTeamError: boolean;
     badRequest: boolean;
     teamAlreadyExists: boolean = false;
     isRoundAutoGen: string;
+    tourneyTeams: boolean;
     
     constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
         console.log("Constructor of TeamService");
     }
     
     // 3. The Method to change the value
-    public onTeamOperationChange(teamData: ETeamOperation) {
-        this.teamSource.next(teamData);
-    }
+    // public onTeamOperationChange(teamData: ETeamOperation) {
+    //     this.teamSource.next(teamData);
+    // }
 
     loadAllTeams (complete?: () => void): void {
         let url = loadTeamBySessionIdUrl;
@@ -200,7 +201,7 @@ export class TeamService {
         return found == undefined ? false : true;
     }
 
-    saveTeam( newTeam : Team
+    saveTeam( selectedTeam : Team
         , newTeamName: string
         , message : string
         , complete?: () => void) {     
@@ -212,10 +213,10 @@ export class TeamService {
                     return;
                 }
             }  
-            newTeam.id = null;
+            selectedTeam.id = null;
         }
 
-        this.selectedTeam = newTeam;
+        this.selectedTeam = selectedTeam;
         this.selectedTeam.teamName = newTeamName;
 
         this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;

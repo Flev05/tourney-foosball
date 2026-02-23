@@ -8,9 +8,6 @@
         scrollHeight="250px">
 
     <ng-template *ngIf="addTeamEnabled" pTemplate="caption">
-        <div style="text-align:center">
-            Squadre ({{teams.length}})
-        </div>
         <div style="text-align:left">
             <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
         </div>
@@ -18,7 +15,7 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th style="width: 15mm;">{{teamCount}}</th>
+            <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : teams.length }}</th>
             <th>Nome</th>
             <th>Indirizzo</th>
             <th>ASD</th>
@@ -35,7 +32,14 @@
                     (input)="table.filter($any($event.target).value.trim(), 'teamName', 'contains')">
             </th>
             <th></th>
-            <th></th>
+            <th>
+                <input 
+                    style="width: 100%;" 
+                    type="text" 
+                    pInputText 
+                    placeholder="Cerca per ASD" 
+                    (input)="table.filter($any($event.target).value.trim(), 'asd', 'contains')">
+            </th>
             <th *ngIf="addTeamEnabled" style="width: 15mm;">X</th>
         </tr>
     </ng-template>

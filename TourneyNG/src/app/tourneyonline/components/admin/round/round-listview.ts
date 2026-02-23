@@ -112,7 +112,7 @@ export class RoundListView extends AbstractListView {
         const workbook = XLSX.utils.book_new();
         let meetings : MeetingDto[] = [];
         for( let r of this.selectedTourney.roundVO.rounds ) {
-            this.meetingRoundService.prepareMeetingsMap(r, false); 
+            this.meetingRoundService.prepareMeetingsMap(r); 
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getOnewayMeetingsOfDay(md);
                 let newDate = new Date(ms[0].datetime);

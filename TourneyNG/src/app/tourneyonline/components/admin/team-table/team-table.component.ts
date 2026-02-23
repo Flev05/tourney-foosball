@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -10,6 +10,7 @@ import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 import { Observable, of } from 'rxjs';
 import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
+import { Table } from 'primeng/table';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -21,6 +22,7 @@ const REDIRECT_TOURNEY_LV   = 'admintourney/';
 export class TeamTableComponent extends AbstractListView {
     @Input() addTeamEnabled: boolean | undefined;
     @Input() tourneyTeams: boolean | undefined;
+    @ViewChild('table') table: Table; // This gives us access to the #table from HTML
     
     cols: TableCols[] = TeamService.cols;
     selectedTeam: Team;
@@ -51,12 +53,15 @@ export class TeamTableComponent extends AbstractListView {
         console.log("Loaded [" + this.teams.length + "] pool teams");
         if( this.tourneyTeams ) {
             this.teams = this.tourneyService.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+            this.teamService.tourneyTeams = this.tourneyTeams;
         }
         this.teamCount = this.teams.length;
     }
   
     public gotoListView() {
-        this.router.navigate([REDIRECT_TOURNEY_LV]);
+        this.router.navigate([REDIRECT_TOURNEY_LV], { 
+            queryParams: { tourneyTeams: this.tourneyTeams }
+        });
     }
 
     create() {
@@ -72,21 +77,32 @@ export class TeamTableComponent extends AbstractListView {
         this.teamService.selectedTeam = this.selectedTeam;
         this.gotoDetailView();
     }
+    
+    protected gotoDetailView(): void {
+        this.router.navigate([this.redirect], { 
+            queryParams: { tourneyTeams: this.tourneyTeams }
+        });
+    }
 
     doDelete(team: Team) {
         console.log(team.teamName);
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName ;
         this.deleteTeam = team;
         if(confirm(popup)) {
-            if( this.tourneyTeams ) {
-                let index: number = this.teams.indexOf(this.deleteTeam);
+            let index: number = this.teams.indexOf(this.deleteTeam);
+            if( this.tourneyTeams ) { // the DELETE will apply only on the teams belonging to the tourney, not the one in the pool
                 if(index > -1) {
-                    this.teams.splice(index, 1);
-                    this.teamService.onTeamOperationChange(ETeamOperation.DELETE);
+                    this.teams = [...this.teams.filter(item => item !== team)];
+                    this.tourneyService.selectedTourney.teams = this.teams;
+                    // If the user has a search/filter active, update the filtered list too
+                    if (this.table.filteredValue) {
+                        this.table.filteredValue = this.table.filteredValue.filter(t => t.id !== team.id);
+                    }
+                    // this.teamService.onTeamOperationChange(ETeamOperation.DELETE); // fire the DELETE event for Subscribed listeners
+                    this.tourneyService.selectedTourney.teamsChanged = true;
                 }
                 return;
             }
-            let index: number = this.teams.indexOf(team);
             if(index > -1) {
                 const observer = this.teamService.deleteTeam(team, this.deleteTeamErrorHandler("Team player operation"));
                 observer.subscribe(n => this.next(n), e => this.subscribeErrorHandler(e), () => this.onDeleteComplete());

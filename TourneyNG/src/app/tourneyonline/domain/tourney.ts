@@ -12,6 +12,7 @@ import { PhaseType, EliminatoryMode } from './enumerations';
 import { EliminatoryLevel } from './eliminatory-level';
 import { Combobox } from './tourney-combobox';
 import { ClientVO } from './client-vo';
+import { Player } from './player';
 
 export interface Tourney {
     id?: number;
@@ -23,6 +24,8 @@ export interface Tourney {
     playoutTabName? : string;
     eliminatoryTabName?  : string;
     eliminatoryBTabName? : string;
+    chaosEnabled?       : boolean;
+    teamsChanged?       : boolean;
 
     followerName?   : string;
     isDaily?        : string;
@@ -73,5 +76,9 @@ export interface Tourney {
     isEliminatoryAutoGen?       : string;
     eliminatoryLevels?          : Array<EliminatoryLevel>;
     eliminatoryBLevels?         : Array<EliminatoryLevel>;
+
+    defenderPlayers?            : Player[];
+    offenderPlayers?            : Player[];
+    jollyPlayers?               : Player[];
 }
  

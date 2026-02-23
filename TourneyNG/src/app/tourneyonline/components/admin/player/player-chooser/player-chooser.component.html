@@ -1,0 +1,199 @@
+<div class="player-chooser-container">
+
+  <!-- DEFENDER PANEL -->
+  <div class="player-panel">
+    <h3>Portieri</h3>
+    <div class="toolbar">
+        <p-autoComplete
+            [(ngModel)]="selectedDefenderToAdd"
+            [suggestions]="filteredDefenderPlayers"
+            (completeMethod)="filterDefenderPlayers($event)"
+            field="playerName"
+            [forceSelection]="true"
+            [dropdown]="true"
+            placeholder="Cerca">
+        </p-autoComplete>
+        <button pButton
+                type="button"
+                label="Aggiungi"
+                (click)="addDefender()">
+        </button>
+    </div>
+ 
+    <p-table
+      [value]="defenderPlayers"
+      [scrollable]="true" 
+      scrollHeight="500px">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 15mm; text-align: center;">N°</th>
+          <th>Nome</th>
+          <th style="width:180px">Azioni</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-player let-rowIndex="rowIndex">
+        <tr>
+          <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+          <td>
+            <input *ngIf="isEditing(player)"
+                   pInputText
+                   [(ngModel)]="player.playerName" />
+            <span *ngIf="!isEditing(player)">
+              {{ player.playerName }}
+            </span>
+          </td>
+          <td class="actions">
+            <button pButton icon="pi pi-arrow-right"
+                    class="p-button-warning p-button-sm"
+                    (click)="moveToOffender(player)">
+            </button>
+            <button pButton icon="pi pi-pencil"
+                    class="p-button-info p-button-sm"
+                    (click)="enableEdit(player)"
+                    *ngIf="!isEditing(player)">
+            </button>
+            <button pButton icon="pi pi-check"
+                    class="p-button-success p-button-sm"
+                    (click)="disableEdit()"
+                    *ngIf="isEditing(player)">
+            </button>
+            <button pButton icon="pi pi-trash"
+                    class="p-button-danger p-button-sm"
+                    (click)="removeDefender(player)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="player-panel">
+      <h3>JOLLY</h3>
+      <div class="toolbar">
+          <p-autoComplete
+              [(ngModel)]="selectedJollyToAdd"
+              [suggestions]="filteredJollyPlayers"
+              (completeMethod)="filterJollyPlayers($event)"
+              field="playerName"
+              [forceSelection]="true"
+              [dropdown]="true"
+              placeholder="Cerca">
+          </p-autoComplete>
+          <button pButton
+                  type="button"
+                  label="Aggiungi"
+                  (click)="addJolly()">
+          </button>
+      </div>
+          
+      <p-table
+        [value]="jollyPlayers"
+        [scrollable]="true"
+        scrollHeight="500px">
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 15mm; text-align: center;">N°</th>
+            <th>Nome</th>
+            <th style="width:200px">Azioni</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-player let-rowIndex="rowIndex">
+          <tr>
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+            <td>{{ player.playerName }}</td>
+            <td class="actions">
+              <!-- To Defender -->
+              <button pButton
+                      icon="pi pi-arrow-left"
+                      class="p-button-success p-button-sm"
+                      (click)="moveJollyToDefender(player)">
+              </button>
+              <!-- To Offender -->
+              <button pButton
+                      icon="pi pi-arrow-right"
+                      class="p-button-warning p-button-sm"
+                      (click)="moveJollyToOffender(player)">
+              </button>
+              <!-- Remove -->
+              <button pButton icon="pi pi-trash"
+                      class="p-button-danger p-button-sm"
+                      (click)="removeJolly(player)">
+               </button>              
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+  </div>
+
+  <!-- OFFENDER PANEL -->
+  <div class="player-panel">
+      <h3>Attaccanti</h3>
+      <div class="toolbar">
+          <p-autoComplete
+              [(ngModel)]="selectedOffenderToAdd"
+              [suggestions]="filteredOffenderPlayers"
+              (completeMethod)="filterOffenderPlayers($event)"
+              field="playerName"
+              [forceSelection]="true"
+              [dropdown]="true"
+              placeholder="Cerca">
+          </p-autoComplete>
+          <button pButton
+                  type="button"
+                  label="Aggiungi"
+                  (click)="addOffender()">
+          </button>
+      </div>
+
+      <p-table
+          [value]="offenderPlayers"
+          [scrollable]="true"
+          scrollHeight="500px">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 15mm; text-align: center;">N°</th>
+              <th>Nome</th>
+              <th style="width:180px">Azioni</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-player let-rowIndex="rowIndex">
+            <tr>
+              <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+              <td>
+                <input *ngIf="isEditing(player)"
+                      pInputText
+                      [(ngModel)]="player.playerName" />
+                <span *ngIf="!isEditing(player)">
+                  {{ player.playerName }}
+                </span>
+              </td>
+              <td class="actions">
+                  <button pButton icon="pi pi-arrow-left"
+                          class="p-button-warning p-button-sm"
+                          (click)="moveToDefender(player)">
+                  </button>
+                  <button pButton icon="pi pi-pencil"
+                          class="p-button-info p-button-sm"
+                          (click)="enableEdit(player)"
+                          *ngIf="!isEditing(player)">
+                  </button>
+                  <button pButton icon="pi pi-check"
+                          class="p-button-success p-button-sm"
+                          (click)="disableEdit()"
+                          *ngIf="isEditing(player)">
+                  </button>
+                  <button pButton icon="pi pi-trash"
+                          class="p-button-danger p-button-sm"
+                          (click)="removeOffender(player)">
+                  </button>
+              </td>
+            </tr>
+          </ng-template>
+      </p-table>
+  </div>
+</div>

@@ -50,13 +50,15 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="summary">
-                <p-checkbox *ngIf="loginService.isUserAllowed()" name="terminatedRoundsGroupname" 
-                    label="Gironi terminati" 
-                    pTooltip="Selezionare solo quando tutti i gironi sono terminati"
-                    value="terminatedRounds" 
-                    [(ngModel)]="selectedTourney.terminatedRounds" 
-                    (onChange)="onTerminateRoundChange($event)" >
-                </p-checkbox>
+                <div style="margin-bottom: 10px;">
+                    <p-checkbox *ngIf="loginService.isUserAllowed()" name="terminatedRoundsGroupname" 
+                        label="Gironi terminati" 
+                        pTooltip="Selezionare solo quando tutti i gironi sono terminati"
+                        value="terminatedRounds" 
+                        [(ngModel)]="selectedTourney.terminatedRounds" 
+                        (onChange)="onTerminateRoundChange($event)" >
+                    </p-checkbox>
+                </div>
                 <button type="button" 
                     icon="fa fa-file-excel-o" 
                     pButton (click)="printPdfMeeting()" 
@@ -242,7 +244,7 @@
         </p-table>
     </p-tabPanel>
     
-    <p-tabPanel header="Teams">   
+    <p-tabPanel header="Teams({{selectedTourney.teams.length}})">   
         <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
     </p-tabPanel>
 </p-tabView>        

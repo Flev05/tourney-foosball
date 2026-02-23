@@ -496,4 +496,18 @@ export class MeetingRoundService extends MeetingService {
         m.id = mdb.id;
         e.id = mdb.eliminatoryId;
     }
+
+    public getOnewayMeetingsOfDay(md: number) : Meeting[] {
+        let onewayMeetingDaysMap = this.onewayMeetingDaysMap;
+        let onewayMeetings = onewayMeetingDaysMap.get(md);
+        onewayMeetings.sort((m1, m2) => this.sortMeeting(m1, m2));
+        return onewayMeetings;
+    }
+
+    public getRoundtripMeetingsOfDay(md: number) : Meeting[]{
+        let roundtripMeetingDaysMap = this.roundtripMeetingDaysMap;
+        let roundtripMeetings = roundtripMeetingDaysMap.get(md);
+        roundtripMeetings.sort((m1, m2) => this.sortMeeting(m1, m2));
+        return roundtripMeetings;
+    }
 }

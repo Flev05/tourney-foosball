@@ -270,36 +270,30 @@ export class MeetingService extends AbstractService {
      * Converts the date and time and complete the round trip meetings copying from 
      * its corresponding oneway meeting list
      */
-    public prepareMeetingsMap(round : Round, isAdmin: boolean ): void {
+    public prepareMeetingsMap(round : Round): void {
         this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
         this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
 
         for( let m of round.onewayMeetings ) {
-
             // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
             m.containerId = round.id;
-
             let key = m.day;
             if(!this.onewayMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
                 this.onewayMeetingDaysMap.set(key, emptyList);
             }
-
             let meetingList: Meeting[] = this.onewayMeetingDaysMap.get(key);
             meetingList.push(m);
         }
 
         for( let m of round.roundtripMeetings ) {
-
             // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
             m.containerId = round.id;
-
             let key = m.day;
             if(!this.roundtripMeetingDaysMap.has(key)) {
                 let emptyList: Meeting[] = [];
                 this.roundtripMeetingDaysMap.set(key, emptyList);
             }
-
             let meetingList: Meeting[] = this.roundtripMeetingDaysMap.get(key);
             meetingList.push(m);
         }

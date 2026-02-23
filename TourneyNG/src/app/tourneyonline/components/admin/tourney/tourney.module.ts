@@ -35,11 +35,12 @@ import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-
 import { RoundModule } from 'app/tourneyonline/components/admin/round/round.module';
 import { PlayoffModule } from 'app/tourneyonline/components/admin/playoff/playoff.module';
 import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
-import { PlayerModule } from 'app/tourneyonline/components/admin/player/player.module';
+import { PlayerModule } from 'app/tourneyonline/components/admin/player/core/player.module';
 import { PlayerPickList } from './player-picklist';
 import { TeamModule } from 'app/tourneyonline/components/admin/team/team.module';
 import { NewTourneyDetailView } from './new-tourney-detailview';
 import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/team-table.module';
+import { PlayerChooserModule } from '../player/player-chooser/player-chooser.module';
 
 @NgModule({
 	imports: [
@@ -76,6 +77,7 @@ import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/t
         ,PlayerModule
         ,TeamModule
         ,TeamTableModule
+        ,PlayerChooserModule
 	],
 	declarations: [
         TourneyListView

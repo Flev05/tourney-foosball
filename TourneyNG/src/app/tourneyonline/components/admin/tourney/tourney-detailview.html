@@ -718,7 +718,7 @@
     </div>
     </p-tabPanel>
 
-    <p-tabPanel header="Squadre">
+    <p-tabPanel header="Squadre({{selectedTourney.teams.length}})">
         <p-accordion>
             <p-accordionTab header="Istruzioni">     
                 <p>
@@ -776,9 +776,40 @@
                 text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
             </p-message>
         </div>    
+
+        <div class="ui-grid-col-3" tooltipPosition="right">
+            <div class="ui-g radiobuttons">
+                <div class="ui-g-12">
+                    <p-radioButton name="isTeamsOrderedGroupname" 
+                        label="Ordinamento Casuale" 
+                        pTooltip="Indicare se le squadre sono scelte in ordine casuale"
+                        value="true" 
+                        [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                    </p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton name="isTeamsOrderedGroupname" 
+                        label="Teste di serie" 
+                        pTooltip="Indicare se le squadre sono scelte ordinate come teste di serie"
+                        value="false" 
+                        [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                    </p-radioButton>
+                </div>
+                <div class="ui-g-12">
+                    <p-checkbox name="chaosGroupname" 
+                        pTooltip="Apporre il segno di spunta se i giocatori sono scelti a BARAONDA"
+                        label="Baraonda"     
+                        [binary]="true"
+                        [(ngModel)]="selectedTourney.chaosEnabled" >
+                    </p-checkbox>
+                </div>
+            </div>
+        </div>        
         
         <div *ngIf="teamTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            
+
+            <app-player-chooser *ngIf="selectedTourney.chaosEnabled"></app-player-chooser>
+
             <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
 
             <button *ngIf="!isInWizardMode()" pButton type="button"

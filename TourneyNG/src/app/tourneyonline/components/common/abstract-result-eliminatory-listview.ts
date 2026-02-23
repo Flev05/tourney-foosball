@@ -138,7 +138,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         } else {
             fullRounds = this.selectedTourney.roundVO.rounds;
         }
-        let rounds: Array<Round> = this.copyRounds(fullRounds, topLevelTeamNo, isPlayoff);
+        let rounds: Array<Round> = [...fullRounds];
 
         this.meetingService.qualifyingRounds =  rounds;
  
@@ -159,13 +159,13 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             let currentRound : Round = rounds[currentIndex];
             let nextRound : Round = rounds[nextIndex];
             
-            if(firstLastMatrix [currentIndex][0] >  firstLastMatrix [currentIndex][1] )  {
+            if(firstLastMatrix[currentIndex][0] >  firstLastMatrix[currentIndex][1] )  {
                 currentIndex = (currentIndex + 1) % R;
                 nextIndex = (nextIndex + 1) % R;
             }
 
-            let c1 : Classification = currentRound.classification[ firstLastMatrix [currentIndex][0]++ ];
-            let c2 : Classification = nextRound.classification[ firstLastMatrix [nextIndex][1]-- ];
+            let c1 : Classification = currentRound.classification[ firstLastMatrix[currentIndex][0]++ ];
+            let c2 : Classification = nextRound.classification[ firstLastMatrix[nextIndex][1]-- ];
 
             const t1 = c1.teamName;
             const t2 = c2.teamName;
@@ -186,33 +186,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             currentIndex = (currentIndex + 1) % R;
             nextIndex = (nextIndex + 1) % R;
         }
-    }
-
-    private copyRounds(fullRounds: Round[], topLevelTeamNo: number, isPlayoff : boolean): Round[] {
-        let rounds: Array<Round> = new Array<Round>();
-        const N : number = fullRounds.length;
-        const Q : number = Math.floor(topLevelTeamNo / N);
-        let R : number = topLevelTeamNo % N;
-        for( let fr of fullRounds ) {
-            let cl : Classification [] = [...fr.classification];
-            let nr : Round = this.tourneyService.cloneRound(fr);
-            nr.classification = [];
-            for( let i=0; i<Q; i++ ) {
-                let c : Classification = cl[i];
-                nr.classification.push(c);
-            }
-            rounds.push(nr);
-        }
-        if( !isPlayoff ) {
-            R = N;
-        }
-        for( let i=0; i<R; i++ ) {
-            let fr : Round = fullRounds[i];
-            let c : Classification = fr.classification[Q];
-            let r : Round = rounds[i];
-            r.classification.push(c);
-        }
-        return rounds;
     }
     
     /**

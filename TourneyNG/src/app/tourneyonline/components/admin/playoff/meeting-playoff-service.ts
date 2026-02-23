@@ -59,7 +59,7 @@ export class MeetingPlayoffService extends MeetingService {
             this.resolveManualMeetings(p, this.selectedTourney.roundVO.rounds);
         }
 
-        this.prepareMeetingsMap(p.round, false);
+        this.prepareMeetingsMap(p.round);
         complete();
     }
     

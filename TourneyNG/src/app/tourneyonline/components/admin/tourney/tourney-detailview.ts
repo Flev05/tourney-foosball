@@ -129,7 +129,9 @@ export class TourneyDetailView extends AbstractDetailView {
     resultTool : EResultTool;
 
     addTeamEnabled = false;
-    tourneyTeams = true;    
+    tourneyTeams = true;  
+    chaosEnabled: boolean = false;
+    isTeamsOrderedGroupname : boolean = false;
     
     private tabChangedIndex : number = 0;
 
@@ -156,14 +158,20 @@ export class TourneyDetailView extends AbstractDetailView {
             if( data == null ) {
                 return;
             }
-            let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
-            this.doOnRoundNumChange(cb);
-            if( data == ETeamOperation.INSERT ) {
-            }
-            if( data == ETeamOperation.UPDATE ) {
-            }
-            if( data == ETeamOperation.DELETE ) {
-            }
+            
+            // let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+            // this.doOnRoundNumChange(cb);
+            // this.resetComboBoxes();
+            // if( data == ETeamOperation.INSERT ) {
+            //     this.teamsChanged = true;
+            // }
+            // if( data == ETeamOperation.UPDATE ) {
+            //     this.teamsChanged = true;
+            // }
+            // if( data == ETeamOperation.DELETE ) {
+            //     this.teamsChanged = true;
+            // }
+            // this.ngOnInit();
         });
     }
 
@@ -172,7 +180,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.blockDocument();
 
         super.ngOnInit();
-
+        this.teamService.tourneyTeams = true;
         this.countries = this.countryService.countries;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
 
@@ -181,6 +189,7 @@ export class TourneyDetailView extends AbstractDetailView {
         } else {
             this.loadOperators();
         }
+        this.chaosEnabled = this.selectedTourney.chaosEnabled;
 
         this.maxBoundaryTabIndex = this.getLastTabIndex();
 
@@ -220,6 +229,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.access = AccessMode.PU;
         this.selectedTourney.objectives = [];
         this.selectedTourney.resultTool = EResultTool.C
+        this.selectedTourney.chaosEnabled = false;
 
         this.initDefaultRoundVO();
         this.initDefaultPlayoffVO();
@@ -705,6 +715,11 @@ export class TourneyDetailView extends AbstractDetailView {
         let index=e.index;
         this.tourneyService.selectedTabIndex = index; 
         this.enableTabsFlags();
+        if( this.tourneyService.selectedTourney.teamsChanged ) {
+            let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+            this.doOnRoundNumChange(cb);
+            this.tourneyService.selectedTourney.teamsChanged = false;
+        }
     }
 
     addTeams() {

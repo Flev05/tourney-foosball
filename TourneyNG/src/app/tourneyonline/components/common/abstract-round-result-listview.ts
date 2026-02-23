@@ -94,7 +94,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     private onCompleteLoad(maxMatchesPerMeeting:number): void {
         this.mdbList = this.meetingRoundService.mdbList;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
-        this.meetingRoundService.prepareMeetingsMap(this.selectedRound, false);
+        this.meetingRoundService.prepareMeetingsMap(this.selectedRound);
 
         this.pageSize = this.selectedRound.pageSize;
         this.roundDaysNo = this.selectedRound.daysNo;

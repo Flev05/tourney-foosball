@@ -9,8 +9,9 @@ const REDIRECT_TOURNEY_LV   = 'admintourney/';
     templateUrl: './team-listview.html'
 })
 export class TeamListView extends AbstractListView {
-    addTeamEnabled = true;
+    addTeamEnabled = false;
     tourneyTeams = false;
+
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router

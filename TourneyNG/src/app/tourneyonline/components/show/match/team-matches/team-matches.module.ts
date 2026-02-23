@@ -29,4 +29,4 @@ import { CommonModule } from '@angular/common';
   ] 
   , exports: [TeamMatchesComponent]
 })
-export class TeamTableModule { }
+export class TeamMatchesModule { }

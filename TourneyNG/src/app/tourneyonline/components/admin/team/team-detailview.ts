@@ -10,6 +10,7 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -20,7 +21,7 @@ export class TeamDetailView extends AbstractDetailView {
     public static CHECK_ALREADY_EXIST_TEAM: string = 'ATTENZIONE! Esiste già una squadra con tale nome.' 
         + ' Usare un altro nome per una nuova squadra.' 
         + ' Se si conferma, non viene creata una nuova squadra ma vengono aggiornati gli altri dati.';
-
+    
     selectedTeam: Team;
     previousTeamName: string;
     selectedRound: Round;
@@ -33,8 +34,7 @@ export class TeamDetailView extends AbstractDetailView {
     teams: Team[];
     playerLv: boolean = true;
     addPlayerEnabled : boolean = false;
-    
-    currentTeam: any;
+    tourneyTeams: boolean | undefined;
 
     constructor(
         protected location: Location,
@@ -42,7 +42,8 @@ export class TeamDetailView extends AbstractDetailView {
         protected clientService: ClientService,
         protected countryService: CountryService,
         public teamService: TeamService,
-        public meetingRoundService: MeetingRoundService
+        public meetingRoundService: MeetingRoundService,
+        private route: ActivatedRoute
     ) { 
         super(tourneyService, location);
     }
@@ -53,7 +54,12 @@ export class TeamDetailView extends AbstractDetailView {
         this.countries = this.countryService.countries;
         this.selectedTeam = this.teamService.selectedTeam;
         this.isRoundAutoGen = this.teamService.isRoundAutoGen;
-        
+
+        this.route.queryParams.subscribe(params => {
+            // Note: Query params are strings, so we convert back to boolean
+            this.tourneyTeams = params['tourneyTeams'] === 'true';
+        });
+
         this.selectedRound = null;
         if(this.teamService.newTeam) {
             this.prepareNewTeam();
@@ -104,6 +110,43 @@ export class TeamDetailView extends AbstractDetailView {
     }
 
     saveTeam() {
+        if( !this.tourneyTeams ) {
+            this.teamService.saveTeam(this.selectedTeam
+                , this.autoCompleteTeamName
+                , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
+                , () => this.goBack()); 
+            return;
+        }
+        // 1. Verify if the teamName alreay exists in team pool
+        const poolIndex = this.teamService.teamPool.findIndex(t => t.teamName === this.autoCompleteTeamName);
+        if (poolIndex !== -1) { 
+            // The team already exists in the team pool
+            if(this.teamService.newTeam) {
+                // Simply take the team from the pool team and add it to the teams tourney
+                const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === this.autoCompleteTeamName);
+                if (ttIndex !== -1) {
+                    this.tourneyService.selectedTourney.teams[ttIndex] = this.teamService.teamPool[poolIndex];
+                } else {
+                    this.tourneyService.selectedTourney.teams.push(this.teamService.teamPool[poolIndex]);
+                }
+            } else {
+                // Simply take the team from the pool team and update the one in the teams tourney
+                if( this.previousTeamName != this.autoCompleteTeamName ) {
+                    const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === this.previousTeamName);
+                    if (ttIndex !== -1) {
+                        this.tourneyService.selectedTourney.teams[ttIndex] = this.teamService.teamPool[poolIndex];
+                    }
+                }                
+            }
+            this.teams = this.tourneyService.selectedTourney.teams;
+            // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+            this.tourneyService.selectedTourney.teamsChanged = true;
+            super.goBack();
+            return;
+        } 
+
+        // Add the new team also to the team pool...
+        this.selectedTeam.id = null;
         this.teamService.saveTeam(this.selectedTeam
             , this.autoCompleteTeamName
             , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
@@ -111,17 +154,23 @@ export class TeamDetailView extends AbstractDetailView {
     }
 
     goBack(): void {
+        if( !this.tourneyTeams ) {
+            super.goBack();
+            return;
+        }
         if(this.teamService.newTeam) {
             if( this.selectedTeam.teamName.trim() != "") {
                 let foundTeam = this.tourneyService.selectedTourney.teams.find( t => t.teamName.toUpperCase() == this.selectedTeam.teamName.toUpperCase() );
                 if( foundTeam == undefined) {
                     this.tourneyService.selectedTourney.teams.push(this.teamService.selectedTeam);
-                    this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+                    // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+                    this.tourneyService.selectedTourney.teamsChanged = true;
                 }
             }
         } else {
             if( this.selectedTeam.teamName != this.autoCompleteTeamName ) {
-                this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+                // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
+                this.tourneyService.selectedTourney.teamsChanged = true;
             }
         }
         this.selectedTeam.teamName = this.autoCompleteTeamName;

@@ -1,0 +1,27 @@
+.leftTeamName {
+    text-align: right; 
+    font-size: 90%;
+    font-weight: bold;
+}
+.leftTeamNameGreen {
+    text-align: right; 
+    font-size: 90%;
+    font-weight: bold;
+    color: green;
+}
+.rightTeamName {
+    text-align: left; 
+    font-size: 90%;
+    font-weight: bold;
+}
+.rightTeamNameGreen {
+    text-align: left; 
+    font-size: 90%;
+    font-weight: bold;
+    color: green;
+}
+.centralPoints {
+    width: 25mm;
+    text-align: center; 
+    font-size: 90%;
+}

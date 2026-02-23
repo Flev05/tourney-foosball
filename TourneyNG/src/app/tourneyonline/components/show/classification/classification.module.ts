@@ -23,7 +23,8 @@ import { ClassificationTourneyListView } from './tourney-listview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { ClassificationEliminatoryListView } from './eliminatory-listview';
 import { ClassificationDetailView } from './classification-detailview';
-import { PlayerTableModule } from '../../admin/player-table/player-table.module';
+import { PlayerTableModule } from '../../admin/player/player-table/player-table.module';
+import { TeamMatchesModule } from '../match/team-matches/team-matches.module';
 
 @NgModule({
         imports: [
@@ -47,6 +48,7 @@ import { PlayerTableModule } from '../../admin/player-table/player-table.module'
         ,MessagesModule
         ,MessageModule
         ,PlayerTableModule
+        ,TeamMatchesModule
 	],
 	declarations: [
                 ClassificationTourneyListView

@@ -88,7 +88,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     private onPlayoffCompleteLoad() {
         this.mdbList = this.meetingPlayoffService.mdbList;
 
-        this.meetingPlayoffService.prepareMeetingsMap(this.selectedPlayoff.round, false);
+        this.meetingPlayoffService.prepareMeetingsMap(this.selectedPlayoff.round);
 
         this.roundDaysNo = this.selectedPlayoff.round.daysNo;
         this.pageSize  = this.selectedPlayoff.round.pageSize;

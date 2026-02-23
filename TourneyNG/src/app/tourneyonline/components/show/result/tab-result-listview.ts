@@ -17,7 +17,6 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 import { MeetingDto } from '../../admin/round/meeting-dto';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 
@@ -241,19 +240,7 @@ export class TabResultListView extends AbstractTabResultListView {
         console.log("Entering regenerateB()");
     }
 
-    private getOnewayMeetingsOfDay(md: number) : Meeting[] {
-        let onewayMeetingDaysMap = this.meetingRoundService.onewayMeetingDaysMap;
-        let onewayMeetings = onewayMeetingDaysMap.get(md);
-        onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
-        return onewayMeetings;
-    }
 
-    private getRoundtripMeetingsOfDay(md: number) : Meeting[]{
-        let roundtripMeetingDaysMap = this.meetingRoundService.roundtripMeetingDaysMap;
-        let roundtripMeetings = roundtripMeetingDaysMap.get(md);
-        roundtripMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
-        return roundtripMeetings;
-    }
 
     public printPdfMeeting() {
         const doc = new jsPDF();
@@ -266,11 +253,11 @@ export class TabResultListView extends AbstractTabResultListView {
             }
             isFirstRound = false;
             // 2. Prepare the data just for THIS specific round
-            this.meetingRoundService.prepareMeetingsMap(r, false);
+            this.meetingRoundService.prepareMeetingsMap(r);
             let meetings: MeetingDto[] = [];
             // (Populate roundMeetings instead of a global meetings array)  
             for( let md = 1; md <= r.daysNo; md ++ ) {
-                let ms = this.getOnewayMeetingsOfDay(md);
+                let ms = this.meetingRoundService.getOnewayMeetingsOfDay(md);
                 let newDate = new Date(ms[0].datetime);
                 let range = this.dfp.transform(newDate);
                 let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
@@ -295,10 +282,10 @@ export class TabResultListView extends AbstractTabResultListView {
                 }
                 isFirstRound = false;
                 // 2. Prepare the data just for THIS specific round
-                this.meetingRoundService.prepareMeetingsMap(r, false);
+                this.meetingRoundService.prepareMeetingsMap(r);
                 let meetings: MeetingDto[] = [];
                 for( let md = 1; md <= r.daysNo; md ++ ) {
-                    let ms = this.getRoundtripMeetingsOfDay(md);
+                    let ms = this.meetingRoundService.getRoundtripMeetingsOfDay(md);
                     let newDate = new Date(ms[0].datetime);
                     let range = this.dfp.transform(newDate);
                     let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
@@ -547,10 +534,10 @@ export class TabResultListView extends AbstractTabResultListView {
             const r : Round = e.round;
             
             // 1. Prepare the data for this specific round
-            this.meetingRoundService.prepareMeetingsMap(r, false);
+            this.meetingRoundService.prepareMeetingsMap(r);
             let meetings: any[] = [];
             for (let md = 1; md <= r.daysNo; md++) {
-                let ms = this.getOnewayMeetingsOfDay(md);
+                let ms = this.meetingRoundService.getOnewayMeetingsOfDay(md);
                 if (ms && ms.length > 0) {
                     let newDate = new Date(ms[0].datetime);
                     let range = this.dfp.transform(newDate);

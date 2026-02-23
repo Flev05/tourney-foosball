@@ -4,6 +4,8 @@ import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { MeetingRoundService } from '../../admin/round/meeting-round-service';
+import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
     templateUrl: './classification-detailview.html',
@@ -12,13 +14,17 @@ export class ClassificationDetailView extends AbstractDetailView {
     public static redirect : string = "/classification/dv";
     selectedClassificationRow:  Classification;
     selectedClassificationName: string;
+
     playerLv: boolean = true;
     addPlayerEnabled : boolean = false;
+    teamName: string = "";
 
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
         protected teamService: TeamService,
+        protected meetingRoundService: MeetingRoundService,
+        protected dfp: DateFormatPipe
     ) { 
         super(tourneyService, location);
     }
@@ -32,6 +38,9 @@ export class ClassificationDetailView extends AbstractDetailView {
             this.teamService.selectedTeam = this.tourneyService.selectedTourney.teams[index];
         }
         this.selectedClassificationName = this.tourneyService.getClassificationName();
+
+        this.teamName = this.selectedClassificationRow.teamName;
+
         super.ngOnInit();
     }
 }

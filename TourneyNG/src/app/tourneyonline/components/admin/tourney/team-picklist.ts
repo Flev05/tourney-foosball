@@ -80,7 +80,7 @@ export class TeamPickList extends AbstractListView {
     onTargetReorder(event) {
         console.log("Entering onTargetReorder()");
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged=true;
+        // this.teamService.isTeamsChanged=true;
         this.resetAll();
         
         let teams = [...this.selectedTourney.teams];
@@ -106,14 +106,14 @@ export class TeamPickList extends AbstractListView {
     onMoveToTarget(event) {
         console.log("Entering onMoveToTarget()");
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged=true;
+        // this.teamService.isTeamsChanged=true;
         this.resetAll();
     }
 
     onMoveToSource(event) {
         console.log("Entering onMoveToSource()" );
         this.returnLabel = "Salva e torna";
-        this.teamService.isTeamsChanged=true;
+        // this.teamService.isTeamsChanged=true;
         this.resetAll();
 
         let missingTeams : Team[] = [];
@@ -123,7 +123,7 @@ export class TeamPickList extends AbstractListView {
                 let tt =  this.selectedTourney.teams.find(x => x.teamName == at);
                 missingTeams.push(tt);
                 this.teamService.addMissingTeam( tt );
-                this.teamService.isTeamsChanged = true;
+                // this.teamService.isTeamsChanged = true;
             }
         }
     }
@@ -221,9 +221,9 @@ export class TeamPickList extends AbstractListView {
     }
 
     private alignTourneyTeams() {
-        if(!this.teamService.isTeamsChanged) {
-            return;
-        }
+        // if(!this.teamService.isTeamsChanged) {
+        //     return;
+        // }
 
         for (let tn of this.targetTeams) {
             let index = this.selectedTourney.teams.findIndex(e => e.teamName === tn);

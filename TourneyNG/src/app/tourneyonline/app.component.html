@@ -1,30 +1,23 @@
 <div class="layout-wrapper">
-    
     <div id="layout-topbar">
         <a href="#" class="menu-button" (click)="onMenuButtonClick($event)">
             <i class="fa fa-bars"></i>
         </a>
-
         <a href="#" class="logo" [routerLink]="['/']">
-            <!-- <img alt="logo" src="assets/showcase/images/omino.jpg" />
-            <img alt="logo" src="assets/showcase/images/volley.jpg" />
-            <img alt="logo" src="assets/showcase/images/basket.jpg" /> -->
             <img alt="logo" src="assets/showcase/images/logoTorneiNG.png" />
         </a>
-
         <ul class="topbar-menu">
             <li>
                 <a href="#" [routerLink]="['/']">Home</a>
             </li>
-            <!-- <li>
-                <a href="#" [routerLink]="['/login']">Login</a>
-            </li> -->
         </ul>
     </div>
-     
+    <div class="layout-mask" 
+         *ngIf="menuActive" 
+         (click)="menuActive = false">
+    </div>    
     <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
         <p *ngIf="loginService.isUserLogged">Utente [{{loginService.userLogged.username}}]</p>
-
         <div *ngIf="clientsCBEnabled()" class="ui-grid-row">
             <div class="ui-grid-col-3">
                 Cliente:
@@ -37,7 +30,6 @@
                 </p-dropdown>
             </div>
         </div>           
-
         <div *ngIf="!loginService.isUserLogged" class="layout-menu">
            <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
                     (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
@@ -50,7 +42,6 @@
                 <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
-
         <div *ngIf="loginService.isSuperUser()" class="layout-menu">
             <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
@@ -66,7 +57,6 @@
                 <a *ngIf="loginService.isAtLeastAdmin()" [routerLink]="['/users/resetPasswordLv']"  (click)="menuActive = false">&#9679; Reset Password</a>
             </div>
         </div>
-    
         <div *ngIf="loginService.isUserAllowed()" class="layout-menu" >
             <a id="manager-id" #managermenutitle [class.active-menuitem]="managermenutitle.id == activeMenuId"
                     (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
@@ -81,7 +71,6 @@
                 <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
-   
         <div class="layout-menu">
             <a id="tourney-id" #tourneymenutitle [class.active-menuitem]="tourneymenutitle.id == activeMenuId" 
                     (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
@@ -94,7 +83,6 @@
                 <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']"  (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
-   
         <div *ngIf="!loginService.isUserLogged" class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
@@ -106,7 +94,6 @@
                 <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
             </div>
         </div>
-
         <div *ngIf="loginService.isUserLogged" class="layout-menu">
             <a id="login-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
                 <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
@@ -119,7 +106,6 @@
             </div>
         </div>
     </div>
-
     <div id="layout-content">
         <div>
             <router-outlet></router-outlet>
@@ -135,7 +121,6 @@
                     </a>
                 </div>
             </div>
-            
             <div class="footer-links">
                 <a href="https://www.facebook.com/CalcioBalillaPregnana/"><i class="fa fa-facebook"></i></a>
             </div>

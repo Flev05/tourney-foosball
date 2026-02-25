@@ -779,30 +779,32 @@
 
         <div class="ui-grid-col-3" tooltipPosition="right">
             <div class="ui-g radiobuttons">
-                <div class="ui-g-12">
-                    <p-radioButton name="isTeamsOrderedGroupname" 
-                        label="Ordinamento Casuale" 
-                        pTooltip="Indicare se le squadre sono scelte in ordine casuale"
-                        value="true" 
-                        [(ngModel)]="selectedTourney.teamsWeightEnabled">
-                    </p-radioButton>
-                </div>
-                <div class="ui-g-12">
-                    <p-radioButton name="isTeamsOrderedGroupname" 
-                        label="Teste di serie" 
-                        pTooltip="Indicare se le squadre sono scelte ordinate come teste di serie"
-                        value="false" 
-                        [(ngModel)]="selectedTourney.teamsWeightEnabled">
-                    </p-radioButton>
-                </div>
-                <div class="ui-g-12">
-                    <p-checkbox name="chaosGroupname" 
-                        pTooltip="Apporre il segno di spunta se i giocatori sono scelti a BARAONDA"
-                        label="Baraonda"     
-                        [binary]="true"
-                        [(ngModel)]="selectedTourney.chaosEnabled" >
-                    </p-checkbox>
-                </div>
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Random" 
+                    pTooltip="Indicare se le squadre sono scelte in ordine casuale"
+                    value="random" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Teste di serie" 
+                    pTooltip="Indicare se le squadre sono scelte ordinate come teste di serie"
+                    value="topseed" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Gruppi" 
+                    pTooltip="Indicare se le squadre sono Random ma ragguppate per appartenenza tipo per ASD o società"
+                    value="group" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+            </div>
+            <div class="ui-g-12">
+                <p-checkbox name="chaosGroupname" 
+                    pTooltip="Apporre il segno di spunta se i giocatori sono scelti a BARAONDA"
+                    label="Baraonda"     
+                    [binary]="true"
+                    [(ngModel)]="selectedTourney.chaosEnabled" >
+                </p-checkbox>
             </div>
         </div>        
         

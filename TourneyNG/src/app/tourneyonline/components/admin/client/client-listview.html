@@ -45,6 +45,10 @@
     <p-message severity="error" text="Cancellazione fallita, oggetto ancora in uso"></p-message>
 </div>    
                         
+<div *ngIf="isUserDeveloper" style="text-align:left">
+    <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Cliente"></button>
+</div>
+ 
 <p-table [columns]="cols" 
     [responsive]="true"
     [value]="clients" 

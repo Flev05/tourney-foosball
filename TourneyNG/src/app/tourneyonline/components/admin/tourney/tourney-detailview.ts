@@ -245,7 +245,7 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.isOnewayRound = "true";
         this.selectedTourney.isOnewayPlayoff = "true";
         this.selectedTourney.isOnewayPlayout = "true";
-        this.selectedTourney.teamsWeightEnabled = "false";
+        this.selectedTourney.teamsWeightEnabled = "random";
                 
         this.selectedTourney.discipline = {id:0, name: "", description: ""};
 
@@ -914,8 +914,8 @@ export class TourneyDetailView extends AbstractDetailView {
     onRoundTeamsChangeNoConfirm(cb: Combobox) {
         let R: number = this.selectedTourney.selectedRoundsNumCB.value;
         let T: number = this.selectedTourney.teams.length;
-        let randomTeams = [];
-        randomTeams = this.prepareTourneyTeams(T);
+        
+        let randomTeams = this.prepareTourneyTeams(T, R);
 
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
@@ -959,7 +959,9 @@ export class TourneyDetailView extends AbstractDetailView {
         } 
         this.onRoundTeamsChangeNoConfirm(cb);
     }
+
     
+
     onRoundAutoGenClick( ) {
         console.log("Entering onRoundAutoGenClick()");
         let autoGen = this.selectedTourney.roundVO.isRoundAutoGen;
@@ -995,12 +997,25 @@ export class TourneyDetailView extends AbstractDetailView {
             let r: Round = this.prepareEmptyRound(i);
             this.selectedTourney.roundVO.rounds.push(r);
         }
-
-        for( let i=0; i<randomTeams.length; i++ ) {            
-            let rt = randomTeams[i];
-            let rno = i % roundCount;
-            let round = this.selectedTourney.roundVO.rounds[rno];
-            round.teamNames.push(rt);
+                
+        if( this.selectedTourney.teamsWeightEnabled == "group" && roundCount > 0 ) {
+            let teams: Team[] = this.selectedTourney.teams;
+            const matrix : Team[][] = this.distributeTeams(teams, roundCount);
+            for( let r=0; r<matrix.length; r++ ) {
+                let row: Team[] = matrix[r];
+                for( let c=0; c<row.length; c++ ) {
+                    const t : Team = matrix[r][c];
+                    let round = this.selectedTourney.roundVO.rounds[r];
+                    round.teamNames.push(t.teamName);
+                }
+            }
+        } else {
+            for( let i=0; i<randomTeams.length; i++ ) {            
+                let rt = randomTeams[i];
+                let rno = i % roundCount;
+                let round = this.selectedTourney.roundVO.rounds[rno];
+                round.teamNames.push(rt);
+            }
         }
 
         for (let r of this.selectedTourney.roundVO.rounds) {
@@ -1016,30 +1031,62 @@ export class TourneyDetailView extends AbstractDetailView {
      * a new random list of the original list of teams.
      * 
      * @param T the number of teams to prepare
+     * @param R the number of rounds to prepare
      * @returns the list of team list
      */
-    private prepareTourneyTeams(T : number) : string[]  {
+    private prepareTourneyTeams(T : number, R : number) : string[]  {
         let randomTeams: string[] = [];
-        
-        if( this.selectedTourney.teamsWeightEnabled == "false" ) {
+        if( this.selectedTourney.teamsWeightEnabled == "topseed" ) {
             return this.selectedTourney.teams.map(x=>x.teamName);         
         } 
-
-        for(let t=0; t<T; t++) {
-            let team: Team = this.selectedTourney.teams[t];
-            randomTeams.push(team.teamName);
-        }
-        randomTeams.sort((t1, t2) =>{
-            let rand = Math.random();
-            if(rand < 0.5) {
-                return 1;
+        if( this.selectedTourney.teamsWeightEnabled == "random" ) {
+            for(let t=0; t<T; t++) {
+                let team: Team = this.selectedTourney.teams[t];
+                randomTeams.push(team.teamName);
             }
-            return -1;
-        });
+            randomTeams.sort((t1, t2) =>{
+                let rand = Math.random();
+                if(rand < 0.5) {
+                    return 1;
+                }
+                return -1;
+            });
+            return randomTeams;
+        } 
 
-        return randomTeams;
+        return this.selectedTourney.teams.map(x=>x.teamName);         
     }
  
+    private distributeTeams(teams: Team[], n: number): Team[][] {
+        // 1. Initialize N empty groups
+        const groups: Team[][] = Array.from({ length: n }, () => []);
+
+        // 2. Group teams by the 'asd' property
+        const groupedByAsd: Record<string, Team[]> = {};
+        teams.forEach(team => {
+            const key = team.asd || 'undefined';
+            if (!groupedByAsd[key]) {
+                groupedByAsd[key] = [];
+            } 
+            groupedByAsd[key].push(team);
+        });
+
+        // 3. Shuffle each 'asd' group and flatten into a "dealt" list
+        // This ensures that same 'asd' values are spread out
+        let roundRobinIndex = 0;        
+        for (const key in groupedByAsd) {
+            const currentAsdGroup = groupedByAsd[key];           
+            // Randomize the order within this specific ASD category
+            const shuffled = currentAsdGroup.sort(() => Math.random() - 0.5);
+            // 4. Distribute into buckets round-robin
+            shuffled.forEach(team => {
+                groups[roundRobinIndex].push(team);
+                roundRobinIndex = (roundRobinIndex + 1) % n;
+            });
+        }
+        return groups;
+    }
+    
     private prepareEmptyRound(i: number): Round {
         let r: Round = {
             id: this.tourneyService.getSequenceNumber(),

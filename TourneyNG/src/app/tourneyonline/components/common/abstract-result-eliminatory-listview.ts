@@ -146,7 +146,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         const R : number = rounds.length;
 
         let currentIndex : number = 0;
-        let nextIndex    : number = 1;
+        let nextIndex    : number = R == 1 ? 0 : 1; // If we have only 1 round, the indexes are the same
         if( isPlayoff )  { // we have 2 playoffs
             const playoffTeams : number = playoffNo * 2;
             elimNo = playoffTeams; // = 2
@@ -204,11 +204,12 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         const n : number = teamsNo; // like 24 = (28 - 16 = 12) * 2 on 5 rounds and 28 teams
         const q : number = Math.floor(n / R); // like q=4 in 24 = pq + r = 5*4 + 4
         const r : number = n % R;
+        let fi = 0;
+        let li : number = q;
         
         for( let i=0; i<R; i++ ) {
-            const li : number = rounds[i].classification.length;
-            let fi = 0;
             if( isPlayoff ) {
+                li = rounds[i].classification.length;
                 fi = li - q;
             }
             let row : number[] = [];

@@ -8,20 +8,18 @@
         <tr>
             <th style="width: 15mm;">N°</th>
             <th>Torneo</th>
-            <th>Calendar</th>
+            <th>Location</th>
         </tr>        
     </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" let-rowData>
         <tr [pSelectableRow]="rowData">
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td>
                 {{rowData['tourneyName']}}
             </td>
             <td>
-                <a href="{{rowData['calendar']}}" pButton target="_blank">
-                    <span pButtonLabel>PDF</span>
-                </a>
+                {{rowData['location']}}
             </td>
         </tr>
     </ng-template>

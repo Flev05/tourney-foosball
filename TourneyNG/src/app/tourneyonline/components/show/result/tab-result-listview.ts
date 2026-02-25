@@ -240,117 +240,8 @@ export class TabResultListView extends AbstractTabResultListView {
         console.log("Entering regenerateB()");
     }
 
-
-
     public printPdfMeeting() {
-        const doc = new jsPDF();
-        let isFirstRound = true;
-
-        for (let r of this.selectedTourney.roundVO.rounds) {
-            // 1. If it's not the first round, add a new page
-            if (!isFirstRound) {
-                doc.addPage();
-            }
-            isFirstRound = false;
-            // 2. Prepare the data just for THIS specific round
-            this.meetingRoundService.prepareMeetingsMap(r);
-            let meetings: MeetingDto[] = [];
-            // (Populate roundMeetings instead of a global meetings array)  
-            for( let md = 1; md <= r.daysNo; md ++ ) {
-                let ms = this.meetingRoundService.getOnewayMeetingsOfDay(md);
-                let newDate = new Date(ms[0].datetime);
-                let range = this.dfp.transform(newDate);
-                let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
-                meetings.push(dto);
-                for( let m of ms ) {
-                    if( m.points1 >= 0 ) {
-                        let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                        meetings.push(dto);
-                        dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
-                        meetings.push(dto);
-                    }
-                }
-            } 
-            this.printMeetingsByDirection(doc, r, meetings);
-        }
-
-        if (this.selectedTourney.isOnewayRound != "true") {
-            for (let r of this.selectedTourney.roundVO.rounds) {
-                // 1. If it's not the first round, add a new page
-                if (!isFirstRound) {
-                    doc.addPage();
-                }
-                isFirstRound = false;
-                // 2. Prepare the data just for THIS specific round
-                this.meetingRoundService.prepareMeetingsMap(r);
-                let meetings: MeetingDto[] = [];
-                for( let md = 1; md <= r.daysNo; md ++ ) {
-                    let ms = this.meetingRoundService.getRoundtripMeetingsOfDay(md);
-                    let newDate = new Date(ms[0].datetime);
-                    let range = this.dfp.transform(newDate);
-                    let dto: MeetingDto = {round: r.name,direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
-                    meetings.push(dto);
-                    for( let m of ms ) {
-                        if( m.points1 >= 0 ) {
-                            dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                            meetings.push(dto);
-                            dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
-                            meetings.push(dto);
-                        }
-                    }
-                } 
-                this.printMeetingsByDirection(doc, r, meetings);
-            }
-        }
-        doc.save(`Meetings-${this.selectedTourney.tourneyName}.pdf`);
-    }
-    
-    // 3. Add a Title for this specific Round page
-    private printMeetingsByDirection(doc: jsPDF, r: Round, meetings: any[]) {
-        doc.setFontSize(16);
-        doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, 15);
-        // 4. Draw the table starting slightly below the text
-        autoTable(doc, {
-            head: [["In Casa", "P1", "P2", "Fuori Casa"]],
-            body: this.formatRoundData(meetings),
-            startY: 20,
-            theme: 'striped',
-            columnStyles: {
-                0: { halign: 'right', cellWidth: 'auto' },
-                1: { halign: 'center', cellWidth: 15 },
-                2: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'left', cellWidth: 'auto' }
-            },
-            didParseCell: (data) => {
-                // Only apply this logic to the header row
-                if (data.section === 'head') {
-                    // 1. Shrink the height/area
-                    data.cell.styles.fontSize = 10;      // Smaller font (default is usually 10)
-                    data.cell.styles.cellPadding = 1;    // Minimum padding to tighten the area
-                    data.cell.styles.minCellHeight = 8;  // Explicitly force a smaller height                    
-                    if (data.column.index === 0) data.cell.styles.halign = 'right';
-                    if (data.column.index === 1) data.cell.styles.halign = 'center';
-                    if (data.column.index === 2) data.cell.styles.halign = 'center';
-                    if (data.column.index === 3) data.cell.styles.halign = 'left';
-                }
-            },
-            styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
-            didDrawCell: (data) => {
-                // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
-                if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
-                    // Only draw if the content is empty (which means points were 0)
-                    const boxSize = 10; // 10mm
-                    if (data.cell.text[0] === '') {0
-                        // Calculate center of the cell to place the box
-                        const posX = data.cell.x + (data.cell.width - boxSize) / 2;
-                        const posY = data.cell.y + (data.cell.height - boxSize) / 2;
-                        // Draw the rectangle (x, y, width, height, style)
-                        doc.setDrawColor(0); // Black border
-                        doc.rect(posX, posY, boxSize, boxSize, 'S');
-                    }
-                }
-            }
-        });
+        this.meetingRoundService.printPdfMeeting(this.selectedTourney)
     }
 
     public printPdfClassification() {
@@ -563,7 +454,7 @@ export class TabResultListView extends AbstractTabResultListView {
             // 4. Draw the table starting slightly below the text
             autoTable(doc, {
                 head: [["In Casa", "P1", "P2", "Fuori Casa"]],
-                body: this.formatRoundData(meetings),
+                body: this.meetingRoundService.formatRoundData(meetings),
                 startY: currentY + 5,
                 theme: 'striped',
                 columnStyles: {
@@ -603,52 +494,6 @@ export class TabResultListView extends AbstractTabResultListView {
             currentY = (doc as any).lastAutoTable.finalY + 15;
         }
         doc.save(`Eliminations-${this.selectedTourney.tourneyName}.pdf`);
-    }
-
-    private formatRoundData(meetings: MeetingDto[]): any[] {
-        return meetings.map((dto) => {
-            if (dto.separator) {
-                return [{
-                        content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
-                        colSpan: 4,
-                        styles: { 
-                            minCellHeight: 5,
-                            halign: 'center', 
-                            fillColor: [220, 220, 200, 220] as [number, number, number, number], // Cast as a Tuple
-                            fontStyle: 'bold' 
-                        }
-                    }
-                ];
-            }
-            if (dto.signLine) {
-                // 3. The "Line Row" (This creates the 10mm gap + the line)
-                const spacerRow = [{
-                    content: '', // Empty content
-                    colSpan: 4,
-                    styles: { 
-                        minCellHeight: 10,             // Your 10mm gap
-                        lineColor: [0, 0, 0],          // Black line (use lineColor for the border)
-                        lineWidth: { 
-                            bottom: 1.0,               // 1.0 is a strong bold line; try 1.5 for extra bold
-                            top: 0, 
-                            left: 0, 
-                            right: 0 
-                        }
-                    }
-                }];
-                return spacerRow;
-            }
-
-            // 2. The Meeting Row
-            const meetingRow = [
-                dto.meeting.teamName1,
-                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points1,
-                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points2,
-                dto.meeting.teamName2
-            ];
-
-            return meetingRow;
-        });
     }
 
     /**

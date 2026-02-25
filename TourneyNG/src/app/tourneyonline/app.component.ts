@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import {trigger,state,style,transition,animate} from '@angular/animations';
 import { Router } from '@angular/router';
 import { LoginService } from './service/login-service';
@@ -22,9 +22,7 @@ const redirectTourneyListView = "/login/tourneyLv";
           })),
           transition('visible => hidden', animate('400ms ease-in')),
           transition('hidden => visible', animate('400ms ease-out'))
-      ]),
-  
-      
+      ]),     
       trigger('notificationTopbar', [
         state('hidden', style({
           height: '0',
@@ -39,37 +37,45 @@ const redirectTourneyListView = "/login/tourneyLv";
       ])
   ],
 })
-export class AppComponent implements OnInit{
-    
-    menuActive: boolean;
-    
-    activeMenuId: string;
-    
-    notification: boolean = false;
 
+export class AppComponent implements OnInit{
+    menuActive: boolean;
+    activeMenuId: string;
+    notification: boolean = false
     clientOptions: Combobox[];
     selectedClientOption : Combobox;
-
     visibleSidebar1: boolean;
 
     constructor( public loginService: LoginService
           , protected roleService: RoleService
           , protected clientService: ClientService
           , private router: Router
+          , private el: ElementRef
     ) {}
+
+    @HostListener('document:click', ['$event'])
+        onDocumentClick(event: MouseEvent) {
+        // 1. If the menu is already closed, do nothing
+        if (!this.menuActive) return;
+        // 2. Check if the click was inside the sidebar or on the menu button
+        // We look for the sidebar and the bars icon specifically
+        const clickedInsideSidebar = this.el.nativeElement.querySelector('#layout-sidebar').contains(event.target);
+        const clickedMenuButton = this.el.nativeElement.querySelector('.menu-button').contains(event.target);
+        // 3. If the click was outside both, close the menu
+        if (!clickedInsideSidebar && !clickedMenuButton) {
+            this.menuActive = false;
+        }
+    }
 
     ngOnInit() {
         setTimeout(()=>this.notification = true , 1000);
-
         this.clientsCBEnabled();
     }
 
     clientsCBEnabled(): boolean {
-
         if(!this.loginService.isUserLogged || this.clientService.clientOptions == undefined) {
             return false;
         }
-
         this.clientOptions = this.clientService.clientOptions;
         let en = this.loginService.isUserLogged && this.clientOptions.length > 1 ? true : false;
         this.selectedClientOption = this.clientService.selectedClientOption;
@@ -111,4 +117,5 @@ export class AppComponent implements OnInit{
         let redirect = '/login';
         this.router.navigate([redirect]);
     }
-  }
+}
+

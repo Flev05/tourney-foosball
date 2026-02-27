@@ -1,0 +1,68 @@
+<div class="team-results-container">
+    <p-table [value]="homeMeetings" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr>
+                <th></th>
+                <th style="text-align: center; font-weight: bold; color: blue;">Andata</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dto>
+            <tr>
+                <td [ngClass]="{'leftTeamNameGreen': dto.meeting.teamName1 === teamName, 'leftTeamName' : dto.meeting.teamName1 !== teamName}">
+                    {{dto.meeting.teamName1}} 
+                </td>
+                <td class="centralPoints">
+                    <div>
+                        <span>{{dto.meeting.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
+                    </div>
+                    
+                    <div style="text-align: center; font-weight: bold;">
+                            {{dto.meeting.vpoints1}} - {{dto.meeting.vpoints2}}                      
+                    </div>
+                </td>
+                <td [ngClass]="{'rightTeamNameGreen': dto.meeting.teamName2 === teamName, 'rightTeamName' : dto.meeting.teamName1 !== teamName}">
+                    {{dto.meeting.teamName2}}
+                </td>
+            </tr>
+        </ng-template>        
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No matches found for this team.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-table [value]="awayMeetings" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr>
+                <th></th>
+                <th style="text-align: center; font-weight: bold; color: blue;">Ritorno</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dto>
+            <tr>
+                <td [ngClass]="{'leftTeamNameGreen': dto.meeting.teamName1 === teamName, 'leftTeamName' : dto.meeting.teamName1 !== teamName}">
+                    {{dto.meeting.teamName1}} 
+                </td>
+                <td class="centralPoints">
+                    <div>
+                        <span>{{dto.meeting.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
+                    </div>
+                    <div style="text-align: center; font-weight: bold;">
+                            {{dto.meeting.vpoints1}} - {{dto.meeting.vpoints2}}                      
+                    </div>
+                </td>
+                <td [ngClass]="{'rightTeamNameGreen': dto.meeting.teamName2 === teamName, 'rightTeamName' : dto.meeting.teamName1 !== teamName}">
+                    {{dto.meeting.teamName2}}
+                </td>
+            </tr>
+        </ng-template>        
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No matches found for this team.</td>
+            </tr>
+        </ng-template>
+    </p-table>    
+</div>

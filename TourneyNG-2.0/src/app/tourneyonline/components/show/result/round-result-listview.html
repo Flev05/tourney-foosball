@@ -1,0 +1,157 @@
+<p-table>
+    <ng-template pTemplate="header">
+        <tr>
+            <td>
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+            </td>
+            <td>
+                <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
+            </td>
+            <td style="text-align: right;">
+                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<p-blockUI [blocked]="meetingService.blockedDocument"></p-blockUI>
+
+<p-tabView [activeIndex]="tourneyService.selectedRoundTabIndex"         
+        (onChange)="onChangeTab($event)">
+ 
+    <p-tabPanel header="Andata">
+        <p-table [columns]="cols"
+            [value]="onewayMeetings" 
+            selectionMode="single" 
+            [(selection)]="selectedRow"  
+            (onRowSelect)="onRowSelect($event)">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <td>
+                        <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
+                    </td>
+                    <td style="text-align: center; font-weight: bold;">
+                        <div>{{getHeaderOneway()}}</div>
+                        <div>{{getWeekOneway()}}</div>
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData>
+                <tr [pSelectableRow]="rowData">
+                    <td class="leftTeamName">
+                        {{rowData.teamName1}} 
+                    </td>
+                    <td class="centralPoints">
+                        <div>
+                            <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
+                        </div>
+                        <div style="text-align: center; font-weight: bold;">
+                             {{rowData.vpoints1}} - {{rowData.vpoints2}}                      
+                        </div>
+                        <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                ,'inProgress': rowData.status === 'In Corso'
+                                ,'terminated': rowData.status === 'Terminata'
+                                ,'confirmed': rowData.status === 'Convalidata'}">
+                            {{rowData.status}}
+                        </div>
+                    </td>
+                    <td class="rightTeamName">
+                        {{rowData.teamName2}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
+        <p-table 
+            [columns]="cols"
+            [value]="roundtripMeetings" 
+            selectionMode="single" 
+            [(selection)]="selectedRow"  
+            (onRowSelect)="onRowSelect($event)">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <td>
+                        <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
+                    </td>
+                    <td style="text-align: center; font-weight: bold;">
+                        <div>{{getHeaderRoundtrip()}}</div>
+                        <div>{{getWeekRoundtrip()}}</div>
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr [pSelectableRow]="rowData">
+                    <td class="leftTeamName">
+                        {{rowData.teamName1}} 
+                    </td>
+                    <td class="centralPoints">
+                        <div>
+                            <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
+                        </div>
+                        <div>
+                            <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>                        
+                        </div>
+                        <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                ,'inProgress': rowData.status === 'In Corso'
+                                ,'terminated': rowData.status === 'Terminata'
+                                ,'confirmed': rowData.status === 'Convalidata'}">
+                            {{rowData.status}}
+                        </div>
+                    </td>
+                    <td class="rightTeamName">
+                        {{rowData.teamName2}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel> 
+
+    <p-tabPanel header="Classifica">    
+        <p-table [columns]="classificationCols"
+            [value]="classificationRows"
+            selectionMode="single" 
+            [(selection)]="selectedClassificationRow"  
+            (onRowSelect)="onClassifcationRowSelect($event)" >
+
+            <ng-template pTemplate="caption">
+                {{selectedRound.name}}
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th class="position">P°</th>
+                    <th *ngFor="let col of columns" [ngClass]="col.style">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+    
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">            
+                <tr [pSelectableRow]="rowData">
+                    <td style="text-align: center;">{{rowIndex+1}}</td>
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <p>
+            Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto. 
+        </p>            
+    </p-tabPanel>
+</p-tabView>

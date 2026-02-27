@@ -1,0 +1,66 @@
+import {NgModule}     from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
+import {TableModule}  from 'primeng/table';
+import {DialogModule}  from 'primeng/dialog';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {SpinnerModule} from 'primeng/spinner';
+import {CheckboxModule} from 'primeng/checkbox';
+import {FieldsetModule} from 'primeng/fieldset';
+import {TooltipModule} from 'primeng/tooltip';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {AccordionModule} from 'primeng/accordion';
+
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+import { TabViewModule } from 'primeng/tabview';
+import { SliderModule } from 'primeng/slider';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { CalendarModule } from 'primeng/calendar';
+
+import {PlayerListView} from './player-listview';
+import {PlayerDetailView} from './player-detailview';
+import { DateFormatPipe } from '../../../../components/common/date-format-pipe';
+import {PlayerRoutingModule} from './player-routing.module';
+import { PlayerTableModule } from '../../player/player-table/player-table.module';
+import { PlayerChooserModule } from '../../player/player-chooser/player-chooser.module';
+
+@NgModule({
+	imports: [
+		CommonModule
+        ,FormsModule
+        ,ReactiveFormsModule
+        ,PanelModule
+        ,DropdownModule
+        ,InputTextModule
+        ,InputTextareaModule
+        ,ButtonModule
+        ,TabViewModule
+        ,TableModule
+        ,DialogModule
+        ,SliderModule
+        ,AutoCompleteModule
+        ,RadioButtonModule
+        ,CheckboxModule
+        ,SpinnerModule
+        ,FieldsetModule
+        ,TooltipModule
+        ,CalendarModule
+        ,MessagesModule
+        ,MessageModule
+        ,PlayerRoutingModule
+        ,AccordionModule
+        ,PlayerTableModule
+        ,PlayerChooserModule
+    ],
+	declarations: [
+        PlayerListView,
+        PlayerDetailView
+    ]
+    ,providers: [DateFormatPipe]
+})
+export class PlayerModule {}

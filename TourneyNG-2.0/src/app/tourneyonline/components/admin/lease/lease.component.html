@@ -1,0 +1,132 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Noleggio</span>
+        <span>Noleggio del sistema per la creazione e gestione di qualsiasi numero di tornei</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+
+    <p>Noleggia il sistema Tourney Online per il numero di giorni che ti serve.</p>
+
+    <p>
+        Durante tale periodo puoi creare i tuoi tornei, configurarli in tutte le loro caratteristiche
+        e goderti lo svolgimento senza il minimo sforso organizzativo,
+        devi solo aggiornare i risultati man mano che arrivano.
+    </p>
+    <p>A fronte dell'aggiornamento dei risultati, automaticamente saranno aggioranti risultati e classifica
+        e tutti i partecipanti al torneo possono vedere in tempo reale l'evoluzione sugli altri campi.
+    </p>
+    <p>       
+        I dati inseriti sono salvati sul database di Tourney Online e hanno durata illimitata. 
+        Possono essere ripresi e consultati tutte le volte che vuoi, oggi e in futuro.
+    </p>
+    <p>
+        La versione a noleggio, oltre a tutte le caratteristiche di quella DEMO, 
+        consente in più:
+    </p>
+    <ul>
+        <li>Persistenza dei tornei sul database di Tourney Online</li>
+        <li>Creazione di più utenti per la gestione dei tornei</li>
+        <li>Consultazione risultati e classifica in tempo reale</li>
+    </ul>
+
+    <h4>Noleggio</h4>
+    <p>
+        Per il noleggio non devi fare altro che consultare il tariffario e scegliere la soluzione più 
+        consona alle tue esigenze.
+        Devi inserire il minimo indispensabile di dati che ti identifica univocamente, vanno bene anche nomi fittizi, 
+        ma è necessario un indirizzo e-mail a cui Tourney Online invierà le tue credenziali di accesso.
+        Dopo il pagamento con carta di credito sul sito sicuro della banca, riceverete sulla vostra email 
+        la username, che coincide con la vostra e-mail, e la password generata da Tourney Online.
+    </p>
+
+    
+    <h4>Login</h4>
+    <p>La prima volta che vi collegate al sistema, dovrete modificare la password ricevuta del sistema
+        con una vostra di più facile memorizzazione.
+        Una volta in possesso delle proprie credenziali, potete accedere al vostro spazio dei tornei 
+        nella sezione a sinistra della pagina.
+        Qui potete configurare tutti i tornei che volete partendo dalla creazione, alla modifica e 
+        alla gestione durante lo svolgimento del torneo.
+    </p>
+    <p>L'accesso alla pagina viene effettuato tramite la form di login sotto</p>
+</div>
+
+<div class="content-section implementation">
+    <p-toast></p-toast>
+
+    <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+        <p-panel>
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Username *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['username'].valid&&userform.controls['username'].dirty">
+                            <i class="fa fa-close"></i>
+                            La username è obbligatoria
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Password *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="password" formControlName="password" placeholder="Obbligatoria - Min(6)"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty">
+                            <i class="fa fa-close"></i>
+                            <span *ngIf="userform.controls['password'].errors['required']">La password è obbligatoria</span>
+                            <span *ngIf="userform.controls['password'].errors['minlength']">Almento 6 caratteri</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"></div>
+                    <div class="ui-grid-col-6">
+                        <button pButton type="submit" label="Login" [disabled]="!userform.valid"></button>
+                    </div>
+                    <div class="ui-grid-col-4"></div>
+                </div>
+                <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                    Form Submitted
+                    <br>
+                    {{diagnostic}}
+                </div>
+            </div>
+        </p-panel>
+
+    </form>    
+</div>
+<div class="content-section documentation">
+    <h4>Configurazione</h4>
+    <p>La configurazione è la prima parte di preparazione per un nuovo torneo.
+            L'utente deve inserire tutti i dati relativi al torneo
+    </p>
+    <p>In questa fase il proprietario o responsabile del torneo deve inserire tutte le informazioni
+        inerenti il torneo come descritto nella pagina della DEMO 
+        <a class="home-button" [routerLink]="['/demo']">
+            Versione DEMO
+        </a>            
+    </p>
+    <p>Terminata la definizione del torneo, occorre diffondere il codice di accesso ai partecipanti al gioco.
+        Questo permette la consultazione del torneo in tempo reale.
+        <a class="home-button" [routerLink]="['/realtime']">
+            Tempo reale
+        </a>            
+    </p>
+    <p>
+        Se in fase di inserimento dei dati, nella sezione di compilazione delle squadre, viene fornito un 
+        indirizzo email, il sistema invia in automatico il codice alla mail box indicata.
+        Se la email non viene fornita, il gestore del torneo deve inviare il codice di accesso 
+        attraverso altri canali, per esempio: telefono, cartaceo, SMS, Whatsup o altro.
+    </p>
+</div>    

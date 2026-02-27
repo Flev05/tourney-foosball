@@ -1,0 +1,1567 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+
+import { Tourney } from '../domain/tourney';
+import { Round } from '../domain/round';
+import { Playoff } from '../domain/playoff';
+import { Team } from '../domain/team';
+import { Combobox } from '../domain/tourney-combobox';
+import { Eliminatory } from '../domain/eliminatory';
+
+import { EliminatoryLevel } from '../domain/eliminatory-level';
+import { PlayoffRule } from '../domain/playoff-rule';
+import { Meeting } from '../domain/meeting';
+import { LoginService } from './login-service';
+import { TourneyVO } from '../domain/tourney.vo';
+import { ClientService } from './client-service';
+import { TableCols } from '../domain/table-cols';
+import { Classification } from '../domain/classification';
+import { MeetingStatus } from '../domain/enumerations';
+import { MeetingService } from './meeting-service';
+import { AbstractService } from '../components/common/abstract-service';
+import { ClientVO } from '../domain/client-vo';
+import { MeetingDb } from '../domain/meeting-db';
+import { UserVO } from '../domain/user-vo';
+import { OperatorsVO } from '../domain/operators-vo';
+import { PlayoffVO } from '../domain/playoff-vo';
+import { Match } from '../domain/match';
+
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
+const tourneyUrl = 'api/tourneys';  
+const loadTourneyByClientIdUrl  = tourneyUrl + '/loadByClientUserId';  
+const loadTourneyBySessionIdUrl = tourneyUrl + '/loadBySessionId';  
+const loadTourneyByIdUrl        = tourneyUrl + '/loadTourneyById';  
+const loadTourneyByUsernameUrl  = tourneyUrl + '/loadTourneyByFollowerName';  
+
+const insertTourneyUrl = tourneyUrl + '/insert';
+
+const updateTourneyUrl = tourneyUrl + '/update';
+const updateTourneyDeleteRoundMeetingsUrl = tourneyUrl + '/updateTourneyDeleteRoundMeetings';
+const updateTourneyDeleteAllMeetingsUrl = tourneyUrl + "/updateTourneyDeleteAllMeetings";
+const updateTourneyRoundsUrl = tourneyUrl + "/updateTourneyRounds";
+const updateTourneyPlayoffsUrl = tourneyUrl + "/updateTourneyPlayoffs";
+const updateTourneyPlayoutsUrl = tourneyUrl + "/updateTourneyPlayouts";
+const updateTourneyEliminatoriesUrl = tourneyUrl + "/updateTourneyEliminatories";
+const updateTourneyEliminatoriesBUrl = tourneyUrl + "/updateTourneyEliminatoriesB";
+
+const deleteTourneyUrl = tourneyUrl + '/delete';
+
+const classificationLabel = "°";
+
+@Injectable()
+export class TourneyService extends AbstractService {
+
+    public FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
+
+    tourneys: Tourney[] = []; 
+
+    positionsCombobox: Combobox[] = [];
+    roundsCombobox: Combobox[] = [];
+    playoffsCombobox: Combobox[] = [];
+
+    selectedTourney : Tourney = new Tourney();
+    eliminatoryTabName: string = "";
+
+    selectedRound : Round = new Round();
+    selectedPlayoff : Playoff | null = new Playoff();
+    selectedPlayout : Playoff | null = new Playoff();
+    selectedEliminatory : Eliminatory = new Eliminatory();
+    selectedEliminatoryLevel: EliminatoryLevel = new EliminatoryLevel();
+
+    newTourney : boolean = false;
+    newRound : boolean = false;
+    
+    newPlayoffConfig : boolean = false;
+
+    firstTime : boolean = true;
+    selectedResultTabIndex: number = 0; 
+    selectedTabIndex: number = 0; 
+    private sequenceNumber: number = 1000;
+    playoffsConfig: boolean = false;
+
+    originalTeams: Team[] = [];
+    // operators: UserVO[];
+    selectedOperator: UserVO = new UserVO();
+    operatorVo : OperatorsVO = new OperatorsVO();
+    isOneway: boolean = true;
+    selectedPlayoffConfig: PlayoffRule = new PlayoffRule();
+    newRule: boolean = false;
+    selectedRoundTabIndex: number = 0;
+    selectedPlayoffTabIndex: number = 0;
+    selectedEliminatoryTabIndex: number = 0;
+    selectedEliminatoryBTabIndex: number = 0;
+    selectedEliminatoryLevelIndex: number = 0;
+    selectedEliminatoryBLevelIndex: number = 0;
+    selectedEliminatoryIndex: number = 0;
+    selectedEliminatoryLevelBIndex: number = 0;
+    selectedEliminatoryBIndex: number = 0;
+    selectedClassificationRow: Classification = new Classification();
+
+    static roundCols: TableCols[] = [
+        { field: 'name',        header: 'Gironi' },
+        { field: 'teamNo',      header: 'N° Squadre' },
+        { field: 'classificatedTeamNames',  header: 'Squadre' },
+    ];
+
+    static playoffCols: TableCols[] = [
+        { field: 'playoffName', header: 'Playoff' },
+        { field: 'teamNo',      header: 'N° Squadre' },
+        { field: 'teamNames',   header: 'Squadre' },
+    ];
+    redirect: string = "";
+
+    classificationCols: TableCols[] = [
+        { field: 'teamName',      header: 'Team', style: 'team'},
+        { field: 'points',        header: 'Pt.',  style: 'points'},
+        { field: 'played',        header: 'G',    style: 'points'},
+        // { field: 'won',           header: 'V'},
+        // { field: 'lost',          header: 'P'},
+        // { field: 'balanced',      header: 'N'},
+        // { field: 'goalsDone',     header: 'Gf'},
+        // { field: 'goalsConceded', header: 'Gs'},
+        // { field: 'goalsDiff',     header: 'D'},
+    ];
+
+    classificationReducedCols: TableCols[] = [
+        { field: 'teamName',      header: 'Team', style: 'team'},
+        { field: 'points',        header: 'Pt.',  style: 'points'},
+        { field: 'played',        header: 'G',    style: 'points'},
+    ];
+
+    eliminatoryClassificationCols: TableCols[] = [
+        { field: 'roundName',   header: 'E°',  style: 'position'}
+    ];
+
+    resultCols: TableCols[] = [
+        { field: 'teamName1',   header: 'In casa' },
+        { field: 'points1',     header: 'Pt.1' },
+        { field: 'points2',     header: 'Pt.2' },
+        { field: 'teamName2',   header: 'Trasferta' },
+    ];
+    operatorCols:  TableCols[] = [
+        { field: 'username',  header: 'Username' },
+        { field: 'firstname', header: 'Nome' },
+        { field: 'lastname',  header: 'Cognome' },
+    ];
+    
+    private tvo: TourneyVO = new TourneyVO();
+
+    private onSaveTourneyError: boolean = false;
+    private onewayPlayoffMap: Map<string, Meeting[]> = new Map<string, Meeting[]>();
+    private roundtripPlayoffMap: Map<string, Meeting[]> = new Map<string, Meeting[]>();
+    classificationName: string = "";
+
+    constructor(private http: HttpClient
+        , private loginService: LoginService
+        , private clientService: ClientService
+        , private meetingService: MeetingService) 
+    { 
+        super();
+        console.log("Constructor of TourneyService");
+        this.sequenceNumber++;
+    }
+    
+    prepareEliminatoriesComboBoxes(teamsNo : number): Combobox[] {
+        if(this.selectedEliminatoryLevel==undefined) {
+            this.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
+        }
+
+        let min: number = 2;
+    
+        let eliminatoryTeamsCombobox: Combobox[] = [];
+
+        eliminatoryTeamsCombobox.push(this.FIRST_COMBO_ITEM);
+        
+        for(let i=min; i<=teamsNo; i++) {
+            eliminatoryTeamsCombobox.push({label: "" + i, value: i});
+        }
+
+        return eliminatoryTeamsCombobox;
+    }
+
+    prepareDefaultComboBoxes(): number {
+        if(this.selectedTourney.roundVO.rounds.length==0 && this.selectedTourney.teams.length==0) {
+            return 0;
+        }
+
+        if(this.selectedEliminatoryLevel==undefined) {
+            this.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
+        }
+
+        let min: number = 2;
+
+        let teamsNo = this.selectedTourney.roundVO.rounds.length;
+        if( this.selectedTourney.roundVO.rounds.length == 0 ) {
+            teamsNo = this.selectedTourney.teams.length;
+        } else {
+            teamsNo = 0;
+            for( let r of this.selectedTourney.roundVO.rounds ){
+                teamsNo += r.teamNames.length;
+            }
+        }
+
+        let max: number = this.selectedTourney.teams.length;
+    
+        let eliminatoryTeamsCombobox: Combobox[] = [];
+
+        eliminatoryTeamsCombobox.push(this.FIRST_COMBO_ITEM);
+        
+        for(let i=min; i<=max; i++) {
+            eliminatoryTeamsCombobox.push({label: "" + i, value: i});
+        }
+        
+        this.roundsCombobox = [];
+        this.roundsCombobox.push({label: "", value: 0});
+            
+        for(let i=0; i<this.selectedTourney.roundVO.rounds.length; i++) {
+            let r=this.selectedTourney.roundVO.rounds[i];
+            this.roundsCombobox.push({label: r.name, value: r.id});
+        }
+
+        if(this.selectedTourney.playoffVO.playoffs.length > 0) {
+            this.playoffsCombobox = [];
+            this.playoffsCombobox.push({label: "", value: 0});
+            for(let i=0; i<this.selectedTourney.playoffVO.playoffs.length; i++) {
+                let r=this.selectedTourney.playoffVO.playoffs[i];
+                this.playoffsCombobox.push({label: r.round.name, value: r.round.id});
+            }
+        }
+
+        this.positionsCombobox = [{label: "", value: 0}];
+        if(this.selectedTourney.roundVO.rounds.length > 0) {
+            let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.roundVO.rounds.length;
+            if(this.selectedTourney.teams.length % this.selectedTourney.roundVO.rounds.length > 0) {
+                maxPosition++;
+            }
+            for(let p=1; p<=maxPosition; p++ ) {
+                let vv: string = "" + p + classificationLabel;
+                this.positionsCombobox.push({label: vv, value: p});
+            }                    
+        }
+
+        if(this.selectedTourney.selectedEliminatoryTeamsCB == undefined) {
+            this.selectedTourney.selectedEliminatoryTeamsCB = eliminatoryTeamsCombobox[0];
+        }
+
+        return teamsNo;
+    }
+
+    power2Padding(length: number): number {
+        let levelNo = Math.ceil(Math.log2(length));
+        let min = Math.pow(2, levelNo);
+
+        return min;
+    }
+
+    public getSequenceNumber() {
+        return this.sequenceNumber++;
+    }
+
+    sort( tourneys: Tourney[] ): Tourney[] {
+        let sortedTourneys = tourneys.sort((t1,t2) => {
+            if(t1.datetime < t2.datetime) {
+                return 1;
+            }
+            if(t1.datetime > t2.datetime) {
+                return -1;
+            }
+            return 0;
+        });
+         
+        return sortedTourneys;
+    }
+    /**
+     * Loads all tourneys published from the database belonging to the same client
+     */
+    loadAllTourneys(error: (em: any) => any): Observable<TourneyVO[]> {
+        let url = loadTourneyBySessionIdUrl;
+
+        if(this.loginService.isUserLogged) {
+            url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id + "/" + this.loginService.userLogged.id
+        }
+        
+        return this.http.get<TourneyVO[]>(url).pipe(
+            tap(_ => this.log('fetched all tourneys from DB, url=' + url)),
+            catchError(error('loadTourneyDb'))
+          );
+    }
+
+    /**
+     * Loads the tourney selected by its id previously loaded from the list view
+     */
+    loadTourneyById(tourneyId : number, complete: () => void, error: (em: any) => any ): void {
+        let url = loadTourneyByIdUrl + "/" + tourneyId
+        console.log("loadTourneyById(): " + url);
+
+        const obs = this.http.get<TourneyVO>(url).pipe(
+            tap(_ => this.log('fetched tourney from DB by url=' + url)), 
+            catchError(error('loadTourneyDb')
+            )
+        );
+        obs.subscribe(tvo => this.onLoadTourneyByIdNext(tvo, complete), e => error(e) );
+    }
+
+    /**
+     * Loads the tourney selected by a given username 
+     */
+    loadTourneyByUsername(username : string, complete: () => void, error: (em: any) => any ): void {
+        let url = loadTourneyByUsernameUrl + "/" + username
+        console.log("loadTourneyById(): " + url);
+
+        const obs = this.http.get<TourneyVO>(url).pipe(
+            tap(_ => this.log('fetched tourney from DB by url=' + url)), 
+            catchError(error('loadTourneyDb')
+            )
+        );
+        obs.subscribe(tvo => this.onLoadTourneyByIdNext(tvo, complete), e => error(e) );
+    }
+
+    private onLoadTourneyByIdNext(tvo: TourneyVO, complete: () => void) {
+        console.log("TourneyService.onLoadTourneyByIdNext() ");
+
+        this.tvo = tvo;
+        this.selectedTourney = JSON.parse(this.tvo.json);
+
+        this.selectedTourney.id = this.tvo.id;
+        this.selectedTourney.tourneyName = this.tvo.tourneyName;
+        this.selectedTourney.followerName = this.tvo.followerName;
+        this.selectedTourney.country = this.tvo.country;
+        this.selectedTourney.clientVO = this.tvo.clientVO;
+
+        complete();
+    }
+
+    loadTourneys(fromDate: Date, toDate: Date, error: (em: any) => any): any {
+        let url = loadTourneyBySessionIdUrl;
+
+        if(this.loginService.isUserLogged) {
+            url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id;
+        }
+        url += + "?" + "fromDate=" + fromDate + "&" + "toDate="   + toDate;
+        
+        return this.http.get<TourneyVO[]>(url).pipe(
+            tap(_ => this.log('fetched selected tourneys from DB, url=' + url)),
+            catchError(error('loadTourneyDb'))
+          );
+    }
+
+    loadTourneyPlayoff (error: (em: any) => any): Observable<Tourney[]> {
+ 
+        return this.http.get<Tourney[]>(loadTourneyByClientIdUrl)
+        .pipe(
+            tap(_ => this.log('fetched all Playoff tourneys')),
+            catchError(error('loadTourneyPlayoff'))
+          );
+    }
+
+    loadTourneyElimination (error: (em: any) => any): Observable<Tourney[]> {
+ 
+        return this.http.get<Tourney[]>(loadTourneyByClientIdUrl)
+        .pipe(
+            tap(_ => this.log('fetched all Elimination tourneys')),
+            catchError(error('loadTourneyElimination'))
+          );
+    }
+
+    /** POST: add a new tourney to the server */
+    private addTourney (tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+
+        let url = insertTourneyUrl;
+
+        return this.http.post<TourneyVO>(url, tvo, httpOptions).pipe(
+            tap((tvo: TourneyVO) => this.log('added Tourney url=' + url + " (id=" + tvo.id + ")")),
+            catchError(selector)
+        );
+    }
+
+    /** PUT: prepare the TourneyDb by stringify of received tourney to save on the server */
+    private updateTourney (tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+
+        return this.updateTourneyDb(tvo, selector);
+    }
+
+    saveTourney (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        if(tvo.id == null) {
+            return this.addTourney(tvo, selector);
+        }
+        return this.updateTourney(tvo, selector);
+    }
+
+    public convertTourneyToVo( t : Tourney ): TourneyVO {
+        const tvo = new TourneyVO();
+        tvo.id = t.id;
+        tvo.tourneyName = t.tourneyName == null ? "" : t.tourneyName;
+        tvo.country = t.country;
+        tvo.clientVO = this.clientService.selectedClient;
+        tvo.json = JSON.stringify(t);
+        return tvo;
+    }
+     /**
+     * Save the tourney after cleaning the internal list of meetings and calendars
+     *  
+     * @param t the tourney to save 
+     * @param complete the callback method do invoke when the save will finish
+     */
+    public updateTourneyWithCleanAll(t : Tourney, complete: () => void ) : void  {
+        this.onSaveTourneyError = false;
+        this.clearTourneyMeetings(t, 0);
+        let tvo : TourneyVO = this.prepareTourneyVO(t, this.clientService.selectedClient);
+        let url = updateTourneyUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put<TourneyVO>(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+
+        subscriber.subscribe( () => complete() );
+    }
+
+    /**
+     * Save the tourney without saving its playoff meetings!
+     * 
+     * Before to update the received tourney, saves the roundtrip and oneway playoff meetings in the local variables, clean both
+     * the oneway and roundtrip meetings, save the toruney and, when the method returns, restorea the saved meetings in 
+     * the original tourney.
+     * 
+     * @param t the tourney to save 
+     * @param complete the callback method do invoke when the save will finish
+     */
+    public updateTourneyCleanPalyoffMeetings(t: Tourney, complete: () => void ) : void    {
+        this.onewayPlayoffMap = new Map<string, Meeting[]>();
+        this.roundtripPlayoffMap = new Map<string, Meeting[]>();
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, t.playoffVO, true, this.clientService.selectedClient);
+        this.onSaveTourneyError = false;
+        let url = updateTourneyUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put<Tourney>(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+        if(!this.onSaveTourneyError) {
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t.playoffVO, complete ) );
+        }
+    }
+
+    /**
+     * Save the meetings and the tourney in one transaction!
+     * 
+     * Before to update the received tourney, saves the roundtrip and oneway playoff meetings in the local variables, clean both
+     * the oneway and roundtrip meetings, save the toruney and meetings on the DB and, when the method returns, restores the saved meetings in 
+     * the original tourney.
+     * 
+     * @param t the tourney to save 
+     * @param complete the callback method do invoke when the save will finish
+     */
+    public updateTourneyAndPlayoffs(t: Tourney, complete: () => void ) : void {
+        this.onewayPlayoffMap = new Map<string, Meeting[]>();
+        this.roundtripPlayoffMap = new Map<string, Meeting[]>();
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, t.playoffVO, true, this.clientService.selectedClient);
+        this.onSaveTourneyError = false;
+        let url = updateTourneyPlayoffsUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put<Tourney>(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+        if(!this.onSaveTourneyError) {
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t.playoffVO, complete ) );
+        }
+    }
+
+    public updateTourneyAndPlayouts(t: Tourney, complete: () => void ) : void {
+        this.onewayPlayoffMap = new Map<string, Meeting[]>();
+        this.roundtripPlayoffMap = new Map<string, Meeting[]>();
+        let tvo : TourneyVO = this.preparePlayoffTourneyVO(t, t.playoutVO, false, this.clientService.selectedClient);
+        this.onSaveTourneyError = false;
+        let url = updateTourneyPlayoutsUrl;
+        console.log("Invoking put method on URL: [" + url + "]");
+        let subscriber: Observable<TourneyVO> = this.http.put<Tourney>(url, tvo, httpOptions).pipe(
+            tap(x => this.log('updated TourneyDb url=' + url)),
+            catchError(this.saveTourneyErrorHandler())
+        );
+        if(!this.onSaveTourneyError) {
+            subscriber.subscribe(cs => t.id = cs.id, e => this.subscribeErrorHandler(e), () => this.restoreOnComplete( t.playoutVO, complete ) );
+        }
+    }
+
+    private  preparePlayoffTourneyVO(t: Tourney, po: PlayoffVO, isPlayoff: boolean, c: ClientVO): TourneyVO {
+        let playoffsMeetings : MeetingDb [] = [];
+        for (let p of po.playoffs) {
+            for (let m of p.round.onewayMeetings) {
+                let mdb = null;
+                if(isPlayoff) {
+                    mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                } else {
+                    mdb = this.meetingService.preparePlayoutMeetingDb(m, this.selectedTourney.id, p.id);
+                }
+                playoffsMeetings.push(mdb);
+            }
+            for (let m of p.round.roundtripMeetings) {
+                let mdb = null;
+                if(isPlayoff) {
+                    mdb = this.meetingService.preparePlayoffMeetingDb(m, this.selectedTourney.id, p.id);
+                } else {
+                    mdb = this.meetingService.preparePlayoutMeetingDb(m, this.selectedTourney.id, p.id);
+                }
+                playoffsMeetings.push(mdb);
+            }
+        }
+        for (let p of po.playoffs) {
+            this.onewayPlayoffMap.set(p.playoffName, p.round.onewayMeetings);
+            p.round.onewayMeetings = [];            
+            this.roundtripPlayoffMap.set(p.playoffName, p.round.roundtripMeetings);
+            p.round.roundtripMeetings = [];
+        }
+
+        let tvo = new TourneyVO();
+        tvo.id = t.id;
+        tvo.tourneyName = t.tourneyName == null ? "" : t.tourneyName;
+        tvo.country = t.country;
+        tvo.clientVO = c;
+        tvo.json = JSON.stringify(t);
+        tvo.mdbs = playoffsMeetings;
+        return tvo;
+    }
+
+    /**
+     * Restores in the tourney the previous saved meetings
+     * 
+     * @param t the tourney the meetings to restore 
+     * @param complete the callback to call whene the restore will finish
+     */
+    private restoreOnComplete(po: PlayoffVO, complete: () => void): void {
+        for (let p of po.playoffs) {
+            let rom = this.onewayPlayoffMap.get(p.playoffName);
+            if( rom == undefined ) continue;
+            p.round.onewayMeetings = rom;  
+            let rrm = this.roundtripPlayoffMap.get(p.playoffName);
+            if( rrm == undefined ) continue;
+            p.round.roundtripMeetings = rrm;
+        }
+        complete();
+    }
+    
+    private saveTourneyErrorHandler<T> (operation = 'operation', result?: T): any {
+        return (res: any): Observable<T> => {
+            console.log("Entering saveTourneyErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+      
+            this.onSaveTourneyError = true;
+ 
+            return of(result as T);
+        };
+    }
+
+    private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            console.log("Entering subscribeErrorHandler()");
+
+            this.onSaveTourneyError = true;
+
+            console.error(error); // log to console instead
+      
+            console.log(`${operation} failed: ${error.message}`);
+      
+            return of(result as T);
+        };
+    }
+    
+    updateTourneyRoundTeams(tvo: TourneyVO, complete?: () => void )  {
+        let url = updateTourneyRoundsUrl;
+        const subscriber = this.http.put(url, tvo, httpOptions).pipe(
+                tap(_ => this.log('updated TourneyDb url=' + url)),
+                catchError(this.handleError('update TourneyDb', []))
+        );
+        if( complete ) {
+            subscriber.subscribe(cs => this.next(cs), e => this.subscribeErrorHandler(e), () =>  complete());
+        }
+    }
+
+    updateTourneyAndRounds(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyRoundsUrl;
+        return this.http.put<TourneyVO>(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
+    updateTourneyAndEliminatories(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyEliminatoriesUrl;
+        return this.http.put<TourneyVO>(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
+    updateTourneyAndEliminatoriesB(tvo: TourneyVO, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyEliminatoriesBUrl;
+        return this.http.put<TourneyVO>(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
+    /** PUT: update the tourney on the server */
+    private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
+        let url = updateTourneyUrl;
+        const ob : Observable<TourneyVO> = this.http.put<TourneyVO>(url, tvo, httpOptions);
+        return ob.pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(selector)
+        );
+    }
+
+    /** PUT: update the tourney and the round meetings on the server */
+    public updateTourneyDeleteAllMeetings(tvo: TourneyVO): void {
+        let url = updateTourneyDeleteAllMeetingsUrl;
+        let obs = this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(this.handleError('loadTourneyVO', []))
+        );
+        obs.subscribe();
+    }
+
+    /** PUT: update the tourney and the round meetings on the server */
+    public updateTourneyDeleteRoundMeetings (tvo: TourneyVO): void {
+        let url = updateTourneyDeleteRoundMeetingsUrl;
+        let obs = this.http.put(url, tvo, httpOptions).pipe(
+            tap(_ => this.log('updated TourneyDb url=' + url)),
+            catchError(this.handleError('loadTourneyDb', []))
+        );
+        obs.subscribe();
+    }
+  
+    doRoundDelete(round: Round, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): void {
+        console.log("doRoundDelete(): " + round.name);
+        let popup = 'Sicuro di voler rimuovere il girone: ' + round.name + "?";
+        if(confirm(popup)) {
+            let index: number = this.selectedTourney.roundVO.rounds.indexOf(round);
+            if(index > -1) {
+                let rounds: Round[] = this.selectedTourney.roundVO.rounds.splice(index, 1);
+                for(let r of rounds) {
+                    this.removeRound(r);
+                }
+                const tvo = this.convertTourneyToVo(this.selectedTourney);
+                this.updateTourney(tvo, selector).subscribe(n => this.next(n), e => this.onError(e));
+            }
+        }
+    }
+
+    doPlayoffDelete(playoff: Playoff, selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): void {
+        console.log(playoff);
+        let popup = 'Sicuro di voler rimuovere la regola di playoff: '+ playoff.playoffName + "?";
+        if(confirm(popup)) {
+            for( let m of playoff.round.onewayMeetings) {
+                this.meetingService.deleteMeeting(m);
+            }
+            let index = this.selectedTourney.playoffVO.playoffs.indexOf(playoff);
+            if(index > -1) {
+                this.selectedTourney.playoffVO.playoffs.splice(index, 1);
+                const tvo = this.convertTourneyToVo(this.selectedTourney);
+                this.updateTourney(tvo, selector).subscribe(n => this.next(n), e => this.onError(e) );
+            }
+        }
+    }
+   
+    private next(n:any) {
+    }
+
+    private removeRound(r: Round): any {
+        for(let m of r.onewayMeetings) {
+            this.meetingService.deleteMeeting(m);
+        }
+        r.onewayMeetings = [];
+    }
+
+    /** DELETE: delete the tourney from the server */
+    deleteTourney (tourney: Tourney, selector: (err: any, caught: Observable<Tourney> ) => Observable<Tourney> ) : Observable<Tourney> {
+        const id = tourney.id;        
+        const url = deleteTourneyUrl + "/" + id;
+
+        return this.http.delete<Tourney>(url, httpOptions).pipe(
+            tap(_ => this.log('deleted Tourney id=' + id)),
+            catchError(selector)
+        );
+    }
+
+    private handleError<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+      
+          // TODO: send the error to remote logging infrastructure
+          console.error(error); // log to console instead
+      
+          // TODO: better job of transforming error for user consumption
+          this.log(`${operation} failed: ${error.message}`);
+      
+          // Let the app keep running by returning an empty result.
+          return of(result as T);
+        };
+      }
+      
+    /** Log a HeroService message with the MessageService */
+    private log(message: string) {
+        console.log('TourneyService: ' + message);
+    }
+
+    containsPhase(value: string) : boolean{
+        for(let i=0; i<this.selectedTourney.phases.length; i++ ) {
+            if(this.selectedTourney.phases[i].toLowerCase().indexOf(value) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Rotates the original MxN matrix of the rounds and teams defined in the tournament.
+     * 
+     * Creates a NxM matrix as a rotation of 90° of the original Tournament matrix,
+     * where the N rows are the positions in classificatin: 1°, 2°, 3°,... and the M columns are
+     * the teams of each round of the tourney. 
+     * 
+     * In the first row, we have the list of the teams qualified as first in its round, 
+     * in the second row we have the list of teams qualified as second in its round and so on.
+     * 
+     * It also normalizes the classification if we have some round with lesser teams than others
+     * 
+     * The matrix has to be accessed by 2 indexes:
+     * - the row index to select the band position of a team: 1°, 2°,...
+     * - tne column index to select the team with its points
+     * 
+     * @param rounds the rounds containing the teams to make the matrix
+     * @param sortTheBand true if sort the teams in the band, false otherwise
+     * @returns the global classification matrix of the teams
+     */
+    public createPositionRoundMatrix(rounds: Array<Round>, sortTheBand : boolean ): Array<Array<Classification>>  {
+        let maxTeamsPerRound : number = rounds[0].teamNames.length;
+        let thereAreSpare : boolean = false;
+        let i : number = -1;
+        for( let r of rounds ) {
+            if( r.teamNames.length < maxTeamsPerRound ) {
+                thereAreSpare = true;
+            }
+        }
+ 
+        if( thereAreSpare ) {
+            for(let r of rounds) {
+                if(r.teamNames.length == maxTeamsPerRound) {
+                    this.normalizeClassificationList(r);
+                }
+            }
+        }
+
+        let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
+        // t=0, the first team in its round. t=1 the second team in its round and so on... 
+        for( let t=0; t<maxTeamsPerRound; t++ ) { 
+            let bandClassificationList: Classification[] = [] ;
+            for(let r of rounds) {
+                let c = r.classification[t];
+                bandClassificationList.push(c);    
+            }
+            if( sortTheBand )  {
+                bandClassificationList = this.sortTeamsDesc(bandClassificationList);
+            }            
+            let row: Classification[] = [] ;
+            roundMatrix.push(row);
+            for(let c of bandClassificationList) {
+                row.push(c);
+            }
+        }
+        return roundMatrix;
+    }
+
+    public shiftLevelBMatrix(roundMatrix: Classification[][], levelATeams: number): Classification[][] {
+        let newMatrix :  Classification[][] = [];
+        let counter : number = 0;
+        for(let r=0; r<roundMatrix.length; r++) {
+            let classificationCols:  Classification[] = [];
+            for(let c=0; c<roundMatrix[r].length; c++) {
+                if( counter++ < levelATeams ) {
+                    continue;
+                }
+                classificationCols.push(roundMatrix[r][c]);
+            }
+            if( counter < levelATeams ) {
+                continue;
+            }
+            let row: Classification[] = [] ;
+            newMatrix.push(row);
+            for(let c of classificationCols) {
+                row.push(c);
+            }
+        }
+        return newMatrix;
+    }
+
+    public sortTeamsDesc(unsortedClassification: Array<Classification> ): Array<Classification>  {
+        return this.sortDesc(unsortedClassification, null);
+    }
+
+    public sortDesc(unsortedClassification: Array<Classification>, originalClassification: Array<Classification> | null ): Array<Classification>  {
+        let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
+            if( c1.teamName == "" && c2.teamName != "") {
+                return 1;
+            }
+            if( c1.teamName != "" && c2.teamName == "") {
+                return -1;
+            }
+
+            if (c1.points > c2.points) {
+                return -1;
+            }
+            if (c1.points < c2.points) {
+                return 1;
+            }
+            if (c1.played > c2.played) {
+                return 1;
+            }
+            if (c1.played < c2.played) {
+                return -1;
+            }
+            if( c1.goalsDiff > c2.goalsDiff ) {
+                return -1;
+            }
+            if( c1.goalsDiff < c2.goalsDiff ) {
+                return 1;
+            }
+
+            if( c1.goalsDone > c2.goalsDone ) {
+                return -1;
+            }
+            if( c1.goalsDone < c2.goalsDone ) {
+                return 1;
+            }
+
+            if( c1.goalsConceded < c2.goalsConceded ) {
+                return -1;
+            }
+            if( c1.goalsConceded > c2.goalsConceded ) {
+                return 1;
+            }
+
+            if( originalClassification == null ) {
+                c1.notResolveble=true;
+                c2.notResolveble=true;
+                return c1.teamName > c2.teamName ? 1 : -1;
+            }
+
+            let fi1 = originalClassification.findIndex(e => e.teamName === c1.teamName);
+            let originalC1 = originalClassification[fi1];
+
+            let fi2 = originalClassification.findIndex(e => e.teamName === c2.teamName);
+            let originalC2 = originalClassification[fi2];
+
+            if( originalC1.played > originalC2.played ) {
+                return 1;
+            }
+            if( originalC1.played < originalC2.played ) {
+                return -1;
+            }
+
+            if( originalC1.goalsDiff > originalC2.goalsDiff ) {
+                return -1;
+            }
+            if( originalC1.goalsDiff < originalC2.goalsDiff ) {
+                return 1;
+            }
+
+            if( originalC1.goalsDone > originalC2.goalsDone ) {
+                return -1;
+            }
+            if( originalC1.goalsDone < originalC2.goalsDone ) {
+                return 1;
+            }
+
+            if( originalC1.goalsConceded < originalC2.goalsConceded ) {
+                return -1;
+            }
+            if( originalC1.goalsConceded > originalC2.goalsConceded ) {
+                return 1;
+            }
+            if (originalC1.played > originalC2.played) {
+                return 1;
+            }
+            if (originalC1.played < originalC2.played) {
+                return -1;
+            }
+
+            originalC1.notResolveble=true;
+            originalC2.notResolveble=true;
+            return c1.teamName > c2.teamName ? 1 : -1;
+        });
+
+        return sortedClassification;
+    }
+
+    /**
+     * Converts in a sorted list the received classification matrix.
+     * The powerOf2TopLevelLen parameter is to manage the NO power of 2 use case when all 
+     * teams in any round are qualified, the number of teams in the matrix is 
+     * not a power of 2. If the matrix is not a pwer of 2, the returned list will filled
+     * with a dummy team having progressive negative points
+     * 
+     * @param roundMatrix the classification matrix to convert in the list
+     * @param powerOf2TopLevelLen the length of top elimiatory level, always a power of 2
+     * @returns the sorted classification list of the teams, always a power of 2
+     */
+    public sortedGlobalClassification( roundMatrix: Array<Array<Classification>>, powerOf2TopLevelLen: number):  Array<Classification>  {
+        let sortedGlobalClassification :  Array<Classification> = [];       
+        for(let r=0; r<roundMatrix.length; r++) {
+            for(let c=0; c<roundMatrix[r].length; c++) {
+                const cell = roundMatrix[r][c];
+                if( cell == undefined ) {
+                    continue;
+                }
+                sortedGlobalClassification.push(cell);
+                if( --powerOf2TopLevelLen === 0 ) {
+                    return sortedGlobalClassification;
+                }
+            }
+        }
+        let f : number = 1;
+        while( powerOf2TopLevelLen-- > 0 ) {
+            let fake = "Fittizio-" + f;
+            let c : Classification = this.newClassification(fake, -(f++));
+            sortedGlobalClassification.push(c);
+        }
+        for( let c of sortedGlobalClassification) {
+            console.log(c.teamName + "(" + c.points +")");
+        }
+        return sortedGlobalClassification;
+    }
+
+    /**
+     * Do a simple round classification in function of each best team. 
+     * The first round will be the one with the best team having the one at the first position among all the rounds
+     * 
+     * @param rounds the round list to sort
+     
+    public simpleRoundClassificationDeprecated(rounds: Array<Round>):  Array<Round> {
+         let sortedRounds: Array<Round> = rounds.sort((r1, r2) => {
+            let c1: Array<Classification> = r1.classification;
+            let c2: Array<Classification> = r2.classification;
+            // Sort on the points basis
+            if( c1[0].points > c2[0].points) {
+                return 1;
+            };
+            if( c1[0].points < c2[0].points) {
+                return -1;
+            };
+            if( c1[0].points  == c2[0].points) {
+                // Sort on the matches played basis
+                if(c1[0].played > c2[0].played ) {
+                    return 1;
+                }
+                if(c1[0].played < c2[0].played ) {
+                    return -1;
+                }
+                // Sort on the Goals diff basis
+                if(c1[0].goalsDiff > c2[0].goalsDiff ) {
+                    return 1;
+                }
+                if(c1[0].goalsDiff < c2[0].goalsDiff ) {
+                    return -1;
+                }
+                // Sort on the Goals done basis
+                if(c1[0].goalsDone > c2[0].goalsDone ) {
+                    return 1;
+                }
+                if(c1[0].goalsDone < c2[0].goalsDone ) {
+                    return -1;
+                }
+                // Sort on the Goals Conceded basis
+                if(c1[0].goalsConceded > c2[0].goalsConceded ) {
+                    return 1;
+                }
+                if(c1[0].goalsConceded < c2[0].goalsConceded ) {
+                    return -1;
+                }
+                return 0;
+            };
+        });
+        return sortedRounds;
+    }
+    */
+
+    /**
+     * Returns a simple team classification on all the received rounds as packing the 1° positions, the 2° posistion,
+     * the 3° positions, and so on. 
+     * 
+     * Prepares the list of Classification by appending each list from the position matrix, the 1° row positions,
+     * the second row positions, ... , until the last one. If the last row to append is a spare row, sort that row
+     * before to append it.
+     * 
+     * @param rounds the round list to sort its classification teams
+     * @param selectedTeamNo the number of teams to pack in the return list
+     */
+    public getPackedBandPositions( rounds: Array<Round>, topLevelTeamNo: number ): Array<Classification> {
+        let positionRoundMatrix : Array<Array<Classification>> = this.createPositionRoundMatrix(rounds, false);
+        let sortedGlobalClassification :  Array<Classification> = [];       
+        const roundNo : number = rounds.length; 
+        for(let r=0; r<positionRoundMatrix.length; r++) {
+            let row : Array<Classification> = positionRoundMatrix[r];
+            topLevelTeamNo -= roundNo;
+            if( topLevelTeamNo < roundNo ) {
+                // sort this last spare row on the classification points
+                row = this.sortTeamsDesc(row);
+            }
+            sortedGlobalClassification = sortedGlobalClassification.concat(row);
+        }
+        return sortedGlobalClassification;
+    }
+
+    /**
+     * Normalizes the classification in the received round by reducing the points aquired by each 
+     * team vs the last team in the round, paying attention if the final difference is 
+     * not less or equals to the points of the last team in the round
+     * 
+     * @param round the round to verify if it has one more team
+     */
+    public normalizeClassificationList( round: Round ) {
+        let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
+        if( meetings.length == 0 ) {
+            return;
+        }
+        let lastTeam: string = round.classification[round.classification.length-1].teamName;
+        let lastTeamClassification: Classification | undefined = round.classification.find( c => c.teamName === lastTeam );
+        if( lastTeamClassification == undefined ) {
+            return;
+        } 
+
+        for( let c of round.classification ) {
+            let t = c.teamName;
+            // let rc: Classification = round.classification.find( c => c.teamName === t );
+            if( t === lastTeam ) {
+                c.points = 0;
+                continue;
+            }
+            let pointsAgainstTheLast: number = 0;
+            let m1: Meeting | undefined = meetings.find( m => m.teamName1 === t && m.teamName2 === lastTeam );
+            if( m1 == undefined ) {
+                continue;
+            }
+
+            pointsAgainstTheLast += m1.points1;
+            let m2: Meeting | undefined = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
+            if( m2 == undefined ) {
+                continue;
+            }
+            pointsAgainstTheLast += m2.points2;
+            if( c.points - pointsAgainstTheLast > lastTeamClassification.points ) {
+                c.points -= pointsAgainstTheLast;
+            }
+        }
+    }
+
+    /**
+     * Creates a new Classification in function of the received parameters
+     */
+    public newClassification(teamName: string, initialPoints: number): Classification {
+        return new Classification();
+    }
+
+    /**
+     * Prepares the teams classification in function of the list of all of the meetings for each team 
+     * @param meetings the list of the meetings
+     */
+    public createClassification(round: Round, correct : boolean) {
+        const teamNames : string[] = round.teamNames;
+        let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
+        let classificationList: Classification[] = this.prepareClassificationList(teamNames, meetings, null);
+        if( correct ) {
+            classificationList = this.correctClassification(classificationList, meetings);
+        }
+        round.classification = classificationList;
+    }
+
+    public cloneRounds(rounds: Round[]): Round[] {
+        let clonedRounds: Array<Round> = new Array<Round>();
+        for(let r of rounds) {
+            let newRound = this.cloneRound(r);
+            clonedRounds.push(newRound);
+        }
+        return clonedRounds;
+    }
+
+    public cloneRound(r: Round) : Round {
+        let newRound : Round = { direction: r.direction
+        , id: r.id
+        , name: r.name
+        , label: r.label
+        , type: r.type
+        , pageSize: r.pageSize
+        , daysNo: r.daysNo
+        , onewayCurrentDay: r.onewayCurrentDay
+        , roundtripCurrentDay: r.roundtripCurrentDay
+        , teamNames: [...r.teamNames]
+        , teamNo: r.teamNo
+        , onewayMeetings: this.cloneMeetings(r.onewayMeetings)
+        , roundtripMeetings: this.cloneMeetings(r.roundtripMeetings)
+        , classification: this.cloneClassifications(r.classification)
+        };
+        return newRound;
+    }
+  
+    private cloneMeetings(mts: Meeting[]): Meeting[] {
+        let nms : Meeting[] = [];
+        for(let m of mts) {
+            let nm = this.cloneMeeting(m);
+            nms.push(nm);
+        }
+        return nms;
+    }
+
+    private cloneMeeting(m: Meeting): Meeting {
+        let mr : Meeting = new Meeting();
+        mr.address=m.address;
+        mr.containerId = m.containerId;
+        mr.country = m.country;
+        mr.datetime = m.datetime;
+        mr.day = m.day;
+        mr.direction = m.direction;
+        mr.id = m.id;
+        mr.isDummy = m.isDummy;
+        mr.isSkiping = m.isSkiping;
+        mr.matches = this.cloneMatches(m.matches);
+        mr.name = m.name;
+        mr.points1 = m.points1;
+        mr.points2 = m.points2
+        mr.rule1 = m.rule1;
+        mr.rule2 = m.rule2;
+        mr.ruleName1 = m.ruleName1;
+        mr.ruleName2 = m.ruleName1;
+        mr.ruleName = m.ruleName;
+        mr.status = m.status;
+        mr.teamName1 = m.teamName1;
+        mr.teamName2 = m.teamName2;
+        mr.vpoints1 = m.vpoints1;
+        mr.vpoints2 = m.vpoints2;
+        return mr;
+    }
+        
+    private cloneMatches(matches:  Match[]):  Match[] {
+        let nms : Match[] = [];
+        for( let m of matches ) {
+            let nm = this.cloneMatch(m);
+            nms.push(nm);
+        }
+        return nms;
+    }
+    private cloneMatch(m: Match) : Match {
+        let nm = new Match();
+        nm.id = m.id;
+        nm.players1 = m.players1;
+        nm.players2 = m.players2;
+        nm.score1 = m.score1;
+        nm.score2 = m.score2;
+        nm.status = m.status;
+        return nm;
+    }
+    private cloneClassifications(classifications: Classification[]): Classification[] {
+        let cloneClassifications: Array<Classification> = new Array<Classification>();
+        for(let c of classifications) {
+            let nc = this.cloneClassification(c);
+            cloneClassifications.push(nc);
+        }
+        return cloneClassifications; 
+    }
+
+    public cloneClassification(c: Classification) : Classification {
+        let nc : Classification = new Classification();
+        nc.id = c.id;
+        nc.balanced = c.balanced;
+        nc.teamName = c.teamName;
+        nc.points = c.points;
+        nc.played = c.played;
+        nc.won = c.won;
+        nc.lost = c.lost;
+        nc.balanced = c.balanced;
+        nc.penalty = c.penalty;
+        nc.goalsDone = c.goalsDone;
+        nc.goalsDiff = c.goalsDiff;
+        nc.goalsConceded = c.goalsConceded;
+        nc.notResolveble = c.notResolveble;
+        nc.roundIndex = c.roundIndex;
+        return nc;
+    }
+
+    /**
+     * Prepares the classification relatid to the selected eliminaory 
+     */
+    public updateClassification(el: EliminatoryLevel): void {
+        console.log("Entering updateClassification(" + el.level +")");
+        for( let e of el.eliminatories ) {
+            this.createClassification(e.round, false);
+        }
+    }
+    
+    public updateEliminatoryLevelsAndGui(eliminatoryLevels : Array<EliminatoryLevel>) {
+        for (let l = 0; l < eliminatoryLevels.length; l++) {
+            let el = eliminatoryLevels[l];
+            this.updateClassification(el);
+        }
+    }
+
+    /**
+     * Correctes the classification list when there are 2 or more teams having the same number of points.
+     * In that case, it computes the separate(avulsa) classification only on the teams having the same points. 
+     * After that, updates the original classification.
+     * 
+     * @param classificationList the origina classification list
+     * @param meetings the list of meetings of all teams in the same round
+     * @returns the new corrected classification
+     */
+    private correctClassification(classificationList:  Classification[], meetings: Meeting[]): Array<Classification>  {
+         
+        const classificationGroupByMap : Map<number, Classification[]> = this.groupBy(classificationList);
+
+        let pointsMap : Map<number,  Meeting[]> = new Map();
+        
+        for(let c of classificationList) {
+            const points = c.points;
+            let cmList : Classification[] | undefined = classificationGroupByMap.get(points);
+            if( cmList == undefined ) continue;
+            for (let m of meetings) {
+                let f1 = cmList.findIndex( t => t.teamName === m.teamName1 );
+                let f2 = cmList.findIndex( t => t.teamName === m.teamName2 );
+                if(f1!=-1 && f2!=-1) {
+                    if( !pointsMap.has(points) ) {
+                        pointsMap.set(points, new Array<Meeting>())
+                    }
+                    let meetingList = pointsMap.get(points);
+                    if( meetingList == undefined ) continue;
+                    meetingList.push(m);                        
+                }
+            }
+        }
+
+        let sortedClassification: Classification[] = [];
+        let step : number = 1;
+        for(let i=0; i < classificationList.length; i+=step) {
+            let c : Classification = classificationList[i];
+            let key = c.points;
+   
+            if(!pointsMap.has(key)) {
+                sortedClassification.push(c);
+                step=1;
+                continue;
+            }
+
+            let meetingSubList:  Meeting[] | undefined = pointsMap.get(key);
+            if( meetingSubList == undefined ) continue;
+             
+            const teamNamesSet: Set<string> = new Set();
+            for(let m of meetingSubList) {
+                if( m.teamName1 == null || m.teamName2 == null ) continue;
+                teamNamesSet.add(m.teamName1);
+                teamNamesSet.add(m.teamName2);
+            }
+
+            let teamNames: string[] = Array.from(teamNamesSet);
+            let sortedSubList: Classification[] = this.prepareClassificationList(teamNames, meetingSubList, classificationList);
+
+            for( let j=0; j<sortedSubList.length; j++ ) {
+                let sc = sortedSubList[j];
+                let fi = classificationList.findIndex(e => e.teamName === sc.teamName);
+                let originalClassification = classificationList[fi];
+                sortedClassification.push(originalClassification);
+            }
+            step = sortedSubList.length;
+        }
+
+        return sortedClassification;
+    }
+
+    private groupBy(classificationList: Array<Classification>) : Map<number, Classification[]>  {
+        const groupByMap: Map<number, Classification[]> = new Map();
+        for (let c of classificationList) {
+            if (!groupByMap.has(c.points)) {
+                groupByMap.set(c.points, [])
+            }
+            let cList = groupByMap.get(c.points);
+            if( cList == undefined ) continue;
+            cList.push(c);
+          }
+          return groupByMap;
+    }
+
+    private prepareClassificationList(teamNames: string[], meetings: Meeting[], ocList:  Classification[] | null): Classification[] {
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+        for (let t of teamNames) {
+            let c = this.newClassification(t, 0);
+            classificationMap.set(t, c);
+        }
+
+        for (let m of meetings) {
+            let t1 = m.teamName1;
+            let t2 = m.teamName2;
+            // console.log("M.id="+ m.id + ": " + t1 + " <==> " + t2);
+            if ( t1=="" || t2=="" || m.isSkiping ) {
+                continue;
+            }
+            if( t1 == null || t2 == null ) continue;
+
+            let c1: Classification | undefined = classificationMap.get(t1);
+            let c2: Classification | undefined = classificationMap.get(t2);
+            if( c1 == undefined || c2 == undefined ) {
+                console.log("c1=classificationMap.get("+ t1 +")");
+                console.log("c2=classificationMap.get("+ t2 +")");
+                continue;
+            }
+
+            c1.points += m.points1;
+            c2.points += m.points2;
+
+            if (c1.points > 0 || c2.points > 0) {
+                for (let ma of m.matches) {
+                    if (ma.score1 > 0 || ma.score2 > 0 || m.status == MeetingStatus.Terminated) {
+                        c1.played++;
+                        c2.played++;
+                    }
+                }
+            }
+
+            if (m.points1 > m.points2) {
+                c1.won++;
+                c2.lost++;
+            }
+            if (m.points2 > m.points1) {
+                c2.won++;
+                c1.lost++;
+            }
+            if (m.points1 == m.points2 && m.status == MeetingStatus.Terminated) {
+                c1.balanced++;
+                c2.balanced++;
+            }
+
+            for (let ma of m.matches) {
+                c1.goalsDone += ma.score1;
+                c1.goalsConceded += ma.score2;
+
+                c2.goalsDone += ma.score2;
+                c2.goalsConceded += ma.score1;
+            }
+            c1.goalsDiff = c1.goalsDone - c1.goalsConceded;
+            c2.goalsDiff = c2.goalsDone - c2.goalsConceded;
+        }
+
+        let cl: Classification[] = [...classificationMap.values()];
+    
+        cl = this.sortDesc(cl, ocList);
+        return cl;
+    }
+
+    /**
+     *   Prepares the classification rows for Round, Playoff  and Eliminatoryformat  
+     */
+     prepareRoundsGui(maxMatchesPerMeeting : number, rounds: Round[]): any[] {
+
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            let r = 0;
+            for (let oc of round.classification) {
+
+                let c = this.cloneClassification(oc);
+                rows.push(c);
+
+                let played = c.played / maxMatchesPerMeeting;
+                rows[row].rowNumber = ++r;    
+                rows[row].roundName = round.name;    
+                rows[row].teamName = c.teamName;    
+                if( c.notResolveble ) {
+                    rows[row].teamName = c.teamName + " *";  
+                }
+                rows[row].points = c.points < 0 ? 0 : c.points;    
+                rows[row].played = c.played + " (" + played + "x" + maxMatchesPerMeeting + ")";    
+                rows[row].won = c.won;    
+                rows[row].lost = c.lost;    
+                rows[row].balanced = c.balanced;    
+                rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
+                rows[row].goalsConceded = c.goalsConceded;    
+
+                let len = round.onewayMeetings.length;
+
+                let currentKey = round.name;  
+                if(!classificationMap.has(currentKey)) {
+                    classificationMap.set(currentKey, c);
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+
+        return rows;
+    }
+    
+    /**
+     *  Prepares the classification rows for Eliminatory format  
+     */
+    prepareEliminatoryRoundsGui(rounds: Round[]): any[] {
+
+        let row : number = 0;
+        let rows: any[] = [];
+
+        let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+
+        for (let round of rounds) {
+            let r = 0;
+            for (let c of round.classification) {
+
+                rows.push(c);
+
+                rows[row].rowNumber = ++r;    
+                rows[row].roundName = round.name;    
+                rows[row].teamName = c.teamName;    
+                rows[row].points = c.points < 0 ? 0 : c.points;   
+                rows[row].played = c.played;    
+                rows[row].won = c.won;    
+                rows[row].lost = c.lost;    
+                rows[row].balanced = c.balanced;    
+                rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
+                rows[row].goalsConceded = c.goalsConceded;    
+
+                let len = round.onewayMeetings.length;
+
+                let currentKey = round.name;  
+                if(!classificationMap.has(currentKey)) {
+                    classificationMap.set(currentKey, c);
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+
+        return rows;
+    }
+
+    public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
+        if( t.tourneyName )  {
+            let followerName : string = t.tourneyName.replace(/[\s\/\\%]/g,"");
+            let tvo = new TourneyVO();
+            tvo.id = t.id;
+            tvo.tourneyName = t.tourneyName;
+            tvo.followerName = followerName;
+            tvo.country = t.country;
+            tvo.clientVO = c;
+            tvo.json = JSON.stringify(t);
+            return tvo;
+        }
+        return new TourneyVO();
+    }
+
+    /**
+     * Clears tourney local meetings array before create che JSON string to save on the Back End
+     */
+    public clearTourneyMeetings(tourney: Tourney, roundTabChangedNo : number) {
+        if( roundTabChangedNo >= 5 ) {
+            this.cleanEliminatoryMeetings(tourney);
+            return;
+        }
+        if( roundTabChangedNo >= 4 ) {
+            this.cleanPlayOffMeetings(tourney);
+            this.cleanPlayoutMeeting(tourney); 
+            this.cleanEliminatoryMeetings(tourney);
+            return;
+        }
+        if( roundTabChangedNo >= 3 ) {
+            this.cleanRoundMeetings(tourney);            
+            this.cleanPlayOffMeetings(tourney);
+            this.cleanPlayoutMeeting(tourney); 
+            this.cleanEliminatoryMeetings(tourney);
+            return;
+        } 
+    }
+
+    private cleanRoundMeetings(tourney: Tourney) {
+        for (let r of tourney.roundVO.rounds) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+            // r.classification = [];
+        }
+    }
+
+    private cleanPlayOffMeetings(tourney: Tourney) {
+        for (let p of tourney.playoffVO.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+    }
+
+    private cleanEliminatoryMeetings(tourney: Tourney) {
+        for (let el of tourney.eliminatoryLevels) {
+            for (let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+    }
+
+    public cleanRoundMeeting(t: Tourney): Tourney  {
+        for(let r of t.roundVO.rounds) {
+            r.onewayMeetings = [];
+            r.roundtripMeetings = [];
+        }
+        return t;
+    }
+
+    public cleanPlayoffMeeting(t:  Tourney): Tourney {
+        for(let p of t.playoffVO.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        return t;
+    }
+
+    public cleanPlayoutMeeting(t:  Tourney): Tourney {
+        for(let p of t.playoutVO.playoffs) {
+            p.round.onewayMeetings = [];
+            p.round.roundtripMeetings = [];
+        }
+        return t;
+    }
+    
+    public cleanEliminatoryMeeting(t: Tourney): Tourney{
+        // let copy = this.cloneObject(t);
+        for(let el of t.eliminatoryLevels) {
+            for( let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        return t;
+    }
+
+    public cleanEliminatoryBMeeting(t: Tourney): Tourney{
+        // let copy = this.cloneObject(t);
+        for(let el of t.eliminatoryBLevels) {
+            for( let e of el.eliminatories) {
+                e.round.onewayMeetings = [];
+                e.round.roundtripMeetings = [];
+            }
+        }
+        return t;
+    }
+
+    public getClassificationName(): string {
+        return this.classificationName;
+    }
+
+    public makeClassificationName(sc: Classification, roundName: string): void {
+        this.selectedClassificationRow =  sc;
+        this.classificationName = roundName ;
+    }
+}

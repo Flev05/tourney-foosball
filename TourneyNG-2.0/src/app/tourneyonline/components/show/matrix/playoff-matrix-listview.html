@@ -1,0 +1,169 @@
+<h2>Fase Playoff (Matrice)</h2>
+<h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+<h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
+<h4><span>Incontri: {{meetingsNoMsg}}</span></h4>
+
+<div class="content-section documentation">    
+    <p-accordion>
+        <p-accordionTab header="Istruzioni">                                   
+            <h4>Istruzioni</h4>
+            <p>
+                La vista contiente l'elenco di tutti gli incontri previsti per la fase dei playoff.
+            </p>
+            <p> 
+                Selezionate l'incontro di playoff per accedere alla vista a matrice corrispondente dove inserire i punti conquistati nell'incontro.        
+            </p> 
+        </p-accordionTab>
+    </p-accordion>
+</div>
+        
+<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button> 
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<p-tabView [activeIndex]="tourneyService.selectedPlayoffTabIndex" 
+        (onChange)="onChangeTab($event)">
+    
+    <p-tabPanel header="Andata">
+        <p-table [columns]="cols" [value]="onewayMatrix.rows">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}                                
+                    </th>
+                </tr>
+            </ng-template>                                     
+        
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData" >
+                    <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
+                        <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
+                            <ng-template pTemplate="input" >
+                                <p-dropdown [options]="rowData.cells[i].options" 
+                                    [(ngModel)]="rowData.cells[i].points" 
+                                    optionLabel="label"
+                                    [style]="{'width':'100%'}"
+                                    placeholder="Punti"
+                                    (onChange)="onOnewayPointChange($event.value)">                                
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{rowData.cells[i].points.label}}
+                            </ng-template>                        
+                        </p-cellEditor>
+                        
+                        <label *ngIf="!rowData.cells[i].isEditable">
+                            {{rowData.cells[i].field}}
+                        </label>
+    
+                        <label *ngIf="rowData.cells[i].isTotal">
+                            {{rowData.cells[i].points.value}}
+                        </label>
+                    </td>            
+                </tr>
+            </ng-template>
+        </p-table> 
+        <p-table [columns]="legendCols"
+            [value]="legendRows"
+            [responsive]="true">
+            <ng-template pTemplate="caption">
+                Legenda
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">            
+                <tr>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>           
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="isRoundTrip" header="Ritorno">
+        <p-table [columns]="cols" [value]="roundtripMatrix.rows">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}                                
+                    </th>
+                </tr>
+            </ng-template>                                     
+        
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData" >
+                    <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
+                        <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
+                            <ng-template pTemplate="input" >
+                                <p-dropdown [options]="rowData.cells[i].options" 
+                                    [(ngModel)]="rowData.cells[i].points" 
+                                    optionLabel="label"
+                                    [style]="{'width':'100%'}"
+                                    placeholder="Punti"
+                                    (onChange)="onRoundtripPointChange($event.value)">                                
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{rowData.cells[i].points.label}}
+                            </ng-template>                        
+                        </p-cellEditor>
+                        
+                        <label *ngIf="!rowData.cells[i].isEditable">
+                            {{rowData.cells[i].field}}
+                        </label>
+    
+                        <label *ngIf="rowData.cells[i].isTotal">
+                            {{rowData.cells[i].points.value}}
+                        </label>
+                    </td>            
+                </tr>
+            </ng-template>
+        </p-table>
+        <p-table [columns]="legendCols"
+            [value]="legendRows"
+            [responsive]="true">
+        
+            <ng-template pTemplate="caption">
+                Legenda
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">            
+                <tr>
+                    <td *ngFor="let col of columns">
+                        <span class="ui-column-title">{{col.header}}</span>
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>            
+    </p-tabPanel>   
+ 
+    <p-tabPanel header="Classifica">    
+        <p-table [columns]="classificationCols"
+            [value]="playoffClassification" >
+
+            <ng-template pTemplate="caption">
+                {{selectedPlayoff.round.name}}
+            </ng-template>
+            
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th class="position">P°</th>
+                    <th *ngFor="let col of columns" [ngClass]="col.style">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                <tr>
+                    <td style="text-align: center;">{{rowIndex+1}}</td>
+                    <td *ngFor="let col of columns" >
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>    
+</p-tabView>
+

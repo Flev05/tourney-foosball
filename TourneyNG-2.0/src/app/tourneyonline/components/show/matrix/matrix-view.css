@@ -1,0 +1,22 @@
+.style0 {
+    width: auto;
+}
+.style1 {
+    width: 10mm;
+    font-weight: 700;
+    color: #333333;
+}
+.totalStyle {
+    width: 10mm;
+    font-weight: 700;
+    background-color: yellow !important;
+    color: black;
+}
+.diagonalStyle {
+    background-color: black !important;
+    disabled: true;
+}
+.lastStyle {
+    background-color: black !important;
+    disabled: false !important;
+}

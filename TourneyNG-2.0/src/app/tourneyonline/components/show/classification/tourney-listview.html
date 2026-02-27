@@ -1,0 +1,45 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Classifiche</span>
+        <span>Vista elenco classifiche dei gironi del torneo</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">      
+    <p>
+        Selezionare il torneo ed accedere alla corrispondente vista delle schede di gironi, playoff ed
+        eliminazioni dirette contenenti le classifiche delle squadre. 
+    </p>    
+    </p-accordionTab>
+</p-accordion>    
+</div>
+
+<p-table [columns]="cols" 
+    [value]="rows" 
+    [responsive]="true"
+    selectionMode="single" 
+    [(selection)]="selectedRow" 
+    (onRowSelect)="onRowSelect($event)" >
+ 
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                <span class="ui-column-title">{{col.header}}</span>
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>
+ 
+ 

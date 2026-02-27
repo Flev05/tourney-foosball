@@ -1,0 +1,101 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista di dettagio Playoff</span>
+        <h3>Torneo: {{selectedTourney.tourneyName}}</h3>
+        <h3>Girone Playoff: {{selectedPlayoff.round.name}}</h3>        
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <p-accordion>
+        <p-accordionTab header="Introduzione">                        
+            <p>
+                Vista di dettaglio per la gestione delle regole del passaggio del turno ai play off.
+            </p>
+ 
+            <p>
+                La configurazione del play off consiste nel documentare come popolarlo in funzione della posizione di
+                classifica maturata dalle squadre nei gironi all'italiana. 
+                Ogni riga di configurazione rappresenta una regola con cui popolare il play off
+                con una squadra proveniente da un girone all'italiana.                
+            </p>
+            <p>
+                Per esempio le seguent regole per il girone "Playoff Girone A"
+            </p>
+            <ul>
+                <li>1° Girone A</li>
+                <li>2° Girone B</li>
+                <li>1° Girone B</li>
+                <li>2° Girone A</li>
+            </ul>         
+            <p>           
+                Significa che nel girone "Play off Girone A", ci finiranno la 1° classificata del girone all'italiana "Girone A", la 2° del "Girone B",
+                la 1° classificata del "Girone B" e la 2° del "Girone A"
+            </p>
+        </p-accordionTab>
+    </p-accordion>    
+
+    <p-accordion>
+        <p-accordionTab header="Istruzioni">   
+            <p>
+                In questa vista, trovate i seguenti oggetti:
+            </p>
+            <ul>
+                <li>Il bottone Fatto</li>
+                <li>La combo box delle posizioni di classifica</li>
+                <li>La combo box dei gironi all'italiana</li>
+                <li>Il bottone Salva</li>
+                <li>Il bottone Rimuovi</li>
+            </ul>         
+
+            <p>
+                Il bottone Indietro permette di ritornare alla vista precedente senza salvare le eventuale modifiche apportate.
+            </p>
+                             
+            <p>
+                La combo box delle posizioni di classifica 
+            </p>
+            <ul>
+                <li>Scegliere la posizione di classifica</li>
+                <li>Scegliere il girone all'italiana</li>
+                <li>Rimuovere una regola</li>
+            </ul>         
+            
+            <p>
+                Per scegliere la posizione occorre selezione un numero dalla combo box delle posizione di clssifica.
+                Allo stesso modo per il nome del girone all'italiana, occorre selezionare il nome dalla combo box
+                dei gironi presenti in combo box.
+            </p>
+            <p>
+                Alla fine dell'operazione salvare con il bottone Salva che vi riporta alla vista elenco delle regole de girone.
+            </p>
+
+            <h4>Rimuovere una regola</h4>
+            <p>
+                Rimuovere una regola significa rimuovere la regola di passaggio del turno selezionata. 
+                Il bottone Rimuovi effettua tale operazione e vi riporta alla vista elenco delle regole del girone rimaste.
+            </p>
+        </p-accordionTab>
+    </p-accordion>    
+</div>
+
+<form [formGroup]="playoffConfigFormGroup" >
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="submit" icon="fa fa-arrow-left" pButton label="Indietro"></button>
+    </div>              
+
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12">
+            <div class="ui-g-2">
+                <label for="positionId">Classificata: </label>
+            </div>
+            <p-dropdown id="positionId" [options]="positions" formControlName="position" optionLabel="label" ></p-dropdown>
+        </div>
+        <div class="ui-g-12">
+            <div class="ui-g-2">
+                <label for="roundId">Girone: </label>
+            </div>
+            <p-dropdown id="roundId" [options]="rounds" formControlName="round" optionLabel="label"></p-dropdown>
+        </div>
+    </div>   
+</form>

@@ -1,0 +1,251 @@
+
+
+<p-table *ngIf="!loginService.isFollower()" >
+    <ng-template pTemplate="header">
+        <tr>
+            <td>
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+            </td>
+            <td>
+                <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
+            </td>
+            <td style="text-align: right;">
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibile. Riprovare più tardi."></p-message>
+</div>   
+
+<p-tabView [activeIndex]="meetingService.selectedResultTabIndex" (onChange)="onChangeTab($event)">
+    <p-tabPanel  *ngIf="containsRound()" header="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})" >      
+        <p-table [columns]="roundCols"
+                    [value]="roundRows"
+                    [responsive]="true"
+                    selectionMode="single" 
+                    [(selection)]="selectedRound"
+                    (onRowSelect)="onRoundRowSelect($event)">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 40mm; text-align: center;">
+                        Gironi
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        N° Squadre
+                    </th>                    
+                    <th>
+                        Squadre
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">                    
+                <tr [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>           
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div style="margin-bottom: 10px;">
+                    <p-checkbox *ngIf="loginService.isUserAllowed()" name="terminatedRoundsGroupname" 
+                        label="Gironi terminati" 
+                        pTooltip="Selezionare solo quando tutti i gironi sono terminati"
+                        value="terminatedRounds" 
+                        [(ngModel)]="selectedTourney.terminatedRounds" 
+                        (onChange)="onTerminateRoundChange($event)" >
+                    </p-checkbox>
+                </div>
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pButton (click)="printPdfMeeting()" 
+                    label="Incontri" 
+                    class="ui-button-success">
+                </button>
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pButton (click)="printPdfClassification()" 
+                    label="Classifica" 
+                    class="ui-button-success"
+                    style="margin-left: 5mm;">
+                </button>
+            </ng-template>
+        </p-table>   
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="containsPlayoff()" header="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}({{playoffCount}})" >    
+        <p-table [columns]="playoffCols"
+            [value]="playoffRows"
+            selectionMode="single" 
+            [(selection)]="selectedPlayoff"
+            (onRowSelect)="onPlayoffRowSelect($event)">s
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 40mm; text-align: center;">
+                        Gironi
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        N° Squadre
+                    </th>                     
+                    <th>
+                        Squadre
+                    </th>
+                </tr>
+            </ng-template>
+    
+            <ng-template pTemplate="body" let-rowData let-columns="columns">                    
+                <tr [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template *ngIf="loginService.isUserAllowed()" pTemplate="summary">
+                <p-checkbox name="terminatedPlayoffsGroupname" 
+                    label="Playoff terminati" 
+                    pTooltip="Selezionare solo quando tutti i gironi di PLAYOFF sono terminati"
+                    value="terminatedRounds" 
+                    [(ngModel)]="selectedTourney.terminatedPlayoffs" 
+                    (onChange)="onTerminatePlayoffChange($event)">
+                </p-checkbox>                
+            </ng-template>      
+
+        </p-table>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="containsPlayout()" header="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}({{playoutCount}})" >    
+        <p-table [columns]="playoffCols"
+            [value]="playoutRows"
+            selectionMode="single" 
+            [(selection)]="selectedPlayout"
+            (onRowSelect)="onPlayoutRowSelect($event)">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 40mm; text-align: center;">
+                        Gironi
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        N° Squadre
+                    </th>                    
+                    <th>
+                        Squadre
+                    </th>
+                </tr>
+            </ng-template>
+    
+            <ng-template pTemplate="body" let-rowData let-columns="columns">                    
+                <tr [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+
+    <p-tabPanel *ngIf="containsEliminatory()" 
+        header="{{selectedTourney.eliminatoryTabName}}({{eliminatoryCount}})"  >   
+        <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryLevelRows" 
+                selectionMode="single" 
+                [(selection)]="selctedEliminatoryLevel" 
+                (onRowSelect)="onEliminatoryRowSelect($event)">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th>
+                        Livello
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        N° Squadre
+                    </th>
+                    <th>
+                        Squadre
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        Lista
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        T.one
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        {{rowData['name']}}
+                    </td>
+                    <td style="width: 20mm; text-align: center;">
+                        {{rowData['level']}}
+                    </td>
+                    <td>
+                        {{rowData['teams']}}
+                    </td>
+                    <td>
+                        <button class="ui-button-success" 
+                            pButton icon="fa fa-file-excel-o" 
+                            pTooltip="Stampa la lista degli incontri di eliminazione diretta"
+                            (click)="printPdfTopLevelMeeting(rowIndex)">
+                        </button>
+                    </td>
+                    <td>
+                        <button class="ui-button-success" 
+                            pButton icon="fa fa-file-excel-o" 
+                            pTooltip="Stampa il tabellone degli incontri di eliminazione diretta"
+                            (click)="printTennisBracket(rowIndex)">
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+    
+    <p-tabPanel *ngIf="containsEliminatoryB()" 
+        header="{{selectedTourney.eliminatoryBTabName}}({{eliminatoryBCount}})"  >  
+        <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryBLevelRows" 
+                selectionMode="single" 
+                [(selection)]="selectedEliminatoryBLevel" 
+                (onRowSelect)="onEliminatoryBRowSelect($event)">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th>
+                        Livello
+                    </th>
+                    <th style="width: 20mm; text-align: center;">
+                        N° Squadre
+                    </th>
+                    <th>
+                        Squadre
+                    </th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="rowData">
+                    <td>
+                        {{rowData['name']}}
+                    </td>
+                    <td style="width: 20mm; text-align: center;">
+                        {{rowData['level']}}
+                    </td>
+                    <td>
+                        {{rowData['teams']}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-tabPanel>
+    
+    <p-tabPanel header="Teams({{selectedTourney.teams.length}})">   
+        <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
+    </p-tabPanel>
+</p-tabView>        
+    

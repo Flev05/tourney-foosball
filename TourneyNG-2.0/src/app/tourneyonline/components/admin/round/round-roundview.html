@@ -1,0 +1,109 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
+        <h3>Girone: {{selectedRound.name}}</h3> 
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Introduzione">                        
+        <p>
+            Vista di dettaglio girone.
+            Da questa vista potete modificare le squadre del girone selezionato.
+        </p>
+        <p>                
+            Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto 
+            relativamente agli incontri di andata e ritorno che sono documentati nella vista degli incontri
+            accessibile con il bottone "Incontri".
+        </p>
+        
+        <p>
+            L'utente deve semplicemente spostare, con i bottoni preposti, la squadra scelta da sinstra verso destra per aggiungerla
+            al girone e da destra verso sinistra per rimuoverla dal girone e renderla disponibile per altri.            
+        </p>
+        <p>
+            Attenzione! Se non ci sono squadre nell'area di sinistra, dovete prima creare le squadre del torneo
+            nella scheda delle squadre.
+        </p>
+
+        <p>
+            Tutti i dettagli relativi agli incontri tra le squadre del girone sono demandati alla vista degli incontri.
+            Gli incontri sono tutti precompilati con la data e l'indirizzo del luogo di svolgimento ereditati da quelli del torneo.
+            Se il torneo si svolge su più di un giorno, deve essere compilato il calendario corrispondente accessibile con
+            il bottone "Incontri".
+        </p>
+        <p>
+            Attenzione! Se non entrate esplicitamente nella vista degli incontri, con il bottone Incontri, non saranno generati
+            gli incontri tra le squadre del girone e il sistema non sarà in grado di organizzare il resto del torneo.
+        </p>
+    </p-accordionTab>
+</p-accordion>
+
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+            
+        <h4>Creare un nuovo girone</h4>
+        <p>
+            L'area di destra "Selezionati", elenca le squadre che compongono il girone
+            mentre quella di sinistra "Disponibili", elenca tutte le squadre disponibili
+        </p>
+
+        <h4>Modificare un girone</h4>
+        <p>
+            La modifica del girone consiste nello spostare le squadre dall'area dei Disponibili a quella dei 
+            Selezionati e viceversa.
+        </p>
+
+        <h4>Attenzione!</h4>
+        <p>
+            Ricordarsi, una volta che avete sistemato le squadre, di accedere esplicitamente alla vista di dettaglio 
+            degli incontri con il bottone Incontri altrimenti il sistema non disporrà di alcun incontro e non potrà
+            gestire il resto del torneo.
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+
+    <button type="button" 
+        icon="fa fa-user-plus" 
+        pButton (click)="goMeeting()" 
+        label="Incontri" 
+        class="ui-button-success">
+    </button>
+</div>                  
+
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p-table [responsive]="true" 
+        [columns]="cols" 
+        [value]="teams" 
+        selectionMode="single"
+        [(selection)]="selectedTeam" 
+        (onRowSelect)="onRowSelect($event)" 
+        [scrollable]="true" 
+        scrollHeight="500px">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 15mm;">N°</th>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+                <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                <td *ngFor="let col of columns">
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
+                </td>         
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+ 

@@ -1,0 +1,2094 @@
+<div class="content-section introduction">
+    <div>
+        <h2>Vista di dettaglio torneo: {{selectedTourney.tourneyName}}</h2>
+    </div>
+</div>
+
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Introduzione">            
+        <p>
+            Da questa vista potete creare un nuovo torneo, modificare o rimuovere uno già esistente.
+            Prima di proseguire, dovete capire la tipologia del vostro torneo.
+        </p>
+        <p>
+            Allo scopo consultare la documentazione al link:
+            <a [routerLink]="['/demo']">Demo</a>
+        </p>
+        <p>
+            La vista contiene 2 bottoni:
+        </p>
+        <ul>
+            <li>Indietro</li>
+            <li>Salva</li>
+        </ul>
+        <p>e le seguenti schede da compilare:</p>
+        <ul>
+            <li>Generalità</li>
+            <li>Modalità</li>
+            <li>Squadre</li>
+            <li>Gironi</li>
+            <li>Playoff</li>
+            <li>Eliminazioni Dirette</li>
+            <li>Campi</li>
+        </ul>   
+        <h4>Indietro</h4>
+        <p>
+            Il bottone Indietro deve essere utilizzato per tornare alla vista precedente senza aver confermato nessun dato.
+            Anche se modificate dei dati nelle 2 schede e premete il bottone Indietro, i dati preesistenti resteranno inalterati.
+        </p>
+        <h4>Salva</h4>
+        <p>            
+            Il bottone Salva deve essere utilizzato per confermare le modifiche apportate alla schede.
+            Se effettuate delle modifiche e non premete il bottone Salva, i dati resteranno invariati e 
+            vi troverete con quelli preesistenti.
+        </p>
+    
+        <p>
+            In ogni caso, sia per gli utenti anonimi che autorizzati, la creazione di un nuovo torneo deve essere 
+            organizzata per tappe consecutive da eseguire in un ordine ben preciso.
+        </p>
+        <p>Le tappe devono essere completate nel seguente ordine:</p>
+        <ul>
+            <li>Definizione torneo</li>
+            <li>Configurazione squadre</li>
+            <li>Configurazione gironi</li>
+            <li>Configurazione playoff</li>
+            <li>Configurazione eliminatorie</li>
+            <li>Configurazione Obiettivo torneo</li>
+        </ul>
+
+        <p>
+            Alcune di esse hanno dati facoltativi e possono essere completate anche successivamente.
+        </p>
+
+        <h3>Definizione torneo</h3>
+        <p>
+            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Modalità" del torneo.
+        </p>
+        <p>
+            Nella scheda "Generalità" dovete inserire il nome, la data di inizio, la tipologia del torneo, ecc
+        </p>
+        <p>
+            Nella scheda "Modalità" dovete specificate i dati specifici del torneo come la durata, il numero di
+            fasi, le eliminazioni dirette, i turni, ecc.
+        </p>
+        <p>
+            In entrambi i casi troverete maggiori dettagli nel paragrafo delle Istruzioni.
+        </p>
+
+        <h4>Caricamento anagrafica giocatori</h4>
+        <p>
+            I giocatori che partecipano al torneo devono essere caricati a sistema inserendo i loro dati anagrafici.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>
+        </p>
+        
+        <h4>Configurazione squadre</h4>
+        <p>
+            Le squadre che compongono il torneo, possono essere create independentemente dai giocatori.
+            Una squadra contiene un sottoinsieme dei giocatori del torneo e può essere competate in un momento successivo.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù:
+            <a class="home-button" [routerLink]="['/adminteam']">Squadre</a>
+        </p>
+        
+        <h3>Configurazione gironi</h3>
+        <p>
+            I gironi sono intesi come quelli all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+            Il torneo contiene sempre almeno un girone.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminround']">Gironi</a>
+        </p>        
+
+        <h3>Configurazione playoff</h3>
+        <p>
+            I playoff sono opzionali, dipende dalla natura del torneo, alcuni li prevedono altri no.
+            Anche i playoff sono gironi all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+        </p>            
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayoff']">Playoff</a>
+        </p>
+
+        <h3>Configurazione eliminatorie</h3>
+        <p>
+            La fase delle eliminazioni dirette, deve essere configurata scegliendo il livello
+            di partenza - sedicesimi, ottavi, quarti, ecc. - e specificando come popolare gli incontri 
+            a partire dai posizionamenti di clssifica dei girone precedenti: gironi all'italiana e playoff.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/admineliminatory']">Eliminatorie</a>
+        </p> 
+
+        <h3>Obiettivi</h3>
+        <p>
+            L'obiettivo del torneo è opzional, da configurare per scopi di memorizzazione dello scopo del torneo
+            possibile da consultare anche in futuro.
+            Per esempio, per il campionato di calcio di serie B, l'obiettivo è salire in serie A e ci 
+            arrivano le prime due squadre del campionato più quella che vince i playoff corrispondenti.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminobjective']">Obiettivi</a>
+        </p>
+    </p-accordionTab>
+
+    <p-accordionTab header="Istruzioni">    
+        <h3>Modalità</h3>
+        <p>            
+                In questa scheda dovete impostare i seguenti campi:
+        </p>
+        <ul>
+            <li>Gara</li>
+            <li>Durata</li>
+            <li>Fasi</li>
+            <li>Inserimento Risultati</li>
+            <li>Turni</li>
+            <li>Playoff</li>
+            <li>Goal</li>
+            <li>Vittoria</li>
+            <li>Sconfitta</li>
+            <li>Pareggio</li>
+            <li>Partite</li>
+            <li>Giocatori</li>
+        </ul>   
+
+        <h4>Gara</h4>
+        <p>
+            Per Gara si intende se terminano a tempo o a punti. A tempo solo le gare che terminano entro un certo tempo, tipo
+            i 90 minuti nel calcio. Mentre a punti sono le gare come il volley o il tennis in cui le gare vanno avanti fino a 
+            quando una delle 2 squadre non raggiunge il punteggio prefissato.
+        </p>
+
+        <h4>Fasi</h4>
+        <p>
+            Per Fasi si intende le tre classiche: Gironi, Playoff, Eliminazioni Dirette. Non sono ammesse tutte le
+            combinazioni, per esempio non si può scegliere Playoff ed Eliminazioni senza Gironi perchè
+            non avrebbero senso. Se una combinazione non è ammessa, il sistema visualizzerà un messaggio di errore con
+            la spiegazione del caso.
+        </p>
+
+        <h4>Inserimento Risultati</h4>
+        <p>
+            Si tratta di scegliere lo strumento per inserire i risultati di un incontro. Si hanno due possibilità:
+        </p>
+        <ul>
+            <li>Risultato Finale</li>
+            <li>Punti Conquistati</li>
+        </ul>
+        <p>
+            La scelta del Risultato Finale, vi permette di raccogliere il punteggio delle partite che caratterizza l'incontro, con possibilità
+            di costruire tutti i calcoli statistici del torneo, dalle reti segnate, ai giocatori che le hanno realizzate, differenza reti, ecc.
+        </p>
+        <p>
+            Se scegliete invece Punti Conquistati, allora avrete a disposizione solo i punti conquistati in ciascun incontro senza alcun dettaglio
+            sulle reti segnate e sull'identita del marcatore.
+            Si consiglia questa scelta per gironi con un numero massimo di 8 squadre.
+        </p>
+
+        <h4>Playoff</h4>
+        <p>
+            Se previsti i Playoff, si deve specificare se ci sono i Turni di ritorno o solo andata.
+        </p>
+
+        <h4>Goal</h4>
+        <p>
+            Nei tornei a punti, specificare i Goal necessari da segnare per aggiudicarsi la vittoria
+        </p>
+        <h4>Vittoria</h4>
+        <p>
+            In entrambi i tornei a punti o a tempo, specificare i punti guadagnati in caso di vittoria
+        </p>
+        <h4>Pareggio</h4>
+        <p>
+            Solo nei tornei a tempo, specificare i punti guadagnati in caso di pareggio, nei tornei a punti il pareggio non esiste.
+        </p>
+        <h4>Sconfitta</h4>
+        <p>
+            Solo nei tornei a punti, specificare i punti guadagnati in caso di sconfitta al Golden Goal o Tie Break.
+            Nei tornei a tempo, la sconfitta vale sempre zero punti.
+        </p>            
+
+        <h4>Partite</h4>
+        <p>
+            Solo nei tornei a punti, specificare il numero massimo di partite da disputare in ciascun incontro. 
+            Per esempio in un incontro di tennis, dove le partite coincidono con i SET, si disputano massimo 5 partite.
+            In un incontro di volley anche si disputano massimo 5 partite.
+        </p>            
+        <h4>Tutte/Al Meglio</h4>
+        <p>
+            Solo nei tornei a punti, specificare se disputare Tutte le patite o il numero minimo per aggiudicarsi l'incontro. 
+            Se scegliete Al Meglio, il sistema automaticamente calcola il numero minimo di partite da vincere per aggiudicarsi l'incontro.
+        </p>            
+        <p>
+            Per esempio in un incontro di tennis, si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie, 
+            in un incontro di volley si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie.
+            In un campionato CSI di calcio balilla si disputano tutte le 9 partite dell'incontro perchè si assegna un punto
+            per ciascuna partita vinta.
+        </p>
+  
+        <h3>Squadre</h3>
+        <p>
+           Vedi descrizione riporta a livello della scheda Squadre.
+        </p>
+
+        <h3>Gironi</h3>
+        <p>
+            Specificare i gironi che compongono il torneo, inserendo i loro nomi e le squadre che li compongono
+            scegliendole dalla lista di squadre proposte. Quando si aggiunge una squadra ad un girone, automaticamente
+            il sistema la rimuove dal pool delle squadre diponibili per il torneo ed, allo stesso modo, se rimuovete
+            un squadra da un girone, il sistema la rimette nel pool delle squadre disponilibi.
+        </p>
+        
+        <h3>Playoff</h3>
+        <p>
+            Specificare, se previsti, i playoff del torneo. Allo scopo occorre definire le regole per il passaggio
+            del turno dai gironi all'italiana che approdono ai playoff in funzione delle posizioni di classifica conseguite.
+        </p>
+
+        <h3>Eliminazioni Dirette</h3>
+        <p>
+            Specificare, se previsti, i livelli di eliminazioni dirette del torneo. Allo scopo il sistema automaticamente
+            propone le diverse possibilità in funzione delle scelte effettuate nella scheda Modalità.
+        </p>
+
+        <h3>Campi</h3>
+        <p>
+            Se previsti si possono registrare i campi di gioco utilizzati durante il torneo.
+            Questa fase dipende fortemente della disciplina del torneo e potrebbe essere presente solo per alcune di loro.
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" type="button" icon="fa fa-arrow-left" pButton (click)="gotoListView()" label="Elenco Tornei"></button>
+</div>   
+ 
+<p-tabView [activeIndex]="tourneyService.selectedTabIndex" (onChange)="onChangeTab($event)">
+    <p-tabPanel header="Generalità">
+    <p-accordion>
+        <p-accordionTab header="Istruzioni">
+        <p>
+            Sotto le istruzioni per la compiazione delle 2 schede. 
+        </p>        
+        <h3>Generalità</h3>
+        <p>            
+            In questa scheda dovete impostare i seguenti campi:
+        </p>
+        <ul>
+            <li>Nome torneo</li>
+            <li>Giornaliero</li>
+            <li>Accesso</li>
+            <li>Data e luogo</li>
+            <li>Disciplina</li>
+        </ul>   
+
+        <h4>Nome torneo</h4>
+        <p>
+            Il nome del torneo deve essere univoco all'interno dello spazio dei tornei, se tentate di inserire un nome già esistente 
+            riceverete un messaggio di errore.
+        </p>
+        <h4>Giornaliero</h4>
+        <p>
+            Dovete specificare se il torneo si svolge in uno o più giorni. Un torneo gioraliero, è un torneo che incomincia e finisce
+            nell'arco di massimo 24 0re, per esempio le coppe CSI del calcio balilla che durano circa 6 ore. 
+            Altrimenti si tratta di un torneo con durata temporale lunga tipica dei campionati.
+        </p>
+
+        <h4>Accesso</h4>
+        <p>
+            Per Accesso di intende se volete rendere pubblico o privato il vostro torneo. Se scegliete Pubblico, il sistema farà vedere
+            il vostro torneo a tutti gli utenti di Tourney Online, ovviamente nessuno di essi potrà modificare i dati del torneo
+            a meno che non sia un utente autorizzato dal proprietario del torneo, un utente creato dal proprietario con privilegio
+            di modifica. Se invece scegliete Privato, il torneo non sarà visibili agli utenti generici di Tourney Online ma solo
+            a quelli autorizzati ossia in possesso delle credenziali di login create dal proprietario del torneo.
+        </p>
+        <h4>Data e luogo</h4>
+        <p>
+            Per data, si intende la data di inizio del torneo anche se di tipo tipo non giornaliero. Per il luogo bisogna distinguere
+            se il torneo è giornaliero o no.
+            Se giornaliero, si intende l'indirizzo della località dove si svolgono tutte le partite, se non giornaliero,
+            si usa inserire l'indirizzo della sede dell'organizzazione o dove si svolge la prima partita, le location di tutti
+            gli incontri sono documentati uno per uno nelle corrispondenti viste di dettaglio. 
+        </p>
+        <h4>Disciplina</h4>
+        <p>
+            Per disciplina si intende la categoria di appartenenza del gioco, tipo Calcio, Basket, Volley, ecc.
+            Il programma non fa alcuna distinzione tra le varie discipline a livello di gestione, ma può usarle per 
+            dei link di rimando per regolamenti e normative.
+        </p>
+        </p-accordionTab>
+    </p-accordion>
+    
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <p>
+            <span style="font-weight: bold">
+                Attenzione! I campi contrassegnati con * sono obbligatori!
+            </span>
+        </p>
+                
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Disciplina:
+            </div>
+            <div class="ui-grid-col-3">
+                <p-dropdown [options]="disciplineOptions" 
+                    [(ngModel)]="selectedDiscipline" 
+                    optionLabel="label" 
+                    (onChange)="onDisciplineChange($event.value)" 
+                    [autoWidth]="false">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Nome Torneo*:
+            </div>
+            <div class="ui-grid-col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
+                <input pInputText type="text" [(ngModel)]="selectedTourney.tourneyName"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Follower URL:
+            </div>
+            <div class="ui-grid-col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
+                {{followerUrl}}
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Giornaliero:
+            </div>
+            <div class="ui-grid-col-3" tooltipPosition="right"
+                    pTooltip="Indicare se il torneo si svolge in un singolo giorno o su più giorni.">
+                <div class="ui-g radiobuttons">
+                    <div class="ui-g-12">
+                        <p-radioButton name="isDailyGroupname" 
+                            label="Si" 
+                            value="true" 
+                            [(ngModel)]="selectedTourney.isDaily"
+                            (onClick)="onIsDailyClick()">
+                        </p-radioButton>
+                    </div>
+                    <div class="ui-g-12">
+                        <p-radioButton name="isDailyGroupname" 
+                            label="No" 
+                            value="false" 
+                            [(ngModel)]="selectedTourney.isDaily"
+                            (onClick)="onIsNotDailyClick()">
+                        </p-radioButton>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" >
+                Via*:
+            </div>
+            <div class="ui-grid-col-5" pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
+                <input pInputText type="text" [(ngModel)]="selectedTourney.address"/>
+            </div>
+        </div>
+                    
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" 
+                    [(ngModel)]="selectedTourney.country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" 
+                    field="city"
+                    placeholder="Comune" 
+                    [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="ui-grid-row" tooltipPosition="right">
+            <div class="ui-grid-col-3">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{selectedTourney.address}} {{selectedTourney.country != undefined ? " - " + selectedTourney.country.zipCode + " " + selectedTourney.country.city
+                + " (" + selectedTourney.country.provinceCode +")" : "" }}
+            </div>
+        </div>
+            
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3" tooltipPosition="right"
+                    pTooltip="Indicare la data di inizio del torneo.">
+                <p-calendar [(ngModel)]="selectedTourney.datetime" 
+                    [locale]="it" 
+                    [showIcon]="true"   
+                    dateFormat="dd/mm/yy" 
+                    showTime="true">
+                </p-calendar>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <button pButton type="button"
+                    class="ui-button-success" 
+                    icon="{{nextButtonIcon}}" 
+                    iconPos="right"
+                    label="{{nextButtonLabel}}" 
+                    (click)="nextTab()"
+                    [disabled]="enableSaveButton()">
+                </button>
+            </div>
+        </div>
+    </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="Modalità">
+    <p-accordion>
+        <p-accordionTab header="Istruzioni">   
+            <h3>Modalità</h3>
+            <p>            
+                In questa scheda dovete impostare i seguenti campi:
+            </p>
+            <ul>
+                <li>Gara</li>
+                <li>Durata</li>
+                <li>Fasi</li>
+                <li>Goal</li>
+                <li>Vittoria</li>
+                <li>Sconfitta</li>
+                <li>Pareggio</li>
+                <li>Partite</li>
+                <li>Giocatori</li>
+            </ul>   
+    
+            <h4>Gara</h4>
+            <p>
+                Per Gara si intende se terminano a tempo o a punti. A tempo solo le gare che terminano entro un certo tempo, tipo
+                i 90 minuti nel calcio. Mentre a punti sono le gare come il volley o il tennis in cui le gare vanno avanti fino a 
+                quando una delle 2 squadre non raggiunge il punteggio prefissato.
+            </p>
+    
+            <h4>Fasi</h4>
+            <p>
+                Per Fasi si intende le tre classiche: Gironi, Play Off, Ply Out, Eliminazioni Dirette. Non sono ammesse tutte le
+                combinazioni, per esempio non si può scegliere Play Off ed Eliminazioni senza Gironi perchè
+                non avrebbero senso. Se una combinazione non è ammessa, il sistema visualizzerà un messaggio di errore con
+                la spiegazione del caso.
+            </p>
+    
+            <h4>Goal</h4>
+            <p>
+                Nei tornei a punti, specificare i Goal necessari da segnare per aggiudicarsi la vittoria
+            </p>
+            <h4>Vittoria</h4>
+            <p>
+                In entrambi i tornei a punti o a tempo, specificare i punti guadagnati in caso di vittoria
+            </p>
+            <h4>Pareggio</h4>
+            <p>
+                Solo nei tornei a tempo, specificare i punti guadagnati in caso di pareggio, nei tornei a punti il pareggio non esiste.
+            </p>
+            <h4>Sconfitta</h4>
+            <p>
+                Solo nei tornei a punti, specificare i punti guadagnati in caso di sconfitta al Golden Goal o Tie Break.
+                Nei tornei a tempo, la sconfitta vale sempre zero punti.
+            </p>            
+    
+            <h4>Partite</h4>
+            <p>
+                Solo nei tornei a punti, specificare il numero massimo di partite da disputare in ciascun incontro. 
+                Per esempio in un incontro di tennis, dove le partite coincidono con i SET, si disputano massimo 5 partite.
+                In un incontro di volley anche si disputano massimo 5 partite.
+            </p>            
+            <h4>Tutte/Al Meglio</h4>
+            <p>
+                Solo nei tornei a punti, specificare se disputare Tutte le patite o il numero minimo per aggiudicarsi l'incontro. 
+                Se scegliete Al Meglio, il sistema automaticamente calcola il numero minimo di partite da vincere per aggiudicarsi l'incontro.
+            </p>            
+            <p>
+                Per esempio in un incontro di tennis, si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie, 
+                in un incontro di volley si disputano massimo 5 partite, vince chi arriva prima a 3 vittorie.
+                In un campionato CSI di calcio balilla si disputano tutte le 9 partite dell'incontro perchè si assegna un punto
+                per ciascuna partita vinta.
+            </p>                                        
+        </p-accordionTab>
+    </p-accordion>
+        
+    <div *ngIf="!modeTabEnabled" style="margin-top:30px">
+        <p-message  
+            severity="error" 
+            text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
+        </p-message>
+    </div>    
+    
+    <div *ngIf="modeTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <p-fieldset legend="Gara">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4" tooltipPosition="right"
+                        pTooltip="Indicare se le gare terminano a tempo o a punteggio">
+                    <div class="ui-g radiobuttons">
+                        <div class="ui-g-12"> 
+                            <p-radioButton name="tourneyTypeGroupname" 
+                                label="A punti" 
+                                value="score" 
+                                [(ngModel)]="selectedTourney.tourneyType"
+                                (onClick)="onScoreClick()">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-g-12">
+                            <p-radioButton name="tourneyTypeGroupname" 
+                                label="A tempo" 
+                                value="time" 
+                                [(ngModel)]="selectedTourney.tourneyType"
+                                (onClick)="onTimeClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-fieldset>
+        <p-fieldset legend="Inserimento Risultati">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4" tooltipPosition="right"
+                        pTooltip="Scegliere la modalità di inserimento dei risultati: Risultato Finale (un goal per volta) di ciascun incontro, con l'uso della MATRICE in cui si inseriscono solo i Punti Conquistati(3, 2, 1 o 0)">
+                    <div class="ui-g radiobuttons">
+                        <div class="ui-g-12">
+                            <p-radioButton name="resultToolGroupname" 
+                                label="Punti Conquistati (Matrice)" 
+                                value="Reduced" 
+                                [(ngModel)]="selectedTourney.resultTool"
+                                (onClick)="onRoundReducedClick()">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-g-12">
+                            <p-radioButton name="resultToolGroupname" 
+                                label="Risultato Finale" 
+                                value="Complete" 
+                                [(ngModel)]="selectedTourney.resultTool"
+                                (onClick)="onRoundCompleteClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-fieldset>
+        
+        <p-fieldset legend="Fasi"> 
+            <div class="ui-g" >
+                <div class="ui-g-2" tooltipPosition="left" 
+                    pTooltip="Selezionare Gironi se sono previsti gironi di qualificazione all'italiana">
+                    <p-checkbox name="phasesGroupname" 
+                        label="Gironi"     
+                        value="round"     
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onRoundPhaseChange($event)">
+                    </p-checkbox>
+                </div>
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Gironi">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.roundTabName"/>
+                </div>
+            </div>
+            <div *ngIf="containsRound()" class="ui-g" >                           
+                <div class="ui-g-2" tooltipPosition="left" 
+                    pTooltip="Selezionare Play Off se sono previsti altri gironi di qualificazione a valle dei gironi all'italiana">
+                    <p-checkbox name="phasesGroupname" label="Play Off"     
+                        value="playoff"     
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onPlayoffPhaseChange($event)">
+                    </p-checkbox>
+                </div>
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Play Off">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.playoffTabName"/>
+                </div>
+            </div>
+            <div *ngIf="containsPlayoff()" class="ui-g" >
+                <div class="ui-g-2" tooltipPosition="left" 
+                    pTooltip="Selezionare Play Out solo se previsto un ulteriore girone all'italiana creato con le squadre non qualificate ai Play Off">
+                    <p-checkbox name="phasesGroupname" label="Play Out"     
+                        value="playout"     
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onPlayoutPhaseChange($event)">
+                    </p-checkbox>
+                </div>
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Play Out">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.playoutTabName"/>
+                </div>
+            </div>    
+            <div class="ui-g">
+                <div class="ui-g-2" tooltipPosition="left"
+                    pTooltip="Selezionare Eliminazioni Dirette se sono previste le eliminazioni dirette sia derivanti dai precedenti gironi che come torneo con solo eliminatorie">
+                    <p-checkbox name="phasesGroupname" 
+                        label="Eliminazioni Dirette" 
+                        value="eliminatory" 
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onEliminatoryPhaseChange($event)">
+                    </p-checkbox>
+                </div>          
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.eliminatoryTabName"/>
+                </div>
+            </div>
+            <div class="ui-g"  *ngIf="containsEliminatory()">
+                <div class="ui-g-2" tooltipPosition="left"
+                    pTooltip="Selezionare Eliminazioni Dirette B se sono previste le eliminazioni dirette per le squadre che non si sono qualificate nei gironi precedenti">
+                    <p-checkbox name="phasesGroupname" label="Eliminazioni Dirette B" 
+                        value="eliminatoryB" 
+                        [(ngModel)]="selectedTourney.phases"
+                        (onChange)="onEliminatoryBPhaseChange($event)">
+                    </p-checkbox>
+                </div>          
+                <div class="ui-g-3" tooltipPosition="right" pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette B">                                
+                    <input pInputText type="text" [(ngModel)]="selectedTourney.eliminatoryBTabName"/>
+                </div>
+            </div>
+                              
+            <div *ngIf="notAllowedPhases()" class="ui-grid-col-3">
+                <div class="ui-message ui-messages-error ui-corner-all">
+                    <span>
+                        Questa combinazione non è prevista
+                    </span>
+                </div>
+                <div *ngIf="!atLeastOnePhase()" class="ui-message ui-messages-error ui-corner-all">
+                    <span>
+                        Abilitare almeno una fase
+                    </span>
+                </div>
+            </div>
+             
+        </p-fieldset>                                    
+        <p-fieldset legend="Durata" *ngIf="selectedTourney.tourneyType=='time'">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3">
+                    Minuti:
+                </div>
+                <div class="ui-grid-col-3">
+                    <p-spinner [(ngModel)]="selectedTourney.raceDuration" tooltipPosition="right"
+                        [min]="1"
+                        pTooltip="Indicare la durata in minuti della singola gara per i tornei a tempo">
+                    </p-spinner>
+                </div>
+            </div>
+        </p-fieldset>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
+                    <button pButton type="button" 
+                        class="ui-button-success"   
+                        icon="fa fa-arrow-left" 
+                        label="Indietro" 
+                        (click)="prevTab()">
+                    </button>
+                </div>
+                <div class="ui-grid-col-2">
+                    <button pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="enableSaveButton()">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="Squadre({{selectedTourney.teams.length}})">
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">     
+                <p>
+                    Inserire in questa vista tutte le squadre compongono il torneo, a prescindere da come saranno suddivise in gironi.
+                </p>
+                <p>
+                    Sono disponibili 3 operazioni:
+                </p>
+                <ul>
+                    <li>Gestisci/Aggiungi squadre</li>
+                    <li>Rimuovi squadra dal torneo</li>
+                    <li>Gestisci lista di giocatori della squadra</li>
+                </ul>   
+                <h4>Gestisci/Aggiungi squadre</h4>
+                <p>
+                    Per gestire la lista delle squadre del torneo, dovete usare il bottone Gestisci Squadre che vi farà
+                    accedere alla vista di gestione delle squadre come descritto nella vista corrispondente.
+                </p>
+                <p>
+                    Quando inserite una nuova squadra, il sistema verifica che il nome della squadra esista già
+                    a livello di torneo o a livello di società. Se esiste già vi propone quella già esitente così 
+                    potete modificare i dati presentati, se occorre. Se la squadra non esiste,
+                    dovete inserire tutti i dati della squadra richiesti. La squadra, se nuova, viene inserita
+                    sia a livello di torneo che di società.
+                </p>
+                <p>
+                    N.B. L'aggiunta di una squadra al torneo comporta l'annullamento dei gironi e degli incontri preesistenti.
+                </p>                
+                <h4>Rimuovi squadra dal torneo</h4>
+                <p>
+                    Si tratta di rimuovere la squadra selezionata SOLO a livello di torneo, se presente in anagrafica globale della
+                    società, rimarrà a livello di società. 
+                    Per eventuale rimozione globale, bisogna utilizzare la vista Team a livello di società. 
+                </p>
+                <p>
+                    N.B. La rimozione di una squadra dal torneo comporta l'annullamento
+                    dei gironi e degli incontri preesistenti.
+                </p>
+                <h4>Gestisci lista di giocatori della squadra</h4>
+                <p>
+                    Selezionando la squadra, si passa alla 
+                    gestione della lista dei giocatori che la compongono.
+                    Un click sulla riga della squadra, aprirà la vista elenco dei giocatori della squadra da cui 
+                    potete gestire la lista dei giocatori come descritto nella vista corrispondente.
+                </p>
+                <p>
+                    Per un nuovo torneo, creare almeno 2 squadre e spostarle nell'area delle squadre selezionate altrimenti il bottone Avanti resta disabilitato. 
+                </p>
+            </p-accordionTab>
+        </p-accordion>
+
+        <div *ngIf="!teamTabEnabled" style="margin-top:30px">
+            <p-message  
+                severity="error" 
+                text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
+            </p-message>
+        </div>    
+
+        <div class="ui-grid-col-3" tooltipPosition="right">
+            <div class="ui-g radiobuttons">
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Random" 
+                    pTooltip="Indicare se le squadre sono scelte in ordine casuale"
+                    value="random" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Teste di serie" 
+                    pTooltip="Indicare se le squadre sono scelte ordinate come teste di serie"
+                    value="topseed" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+                <p-radioButton name="isTeamsOrderedGroupname" 
+                    label="Gruppi" 
+                    pTooltip="Indicare se le squadre sono Random ma ragguppate per appartenenza tipo per ASD o società"
+                    value="group" 
+                    [(ngModel)]="selectedTourney.teamsWeightEnabled">
+                </p-radioButton>
+            </div>
+            <div class="ui-g-12">
+                <p-checkbox name="chaosGroupname" 
+                    pTooltip="Apporre il segno di spunta se i giocatori sono scelti a BARAONDA"
+                    label="Baraonda"     
+                    [binary]="true"
+                    [(ngModel)]="selectedTourney.chaosEnabled" >
+                </p-checkbox>
+            </div>
+        </div>        
+        
+        <div *ngIf="teamTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+            <app-player-chooser *ngIf="selectedTourney.chaosEnabled"></app-player-chooser>
+
+            <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
+
+            <button *ngIf="!isInWizardMode()" pButton type="button"
+                class="ui-button-success" 
+                icon="{{nextButtonIcon}}" 
+                iconPos="right"
+                label="{{nextButtonLabel}}" 
+                (click)="nextTab()"
+                [disabled]="teamButtonDisabled()">  
+            </button>      
+        
+            <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                <div class="ui-grid-row">
+                    <div  class="ui-grid-col-2">
+                        <button *ngIf="isInWizardMode()" pButton type="button" 
+                            class="ui-button-success"   
+                            icon="fa fa-arrow-left" 
+                            label="Indietro" 
+                            (click)="prevTab()">
+                        </button>
+                    </div>
+                    
+                    <div class="ui-grid-col-2">
+                        <button pButton type="button"
+                            class="ui-button-success" 
+                            icon="{{nextButtonIcon}}" 
+                            iconPos="right"
+                            label="{{nextButtonLabel}}" 
+                            (click)="nextTab()"
+                            [disabled]="teamButtonDisabled()">  
+                        </button>  
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}" *ngIf="containsRound()">    
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">              
+                <h4>Turni</h4>
+                <p>
+                    Scegliere se per ciascun girone ci sono turni di solo andata o di andata e ritorno.
+                </p>
+                <h4>Generazione</h4>
+                <p>
+                    Scegliere, se il gironi sono creati in automatico da programma o in manuale.
+                </p>
+                <h4>Numero di gironi</h4>
+                <p>
+                    Scegliere, dalla combo box Gironi, il numero di gironi all'italiana del torneo.
+                </p>
+                <h4>Automatico</h4>
+                <p>
+                    In funzione di questa scelta il sistema propone una compilazione d'ufficio per ciascun girone basato sul numero 
+                    di squadre configurate per il torneo.
+                    Potete modificare il contenuto del girone spostando le squadre presenti al suo interno
+                    dall'area dei Selezionati a quella dei Disponibili ed assegnarli ad altri gironi.
+                </p>
+                <h4>Manuale</h4>
+                <p>
+                    Se scegliete la generazione manuale, dovete scegliere anche il numero complessivo di squadre 
+                    per a livello di torneo e non per singolo girone. Ci pensa il programma a distribuirle 
+                    appropriatamente per ciascun girone. 
+                </p>
+                <p>                    
+                    Questo permette di gestire il caso in cui il numero di 
+                    squadre non sia un multiplo intero del numero di gironi. Esempi: 2 girone e 13 squadre.
+                    Il programma genera gli incontri e le giornate 
+                    senza inserire il nome delle squadre ma usa un segna posto che dovete riempire
+                    voi con il nome delle squadre e la data di calendario che avete già deciso.
+                </p>
+
+                <p>
+                    Per ciascun girone, dovete configurare il luogo e le date di ciascun incontro tra le squadre del girone.
+                    Questo è necessario se il girone si sviluppa su più giornate e in luoghi diversi, tipico dei campionati, 
+                    per tornei che si concludono in un solo giorno potete risparmiarvi questa operazione e passare alla scheda successiva.
+                </p>
+                <p>
+                    ATTENZIONE! A fronte di una modifica al numero di gironi, si perderanno irrimediabilmente 
+                    tutte le precedenti impostazioni che vanno rifatte.
+                </p>
+            </p-accordionTab>
+        </p-accordion>   
+        <div *ngIf="!roundTabEnabled" style="margin-top:30px">
+            <p-message  
+                severity="error" 
+                text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
+            </p-message>
+        </div>    
+        <div *ngIf="roundTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <p-fieldset legend="Struttura Gironi">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Turni:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
+                        <p-radioButton name="isOnewayRoundGroupname" 
+                            label="Solo andata" 
+                            value="true" 
+                            [(ngModel)]="selectedTourney.isOnewayRound"
+                            (onClick)="onOnewayRoundClick()">
+                        </p-radioButton>
+                        <p-radioButton name="isOnewayRoundGroupname" 
+                            label="Andata e ritorno" 
+                            value="false" 
+                            [(ngModel)]="selectedTourney.isOnewayRound"
+                            (onClick)="onRoundtripRoundClick()">
+                        </p-radioButton>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Generazione:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                            pTooltip="Indicare se i gironi devono essere generati in automatico o in manuale">
+                        <p-radioButton name="isGenRoundGroupname" 
+                            label="Automatico" 
+                            value="true" 
+                            [(ngModel)]="isRoundAutoGen"
+                            (onClick)="onRoundAutoGenClick($event.value)">
+                        </p-radioButton>
+                        <p-radioButton name="isGenRoundGroupname" 
+                            label="Manuale" 
+                            value="false" 
+                            [(ngModel)]="isRoundAutoGen"
+                            (onClick)="onRoundManualGenClick($event.value)">
+                        </p-radioButton>
+                    </div>
+                </div>                    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Numero Gironi:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                            pTooltip="Scegliere il numero di gironi che compongono il torneo">
+                        <p-dropdown id="roundId" 
+                            [options]="roundsCombobox" 
+                            [(ngModel)]="selectedTourney.selectedRoundsNumCB"  
+                            optionLabel="label"
+                            (onChange)="onRoundNumChange($event.value)" 
+                            [autoWidth]="false">
+                        </p-dropdown>
+                    </div>
+                </div>             
+                <div *ngIf="isRoundAutoGen=='false'" class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Squadre:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                            pTooltip="Scegliere il numero di squadre complessivo per tutto il torneo, anche se non multiplo intero del numero di gironi">
+                        <p-dropdown id="teamsRoundId" 
+                            [options]="teams4RoundCombobox" 
+                            [(ngModel)]="selectedTourney.selectedTeams4RoundCB"  
+                            optionLabel="label"
+                            (onChange)="onRoundTeamsChange($event.value)" 
+                            placeholder="Seleziona"
+                            [autoWidth]="false">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </p-fieldset>
+
+            <p-fieldset legend="Punteggi Gironi">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Partite:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.roundVO.maxMatchesPerMeeting" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Numero di partite in ciascun incontro"
+                            (onChange)="onRoundSpinnerChange($event)">
+                        </p-spinner>
+                    </div>          
+                </div>
+                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled">
+                    <div class="ui-grid-col-3">
+                        Fine Incontro:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                            pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.roundVO.bestOfWinner}} partite">
+                        <div class="ui-g radiobuttons">
+                            <p-radioButton name="allRoundMatchesGroupname" 
+                                label="Tutte le partite" 
+                                value="true" 
+                                [(ngModel)]="selectedTourney.roundVO.isAllMatches"
+                                (onClick)="onAllRoundMatchesClick()">
+                            </p-radioButton>
+                            <p-radioButton name="allRoundMatchesGroupname" 
+                                label="Al Meglio delle {{selectedTourney.roundVO.bestOfWinner}} partite" 
+                                value="false" 
+                                [(ngModel)]="selectedTourney.roundVO.isAllMatches"
+                                (onClick)="onRoundBestOfClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>        
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Goal:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.roundVO.pointsNeededToWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                        </p-spinner>
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.roundVO.isAllMatches=='true'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Vittoria:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.roundVO.matchWinnerScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Pareggio:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.roundVO.matchBalanceScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di pareggio">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.roundVO.isAllMatches=='true'" 
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Vittoria (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.roundVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                        </p-spinner>
+                    </div>                
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>                
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.roundVO.isAllMatches=='true'"
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Sconfitta (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.roundVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                            [min]="0"
+                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                        </p-spinner>
+                    </div>                            
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>      
+            </p-fieldset>
+
+            <p-table [columns]="roundCols"
+                    [value]="roundRows"
+                    [responsive]="true"
+                    selectionMode="single" 
+                    [(selection)]="selectedRound"
+                    (onRowSelect)="onRoundRowSelect($event)"
+                    [scrollable]="true" 
+                    scrollHeight="500px">
+        
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 15mm;">N°</th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+        
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+                    <tr [pSelectableRow]="rowData">
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                        <td *ngFor="let col of columns">
+                            <span class="ui-column-title">{{col.header}}</span>
+                            {{rowData[col.field]}}
+                        </td>           
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">               
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="roundButtonDisabled()">
+                    </button>
+                
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="roundButtonDisabled()">
+                                </button>
+                            </div>
+                        </div>
+                    </div>     
+                </ng-template>
+            </p-table>
+   
+        </div>
+    </p-tabPanel>
+    
+    <p-tabPanel header="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}" *ngIf="containsPlayoff()">    
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">              
+                <p>
+                    Vista elenco dei gironi di playoff del torneo.
+                </p>
+                <p>
+                    Scegliere se, per ciascun girone di play off, ci sono i turni di solo andata o di andata e ritorno.
+                </p>
+                <p>
+                    Scegliere la modalità di generazione dei playoff: Automatico o Manuale.
+                </p>
+                <p>
+                    Scegliere, dalla combo box Gironi, il numero di gironi di playoff che si intende impostare per il torneo.
+                </p>
+                <p>
+                    Scegliere, dalla combo box Squadre, il numero di squadre per ciascun girone di playoff.
+                </p>
+                <p>
+                    In funzione di queste scelte il sistema propone una compilazione d'ufficio delle regole di 
+                    passaggio del turno dai gironi all'italiana ai playoff.
+                </p>
+                <p>
+                    Scegliere la modalità di generazione dei play off in Automatico o Manuale ha senso soprattutto nel caso 
+                    di molti gironi di provenienza e più di un girone di playoff da organizzare, se abbiamo un solo girone di play off, 
+                    non vi è alcuna differenza tra Manuale e Automatico dato che tutti giocano contro tutti. Se si hanno almeno 2
+                    gironi di play off, allora in Automatico il programma piazza le squadre
+                    nei gironi di playoff tenendo conto della classifica globale dei gironi precedenti con la regola 
+                    delle migliori, migliori seconde, ecc.
+                    In Manuale significa che potete modificare le regole di provenienza proposte dal programma.
+                </p>
+            </p-accordionTab>
+        </p-accordion>        
+
+        <div *ngIf="!playoffTabEnabled" style="margin-top:30px">
+            <p-message 
+                severity="error" 
+                text="Attenzione! Completare la scheda del girone all'italiana ed avanzare con il bottone Avanti!">
+            </p-message>
+        </div>     
+
+        <div *ngIf="playoffTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" 
+            style="margin: 10px 0px">
+            <p-fieldset legend="Struttura Play Off">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Turni:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se gli incontri di Play Off sono di solo andata o andata e ritorno">
+                        <p-radioButton name="isOnewayGroupname" 
+                            label="Solo andata" 
+                            value="true" 
+                            [(ngModel)]="selectedTourney.isOnewayPlayoff"
+                            (onClick)="onOnewayPlayoffClick()">
+                        </p-radioButton>
+                        <p-radioButton name="isOnewayGroupname" 
+                            label="Andata e ritorno" 
+                            value="false" 
+                            [(ngModel)]="selectedTourney.isOnewayPlayoff"
+                            (onClick)="onRoundtripPlayoffClick()">
+                        </p-radioButton>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Generazione:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                            pTooltip="Indicare se i playoff devono essere generati in automatico o in manuale">
+                        <p-radioButton name="isGenPlayoffGroupname" 
+                            label="Automatico" 
+                            value="true" 
+                            [(ngModel)]="isPlayoffAutoGen"
+                            (onClick)="onPlayoffAutoGenClick()">
+                        </p-radioButton>
+                        <p-radioButton name="isGenPlayoffGroupname" 
+                            label="Manuale" 
+                            value="false" 
+                            [(ngModel)]="isPlayoffAutoGen"
+                            (onClick)="onPlayoffManualGenClick()">
+                        </p-radioButton>
+                    </div>
+                </div>    
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Numero Playoff:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                            pTooltip="Scegliere quanti gironi di playoff ci saranno a valle del/i girone/i normale/i">
+                        <p-dropdown id="playoffId" 
+                            [options]="playoffsCombobox" 
+                            [(ngModel)]="selectedTourney.selectedPlayoffsCB"  
+                            optionLabel="label"
+                            (onChange)="onPlayoffNumChange($event.value)" 
+                            placeholder="Seleziona"
+                            [autoWidth]="false">
+                        </p-dropdown>
+                    </div>
+                </div>                  
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Squadre:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                            pTooltip="Scegliere il numero di squadre per ciascun girone di playoff">
+                        <p-dropdown id="teamsPlayoffId" 
+                            [options]="teams4PlayoffsCombobox" 
+                            [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
+                            optionLabel="label"
+                            (onChange)="onPlayoffTeamsChange($event.value)" 
+                            placeholder="Seleziona"
+                            [autoWidth]="false">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </p-fieldset>
+
+            <p-fieldset legend="Punteggi Playoff">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Partite:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoffVO.maxMatchesPerMeeting" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Numero di partite in ciascun incontro"
+                            (onChange)="onPlayoffSpinnerChange($event)">
+                        </p-spinner>
+                    </div>          
+                </div>
+                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled">
+                    <div class="ui-grid-col-3">
+                        Fine Incontro:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                            pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoffVO.bestOfWinner}} partite">
+                        <div class="ui-g radiobuttons">
+                            <p-radioButton name="allPlayoffMatchesGroupname" 
+                                label="Tutte le partite" 
+                                value="true" 
+                                [(ngModel)]="selectedTourney.playoffVO.isAllMatches"
+                                (onClick)="onAllPlayoffMatchesClick()">
+                            </p-radioButton>
+                            <p-radioButton name="allPlayoffMatchesGroupname" 
+                                label="Al Meglio delle {{selectedTourney.playoffVO.bestOfWinner}} partite" 
+                                value="false" 
+                                [(ngModel)]="selectedTourney.playoffVO.isAllMatches"
+                                (onClick)="onPlayoffBestOfClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>        
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Goal:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoffVO.pointsNeededToWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                        </p-spinner>
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoffVO.isAllMatches=='true'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Vittoria:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoffVO.matchWinnerScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Pareggio:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoffVO.matchBalanceScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di pareggio">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true'" 
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Vittoria (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                        </p-spinner>
+                    </div>                
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>                
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true'"
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Sconfitta (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                            [min]="0"
+                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                        </p-spinner>
+                    </div>                            
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+            </p-fieldset>
+            
+            <p-table [columns]="playoffCols"
+                [value]="playoffRows"
+                [responsive]="true"
+                selectionMode="single" 
+                [(selection)]="selectedPlayoff"
+                (onRowSelect)="onPlayoffRowSelect($event)"
+                [scrollable]="true" 
+                scrollHeight="500px">
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 15mm;">N°</th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+        
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+                    <tr [pSelectableRow]="rowData">
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>             
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">   
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="playoffButtonDisabled()">
+                    </button> 
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button   pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="playoffButtonDisabled()">
+                                </button> 
+                            </div>
+                        </div>
+                    </div>                    
+                </ng-template>
+            </p-table>
+        </div>
+    </p-tabPanel>    
+    
+    <p-tabPanel header="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}" *ngIf="containsPlayout()">    
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">              
+                <p>
+                    Vista elenco dei gironi di Play Out del torneo.
+                </p>
+                <p>
+                    Il girone di Play Out è unico, creato con tutte le squadre che non si sono qualificate ai Play off,
+                    non sono previsti le eliminzazioni dirette derivanti dagli esiti di questo girone, conta solo la classifica finale.
+                </p>
+                <p>
+                    Il programma genera tutti gli incontri con le squadre del girone in cui devono essere corrette le date
+                    dell'incontro e chi gioca in casa o fuori.
+                </p>
+            </p-accordionTab>
+        </p-accordion>        
+
+        <div *ngIf="!playoutTabEnabled" style="margin-top:30px">
+            <p-message 
+                severity="error" 
+                text="Attenzione! Completare la scheda del girone Play Off ed avanzare con il bottone Avanti!">
+            </p-message>
+        </div>
+
+        <div *ngIf="selectedTourney.playoutVO!=undefined && playoutTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid"    
+            style="margin: 10px 0px">
+            <p-fieldset legend="Struttura Play Out">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Turni:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se gli incontri di Play Out sono di solo andata o andata e ritorno">
+                        <p-radioButton name="isOnewayPlayoutGroupname" 
+                            label="Solo andata" 
+                            value="true" 
+                            [(ngModel)]="selectedTourney.isOnewayPlayout"
+                            (onClick)="onOnewayPlayoutClick()">
+                        </p-radioButton>
+                        <p-radioButton name="isOnewayPlayoutGroupname" 
+                            label="Andata e ritorno" 
+                            value="false" 
+                            [(ngModel)]="selectedTourney.isOnewayPlayout"
+                            (onClick)="onRoundtripPlayoutClick()">
+                        </p-radioButton>
+                    </div>
+                </div>
+            </p-fieldset>
+
+            <p-fieldset legend="Punteggi Playout">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Partite:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.maxMatchesPerMeeting" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Numero di partite in ciascun incontro"
+                            (onChange)="onPlayoutSpinnerChange($event)">
+                        </p-spinner>
+                    </div>          
+                </div>
+                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.allMatchesEnabled">
+                    <div class="ui-grid-col-3">
+                        Fine Incontro:
+                    </div>
+                    <div class="ui-grid-col-3" tooltipPosition="right"
+                            pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
+                        <div class="ui-g radiobuttons">
+                            <p-radioButton name="allPlayoutMatchesGroupname" 
+                                label="Tutte le partite" 
+                                value="true" 
+                                [(ngModel)]="selectedTourney.playoutVO.isAllMatches"
+                                (onClick)="onAllPlayoutMatchesClick()">
+                            </p-radioButton>
+                            <p-radioButton name="allPlayoutMatchesGroupname" 
+                                label="Al Meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite" 
+                                value="false" 
+                                [(ngModel)]="selectedTourney.playoutVO.isAllMatches"
+                                (onClick)="onPlayoutBestOfClick()">
+                            </p-radioButton>
+                        </div>
+                    </div>        
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Goal:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsNeededToWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                        </p-spinner>
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoutVO.isAllMatches=='true'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Vittoria:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.matchWinnerScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
+                    <div class="ui-grid-col-3">
+                        Pareggio:
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.matchBalanceScores" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di pareggio">
+                        </p-spinner>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true'" 
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Vittoria (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                            [min]="1"
+                            pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                        </p-spinner>
+                    </div>                
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>                
+                <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true'"
+                    class="ui-grid-row" >
+                    <div class="ui-grid-col-3">
+                        Sconfitta (Golden goal o Tie break):
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                            [min]="0"
+                            pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                        </p-spinner>
+                    </div>                            
+                    <div class="ui-grid-col-3">
+                        punti
+                    </div>
+                </div>
+            </p-fieldset>
+            
+            <p-table [columns]="playoffCols"
+                [value]="playoutRows"
+                [responsive]="true"
+                selectionMode="single" 
+                [(selection)]="selectedPlayout"
+                (onRowSelect)="onPlayoutRowSelect($event)"
+                [scrollable]="true" 
+                scrollHeight="500px">
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 15mm;">N°</th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+        
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">                    
+                    <tr [pSelectableRow]="rowData">
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>             
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">   
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="playoutButtonDisabled()">
+                    </button> 
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button   pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="playoutButtonDisabled()">
+                                </button> 
+                            </div>
+                        </div>
+                    </div>                    
+                </ng-template>
+            </p-table>
+        </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{selectedTourney.eliminatoryTabName}}" *ngIf="containsEliminatory()">  
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">                                
+            <p> 
+                La vista contiene l'elenco dei livelli delle eliminazioni dirette minimo indispensabile
+                per effettuare la fase finale da quello più ampio iniziale a quello della finalissima e finalina.
+            </p> 
+            <p>
+                L'utente che sta creando il torneo, deve scegliere il numero di Squadre dalla combo box Squadre.
+                Il sistema predisponde la compilazione delle regole in modo autmatico in funzione delle fasi definite a livello di
+                Modalità. 
+            </p> 
+
+            <h4>Squadre</h4>
+            <p>
+                Scegliere il numero N iniziale di squadre con cui iniziano le eliminazioni dirette, sia se proveniente dai gironi e/o playoff
+                sia se si incomincia direttamente dai gironi eliminatori.
+                Scegliendo il numero N dalla combo box, anche tutte, significa che il sistema preleva le prime N squadre dalla lista 
+                delle squadre configurate nel torneo nell'ordine in cui si trovano.
+            </p>    
+        
+            <h4>Modo</h4>
+            <p>
+                A meno che il vostro torneo non contenga i gironi dei playoff, il sistema genera  
+                le regole di accopiamento iniziale nelle eliminazioni dirette in Automatico.
+            </p>                
+            <p>
+                Se il vostro torneo contiene anche i playoff, invece, non avete alcuna possibilità di far calcolare in Automatico
+                le posizioni di partenza delle elininazioni dirette ma dovete compilare voi a mano tutte le regole di
+                passaggio del turno dalle posizioni dei gironi e playoff alle aliminazioni dirette.
+            </p>
+            <p> 
+                In funzione del numero di squadre fornito nella combo box delle squadre, il sistema determina il livello
+                minimo di partenza per ospitare le squadre scelte e i livelli successivi fino alla finalissima 1° e 2° posto
+                e finalina per il 3° e 4° posto.
+            </p>
+            <p>
+                Solo la prima riga, il livello di partenza, contiene le regole per il popolamento delle squadre provenienti dai posizionamenti
+                nei gironi, le altre devono essere configurate solo per inserire le date e i luoghi dove avverranno
+                gli incontri. 
+            </p>         
+            <p>
+                Per esempio, se selezionate N=13 squadre dalla combo box delle squadre, il sistema prende le prime 13 squadre
+                dalla lista del torneo e visualizza la lista delle eliminazioni dirette dagli ottavi di finale fino alla 
+                finalissima e finalina.
+            </p>
+            <p>
+                Se si tratta di un torneo giornaliero, questa configurazione non è necessaria.
+            </p>
+                    
+            <h5>Manuale</h5>
+            <p>
+                La gestione Manuale, che è il default, permette qualsiasi configurazione delle regole del passaggio del turno.
+                Partendo dai risultati conseguiti nei gironi e playoff, si possono compilare le regole per il posizionamento 
+                nel livello di partenza delle eliminazioni dirette.
+            </p> 
+        
+            <h5>Automatico</h5>
+            <p>
+                Attenzione! Se selezionate questa modalità ed avete inserito in precedenza dei dati
+                in modalità manuale, il sistema vi rimuove gli accoppiamenti fatti in manuale,
+                compreso le date e le locazioni degli incontri, ed applica la generazione degli accoppiamenti 
+                in automatico secondo un proprio algoritmo.
+            </p>
+            <p>
+                Nel modo automatico, il sistema si differenzia per 2 casi:
+            </p>
+            <ul>
+                <li>1) Torneo con gironi ed eliminazioni dirette</li>
+                <li>2) Torneo con sole eliminazioni dirette</li>
+            </ul>  
+        
+            <p>
+                Nel caso 1) il sistema prepara le caselle di coppie, del livello minimo di eliminazione diretta, 
+                per ospitare le squadre in funzione delle posizioni conseguite nei gironi di qualificazione.
+                In pratica effettua un ordinamento sulle posizioni delle squadre all'interno dei singoli gironi e poi un 
+                ordinamento globale in modo che si abbiano, nell'ordine:
+                le migliori prime, le migliori seconde, le migliori terze, ecc.
+            </p>
+            <p>
+                Nel caso 2) il sistema, non avendo delle posizioni di classifica da cui partire, è come se tutte le squadre
+                avessero gli stessi punti quindi effettua un sorteggio con un ordinamento casuale sulle squadre 
+                selezionate ed applica lo stesso algoritmo di popolamento del caso 1) in cui si ha solo la classifica delle
+                migliori prime.
+            </p>
+            <p>
+                Per esempio, se avete 4 gironi da 6 squadre e volete far passare il turno solo alle prime 2 classificate 
+                di ciascun girone ai quarti di finale (inteso come livello di partenza), saranno generate 4 righe
+                con le seguenti regole:
+            </p> 
+            <ul>
+                <li>1° classificata Girone A Vs 2° classificata Girone D</li>
+                <li>1° classificata Girone B Vs 2° classificata Girone C</li>
+                <li>1° classificata Girone C Vs 2° classificata Girone B</li>
+                <li>1° classificata Girone D Vs 2° classificata Girone A</li>
+            </ul>  
+        
+            <p> 
+                Inoltre, dovete completare tutti i livelli, selezionate uno per uno per accedere alla corrispondente vista di dettaglio
+                in cui inserire i dati richiesti.
+                Bisogna differenziare fra il primo livello, quello più alto, e tutti gli altri.
+            </p> 
+            <ul>
+                <li>Livello più alto</li>
+                <li>Tutti gli altri</li>
+            </ul>
+        
+            <h5>Livello più alto</h5>
+            <p>
+                Il livello più alto contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo.
+            </p>
+            <p>
+                Gli altri livelli contengono solo la configurazione della data e del luogo.
+            </p>
+        
+            <p>
+                Se il torneo è di tipo giornaliero, non occorre configurare la parte relativa alle date e ai luoghi
+                di svolgimento delle partite.
+            </p>
+        </p-accordionTab>
+        </p-accordion>
+                    
+        <div *ngIf="!eliminatoryTabEnabled" style="margin-top:30px">
+            <p-message  
+                severity="error" 
+                text="Attenzione! Devono essere completate le schede precedenti. Avanzare passo passo con il bottone Avanti!">
+            </p-message>
+        </div>     
+
+        <div *ngIf="eliminatoryTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Generazione:
+                </div>
+                <div class="ui-grid-col-3" tooltipPosition="right"
+                        pTooltip="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
+                    <p-radioButton name="isGenEliGroupname" 
+                        label="Automatico" 
+                        value="true" 
+                        [(ngModel)]="isEliminatoryAutoGen"
+                        (onClick)="onEliminatoryAutoGenClick()">
+                    </p-radioButton>
+                    <p-radioButton name="isGenEliGroupname" 
+                        label="Manuale" 
+                        value="false" 
+                        [(ngModel)]="isEliminatoryAutoGen"
+                        (onClick)="onEliminatoryManualGenClick()">
+                    </p-radioButton>
+                </div>
+            </div>   
+            
+            <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Squadre:
+                </div>
+                <div class="ui-grid-col-2" tooltipPosition="right" 
+                        pTooltip="Scegliere il numero di squadre con cui incominciare le eliminazioni dirette, anche tutte">
+                    <p-dropdown id="eliminatoryId" 
+                        [options]="eliminatoryTeamsCombobox" 
+                        [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCB"  
+                        optionLabel="label"
+                        (onChange)="onEliminatoryTeamNumChange($event.value)" 
+                        placeholder="Seleziona"
+                        [autoWidth]="false">
+                    </p-dropdown>
+                </div>
+            </div>
+            
+            <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryLevelRows" 
+                [responsive]="true"
+                selectionMode="single" 
+                (onRowSelect)="onEliminatoryLevelRowSelect($event)">
+            
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns">
+                            <span class="ui-column-title">{{col.header}}</span>
+                            {{rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">                
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="eliminatoryButtonDisabled()">
+                    </button>     
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="eliminatoryButtonDisabled()">
+                                </button>     
+                            </div>
+                        </div>
+                    </div>    
+                </ng-template>
+            </p-table>
+        </div>
+    </p-tabPanel>   
+
+    <p-tabPanel header="{{selectedTourney.eliminatoryBTabName}}" *ngIf="containsEliminatoryB()">  
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">                                
+                <p> 
+                    Come per le eliminazioni dirette principali ma costruite sulle squadre che non si sono qualificate
+                    nei gironi precedenti.
+                </p>
+            </p-accordionTab>
+        </p-accordion>
+                    
+        <div *ngIf="!eliminatoryBTabEnabled" style="margin-top:30px">
+            <p-message  
+                severity="error" 
+                text="Attenzione! Devono essere completate le schede precedenti. Avanzare passo passo con il bottone Avanti!">
+            </p-message>
+        </div>     
+
+        <div *ngIf="eliminatoryBTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">             
+            <p-table [columns]="eliminatoryLevelCols"
+                [value]="eliminatoryBLevelRows" 
+                [responsive]="true"
+                selectionMode="single" 
+                (onRowSelect)="onEliminatoryBLevelRowSelect($event)">
+            
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns">
+                            <span class="ui-column-title">{{col.header}}</span>
+                            {{rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">                
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()"
+                        [disabled]="eliminatoryButtonDisabled()">
+                    </button>     
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()"
+                                    [disabled]="eliminatoryButtonDisabled()">
+                                </button>     
+                            </div>
+                        </div>
+                    </div>    
+                </ng-template>
+            </p-table>
+        </div>
+    </p-tabPanel>   
+
+    <p-tabPanel header="Operatori">  
+        <p-accordion>
+            <p-accordionTab header="Istruzioni">                                
+            <p> 
+                La vista permette di definire gli utenti operatori del torneo. 
+            </p> 
+            <p>
+                L'utente operatore può vedere e modificare i risultati di tutti i tornei che gli sono stati assegnati dagli autori del torneo.
+                Non può invece modificare i dati di configurazione del torneo che restano di pertinenza dell'utente amministratore del torneo
+                o del proprietario del sistema. 
+            </p> 
+
+            <h4>Associare un operatore</h4>
+            <p>
+                Asociare un operatore ad un torneo, significa permettere a quell'operatore di modificare il torneo che si sta creando.
+                La lista Operatori contiene tutti gli utenti operatori già esistenti, creati in precendenza da altri amministratori di tornei
+                o dall'utente proprietario. Selezionare gli operatori di intresse apponendo in segno di spunta alla check box corrispondente.
+            </p>    
+        
+            <h4>Creare un operatore</h4>
+            <p>
+                Se l'utente operatore di vostro interesse non è presente fra quelli della lista Operatori, potere crearne uno nuovo con
+                il bottone Nuovo Operatore.
+            </p>                
+            <p>
+                Nella dialog box sucessiva dovete inserire tutti i dati obbligatori e salvare. L'utente così creato sarà automaticamente 
+                associato al torneo in corso di creazione.
+            </p>
+                    
+            <h5>Rimuovere un operatore</h5>
+            <p>
+                Rimuovere un operatore significa rimuovere l'associazione dell'operatore dal torneo in corso così che non possa più
+                esercitare le funzioni di modifica dei risultati del torneo. L'utente rimmarrà nel sistema a far parte della stessa
+                azienda cui apparteneva pronto per essere riuttilizzato per altri tornei.
+            </p> 
+        </p-accordionTab>
+        </p-accordion>
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div style="text-align:left">
+                <button pButton icon="fa fa-plus" 
+                    type="button"
+                    (click)="manageOperator()" 
+                    label="Gestisci Operatori">
+                </button>
+            </div>
+
+            <p-table [columns]="operatorCols"
+                [value]="operators"
+                [responsive]="true"
+                [scrollable]="true" 
+                scrollHeight="500px">
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 15mm;">N°</th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}                                
+                        </th>
+                        <th style="width: 15mm;">X</th>
+                    </tr>
+                </ng-template>                                     
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                    <tr>
+                        <td style="width: 15mm;">
+                            <button pButton icon="fa fa-edit" (click)="updateOperator(rowData)"></button>
+                        </td>
+                        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>            
+                        <td style="width: 15mm;">
+                            <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="deleteOperator(rowData)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="summary">
+                    <button *ngIf="!isInWizardMode()" pButton type="button"
+                        class="ui-button-success" 
+                        icon="{{nextButtonIcon}}" 
+                        iconPos="right"
+                        label="{{nextButtonLabel}}" 
+                        (click)="nextTab()" >
+                    </button>     
+
+                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-grid-row">
+                            <div  class="ui-grid-col-2">
+                                <button pButton type="button" 
+                                    class="ui-button-success"   
+                                    icon="fa fa-arrow-left" 
+                                    label="Indietro" 
+                                    (click)="prevTab()">
+                                </button>  
+                            </div>
+                            
+                            <div class="ui-grid-col-2">
+                                <button pButton type="button"
+                                    class="ui-button-success" 
+                                    icon="{{nextButtonIcon}}" 
+                                    iconPos="right"
+                                    label="{{nextButtonLabel}}" 
+                                    (click)="nextTab()" >
+                                </button>     
+                            </div>
+                        </div>
+                    </div>    
+                </ng-template>
+            </p-table> 
+        </div>
+    </p-tabPanel>   
+</p-tabView>
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="tourneyAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già un torneo con nome {{selectedTourney.tourneyName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+ 
+
+ 

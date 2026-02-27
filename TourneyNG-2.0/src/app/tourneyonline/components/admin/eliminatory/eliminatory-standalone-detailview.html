@@ -1,0 +1,172 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Eliminazioni Dirette</span>
+        <h2><span>Torneo: {{selectedTourney.tourneyName}}</span></h2>
+        <h3><span>Livello: {{tourneyService.selectedEliminatoryLevel.name}}</span></h3>
+        <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>
+            Vista di dettaglio Eliminazione diretta.
+        </p>
+        <p>
+            In questa vista possono essere effettuate al più 2 operazioni: 
+        </p>
+        <ul>
+            <li>1) Data e locazione turno di andata</li>
+            <li>2) Se esiste, data e locazione turno di ritorno</li>
+        </ul>          
+
+        <h4>1) Data e locazione turno di andata</h4>
+        <p>
+            Se il torneo non è di tipo giornaliero, inserire la data e il luogo dell'incontro per il turno di andata
+        </p>
+
+        <h4>2) Se esiste, data e locazione turno di ritorno</h4>
+        <p>
+            Inserire la data e il luogo dell'incontro per il turno di ritorno
+        </p>
+
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<form [formGroup]="eliminatoryFormGroup" >
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" icon="fa fa-arrow-left" pButton (click)="done()" label="Indietro/Salva"></button>
+    </div>                  
+
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+        <div *ngIf="isTopLevel && isStandalone">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    {{m1.teamName1}} Vs {{m1.teamName2}}
+                </div>
+            </div>                    
+        </div>
+
+        <div *ngIf="isTopLevel && !isStandalone">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    {{selectedEliminatory.rule1.fromRound.position.label}} - {{selectedEliminatory.rule1.fromRound.round.label}} Vs {{selectedEliminatory.rule2.fromRound.position.label}} - {{selectedEliminatory.rule2.fromRound.round.label}}
+                </div>
+            </div>
+        </div>
+                
+        <h4>Andata</h4>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
+                <p-calendar formControlName="meetingDate1" [locale]="it" dateFormat="dd/mm/yy " showTime="true">
+                </p-calendar>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Via:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="address1"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid
+                        && eliminatoryFormGroup.controls['address1'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
+                        La via dell'incontro del luogo di andata è obbligatoria
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" formControlName="country1" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" field="city"
+                    placeholder="Comune" [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
+                + " (" + m1.country.provinceCode +")" : "" }}
+            </div>
+        </div>                  
+
+        <h4 *ngIf="!isOneway" >Ritorno</h4>
+
+        <div *ngIf="!isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
+                <p-calendar formControlName="meetingDate2" [locale]="it" dateFormat="dd/mm/yy" showTime="true">
+                </p-calendar>
+            </div>
+        </div>
+            
+        <div *ngIf="!isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Via:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" formControlName="address2"/>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid 
+                        && eliminatoryFormGroup.controls['address2'].dirty">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
+                        La via dell'incontro del luogo di ritorno è obbligatoria
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label for="country-id">Comune:</label>
+            </div>
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" formControlName="country2" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" field="city"
+                    placeholder="Comune" [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div *ngIf="!isOneway" class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
+                + " (" + m2.country.provinceCode +")" : "" }}
+            </div>
+        </div>                  
+    </div>
+</form>
+ 

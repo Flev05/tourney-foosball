@@ -1,0 +1,79 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Login</span>
+        <span>Login nel sistema di gestione tornei</span>
+        <p>Utente [{{loggedUsername}}]</p>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <p-accordion>
+        <p-accordionTab header="Istruzioni">                
+        <p>
+            Pagina di login per chi è già in possesso di credenziali per accedere al sistema 
+            di gestione dei tornei.
+            Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sotto.</p>
+        <p>
+            Se non disponete di credenziali, potete continuare ad utilizzare il sistema come utente anonimo.
+            Imparate l'uso del sistema e solo in un secondo momento potete noleggiarlo per il periodo desiderato.
+        </p>
+        <p>
+            Per maggiori dettagli sul noleggio, si veda il link:
+            <a class="home-button" [routerLink]="['/lease']">
+                Versione Noleggio
+            </a>
+        </p>
+        </p-accordionTab>
+    </p-accordion>    
+</div>
+        
+<div class="content-section implementation">
+    <form [formGroup]="loginformGroup" (ngSubmit)="onSubmit(loginformGroup.value)">
+        <p-panel header="Form Login">
+            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Username *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" 
+                            *ngIf="!loginformGroup.controls['username'].valid && loginformGroup.controls['username'].dirty">
+                            <i class="fa fa-close"></i>
+                            La Username è obbligatoria
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        Password *:
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <input pInputText type="password" formControlName="password" placeholder="Obbligatoria"/>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-message ui-messages-error ui-corner-all" 
+                            *ngIf="!loginformGroup.controls['password'].valid && loginformGroup.controls['password'].dirty">
+                            <i class="fa fa-close"></i>
+                            La Password è obbligatoria
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"></div>
+                    <div class="ui-grid-col-6">
+                        <button pButton type="submit" icon="fa fa-check" label="Login" [disabled]="!loginformGroup.valid"></button>
+                    </div>
+                    <div class="ui-grid-col-4"></div>
+                </div>
+                <div *ngIf="loginFailed" style="margin-top:30px">
+                    <p-message severity="error" text="Login fallito"></p-message>
+                </div>
+            </div>
+        </p-panel>
+    </form>                
+</div>
+

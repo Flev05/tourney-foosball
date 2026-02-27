@@ -1,0 +1,145 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Anagrafica Squadra [{{autoCompleteTeamName}}]</span>
+    </div>
+</div>
+
+<div *ngIf="!teamService.readOnly" class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>
+            Compilare i campi con i valori richiesti e salvare con il bottone Salva. Con il bottone Indietro, invece, si lasciano i dati invariati.
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
+
+<div *ngIf="teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Nome:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedTeam.teamName}}
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8">
+            {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
+            + " (" + selectedTeam.country.provinceCode +")" : "" }}
+        </div>
+    </div> 
+</div>
+
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p>
+        I campi contrassegnati con * sono obbligatori!
+    </p>
+        
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            Squadra*:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
+            <p-autoComplete id="team-id" 
+                [(ngModel)]="autoCompleteTeamName" 
+                [suggestions]="filteredTeamsSingle" 
+                (completeMethod)="searchTeam($event)" 
+                placeholder="Nome Squadra" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>            
+    </div>      
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1" pTooltip="Inserire la via di residenza della squadra.">
+            Via:
+        </div>
+        <div class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
+        </div>
+    </div>    
+ 
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            <label for="country-id">Comune:</label>
+        </div>
+        <div class="ui-grid-col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedTeam.country" 
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8" pTooltip="Inserire l'indirizzo della squadra.">
+            {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
+            + " (" + selectedTeam.country.provinceCode +")" : "" }}
+        </div>
+    </div> 
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-1">
+            ASD:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Inserire l'ASD della squadra se esiste.">
+            <input pInputText type="text" [(ngModel)]="selectedTeam.asd"/>
+        </div>
+    </div> 
+</div>
+
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <button class="ui-button-success" 
+                pButton (click)="saveTeam()" 
+                icon="fa fa-group" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>            
+        </div>
+    </div>
+</div>
+
+<app-player-table [playerLv]="playerLv" [addPlayerEnabled]="addPlayerEnabled"></app-player-table>
+
+<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <button class="ui-button-success" 
+                pButton (click)="saveTeam()" 
+                icon="fa fa-group" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>            
+        </div>
+    </div>
+</div>
+
+<div *ngIf="teamService.badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="teamService.teamAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già una squadra con nome {{selectedTeam.teamName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+ 
+
+ 

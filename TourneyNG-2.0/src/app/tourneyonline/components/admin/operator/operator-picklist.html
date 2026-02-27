@@ -1,0 +1,56 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Torneo: {{selectedTourney.tourneyName}}</span>
+        <h4><span>Operatori</span></h4>        
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">            
+        <p>
+            Da questa vista potete aggiungere una o più operatori selezionandole da quelli disponibili.
+            Se l'operatore non esiste, lo potete creare con il bottone Nuovo Operatore
+        </p>
+        <p>
+            Attenzione! Quando create un nuovo operatore, esso è visibile per tutti i tornei della società 
+            in modo che possa essere riusato in più tornei senza doverso ricreare.
+            Quadno lo rimuovete da un torneo, il sistema lo rimuove solo dal torneo selezionato ma non dal database 
+            quindi resta disponibile per altri nuovi tornei.
+        </p>        
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="{{returnLabel}}"></button>
+</div>                  
+
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+     <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <button class="ui-button-success" pButton type="button" icon="fa fa-group" label="Nuovo Operatore" 
+                (click)="newOperator()">
+            </button>
+        </div>
+    </div>
+    
+    <p-pickList [source]="availableOperators" [target]="targetOperators" 
+            sourceHeader="Disponibili {{availableOperators.length}}" 
+            targetHeader="Selezionati {{targetOperators.length}}" 
+            [responsive]="true"
+            dragdrop="true" 
+            dragdropScope="operators"
+            [sourceStyle]="{'height':'400px'}" 
+            [targetStyle]="{'height':'400px'}"
+            (onMoveToTarget)="onMoveToTarget($event)"
+            (onMoveToSource)="onMoveToSource($event)"
+            (onTargetReorder)="onMoveToSource($event)">
+        <ng-template let-op pTemplate="item">
+            <div class="ui-helper-clearfix">
+                <div>{{op}}</div>
+            </div>
+        </ng-template>
+    </p-pickList>
+</div>
+

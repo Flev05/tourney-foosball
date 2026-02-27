@@ -1,0 +1,179 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista di dettaglio anagrafica giocatore</span>
+        <h4><span>Giocatore: {{selectedPlayer.playerName}}</span></h4>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+        <p>Vista di dettaglio anagrafica giocatore.
+            Da questa vista potete creare o modificare ma non rimuovere l'anagrafica di un giocatore, la rimozione va fatta nella list view.
+        </p>
+
+        <h4>Creare una nuova anagrafica giocatore</h4>
+        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
+            il bottone Salva.
+            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+        </p>
+
+        <h4>Modificare anagrafica giocatore</h4>
+        <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
+            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+            essere svuotati.
+        </p>
+        <p>
+            Alla fine dell'operazione salvare con il bottone Salva
+        </p>
+    </p-accordionTab>
+</p-accordion>
+</div>
+ 
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>                  
+
+<div *ngIf="!enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Nome:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.playerName}}
+        </div>
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Tessera:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.code}}
+        </div>
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8">
+            {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+            + " (" + selectedPlayer.country.provinceCode +")" : "" }}
+        </div>
+    </div> 
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Telefono:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.phoneNumber}}
+        </div>
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            Email:
+        </div>
+        <div class="ui-grid-col-5">
+            {{selectedPlayer.email}}
+        </div>
+    </div>
+</div>
+    
+<div *ngIf="enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p>
+        I campi contrassegnati con * sono obbligatori!
+    </p>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Nominativo*:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Il nome del giocatore è obbligatorio, può essere anche un nick name.">                                
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.playerName"/>
+        </div>
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Tessera:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Inserire il codice della tessera del giocatore.">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.code"/>
+        </div>
+    </div>    
+        
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3" pTooltip="Inserire la via di residenza del giocatore.">
+            Via:
+        </div>
+        <div class="ui-grid-col-5">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.address"/>
+        </div>
+    </div>
+                                    
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            <label for="country-id">Comune:</label>
+        </div>
+        <div class="ui-grid-col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedPlayer.country"
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>           
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Indirizzo:
+        </div>
+        <div class="ui-grid-col-8">
+            {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+            + " (" + selectedPlayer.country.provinceCode +")" : "" }}
+        </div>
+    </div>             
+                
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            Telefono:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Inserire il numero di telefono del giocatore.">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.phoneNumber"/>
+        </div>
+    </div>
+
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-3">
+            E-mail:
+        </div>
+        <div class="ui-grid-col-5" pTooltip="Inserire l'indirizzo e-mail del giocatore.">
+            <input pInputText type="text" [(ngModel)]="selectedPlayer.email"/>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-2">
+            <button class="ui-button-success" 
+                pButton (click)="onSubmit()" 
+                icon="pi pi-save" 
+                label="Salva" 
+                [disabled]="enableSaveButton()">
+            </button>            
+        </div>
+    </div>
+</div>
+
+<div *ngIf="badRequest" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div *ngIf="playerAlreadyExists" style="margin-top:30px">
+    <p-message severity="error" text="Esiste già un giocatore con nome {{selectedPlayer.playerName}}. Cambiare nome e riprovare!"></p-message>
+</div>    
+ 
+
+ 

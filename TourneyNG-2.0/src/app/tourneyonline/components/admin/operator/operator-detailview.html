@@ -1,0 +1,183 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista di dettaglio Operatore</span>
+        <span>Creare o modificare l'utente selezionato</span>
+        <p>Operatore [{{selectedUser.username}}]</p>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion>
+    <p-accordionTab header="Introduzione">            
+        <h3 style="margin-top:0px">Istruzioni</h3> 
+        <p>
+            L'utente operatore viene creato per modificare i risultati dei gironi del torneo.
+            Non può apportare alcuna modifica alla struttura del torneo ma solo inserire i risultati
+            man mano che maturano durante la partita in modo da essere propagati agli altri utenti in tempo reale.
+        </p>
+    </p-accordionTab>
+</p-accordion>    
+</div>
+<p>I campi contrassegnati con * sono obbligatori</p>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" pButton icon="fa fa-arrow-left"  (click)="goBack()" label="Indietro"></button>
+</div>
+
+<p-fieldset legend="Utente Operatore">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Nome*:
+            </div>
+            <div  class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedUser.firstname" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Cognome*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Username*:
+            </div>
+            <div class="ui-grid-col-6">
+                <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
+            </div>
+        </div>
+        <div *ngIf="userAlreadyExists">
+            <div class="ui-message ui-messages-error ui-corner-all">
+                <p-message severity="error" text="Esiste già un utente con lo stesso nome, cognome e username. Se non è l'utente atteso, modificare la username!"></p-message>
+            </div>
+        </div>
+
+        <div *ngIf="urcService.newUser" class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Password: 
+            </div>
+            <div class="ui-grid-col-6">
+                {{currentPassword}} (Temporanea, da cambiare al primo accesso)
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Via*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.address"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Indirizzo:
+            </div>
+            <div class="ui-grid-col-8">
+                {{selectedUser != undefined && selectedUser.country != undefined ? selectedUser.address  + " - " +
+                    selectedUser.country.zipCode + " " + selectedUser.country.city
+                    + " (" + selectedUser.country.provinceCode +")" : ""}}
+            </div>
+        </div>             
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label for="country-id">Comune*:</label>
+            </div>                     
+            <div class="ui-grid-col-5">
+                <p-autoComplete id="country-id" 
+                    [(ngModel)]="selectedUser.country" 
+                    [suggestions]="filteredCountriesSingle" 
+                    (completeMethod)="searchCountry($event)" 
+                    field="city"
+                    placeholder="Comune" 
+                    [minLength]="1">
+                </p-autoComplete>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Telefono*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.phoneNumber" placeholder="Obbligatorio"/>
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                E-mail*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
+            </div>
+        </div>   
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                Descrizione:
+            </div>
+            <div class="ui-grid-col-5">
+                <input pInputText type="text" [(ngModel)]="selectedUser.description"/>
+            </div>
+        </div>   
+    </div>         
+</p-fieldset>
+    
+<p-fieldset legend="Squadre per l'operatore">
+    <p-table [responsive]="true" 
+        [columns]="cols" 
+        [value]="teams" 
+        [scrollable]="true" 
+        scrollHeight="500px"
+        [(selection)]="selectedTeams"
+        dataKey="id">
+ 
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns" >
+            <tr [pSelectableRow]="rowData">
+                <td>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns">
+                    <span class="ui-column-title">{{col.header}}</span>
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-fieldset>
+
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <button class="ui-button-success" 
+        pButton (click)="onSubmit()" 
+        icon="pi pi-save" 
+        label="Salva" 
+        [disabled]="enableSaveButton()">
+    </button>
+</div>
+
+
+ 

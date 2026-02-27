@@ -1,0 +1,256 @@
+<p-accordion>
+    <p-accordionTab header="Istruzioni">                        
+    <h4>Istruzioni</h4>
+    <p> 
+        La vista permette l'inserimento dei risultati man mano che si verificano fino a quello finale.
+        Per ciascuna partita inserite il punteggio azionando opportunamente i bottoni + (più) e - (meno)
+        per aumentare o dimunire il punteggio rispettivamente. 
+    </p> 
+    <p>
+        Se il torneo è di tipo a punti e non a tempo, esiste anche il bottone di rewind verso l'alto che permette
+        di inserire il massimo punteggio della partita, esempio 9
+    </p>
+    <p>
+        Il punteggio, salvato automaticamente ad ogni variazione, sarà immmediatamente riflesso nella classifica e nelle formazioni
+        delle fasi successive se previste come playoff ed eliminazioni dirette.
+    </p>
+</p-accordionTab>
+</p-accordion>
+<p-table>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <td>
+                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+            </td>
+            <td>
+                <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
+            </td>
+            <td style="text-align: right;">
+                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-blockUI [blocked]="meetingService.blockedDocument"></p-blockUI>
+
+<div *ngIf="roundsNotTerminated" style="margin-top:30px">
+    <p-message severity="error" text="Attenzione! I gironi precedenti non sono ancora terminati. Spostare le squadre solo quando tutte le partite saranno terminate.">
+    </p-message>
+</div>   
+
+<div *ngIf="isAtLeastAdmin()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <p-fieldset legend="Incontro/Calendario">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                In Casa:
+            </div>
+            <div class="ui-grid-col-3" tooltipPosition="right" 
+                    pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
+                <p-dropdown id="teams1RoundId" 
+                    [options]="teams4RoundCombobox" 
+                    [(ngModel)]="teamName1CB"  
+                    optionLabel="label"
+                    (onChange)="onTeam1Change($event.value)" 
+                    placeholder="Seleziona" >
+                </p-dropdown>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                In Trasferta:
+            </div>
+            <div class="ui-grid-col-3" tooltipPosition="right" 
+                    pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
+                <p-dropdown id="teams2RoundId" 
+                    [options]="teams4RoundCombobox" 
+                    [(ngModel)]="teamName2CB"  
+                    optionLabel="label"
+                    (onChange)="onTeam2Change($event.value)" 
+                    placeholder="Seleziona" >
+                </p-dropdown>
+            </div>                  
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                Data e ora:
+            </div>
+            <div class="ui-grid-col-3" tooltipPosition="right"
+                    pTooltip="Indicare la data e ora di inizio dell'incontro.">
+                <p-calendar [(ngModel)]="selectedMeeting.datetime" 
+                    [locale]="it" 
+                    dateFormat="dd/mm/yy" 
+                    [showIcon]="false"
+                    showTime="true">
+                </p-calendar>
+            </div>            
+        </div>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" 
+                icon="fa fa-save" 
+                pButton (click)="saveAndGoBack()" 
+                label="Salva">
+            </button>
+        </div>
+    </p-fieldset>
+</div>
+    
+<div *ngIf="serverUnreachable" style="margin-top:30px">
+    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+</div>   
+
+<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="!loginService.isFollower()" class="ui-dialog-buttonpane ui-helper-clearfix"> 
+        <p-table>
+            <ng-template pTemplate="header">
+                <tr *ngIf="!disabledOperator()" >
+                    <td>
+                        <button type="button" 
+                            class="ui-button-danger"
+                            label="Azzera" 
+                            icon="pi pi-times" 
+                            pButton (click)="onResetPoundsClick()" 
+                            pTooltip="Azzera tutti i dati dell'incontro, quelli precedentemente inseriri saranno irrimediabilmente perduti!">
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" 
+                            label="Termina" 
+                            class="ui-button-warning"
+                            icon="pi pi-times" 
+                            pTooltip="Transita lo stato dell'incontro in Terminato, deve essere poi convalidato dall'amministratore del torneo!"
+                            pButton (click)="onTerminatedClick()">
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="isAtLeastAdmin()">
+                    <td>
+                        <button
+                            type="button"  
+                            class="ui-button-info"
+                            label="In corso" 
+                            icon="pi pi-check"
+                            pTooltip="Riabilita l'inserimento dei punti dell'incontro!"
+                            pButton (click)="onInProgressClick()" >
+                        </button>
+                    </td>                    
+                    <td>
+                        <button
+                            type="button"  
+                            label="Convalida" 
+                            class="ui-button-success"
+                            icon="pi pi-check"
+                            pTooltip="Convalida in modo definitivo il risultato dell'incontro!"
+                            pButton (click)="onConfirmClick()" >
+                        </button>
+                    </td>
+                </tr>      
+            </ng-template>      
+        </p-table>
+    </div>
+
+    <p-table [value]="matches">        
+        <ng-template pTemplate="header">
+            <tr>
+                <th colspan="5" style="text-align: center">
+                    <span>{{meetingLabel}} ({{selectedMeeting.datetime | date: 'EEE dd/MM/y'}})<br>{{selectedMeeting.address}}</span>            
+                </th>
+            </tr>
+            <tr>
+                <th colspan="1" style="font-size: 100%;">P°</th>
+                <th colspan="2" style="font-size: 100%;">{{selectedMeeting.teamName1}}</th>
+                <th colspan="2" style="font-size: 100%;">{{selectedMeeting.teamName2}}</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr>
+                <td style="font-size: 100%; font-weight: bold;text-align: center;">
+                    {{rowIndex+1}}°
+                </td>
+                <td *ngIf="!disableButton()" style="width: 10mm; text-align: center;">
+                    <button pButton type="button" icon="pi pi-angle-double-up" 
+                        (click)="upper1(rowData)" 
+                        [disabled]="disableButton()"
+                        pTooltip="Incrementa al numero massimo di goal previsto">
+                    </button>
+                    <button pButton type="button" icon="fa fa-plus" 
+                        (click)="plus1(rowData)" 
+                        [disabled]="disableButton()"
+                        pTooltip="Incrementa di un punto">
+                    </button>
+                    <button pButton type="button" icon="fa fa-minus" 
+                        (click)="minus1(rowData)" 
+                        [disabled]="disableButton()"
+                        pTooltip="Decrementa di un punto">
+                    </button>
+                </td>
+                <td *ngIf="!disableButton()" style="text-align: center;">
+                    <span style="font-size: 300%; font-weight: bold;">{{rowData.score1}}</span>
+                </td>
+                <td *ngIf="!disableButton()" style="text-align: center;">
+                    <span style="font-size: 300%; font-weight: bold;">{{rowData.score2}}</span>
+                </td>    
+                <td *ngIf="disableButton()" colspan="2" style="text-align: center;">
+                    <span style="font-size: 300%; font-weight: bold;">{{rowData.score1}}</span>
+                </td>
+                <td *ngIf="disableButton()" colspan="2" style="text-align: center;">
+                    <span style="font-size: 300%; font-weight: bold;">{{rowData.score2}}</span>
+                </td>    
+                <td *ngIf="!disableButton()" style="text-align: center;">
+                    <button pButton type="button" icon="pi pi-angle-double-up" 
+                        (click)="upper2(rowData)" 
+                        [disabled]="disableButton()">
+                    </button>
+                    <button pButton type="button" icon="fa fa-plus" 
+                        (click)="plus2(rowData)" 
+                        [disabled]="disableButton()">
+                    </button>
+                    <button pButton type="button" icon="fa fa-minus" 
+                        (click)="minus2(rowData)" 
+                        [disabled]="disableButton()" >
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        
+        <ng-template *ngIf="atLeastOneMatch()"  pTemplate="footer">
+            <tr *ngIf="!disableButton()">
+                <td style="text-align: right;font-size: 100%;">Finale</td>
+                <td colspan="2" style="text-align: right;">
+                    <span style="font-size: 200%; font-weight: bold;">{{teamScore1}}</span>
+                </td>
+                <td colspan="2" style="text-align: left;">
+                    <span style="font-size: 200%; font-weight: bold;">{{teamScore2}}</span>
+                </td>
+            </tr>
+            <tr *ngIf="!disableButton()">
+                <td style="text-align: right;font-size: 100%;">Goals</td>
+                <td colspan="2" style="text-align: right;">
+                    <span style="font-size: 200%; font-weight: bold;">{{totalScore1}}</span>
+                </td>
+                <td colspan="2" style="text-align: left;">
+                    <span style="font-size: 200%; font-weight: bold;">{{totalScore2}}</span>
+                </td>
+            </tr>
+            <tr *ngIf="disableButton()">
+                <td style="text-align: right;font-size: 100%;">Finale</td>
+                <td colspan="2" style="text-align: center;">
+                    <span style="font-size: 200%; font-weight: bold;">{{teamScore1}}</span>
+                </td>
+                <td colspan="2" style="text-align: center;">
+                    <span style="font-size: 200%; font-weight: bold;">{{teamScore2}}</span>
+                </td>
+            </tr>
+            <tr *ngIf="disableButton()">
+                <td style="text-align: right;font-size: 100%;">Goals</td>
+                <td colspan="2" style="text-align: center;">
+                    <span style="font-size: 150%; font-weight: bold;">{{totalScore1}}</span>
+                </td>
+                <td colspan="2" style="text-align: center;">
+                    <span style="font-size: 150%; font-weight: bold;">{{totalScore2}}</span>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

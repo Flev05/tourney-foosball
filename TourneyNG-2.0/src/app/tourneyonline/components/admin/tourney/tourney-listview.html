@@ -1,0 +1,308 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista elenco tornei</span>
+        <p>Utente [{{username}}]</p>
+    </div>
+</div>
+
+<div class="content-section documentation">   
+<p-accordion>
+    <p-accordionTab header="Introduzione">
+        <p>
+            La vista contiene l'elenco di tutti i tornei visibili all'utente connesso.
+            Quando l'utente si connette al sito Tourney Online, può vedere tutti i tornei
+            in funzione di che tipo di utente egli sia. 
+        </p>
+        <p>
+            Allo scopo consultare la documentazione al link:
+            <a [routerLink]="['/demo']">Demo</a>
+        </p>
+        
+        <p>Esistono tre tipi di utenti:</p>
+        <ul>
+            <li>Utenti anonimi</li>
+            <li>Utenti con account</li>
+            <li>Utenti follower</li>
+        </ul>
+ 
+        <h4>Utenti anonimi</h4>
+        <p>
+            Un utente anonimo è un utente qualsiasi che si connette al sistema Tourney Online senza effettuare alcuna forma 
+            di login, egli può disporre o non disporre affatto di un account di sistema,
+            possono creare nuovi tornei sui quali hanno tutti i privilegi e li possono modificare 
+            o rimuovere per tutto il tempo di durata della sessione applicativa.
+        </p>
+    
+        <p>
+            Una sessione applicativa, nasce e muore all'interno di una sessione utente. 
+            La sessione utente può durare anche indefinitamente se il browser non viene mai spento. 
+            Infatti, mettendo il PC, portatile o altro device in standby, 
+            la sessione utente continuerebbe a restare viva e quando riaccendete il PC, se non avete chiuso il browser, 
+            potete proseguire da dove avete lasciato senza perdita dei dati.
+        </p>
+        
+        <p>
+            Questa modalità potrebbe andar avanti per giorni, ma nel momento in cui spegnerete fisicamente il PC o chiuderete il 
+            browser, perderete irrimediabilmente tutti i vostri dati.
+            Durante la sessione, infatti, l'utente anonimo dispone di tutte le funzionalità del sistema, 
+            ma i dati sono di fatto volatili, memorizzati nella memoria del vostro browser, e mai salvati 
+            fisicamente sul database di Tourney Online, pertanto sono visibili ed utilizzabili finquando 
+            non viene spento il browser dopo di che non sono più recuperabili.
+        </p>
+        <p>
+            Per maggior informazioni si rimanda alla pagina di introduzione relativa alla:
+            <a class="home-button" [routerLink]="['/demo']">Versione Demo</a>
+        </p>
+    
+        <h4>Utenti con account</h4>
+        <p>
+            L'utente in possesso di un account con diritti di amministrazione può fare tutto ciò che fa un utente anonimo 
+            ma con il grande valore aggiunto della persistenza dei dati nel Data Base di Tourney Online 
+            con possibilità di modificare i dati di un suo torneo esistente, per esempio per 
+            modificare la configurazione dei contenuti o semplicemente per aggiornare i risultari di un incontro.
+        </p>
+        <p>
+            Inoltre, si possono avere più utenti per aggiornre i risultati degli incontri e avere il realtime 
+            per i partecipanti o altri clienti.
+        </p>
+        <p>
+            Per procurarsi un account si rimanda alla pagina di introduzione relativa alla:
+            <a class="home-button" [routerLink]="['/lease']">Versione Noleggio</a>
+        </p>
+
+        <h4>Utenti foollower</h4>
+        <p>
+            Sono utenti che possono accedere a tutti i tornei per i quali hanno avuto il codice di accesso,
+            un account follower senza password, e sono autorizzati a vedere lo svolgimento del torneo.
+            Tipicamente sono i partecipanti al torneo o tifosi che seguono l'andamento del torneo e vogliono
+            vedere l'evoluzione in tempo reale.
+            Per maggiori dettagli si veda la pagina:
+            <a class="home-button" [routerLink]="['/realtime']">Tempo Reale</a>
+        </p>
+
+        <h3>Definizione torneo</h3>
+        <p>
+            A prescindere dalla modalità di accesso in vostro possesso, per creare un torneo per
+            la prima volta, dovete leggere attentamente i paragrafi seguenti e capire a fondo la tipologia
+            del torneo che andrete a costruire.
+        </p>
+        <p>            
+            La prima domanda da porsi è: il vostro torneo si conclude in una sola giornata o in più giornate?
+        </p>
+        <p>
+            In funzione della risposta a questa domanda, capirete di che tipo di utenza avete bisogno.
+            Se si svolge in un solo giorno, diciamo in 12 ore consecutive, allora potrete anche 
+            non aveve bisogno di un account autorizzato e ve la potete cavare come utente anonimo.        
+        </p>
+        <p>
+            Se inveve il vostro torneo richiede più giorni, sia per l'organizzazione che per lo svolgimento,
+            allora avete bisogno di un account autorizzato.
+        </p>
+
+        <p>
+            In ogni caso, sia per gli utenti anonimi che autorizzati, la creazione di un nuovo torneo deve essere 
+            organizzata per tappe successive da eseguire in un ordine ben preciso.
+        </p>
+
+        <p>Le tappe devono essere completate nel seguente ordine:</p>
+        <ul>
+            <li>Definizione torneo</li>
+            <li>Caricamento anagrafica giocatori</li>
+            <li>Configurazione squadre</li>
+            <li>Configurazione gironi</li>
+            <li>Configurazione playoff</li>
+            <li>Configurazione eliminatorie</li>
+            <li>Configurazione Obiettivo torneo</li>
+        </ul>            
+
+        <p>
+            Alcune di esse hanno dati facoltativi e possono essere completate anche successivamente.
+        </p>
+
+        <p>
+            La definizione del torneo si basa su 2 schede: una per le "Generalità" e una per le "Modalità".
+        </p>
+        <p>
+            Nelle "Generalità" dovete inserire il nome, la data di inizio, la tipologia del torneo, ecc
+        </p>
+        <p>
+            Nelle "Modalità" dovete definire i dati specifici del torneo come la durata, il numero di
+            fasi, le eliminazioni dirette, i turni, ecc.
+        </p>
+        <p>
+            In entrambi i casi troverete maggiori dettagli nel paragrafo delle Istruzioni.
+        </p>
+
+        <h4>Caricamento anagrafica giocatori</h4>
+        <p>
+            I giocatori che partecipano al torneo devono essere caricati a sistema inserendo i loro dati anagrafici.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>
+        </p>
+        
+        <h4>Configurazione squadre</h4>
+        <p>
+            Le squadre che compongono il torneo, devono essere create a valle della creazione dei giocatori.
+            Una squadra contiene un sottoinsieme dei giocatori del torneo.
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù:
+            <a class="home-button" [routerLink]="['/adminteam']">Squadre</a>
+        </p>
+        
+        <h3>Configurazione gironi</h3>
+        <p>
+            I gironi sono intesi come quelli all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+            Il torneo contiene sempre almeno un girone, nel caso di campionato, ci sarà un unico girone che contiene
+            tutte le squadre del torneo.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminround']">Gironi</a>
+        </p>        
+
+        <h3>Configurazione playoff</h3>
+        <p>
+            I playoff non sono obbligatori e dipende dalla natura del torneo, alcuni li prevedono altri no.
+            Anche i playoff sono gironi all'italiana in cui tutte le squadre si incontrano e ne determinano
+            una classifica dalla quale far evolvere poi il passaggio ai turni successivi.
+        </p>            
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminplayoff']">Playoff</a>
+        </p>
+
+        <h3>Configurazione eliminatorie</h3>
+        <p>
+            La fase delle eliminazioni dirette, deve essere configurata scegliendo il livello
+            di partenza - sedicesimi, ottavi, quarti, ecc. - e specificando come popolare gli incontri 
+            a partire dai posizionamenti di clssifica dei girone precedenti: gironi all'italiana e playoff.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/admineliminatory']">Eliminatorie</a>
+        </p> 
+
+        <h3>Obiettivi</h3>
+        <p>
+            L'obiettivo del torneo è da configurare per scopi di memorizzazione dello scopo del torneo
+            possibile da consultare anche in futuro.
+            Per esempio, per il campionato di calcio di serie B, l'obiettivo è salire in serie A e ci 
+            arrivano le prime due squadre del campionato più quella che vince i playoff corrispondenti.            
+        </p>
+        <p>
+            La vista preposta allo scopo è accessibile alla voce di menù: 
+            <a class="home-button" [routerLink]="['/adminobjective']">Obiettivi</a>
+        </p>
+    </p-accordionTab>
+
+    <p-accordionTab header="Istruzioni">
+
+        <h4>Creare un nuovo torneo</h4>
+        <p>
+            Con il bottone Nuovo Torneo si accede alla vista di dettaglio per la creazione di un nuovo torneo. 
+            La creazione di un torneo si sviluppa su più fasi e bisogna compilare tante schede prima
+            di completarlo. 
+        </p>
+        
+        <h4>Modificare un torneo esistente</h4>
+        <p>
+            Con un click sulla riga, si accede alla vista di dettaglio corrispondente in cui si possono 
+            modificare i dati esistenti.
+        </p>
+        <p>
+            Per la documentazione completa si rimanda a quella presente della vista di dettaglio del torneo.
+        </p>
+
+        <h4>Rimuovere un torneo</h4>
+        <p>
+            Per rimuovere un torneo basta un click sul bottone con la X rossa sulla riga del torneo in fondo a destra.
+            L'azione, propone una popup con una domanda di conferma, e solo in caso di risposta affermativa, il torneo 
+            verrà rimosso dal sistema senza possibilità di recupero.
+        </p>
+
+    </p-accordionTab>
+</p-accordion>
+</div>
+
+<div *ngIf="onDeleteTourneyError" style="margin-top:30px">
+    <p-message severity="error" text="Impossibile rimuovere il torneo, oggetto ancora in uso!"></p-message>
+</div>   
+
+<p-table [columns]="cols" 
+        [value]="rows" 
+        [responsive]="true"
+        selectionMode="single" 
+        [(selection)]="selectedRow" 
+        (onRowSelect)="onRowSelect($event)" >
+
+    <ng-template pTemplate="caption" let-rowData>
+        <div style="text-align:left">
+            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Nuovo Torneo" ></button>
+        </div>
+    </ng-template>        
+ 
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 15mm;">N°</th>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+            <th style="width: 15mm;">Clone</th>
+            <th style="width: 15mm;">X</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+            <td *ngFor="let col of columns">
+                <span class="ui-column-title">{{col.header}}</span>
+                {{rowData[col.field]}}
+            </td>
+            <td style="width: 15mm;">
+                <button class="ui-button-success" 
+                    pButton icon="fa fa-copy" 
+                    pTooltip="Clona il torneo selezionato."
+                    (click)="doClone(rowData)">
+                </button>
+            </td>
+            <td style="width: 15mm;">
+                <button class="ui-button-danger" 
+                    pButton icon="fa fa-remove" 
+                    pTooltip="Rimuove il torneo selezionato."
+                    (click)="doDelete(rowData)">
+                </button>
+            </td>
+        </tr>
+    </ng-template>
+    
+    <ng-template pTemplate="summary" let-rowData>
+        <div style="text-align:left">
+            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Nuovo Torneo" ></button>
+        </div>
+    </ng-template>        
+</p-table>
+ 
+ <p-dialog header="Clone Tournament" [(visible)]="displayCloneDialog" [modal]="true" [width]="400">
+    <div class="ui-g ui-fluid" *ngIf="selectedTourney">
+        <div class="ui-g-12">
+            <label>Original Name:</label>
+            <div style="font-weight: bold; margin-bottom: 10px;">
+                {{selectedTourney.tourneyName}}
+            </div>
+        </div>
+        <div class="ui-g-12">
+            <label for="newName">New Tournament Name:</label>
+            <input type="text" pInputText id="newName" [(ngModel)]="newTourneyName" />
+        </div>
+    </div>
+    
+    <p-footer>
+        <button type="button" pButton icon="fa fa-check" (click)="saveClone()" label="Clone"></button>
+        <button type="button" pButton icon="fa fa-close" (click)="displayCloneDialog=false" label="Cancel" class="ui-button-secondary"></button>
+    </p-footer>
+</p-dialog>

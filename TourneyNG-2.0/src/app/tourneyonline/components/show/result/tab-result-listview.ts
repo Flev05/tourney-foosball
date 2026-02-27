@@ -23,6 +23,7 @@ import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
@@ -37,17 +38,17 @@ export class TabResultListView extends AbstractTabResultListView {
     teamCount : number = 0;
     
     constructor(
-        public tourneyService: TourneyService,
-        public meetingService: MeetingService,
-        protected meetingRoundService: MeetingRoundService,
-        protected meetingPlayoffService: MeetingPlayoffService,
+        public override tourneyService: TourneyService,
+        public override meetingService: MeetingService,
+        protected override meetingRoundService: MeetingRoundService,
+        protected override meetingPlayoffService: MeetingPlayoffService,
         protected teamService: TeamService,
-        protected router: Router,
-        protected location: Location,
-        protected dfp: DateFormatPipe,
-        protected levelService: LevelService,
+        protected override router: Router,
+        protected override location: Location,
+        protected override dfp: DateFormatPipe,
+        protected override levelService: LevelService,
         public loginService: LoginService,
-        protected clientService: ClientService,
+        protected override clientService: ClientService,
     ) {
         super(MeetingDetailView.meetingDvRedirect
             , tourneyService
@@ -62,11 +63,11 @@ export class TabResultListView extends AbstractTabResultListView {
             );
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
     }
      
-    onRoundRowSelect(event) {
+    onRoundRowSelect(event : any) {
         console.log(event.data);
         for(let i=0;i<this.selectedRound.teamNames.length; i++ ) {
             this.selectedRound.teamNames[i] = this.selectedRound.teamNames[i].replace(/\(\d+\)/g, '');
@@ -78,31 +79,31 @@ export class TabResultListView extends AbstractTabResultListView {
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
 
-        this.meetingService.selectedMeetingDb = {id: null
-            , tourneyId: this.selectedTourney.id
-            , roundId: this.selectedRound.id
-            , playoffId: null
-            , eliminatoryId: null
-        };     
+        this.meetingService.selectedMeetingDb =  new MeetingDb();
+        this.meetingService.selectedMeetingDb.id = null;
+        this.meetingService.selectedMeetingDb.tourneyId = this.selectedTourney.id;
+        this.meetingService.selectedMeetingDb.roundId = this.selectedRound.id;
+        this.meetingService.selectedMeetingDb. playoffId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryId = null;
         this.router.navigate([REDIRECT_ROUND_RESULT_LV]);
     }
 
-    onPlayoffRowSelect(event) {
+    onPlayoffRowSelect(event : any)  {
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         this.meetingService.selectedRound = this.selectedPlayoff.round;
 
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
 
-        this.meetingService.selectedMeetingDb = {
-              id: null
-            , tourneyId: this.selectedTourney.id
-            , roundId: null
-            , playoffId: this.selectedPlayoff.id
-            , playoutId: null
-            , eliminatoryId: null
-            , eliminatoryBId: null
-        };
+        this.meetingService.selectedMeetingDb = new MeetingDb();
+        
+        this.meetingService.selectedMeetingDb.id = null;
+        this.meetingService.selectedMeetingDb.tourneyId = this.selectedTourney.id;
+        this.meetingService.selectedMeetingDb.roundId = null;
+        this.meetingService.selectedMeetingDb.playoffId = this.selectedPlayoff.id;
+        this.meetingService.selectedMeetingDb.playoutId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryBId = null;
         let playoffRounds: Round[] = [];
         for(let p of this.selectedTourney.roundVO.rounds) {
             playoffRounds.push(p);
@@ -111,7 +112,7 @@ export class TabResultListView extends AbstractTabResultListView {
         this.router.navigate([REDIRECT_PLAYOFF_RESULT_LV]);
     }
     
-    onPlayoutRowSelect(event) {
+    onPlayoutRowSelect(event : any) {
         this.tourneyService.selectedPlayoff = null;
         this.tourneyService.selectedPlayout = this.selectedPlayout;
         this.meetingService.selectedRound = this.selectedPlayout.round;
@@ -119,15 +120,14 @@ export class TabResultListView extends AbstractTabResultListView {
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
 
-        this.meetingService.selectedMeetingDb = {
-              id: null
-            , tourneyId: this.selectedTourney.id
-            , roundId: null
-            , playoffId: null
-            , playoutId: this.selectedPlayout.id
-            , eliminatoryId: null
-            , eliminatoryBId: null
-        };     
+        this.meetingService.selectedMeetingDb = new MeetingDb();
+        this.meetingService.selectedMeetingDb.id = null;
+        this.meetingService.selectedMeetingDb.tourneyId = this.selectedTourney.id;
+        this.meetingService.selectedMeetingDb.roundId = null;
+        this.meetingService.selectedMeetingDb.playoffId = null;
+        this.meetingService.selectedMeetingDb.playoutId = this.selectedPlayout.id;
+        this.meetingService.selectedMeetingDb.eliminatoryId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryBId = null;
         let playoutRounds: Round[] = [];
         for(let p of this.selectedTourney.roundVO.rounds) {
             playoutRounds.push(p);
@@ -136,7 +136,7 @@ export class TabResultListView extends AbstractTabResultListView {
         this.router.navigate([REDIRECT_PLAYOFF_RESULT_LV]);
     }
     
-    onEliminatoryRowSelect(event) {
+    onEliminatoryRowSelect(event : any) {
         console.log("Entering onEliminatoryRowSelect()");
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
@@ -151,27 +151,27 @@ export class TabResultListView extends AbstractTabResultListView {
         }
 
         this.meetingService.qualifyingRounds = this.selectedTourney.roundVO.rounds;
-        if(this.containsPlayoff) {
+        if(this.containsPlayoff()) {
             let playoffRounds: Round[] = [];
             for(let p of this.selectedTourney.playoffVO.playoffs) {
                 playoffRounds.push(p.round);
             }
             this.meetingService.qualifyingRounds = playoffRounds;
         }
-        this.meetingService.selectedMeetingDb = {
-            id: null
-          , tourneyId: this.selectedTourney.id
-          , roundId: null
-          , playoffId: null
-          , playoutId: null
-          , eliminatoryId: this.tourneyService.selectedEliminatoryLevel.id
-          , eliminatoryBId: null
-        };     
+        this.meetingService.selectedMeetingDb = new MeetingDb();
+
+        this.meetingService.selectedMeetingDb.id = null;
+        this.meetingService.selectedMeetingDb.tourneyId = this.selectedTourney.id;
+        this.meetingService.selectedMeetingDb.roundId = null;
+        this.meetingService.selectedMeetingDb.playoffId = null;
+        this.meetingService.selectedMeetingDb.playoutId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryId = this.tourneyService.selectedEliminatoryLevel.id;
+        this.meetingService.selectedMeetingDb.eliminatoryBId = null;
         
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
         
-    onEliminatoryBRowSelect(event) {
+    onEliminatoryBRowSelect(event : any) {
         console.log("Entering onEliminatoryBRowSelect()");
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
@@ -186,7 +186,7 @@ export class TabResultListView extends AbstractTabResultListView {
         }
 
         this.meetingService.qualifyingRounds = this.selectedTourney.roundVO.rounds;
-        if(this.containsPlayoff) {
+        if(this.containsPlayoff() ) {
             let playoffRounds: Round[] = [];
             for(let p of this.selectedTourney.playoffVO.playoffs) {
                 playoffRounds.push(p.round);
@@ -194,25 +194,24 @@ export class TabResultListView extends AbstractTabResultListView {
             this.meetingService.qualifyingRounds = playoffRounds;
         }
 
-        this.meetingService.selectedMeetingDb = {
-            id: null
-          , tourneyId: this.selectedTourney.id
-          , roundId: null
-          , playoffId: null
-          , playoutId: null
-          , eliminatoryId: null
-          , eliminatoryBId: this.tourneyService.selectedEliminatoryLevel.id
-        };     
+        this.meetingService.selectedMeetingDb = new MeetingDb();
+        this.meetingService.selectedMeetingDb.id = null;
+        this.meetingService.selectedMeetingDb.tourneyId = this.selectedTourney.id;
+        this.meetingService.selectedMeetingDb.roundId = null;
+        this.meetingService.selectedMeetingDb.playoffId = null;
+        this.meetingService.selectedMeetingDb.playoutId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryId = null;
+        this.meetingService.selectedMeetingDb.eliminatoryBId = this.tourneyService.selectedEliminatoryLevel.id;
         
         this.router.navigate([REDIRECT_ELIMINATORY]);
     }
 
-    onTerminateRoundChange(event) {
+    onTerminateRoundChange(event : any) {
         console.log("Entering onTerminateRoundChange()");
         this.updateTourney();
      }
 
-    onTerminatePlayoffChange(event) {
+    onTerminatePlayoffChange(event : any)  {
         console.log("Entering onTerminatePlayoffChange()");
         this.updateTourney();
     }
@@ -224,7 +223,7 @@ export class TabResultListView extends AbstractTabResultListView {
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }
 
-    goBack(): void {        
+    override goBack(): void {        
         this.router.navigate([TourneyResultListView.REDIRECT_TOURNEY_LV]);
     }
 
@@ -232,22 +231,44 @@ export class TabResultListView extends AbstractTabResultListView {
         this.ngOnInit();
     }
 
-    regenerate(event) {
+    regenerate(event : any) {
         console.log("Entering regenerate()");
     }
 
-    regenerateB(event) {
+    regenerateB(event : any) {
         console.log("Entering regenerateB()");
     }
 
     public printPdfMeeting() {
         this.meetingRoundService.printPdfMeeting(this.selectedTourney)
     }
+    
+    public printPdfPlayoffMeeting() {
+        this.meetingRoundService.printPdfPlayoffMeeting(this.selectedTourney)
+    }
+    
+    public printPdfPlayoffClassification() {
+        const rounds : Round[] = this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
+        this.doPrintPdfClassification( rounds);
+    }
 
+    public printPdfPlayoutMeeting() {
+        this.meetingRoundService.printPdfPlayoutMeeting(this.selectedTourney)
+    }
+    
+    public printPdfPlayoutClassification() {
+        const rounds : Round[] = this.selectedTourney.playoutVO.playoffs.map((p) => {return p.round;});
+        this.doPrintPdfClassification( rounds);
+    }
+    
     public printPdfClassification() {
+        this.doPrintPdfClassification(this.selectedTourney.roundVO.rounds);
+    }
+    
+    private doPrintPdfClassification(rounds : Round[]) {
         const doc = new jsPDF('p', 'mm', 'a4');
         let currentY = 15; // Track the vertical position manually
-        for (let r of this.selectedTourney.roundVO.rounds) {
+        for (let r of rounds) {
             // 1. Check if we have enough space for at least the Title + 3 rows (approx 40mm)
             // If not, start a new page before printing the next Round
             if (currentY > 250) { 
@@ -283,7 +304,9 @@ export class TabResultListView extends AbstractTabResultListView {
                 margin: { bottom: 20 }, // Ensure a little buffer at page end
                 didDrawPage: (data) => {
                     // Update currentY to the end of the table on the current page
-                    currentY = data.cursor.y + 15; 
+                    if (data.cursor) {
+                        currentY = data.cursor.y + 15;
+                    }
                 }
             });
             // 4. Update currentY for the next Round in the loop
@@ -432,12 +455,26 @@ export class TabResultListView extends AbstractTabResultListView {
                 if (ms && ms.length > 0) {
                     let newDate = new Date(ms[0].datetime);
                     let range = this.dfp.transform(newDate);
-                    let dto: MeetingDto = { round: r.name, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range, signLine: false};
+                    let dto: MeetingDto = new MeetingDto();
+                    dto.round = r.name;
+                    dto.direction = "Andata,";
+                    dto.separator = true;
+                    dto.md = md;
+                    dto.days = r.daysNo;
+                    dto.weekRange = range;
+                    dto.signLine = false;
                     meetings.push(dto);
                     for (let m of ms) {
                         let matchDto: MeetingDto = { round: r.name, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m };
                         meetings.push(matchDto);
-                        let signLineDto: MeetingDto = { round: r.name, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range, signLine: true };
+                        let signLineDto: MeetingDto = new MeetingDto();
+                        signLineDto.round = r.name;
+                        signLineDto.direction = "Andata,";
+                        signLineDto.separator = true;
+                        signLineDto.md = md;
+                        signLineDto.days = r.daysNo;
+                        signLineDto.weekRange = range;
+                        signLineDto.signLine = true;
                         meetings.push(signLineDto);
                     }
                 }

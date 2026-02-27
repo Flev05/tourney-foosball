@@ -15,16 +15,16 @@ export class ClassificationEliminatoryListView extends AbstractEliminatoryListVi
     static autoRedirect: string = 'classification/lv/dv';
     
     constructor(
-        public tourneyService: TourneyService,
-        protected meetingService: MeetingService,
-        protected router: Router,
-        protected location: Location,
+        public override tourneyService: TourneyService,
+        protected override meetingService: MeetingService,
+        protected override router: Router,
+        protected override location: Location,
         protected dfp: DateFormatPipe
     ) {
         super(ClassificationEliminatoryListView.autoRedirect, tourneyService, meetingService, router, location, dfp);
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.tourneyService.selectedEliminatoryLevel = this.tourneyService.selectedEliminatoryLevel;
         this.prepareClassificationGui();

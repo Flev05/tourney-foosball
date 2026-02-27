@@ -3,7 +3,7 @@ import { Eliminatory } from "./eliminatory";
 import { Direction } from "./enumerations";
 
 export class EliminatoryLevel   {
-    id?             : number;
+    id              : number | null = null;
     name            : string = "";
     level           : number = 0;
     isTopLevel      : boolean = true;

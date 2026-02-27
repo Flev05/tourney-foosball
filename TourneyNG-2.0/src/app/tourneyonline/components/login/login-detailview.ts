@@ -51,10 +51,7 @@ export class LoginDetailView extends AbstractListView {
             ,   tourneyService 
             ,   router 
             ,   location);
-            this.loginformGroup = this.fb.group({
-                username: [''],
-                password: ['']
-            });
+            
             this.loginformGroup = this.fb.group({
                 'username': new FormControl(this.loggedUsername, Validators.required),
                 'password': new FormControl("", Validators.required),

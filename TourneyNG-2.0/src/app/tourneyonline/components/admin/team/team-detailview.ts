@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { AbstractDetailView } from '../../../components/common/abstract-detailview';
-import { Team } from '../../../domain/team';
-import { TourneyService } from '../../../service/tourney-service';
-import { TeamService } from '../../../service/team-service';
-import { ClientService } from '../../../service/client-service';
-import { CountryService } from '../../../service/country-service';
-import { Round } from '../../../domain/round';
-import { Combobox } from '../../../domain/tourney-combobox';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { Team } from 'app/tourneyonline/domain/team';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from '../round/meeting-round-service';
+import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 import { ActivatedRoute } from '@angular/router';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -26,7 +28,7 @@ export class TeamDetailView extends AbstractDetailView {
     selectedRound: Round = new Round();
     teamNameCB: Combobox = new Combobox();
     teams4RoundCombobox: Combobox[] = []; 
-    isRoundAutoGen: string = ""; 
+    isRoundAutoGen: string = "";  
 
     autoCompleteTeamName: string = ""; 
     filteredTeamsSingle: string[] = [];
@@ -59,6 +61,7 @@ export class TeamDetailView extends AbstractDetailView {
             this.tourneyTeams = params['tourneyTeams'] === 'true';
         });
 
+        // this.selectedRound = null;
         if(this.teamService.newTeam) {
             this.prepareNewTeam();
         }
@@ -126,18 +129,21 @@ export class TeamDetailView extends AbstractDetailView {
                 } else {
                     this.tourneyService.selectedTourney.teams.push(this.teamService.teamPool[poolIndex]);
                 }
+                this.teams = this.tourneyService.selectedTourney.teams;
+                this.tourneyService.selectedTourney.teamsChanged = true;
+                // this.teamService.onTeamOperationChange(ETeamOperation.INSERT);
             } else {
                 // Simply take the team from the pool team and update the one in the teams tourney
                 if( this.previousTeamName != this.autoCompleteTeamName ) {
                     const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === this.previousTeamName);
                     if (ttIndex !== -1) {
                         this.tourneyService.selectedTourney.teams[ttIndex] = this.teamService.teamPool[poolIndex];
+                        this.teams = this.tourneyService.selectedTourney.teams;
+                        this.tourneyService.selectedTourney.teamsChanged = true;
+                        // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
                     }
                 }                
             }
-            this.teams = this.tourneyService.selectedTourney.teams;
-            // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
-            this.tourneyService.selectedTourney.teamsChanged = true;
             super.goBack();
             return;
         } 
@@ -171,7 +177,9 @@ export class TeamDetailView extends AbstractDetailView {
             }
         }
         this.selectedTeam.teamName = this.autoCompleteTeamName;
-        super.goBack();
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => super.goBack());
     }
 
     /**

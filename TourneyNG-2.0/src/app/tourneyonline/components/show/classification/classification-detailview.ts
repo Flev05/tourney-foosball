@@ -12,16 +12,16 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 })
 export class ClassificationDetailView extends AbstractDetailView {
     public static redirect : string = "/classification/dv";
-    selectedClassificationRow:  Classification;
-    selectedClassificationName: string;
+    selectedClassificationRow:  Classification = new Classification();
+    selectedClassificationName: string = "";
 
     playerLv: boolean = true;
     addPlayerEnabled : boolean = false;
     teamName: string = "";
 
     constructor(
-        protected location: Location,
-        protected tourneyService: TourneyService,
+        protected override location: Location,
+        protected override tourneyService: TourneyService,
         protected teamService: TeamService,
         protected meetingRoundService: MeetingRoundService,
         protected dfp: DateFormatPipe
@@ -29,7 +29,7 @@ export class ClassificationDetailView extends AbstractDetailView {
         super(tourneyService, location);
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         console.log("ClassificationDetailView.ngOnInit() ");
         this.selectedClassificationRow = this.tourneyService.selectedClassificationRow;
         let teamName = this.selectedClassificationRow.teamName.replace("*","").trim();

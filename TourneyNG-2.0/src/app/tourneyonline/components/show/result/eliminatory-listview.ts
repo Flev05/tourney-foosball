@@ -22,20 +22,20 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 })
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
     constructor(
-        public tourneyService: TourneyService
-        ,protected meetingService: MeetingService
-        ,protected levelService: LevelService
-        ,protected clientService: ClientService
-        ,protected router: Router
-        ,protected location: Location
-        ,public dfp: DateFormatPipe
+        public override tourneyService: TourneyService
+        ,protected override meetingService: MeetingService
+        ,protected override levelService: LevelService
+        ,protected override clientService: ClientService
+        ,protected override router: Router
+        ,protected override location: Location
+        ,public override dfp: DateFormatPipe
         ,public loginService: LoginService
         ,private teamService: TeamService
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, meetingService, levelService, clientService, router, location, dfp)
     }
     
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.meetingService.abstractRoundVO = this.tourneyService.selectedEliminatoryLevel.abstractRoundVO;
         this.levelService.selectedTourney = this.selectedTourney;
@@ -71,7 +71,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }
 
-    onClassifcationRowSelect(event) {
+    onClassifcationRowSelect(event : any) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.tourneyService.selectedEliminatoryLevel.name);
         this.router.navigate([ClassificationDetailView.redirect]);

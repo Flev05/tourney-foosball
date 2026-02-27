@@ -437,6 +437,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let m1 = e.round.onewayMeetings[0];
         let m2 = e.round.roundtripMeetings[0];
 
+        if( m1.teamName1 == null || m1.teamName2 == null ) return;
+
         e.round.teamNames[0] = m1.teamName1;
         e.round.teamNames[1] = m1.teamName2;
         m2.teamName1 = m1.teamName2;
@@ -464,6 +466,9 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     
     private compile3And4Position(el: EliminatoryLevel, l: number, eliminatoryLevels: EliminatoryLevel[]) {
         let e = el.eliminatories[0];
+        let team1 = e.round.onewayMeetings[0].teamName1;
+        let team2 = e.round.onewayMeetings[0].teamName2;
+        if( team1 == null || team2 == null ) return;
 
         let prevIndex: number = l - 2;
         let semifinalLevel: Array<Eliminatory> = new Array<Eliminatory>();
@@ -473,9 +478,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 this.meetingService.qualifyingRounds.push(e.round);
             }
         }
-
-        let team1: string = e.round.onewayMeetings[0].teamName1;
-        let team2: string = e.round.onewayMeetings[0].teamName2;
 
         let prevEliminatory1: Eliminatory = semifinalLevel[0];
         team1 = this.fromClassification(prevEliminatory1, 1);
@@ -506,9 +508,9 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         return e.round.classification[position].teamName;        
     }
 
-    onEliminatoryRowSelect(event) {
+    onEliminatoryRowSelect(event : any) {
         console.log("Entering onEliminatoryRowSelect("+event+")");
-        if( this.selectedRow.teamName2.includes('Fittizio') ) {
+        if( this.selectedRow.teamName2==null || this.selectedRow.teamName2.includes('Fittizio') ) {
             return;
         }
         this.meetingService.selectedMeeting = this.selectedRow;
@@ -518,7 +520,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             this.meetingService.selectedMeetingDb.eliminatoryId = this.selectedRow.containerId
         }
         this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
-        let el : Eliminatory  = this.eliminatories.find(e => e.round.teamNames[0] === this.selectedRow.teamName1 && e.round.teamNames[1] === this.selectedRow.teamName2);
+        let el = this.eliminatories.find(e => e.round.teamNames[0] === this.selectedRow.teamName1 && e.round.teamNames[1] === this.selectedRow.teamName2);
+        if( el == null ) {
+            return;
+        }
         this.meetingService.selectedRound = el.round;
         this.meetingService.selectedRound.label = this.makeEliminatoryLabel();
         this.gotoDetailView();

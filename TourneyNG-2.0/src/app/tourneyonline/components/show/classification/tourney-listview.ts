@@ -17,14 +17,14 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 export class ClassificationTourneyListView extends AbstractTourneyListView  {
     static redirect = '/classification/lv';
 
-    constructor(protected tourneyService: TourneyService
-        , protected countryService: CountryService
-        , protected playerService : PlayerService
-        , protected teamService : TeamService
-        , public router: Router
+    constructor(protected override tourneyService: TourneyService
+        , protected override countryService: CountryService
+        , protected override playerService : PlayerService
+        , protected override teamService : TeamService
+        , public override router: Router
         , public loc: Location
         , protected dfp: DateFormatPipe
-        , protected disciplineService: DisciplineService) 
+        , protected override disciplineService: DisciplineService) 
     { 
         super(ClassificationTourneyListView.redirect
             , tourneyService
@@ -49,7 +49,7 @@ export class ClassificationTourneyListView extends AbstractTourneyListView  {
         }
     }
 
-    onRowSelect(event) {
+    onRowSelect(event : any) {
         console.log("Entering onRowSelect()");
         console.log(event.data);
         

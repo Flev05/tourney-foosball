@@ -7,14 +7,12 @@ import { OrderListModule } from 'primeng/orderlist';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
-import { GrowlModule } from 'primeng/growl';
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
-import { CodeHighlighterModule } from 'primeng/codehighlighter';
 import { AccordionModule } from 'primeng/accordion';
 
 import { ClassificationTabListView } from './tab-listview';
@@ -32,14 +30,12 @@ import { TeamMatchesModule } from '../match/team-matches/team-matches.module';
         ,FormsModule
         ,ReactiveFormsModule
         ,AccordionModule
-        ,GrowlModule
         ,PanelModule
         ,DropdownModule
         ,InputTextModule
         ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
-        ,CodeHighlighterModule
         ,TableModule
         ,OrderListModule
         ,DialogModule

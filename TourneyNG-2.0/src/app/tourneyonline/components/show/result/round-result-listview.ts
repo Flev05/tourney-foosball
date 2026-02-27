@@ -18,17 +18,17 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
     styleUrls: ['../classification/classification-view.css']
 })
 export class RoundResultListView extends AbstractRoundResultListView {
-    selectedClassificationRow: Classification;
+    selectedClassificationRow: Classification = new Classification();
     onewayCurrentDay: number = 1;
     roundtripCurrentDay: number = 1;
     
-    constructor( public tourneyService: TourneyService
-        , protected meetingRoundService: MeetingRoundService
-        , public meetingService: MeetingService
-        , protected router: Router 
-        , protected location: Location
-        , protected dfp: DateFormatPipe
-        , protected teamService: TeamService
+    constructor( public override tourneyService: TourneyService
+        , protected override meetingRoundService: MeetingRoundService
+        , public override meetingService: MeetingService
+        , protected override router: Router 
+        , protected override location: Location
+        , protected override dfp: DateFormatPipe
+        , protected override teamService: TeamService
         , public loginService: LoginService
     ) {
         super(MeetingDetailView.meetingDvRedirect
@@ -42,7 +42,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
         );
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.onewayCurrentDay = this.selectedRound.onewayCurrentDay;
         this.roundtripCurrentDay = this.selectedRound.roundtripCurrentDay;
@@ -143,7 +143,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
         }
     }
 
-    onClassifcationRowSelect(event) {
+    onClassifcationRowSelect(event : any) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedRound.name);
         this.router.navigate([ClassificationDetailView.redirect]);

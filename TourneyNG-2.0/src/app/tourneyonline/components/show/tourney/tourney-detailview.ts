@@ -9,14 +9,14 @@ import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract
 })
 export class TourneyDetailView extends AbstractDetailView {
     constructor(
-        protected location: Location,
-        protected tourneyService: TourneyService,
+        protected override location: Location,
+        protected override tourneyService: TourneyService,
         protected router: Router,
     ) { 
         super(tourneyService, location);
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         console.log("TourneyDetailView.ngOnInit() ");
 
         super.ngOnInit();

@@ -14,19 +14,19 @@ import { RoundVO } from 'app/tourneyonline/domain/round-vo';
 
 @Injectable()
 export class MatrixService   {
-    roundName: string;
-    cols: any[];
-    onewayMatrix: Matrix;
-    roundtripMatrix: Matrix;
-    round: Round;
-    roundVO: RoundVO;
-    tourney: Tourney;
+    roundName: string = "";
+    cols: any[] = [];
+    onewayMatrix: Matrix = new Matrix();
+    roundtripMatrix: Matrix = new Matrix();
+    round: Round = new Round();
+    roundVO: RoundVO = new RoundVO();
+    tourney: Tourney = new Tourney();
 
-    selectedMeeting: Meeting;
+    selectedMeeting: Meeting = new Meeting();
 
-    legendCols: any[];
-    legendRows: any[];
-    onSaveMeetingError: boolean;
+    legendCols: any[] = [];
+    legendRows: any[] = [];
+    onSaveMeetingError: boolean = false;
 
     constructor( public tourneyService: TourneyService
         , protected meetingService: MeetingService) 
@@ -90,7 +90,7 @@ export class MatrixService   {
             let r = {teamName: tn1, alias: letter};
             this.legendRows.push(r);
 
-            let c: Cell = this.newCell(null, null, letter.toString(), 'style1', false, false, 0, 0, 0);
+            let c: Cell = this.newCell("", "", letter.toString(), 'style1', false, false, 0, 0, 0);
             cells.push(c);
             letter = this.getNextLetter(letter);
             let sum : number = 0;
@@ -98,22 +98,23 @@ export class MatrixService   {
                 let tn2 = this.round.teamNames[j];
                 let points = 0;
                 if (i == j) {
-                    c = this.newCell(null, null, "", 'diagonalStyle', false, false, 0, 0, 0);
+                    c = this.newCell("", "", "", 'diagonalStyle', false, false, 0, 0, 0);
                 }
                 else {
-                    let m1: Meeting = meetings.find( m => m.teamName1 == tn1 && m.teamName2 == tn2 );
-                    if( m1 != undefined ) {
+                    let m1= meetings.find( m => m.teamName1 == tn1 && m.teamName2 == tn2 );
+                    if( m1 ) {
                         points = m1.points1;
                     } else {
-                        let m2: Meeting = meetings.find( m => m.teamName1 == tn2 && m.teamName2 == tn1 );
-                        points = m2.points2;
+                        let m2= meetings.find( m => m.teamName1 == tn2 && m.teamName2 == tn1 );
+                        if( m2 )
+                            points = m2.points2;
                     }
                     c = this.newCell(tn1, tn2, "", 'style0', true, false, i, j, points);
                 }
                 cells.push(c);
                 sum += points;
             }
-            c = this.newCell(null, null, "", 'totalStyle', false, true, 0, 0, 0);
+            c = this.newCell("", "", "", 'totalStyle', false, true, 0, 0, 0);
             c.points = {label: "" + sum, value: sum, row: 0, col: 0};
             cells.push(c);
         }    
@@ -205,12 +206,17 @@ export class MatrixService   {
      */
     private prepareMeeting(cb: CellCombobox, matrix: Matrix, meetings: Meeting[]) {
         let selectedRow = cb.row;
+        const row = matrix?.rows?.[selectedRow];
+        if( ! row ) return;
         let selectedCol = cb.col+1;
         let len = matrix.rows[0].cells.length;
 
         let sum: number = 0;
-        for( let c = 1; c < len-1; c++ ) {
-            sum += matrix.rows[selectedRow].cells[c].points.value;
+        for (let c = 1; c < len - 1; c++) {
+            const cell = row.cells?.[c];
+            if (cell?.points?.value != null) {
+                sum += cell.points.value;
+            }
         }
         matrix.rows[selectedRow].cells[len-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
         let c1 = matrix.rows[selectedRow].cells[selectedCol];
@@ -218,22 +224,30 @@ export class MatrixService   {
         
         sum = 0;
         selectedRow = selectedCol-1;
-        for( let c = 1; c < len-1; c++ ) {
-            sum += matrix.rows[selectedRow].cells[c].points.value;
+        for (let c = 1; c < len - 1; c++) {
+            const cell = row.cells?.[c];
+            if (cell?.points?.value != null) {
+                sum += cell.points.value;
+            }
         }
         matrix.rows[selectedRow].cells[len-1].points = {label: "" + sum, value: sum, row: 0, col: 0};
         selectedCol = cb.row+1;
         let c2 = matrix.rows[selectedRow].cells[selectedCol];
         c2.style = 'totalStyle';
 
-        this.selectedMeeting = meetings.find( m => m.teamName1 == c1.teamName1 && m.teamName2 == c1.teamName2 );
+        let sm = meetings.find( m => m.teamName1 == c1.teamName1 && m.teamName2 == c1.teamName2 );
+        if( !sm ) return;
+        this.selectedMeeting = sm;
         if( this.selectedMeeting == undefined ) {
-            this.selectedMeeting = meetings.find( m => m.teamName1 == c1.teamName2 && m.teamName2 == c1.teamName1 );
-            this.selectedMeeting.points1 = c2.points.value;
-            this.selectedMeeting.points2 = c1.points.value;
+            sm = meetings.find( m => m.teamName1 == c1.teamName2 && m.teamName2 == c1.teamName1 );
+            if( sm ) {
+                this.selectedMeeting = sm;
+                this.selectedMeeting.points1 = c2.points.value == null ? 0 : c2.points.value;
+                this.selectedMeeting.points2 = c1.points.value == null ? 0 : c1.points.value;
+            }
         } else {
-            this.selectedMeeting.points1 = c1.points.value;
-            this.selectedMeeting.points2 = c2.points.value;
+            this.selectedMeeting.points1 = c1.points.value == null ? 0 : c1.points.value;
+            this.selectedMeeting.points2 = c2.points.value == null ? 0 : c2.points.value;
         }
         this.selectedMeeting.status = MeetingStatus.InProgress;
     }
@@ -284,7 +298,7 @@ export class MatrixService   {
         }
 
         let cell: Cell = {
-              id: null // this.tourneyService.getSequenceNumber()
+              id: 0 // this.tourneyService.getSequenceNumber()
             , field: field
             , style: style
             , points: { label: "" + points, value: points, row: row, col: col }

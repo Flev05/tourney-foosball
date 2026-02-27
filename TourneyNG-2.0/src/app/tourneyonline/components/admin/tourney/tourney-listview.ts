@@ -52,6 +52,10 @@ export class TourneyListView extends AbstractTourneyListView {
         , protected override disciplineService: DisciplineService) 
     { 
         super(TourneyDetailView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, loc, dfp);
+        this.tourneyFormGroup = this.fb.group({
+            username: [''],
+            password: ['']
+        });
     }
 
     override ngOnInit() {
@@ -204,7 +208,7 @@ export class TourneyListView extends AbstractTourneyListView {
     onLoadTourneyForCloneComplete(): void {
         this.selectedTourney = this.tourneyService.selectedTourney;
         const clonedFromTourneyName : string = this.selectedTourney.tourneyName;
-        this.selectedTourney.id = null;
+        // this.selectedTourney.id = null;
         this.selectedTourney.tourneyName = this.newTourneyName;
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         tvo.clonedFromTourneyName = clonedFromTourneyName;
@@ -213,7 +217,7 @@ export class TourneyListView extends AbstractTourneyListView {
     }
 
     private saveTourneyNext(cs: TourneyVO): void {
-        this.selectedTourney = null;
+        // this.selectedTourney = null;
         this.ngOnInit();
     }
 }

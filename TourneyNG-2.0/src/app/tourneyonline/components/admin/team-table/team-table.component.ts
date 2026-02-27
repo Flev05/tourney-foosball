@@ -2,14 +2,16 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TeamService } from '../../../service/team-service';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { Team } from '../../../domain/team';
-import { TourneyService } from '../../../service/tourney-service';
-import { TableCols } from '../../../domain/table-cols';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { Team } from 'app/tourneyonline/domain/team';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 import { Observable, of } from 'rxjs';
 import { Table } from 'primeng/table';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -36,7 +38,8 @@ export class TeamTableComponent extends AbstractListView {
         protected override tourneyService: TourneyService,
         protected override router: Router,
         protected override location: Location,
-        private   teamService: TeamService
+        private   teamService: TeamService,
+        private clientService: ClientService,
     ) {
         super(TeamDetailView.redirect, tourneyService, router, location);
     }
@@ -98,7 +101,10 @@ export class TeamTableComponent extends AbstractListView {
                         this.table.filteredValue = this.table.filteredValue.filter(t => t.id !== team.id);
                     }
                     // this.teamService.onTeamOperationChange(ETeamOperation.DELETE); // fire the DELETE event for Subscribed listeners
-                    this.tourneyService.selectedTourney.teamsChanged = true;
+                    
+                    let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
+                    const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+                    subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
                 }
                 return;
             }

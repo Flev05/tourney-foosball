@@ -17,7 +17,7 @@ import { Player } from './player';
 export class Tourney {
     id: number = 0;
     
-    tourneyName    : string | null = null;
+    tourneyName    : string = "";
     calendar       : string = "";
     roundTabName?   : string;
     playoffTabName? : string;

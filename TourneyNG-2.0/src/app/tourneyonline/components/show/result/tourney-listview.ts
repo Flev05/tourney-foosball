@@ -16,14 +16,14 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 export class ResultTourneyListView extends AbstractTourneyListView {
     static redirect: string = '/result/lv';
 
-    constructor(protected tourneyService: TourneyService
-        , protected countryService: CountryService
-        , protected playerService : PlayerService
-        , protected teamService : TeamService
-        , public router: Router
-        , public location: Location
+    constructor(protected override tourneyService: TourneyService
+        , protected override countryService: CountryService
+        , protected override playerService : PlayerService
+        , protected override teamService : TeamService
+        , public override router: Router
+        , public override location: Location
         , protected dfp: DateFormatPipe
-        , protected disciplineService: DisciplineService) 
+        , protected override disciplineService: DisciplineService) 
     { 
         super(ResultTourneyListView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, location, dfp);
     }
@@ -32,7 +32,7 @@ export class ResultTourneyListView extends AbstractTourneyListView {
         return tourneys;
     }
 
-    onRowSelect(event) {
+    onRowSelect(event : any) {
         console.log("Entering onRowSelect()");
         console.log(event.data);
         this.tourneyService.loadTourneyById(event.data.id, () => this.gotoDetailView(), e => this.serverUnreachableHandler(e));

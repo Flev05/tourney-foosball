@@ -23,8 +23,6 @@ export class ClientDetailView extends AbstractDetailView {
 
     selectedClient: ClientVO = new ClientVO();
   
-    filteredCountriesSingle: Country[] = [];
-
     isUserRegisteredRadio: boolean = false;
     
     returnedClientVo: ClientVO = new ClientVO();
@@ -57,16 +55,9 @@ export class ClientDetailView extends AbstractDetailView {
         this.loggedUsername = this.loginService.userLogged.username;
 
         if(this.clientService.newClient) {
-            this.selectedClient={
-                businessName: ""
-              , phoneNumber: ""
-              , email: ""
-              , siteUrl: ""
-              , country: {}
-            };
+            this.selectedClient = new ClientVO();
         } else {
             this.selectedClient = this.clientService.selectedClient;
-            
             this.clientAddress = this.selectedClient != undefined && this.selectedClient.country != undefined ?
                 this.selectedClient.address  + " - " +
                 this.selectedClient.country.zipCode + " " + this.selectedClient.country.city
@@ -150,7 +141,7 @@ export class ClientDetailView extends AbstractDetailView {
         };
     }
 
-    protected subscribeErrorHandler<T> (operation = 'operation', result?: T) {
+    protected override subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
             this.onSaveClientError = true;

@@ -16,14 +16,12 @@ import {MessageModule} from 'primeng/message';
 import { CalendarModule } from 'primeng/calendar';
 
 import {ResultRoutingModule} from './result-routing.module';
-import { GrowlModule } from 'primeng/growl';
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
-import { CodeHighlighterModule } from 'primeng/codehighlighter';
 import { SliderModule } from 'primeng/slider';
 import { BlockUIModule } from 'primeng/blockui';
 import { ResultTourneyListView } from './tourney-listview';
@@ -41,14 +39,12 @@ import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/t
 		 CommonModule
         ,FormsModule
         ,ReactiveFormsModule
-        ,GrowlModule
         ,PanelModule
         ,DropdownModule
         ,InputTextModule
         ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
-        ,CodeHighlighterModule
         ,TableModule
         ,DialogModule
         ,SliderModule

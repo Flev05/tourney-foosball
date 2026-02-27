@@ -113,7 +113,24 @@
                     (onChange)="onTerminatePlayoffChange($event)">
                 </p-checkbox>                
             </ng-template>      
-
+    
+            <ng-template pTemplate="summary">
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pTooltip="Stampa la lista degli incontri del girone di PLAYOFF"
+                    pButton (click)="printPdfPlayoffMeeting()" 
+                    label="Incontri" 
+                    class="ui-button-success">
+                </button>
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pButton (click)="printPdfPlayoffClassification()" 
+                    pTooltip="Stampa la classifica delle squadre del girone di PLAYOFF"
+                    label="Classifica" 
+                    class="ui-button-success"
+                    style="margin-left: 5mm;">
+                </button>
+            </ng-template>            
         </p-table>
     </p-tabPanel>
 
@@ -145,6 +162,23 @@
                     </td>
                 </tr>
             </ng-template>
+            <ng-template pTemplate="summary">
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pTooltip="Stampa la lista degli incontri del girone di PLAYOUT"
+                    pButton (click)="printPdfPlayoutMeeting()" 
+                    label="Incontri" 
+                    class="ui-button-success">
+                </button>
+                <button type="button" 
+                    icon="fa fa-file-excel-o" 
+                    pButton (click)="printPdfPlayoutClassification()" 
+                    pTooltip="Stampa la classifica delle squadre del girone di PLAYOUT"
+                    label="Classifica" 
+                    class="ui-button-success"
+                    style="margin-left: 5mm;">
+                </button>
+            </ng-template>                
         </p-table>
     </p-tabPanel>
 

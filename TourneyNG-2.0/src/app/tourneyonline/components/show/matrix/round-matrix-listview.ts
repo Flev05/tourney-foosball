@@ -17,22 +17,21 @@ import { MatrixService } from './matrix-service';
     styleUrls: ['./matrix-view.css','../classification/classification-view.css']
 })
 export class RoundMatrixListView extends AbstractRoundResultListView {
-    roundName: string;
-    cols: any[];
-    onewayMatrix: Matrix;
-    roundtripMatrix: Matrix;
+    roundName: string = "";
+    onewayMatrix: Matrix = new Matrix();
+    roundtripMatrix: Matrix = new Matrix();
 
-    legendCols: any[];
-    legendRows: any[];
-    meetingsNoMsg: string;
+    legendCols: any[] = [];
+    legendRows: any[] = [];
+    meetingsNoMsg: string = "";
 
-    constructor( public tourneyService: TourneyService
-        , protected meetingRoundService: MeetingRoundService
-        , public meetingService: MeetingService
-        , protected router: Router 
-        , protected location: Location
-        , protected dfp: DateFormatPipe
-        , protected teamService: TeamService
+    constructor( public override tourneyService: TourneyService
+        , protected override meetingRoundService: MeetingRoundService
+        , public override meetingService: MeetingService
+        , protected override router: Router 
+        , protected override location: Location
+        , protected override dfp: DateFormatPipe
+        , protected override teamService: TeamService
         , private matrixService: MatrixService
     ) {
         super(""
@@ -46,7 +45,7 @@ export class RoundMatrixListView extends AbstractRoundResultListView {
         );
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.classificationCols = this.tourneyService.classificationReducedCols;
 

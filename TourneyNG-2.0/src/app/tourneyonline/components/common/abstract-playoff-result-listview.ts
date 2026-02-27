@@ -73,7 +73,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
         if(this.tourneyService.selectedPlayoff != null) {
             this.selectedPlayoff = this.tourneyService.selectedPlayoff;
-        } else {
+        } else if(this.tourneyService.selectedPlayout != null){
             this.selectedPlayoff = this.tourneyService.selectedPlayout;
         }
      

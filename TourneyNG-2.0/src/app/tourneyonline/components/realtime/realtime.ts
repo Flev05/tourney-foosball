@@ -14,13 +14,14 @@ export class Realtime implements OnInit {
     submitted: boolean = false;
     logged: boolean = false;
  
-    constructor(private fb: FormBuilder) {}
-    
-    ngOnInit() {
-        this.logged = true;
+    constructor(private fb: FormBuilder) {
         this.userform = this.fb.group({
             'codiceTorneo': new FormControl('', Validators.required),
         });        
+    }
+    
+    ngOnInit() {
+        this.logged = true;
     }
     
     onSubmit(value: string) {

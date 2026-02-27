@@ -17,21 +17,20 @@ import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
     styleUrls: ['./matrix-view.css','../classification/classification-view.css']
 })
 export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
-    roundName: string;
-    cols: any[];
-    onewayMatrix: Matrix;
-    roundtripMatrix: Matrix;
-    legendCols: any[];
-    legendRows: any[];
-    meetingsNoMsg: string;
+    roundName: string = "";
+    onewayMatrix: Matrix = new Matrix();
+    roundtripMatrix: Matrix = new Matrix();
+    legendCols: any[] = [];
+    legendRows: any[] = [];
+    meetingsNoMsg: string = "";
 
-    constructor( public tourneyService: TourneyService
-        , protected meetingPlayoffService: MeetingPlayoffService
-        , protected meetingService: MeetingService
-        , protected router: Router
-        , protected location: Location
-        , protected dfp: DateFormatPipe
-        , protected levelService: LevelService
+    constructor( public override tourneyService: TourneyService
+        , protected override meetingPlayoffService: MeetingPlayoffService
+        , protected override meetingService: MeetingService
+        , protected override router: Router
+        , protected override location: Location
+        , protected override dfp: DateFormatPipe
+        , protected override levelService: LevelService
         , private matrixService: MatrixService
     ) {
         super(""
@@ -45,7 +44,7 @@ export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
             );
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.classificationCols = this.tourneyService.classificationReducedCols;
 

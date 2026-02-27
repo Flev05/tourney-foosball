@@ -21,17 +21,17 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 export class PlayoffResultListView extends AbstractPlayoffResultListView {
     addTeamEnabled = false;
     tourneyTeams = true;
-    selectedClassificationRow: Classification;
+    selectedClassificationRow: Classification = new Classification();
     onewayCurrentDay: number = 1;
     roundtripCurrentDay: number = 1;
 
-    constructor( public tourneyService: TourneyService
-        , protected meetingPlayoffService: MeetingPlayoffService
-        , protected meetingService: MeetingService
-        , protected router: Router
-        , protected location: Location
-        , protected dfp: DateFormatPipe
-        , protected levelService: LevelService
+    constructor( public override tourneyService: TourneyService
+        , protected override meetingPlayoffService: MeetingPlayoffService
+        , protected override meetingService: MeetingService
+        , protected override router: Router
+        , protected override location: Location
+        , protected override dfp: DateFormatPipe
+        , protected override levelService: LevelService
         , public loginService: LoginService
         , private teamService: TeamService
     ) {
@@ -46,7 +46,7 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
             );
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.onewayCurrentDay = this.selectedPlayoff.round.onewayCurrentDay;
         this.roundtripCurrentDay = this.selectedPlayoff.round.roundtripCurrentDay;
@@ -85,8 +85,7 @@ export class PlayoffResultListView extends AbstractPlayoffResultListView {
         this.setRoundtripCurrentDay(this.roundtripCurrentDay);
     }
      
-    onClassifcationRowSelect(event) {
-        console.log(event.data);
+    onClassifcationRowSelect(even : any) {
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedPlayoff.round.name);
         this.router.navigate([ClassificationDetailView.redirect]);
     }

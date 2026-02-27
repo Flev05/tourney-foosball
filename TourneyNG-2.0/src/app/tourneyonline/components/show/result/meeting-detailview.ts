@@ -29,33 +29,33 @@ export class MeetingDetailView extends AbstractDetailView {
     static redirect: string = "";
     static meetingDvRedirect:   string = "result/lv/meetingLv/dv";
     
-    selectedMeetingDb: MeetingDb;
-    selectedMeeting: Meeting;
+    selectedMeetingDb: MeetingDb = new MeetingDb();
+    selectedMeeting: Meeting = new Meeting();
 
-    matches: Match[];
+    matches: Match[] = [];
 
-    teamPassedMessage: string;
-    currentDay: number;
-    roundName: string;
-    abstractRoundVO: AbstractRoundVO;
-    selectedRound: Round;
-    selectedDirection: Direction;
-    allDaysNo: number;
-    meetingLabel: string;
+    teamPassedMessage: string = "";
+    currentDay: number = 0;
+    roundName: string = "";
+    abstractRoundVO: AbstractRoundVO = new AbstractRoundVO();
+    selectedRound: Round = new Round();
+    selectedDirection: Direction = Direction.OneWay;
+    allDaysNo: number = 0;
+    meetingLabel: string = "";
 
-    teamName1CB: Combobox;
-    teamName2CB: Combobox;
-    teams4RoundCombobox: Combobox[]; 
-    totalScore1: number;
-    totalScore2: number;
-    teamScore1: number;
-    teamScore2: number;
-    qualifyingRounds: Round[];
+    teamName1CB: Combobox = new Combobox();
+    teamName2CB: Combobox = new Combobox();
+    teams4RoundCombobox: Combobox[] = []; 
+    totalScore1: number = 0;
+    totalScore2: number = 0;
+    teamScore1: number = 0;
+    teamScore2: number = 0;
+    qualifyingRounds: Round[] = [];
     roundsNotTerminated: boolean = false;
 
     constructor(
-        protected location: Location,
-        protected tourneyService: TourneyService,
+        protected override location: Location,
+        protected override tourneyService: TourneyService,
         public meetingService: MeetingService,
         protected meetingRoundService: MeetingRoundService,
         protected meetingPlayoffService: MeetingPlayoffService,
@@ -66,7 +66,7 @@ export class MeetingDetailView extends AbstractDetailView {
         super(tourneyService, location);
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
 
         this.selectedMeetingDb = this.meetingService.selectedMeetingDb;   
@@ -104,12 +104,8 @@ export class MeetingDetailView extends AbstractDetailView {
         if(this.selectedMeeting.matches.length!=this.abstractRoundVO.maxMatchesPerMeeting) {
             this.selectedMeeting.matches=[];
             for(let i=0; i<this.abstractRoundVO.maxMatchesPerMeeting; i++) {
-                let m: Match = {id:i
-                    ,players1: []
-                    ,players2: []
-                    ,score1:0
-                    ,score2:0
-                };
+                let m: Match = new Match();
+                 m.id = i;
                 this.selectedMeeting.matches.push(m);
             }
         }
@@ -118,7 +114,8 @@ export class MeetingDetailView extends AbstractDetailView {
 
         this.teams4RoundCombobox = [];
         for( let tn of this.selectedRound.teamNames) {
-            let team : Team = this.selectedTourney.teams.find( t => t.teamName == tn);
+            let team = this.selectedTourney.teams.find( t => t.teamName == tn);
+            if( !team ) continue;
             this.teams4RoundCombobox.push({label: team.teamName, value: team.id});
         }
         this.teams4RoundCombobox.sort((t1,t2) => {
@@ -130,14 +127,14 @@ export class MeetingDetailView extends AbstractDetailView {
             }
             return 0;
         });
-        this.teamName1CB = {label: this.selectedMeeting.teamName1, value: -1};
+        this.teamName1CB = {label: this.selectedMeeting.teamName1 == null ? "" : this.selectedMeeting.teamName1, value: -1};
         for( let t of this.selectedTourney.teams) {
             if(t.teamName == this.selectedMeeting.teamName1) {
                 this.teamName1CB.value = t.id;
                 break;
             }
         }
-        this.teamName2CB = {label: this.selectedMeeting.teamName2, value: -1};
+        this.teamName2CB = {label: this.selectedMeeting.teamName2 == null ? "" : this.selectedMeeting.teamName2, value: -1};
         for( let t of this.selectedTourney.teams) {
             if(t.teamName == this.selectedMeeting.teamName2) {
                 this.teamName2CB.value = t.id;
@@ -176,8 +173,9 @@ export class MeetingDetailView extends AbstractDetailView {
     disabledOperator(): boolean {
         if(this.loginService.isOperator()) {
             let un = this.loginService.userLogged.username;
-            let tn : string = this.selectedMeeting.teamName1;
-            let team : Team = this.selectedTourney.teams.find(t => t.teamName == tn);
+            let tn = this.selectedMeeting.teamName1;
+            if( !tn ) return false;
+            let team = this.selectedTourney.teams.find(t => t.teamName == tn);
             if( team == undefined || team.operators == undefined) {
                 return true;
             }
@@ -427,7 +425,7 @@ export class MeetingDetailView extends AbstractDetailView {
         }
     }
 
-    private saveMeetingNextCallback(m: Meeting, goback: boolean) {   
+    private saveMeetingNextCallback(m: MeetingDb, goback: boolean) {   
         console.log("Entering saveMeetingNextCallback("+m+")");  
         if(this.serverUnreachable) {
             return;
@@ -449,12 +447,14 @@ export class MeetingDetailView extends AbstractDetailView {
             this.meetingRoundService.reloadRoundMeeting(this.selectedTourney, this.selectedRound, () => this.updateTourney(goback) );
         } else
         if( this.selectedMeetingDb.playoffId != null ) {
-            let p: Playoff = this.selectedTourney.playoffVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
-            this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => this.updateTourney(goback), e => this.serverUnreachableHandler(e) );
+            let p = this.selectedTourney.playoffVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoffId );
+            if( p )
+                this.meetingPlayoffService.reloadPlayoffMeetings(this.selectedTourney.id, p, () => this.updateTourney(goback), e => this.serverUnreachableHandler(e) );
         } else
         if( this.selectedMeetingDb.playoutId != null ) {
-            let p: Playoff = this.selectedTourney.playoutVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoutId );
-            this.meetingPlayoffService.reloadPlayoutMeetings(this.selectedTourney.id, p, () => this.updateTourney(goback), e => this.serverUnreachableHandler(e) );
+            let p = this.selectedTourney.playoutVO.playoffs.find( p => p.id == this.selectedMeetingDb.playoutId );
+            if( p )
+                this.meetingPlayoffService.reloadPlayoutMeetings(this.selectedTourney.id, p, () => this.updateTourney(goback), e => this.serverUnreachableHandler(e) );
             return;
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
@@ -483,11 +483,11 @@ export class MeetingDetailView extends AbstractDetailView {
         this.save(true);
     }
 
-    goBack() {
+    override goBack() {
         this.tourneyService.loadTourneyById(this.selectedTourney.id, () =>  super.goBack(), e => this.serverUnreachableHandler(e));
     }
 
-    onError(n:any) {
+    override onError(n:any) {
         console.log('Modifica result fallita');
     }
 

@@ -17,18 +17,18 @@ const matrixDvRedirect: string = "matrix/lv/dv";
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
     constructor(
-        public tourneyService: TourneyService
-        ,protected meetingService: MeetingService
-        , protected levelService: LevelService
-        , protected clientService: ClientService
-        ,protected router: Router
-        ,protected location: Location
-        ,public dfp: DateFormatPipe 
+        public override tourneyService: TourneyService
+        , protected override meetingService: MeetingService
+        , protected override levelService: LevelService
+        , protected override clientService: ClientService
+        , protected override router: Router
+        , protected override location: Location
+        , public override dfp: DateFormatPipe 
     ) {
         super(matrixDvRedirect, tourneyService, meetingService, levelService, clientService, router, location, dfp)
     } 
     
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.levelService.loadAllEliminatoryMeetingByIdList(this.selectedTourney.eliminatoryLevels, () => this.onEliminatoryLoadComplete(), e => this.serverUnreachableHandler(e));
     }
@@ -39,19 +39,18 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.classificationCols = this.tourneyService.eliminatoryClassificationCols.concat(this.tourneyService.classificationReducedCols);
     }
     
-    onEliminatoryRowSelect(event) {
+    override onEliminatoryRowSelect(event : any) {
         console.log("Entering onEliminatoryRowSelect()");
-
-        this.meetingService.selectedMeeting = this.selectedRow;
-        
-        if( this.selectedRow.isSkiping ) {
+        this.meetingService.selectedMeeting = this.selectedRow;      
+        if( this.selectedRow.isSkiping || this.selectedRow.containerId ==null ) {
             return;
         }
         this.meetingService.selectedMeetingDb.eliminatoryId = this.selectedRow.containerId;
-
-        this.eliminatorySelectedRow =  this.eliminatoryRows.find( e => e.eliminatory.id == this.selectedRow.containerId );
+        let el =  this.eliminatoryRows.find( e => e.eliminatory.id == this.selectedRow.containerId );
+        if( el ) {
+            this.eliminatorySelectedRow = el;
+        }
         this.tourneyService.selectedRound = this.eliminatorySelectedRow.eliminatory.round;
-
         this.gotoDetailView();
     }
 }

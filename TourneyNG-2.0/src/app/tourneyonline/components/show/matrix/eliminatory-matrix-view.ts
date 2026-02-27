@@ -15,27 +15,27 @@ import { MatrixService } from './matrix-service';
     templateUrl: './eliminatory-matrix-view.html',
 })
 export class MatrixDetailView extends AbstractDetailView {
-    selectedRound: Round;
+    selectedRound: Round = new Round();
  
-    roundName: string;
-    cols: any[];
-    onewayMatrix: Matrix;
-    matrix: Matrix;
-    roundtripMatrix: Matrix;
-    classificationCols: TableCols[];
-    legendCols: any[];
-    legendRows: any[];
+    roundName: string = "";
+    cols: any[] = [];
+    onewayMatrix: Matrix = new Matrix();
+    matrix: Matrix = new Matrix();
+    roundtripMatrix: Matrix = new Matrix();
+    classificationCols: TableCols[] = [];
+    legendCols: any[] = [];
+    legendRows: any[] = [];
 
     constructor(
-        protected location: Location,
-        protected tourneyService: TourneyService,
+        protected override location: Location,
+        protected override tourneyService: TourneyService,
         protected router: Router,
         private matrixService: MatrixService
     ) { 
         super(tourneyService, location);
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         super.ngOnInit();
         this.classificationCols = this.tourneyService.classificationReducedCols;
 

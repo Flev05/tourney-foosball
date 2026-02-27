@@ -1,7 +1,7 @@
 import { Row } from './row';
 
-export interface Matrix
+export class Matrix
 {
-    id   : number;
-    rows : Array<Row>;
+    id   : number = 0;
+    rows : Array<Row> = [];
 }

@@ -1,21 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { MeetingService } from '../../../service/meeting-service';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { Router } from '@angular/router';
-import { DateFormatPipe } from '../../../components/common/date-format-pipe';
-import { Tourney } from '../../../domain/tourney';
-import { Round } from '../../../domain/round';
-import { MeetingDb } from '../../../domain/meeting-db';
-import { Meeting } from '../../../domain/meeting';
-import { Direction, PhaseType } from '../../../domain/enumerations';
-import { PlayoffRule } from '../../../domain/playoff-rule';
-import { Eliminatory } from '../../../domain/eliminatory';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { Round } from 'app/tourneyonline/domain/round';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Direction, PhaseType } from 'app/tourneyonline/domain/enumerations';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
-import { TourneyService } from '../../../service/tourney-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
-import { TourneyVO } from '../../../domain/tourney.vo';
-import { ClientService } from '../../../service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MeetingDto } from './meeting-dto';
@@ -23,7 +23,8 @@ import { MeetingDto } from './meeting-dto';
 @Injectable()
 export class MeetingRoundService extends MeetingService {
 
-    isRoundAutoGen: string = "true";
+    isRoundAutoGen: string = "";
+    isFirstRound: boolean = false;
 
     constructor(protected override http: HttpClient
         , protected override router: Router
@@ -329,7 +330,8 @@ export class MeetingRoundService extends MeetingService {
                 this.onewayMeetingDaysMap.set(key, emptyList);
             }
 
-            let meetingList: Meeting[] | undefined = this.onewayMeetingDaysMap.get(key);
+            let meetingList = this.onewayMeetingDaysMap.get(key);
+            if( !meetingList ) continue;
 
             /* alterna le partite in casa e fuori */
             if (i % 2 == 0) {
@@ -343,9 +345,6 @@ export class MeetingRoundService extends MeetingService {
 
                     if( mfound == undefined ) {
                         mfound = this.newMeeting(t2, t1, key, Direction.OneWay);
-                    }
-                    if( meetingList == undefined ) {
-                        continue;
                     }
                     meetingList.push(mfound);
                 }
@@ -361,15 +360,10 @@ export class MeetingRoundService extends MeetingService {
                     if( mfound == undefined ) {
                         mfound = this.newMeeting(t1, t2, key, Direction.OneWay);
                     }
-                    if( meetingList == undefined ) {
-                        continue;
-                    }
                     meetingList.push(mfound);
                 }
             }
-            if( meetingList == undefined ) {
-                return;
-            }
+
             meetingList = MeetingService.sortMeetings(meetingList);
 
             // Ruota gli elementi delle liste, tenendo fisso il primo elemento
@@ -405,9 +399,8 @@ export class MeetingRoundService extends MeetingService {
         this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
 
         for (let key of this.onewayMeetingDaysMap.keys()) {
-            let onewayMeetings: Meeting[] | undefined = this.onewayMeetingDaysMap.get(key);
-            if( onewayMeetings == undefined ) continue;
-
+            let onewayMeetings  = this.onewayMeetingDaysMap.get(key);
+            if( !onewayMeetings ) continue;
             for( let m of onewayMeetings ) {   
                 // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
     
@@ -422,9 +415,9 @@ export class MeetingRoundService extends MeetingService {
                     let emptyList: Meeting[] = [];
                     this.roundtripMeetingDaysMap.set(key, emptyList);
                 }
-                let dayList = this.roundtripMeetingDaysMap.get(key);3
-                if( dayList == undefined ) continue;
-                dayList.push(rtm);
+                let dayList = this.roundtripMeetingDaysMap.get(key);
+                if( dayList )
+                    dayList.push(rtm);
             }
 
             round.onewayMeetings = round.onewayMeetings.concat(onewayMeetings);
@@ -433,13 +426,13 @@ export class MeetingRoundService extends MeetingService {
         round.roundtripMeetings = [];
         for (let key of this.roundtripMeetingDaysMap.keys()) {
             let dayList = this.roundtripMeetingDaysMap.get(key);
-            if( dayList == undefined ) continue;
+            if( !dayList ) continue;
             dayList = MeetingService.sortMeetings(dayList);
             round.roundtripMeetings = round.roundtripMeetings.concat(dayList);
         }
     }
 
-    public override newMeeting(t1: string| null, t2: string| null, day: number, d: Direction): Meeting {
+    public override newMeeting(t1: string | null, t2: string| null, day: number, d: Direction): Meeting {
         let skiping: boolean = t1 == MeetingService.SKIPING_TEAM || t2 == MeetingService.SKIPING_TEAM;
         let m = this.createMeeting(t1, t2, null, null, day, d, skiping);
         return m;
@@ -473,10 +466,14 @@ export class MeetingRoundService extends MeetingService {
 
     public shiftOnewayDay( currentDay : number) : any[] | undefined {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
+        // for( let d of this.onewayDays ) {
+        //     d.teamName1 = d.teamName1;
+        //     d.teamName2 = d.teamName2;
+        // }
         return this.onewayDays;
     }
 
-    public shiftRoundtripDay( currentDay : number ) : any[] | undefined {
+    public shiftRoundtripDay( currentDay : number ) : any[] | undefined  {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
         // for( let d of this.roundtripDays ) {
         //     d.teamName1 = d.teamName1;
@@ -507,45 +504,65 @@ export class MeetingRoundService extends MeetingService {
         e.id = mdb.eliminatoryId;
     }
 
-    public getOnewayMeetingsOfDay(md: number) : Meeting[] | undefined {
+    public getOnewayMeetingsOfDay(md: number) : Meeting[] {
         let onewayMeetingDaysMap = this.onewayMeetingDaysMap;
         let onewayMeetings = onewayMeetingDaysMap.get(md);
-        if( onewayMeetings == undefined ) return undefined;
+        if( !onewayMeetings ) return [];
         onewayMeetings.sort((m1, m2) => this.sortMeeting(m1, m2));
         return onewayMeetings;
     }
 
-    public getRoundtripMeetingsOfDay(md: number) : Meeting[] | undefined {
+    public getRoundtripMeetingsOfDay(md: number) : Meeting[]{
         let roundtripMeetingDaysMap = this.roundtripMeetingDaysMap;
         let roundtripMeetings = roundtripMeetingDaysMap.get(md);
-        if( roundtripMeetings == undefined ) return undefined;
+        if( !roundtripMeetings ) return [];
         roundtripMeetings.sort((m1, m2) => this.sortMeeting(m1, m2));
         return roundtripMeetings;
     }
 
-    public printPdfMeeting( selectedTourney: Tourney) {
-        const doc = new jsPDF();
-        let isFirstRound = true;
+    public printPdfPlayoffMeeting( selectedTourney: Tourney) {
+        this.isFirstRound = true;
+        const rounds : Round[] = selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
+        const both : boolean = selectedTourney.isOnewayPlayoff != "true";
+        const roundName : string = selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName;
+        this.doPrintPdfMeeting(selectedTourney, rounds, both, roundName);
+    }
 
+    public printPdfPlayoutMeeting( selectedTourney: Tourney) {
+        this.isFirstRound = true;
+        const rounds : Round[] = selectedTourney.playoutVO.playoffs.map((p) => {return p.round;});
+        const both : boolean = selectedTourney.isOnewayPlayout != "true";
+        const roundName : string = selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName;
+        this.doPrintPdfMeeting(selectedTourney, rounds, both, roundName);
+    }
+
+    public printPdfMeeting( selectedTourney: Tourney) {
+        this.isFirstRound = true;
+        const both : boolean = selectedTourney.isOnewayRound != "true";
+        const roundName : string = selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName;
+        this.doPrintPdfMeeting(selectedTourney, selectedTourney.roundVO.rounds, both, roundName);
+    }
+
+    private doPrintPdfMeeting( selectedTourney: Tourney, rounds : Round[], both : boolean, roundName : string) {
+        const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
-        
-        for (let r of this.selectedTourney.roundVO.rounds ) {
+
+        for (let r of  rounds ) {
             // 1. If it's not the first round, add a new page
-            if (!isFirstRound) {
+            if (!this.isFirstRound) {
                 doc.addPage();
             }
-            isFirstRound = false;
+            this.isFirstRound = false;
             // 2. Prepare the data just for THIS specific round
             this.prepareMeetingsMap(r);
             let meetings: MeetingDto[] = [];
             // (Populate roundMeetings instead of a global meetings array)  
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getOnewayMeetingsOfDay(md);
-                if( ms == undefined ) continue;
                 let newDate = new Date(ms[0].datetime);
                 let range = this.dateFormatPipe.transform(newDate);
                 let dto = new MeetingDto();
-                dto.round = r.name;
+                dto.round = roundName;
                 dto.direction = "Andata,";
                 dto.separator = true;
                 dto.md = md;
@@ -554,33 +571,32 @@ export class MeetingRoundService extends MeetingService {
                 meetings.push(dto);
                 for( let m of ms ) {
                     if( m.points1 >= 0 ) {
-                        let dto: MeetingDto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                        let dto: MeetingDto = {round: roundName, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
                         meetings.push(dto);
-                        dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                        dto = {round: roundName, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
                         meetings.push(dto);
                     }
                 }
             } 
-            this.printMeetingsByDirection(doc, r, meetings);
+            this.printMeetingsByDirection(doc, roundName, meetings);
         }
 
-        if (this.selectedTourney.isOnewayRound != "true") {
-            for (let r of this.selectedTourney.roundVO.rounds) {
+        if ( both ) {
+            for (let r of rounds) {
                 // 1. If it's not the first round, add a new page
-                if (!isFirstRound) {
+                if (!this.isFirstRound) {
                     doc.addPage();
                 }
-                isFirstRound = false;
+                this.isFirstRound = false;
                 // 2. Prepare the data just for THIS specific round
                 this.prepareMeetingsMap(r);
                 let meetings: MeetingDto[] = [];
                 for( let md = 1; md <= r.daysNo; md ++ ) {
                     let ms = this.getRoundtripMeetingsOfDay(md);
-                    if( ms == undefined ) continue;
                     let newDate = new Date(ms[0].datetime);
                     let range = this.dateFormatPipe.transform(newDate);
-                    let dto: MeetingDto = new MeetingDto();
-                    dto.round = r.name;
+                    let dto = new MeetingDto();
+                    dto.round = roundName;
                     dto.direction = "Ritorno,";
                     dto.separator = true;
                     dto.md = md;
@@ -589,53 +605,57 @@ export class MeetingRoundService extends MeetingService {
                     meetings.push(dto);
                     for( let m of ms ) {
                         if( m.points1 >= 0 ) {
-                            dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                            dto = {round: roundName, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
                             meetings.push(dto);
-                            dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                            dto = {round: roundName, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
                             meetings.push(dto);
                         }
                     }
                 } 
-                this.printMeetingsByDirection(doc, r, meetings);
+                this.printMeetingsByDirection(doc, roundName, meetings);
             }
         }
-        doc.save(`Meetings-${this.selectedTourney.tourneyName}.pdf`);
+        doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
     }
     
     // 3. Add a Title for this specific Round page
-    private printMeetingsByDirection(doc: jsPDF, r: Round, meetings: any[]) {
+    private printMeetingsByDirection(doc: jsPDF, roundName: string, meetings: any[]) {
         doc.setFontSize(16);
-        doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, 15);
+        doc.text(`${this.selectedTourney.tourneyName} - ${roundName}`, 14, 15);
         // 4. Draw the table starting slightly below the text
         autoTable(doc, {
-            head: [["In Casa", "P1", "P2", "Fuori Casa"]],
+            head: [["Data","In Casa", "P1", "P2", "Fuori Casa"]],
             body: this.formatRoundData(meetings),
             startY: 20,
             theme: 'striped',
             columnStyles: {
-                0: { halign: 'right', cellWidth: 'auto' },
-                1: { halign: 'center', cellWidth: 15 },
+                0: { halign: 'left', cellWidth: 'auto' },
+                1: { halign: 'right', cellWidth: 'auto' },
                 2: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'left', cellWidth: 'auto' }
+                3: { halign: 'center', cellWidth: 15 },
+                4: { halign: 'left', cellWidth: 'auto' }
             },
             didParseCell: (data) => {
+                // Only apply this logic to the header row
                 if (data.section === 'head') {
-                    data.cell.styles.fontSize = 10;
-                    data.cell.styles.cellPadding = 1;
-                    data.cell.styles.minCellHeight = 8;
-                    if (data.column.index === 0) data.cell.styles.halign = 'right';
-                    if (data.column.index === 1) data.cell.styles.halign = 'center';
+                    // 1. Shrink the height/area
+                    data.cell.styles.fontSize = 10;      // Smaller font (default is usually 10)
+                    data.cell.styles.cellPadding = 1;    // Minimum padding to tighten the area
+                    data.cell.styles.minCellHeight = 8;  // Explicitly force a smaller height                    
+                    if (data.column.index === 0) data.cell.styles.halign = 'left';
+                    if (data.column.index === 1) data.cell.styles.halign = 'right';
                     if (data.column.index === 2) data.cell.styles.halign = 'center';
-                    if (data.column.index === 3) data.cell.styles.halign = 'left';
+                    if (data.column.index === 3) data.cell.styles.halign = 'center';
+                    if (data.column.index === 4) data.cell.styles.halign = 'left';
                 }
             },
             styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
-            didDrawCell: (data: { section: string; column: { index: number; }; cell: { text: string[]; x: number; width: number; y: number; height: number; }; }) => {
+            didDrawCell: (data) => {
                 // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
-                if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
+                if (data.section === 'body' && (data.column.index === 2 || data.column.index === 3)) {
                     // Only draw if the content is empty (which means points were 0)
                     const boxSize = 10; // 10mm
-                    if (data.cell.text[0] === '') {0
+                    if (data.cell.text[0] === '') {
                         // Calculate center of the cell to place the box
                         const posX = data.cell.x + (data.cell.width - boxSize) / 2;
                         const posY = data.cell.y + (data.cell.height - boxSize) / 2;
@@ -653,11 +673,11 @@ export class MeetingRoundService extends MeetingService {
             if (dto.separator) {
                 return [{
                         content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
-                        colSpan: 4,
+                        colSpan: 5,
                         styles: { 
                             minCellHeight: 5,
                             halign: 'center', 
-                            fillColor: [220, 220, 200, 220] as [number, number, number, number], // Cast as a Tuple
+                            fillColor: [220, 220, 200, 220, 220] as [number, number, number, number, number], // Cast as a Tuple
                             fontStyle: 'bold' 
                         }
                     }
@@ -667,7 +687,7 @@ export class MeetingRoundService extends MeetingService {
                 // 3. The "Line Row" (This creates the 10mm gap + the line)
                 const spacerRow = [{
                     content: '', // Empty content
-                    colSpan: 4,
+                    colSpan: 5,
                     styles: { 
                         minCellHeight: 10,             // Your 10mm gap
                         lineColor: [0, 0, 0],          // Black line (use lineColor for the border)
@@ -684,6 +704,7 @@ export class MeetingRoundService extends MeetingService {
 
             // 2. The Meeting Row
             const meetingRow = [
+                this.dateFormatPipe.transformWeek(dto.meeting.datetime),
                 dto.meeting.teamName1,
                 dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points1,
                 dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points2,

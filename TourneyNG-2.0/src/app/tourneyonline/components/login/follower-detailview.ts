@@ -28,7 +28,8 @@ export class FollowerDetailView extends LoginDetailView {
         , protected override location: Location
         , protected teamService : TeamService
     ) {
-        super(fb,router,loginService,clientService,location);
+        super(fb,router,loginService,tourneyService,clientService,location);
+        
         this.getRouteParams();
     }
 
@@ -43,12 +44,6 @@ export class FollowerDetailView extends LoginDetailView {
     override ngOnInit() {
         console.log("RouteParams:");
         console.log( this.routeParams );
-
-        this.formLogin = { 
-            username: this.routeParams['first'], 
-            password: DEFAULT_PASSWORD 
-        };
-
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
 

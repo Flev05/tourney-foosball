@@ -346,6 +346,12 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private checkTeamsChanged() {
+        if( this.tourneyService.selectedTourney.teamsChanged ) {
+            let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+            this.doOnRoundNumChange(cb);
+            this.tourneyService.selectedTourney.teamsChanged = false;
+            this.turnOnWizardMode(2)
+        }        
         // if (this.teamService.isTeamsChanged) {
         //     this.teamService.isTeamsChanged = false;
         //     this.turnOnWizardMode(2);

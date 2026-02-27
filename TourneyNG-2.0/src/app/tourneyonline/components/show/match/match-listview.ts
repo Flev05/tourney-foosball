@@ -19,22 +19,22 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
   `]
 })
 export class MatchListView extends AbstractListView {
-    selectedMeeting: Meeting;
+    selectedMeeting: Meeting = new Meeting();
 
-    matches: Match[];
+    matches: Match[] = [];
     rows: any[] = [];
 
     constructor(
-        protected tourneyService: TourneyService,
+        protected override tourneyService: TourneyService,
         protected meetingService: MeetingService,
-        protected router: Router,
-        protected location: Location
+        protected override router: Router,
+        protected override location: Location
     ) {
 
         super("", tourneyService, router, location);
     }    
 
-    ngOnInit() {
+    override ngOnInit() {
         this.selectedMeeting = this.meetingService.selectedMeeting;
         this.matches = this.selectedMeeting.matches;
 
@@ -65,7 +65,7 @@ export class MatchListView extends AbstractListView {
         }
     }
 
-    goBack(): void {
+    override goBack(): void {
         this.location.back();
     }
 }

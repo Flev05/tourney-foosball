@@ -33,7 +33,7 @@ export class TeamMatchesComponent implements OnInit {
                 let mArray : Meeting[] = this.meetingRoundService.getOnewayMeetingsOfDay(md);
                 for( let m of mArray ) {
                     if( m.teamName1 == this.teamName || m.teamName2 == this.teamName ) {
-                        let dto: MeetingDto = {round: r.name, direction: "Andata", separator: false, md: m.day, days: r.daysNo, weekRange: null, meeting: m};
+                        let dto: MeetingDto = {round: r.name, direction: "Andata", separator: false, md: m.day, days: r.daysNo, weekRange: "", meeting: m};
                         this.homeMeetings.push(dto);
                     }
                 }
@@ -46,7 +46,7 @@ export class TeamMatchesComponent implements OnInit {
                 let mArray : Meeting[] = this.meetingRoundService.getRoundtripMeetingsOfDay(md);
                 for( let m of mArray ) {
                     if( m.teamName1 == this.teamName || m.teamName2 == this.teamName ) {
-                        let dto: MeetingDto = {round: r.name,direction: "Ritorno", separator: false, md: m.day, days: r.daysNo, weekRange: null, meeting: m};
+                        let dto: MeetingDto = {round: r.name,direction: "Ritorno", separator: false, md: m.day, days: r.daysNo, weekRange: "", meeting: m};
                         this.awayMeetings.push(dto);
                     }
                 }

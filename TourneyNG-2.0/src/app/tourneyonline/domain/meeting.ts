@@ -5,7 +5,7 @@ import { MeetingStatus, Direction } from './enumerations';
 
 export class Meeting {
     id              : number | null = null;
-    containerId     : number = 0;
+    containerId     : number | null = null;
     isDummy         : boolean = false;
     isSkiping       : boolean = false;
     name            : string = "";
@@ -16,7 +16,7 @@ export class Meeting {
     teamName1       : string | null = null;
     teamName2       : string | null = null;
     day             : number = 1;
-    status?         : MeetingStatus;
+    status          : MeetingStatus = MeetingStatus.ToPlay;
     points1         : number = 0;
     points2         : number = 0;
     vpoints1        : number = 0;

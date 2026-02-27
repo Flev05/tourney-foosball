@@ -14,21 +14,21 @@ import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 export class ClassificationTabListView extends AbstractEliminatoryListView {
     static tabDvRedirect: string = "classification/lv/eliminatories";
     activeIndex: any;
-    incompletePlayoffConfiguration: boolean;
-    selectedTabIndex: number; 
+    incompletePlayoffConfiguration: boolean = true;
+    selectedTabIndex: number = 0; 
 
     constructor(
-        protected tourneyService: TourneyService,
-        protected meetingService: MeetingService,
-        protected router: Router,
-        protected location: Location,
+        protected override tourneyService: TourneyService,
+        protected override meetingService: MeetingService,
+        protected override router: Router,
+        protected override location: Location,
         protected dfp: DateFormatPipe
     ) {
         super(ClassificationTabListView.tabDvRedirect, tourneyService, meetingService, router, location, dfp);
         console.log("Entering ClassificationTabListView.constructor()");
     }
 
-    ngOnInit() {
+    override ngOnInit() {
         this.activeIndex = this.selectedTabIndex;
 
         super.ngOnInit();
@@ -51,7 +51,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         }
     }
     
-    onChangeTab(e) {
+    override onChangeTab(e : any) {
         let index=e.index;
         console.log("Entering onChangeTab(): tab=" + index);
         this.activeIndex = index;
@@ -70,7 +70,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         }
     }
 
-    onEliminatoryRowSelect(event) {
+    onEliminatoryRowSelect(event : any) {
         console.log("Entering onEliminatoryRowSelect()");
       
         this.tourneyService.selectedEliminatoryLevel = this.eliminatoryLevelSelectedRow.eliminatoryLevel;

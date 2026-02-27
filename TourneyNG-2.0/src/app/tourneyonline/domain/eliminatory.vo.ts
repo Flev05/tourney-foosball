@@ -1,7 +1,7 @@
 import { Eliminatory } from "./eliminatory";
 
 export class EliminatoryVO  {
-    eliminatory? : Eliminatory;
+    eliminatory : Eliminatory = new Eliminatory();
     rowNumber: number = 0;
     teamName1: string = "";
     teamName2: string = "";

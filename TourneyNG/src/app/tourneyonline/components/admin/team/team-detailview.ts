@@ -11,6 +11,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 import { ActivatedRoute } from '@angular/router';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -129,18 +130,21 @@ export class TeamDetailView extends AbstractDetailView {
                 } else {
                     this.tourneyService.selectedTourney.teams.push(this.teamService.teamPool[poolIndex]);
                 }
+                this.teams = this.tourneyService.selectedTourney.teams;
+                this.tourneyService.selectedTourney.teamsChanged = true;
+                // this.teamService.onTeamOperationChange(ETeamOperation.INSERT);
             } else {
                 // Simply take the team from the pool team and update the one in the teams tourney
                 if( this.previousTeamName != this.autoCompleteTeamName ) {
                     const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === this.previousTeamName);
                     if (ttIndex !== -1) {
                         this.tourneyService.selectedTourney.teams[ttIndex] = this.teamService.teamPool[poolIndex];
+                        this.teams = this.tourneyService.selectedTourney.teams;
+                        this.tourneyService.selectedTourney.teamsChanged = true;
+                        // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
                     }
                 }                
             }
-            this.teams = this.tourneyService.selectedTourney.teams;
-            // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
-            this.tourneyService.selectedTourney.teamsChanged = true;
             super.goBack();
             return;
         } 
@@ -174,7 +178,9 @@ export class TeamDetailView extends AbstractDetailView {
             }
         }
         this.selectedTeam.teamName = this.autoCompleteTeamName;
-        super.goBack();
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => super.goBack());
     }
 
     /**

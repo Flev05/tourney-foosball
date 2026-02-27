@@ -547,6 +547,7 @@ export class MeetingRoundService extends MeetingService {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
 
+        let i = 0;
         for (let r of  rounds ) {
             // 1. If it's not the first round, add a new page
             if (!this.isFirstRound) {
@@ -557,6 +558,8 @@ export class MeetingRoundService extends MeetingService {
             this.prepareMeetingsMap(r);
             let meetings: MeetingDto[] = [];
             // (Populate roundMeetings instead of a global meetings array)  
+            let rn = roundName + " " + String.fromCharCode(65 + i);
+            i++;
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getOnewayMeetingsOfDay(md);
                 let newDate = new Date(ms[0].datetime);
@@ -571,17 +574,18 @@ export class MeetingRoundService extends MeetingService {
                 meetings.push(dto);
                 for( let m of ms ) {
                     if( m.points1 >= 0 ) {
-                        let dto: MeetingDto = {round: roundName, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                        let dto: MeetingDto = {round: rn, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
                         meetings.push(dto);
-                        dto = {round: roundName, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                        dto = {round: rn, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
                         meetings.push(dto);
                     }
                 }
             } 
-            this.printMeetingsByDirection(doc, roundName, meetings);
+            this.printMeetingsByDirection(doc, rn, meetings);
         }
 
         if ( both ) {
+            i = 0;
             for (let r of rounds) {
                 // 1. If it's not the first round, add a new page
                 if (!this.isFirstRound) {
@@ -591,6 +595,8 @@ export class MeetingRoundService extends MeetingService {
                 // 2. Prepare the data just for THIS specific round
                 this.prepareMeetingsMap(r);
                 let meetings: MeetingDto[] = [];
+                let rn = roundName + " " + String.fromCharCode(65 + i);
+                i++;
                 for( let md = 1; md <= r.daysNo; md ++ ) {
                     let ms = this.getRoundtripMeetingsOfDay(md);
                     let newDate = new Date(ms[0].datetime);
@@ -605,14 +611,14 @@ export class MeetingRoundService extends MeetingService {
                     meetings.push(dto);
                     for( let m of ms ) {
                         if( m.points1 >= 0 ) {
-                            dto = {round: roundName, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
+                            dto = {round: rn, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
                             meetings.push(dto);
-                            dto = {round: roundName, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
+                            dto = {round: rn, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
                             meetings.push(dto);
                         }
                     }
                 } 
-                this.printMeetingsByDirection(doc, roundName, meetings);
+                this.printMeetingsByDirection(doc, rn, meetings);
             }
         }
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Observable, of} from 'rxjs';
 import { Location } from '@angular/common';
 import { ClientVO } from '../../../domain/client-vo';
-import { Country } from '../../../domain/country';
 import { ClientService } from '../../../service/client-service';
 import { CountryService } from '../../../service/country-service';
 import { AbstractDetailView } from '../../../components/common/abstract-detailview';
@@ -11,7 +10,7 @@ import { LoginService } from '../../../service/login-service';
 
 @Component({
     templateUrl: './client-detailview.html',
-    styles: [`        
+    styles: [`
         .ui-g label {
           font-weight: bold;
           margin-top: .25em;

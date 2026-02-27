@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of} from 'rxjs';
 import { Location } from '@angular/common';
-import { ClientVO } from '../../../domain/client-vo';
-import { ClientService } from '../../../service/client-service';
-import { TourneyService } from '../../../service/tourney-service';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { TableCols } from '../../../domain/table-cols';
-import { UserService } from '../../../service/user-service';
-import { LoginService } from '../../../service/login-service';
+import { ClientVO } from 'app/tourneyonline/domain/client-vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect = '/clients/dv';
 

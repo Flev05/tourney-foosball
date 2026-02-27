@@ -243,11 +243,33 @@ export class TabResultListView extends AbstractTabResultListView {
     public printPdfMeeting() {
         this.meetingRoundService.printPdfMeeting(this.selectedTourney)
     }
+    
+    public printPdfPlayoffMeeting() {
+        this.meetingRoundService.printPdfPlayoffMeeting(this.selectedTourney)
+    }
+    
+    public printPdfPlayoffClassification() {
+        const rounds : Round[] = this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
+        this.doPrintPdfClassification( rounds);
+    }
 
+    public printPdfPlayoutMeeting() {
+        this.meetingRoundService.printPdfPlayoutMeeting(this.selectedTourney)
+    }
+    
+    public printPdfPlayoutClassification() {
+        const rounds : Round[] = this.selectedTourney.playoutVO.playoffs.map((p) => {return p.round;});
+        this.doPrintPdfClassification( rounds);
+    }
+    
     public printPdfClassification() {
+        this.doPrintPdfClassification(this.selectedTourney.roundVO.rounds);
+    }
+    
+    private doPrintPdfClassification(rounds : Round[]) {
         const doc = new jsPDF('p', 'mm', 'a4');
         let currentY = 15; // Track the vertical position manually
-        for (let r of this.selectedTourney.roundVO.rounds) {
+        for (let r of rounds) {
             // 1. Check if we have enough space for at least the Title + 3 rows (approx 40mm)
             // If not, start a new page before printing the next Round
             if (currentY > 250) { 

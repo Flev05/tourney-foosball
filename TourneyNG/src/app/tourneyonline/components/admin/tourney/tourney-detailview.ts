@@ -158,6 +158,7 @@ export class TourneyDetailView extends AbstractDetailView {
             if( data == null ) {
                 return;
             }
+            // this.checkTeamsChanged();
             
             // let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
             // this.doOnRoundNumChange(cb);
@@ -345,6 +346,13 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     private checkTeamsChanged() {
+        if( this.tourneyService.selectedTourney.teamsChanged ) {
+            let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
+            this.doOnRoundNumChange(cb);
+            this.tourneyService.selectedTourney.teamsChanged = false;
+            this.turnOnWizardMode(2)
+        }
+        
         // if (this.teamService.isTeamsChanged) {
         //     this.teamService.isTeamsChanged = false;
         //     this.turnOnWizardMode(2);
@@ -1092,7 +1100,7 @@ export class TourneyDetailView extends AbstractDetailView {
             id: this.tourneyService.getSequenceNumber(),
             onewayCurrentDay: 1,
             roundtripCurrentDay: 1,
-            name: "Girone." + (1 + i),
+            name: "Girone " + String.fromCharCode(65 + i),
             type: RoundType.R,
             direction: Direction.OneWay,
             pageSize: 1,

@@ -11,6 +11,8 @@ import { TeamDetailView } from '../team/team-detailview';
 import { Observable, of } from 'rxjs';
 import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 import { Table } from 'primeng/table';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -37,7 +39,8 @@ export class TeamTableComponent extends AbstractListView {
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
-        private   teamService: TeamService
+        private   teamService: TeamService,
+        private clientService: ClientService,
     ) {
         super(TeamDetailView.redirect, tourneyService, router, location);
     }
@@ -98,8 +101,12 @@ export class TeamTableComponent extends AbstractListView {
                     if (this.table.filteredValue) {
                         this.table.filteredValue = this.table.filteredValue.filter(t => t.id !== team.id);
                     }
-                    // this.teamService.onTeamOperationChange(ETeamOperation.DELETE); // fire the DELETE event for Subscribed listeners
                     this.tourneyService.selectedTourney.teamsChanged = true;
+                    // this.teamService.onTeamOperationChange(ETeamOperation.DELETE); // fire the DELETE event for Subscribed listeners
+                    
+                    let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
+                    const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+                    subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
                 }
                 return;
             }

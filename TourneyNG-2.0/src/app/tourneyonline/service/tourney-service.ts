@@ -53,7 +53,9 @@ const deleteTourneyUrl = tourneyUrl + '/delete';
 
 const classificationLabel = "°";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TourneyService extends AbstractService {
 
     public FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
@@ -281,7 +283,7 @@ export class TourneyService extends AbstractService {
     loadAllTourneys(error: (em: any) => any): Observable<TourneyVO[]> {
         let url = loadTourneyBySessionIdUrl;
 
-        if(this.loginService.isUserLogged) {
+        if(this.loginService.isUserLogged && this.clientService.selectedClient) {
             url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id + "/" + this.loginService.userLogged.id
         }
         
@@ -339,7 +341,7 @@ export class TourneyService extends AbstractService {
     loadTourneys(fromDate: Date, toDate: Date, error: (em: any) => any): any {
         let url = loadTourneyBySessionIdUrl;
 
-        if(this.loginService.isUserLogged) {
+        if(this.loginService.isUserLogged && this.clientService.selectedClient) {
             url = loadTourneyByClientIdUrl + "/" + this.clientService.selectedClient.id;
         }
         url += + "?" + "fromDate=" + fromDate + "&" + "toDate="   + toDate;

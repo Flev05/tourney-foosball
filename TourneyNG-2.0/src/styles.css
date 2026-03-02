@@ -1,1 +1,118 @@
+/* @import 'assets/showcase/css/primeng.css';
+@import 'assets/showcase/css/code.css';
+@import 'assets/showcase/css/site.css'; */
+
+@import "primeflex/primeflex.css";
+@import "@fortawesome/fontawesome-free/css/all.css";
+
 /* You can add global styles to this file, and also import other style files */
+#layout-content .p-table table {
+    width: auto;
+}
+
+/* For Matrix layout */
+#layout-content div.content-section.implementation > p-table > div > div.ui-table-wrapper.ng-star-inserted > table{
+    width: auto;
+}
+
+.roundNames {
+    font-weight:bold;
+    /* color: #5cb85c; */
+    color: #2399e5;
+}
+
+.deleteColSize, .checkBoxColSize {
+    width: 20mm;
+}
+ 
+body .ui-button.ui-state-default.ui-button-success, body .ui-buttonset.ui-button-success > .ui-button.ui-state-default {
+    color: #ffffff;
+    background-color: #34A835;
+    border: 1px solid #34A835;
+    height: 75px;
+  }
+  body .ui-button.ui-state-default.ui-button-success:enabled:hover, body .ui-buttonset.ui-button-success > .ui-button.ui-state-default:enabled:hover {
+    background-color: #107D11;
+    color: #ffffff;
+    border-color: #107D11;
+    height: 75px;
+  }
+  body .ui-button.ui-state-default.ui-button-success:enabled:focus, body .ui-buttonset.ui-button-success > .ui-button.ui-state-default:enabled:focus {
+    -webkit-box-shadow: 0 0 0 0.2em #aae5aa;
+    -moz-box-shadow: 0 0 0 0.2em #aae5aa;
+    box-shadow: 0 0 0 0.2em #aae5aa;
+    height: 75px;
+  }
+  body .ui-button.ui-state-default.ui-button-success:enabled:active, body .ui-buttonset.ui-button-success > .ui-button.ui-state-default:enabled:active {
+    background-color: #0C6B0D;
+    color: #ffffff;
+    border-color: #0C6B0D;
+    height: 75px;
+  }
+ 
+body .ui-button.ui-state-default.ui-button-info,
+body .ui-buttonset.ui-button-info > .ui-button.ui-state-default {
+   height: 75px;
+}
+
+body .ui-button.ui-state-default.ui-button-warning, body .ui-buttonset.ui-button-warning > .ui-button.ui-state-default {
+    color: #333333;
+    background-color: #ffba01;
+    border: 1px solid #ffba01;
+    height: 75px;
+  }
+  body .ui-button.ui-state-default.ui-button-warning:enabled:hover, body .ui-buttonset.ui-button-warning > .ui-button.ui-state-default:enabled:hover {
+    background-color: #ED990B;
+    color: #333333;
+    border-color: #ED990B;
+    height: 75px;
+  }
+  body .ui-button.ui-state-default.ui-button-warning:enabled:focus, body .ui-buttonset.ui-button-warning > .ui-button.ui-state-default:enabled:focus {
+    -webkit-box-shadow: 0 0 0 0.2em #ffeab4;
+    -moz-box-shadow: 0 0 0 0.2em #ffeab4;
+    box-shadow: 0 0 0 0.2em #ffeab4;
+    height: 75px;
+  }
+  body .ui-button.ui-state-default.ui-button-warning:enabled:active, body .ui-buttonset.ui-button-warning > .ui-button.ui-state-default:enabled:active {
+    background-color: #D38B10;
+    color: #333333;
+    border-color: #D38B10;
+  }
+ 
+body .ui-button.ui-state-default.ui-button-danger, 
+body .ui-buttonset.ui-button-danger > .ui-button.ui-state-default {
+    height: 75px;
+}
+
+/* The Mask Overlay */
+.layout-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+    z-index: 998; /* Just below the sidebar */
+    transition: opacity 0.3s;
+}
+
+/* Ensure your sidebar has a higher z-index than the mask */
+#layout-sidebar {
+    z-index: 999;
+    /* ... your other sidebar styles ... */
+    transition: transform 0.3s; /* Smooth sliding */
+}
+
+#layout-topbar {
+    background-color: #20272a;
+    display: block;
+    padding: 0;
+    height: 70px; 
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Highest priority */
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+}

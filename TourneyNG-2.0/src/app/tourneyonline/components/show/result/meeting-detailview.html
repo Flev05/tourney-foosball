@@ -20,13 +20,13 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <td>
-                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+                <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
             </td>
             <td>
                 <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
             </td>
             <td style="text-align: right;">
-                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+                <button type="button" icon="pi pi-refresh" pButton (click)="refresh()"></button>
             </td>
         </tr>
     </ng-template>
@@ -39,13 +39,13 @@
     </p-message>
 </div>   
 
-<div *ngIf="isAtLeastAdmin()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="isAtLeastAdmin()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p-fieldset legend="Incontro/Calendario">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 In Casa:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right" 
+            <div class="col-3" tooltipPosition="right" 
                     pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
                 <p-dropdown id="teams1RoundId" 
                     [options]="teams4RoundCombobox" 
@@ -56,11 +56,11 @@
                 </p-dropdown>
             </div>
         </div>
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 In Trasferta:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right" 
+            <div class="col-3" tooltipPosition="right" 
                     pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
                 <p-dropdown id="teams2RoundId" 
                     [options]="teams4RoundCombobox" 
@@ -71,23 +71,23 @@
                 </p-dropdown>
             </div>                  
         </div>
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Data e ora:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right"
+            <div class="col-3" tooltipPosition="right"
                     pTooltip="Indicare la data e ora di inizio dell'incontro.">
                 <p-calendar [(ngModel)]="selectedMeeting.datetime" 
                     [locale]="it" 
                     dateFormat="dd/mm/yy" 
                     [showIcon]="false"
-                    showTime="true">
+                    [showTime]="true">
                 </p-calendar>
             </div>            
         </div>
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
             <button type="button" 
-                icon="fa fa-save" 
+                icon="pi pi-save" 
                 pButton (click)="saveAndGoBack()" 
                 label="Salva">
             </button>
@@ -99,7 +99,7 @@
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <div *ngIf="!loginService.isFollower()" class="ui-dialog-buttonpane ui-helper-clearfix"> 
         <p-table>
             <ng-template pTemplate="header">
@@ -174,12 +174,12 @@
                         [disabled]="disableButton()"
                         pTooltip="Incrementa al numero massimo di goal previsto">
                     </button>
-                    <button pButton type="button" icon="fa fa-plus" 
+                    <button pButton type="button" icon="pi pi-plus" 
                         (click)="plus1(rowData)" 
                         [disabled]="disableButton()"
                         pTooltip="Incrementa di un punto">
                     </button>
-                    <button pButton type="button" icon="fa fa-minus" 
+                    <button pButton type="button" icon="pi pi-minus" 
                         (click)="minus1(rowData)" 
                         [disabled]="disableButton()"
                         pTooltip="Decrementa di un punto">
@@ -202,11 +202,11 @@
                         (click)="upper2(rowData)" 
                         [disabled]="disableButton()">
                     </button>
-                    <button pButton type="button" icon="fa fa-plus" 
+                    <button pButton type="button" icon="pi pi-plus" 
                         (click)="plus2(rowData)" 
                         [disabled]="disableButton()">
                     </button>
-                    <button pButton type="button" icon="fa fa-minus" 
+                    <button pButton type="button" icon="pi pi-minus" 
                         (click)="minus2(rowData)" 
                         [disabled]="disableButton()" >
                     </button>

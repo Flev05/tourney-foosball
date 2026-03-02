@@ -34,13 +34,13 @@
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="{{returnLabel}}"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="{{returnLabel}}"></button>
 </div>                  
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-3">
             <button pButton class="ui-button-success" 
-                icon="fa fa-plus" 
+                icon="pi pi-plus" 
                 type="button" 
                 (click)="newPlayer()" 
                 label="Nuovo Giocatore" >
@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p-pickList  [source]="availablePlayers" 
         [target]="targetPlayers" 
         sourceHeader="Disponibili {{availablePlayers.length}}" 

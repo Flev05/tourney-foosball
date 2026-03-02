@@ -4,13 +4,13 @@
     <ng-template pTemplate="header">
         <tr>
             <td>
-                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+                <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
             </td>
             <td>
                 <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
             </td>
             <td style="text-align: right;">
-                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+                <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
             </td>
         </tr>
     </ng-template>
@@ -60,13 +60,13 @@
                     </p-checkbox>
                 </div>
                 <button type="button" 
-                    icon="fa fa-file-excel-o" 
+                    icon="pi pi-file-excel-o" 
                     pButton (click)="printPdfMeeting()" 
                     label="Incontri" 
                     class="ui-button-success">
                 </button>
                 <button type="button" 
-                    icon="fa fa-file-excel-o" 
+                    icon="pi pi-file-excel-o" 
                     pButton (click)="printPdfClassification()" 
                     label="Classifica" 
                     class="ui-button-success"
@@ -116,14 +116,14 @@
     
             <ng-template pTemplate="summary">
                 <button type="button" 
-                    icon="fa fa-file-excel-o" 
+                    icon="pi pi-file-excel-o" 
                     pTooltip="Stampa la lista degli incontri del girone di PLAYOFF"
                     pButton (click)="printPdfPlayoffMeeting()" 
                     label="Incontri" 
                     class="ui-button-success">
                 </button>
                 <button type="button" 
-                    icon="fa fa-file-excel-o" 
+                    icon="pi pi-file-excel-o" 
                     pButton (click)="printPdfPlayoffClassification()" 
                     pTooltip="Stampa la classifica delle squadre del girone di PLAYOFF"
                     label="Classifica" 
@@ -164,14 +164,14 @@
             </ng-template>
             <ng-template pTemplate="summary">
                 <button type="button" 
-                    icon="fa fa-file-excel-o" 
+                    icon="pi pi-file-excel-o" 
                     pTooltip="Stampa la lista degli incontri del girone di PLAYOUT"
                     pButton (click)="printPdfPlayoutMeeting()" 
                     label="Incontri" 
                     class="ui-button-success">
                 </button>
                 <button type="button" 
-                    icon="fa fa-file-excel-o" 
+                    icon="pi pi-file-excel-o" 
                     pButton (click)="printPdfPlayoutClassification()" 
                     pTooltip="Stampa la classifica delle squadre del girone di PLAYOUT"
                     label="Classifica" 
@@ -187,7 +187,7 @@
         <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryLevelRows" 
                 selectionMode="single" 
-                [(selection)]="selctedEliminatoryLevel" 
+                [(selection)]="selectedEliminatoryLevel" 
                 (onRowSelect)="onEliminatoryRowSelect($event)">
 
             <ng-template pTemplate="header" let-columns>
@@ -223,14 +223,14 @@
                     </td>
                     <td>
                         <button class="ui-button-success" 
-                            pButton icon="fa fa-file-excel-o" 
+                            pButton icon="pi pi-file-excel-o" 
                             pTooltip="Stampa la lista degli incontri di eliminazione diretta"
                             (click)="printPdfTopLevelMeeting(rowIndex)">
                         </button>
                     </td>
                     <td>
                         <button class="ui-button-success" 
-                            pButton icon="fa fa-file-excel-o" 
+                            pButton icon="pi pi-file-excel-o" 
                             pTooltip="Stampa il tabellone degli incontri di eliminazione diretta"
                             (click)="printTennisBracket(rowIndex)">
                         </button>

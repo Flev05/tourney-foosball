@@ -15,10 +15,12 @@ const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DisciplineService {
 
-    selectedDiscipline : Discipline = {};
+    selectedDiscipline : Discipline = new Discipline();
 
     newDiscipline : boolean = false;
     disciplineOptions : Combobox[] = [];
@@ -78,7 +80,7 @@ export class DisciplineService {
 
         console.log(discipline);
 
-        return this.http.put(url, discipline, httpOptions).pipe(
+        return this.http.put<Discipline>(url, discipline, httpOptions).pipe(
             tap(_ => this.log(`updated Discipline id=${id}`)),
             catchError(this.handleError<Discipline>('updateDiscipline'))
         );

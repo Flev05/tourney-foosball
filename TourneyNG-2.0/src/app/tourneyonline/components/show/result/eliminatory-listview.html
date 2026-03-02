@@ -2,14 +2,14 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <td>
-                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+                <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
             </td>
             <td>
                 <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
                 <p style="text-align: center;font-weight: bold;">{{tourneyService.selectedEliminatoryLevel.name}}</p>
             </td>
             <td style="text-align: right;">
-                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+                <button type="button" icon="pi pi-refresh" pButton (click)="refresh()"></button>
             </td>
         </tr>
     </ng-template>

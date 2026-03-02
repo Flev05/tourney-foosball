@@ -17,7 +17,7 @@ import { MessageService } from 'primeng/api';
           margin-top: .25em;
           display: block;
         }
-        .ui-grid-col-2 {
+        .col-2 {
             width: 47mm;
         }
   `]

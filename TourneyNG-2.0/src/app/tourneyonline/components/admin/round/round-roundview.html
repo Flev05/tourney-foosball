@@ -66,17 +66,17 @@
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 
     <button type="button" 
-        icon="fa fa-user-plus" 
+        icon="pi pi-user-plus" 
         pButton (click)="goMeeting()" 
         label="Incontri" 
         class="ui-button-success">
     </button>
 </div>                  
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p-table [responsive]="true" 
         [columns]="cols" 
         [value]="teams" 

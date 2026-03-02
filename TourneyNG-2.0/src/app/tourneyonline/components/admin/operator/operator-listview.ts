@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { TourneyService } from '../../../service/tourney-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
-import { UserVO } from '../../../domain/user-vo';
-import { TableCols } from '../../../domain/table-cols';
-import { UserService } from '../../../service/user-service';
-import { OperatorsVO } from '../../../domain/operators-vo';
-import { ClientService } from '../../../service/client-service';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { OperatorsVO } from 'app/tourneyonline/domain/operators-vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 import { OperatorDetailView } from './operator-detailview';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
@@ -119,16 +119,9 @@ export class OperatorListView extends AbstractListView {
             return of(result as T);
         };
     }
-
-/*     private mergeOperators() {
-        let selectedClientId = this.clientService.selectedClient.id;
-        let op : UserVO = {clientId: selectedClientId, tourneyId: this.selectedTourney.id};
-        op.allOperators = this.operatorRows;
-        op.selectedOperators = this.selectedOperatorRows;
-        const subscriber = this.userService.mergeOperators(op, this.loadUsersErrorHandler('mergeOperators()'));
-        subscriber.subscribe(cs => this.onMergeNext(cs), e => this.onError(e) );
-    } */
-
+    doDelete(user: UserVO) {
+        console.log(user);
+    }
 /*     private onMergeNext(cs: UserVO): void {
         this.onLoadNext(cs);
         this.gotoListView();

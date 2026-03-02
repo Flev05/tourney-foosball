@@ -46,7 +46,7 @@
 </div>    
                         
 <div *ngIf="isUserDeveloper" style="text-align:left">
-    <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Cliente"></button>
+    <button type="button" pButton icon="pi pi-plus" (click)="create()" label="Nuovo Cliente"></button>
 </div>
  
 <p-table [columns]="cols" 
@@ -73,14 +73,14 @@
                 {{rowData[col.field]}}
             </td>
             <td>
-                <button class="ui-button-danger" pButton icon="fa fa-remove" (click)="doDelete(rowData)"></button>
+                <button class="ui-button-danger" pButton icon="pi pi-remove" (click)="doDelete(rowData)"></button>
             </td>
         </tr>
     </ng-template>
 </p-table>
 
 <div *ngIf="isUserDeveloper" style="text-align:left">
-    <button type="button" pButton icon="fa fa-plus" (click)="create()" label="Nuovo Cliente"></button>
+    <button type="button" pButton icon="pi pi-plus" (click)="create()" label="Nuovo Cliente"></button>
 </div>
  
  

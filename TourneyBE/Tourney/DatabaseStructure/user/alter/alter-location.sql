@@ -1,0 +1,6 @@
+-- Tourney 1.0
+
+ALTER TABLE ONLY country
+ADD CONSTRAINT country_id_pk PRIMARY KEY (id) ; 
+
+ALTER TABLE country OWNER TO :SCHEMA_USER_NAME;

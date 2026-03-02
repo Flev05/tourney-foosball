@@ -20,7 +20,9 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MeetingDto } from './meeting-dto';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MeetingRoundService extends MeetingService {
 
     isRoundAutoGen: string = "";

@@ -47,11 +47,11 @@
 </div>   
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
 <form [formGroup]="eliminatoryFormGroup" >
 
-    <div *ngIf="isDoubleSelection" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="isDoubleSelection" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
         <div style="margin-top:30px">
             <p-message 
                 severity="error" 
@@ -63,44 +63,41 @@
     <h4 *ngIf="isRulesEnabled()">Regole di accoppiamento</h4>
 
     <div *ngIf="isRulesEnabled()" class="ui-fluid">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Classificata
             </div>
-            <div class="ui-grid-col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
+            <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
                 <p-dropdown id="positionId" 
                     [options]="positions" 
                     formControlName="position1" 
-                    optionLabel="label"
-                    [autoWidth]="false">
+                    optionLabel="label">
                 </p-dropdown>
             </div>
         </div>
         
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3" >
+        <div class="grid">
+            <div class="col-3" >
                 Girone
             </div>
-            <div class="ui-grid-col-3"  pTooltip="Lasciare in bianco significa che passano le migliori {{position1.value}}° classificate">
+            <div class="col-3"  pTooltip="Lasciare in bianco significa che passano le migliori {{position1.value}}° classificate">
                 <p-dropdown id="roundId" 
                     [options]="rounds" 
                     formControlName="round1" 
-                    optionLabel="label"
-                    [autoWidth]="false">
+                    optionLabel="label">
                 </p-dropdown>
             </div>
         </div>
 
-        <div *ngIf="isPlayoff" class="ui-grid-row">
-            <div class="ui-grid-col-3" >
+        <div *ngIf="isPlayoff" class="grid">
+            <div class="col-3" >
                     Playoff
             </div>
-            <div class="ui-grid-col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
+            <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
                 <p-dropdown id="playoffId" 
                     [options]="playoffs" 
                     formControlName="playoff1" 
-                    optionLabel="label"
-                    [autoWidth]="false">
+                    optionLabel="label">
                 </p-dropdown>
             </div>
         </div>
@@ -108,44 +105,41 @@
         <h4>Vs</h4> 
 
         <div *ngIf="isTopLevel">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
+            <div class="grid">
+                <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
                     Classificata
                 </div>
-                <div class="ui-grid-col-3" >
+                <div class="col-3" >
                     <p-dropdown id="vin" 
                         [options]="positions" 
                         formControlName="position2" 
-                        optionLabel="label"
-                        [autoWidth]="false">
+                        optionLabel="label">
                     </p-dropdown>
                 </div>
             </div>
 
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3" >
+            <div class="grid">
+                <div class="col-3" >
                     Girone
                 </div>
-                <div class="ui-grid-col-3" pTooltip="Lasciare in bianco significa che passano le migliori {{position2.value}}° classificate">
+                <div class="col-3" pTooltip="Lasciare in bianco significa che passano le migliori {{position2.value}}° classificate">
                     <p-dropdown id="round" 
                         [options]="rounds" 
                         formControlName="round2" 
-                        optionLabel="label"
-                        [autoWidth]="false">
+                        optionLabel="label">
                     </p-dropdown>
                 </div>
             </div>
 
-            <div *ngIf="isPlayoff" class="ui-grid-row">
-                <div class="ui-grid-col-3" >
+            <div *ngIf="isPlayoff" class="grid">
+                <div class="col-3" >
                     Playoff
                 </div>
-                <div class="ui-grid-col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
+                <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
                     <p-dropdown id="playoff"    
                         [options]="playoffs" 
                         formControlName="playoff2" 
-                        optionLabel="label"
-                        [autoWidth]="false">
+                        optionLabel="label">
                     </p-dropdown>
                 </div>
             </div>
@@ -155,42 +149,42 @@
     <h4>Andata</h4>
 
     <div class="ui-fluid">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Data e ora:
             </div>
-            <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
+            <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
                 <p-calendar formControlName="meetingDate1" 
                     [locale]="it" 
                     dateFormat="dd/mm/yy" 
-                    showTime="true">
+                    [showTime]="true">
                 </p-calendar>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Via:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <input pInputText type="text" formControlName="address1"/>
             </div>
-            <div class="ui-grid-col-4">
+            <div class="col-4">
                 <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid
                     && eliminatoryFormGroup.controls['address1'].dirty">
-                    <i class="fa fa-close"></i>
-                    <span *ngIf="eliminatoryFormGroup.controls['address1'].errors['required']">
+                    <i class="pi pi-close"></i>
+                    <span *ngIf="eliminatoryFormGroup.controls['address1']?.errors?.['required']">
                         La via dell'incontro di andata è obbligatoria
                     </span>
                 </div>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Comune:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <p-autoComplete id="country-id" formControlName="country1" 
                     [suggestions]="filteredCountriesSingle" 
                     (completeMethod)="searchCountry($event)" field="city"
@@ -199,11 +193,11 @@
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Indirizzo:
             </div>
-            <div class="ui-grid-col-8">
+            <div class="col-8">
                 {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
                 + " (" + m1.country.provinceCode +")" : "" }}
             </div>
@@ -212,42 +206,42 @@
         <h4 *ngIf="!isOneway" >Ritorno</h4>
         
         <div *ngIf="!isOneway">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+            <div class="grid">
+                <div class="col-3">
                     Data e ora:
                 </div>
-                <div class="ui-grid-col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
+                <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
                     <p-calendar formControlName="meetingDate2" 
                         [locale]="it" 
                         dateFormat="dd/mm/yy" 
-                        showTime="true">
+                        [showTime]="true">
                     </p-calendar>
                 </div>
             </div>
 
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+            <div class="grid">
+                <div class="col-3">
                     Via:
                 </div>
-                <div class="ui-grid-col-5">
+                <div class="col-5">
                     <input pInputText type="text" formControlName="address2"/>
                 </div>
-                <div class="ui-grid-col-4">
+                <div class="col-4">
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid
                             && eliminatoryFormGroup.controls['address2'].dirty">
-                        <i class="fa fa-close"></i>
-                        <span *ngIf="eliminatoryFormGroup.controls['address2'].errors['required']">
+                        <i class="pi pi-close"></i>
+                        <span *ngIf="eliminatoryFormGroup.controls['address2']?.errors?.['required']">
                             La via dell'incontro di ritorno è obbligatoria
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+            <div class="grid">
+                <div class="col-3">
                     Comune:
                 </div>
-                <div class="ui-grid-col-5">
+                <div class="col-5">
                     <p-autoComplete id="country-id" formControlName="country2" 
                         [suggestions]="filteredCountriesSingle" 
                         (completeMethod)="searchCountry($event)" field="city"
@@ -256,11 +250,11 @@
                 </div>
             </div>
 
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+            <div class="grid">
+                <div class="col-3">
                     Indirizzo:
                 </div>
-                <div class="ui-grid-col-8">
+                <div class="col-8">
                     {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
                     + " (" + m2.country.provinceCode +")" : "" }}
                 </div>
@@ -268,7 +262,7 @@
         </div>                                               
     </div>
 
-    <div *ngIf="isDoubleSelection" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="isDoubleSelection" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
         <div style="margin-top:30px">
             <p-message 
                 severity="error" 
@@ -277,7 +271,7 @@
         </div>   
     </div>
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" class="ui-button-success" icon="fa fa-save" pButton (click)="done()" label="Salva"></button>
+        <button type="button" class="ui-button-success" icon="pi pi-save" pButton (click)="done()" label="Salva"></button>
     </div>                      
 </form>   
  

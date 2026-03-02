@@ -9,7 +9,6 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from '../round/meeting-round-service';
-import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 import { ActivatedRoute } from '@angular/router';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
@@ -35,7 +34,7 @@ export class TeamDetailView extends AbstractDetailView {
     teams: Team[] = [];
     playerLv: boolean = true;
     addPlayerEnabled : boolean = false;
-    tourneyTeams: boolean | undefined;
+    tourneyTeams: boolean | undefined = false;
 
     constructor(
         protected override location: Location,

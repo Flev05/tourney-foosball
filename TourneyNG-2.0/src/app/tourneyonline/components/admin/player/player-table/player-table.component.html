@@ -9,7 +9,7 @@
 
     <ng-template *ngIf="addPlayerEnabled" pTemplate="caption">
         <div style="text-align:left">
-            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
         </div>
     </ng-template>
 
@@ -25,7 +25,10 @@
         <tr>
             <th style="width: 15mm;"></th>
             <th>
-                <input style="width: 100%;" type="text" pInputText placeholder="Cerca per nome" (input)="table.filter($event.target.value, 'playerName', 'contains')">
+                <input style="width: 100%;" 
+                    type="text" pInputText placeholder="Cerca per nome" 
+                     #playerNameInput
+                    (input)="table.filter(playerNameInput.value, 'playerName', 'contains')">
             </th>
             <th></th>
             <th></th>
@@ -42,14 +45,14 @@
                 {{rowData[col.field]}}
             </td>
             <td *ngIf="addPlayerEnabled" style="width: 15mm; text-align: center;">
-                <button class="ui-button-danger" pButton icon="fa fa-close" (click)="doDelete(rowData)"></button>
+                <button class="ui-button-danger" pButton icon="pi pi-close" (click)="doDelete(rowData)"></button>
             </td>        
         </tr>
     </ng-template>  
 
     <ng-template *ngIf="addPlayerEnabled" pTemplate="summary">
         <div style="text-align:left">
-            <button pButton icon="fa fa-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
         </div>
     </ng-template>
 </p-table>

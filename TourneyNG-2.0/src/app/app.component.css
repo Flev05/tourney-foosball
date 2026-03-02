@@ -1,0 +1,56 @@
+/* .ui-table table {
+    border-collapse: collapse;
+    width: auto;
+    table-layout: fixed;
+}
+
+#layout-content ng-component > div.content-section.implementation > p-table > div > div.ui-table-wrapper.ng-star-inserted > table{
+    width: auto;
+}
+.diagonalStyle .ui-editable-column .ng-star-inserted {
+    display: none;
+}
+#layout-content > div.ng-tns-c0-0 > ng-component > div.content-section.implementation > p-table > div 
+> div.ui-table-wrapper.ng-star-inserted > table > tbody > tr.ng-star-inserted.ui-state-highlight 
+> td.diagonalStyle.ui-editable-column.ng-star-inserted.ui-editing-cell > p-celleditor > input
+{
+    display: none;
+} */
+
+/* The Mask Overlay */
+.layout-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+    z-index: 998; /* Just below the sidebar */
+    transition: opacity 0.3s;
+}
+
+/* Ensure your sidebar has a higher z-index than the mask */
+#layout-sidebar {
+    z-index: 999;
+    /* ... your other sidebar styles ... */
+    transition: transform 0.3s; /* Smooth sliding */
+}
+
+/* If the sidebar is active, ensure it's visible */
+#layout-sidebar.active {
+    /* Your logic to show the sidebar, e.g., transform: translateX(0); */
+}
+
+#layout-topbar {
+    background-color: #20272a;
+    display: block;
+    padding: 0;
+    height: 70px; 
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Highest priority */
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+}

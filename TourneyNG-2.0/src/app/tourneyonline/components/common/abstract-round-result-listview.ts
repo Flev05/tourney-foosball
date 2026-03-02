@@ -170,7 +170,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.classificationRows = this.tourneyService.prepareRoundsGui(maxMatchesPerMeeting, [this.selectedRound]);
     }
   
-    onRowSelect(event: { data: any; }) {
+    onRowSelect(event: any) {
         console.log(event.data);
         if( this.selectedRow.isSkiping ) {
             return;

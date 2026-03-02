@@ -187,7 +187,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.currentDay = this.selectedPlayoff.round.roundtripCurrentDay;
     }
   
-    onRowSelect(event: { data: any; }) {
+    onRowSelect(event: any) {
         console.log(event.data);
         if( this.selectedRow.isSkiping) {
             return;

@@ -182,7 +182,7 @@ export class EliminatoryDetailView extends AbstractDetailView {
         let po1:  Combobox = efg == null ? new Combobox() : efg.value;
 
         this.isDoubleSelection = false;
-        if(this.isPlayoff && r1.value > 0 && po1.value > 0) {
+        if(this.isPlayoff && r1.value != null && r1.value > 0 && po1.value != null && po1.value > 0) {
             this.isDoubleSelection = true;
             return false;
         }
@@ -198,7 +198,7 @@ export class EliminatoryDetailView extends AbstractDetailView {
         let po2:  Combobox = efg == null ? new Combobox() : efg.value;
        
         this.isDoubleSelection = false;
-        if(this.isPlayoff && r2.value > 0 && po2.value > 0) {
+        if(this.isPlayoff && r2.value != null && r2.value > 0 && po2.value != null && po2.value > 0) {
             this.isDoubleSelection = true;
             return false;
         }

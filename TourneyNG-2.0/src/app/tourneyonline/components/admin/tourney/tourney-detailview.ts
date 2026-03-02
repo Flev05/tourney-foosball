@@ -114,7 +114,7 @@ export class TourneyDetailView extends AbstractDetailView {
     teamTabEnabled: boolean = false;
 
     nextButtonLabel: string = "Avanti";
-    nextButtonIcon: string = "fa fa-arrow-right";
+    nextButtonIcon: string = "pi pi-arrow-right";
     maxBoundaryTabIndex: number = 0;
     // rewind: boolean;
     isPlayoffNumChanged: boolean = false;
@@ -519,17 +519,17 @@ export class TourneyDetailView extends AbstractDetailView {
 
         if( !this.isInWizardMode()  ) {
             this.nextButtonLabel = "Salva";
-            this.nextButtonIcon = "fa fa-save";
+            this.nextButtonIcon = "pi pi-save";
             return;
         }
 
         if (this.tourneyService.selectedTabIndex >= this.maxBoundaryTabIndex) {
             this.nextButtonLabel = "Fine";
-            this.nextButtonIcon = "fa fa-save";
+            this.nextButtonIcon = "pi pi-save";
         }
         else {
             this.nextButtonLabel = "Avanti";
-            this.nextButtonIcon = "fa fa-arrow-right";
+            this.nextButtonIcon = "pi pi-arrow-right";
         }
     }
 
@@ -1754,6 +1754,13 @@ export class TourneyDetailView extends AbstractDetailView {
         this.selectedTourney.playoffVO.isAllMatches = "false";
     }
 
+    onAllPlayoutMatchesClick() {
+        this.selectedTourney.playoutVO.isAllMatches = "true";
+    }
+    onPlayoutBestOfClick() {
+        this.selectedTourney.playoutVO.isAllMatches = "false";
+    }
+
     onRoundPhaseChange(event : any) {
         console.log("Entering onRoundPhaseChange()");
         console.log(event);
@@ -1834,6 +1841,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
         this.selectedTourney.roundVO.bestOfWinner = spin;
     }
+    
     onPlayoffSpinnerChange(event : any) {
         let spin = this.selectedTourney.playoffVO.maxMatchesPerMeeting;
         if(spin == 1 || spin == 2) {
@@ -1842,6 +1850,16 @@ export class TourneyDetailView extends AbstractDetailView {
             this.selectedTourney.playoffVO.allMatchesEnabled = true;
         }
         this.selectedTourney.playoffVO.bestOfWinner = spin;
+    }
+
+    onPlayoutSpinnerChange(event : any) {
+        let spin = this.selectedTourney.playoutVO.maxMatchesPerMeeting;
+        if(spin == 1 || spin == 2) {
+            this.selectedTourney.playoutVO.allMatchesEnabled = false;
+        } else {
+            this.selectedTourney.playoutVO.allMatchesEnabled = true;
+        }
+        this.selectedTourney.playoutVO.bestOfWinner = spin;
     }
 
     private doSave(): void {

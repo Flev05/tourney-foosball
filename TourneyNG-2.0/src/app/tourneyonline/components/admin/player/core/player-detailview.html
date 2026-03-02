@@ -31,89 +31,89 @@
 </div>
  
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
 
-<div *ngIf="!enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+<div *ngIf="!enabledModify()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-2">
             Nome:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             {{selectedPlayer.playerName}}
         </div>
     </div>
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+    <div class="grid">
+        <div class="col-2">
             Tessera:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             {{selectedPlayer.code}}
         </div>
     </div>
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+    <div class="grid">
+        <div class="col-2">
             Indirizzo:
         </div>
-        <div class="ui-grid-col-8">
+        <div class="col-8">
             {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
             + " (" + selectedPlayer.country.provinceCode +")" : "" }}
         </div>
     </div> 
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+    <div class="grid">
+        <div class="col-2">
             Telefono:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             {{selectedPlayer.phoneNumber}}
         </div>
     </div>
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+    <div class="grid">
+        <div class="col-2">
             Email:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             {{selectedPlayer.email}}
         </div>
     </div>
 </div>
     
-<div *ngIf="enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="enabledModify()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p>
         I campi contrassegnati con * sono obbligatori!
     </p>
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             Nominativo*:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Il nome del giocatore è obbligatorio, può essere anche un nick name.">                                
+        <div class="col-5" pTooltip="Il nome del giocatore è obbligatorio, può essere anche un nick name.">                                
             <input pInputText type="text" [(ngModel)]="selectedPlayer.playerName"/>
         </div>
     </div>
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             Tessera:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire il codice della tessera del giocatore.">
+        <div class="col-5" pTooltip="Inserire il codice della tessera del giocatore.">
             <input pInputText type="text" [(ngModel)]="selectedPlayer.code"/>
         </div>
     </div>    
         
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3" pTooltip="Inserire la via di residenza del giocatore.">
+    <div class="grid">
+        <div class="col-3" pTooltip="Inserire la via di residenza del giocatore.">
             Via:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             <input pInputText type="text" [(ngModel)]="selectedPlayer.address"/>
         </div>
     </div>
                                     
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             <label for="country-id">Comune:</label>
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             <p-autoComplete id="country-id" 
                 [(ngModel)]="selectedPlayer.country"
                 [suggestions]="filteredCountriesSingle" 
@@ -125,38 +125,38 @@
         </div>
     </div>           
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             Indirizzo:
         </div>
-        <div class="ui-grid-col-8">
+        <div class="col-8">
             {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
             + " (" + selectedPlayer.country.provinceCode +")" : "" }}
         </div>
     </div>             
                 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             Telefono:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire il numero di telefono del giocatore.">
+        <div class="col-5" pTooltip="Inserire il numero di telefono del giocatore.">
             <input pInputText type="text" [(ngModel)]="selectedPlayer.phoneNumber"/>
         </div>
     </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             E-mail:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire l'indirizzo e-mail del giocatore.">
+        <div class="col-5" pTooltip="Inserire l'indirizzo e-mail del giocatore.">
             <input pInputText type="text" [(ngModel)]="selectedPlayer.email"/>
         </div>
     </div>
 </div>
 
-<div *ngIf="enabledModify()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+<div *ngIf="enabledModify()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-2">
             <button class="ui-button-success" 
                 pButton (click)="onSubmit()" 
                 icon="pi pi-save" 

@@ -17,40 +17,40 @@
 <h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>                  
 
-<div *ngIf="teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+<div *ngIf="teamService.readOnly" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-2">
             Nome:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             {{selectedTeam.teamName}}
         </div>
     </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+    <div class="grid">
+        <div class="col-2">
             Indirizzo:
         </div>
-        <div class="ui-grid-col-8">
+        <div class="col-8">
             {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
             + " (" + selectedTeam.country.provinceCode +")" : "" }}
         </div>
     </div> 
 </div>
 
-<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div *ngIf="!teamService.readOnly" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p>
         I campi contrassegnati con * sono obbligatori!
     </p>
         
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1">
+    <div class="grid">
+        <div class="col-1">
             Squadra*:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
+        <div class="col-5" pTooltip="Inserire il nome della squadra." >
             <p-autoComplete id="team-id" 
                 [(ngModel)]="autoCompleteTeamName" 
                 [suggestions]="filteredTeamsSingle" 
@@ -61,20 +61,20 @@
         </div>            
     </div>      
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1" pTooltip="Inserire la via di residenza della squadra.">
+    <div class="grid">
+        <div class="col-1" pTooltip="Inserire la via di residenza della squadra.">
             Via:
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
         </div>
     </div>    
  
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1">
+    <div class="grid">
+        <div class="col-1">
             <label for="country-id">Comune:</label>
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             <p-autoComplete id="country-id" 
                 [(ngModel)]="selectedTeam.country" 
                 [suggestions]="filteredCountriesSingle" 
@@ -86,31 +86,31 @@
         </div>
     </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1">
+    <div class="grid">
+        <div class="col-1">
             Indirizzo:
         </div>
-        <div class="ui-grid-col-8" pTooltip="Inserire l'indirizzo della squadra.">
+        <div class="col-8" pTooltip="Inserire l'indirizzo della squadra.">
             {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
             + " (" + selectedTeam.country.provinceCode +")" : "" }}
         </div>
     </div> 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1">
+    <div class="grid">
+        <div class="col-1">
             ASD:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire l'ASD della squadra se esiste.">
+        <div class="col-5" pTooltip="Inserire l'ASD della squadra se esiste.">
             <input pInputText type="text" [(ngModel)]="selectedTeam.asd"/>
         </div>
     </div> 
 </div>
 
-<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+<div *ngIf="!teamService.readOnly" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-2">
             <button class="ui-button-success" 
                 pButton (click)="saveTeam()" 
-                icon="fa fa-group" 
+                icon="pi pi-group" 
                 label="Salva" 
                 [disabled]="enableSaveButton()">
             </button>            
@@ -120,12 +120,12 @@
 
 <app-player-table [playerLv]="playerLv" [addPlayerEnabled]="addPlayerEnabled"></app-player-table>
 
-<div *ngIf="!teamService.readOnly" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-2">
+<div *ngIf="!teamService.readOnly" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-2">
             <button class="ui-button-success" 
                 pButton (click)="saveTeam()" 
-                icon="fa fa-group" 
+                icon="pi pi-group" 
                 label="Salva" 
                 [disabled]="enableSaveButton()">
             </button>            

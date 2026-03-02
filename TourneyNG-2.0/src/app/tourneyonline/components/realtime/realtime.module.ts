@@ -2,14 +2,15 @@ import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
 import {RealtimeRoutingModule} from './realtime-routing.module';
-import {GrowlModule} from 'primeng/growl';
-import {PanelModule} from 'primeng/panel';
+import { PanelModule } from 'primeng/panel';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
-import {CodeHighlighterModule} from 'primeng/codehighlighter';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 import {Realtime} from './realtime';
 
 @NgModule({
@@ -18,17 +19,19 @@ import {Realtime} from './realtime';
         FormsModule,
         ReactiveFormsModule,
 		RealtimeRoutingModule,
-        GrowlModule,
         PanelModule,
+        ToastModule,
         DropdownModule,
         InputTextModule,
         InputTextareaModule,
         ButtonModule,
         TabViewModule,
-        CodeHighlighterModule
 	],
 	declarations: [
 		Realtime
-	]
+	],
+    providers: [
+        MessageService
+    ],
 })
 export class RealtimeModule {}

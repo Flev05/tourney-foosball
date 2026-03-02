@@ -43,32 +43,32 @@
     </p-accordionTab>
 </p-accordion>
 
-<div *ngIf="isRoundAutoGen=='false'" class="ui-grid-row">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-1">
+<div *ngIf="isRoundAutoGen=='false'" class="grid">
+    <div class="grid">
+        <div class="col-1">
             Girone:
         </div>
-        <div class="ui-grid-col-3" pTooltip="Nome del girone.">
+        <div class="col-3" pTooltip="Nome del girone.">
             <input pInputText type="text" [(ngModel)]="selectedRound.name"/>
         </div>
     </div>
 </div>
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     <button type="button" 
-        icon="fa fa-user-plus" 
+        icon="pi pi-user-plus" 
         pButton (click)="goMeeting()" 
         label="Incontri" 
         class="ui-button-success">
     </button>
     <button *ngIf="isRoundAutoGen=='false'" type="button" 
-        icon="fa fa-user-plus" 
+        icon="pi pi-user-plus" 
         pButton (click)="redoMeetings()" 
         label="Ricrea Incontri" 
         class="ui-button-danger">
     </button>
     <button type="button" 
-        icon="fa fa-file-excel-o" 
+        icon="pi pi-file-excel-o" 
         pButton (click)="printExcelMeeting()" 
         label="Stampa" 
         class="ui-button-success">
@@ -109,7 +109,7 @@
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" 
-        icon="fa fa-user-plus" 
+        icon="pi pi-user-plus" 
         pButton (click)="saveRound()" 
         label="Save" 
         class="ui-button-success">

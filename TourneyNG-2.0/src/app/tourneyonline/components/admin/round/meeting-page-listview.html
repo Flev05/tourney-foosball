@@ -26,7 +26,7 @@
     <p-message *ngIf="!atLeast2teams" severity="error" text="Attenzione! C'è almeno un girone vuoto, inserire almeno 2 squadre per ciascuno girone"></p-message>
 </div>     
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 <p-tabView *ngIf="atLeast2teams" 
         [activeIndex]="meetingRoundService.selectedTabIndex"

@@ -18,7 +18,9 @@ import { Classification } from '../../../domain/classification';
 import { Round } from '../../../domain/round';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MeetingPlayoffService extends MeetingService {
     
     constructor(protected override http: HttpClient

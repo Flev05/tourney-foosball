@@ -49,15 +49,15 @@
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-3">
             Squadra*:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire il nome della squadra." >
+        <div class="col-5" pTooltip="Inserire il nome della squadra." >
             <p-autoComplete id="team-id" 
                 [(ngModel)]="autoCompleteTeamName" 
                 [suggestions]="filteredTeamsSingle" 
@@ -68,20 +68,20 @@
         </div>
     </div>
         
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             Via:
         </div>
-        <div class="ui-grid-col-5" pTooltip="Inserire la via della squadra.">
+        <div class="col-5" pTooltip="Inserire la via della squadra.">
             <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
         </div>
     </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             <label for="country-id">Comune:</label>
         </div>
-        <div class="ui-grid-col-5">
+        <div class="col-5">
             <p-autoComplete id="country-id" 
                 [(ngModel)]="selectedTeam.country" 
                 [suggestions]="filteredCountriesSingle" 
@@ -93,18 +93,18 @@
         </div>
     </div>
 
-    <div class="ui-grid-row">
-        <div class="ui-grid-col-3">
+    <div class="grid">
+        <div class="col-3">
             Indirizzo:
         </div>
-        <div class="ui-grid-col-8">
+        <div class="col-8">
             {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
             + " (" + selectedTeam.country.provinceCode +")" : "" }}
         </div>
     </div> 
 </div>
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p-table 
         [columns]="playerCols" 
         [value]="selectedTeam.players" 
@@ -117,7 +117,7 @@
     
         <ng-template pTemplate="caption" let-rowData>
             <div style="text-align:left">
-                <button pButton type="button" icon="fa fa-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
+                <button pButton type="button" icon="pi pi-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
             </div>
         </ng-template>      
 
@@ -143,7 +143,7 @@
         <ng-template pTemplate="summary" let-rowData>
             <button class="ui-button-success" 
                 pButton (click)="saveTourneyTeam()" 
-                icon="fa fa-save" 
+                icon="pi pi-save" 
                 label="Salva" 
                 [disabled]="enableSaveButton()">
             </button>  

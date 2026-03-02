@@ -2,26 +2,28 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../../service/tourney-service';
-import { Eliminatory } from '../../../domain/eliminatory';
-import { Combobox } from '../../../domain/tourney-combobox';
-import { EliminatoryLevel } from '../../../domain/eliminatory-level';
-import { RoundType, Direction } from '../../../domain/enumerations';
-import { Meeting } from '../../../domain/meeting';
-import { Team } from '../../../domain/team';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { RoundType, Direction } from 'app/tourneyonline/domain/enumerations';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Team } from 'app/tourneyonline/domain/team';
 import { AbstractEliminatoryListView } from '../../common/abstract-eliminatory-listview';
-import { DateFormatPipe } from '../../../components/common/date-format-pipe';
-import { MeetingService } from '../../../service/meeting-service';
-import { TeamService } from '../../../service/team-service';
-import { EliminatoryLevelVO } from '../../../domain/eliminatory-level.vo';
-import { MeetingDb } from '../../../domain/meeting-db';
-import { FromRound } from '../../../domain/from-round';
-import { Round } from '../../../domain/round';
-import { PlayoffRule } from '../../../domain/playoff-rule';
-import { AbstractRoundVO } from '../../../domain/abstract-round-vo';
-import { RoundVO } from "../../../domain/round-vo";
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { FromRound } from 'app/tourneyonline/domain/from-round';
+import { Round } from 'app/tourneyonline/domain/round';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
+import { AbstractRoundVO } from 'app/tourneyonline/domain/abstract-round-vo';
+import { RoundVO } from "app/tourneyonline/domain/round-vo";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LevelService extends AbstractEliminatoryListView {
     static manualRedirectDV: string = '/admineliminatory/levelLv/eliminatoryLv/manualdv';
     static manualRedirectLV: string = '/admineliminatory/levelLv/eliminatoryManualLv';
@@ -107,14 +109,14 @@ export class LevelService extends AbstractEliminatoryListView {
                     els.push(e);
                 }
             } else {
-                const pow2 = Math.pow(2, lcb.value-1); // the minimum value of pow2 is 2^(lcb.value-1)=2^(1-1)=2^0=1
+                const pow2 = Math.pow(2, lcb.value == null ? 1 : lcb.value-1); // the minimum value of pow2 is 2^(lcb.value-1)=2^(1-1)=2^0=1
                 for(let i=0; i<pow2; i++ ) {
                     let e: Eliminatory = this.newEliminatory( "E." + (i+1));
                     els.push(e);
                 }
             }
         } else {
-            const pow2 = Math.pow(2, lcb.value-1); // the minimum value of pow2 is 2^(lcb.value-1)=2^(1-1)=2^0=1
+            const pow2 = Math.pow(2, lcb.value == null ? 1 : lcb.value-1); // the minimum value of pow2 is 2^(lcb.value-1)=2^(1-1)=2^0=1
             for(let i=0; i<pow2; i++ ) {
                 let e: Eliminatory = this.newEliminatory( "E." + (i+1));
                 els.push(e);
@@ -122,17 +124,16 @@ export class LevelService extends AbstractEliminatoryListView {
         }
 
         const arVO = this.newAbstractRoundVO();
-        let el : EliminatoryLevel = {
-              id: lcb.value
-            , name:  lcb.label
-            , level: lcb.value
-            , isTopLevel: isTopLevel
-            , direction: Direction.OneWay
-            , eliminatories: els
-            , isOptional: false
-            , topLevelTeamNo : topLevelTeamNo
-            , abstractRoundVO : arVO
-        };
+        let el : EliminatoryLevel = new EliminatoryLevel();        
+        el.id = lcb.value;
+        el.name = lcb.label;
+        el.level = lcb.value == null ? 0 : lcb.value;
+        el.isTopLevel = isTopLevel;
+        el.direction = Direction.OneWay;
+        el.eliminatories = els;
+        el.isOptional = false;
+        el.topLevelTeamNo = topLevelTeamNo;
+        el.abstractRoundVO = arVO;
         return el;
     }
 

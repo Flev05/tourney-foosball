@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { TourneyService } from '../../../service/tourney-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Location } from '@angular/common';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
@@ -15,10 +15,9 @@ export class TeamListView extends AbstractListView {
 
     constructor(protected override tourneyService: TourneyService
         , protected override router: Router
-        , protected override redirect: string
         , protected override location: Location
     ) {
-        super(redirect, tourneyService, router, location);
+        super("", tourneyService, router, location);
     }
      
     public gotoListView() {

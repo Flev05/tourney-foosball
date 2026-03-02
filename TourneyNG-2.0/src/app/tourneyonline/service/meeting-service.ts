@@ -39,7 +39,9 @@ const deleteMeetingUrl                  = meetingUrl + '/delete';
 const deleteMeetingByPlayoffIdUrl       = meetingUrl + "/deletePlayoffMeetingsByTourneyId"
 const deleteMeetingByPlayoutIdUrl       = meetingUrl + "/deletePlayoutMeetingsByTourneyId"
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MeetingService extends AbstractService {
 
     public static SKIPING_TEAM = "(Riposo)";

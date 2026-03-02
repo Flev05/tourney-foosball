@@ -22,15 +22,18 @@ import { SliderModule } from 'primeng/slider';
 import { CalendarModule } from 'primeng/calendar';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-
-import {TeamListView} from './team-listview';
 import {TeamDetailView} from './team-detailview';
-import { DateFormatPipe } from '../../../components/common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { TeamRoutingModule } from './team-routing.module';
 import { TeamTableModule } from '../team-table/team-table.module';
 import { PlayerTableModule } from '../player/player-table/player-table.module';
+import { TeamListView } from './team-listview';
 
 @NgModule({
+    declarations: [
+        TeamDetailView
+        ,TeamListView
+    ],
 	imports: [
 		CommonModule
         ,FormsModule
@@ -59,10 +62,6 @@ import { PlayerTableModule } from '../player/player-table/player-table.module';
         ,TeamTableModule
         ,PlayerTableModule
     ],
-	declarations: [
-        TeamListView
-        ,TeamDetailView
-    ]
-    ,providers: [DateFormatPipe]
+    providers: [DateFormatPipe]
 })
 export class TeamModule {}

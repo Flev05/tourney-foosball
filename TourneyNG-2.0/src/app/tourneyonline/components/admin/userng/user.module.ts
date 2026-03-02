@@ -1,6 +1,8 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import {AccordionModule} from 'primeng/accordion';
@@ -38,6 +40,7 @@ import { UserListView } from './user-listview';
                 ,TableModule
                 ,DialogModule
                 ,SliderModule
+                ,ToastModule
                 ,AutoCompleteModule
                 ,RadioButtonModule
                 ,FieldsetModule
@@ -53,6 +56,9 @@ import { UserListView } from './user-listview';
                 , UserChangePassword
                 , UserResetPasswordLv
                 , UserResetPasswordDv
-	]
+	],
+    providers: [
+        MessageService
+    ],
 })
 export class UserModule {}

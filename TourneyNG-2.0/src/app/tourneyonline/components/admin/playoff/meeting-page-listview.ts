@@ -50,7 +50,9 @@ export class MeetingPageListView extends AbstractRuleListView {
         if(this.tourneyService.selectedPlayoff != null ) {
             this.selectedPlayoff = this.tourneyService.selectedPlayoff;
         } else {
-            this.selectedPlayoff = this.tourneyService.selectedPlayout;
+            if(this.tourneyService.selectedPlayout != null ) {
+                this.selectedPlayoff = this.tourneyService.selectedPlayout;
+            }
         }
 
         this.isRoundTrip = false;

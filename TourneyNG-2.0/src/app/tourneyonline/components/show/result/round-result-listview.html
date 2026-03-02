@@ -2,13 +2,13 @@
     <ng-template pTemplate="header">
         <tr>
             <td>
-                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+                <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
             </td>
             <td>
                 <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
             </td>
             <td style="text-align: right;">
-                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+                <button type="button" icon="pi pi-refresh" pButton (click)="refresh()"></button>
             </td>
         </tr>
     </ng-template>
@@ -33,14 +33,14 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
+                        <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
                         <div>{{getHeaderOneway()}}</div>
                         <div>{{getWeekOneway()}}</div>
                     </td>
                     <td style="text-align: right;">
-                        <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
+                        <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -83,14 +83,14 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
+                        <button type="button" icon="pi pi-backward" pButton (click)="prevRoundtripDay()"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
                         <div>{{getHeaderRoundtrip()}}</div>
                         <div>{{getWeekRoundtrip()}}</div>
                     </td>
                     <td style="text-align: right;">
-                        <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>
+                        <button type="button" icon="pi pi-forward" pButton (click)="nextRoundtripDay()"></button>
                     </td>
                 </tr>
             </ng-template>

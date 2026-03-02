@@ -14,12 +14,16 @@
 -- \set TS_INDEX_LOCATION '\'C:/views/tablespaces/tourney/prod/index\''
 
 -- DESKTOP HP ENVY
-\set TS_DATA_LOCATION  '\'C:/views/tablespaces/tourney/test/data\''
-\set TS_INDEX_LOCATION '\'C:/views/tablespaces/tourney/test/index\''
+-- \set TS_DATA_LOCATION  '\'C:/views/tablespaces/tourney/test/data\''
+-- \set TS_INDEX_LOCATION '\'C:/views/tablespaces/tourney/test/index\''
 
 -- Server Centos Linux
 -- \set TS_DATA_LOCATION  '\'/data/tourney/tourneydb/data\''
 -- \set TS_INDEX_LOCATION '\'/data/tourney/tourneydb/index\''
+
+-- DESKTOP GMKTec
+\set TS_DATA_LOCATION  '\'C:/DATA/PostgreSQL/tourney/data\''
+\set TS_INDEX_LOCATION '\'C:/DATA/PostgreSQL/tourney/index\''
 
 \i ../../DatabaseCommons/DatabaseCreation/create_tablespaces.sql
 

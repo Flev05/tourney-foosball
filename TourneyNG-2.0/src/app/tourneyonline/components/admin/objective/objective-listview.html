@@ -15,7 +15,7 @@
     <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
 
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+        <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     </div>
 
     <p-table [responsive]="true" 
@@ -56,7 +56,7 @@
 
     </p-table>
 
-    <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="500">
+    <p-dialog header="Eliminatorie" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{ width: '500px' }">
         <div class="ui-g ui-fluid" *ngIf="row">
             <div class="ui-g-12">
                 <div class="ui-g-4">
@@ -68,7 +68,7 @@
                 <div class="ui-g-4">
                     <label for="roundId">Girone</label>
                 </div>
-                <div class="ui-grid-col-3">
+                <div class="col-3">
                     <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.fromRound.round" 
                     optionLabel="label" 
                     placeholder="Selezionare">
@@ -79,7 +79,7 @@
                 <div class="ui-g-4">
                     <label for="playoffId">Playoff</label>
                 </div>
-                <div class="ui-grid-col-3">
+                <div class="col-3">
                     <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.fromPlayoff.round" 
                     optionLabel="label"
                     placeholder="Selezionare">
@@ -89,7 +89,7 @@
         </div>       
 
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-check" (click)="done()" label="Indietro"></button>
+            <button type="button" pButton icon="pi pi-check" (click)="done()" label="Indietro"></button>
         </div>
     </p-dialog>
 </div>

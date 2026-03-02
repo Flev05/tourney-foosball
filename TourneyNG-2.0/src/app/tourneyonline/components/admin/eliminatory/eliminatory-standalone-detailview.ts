@@ -3,17 +3,17 @@ import { Location } from '@angular/common';
 
 import {FormControl,FormGroup,FormBuilder, Validators} from '@angular/forms';
 
-import { Eliminatory } from '../../../domain/eliminatory';
-import { Meeting } from '../../../domain/meeting';
-import { EliminatoryLevel } from '../../../domain/eliminatory-level';
-import { TourneyService } from '../../../service/tourney-service';
-import { AbstractDetailView } from '../../../components/common/abstract-detailview';
-import { MeetingService } from '../../../service/meeting-service';
-import { MeetingDb } from '../../../domain/meeting-db';
-import { Direction } from '../../../domain/enumerations';
-import { CountryService } from '../../../service/country-service';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
-import { Country } from '../../../domain/country';
+import { Country } from 'app/tourneyonline/domain/country';
 
 @Component({
     templateUrl: './eliminatory-standalone-detailview.html',

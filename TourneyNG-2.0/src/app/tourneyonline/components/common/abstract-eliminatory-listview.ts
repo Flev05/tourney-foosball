@@ -42,7 +42,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     isPlayoff: boolean = false;
     isAutomatic: boolean = true;
     isOneway: string = "true";
-    private isStandalone: boolean = false;
+    public isStandalone: boolean = false;
     selectedLevelCombobox: Combobox = new Combobox();
   
     elHttpCounter: number = 0;

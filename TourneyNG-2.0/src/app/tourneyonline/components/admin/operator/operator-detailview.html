@@ -21,34 +21,34 @@
 <p>I campi contrassegnati con * sono obbligatori</p>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" pButton icon="fa fa-arrow-left"  (click)="goBack()" label="Indietro"></button>
+    <button type="button" pButton icon="pi pi-arrow-left"  (click)="goBack()" label="Indietro"></button>
 </div>
 
 <p-fieldset legend="Utente Operatore">
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+    <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+        <div class="grid">
+            <div class="col-2">
                 Nome*:
             </div>
-            <div  class="ui-grid-col-6">
+            <div  class="col-6">
                 <input pInputText type="text" [(ngModel)]="selectedUser.firstname" placeholder="Obbligatorio"/>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 Cognome*:
             </div>
-            <div class="ui-grid-col-6">
+            <div class="col-6">
                 <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 Username*:
             </div>
-            <div class="ui-grid-col-6">
+            <div class="col-6">
                 <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
             </div>
         </div>
@@ -58,40 +58,40 @@
             </div>
         </div>
 
-        <div *ngIf="urcService.newUser" class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div *ngIf="urcService.newUser" class="grid">
+            <div class="col-2">
                 Password: 
             </div>
-            <div class="ui-grid-col-6">
+            <div class="col-6">
                 {{currentPassword}} (Temporanea, da cambiare al primo accesso)
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 Via*:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <input pInputText type="text" [(ngModel)]="selectedUser.address"/>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 Indirizzo:
             </div>
-            <div class="ui-grid-col-8">
+            <div class="col-8">
                 {{selectedUser != undefined && selectedUser.country != undefined ? selectedUser.address  + " - " +
                     selectedUser.country.zipCode + " " + selectedUser.country.city
                     + " (" + selectedUser.country.provinceCode +")" : ""}}
             </div>
         </div>             
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 <label for="country-id">Comune*:</label>
             </div>                     
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <p-autoComplete id="country-id" 
                     [(ngModel)]="selectedUser.country" 
                     [suggestions]="filteredCountriesSingle" 
@@ -103,29 +103,29 @@
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 Telefono*:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <input pInputText type="text" [(ngModel)]="selectedUser.phoneNumber" placeholder="Obbligatorio"/>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 E-mail*:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
             </div>
         </div>   
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+        <div class="grid">
+            <div class="col-2">
                 Descrizione:
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <input pInputText type="text" [(ngModel)]="selectedUser.description"/>
             </div>
         </div>   
@@ -170,7 +170,7 @@
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <button class="ui-button-success" 
         pButton (click)="onSubmit()" 
         icon="pi pi-save" 

@@ -23,7 +23,7 @@
 <h3>Torneo: {{selectedTourney.tourneyName}}</h3>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
 <div *ngIf="serverUnreachable" style="margin-top:30px">
@@ -101,7 +101,7 @@
                 [value]="eliminatoryLevelRows" 
                 [responsive]="true"
                 selectionMode="single" 
-                [(selection)]="selctedEliminatoryLevel" 
+                [(selection)]="selectedEliminatoryLevel" 
                 (onRowSelect)="onEliminatoryRowSelect($event)">
                 
             <ng-template pTemplate="caption">

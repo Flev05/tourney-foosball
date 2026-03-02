@@ -2,13 +2,13 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <td>
-                <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" ></button>
+                <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
             </td>
             <td>
                 <span style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</span>
             </td>
             <td style="text-align: right;">
-                <button type="button" icon="fa fa-refresh" pButton (click)="refresh()"></button>
+                <button type="button" icon="pi pi-refresh" pButton (click)="refresh()"></button>
             </td>
         </tr>
     </ng-template>
@@ -31,13 +31,13 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-backward" pButton (click)="prevOnewayDay()"></button>
+                        <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
                         <div>{{selectedPlayoff.round.name}} {{onewayCurrentDay}}/{{allDaysNo}}</div>
                     </td>
                     <td style="text-align: right;">
-                        <button type="button" icon="fa fa-forward" pButton (click)="nextOnewayDay()"></button>
+                        <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -80,13 +80,13 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <td>
-                        <button type="button" icon="fa fa-backward" pButton (click)="prevRoundtripDay()"></button>
+                        <button type="button" icon="pi pi-backward" pButton (click)="prevRoundtripDay()"></button>
                     </td>
                     <td style="text-align: center; font-weight: bold;">
                         <div>{{selectedPlayoff.round.name}} {{roundtripCurrentDay}}/{{roundDaysNo}} ({{roundDaysNo + roundtripCurrentDay}}/{{allDaysNo}})</div>
                     </td>
                     <td style="text-align: right;">
-                        <button type="button" icon="fa fa-forward" pButton (click)="nextRoundtripDay()"></button>
+                        <button type="button" icon="pi pi-forward" pButton (click)="nextRoundtripDay()"></button>
                     </td>
                 </tr>
             </ng-template>

@@ -11,4 +11,4 @@
 
 \i create_db-prod.sql
 
-\i create_schema-booking-prod.sql
+\i create_schema-tourney-prod.sql

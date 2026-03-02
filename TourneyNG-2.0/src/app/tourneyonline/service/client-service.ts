@@ -19,7 +19,9 @@ const insertClientUrl = clientUrl + '/insert';
 const updateClientUrl = clientUrl + '/update';   
 const deleteClientUrl = clientUrl + '/delete';   
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ClientService {
 
     selectedClientOption : Combobox = {label:"", value: 0};

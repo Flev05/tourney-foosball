@@ -4,9 +4,9 @@ REM Desktop HP
 rem set TOURNEY_DIR=C:\DATA\DEVELOP\EREBUS\CalcioBalilla
 
 rem Laptop LENOVO
-set TOURNEY_DIR=C:\views\EREBUS\Tourney
+set TOURNEY_DIR=C:\views\EREBUS\Tourney-2.0
 
-set FE_DIR=%TOURNEY_DIR%\TourneyNG
+set FE_DIR=%TOURNEY_DIR%\TourneyNG-2.0
 set BE_DIR=%TOURNEY_DIR%\TourneyBE
 
 set WEB_CONTENT_DIR=%BE_DIR%\WebContent

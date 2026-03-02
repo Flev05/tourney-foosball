@@ -80,18 +80,18 @@
 </p-accordion>
 </div>
 
-<button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+<button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 <div *ngIf="serverUnreachable" style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
 </div>   
 
-<div class="ui-grid ui-grid-responsive ui-grid-pad ui-flui">
+<div class="ui-grid responsive pad ui-flui">
     <p-fieldset legend="Struttura {{tourneyService.selectedEliminatoryLevel.name}}">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Turni:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right"
+            <div class="col-3" tooltipPosition="right"
                     pTooltip="Indicare se le eliminazioni dirette sono di solo andata o andata e ritorno">
                 <p-radioButton name="isOnewayGroupname" 
                     label="Solo andata" 
@@ -107,11 +107,11 @@
                 </p-radioButton>
             </div>
         </div>
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Partite:
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.maxMatchesPerMeeting" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Numero di partite in ciascun incontro"
@@ -119,11 +119,11 @@
                 </p-spinner>
             </div>
         </div>
-        <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.allMatchesEnabled">
-            <div class="ui-grid-col-3">
+        <div class="grid" *ngIf="selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.allMatchesEnabled">
+            <div class="col-3">
                 Fine Incontro:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right"
+            <div class="col-3" tooltipPosition="right"
                     pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite">
                 <div class="ui-g radiobuttons">
                     <p-radioButton name="allEliminatoryMatchesGroupname" 
@@ -135,84 +135,83 @@
                     <p-radioButton name="allEliminatoryMatchesGroupname" 
                         label="Al Meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite" 
                         value="false" 
-                        [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.isAllMatches"
-                        (onClick)="onEliminatoryBestOfClick()">
+                        [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.isAllMatches">
                     </p-radioButton>
                 </div>
             </div>        
         </div>
-        <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div *ngIf="selectedTourney.tourneyType=='score'" class="grid">
+            <div class="col-3">
                 Goal:
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsNeededToWin" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
                 </p-spinner>
             </div>
         </div>
-        <div *ngIf="selectedTourney.tourneyType=='time' || selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true'" class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div *ngIf="selectedTourney.tourneyType=='time' || selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true'" class="grid">
+            <div class="col-3">
                 Vittoria:
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchWinnerScores" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Punti assegnati in caso di vittoria">
                 </p-spinner>
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 punti
             </div>
         </div>
-        <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div *ngIf="selectedTourney.tourneyType=='time'" class="grid">
+            <div class="col-3">
                 Pareggio:
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchBalanceScores" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Punti assegnati in caso di pareggio">
                 </p-spinner>
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 punti
             </div>
         </div>
         <div *ngIf="selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true'" 
-            class="ui-grid-row" >
-            <div class="ui-grid-col-3">
+            class="grid" >
+            <div class="col-3">
                 Vittoria (Golden goal o Tie break):
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                 </p-spinner>
             </div>                
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 punti
             </div>
         </div>                
         <div *ngIf="selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true'"
-            class="ui-grid-row" >
-            <div class="ui-grid-col-3">
+            class="grid" >
+            <div class="col-3">
                 Sconfitta (Golden goal o Tie break):
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
                     [min]="0"
                     pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
                 </p-spinner>
             </div>                            
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 punti
             </div>
         </div>
 
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" class="ui-button-success" icon="fa fa-save" pButton (click)="save()" label="Salva"></button>
+            <button type="button" class="ui-button-success" icon="pi pi-save" pButton (click)="save()" label="Salva"></button>
         </div>    
     </p-fieldset>   
 </div>

@@ -17,7 +17,9 @@ const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
     cols: TableCols[] = [
         { field: 'username',    header: 'Username' },
@@ -98,7 +100,7 @@ export class UserService {
         const url = userUrl + "/update";
         console.log(url);
         
-        return this.http.put(url, user, httpOptions).pipe(
+        return this.http.put<UserVO>(url, user, httpOptions).pipe(
             tap(_ => this.log(`updated User id=${user.id}`)),
             catchError(selector)
         );
@@ -162,7 +164,7 @@ export class UserService {
         const username =  uvo.username;
         const url = changePasswordUrl;
 
-        return this.http.put(url, uvo, httpOptions).pipe(
+        return this.http.put<UserVO>(url, uvo, httpOptions).pipe(
             tap(_ => this.log(`Change password, username=${username}`)),
             catchError(this.handleError<UserVO>('changePassword'))
         );
@@ -172,7 +174,7 @@ export class UserService {
     resetPassword( uvo: UserVO ): Observable<UserVO> {
         const url = resetPasswordUrl;
 
-        return this.http.put(url, uvo, httpOptions).pipe(
+        return this.http.put<UserVO>(url, uvo, httpOptions).pipe(
             tap(_ => this.log(`Reset password, username=${uvo.username}`)),
             catchError(this.handleError<UserVO>('resetPassword'))
         );

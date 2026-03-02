@@ -14,7 +14,12 @@ export class LeaseComponent {
  
     constructor(private fb: FormBuilder
         ,private messageService: MessageService
-    ) {}
+    ) {
+         this.userform = this.fb.group({
+            username: [''],
+            password: ['']
+        });
+    }
     
     ngOnInit() {
         this.userform = this.fb.group({

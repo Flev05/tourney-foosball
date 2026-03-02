@@ -35,35 +35,35 @@
 </div>
 
 <div class="content-section implementation">
-    <p-toast></p-toast>
+    <p-toast [position]="'top-right'"></p-toast>
 
     <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
         <p-panel>
-            <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+            <div class="ui-grid responsive pad ui-fluid">
+                <div class="grid">
+                    <div class="col-2">
                         Codice Torneo:
                     </div>
-                    <div class="ui-grid-col-6">
+                    <div class="col-6">
                         <input pInputText type="text" formControlName="codiceTorneo" placeholder="Obbligatorio"/>
                     </div>
-                    <div class="ui-grid-col-4">
+                    <div class="col-4">
                         <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['codiceTorneo'].valid&&userform.controls['codiceTorneo'].dirty">
-                            <i class="fa fa-close"></i>
+                            <i class="pi pi-close"></i>
                             Il codice torneo è obbligatorio
                         </div>
                     </div>
                 </div>
 
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2"></div>
-                    <div class="ui-grid-col-6">
+                <div class="grid">
+                    <div class="col-2"></div>
+                    <div class="col-6">
                         <button pButton type="submit" label="Accedi" [disabled]="!userform.valid"></button>
                     </div>
                 </div>
-                <div class="ui-grid-col-4">
+                <div class="col-4">
                     <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!logged">
-                        <i class="fa fa-close"></i>
+                        <i class="pi pi-close"></i>
                         Accesso fallito
                     </div>
                 </div>

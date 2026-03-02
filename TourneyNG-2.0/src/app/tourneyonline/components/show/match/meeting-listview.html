@@ -22,7 +22,7 @@
         [(selection)]="selectedMeeting" 
         dataKey="vin">
     <ng-template pTemplate="caption">
-        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
+        <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
         {{selectedTourney.tourneyName}} - {{selectedTourney.date}} {{selectedTourney.time}}
     </ng-template>
         
@@ -68,8 +68,8 @@
     [rows]="15">
 
     <ng-template pTemplate="caption">
-        <button type="button" icon="fa fa-arrow-left" pButton (click)="goBack()"></button>
-        {{selectedTourney.tourneyName}} - {{selectedTourney.date}} {{selectedTourney.time}}
+        <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
+        {{selectedTourney.tourneyName}} - {{selectedTourney.datetime}}
     </ng-template>
 
 

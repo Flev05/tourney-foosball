@@ -14,7 +14,9 @@ const httpOptions = {
 const loginUrl  = 'api/logon/login';  // URL to web server api
 const logoutUrl = 'api/logon/logout';  // URL to web server api
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoginService {
 
     userLogged   : Login = new Login();
@@ -81,9 +83,17 @@ export class LoginService {
     /** PUT: send the request login to the server */
     sendLogin (login: Login, selector: (err: any, caught: Observable<Login> ) => Observable<Login> ): Observable<Login> {
         const url = loginUrl;
-        console.log("Entering sendLogin(" + login.username + ")"); 
+        console.log("URL: " + loginUrl); 
+        const json = JSON.stringify(login);
+        console.log('Payload: ', json);
+        console.log('Headers: ', httpOptions.headers.keys());
 
-        return this.http.put<Login>(url, login, httpOptions).pipe(
+        const payload = {
+            id: login.id,
+            username: login.username,
+            password: login.password
+        };
+        return this.http.put<Login>(url, payload, httpOptions).pipe(
             tap(_ => this.log(`sendLogin url=${url}  successful`)),
             catchError(selector)
         );

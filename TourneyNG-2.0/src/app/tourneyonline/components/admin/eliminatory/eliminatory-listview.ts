@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../../service/tourney-service';
-import { DateFormatPipe } from '../../../components/common/date-format-pipe';
-import { Eliminatory } from '../../../domain/eliminatory';
-import { AbstractListView } from '../../../components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { LevelService } from './level-service';
-import { EliminatoryLevel } from '../../../domain/eliminatory-level';
-import { EliminatoryVO } from '../../../domain/eliminatory.vo';
-import { TableCols } from '../../../domain/table-cols';
-import { TourneyVO } from '../../../domain/tourney.vo';
-import { ClientService } from '../../../service/client-service';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
+import { EliminatoryVO } from 'app/tourneyonline/domain/eliminatory.vo';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Component({
     templateUrl: './eliminatory-listview.html'

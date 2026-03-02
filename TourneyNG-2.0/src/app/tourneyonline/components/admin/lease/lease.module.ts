@@ -9,6 +9,8 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   imports: [
@@ -21,10 +23,12 @@ import {TabViewModule} from 'primeng/tabview';
     InputTextareaModule,
     ButtonModule,
     TabViewModule,
-    LeaseRoutingModule
+    LeaseRoutingModule,
+    ToastModule
   ],
   declarations: [
     LeaseComponent
-  ]
+  ],
+  providers: [MessageService]
 })
 export class LeaseModule {}

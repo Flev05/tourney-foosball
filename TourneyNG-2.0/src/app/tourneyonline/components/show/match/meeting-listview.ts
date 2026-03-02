@@ -40,12 +40,4 @@ export class MeetingListView extends AbstractListView {
     protected override gotoDetailView() {
         this.router.navigate([redirect]);
     }
-
-    // cloneMeeting(c: any): any {
-    //     let car = {};
-    //     for (let prop in c) {
-    //         car[prop] = c[prop];
-    //     }
-    //     return car;
-    // }
 }

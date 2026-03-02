@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
     ,InputTextareaModule
     ,ButtonModule
     ,TableModule
-  ] 
-  , exports: [TeamTableComponent]
+  ], 
+  exports: [TeamTableComponent]
 })
 export class TeamTableModule { }

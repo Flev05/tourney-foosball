@@ -332,50 +332,49 @@
         </p-accordionTab>
     </p-accordion>
     
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
         <p>
             <span style="font-weight: bold">
                 Attenzione! I campi contrassegnati con * sono obbligatori!
             </span>
         </p>
                 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Disciplina:
             </div>
-            <div class="ui-grid-col-3">
+            <div class="col-3">
                 <p-dropdown [options]="disciplineOptions" 
                     [(ngModel)]="selectedDiscipline" 
                     optionLabel="label" 
-                    (onChange)="onDisciplineChange($event.value)" 
-                    [autoWidth]="false">
+                    (onChange)="onDisciplineChange($event.value)" >
                 </p-dropdown>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Nome Torneo*:
             </div>
-            <div class="ui-grid-col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
+            <div class="col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
                 <input pInputText type="text" [(ngModel)]="selectedTourney.tourneyName"/>
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Follower URL:
             </div>
-            <div class="ui-grid-col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
+            <div class="col-5" pTooltip="Il nome del torneo è obbligatorio.">                                
                 {{followerUrl}}
             </div>
         </div>
 
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Giornaliero:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right"
+            <div class="col-3" tooltipPosition="right"
                     pTooltip="Indicare se il torneo si svolge in un singolo giorno o su più giorni.">
                 <div class="ui-g radiobuttons">
                     <div class="ui-g-12">
@@ -398,20 +397,20 @@
             </div>
         </div>        
         
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3" >
+        <div class="grid">
+            <div class="col-3" >
                 Via*:
             </div>
-            <div class="ui-grid-col-5" pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
+            <div class="col-5" pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
                 <input pInputText type="text" [(ngModel)]="selectedTourney.address"/>
             </div>
         </div>
                     
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 <label for="country-id">Comune:</label>
             </div>
-            <div class="ui-grid-col-5">
+            <div class="col-5">
                 <p-autoComplete id="country-id" 
                     [(ngModel)]="selectedTourney.country" 
                     [suggestions]="filteredCountriesSingle" 
@@ -423,35 +422,35 @@
             </div>
         </div>
 
-        <div class="ui-grid-row" tooltipPosition="right">
-            <div class="ui-grid-col-3">
+        <div class="grid" tooltipPosition="right">
+            <div class="col-3">
                 Indirizzo:
             </div>
-            <div class="ui-grid-col-8">
+            <div class="col-8">
                 {{selectedTourney.address}} {{selectedTourney.country != undefined ? " - " + selectedTourney.country.zipCode + " " + selectedTourney.country.city
                 + " (" + selectedTourney.country.provinceCode +")" : "" }}
             </div>
         </div>
             
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-3">
+        <div class="grid">
+            <div class="col-3">
                 Data e ora:
             </div>
-            <div class="ui-grid-col-3" tooltipPosition="right"
+            <div class="col-3" tooltipPosition="right"
                     pTooltip="Indicare la data di inizio del torneo.">
                 <p-calendar [(ngModel)]="selectedTourney.datetime" 
                     [locale]="it" 
                     [showIcon]="true"   
                     dateFormat="dd/mm/yy" 
-                    showTime="true">
+                    [showTime]="true">
                 </p-calendar>
             </div>
         </div>
     </div>
 
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-grid-row">
-            <div class="ui-grid-col-2">
+    <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+        <div class="grid">
+            <div class="col-2">
                 <button pButton type="button"
                     class="ui-button-success" 
                     icon="{{nextButtonIcon}}" 
@@ -544,10 +543,10 @@
         </p-message>
     </div>    
     
-    <div *ngIf="modeTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+    <div *ngIf="modeTabEnabled" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
         <p-fieldset legend="Gara">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-4" tooltipPosition="right"
+            <div class="grid">
+                <div class="col-4" tooltipPosition="right"
                         pTooltip="Indicare se le gare terminano a tempo o a punteggio">
                     <div class="ui-g radiobuttons">
                         <div class="ui-g-12"> 
@@ -571,8 +570,8 @@
             </div>
         </p-fieldset>
         <p-fieldset legend="Inserimento Risultati">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-4" tooltipPosition="right"
+            <div class="grid">
+                <div class="col-4" tooltipPosition="right"
                         pTooltip="Scegliere la modalità di inserimento dei risultati: Risultato Finale (un goal per volta) di ciascun incontro, con l'uso della MATRICE in cui si inseriscono solo i Punti Conquistati(3, 2, 1 o 0)">
                     <div class="ui-g radiobuttons">
                         <div class="ui-g-12">
@@ -665,7 +664,7 @@
                 </div>
             </div>
                               
-            <div *ngIf="notAllowedPhases()" class="ui-grid-col-3">
+            <div *ngIf="notAllowedPhases()" class="col-3">
                 <div class="ui-message ui-messages-error ui-corner-all">
                     <span>
                         Questa combinazione non è prevista
@@ -680,11 +679,11 @@
              
         </p-fieldset>                                    
         <p-fieldset legend="Durata" *ngIf="selectedTourney.tourneyType=='time'">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-3">
+            <div class="grid">
+                <div class="col-3">
                     Minuti:
                 </div>
-                <div class="ui-grid-col-3">
+                <div class="col-3">
                     <p-spinner [(ngModel)]="selectedTourney.raceDuration" tooltipPosition="right"
                         [min]="1"
                         pTooltip="Indicare la durata in minuti della singola gara per i tornei a tempo">
@@ -693,9 +692,9 @@
             </div>
         </p-fieldset>
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div class="ui-grid-row">
-                <div *ngIf="isInWizardMode()" class="ui-grid-col-2">
+        <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+            <div class="grid">
+                <div *ngIf="isInWizardMode()" class="col-2">
                     <button pButton type="button" 
                         class="ui-button-success"   
                         icon="fa fa-arrow-left" 
@@ -703,7 +702,7 @@
                         (click)="prevTab()">
                     </button>
                 </div>
-                <div class="ui-grid-col-2">
+                <div class="col-2">
                     <button pButton type="button"
                         class="ui-button-success" 
                         icon="{{nextButtonIcon}}" 
@@ -777,7 +776,7 @@
             </p-message>
         </div>    
 
-        <div class="ui-grid-col-3" tooltipPosition="right">
+        <div class="col-3" tooltipPosition="right">
             <div class="ui-g radiobuttons">
                 <p-radioButton name="isTeamsOrderedGroupname" 
                     label="Random" 
@@ -808,7 +807,7 @@
             </div>
         </div>        
         
-        <div *ngIf="teamTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="teamTabEnabled" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
 
             <app-player-chooser *ngIf="selectedTourney.chaosEnabled"></app-player-chooser>
 
@@ -823,9 +822,9 @@
                 [disabled]="teamButtonDisabled()">  
             </button>      
         
-            <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                <div class="ui-grid-row">
-                    <div  class="ui-grid-col-2">
+            <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                <div class="grid">
+                    <div  class="col-2">
                         <button *ngIf="isInWizardMode()" pButton type="button" 
                             class="ui-button-success"   
                             icon="fa fa-arrow-left" 
@@ -834,7 +833,7 @@
                         </button>
                     </div>
                     
-                    <div class="ui-grid-col-2">
+                    <div class="col-2">
                         <button pButton type="button"
                             class="ui-button-success" 
                             icon="{{nextButtonIcon}}" 
@@ -902,13 +901,13 @@
                 text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
             </p-message>
         </div>    
-        <div *ngIf="roundTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div *ngIf="roundTabEnabled" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
             <p-fieldset legend="Struttura Gironi">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Turni:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                         pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
                         <p-radioButton name="isOnewayRoundGroupname" 
                             label="Solo andata" 
@@ -924,65 +923,63 @@
                         </p-radioButton>
                     </div>
                 </div>
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Generazione:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                             pTooltip="Indicare se i gironi devono essere generati in automatico o in manuale">
                         <p-radioButton name="isGenRoundGroupname" 
                             label="Automatico" 
                             value="true" 
                             [(ngModel)]="isRoundAutoGen"
-                            (onClick)="onRoundAutoGenClick($event.value)">
+                            (onClick)="onRoundAutoGenClick()">
                         </p-radioButton>
                         <p-radioButton name="isGenRoundGroupname" 
                             label="Manuale" 
                             value="false" 
                             [(ngModel)]="isRoundAutoGen"
-                            (onClick)="onRoundManualGenClick($event.value)">
+                            (onClick)="onRoundManualGenClick()">
                         </p-radioButton>
                     </div>
                 </div>                    
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Numero Gironi:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                    <div class="col-3" tooltipPosition="right" 
                             pTooltip="Scegliere il numero di gironi che compongono il torneo">
                         <p-dropdown id="roundId" 
                             [options]="roundsCombobox" 
                             [(ngModel)]="selectedTourney.selectedRoundsNumCB"  
                             optionLabel="label"
-                            (onChange)="onRoundNumChange($event.value)" 
-                            [autoWidth]="false">
+                            (onChange)="onRoundNumChange($event.value)" >
                         </p-dropdown>
                     </div>
                 </div>             
-                <div *ngIf="isRoundAutoGen=='false'" class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div *ngIf="isRoundAutoGen=='false'" class="grid">
+                    <div class="col-2">
                         Squadre:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                    <div class="col-3" tooltipPosition="right" 
                             pTooltip="Scegliere il numero di squadre complessivo per tutto il torneo, anche se non multiplo intero del numero di gironi">
                         <p-dropdown id="teamsRoundId" 
                             [options]="teams4RoundCombobox" 
                             [(ngModel)]="selectedTourney.selectedTeams4RoundCB"  
                             optionLabel="label"
                             (onChange)="onRoundTeamsChange($event.value)" 
-                            placeholder="Seleziona"
-                            [autoWidth]="false">
+                            placeholder="Seleziona">
                         </p-dropdown>
                     </div>
                 </div>
             </p-fieldset>
 
             <p-fieldset legend="Punteggi Gironi">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div class="grid">
+                    <div class="col-3">
                         Partite:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.roundVO.maxMatchesPerMeeting" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Numero di partite in ciascun incontro"
@@ -990,11 +987,11 @@
                         </p-spinner>
                     </div>          
                 </div>
-                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled">
-                    <div class="ui-grid-col-3">
+                <div class="grid" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled">
+                    <div class="col-3">
                         Fine Incontro:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                             pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.roundVO.bestOfWinner}} partite">
                         <div class="ui-g radiobuttons">
                             <p-radioButton name="allRoundMatchesGroupname" 
@@ -1012,72 +1009,72 @@
                         </div>
                     </div>        
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="grid">
+                    <div class="col-3">
                         Goal:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.roundVO.pointsNeededToWin" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
                         </p-spinner>
                     </div>
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.roundVO.isAllMatches=='true'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.roundVO.isAllMatches=='true'" class="grid">
+                    <div class="col-3">
                         Vittoria:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.roundVO.matchWinnerScores" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di vittoria">
                         </p-spinner>
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="grid">
+                    <div class="col-3">
                         Pareggio:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.roundVO.matchBalanceScores" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di pareggio">
                         </p-spinner>
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
                 <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.roundVO.isAllMatches=='true'" 
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
+                    class="grid" >
+                    <div class="col-3">
                         Vittoria (Golden goal o Tie break):
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.roundVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                         </p-spinner>
                     </div>                
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>                
                 <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.roundVO.isAllMatches=='true'"
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
+                    class="grid" >
+                    <div class="col-3">
                         Sconfitta (Golden goal o Tie break):
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.roundVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
                             [min]="0"
                             pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
                         </p-spinner>
                     </div>                            
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>      
@@ -1121,9 +1118,9 @@
                         [disabled]="roundButtonDisabled()">
                     </button>
                 
-                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                        <div class="ui-grid-row">
-                            <div  class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                        <div class="grid">
+                            <div  class="col-2">
                                 <button pButton type="button" 
                                     class="ui-button-success"   
                                     icon="fa fa-arrow-left" 
@@ -1132,7 +1129,7 @@
                                 </button>
                             </div>
                             
-                            <div class="ui-grid-col-2">
+                            <div class="col-2">
                                 <button pButton type="button"
                                     class="ui-button-success" 
                                     icon="{{nextButtonIcon}}" 
@@ -1191,14 +1188,14 @@
             </p-message>
         </div>     
 
-        <div *ngIf="playoffTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" 
+        <div *ngIf="playoffTabEnabled" class="ui-grid responsive pad ui-fluid" 
             style="margin: 10px 0px">
             <p-fieldset legend="Struttura Play Off">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Turni:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                         pTooltip="Indicare se gli incontri di Play Off sono di solo andata o andata e ritorno">
                         <p-radioButton name="isOnewayGroupname" 
                             label="Solo andata" 
@@ -1214,11 +1211,11 @@
                         </p-radioButton>
                     </div>
                 </div>
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Generazione:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                             pTooltip="Indicare se i playoff devono essere generati in automatico o in manuale">
                         <p-radioButton name="isGenPlayoffGroupname" 
                             label="Automatico" 
@@ -1234,46 +1231,44 @@
                         </p-radioButton>
                     </div>
                 </div>    
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Numero Playoff:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                    <div class="col-3" tooltipPosition="right" 
                             pTooltip="Scegliere quanti gironi di playoff ci saranno a valle del/i girone/i normale/i">
                         <p-dropdown id="playoffId" 
                             [options]="playoffsCombobox" 
                             [(ngModel)]="selectedTourney.selectedPlayoffsCB"  
                             optionLabel="label"
                             (onChange)="onPlayoffNumChange($event.value)" 
-                            placeholder="Seleziona"
-                            [autoWidth]="false">
+                            placeholder="Seleziona">
                         </p-dropdown>
                     </div>
                 </div>                  
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Squadre:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right" 
+                    <div class="col-3" tooltipPosition="right" 
                             pTooltip="Scegliere il numero di squadre per ciascun girone di playoff">
                         <p-dropdown id="teamsPlayoffId" 
                             [options]="teams4PlayoffsCombobox" 
                             [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"  
                             optionLabel="label"
                             (onChange)="onPlayoffTeamsChange($event.value)" 
-                            placeholder="Seleziona"
-                            [autoWidth]="false">
+                            placeholder="Seleziona">
                         </p-dropdown>
                     </div>
                 </div>
             </p-fieldset>
 
             <p-fieldset legend="Punteggi Playoff">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div class="grid">
+                    <div class="col-3">
                         Partite:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoffVO.maxMatchesPerMeeting" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Numero di partite in ciascun incontro"
@@ -1281,11 +1276,11 @@
                         </p-spinner>
                     </div>          
                 </div>
-                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled">
-                    <div class="ui-grid-col-3">
+                <div class="grid" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled">
+                    <div class="col-3">
                         Fine Incontro:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                             pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoffVO.bestOfWinner}} partite">
                         <div class="ui-g radiobuttons">
                             <p-radioButton name="allPlayoffMatchesGroupname" 
@@ -1303,72 +1298,72 @@
                         </div>
                     </div>        
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="grid">
+                    <div class="col-3">
                         Goal:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoffVO.pointsNeededToWin" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
                         </p-spinner>
                     </div>
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoffVO.isAllMatches=='true'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoffVO.isAllMatches=='true'" class="grid">
+                    <div class="col-3">
                         Vittoria:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoffVO.matchWinnerScores" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di vittoria">
                         </p-spinner>
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="grid">
+                    <div class="col-3">
                         Pareggio:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoffVO.matchBalanceScores" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di pareggio">
                         </p-spinner>
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
                 <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true'" 
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
+                    class="grid" >
+                    <div class="col-3">
                         Vittoria (Golden goal o Tie break):
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                         </p-spinner>
                     </div>                
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>                
                 <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true'"
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
+                    class="grid" >
+                    <div class="col-3">
                         Sconfitta (Golden goal o Tie break):
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
                             [min]="0"
                             pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
                         </p-spinner>
                     </div>                            
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
@@ -1411,9 +1406,9 @@
                         [disabled]="playoffButtonDisabled()">
                     </button> 
 
-                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                        <div class="ui-grid-row">
-                            <div  class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                        <div class="grid">
+                            <div  class="col-2">
                                 <button   pButton type="button" 
                                     class="ui-button-success"   
                                     icon="fa fa-arrow-left" 
@@ -1422,7 +1417,7 @@
                                 </button>  
                             </div>
                             
-                            <div class="ui-grid-col-2">
+                            <div class="col-2">
                                 <button pButton type="button"
                                     class="ui-button-success" 
                                     icon="{{nextButtonIcon}}" 
@@ -1463,14 +1458,14 @@
             </p-message>
         </div>
 
-        <div *ngIf="selectedTourney.playoutVO!=undefined && playoutTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid"    
+        <div *ngIf="selectedTourney.playoutVO!=undefined && playoutTabEnabled" class="ui-grid responsive pad ui-fluid"    
             style="margin: 10px 0px">
             <p-fieldset legend="Struttura Play Out">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-2">
+                <div class="grid">
+                    <div class="col-2">
                         Turni:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                         pTooltip="Indicare se gli incontri di Play Out sono di solo andata o andata e ritorno">
                         <p-radioButton name="isOnewayPlayoutGroupname" 
                             label="Solo andata" 
@@ -1489,11 +1484,11 @@
             </p-fieldset>
 
             <p-fieldset legend="Punteggi Playout">
-                <div class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div class="grid">
+                    <div class="col-3">
                         Partite:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoutVO.maxMatchesPerMeeting" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Numero di partite in ciascun incontro"
@@ -1501,11 +1496,11 @@
                         </p-spinner>
                     </div>          
                 </div>
-                <div class="ui-grid-row" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.allMatchesEnabled">
-                    <div class="ui-grid-col-3">
+                <div class="grid" *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.allMatchesEnabled">
+                    <div class="col-3">
                         Fine Incontro:
                     </div>
-                    <div class="ui-grid-col-3" tooltipPosition="right"
+                    <div class="col-3" tooltipPosition="right"
                             pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
                         <div class="ui-g radiobuttons">
                             <p-radioButton name="allPlayoutMatchesGroupname" 
@@ -1523,72 +1518,72 @@
                         </div>
                     </div>        
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='score'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='score'" class="grid">
+                    <div class="col-3">
                         Goal:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsNeededToWin" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
                         </p-spinner>
                     </div>
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoutVO.isAllMatches=='true'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='time' || selectedTourney.playoutVO.isAllMatches=='true'" class="grid">
+                    <div class="col-3">
                         Vittoria:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoutVO.matchWinnerScores" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di vittoria">
                         </p-spinner>
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
-                <div *ngIf="selectedTourney.tourneyType=='time'" class="ui-grid-row">
-                    <div class="ui-grid-col-3">
+                <div *ngIf="selectedTourney.tourneyType=='time'" class="grid">
+                    <div class="col-3">
                         Pareggio:
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoutVO.matchBalanceScores" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di pareggio">
                         </p-spinner>
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
                 <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true'" 
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
+                    class="grid" >
+                    <div class="col-3">
                         Vittoria (Golden goal o Tie break):
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
                             [min]="1"
                             pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
                         </p-spinner>
                     </div>                
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>                
                 <div *ngIf="selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true'"
-                    class="ui-grid-row" >
-                    <div class="ui-grid-col-3">
+                    class="grid" >
+                    <div class="col-3">
                         Sconfitta (Golden goal o Tie break):
                     </div>
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         <p-spinner [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
                             [min]="0"
                             pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
                         </p-spinner>
                     </div>                            
-                    <div class="ui-grid-col-3">
+                    <div class="col-3">
                         punti
                     </div>
                 </div>
@@ -1631,9 +1626,9 @@
                         [disabled]="playoutButtonDisabled()">
                     </button> 
 
-                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                        <div class="ui-grid-row">
-                            <div  class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                        <div class="grid">
+                            <div  class="col-2">
                                 <button   pButton type="button" 
                                     class="ui-button-success"   
                                     icon="fa fa-arrow-left" 
@@ -1642,7 +1637,7 @@
                                 </button>  
                             </div>
                             
-                            <div class="ui-grid-col-2">
+                            <div class="col-2">
                                 <button pButton type="button"
                                     class="ui-button-success" 
                                     icon="{{nextButtonIcon}}" 
@@ -1788,12 +1783,12 @@
             </p-message>
         </div>     
 
-        <div *ngIf="eliminatoryTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-            <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
-                <div class="ui-grid-col-2">
+        <div *ngIf="eliminatoryTabEnabled" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+            <div *ngIf="!levelService.isStandalone" class="grid">
+                <div class="col-2">
                     Generazione:
                 </div>
-                <div class="ui-grid-col-3" tooltipPosition="right"
+                <div class="col-3" tooltipPosition="right"
                         pTooltip="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
                     <p-radioButton name="isGenEliGroupname" 
                         label="Automatico" 
@@ -1810,19 +1805,18 @@
                 </div>
             </div>   
             
-            <div *ngIf="!levelService.isStandalone" class="ui-grid-row">
-                <div class="ui-grid-col-2">
+            <div *ngIf="!levelService.isStandalone" class="grid">
+                <div class="col-2">
                     Squadre:
                 </div>
-                <div class="ui-grid-col-2" tooltipPosition="right" 
+                <div class="col-2" tooltipPosition="right" 
                         pTooltip="Scegliere il numero di squadre con cui incominciare le eliminazioni dirette, anche tutte">
                     <p-dropdown id="eliminatoryId" 
                         [options]="eliminatoryTeamsCombobox" 
                         [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCB"  
                         optionLabel="label"
                         (onChange)="onEliminatoryTeamNumChange($event.value)" 
-                        placeholder="Seleziona"
-                        [autoWidth]="false">
+                        placeholder="Seleziona">
                     </p-dropdown>
                 </div>
             </div>
@@ -1860,9 +1854,9 @@
                         [disabled]="eliminatoryButtonDisabled()">
                     </button>     
 
-                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                        <div class="ui-grid-row">
-                            <div  class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                        <div class="grid">
+                            <div  class="col-2">
                                 <button pButton type="button" 
                                     class="ui-button-success"   
                                     icon="fa fa-arrow-left" 
@@ -1871,7 +1865,7 @@
                                 </button>  
                             </div>
                             
-                            <div class="ui-grid-col-2">
+                            <div class="col-2">
                                 <button pButton type="button"
                                     class="ui-button-success" 
                                     icon="{{nextButtonIcon}}" 
@@ -1905,7 +1899,7 @@
             </p-message>
         </div>     
 
-        <div *ngIf="eliminatoryBTabEnabled" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">             
+        <div *ngIf="eliminatoryBTabEnabled" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">             
             <p-table [columns]="eliminatoryLevelCols"
                 [value]="eliminatoryBLevelRows" 
                 [responsive]="true"
@@ -1939,9 +1933,9 @@
                         [disabled]="eliminatoryButtonDisabled()">
                     </button>     
 
-                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                        <div class="ui-grid-row">
-                            <div  class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                        <div class="grid">
+                            <div  class="col-2">
                                 <button pButton type="button" 
                                     class="ui-button-success"   
                                     icon="fa fa-arrow-left" 
@@ -1950,7 +1944,7 @@
                                 </button>  
                             </div>
                             
-                            <div class="ui-grid-col-2">
+                            <div class="col-2">
                                 <button pButton type="button"
                                     class="ui-button-success" 
                                     icon="{{nextButtonIcon}}" 
@@ -2005,7 +1999,7 @@
         </p-accordionTab>
         </p-accordion>
 
-        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
             <div style="text-align:left">
                 <button pButton icon="fa fa-plus" 
                     type="button"
@@ -2054,9 +2048,9 @@
                         (click)="nextTab()" >
                     </button>     
 
-                    <div *ngIf="isInWizardMode()" class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-                        <div class="ui-grid-row">
-                            <div  class="ui-grid-col-2">
+                    <div *ngIf="isInWizardMode()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+                        <div class="grid">
+                            <div  class="col-2">
                                 <button pButton type="button" 
                                     class="ui-button-success"   
                                     icon="fa fa-arrow-left" 
@@ -2065,7 +2059,7 @@
                                 </button>  
                             </div>
                             
-                            <div class="ui-grid-col-2">
+                            <div class="col-2">
                                 <button pButton type="button"
                                     class="ui-button-success" 
                                     icon="{{nextButtonIcon}}" 

@@ -56,7 +56,6 @@ build.metadata
 **/local.properties
 **/dist/
 **/TourneyNG/e2e/
-**/TourneyNG/src/assets/components/
 **/TourneyNG/src/assets/showcase/data/
 **/TourneyNG/src/assets/showcase/favicon/
 **/TourneyNG/src/assets/showcase/images/

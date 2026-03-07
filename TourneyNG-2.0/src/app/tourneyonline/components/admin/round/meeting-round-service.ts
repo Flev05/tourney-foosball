@@ -541,7 +541,7 @@ export class MeetingRoundService extends MeetingService {
     public printPdfMeeting( selectedTourney: Tourney) {
         this.isFirstRound = true;
         const both : boolean = selectedTourney.isOnewayRound != "true";
-        const roundName : string = selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName;
+        const roundName : string = selectedTourney.roundTabName==null?'Girone':selectedTourney.roundTabName;
         this.doPrintPdfMeeting(selectedTourney, selectedTourney.roundVO.rounds, both, roundName);
     }
 

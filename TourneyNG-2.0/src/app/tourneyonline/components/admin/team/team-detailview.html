@@ -1,9 +1,3 @@
-<div class="content-section introduction">
-    <div>
-        <span class="feature-title">Anagrafica Squadra [{{autoCompleteTeamName}}]</span>
-    </div>
-</div>
-
 <div *ngIf="!teamService.readOnly" class="content-section documentation">
 <p-accordion>
     <p-accordionTab header="Istruzioni">                        
@@ -13,8 +7,6 @@
     </p-accordionTab>
 </p-accordion>
 </div>
-
-<h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
@@ -50,16 +42,33 @@
         <div class="col-1">
             Squadra*:
         </div>
-        <div class="col-5" pTooltip="Inserire il nome della squadra." >
+        <div class="col-5">
             <p-autoComplete id="team-id" 
+                pTooltip="Permette di cercare una squadra, selezionarla o inserire una nuova." 
                 [(ngModel)]="autoCompleteTeamName" 
                 [suggestions]="filteredTeamsSingle" 
-                (completeMethod)="searchTeam($event)" 
-                placeholder="Nome Squadra" 
-                [minLength]="1">
-            </p-autoComplete>
-        </div>            
-    </div>      
+                (completeMethod)="loadTeamsCompleteMethod($event)" 
+                (onSelect)="onTeamSelect($event)"
+                field="teamName"
+                [forceSelection]="false"
+                [dropdown]="true"
+                placeholder="Nome Squadra">            
+            </p-autoComplete>     
+            
+            <button pButton type="button" 
+                pTooltip="Permette di modficare il nome di una squadra senza rimovere e ricreare." 
+                icon="fa fa-pencil" 
+                class="ui-button-warn" 
+                *ngIf="autoCompleteTeamName?.id > 0"
+                (click)="prepareRename()">
+            </button>            
+        </div>   
+        <div *ngIf="isRenaming" style="margin-top: 10px;">
+            <input type="text" pInputText [(ngModel)]="newName" placeholder="Nuovo nome..." />
+            <button pButton label="Salva" (click)="saveRename()"></button>
+            <button pButton label="Annulla" class="ui-button-secondary" (click)="isRenaming = false"></button>
+        </div>                 
+    </div>   
 
     <div class="grid">
         <div class="col-1" pTooltip="Inserire la via di residenza della squadra.">
@@ -118,8 +127,7 @@
     </div>
 </div>
 
-<app-player-table [playerLv]="playerLv" [addPlayerEnabled]="addPlayerEnabled"></app-player-table>
-
+<app-player-table [addPlayerEnabled]="addPlayerEnabled" [tourneyTeams]="tourneyTeams" [selectedTeam]="selectedTeam"></app-player-table>
 <div *ngIf="!teamService.readOnly" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <div class="grid">
         <div class="col-2">

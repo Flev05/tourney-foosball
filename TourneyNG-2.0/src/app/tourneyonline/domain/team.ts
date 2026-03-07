@@ -6,6 +6,7 @@ export class Team {
     clientId   : number | null = null;
     teamName   : string = "";
     isDummy    : boolean = false;
+    isNew      : boolean = false;
     address    : string = "";
     ruleName   : string = "";
     asd        : string = "";

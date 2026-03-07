@@ -13,6 +13,7 @@ import { LoginService } from './login-service';
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
 import { Nullable } from 'primeng/ts-helpers';
+import { PlayerService } from './player-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -42,6 +43,7 @@ export class TeamService {
     newTeam : boolean = false;
     readOnly: boolean = false;
     selectedTabIndex: number = 0; 
+    storedTeamFilter: string = '';    
 
     static cols: TableCols[] = [
         { field: 'teamName',    header: 'Nome' },
@@ -56,7 +58,11 @@ export class TeamService {
     isRoundAutoGen: string = "";
     tourneyTeams: boolean = false;
     
-    constructor(private http: HttpClient,  private clientService: ClientService, private loginService: LoginService) { 
+    
+    constructor(private http: HttpClient
+        , private clientService: ClientService
+        , private playerService: PlayerService
+        , private loginService: LoginService) {     
         console.log("Constructor of TeamService");
     }
     
@@ -202,11 +208,26 @@ export class TeamService {
         return found == undefined ? false : true;
     }
 
-    saveTeam( selectedTeam : Team
-        , newTeamName: string
-        , message : string
-        , complete?: () => void) {     
+    updateExistingTeam(selectedTeam : Team, complete: () => void) {
+        this.selectedTeam = selectedTeam;
+        this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
+        this.selectedTeam.players = this.playerService.selectedPlayers;
+        let tvo : TeamVO = {
+            id: this.selectedTeam.id
+            , teamName: this.selectedTeam.teamName
+            , country: this.selectedTeam.country
+            , clientId: this.selectedTeam.clientId
+            , json: JSON.stringify(this.selectedTeam)
+        };
+        const subscriber = this.addUpdateTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
+        subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
+    }
 
+    saveTeam( selectedTeam : Team
+            , newTeamName: string
+            , message : string
+            , complete: () => void) 
+    {        
         if( this.newTeam ) {
             let foundTeam = this.teamPool.find( t => t.teamName.toUpperCase() == newTeamName.toUpperCase() );
             if( foundTeam != undefined) {
@@ -217,20 +238,8 @@ export class TeamService {
             selectedTeam.id = null;
         }
 
-        this.selectedTeam = selectedTeam;
-        this.selectedTeam.teamName = newTeamName;
-
-        this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
-
-        let tvo : TeamVO = {
-            id: this.selectedTeam.id
-          , teamName: this.selectedTeam.teamName
-          , country: this.selectedTeam.country
-          , clientId: this.selectedTeam.clientId
-          , json: JSON.stringify(this.selectedTeam)
-        };
-        const subscriber = this.addUpdateTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
-        subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
+        selectedTeam.teamName = newTeamName;
+        this.updateExistingTeam(selectedTeam, complete);
     } 
 
     public addMissingTeam(st: Team ): void {

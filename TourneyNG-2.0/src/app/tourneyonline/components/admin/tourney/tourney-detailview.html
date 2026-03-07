@@ -811,8 +811,8 @@
 
             <app-player-chooser *ngIf="selectedTourney.chaosEnabled"></app-player-chooser>
 
-            <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
-
+            <app-team-table [addTeamEnabled]="true" [tourneyTeams]="true"></app-team-table>
+            
             <button *ngIf="!isInWizardMode()" pButton type="button"
                 class="ui-button-success" 
                 icon="{{nextButtonIcon}}" 

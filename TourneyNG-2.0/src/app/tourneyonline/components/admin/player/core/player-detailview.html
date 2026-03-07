@@ -114,14 +114,30 @@
             <label for="country-id">Comune:</label>
         </div>
         <div class="col-5">
-            <p-autoComplete id="country-id" 
-                [(ngModel)]="selectedPlayer.country"
-                [suggestions]="filteredCountriesSingle" 
-                (completeMethod)="searchCountry($event)" 
-                field="city"
-                placeholder="Comune" 
-                [minLength]="1">
-            </p-autoComplete>
+            <p-autoComplete id="palyer-id" 
+                pTooltip="Permette di cercare un giocatore, selezionarlo o inserire uno nuovo." 
+                [(ngModel)]="autoCompletePlayerName" 
+                [suggestions]="filteredPlayersSingle" 
+                (completeMethod)="loadPlayersCompleteMethod($event)" 
+                (onSelect)="onPlayerSelect($event)"
+                field="playerName"
+                [forceSelection]="false"
+                [dropdown]="true"
+                placeholder="Nome Giocatore">            
+            </p-autoComplete>     
+            
+            <button pButton type="button" 
+                pTooltip="Permette di modficare il nome di un giocatore senza rimovere e ricreare." 
+                icon="fa fa-pencil" 
+                class="ui-button-warn" 
+                *ngIf="autoCompletePlayerName?.id > 0"
+                (click)="prepareRename()">
+            </button>   
+        </div>
+        <div *ngIf="isRenaming" style="margin-top: 10px;">
+            <input type="text" pInputText [(ngModel)]="newName" placeholder="Nuovo nome..." />
+            <button pButton label="Salva" (click)="saveRename()"></button>
+            <button pButton label="Annulla" class="ui-button-secondary" (click)="isRenaming = false"></button>
         </div>
     </div>           
 
@@ -158,7 +174,7 @@
     <div class="grid">
         <div class="col-2">
             <button class="ui-button-success" 
-                pButton (click)="onSubmit()" 
+                pButton (click)="savePlayer()"                 
                 icon="pi pi-save" 
                 label="Salva" 
                 [disabled]="enableSaveButton()">

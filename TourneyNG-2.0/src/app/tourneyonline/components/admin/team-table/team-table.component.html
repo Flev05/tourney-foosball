@@ -9,27 +9,27 @@
 
     <ng-template *ngIf="addTeamEnabled" pTemplate="caption">
         <div style="text-align:left">
-            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
+            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Nuova Squadra" ></button>
         </div>
     </ng-template>
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : teams.length }}</th>
+            <th style="width: 15mm;">N°</th>
             <th>Nome</th>
             <th>Indirizzo</th>
             <th>ASD</th>
             <th *ngIf="addTeamEnabled" style="width: 15mm;"></th>
         </tr>
         <tr>
-            <th style="width: 15mm;">N°</th>
+            <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : teams.length }}</th>
             <th>
                 <input 
                     style="width: 100%;" 
                     type="text" 
-                    pInputText 
-                    placeholder="Cerca per nome" 
-                    (input)="table.filter($any($event.target).value.trim(), 'teamName', 'contains')">
+                    pInputText placeholder="Cerca per nome" 
+                    [value]="teamService.storedTeamFilter"
+                    (input)="onFilterChange($event.target.value, table)">
             </th>
             <th></th>
             <th>
@@ -51,14 +51,17 @@
             <td style="text-align: center;">{{rowData['address']}} - {{rowData.country?.zipCode}} - {{ rowData.country?.city }} ({{ rowData.country?.provinceCode }})</td>
             <td style="text-align: center;">{{rowData['asd']}}</td>            
             <td *ngIf="addTeamEnabled" style="width: 15mm; text-align: center;">
-                <button class="ui-button-danger" pButton icon="pi pi-remove" (click)="doDelete(rowData)"></button>
+                <button class="p-button-danger p-button-sm" 
+                    pButton icon="pi pi-trash" 
+                    (click)="doDelete(rowData)">
+                </button>
             </td>                
         </tr>
     </ng-template>
 
-    <ng-template *ngIf="addTeamEnabled" pTemplate="summary">
-        <div style="text-align:left">
-            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Aggiungi Squadra" ></button>
+    <ng-template pTemplate="summary">
+        <div style="text-align:center" >
+            {{ table.filteredValue ? table.filteredValue.length : teams.length }}
         </div>
     </ng-template>
 </p-table>

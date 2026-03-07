@@ -1,19 +1,19 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../service/tourney-service';
-import { Meeting } from '../../domain/meeting';
-import { TableCols } from '../../domain/table-cols';
-import { MeetingDb } from '../../domain/meeting-db';
-import { Playoff } from '../../domain/playoff';
-import { TeamService } from '../../service/team-service';
-import { Team } from '../../domain/team';
-import { MeetingService } from '../../service/meeting-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { Team } from 'app/tourneyonline/domain/team';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { AbstractRuleListView } from './abstract-rule-listview';
 import { MeetingPlayoffService } from '../admin/playoff/meeting-playoff-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
-import { Direction } from '../../domain/enumerations';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 import { Injectable } from '@angular/core';
  
 @Injectable()
@@ -50,6 +50,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     onewayMeetings: Meeting[] = [];
     roundtripMeetings: Meeting[] = [];
     currentDay: number = 0;
+    playoffPlayoutTabName : string = "";
 
     constructor( 
          protected override redirect: string
@@ -73,8 +74,10 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
         if(this.tourneyService.selectedPlayoff != null) {
             this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+            this.playoffPlayoutTabName = this.selectedTourney.playoffTabName;
         } else if(this.tourneyService.selectedPlayout != null){
             this.selectedPlayoff = this.tourneyService.selectedPlayout;
+            this.playoffPlayoutTabName = this.selectedTourney.playoutTabName;            
         }
      
         this.classificationCols = this.tourneyService.classificationCols;
@@ -106,7 +109,12 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         console.log("[Days             " + this.roundDaysNo + "]");
         console.log("[PageSize         " + this.pageSize + "]");
 
-        if (this.selectedTourney.isOnewayPlayoff == "true") {
+        this.isRoundTrip = false;
+        let poType = this.selectedTourney.isOnewayPlayoff;
+        if(this.tourneyService.selectedPlayoff == null) {
+            poType = this.selectedTourney.isOnewayPlayout;
+        }
+        if (poType == "true") {
             this.allDaysNo = this.roundDaysNo;
         } else {
             this.isRoundTrip = true;

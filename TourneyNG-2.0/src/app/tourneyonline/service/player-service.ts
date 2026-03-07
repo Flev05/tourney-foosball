@@ -32,6 +32,8 @@ export class PlayerService {
     selectedPlayer : Player = new Player();
     newPlayer : boolean = false;
     readOnly : boolean = false;
+    storedPlayerFilter: string = '';
+    selectedPlayers: Player[] = [];    
     
     static cols: TableCols[]  = [
         { field: 'playerName',  header: 'Nome' },

@@ -9,5 +9,6 @@ export class Player
     address        : string = "";
     phoneNumber    : string = "";
     email          : string = "";
+    isNew          : boolean = false;
     country        : Country = new Country();
 }

@@ -19,9 +19,9 @@ export class Tourney {
     
     tourneyName    : string = "";
     calendar       : string = "";
-    roundTabName?   : string;
-    playoffTabName? : string;
-    playoutTabName? : string;
+    roundTabName   : string = "";
+    playoffTabName  : string = "";
+    playoutTabName  : string = "";
     eliminatoryTabName  : string = "";
     eliminatoryBTabName : string = "";
     chaosEnabled       : boolean = false;

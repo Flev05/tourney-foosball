@@ -15,7 +15,6 @@ export class ClassificationDetailView extends AbstractDetailView {
     selectedClassificationRow:  Classification = new Classification();
     selectedClassificationName: string = "";
 
-    playerLv: boolean = true;
     addPlayerEnabled : boolean = false;
     teamName: string = "";
 

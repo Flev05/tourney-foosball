@@ -11,6 +11,7 @@ import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 import { MeetingRoundService } from '../round/meeting-round-service';
 import { ActivatedRoute } from '@angular/router';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { Player } from 'app/tourneyonline/domain/player';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -29,12 +30,15 @@ export class TeamDetailView extends AbstractDetailView {
     teams4RoundCombobox: Combobox[] = []; 
     isRoundAutoGen: string = "";  
 
-    autoCompleteTeamName: string = ""; 
-    filteredTeamsSingle: string[] = [];
     teams: Team[] = [];
-    playerLv: boolean = true;
+    allTeams: Team[] = [];
     addPlayerEnabled : boolean = false;
     tourneyTeams: boolean | undefined = false;
+
+    autoCompleteTeamName: Team = new Team(); 
+    filteredTeamsSingle: Team[] = [];
+    isRenaming = false;
+    newName = '';
 
     constructor(
         protected override location: Location,
@@ -62,11 +66,11 @@ export class TeamDetailView extends AbstractDetailView {
 
         // this.selectedRound = null;
         if(this.teamService.newTeam) {
-            this.prepareNewTeam();
+            this.prepareNewTeam("");
         }
         this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
 
-        this.autoCompleteTeamName = this.selectedTeam.teamName;
+        this.autoCompleteTeamName = this.selectedTeam;
         this.previousTeamName = this.selectedTeam.teamName;
         this.teamService.teamAlreadyExists = false;
 
@@ -97,32 +101,64 @@ export class TeamDetailView extends AbstractDetailView {
         }
     }
     
-    private prepareNewTeam() {
+    private prepareNewTeam(teamName: string) {
         this.selectedTeam = new Team();
+        this.selectedTeam.id = 0;
+        this.selectedTeam.teamName = teamName;
         this.selectedTeam.players = [];
+        this.teamService.selectedTeam.players = [];
     }
 
     private onLoadTeamsComplete(): any {
         this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+        this.allTeams = [...this.teams];        
         console.log("Loaded [" + this.teams.length + "] pool teams");
         this.addPlayerEnabled = !this.teamService.readOnly;
     }
 
+    prepareRename() {
+        this.newName = this.autoCompleteTeamName.teamName;
+        this.isRenaming = true;
+    }
+    
+    saveRename() {
+        if (!this.newName || this.newName.trim() === '') {
+            return;
+        } 
+        // Create a copy of the object with the new name
+        this.selectedTeam.teamName = this.newName;
+        this.doSaveTeam(this.newName);
+    }
+    
     saveTeam() {
+        if (typeof this.autoCompleteTeamName === 'string') {
+            this.selectedTeam.teamName = this.autoCompleteTeamName;
+        } else {
+            // This is an EXISTING team object
+            const existingId = this.autoCompleteTeamName.id;
+            let index = this.allTeams.findIndex( t => t.id === existingId);
+            if( index !== -1 ) {
+                this.selectedTeam.teamName = this.allTeams[index].teamName;
+            }
+        }
+        this.doSaveTeam(this.selectedTeam.teamName)
+    }
+
+    private doSaveTeam(newTeamName : string) {
         if( !this.tourneyTeams ) {
             this.teamService.saveTeam(this.selectedTeam
-                , this.autoCompleteTeamName
+                , newTeamName
                 , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
-                , () => this.goBack()); 
+                , () => super.goBack()); 
             return;
         }
         // 1. Verify if the teamName alreay exists in team pool
-        const poolIndex = this.teamService.teamPool.findIndex(t => t.teamName === this.autoCompleteTeamName);
+        const poolIndex = this.teamService.teamPool.findIndex(t => t.teamName === newTeamName);        
         if (poolIndex !== -1) { 
             // The team already exists in the team pool
             if(this.teamService.newTeam) {
                 // Simply take the team from the pool team and add it to the teams tourney
-                const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === this.autoCompleteTeamName);
+                const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === newTeamName);                
                 if (ttIndex !== -1) {
                     this.tourneyService.selectedTourney.teams[ttIndex] = this.teamService.teamPool[poolIndex];
                 } else {
@@ -130,10 +166,11 @@ export class TeamDetailView extends AbstractDetailView {
                 }
                 this.teams = this.tourneyService.selectedTourney.teams;
                 this.tourneyService.selectedTourney.teamsChanged = true;
+                this.selectedTeam.id = null;                
                 // this.teamService.onTeamOperationChange(ETeamOperation.INSERT);
             } else {
                 // Simply take the team from the pool team and update the one in the teams tourney
-                if( this.previousTeamName != this.autoCompleteTeamName ) {
+                if( this.previousTeamName != newTeamName ) {                    
                     const ttIndex = this.tourneyService.selectedTourney.teams.findIndex(t => t.teamName === this.previousTeamName);
                     if (ttIndex !== -1) {
                         this.tourneyService.selectedTourney.teams[ttIndex] = this.teamService.teamPool[poolIndex];
@@ -143,23 +180,17 @@ export class TeamDetailView extends AbstractDetailView {
                     }
                 }                
             }
-            super.goBack();
-            return;
         } 
 
         // Add the new team also to the team pool...
         this.selectedTeam.id = null;
         this.teamService.saveTeam(this.selectedTeam
-            , this.autoCompleteTeamName
+            , newTeamName
             , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
-            , () => this.goBack());
+            , () => this.onTeamSaveComplete());
     }
 
-    override goBack(): void {
-        if( !this.tourneyTeams ) {
-            super.goBack();
-            return;
-        }
+    private onTeamSaveComplete(): void {
         if(this.teamService.newTeam) {
             if( this.selectedTeam.teamName.trim() != "") {
                 let foundTeam = this.tourneyService.selectedTourney.teams.find( t => t.teamName.toUpperCase() == this.selectedTeam.teamName.toUpperCase() );
@@ -170,12 +201,18 @@ export class TeamDetailView extends AbstractDetailView {
                 }
             }
         } else {
-            if( this.selectedTeam.teamName != this.autoCompleteTeamName ) {
+            let newTeamName : string = "";
+            if (typeof this.autoCompleteTeamName === 'string') {
+                newTeamName = this.autoCompleteTeamName;
+            } else {
+                newTeamName = this.autoCompleteTeamName.teamName;
+            }
+            if( this.selectedTeam.teamName != newTeamName ) {
                 // this.teamService.onTeamOperationChange(ETeamOperation.UPDATE);
                 this.tourneyService.selectedTourney.teamsChanged = true;
             }
         }
-        this.selectedTeam.teamName = this.autoCompleteTeamName;
+        this.selectedTeam = this.autoCompleteTeamName;
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => super.goBack());
@@ -196,7 +233,10 @@ export class TeamDetailView extends AbstractDetailView {
     }
     
     enableSaveButton() : string {
-        let n : String = this.autoCompleteTeamName;
+        if(this.teamService.newTeam) {
+            return "";
+        }
+        let n : String = this.autoCompleteTeamName.teamName;
         if( n == undefined || n.trim() == "") {
             // this.prepareNewTeam();
             return "disabled";
@@ -210,16 +250,51 @@ export class TeamDetailView extends AbstractDetailView {
     onComplete(message:any): any {
         super.goBack();
     }
+    
+    loadTeamsCompleteMethod(event: any) {
+        const query = event.query.toLowerCase();
+        this.filteredTeamsSingle = this.getAvailableTeams().filter(t =>
+            t.teamName.toLowerCase().includes(query)
+        );
 
-    searchTeam(event : any) {
-        let query = event.query;
-        this.filteredTeamsSingle = this.teamService.filterTeam(query, this.teams);
-        if(this.filteredTeamsSingle.length > 0) {
-            let partialTeamName = this.filteredTeamsSingle[0];
-            let index = this.teams.findIndex( t => t.teamName === partialTeamName);
-            if( index !== -1 ) {
-                this.selectedTeam = this.teams[index];
+        const exactMatch = this.filteredTeamsSingle.some(t => t.teamName.toLowerCase() === query.toLowerCase());
+        if (!exactMatch && query.length > 2) {
+            const t : Team = new Team();
+            t.id = -1;
+            t.teamName = query;
+            t.isNew = true;
+            this.filteredTeamsSingle.push(t);
+        }
+    }
+
+    onTeamSelect(event: Team) {
+        // 'event' is the object selected from the list
+        const teamId = event.id;
+        if (event.isNew || teamId === -1) {
+            this.prepareNewTeam(event.teamName);
+        } else {
+            this.filteredTeamsSingle = this.allTeams.filter(p => p.id == teamId);
+            if(this.filteredTeamsSingle && this.filteredTeamsSingle.length > 0) {
+                let partialTeam = this.filteredTeamsSingle[0];
+                let index = this.teams.findIndex( t => t.teamName === partialTeam.teamName);
+                if( index !== -1 ) {
+                    this.selectedTeam = this.teams[index];
+                }
             }
         }
+    }
+ 
+    private getAvailableTeams(): Team[] {
+        const used = this.getUsedIds();
+        return this.allTeams.filter(p => !used.has(p.id));
+    }
+
+    private getUsedIds(): Set<number | null> {
+         if( !this.tourneyTeams ) {
+            return new Set([]);
+        }
+        return new Set([
+            ...this.tourneyService.selectedTourney.teams.map(p => p.id)
+        ]);
     }
 }

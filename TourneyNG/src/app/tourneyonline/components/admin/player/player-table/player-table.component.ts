@@ -133,9 +133,6 @@ export class PlayerTableComponent extends AbstractListView {
         console.log('Player removed:', event.data.playerName);
         // You can use this to update a counter or validation message
     }
-    goBack(): void {
-        this.location.back();
-    }
 
     doDelete(player: Player) {
         console.log(player);

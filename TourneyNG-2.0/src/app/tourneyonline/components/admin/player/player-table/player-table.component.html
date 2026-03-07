@@ -1,35 +1,43 @@
-<p-table #table [columns]="cols" 
-    [value]="rows" 
-    [responsive]="true" 
-    selectionMode="single"
-    [(selection)]="selectedRow" 
-    (onRowSelect)="onRowSelect($event)" 
-    [scrollable]="true" 
-    scrollHeight="250px">
+
+<p-table #table 
+        dataKey="id"
+        [columns]="cols" 
+        [value]="players" 
+        [responsive]="true" 
+        [(selection)]="playerService.selectedPlayers" 
+        [scrollable]="true" 
+        scrollHeight="250px">
 
     <ng-template *ngIf="addPlayerEnabled" pTemplate="caption">
-        <div style="text-align:left">
-            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+        <div style="text-align:center" >
+            <button pButton icon="fa fa-plus" 
+                type="button" 
+                (click)="create()" 
+                label="Nuovo Giocatore" 
+                pTooltip="Crea un nuovo giocatore non esistente in lista.">
+            </button>
         </div>
     </ng-template>
 
     <ng-template pTemplate="header" let-columns>
         <tr>
+            <th style="width: 3em">
+            </th>                    
             <th style="width: 15mm;">N°</th>
             <th>Nome</th>
             <th>Tessera</th>
             <th>Telefono</th>
             <th>Email</th>
-            <th *ngIf="addPlayerEnabled" style="width: 15mm;"></th>
-        </tr>
+            <th *ngIf="addPlayerEnabled" style="width: 15mm;">E</th>
+            <th *ngIf="addPlayerEnabled" style="width: 15mm;">D</th>        </tr>
         <tr>
-            <th style="width: 15mm;"></th>
-            <th>
+            <th></th>
+            <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : players.length }}</th>            <th>
                 <input style="width: 100%;" 
-                    type="text" pInputText placeholder="Cerca per nome" 
-                     #playerNameInput
-                    (input)="table.filter(playerNameInput.value, 'playerName', 'contains')">
-            </th>
+                    type="text" 
+                    pInputText placeholder="Cerca per nome" 
+                    [value]="playerService.storedPlayerFilter"
+                    (input)="onFilterChange($event.target.value, table)">            </th>
             <th></th>
             <th></th>
             <th></th>
@@ -38,21 +46,32 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="rowData">
+        <tr [pSelectableRow]="rowData"  [ngClass]="{'already-selected-row': isInitialMember(rowData)}">
+            <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>            
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td *ngFor="let col of columns">
                 <span class="ui-column-title">{{col.header}}</span>
                 {{rowData[col.field]}}
             </td>
-            <td *ngIf="addPlayerEnabled" style="width: 15mm; text-align: center;">
-                <button class="ui-button-danger" pButton icon="pi pi-close" (click)="doDelete(rowData)"></button>
+            <td *ngIf="addPlayerEnabled" style="width: 15mm;" pTooltip="Apre la vista di dettaglio del giocatore sulla riga per la modifica dei campi.">
+                <button class="p-button-success p-button-sm" 
+                    pButton icon="pi pi-pencil"
+                    (click)="doUpdate(rowData)">
+                </button>
             </td>        
+            <td *ngIf="addPlayerEnabled" style="width: 15mm;" pTooltip="Rimuove il giocatore sulla riga.">
+                <button class="p-button-danger p-button-sm" 
+                    pButton icon="pi pi-trash" 
+                    (click)="doDelete(rowData)">
+                </button>
         </tr>
     </ng-template>  
 
-    <ng-template *ngIf="addPlayerEnabled" pTemplate="summary">
-        <div style="text-align:left">
-            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Aggiungi Giocatore" ></button>
+    <ng-template pTemplate="summary">
+        <div style="text-align:center" >
+            {{ table.filteredValue ? table.filteredValue.length : players.length }}
         </div>
     </ng-template>
 </p-table>

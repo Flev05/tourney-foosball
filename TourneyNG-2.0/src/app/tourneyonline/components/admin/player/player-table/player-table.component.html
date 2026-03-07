@@ -10,7 +10,7 @@
 
     <ng-template *ngIf="addPlayerEnabled" pTemplate="caption">
         <div style="text-align:center" >
-            <button pButton icon="fa fa-plus" 
+            <button pButton icon="pi pi-plus" 
                 type="button" 
                 (click)="create()" 
                 label="Nuovo Giocatore" 
@@ -37,7 +37,8 @@
                     type="text" 
                     pInputText placeholder="Cerca per nome" 
                     [value]="playerService.storedPlayerFilter"
-                    (input)="onFilterChange($event.target.value, table)">            </th>
+                    (input)="onFilterChange($any($event.target).value, table)">            
+            </th>
             <th></th>
             <th></th>
             <th></th>

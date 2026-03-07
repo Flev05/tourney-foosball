@@ -105,6 +105,14 @@ export class PlayerTableComponent extends AbstractListView {
         return this.playerService.selectedPlayers.some(p => p.id === player.id);
     }
 
+    create() {
+        this.selectedPlayer = new Player();
+        this.playerService.selectedPlayer = this.selectedPlayer;
+        this.playerService.newPlayer = true;
+        this.playerService.readOnly = false;
+        this.gotoDetailView();
+    }
+
     public gotoListView() {
         this.router.navigate([this.redirect], { 
             queryParams: { tourneyTeams: this.tourneyTeams }

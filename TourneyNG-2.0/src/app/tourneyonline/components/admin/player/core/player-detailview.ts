@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { AbstractDetailView } from '../../../../components/common/abstract-detailview';
-import { Player } from '../../../../domain/player';
-import { TourneyService } from '../../../../service/tourney-service';
-import { CountryService } from '../../../../service/country-service';
-import { PlayerService } from '../../../../service/player-service';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { Player } from 'app/tourneyonline/domain/player';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Observable, of } from 'rxjs';
-import { ClientService } from '../../../../service/client-service';
-import { PlayerVO } from '../../../../domain/player-vo';
-import { TourneyVO } from '../../../../domain/tourney.vo';
-import { LoginService } from '../../../../service/login-service';
-import { Team } from '../../../../domain/team';
-import { TeamService } from '../../../../service/team-service';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
+import { LoginService } from 'app/tourneyonline/service/login-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -218,7 +216,7 @@ export class PlayerDetailView extends AbstractDetailView {
         }
     }
 
-    onPlayerSelect(event: Player) {
+    onPlayerSelect(event: any) {
         // 'event' is the object selected from the list
         const playerId = event.id;
         if (event.isNew || playerId === -1) {

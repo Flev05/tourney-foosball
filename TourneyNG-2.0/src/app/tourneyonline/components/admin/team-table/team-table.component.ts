@@ -38,7 +38,7 @@ export class TeamTableComponent extends AbstractListView {
         protected override tourneyService: TourneyService,
         protected override router: Router,
         protected override location: Location,
-        private   teamService: TeamService,
+        public   teamService: TeamService,
         private clientService: ClientService,
     ) {
         super(TeamDetailView.redirect, tourneyService, router, location);

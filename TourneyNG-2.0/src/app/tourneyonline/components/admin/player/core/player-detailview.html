@@ -130,7 +130,7 @@
                 pTooltip="Permette di modficare il nome di un giocatore senza rimovere e ricreare." 
                 icon="fa fa-pencil" 
                 class="ui-button-warn" 
-                *ngIf="autoCompletePlayerName?.id > 0"
+                *ngIf="autoCompletePlayerName.id != null && autoCompletePlayerName.id > 0"
                 (click)="prepareRename()">
             </button>   
         </div>

@@ -59,7 +59,7 @@
                 pTooltip="Permette di modficare il nome di una squadra senza rimovere e ricreare." 
                 icon="fa fa-pencil" 
                 class="ui-button-warn" 
-                *ngIf="autoCompleteTeamName?.id > 0"
+                *ngIf="autoCompleteTeamName.id != null && autoCompleteTeamName.id > 0"
                 (click)="prepareRename()">
             </button>            
         </div>   

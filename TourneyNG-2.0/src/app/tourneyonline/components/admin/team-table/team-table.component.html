@@ -29,7 +29,7 @@
                     type="text" 
                     pInputText placeholder="Cerca per nome" 
                     [value]="teamService.storedTeamFilter"
-                    (input)="onFilterChange($event.target.value, table)">
+                    (input)="onFilterChange($any($event.target).value, table)">
             </th>
             <th></th>
             <th>

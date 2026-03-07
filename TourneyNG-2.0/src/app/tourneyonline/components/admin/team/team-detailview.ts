@@ -267,7 +267,7 @@ export class TeamDetailView extends AbstractDetailView {
         }
     }
 
-    onTeamSelect(event: Team) {
+    onTeamSelect(event: any) {
         // 'event' is the object selected from the list
         const teamId = event.id;
         if (event.isNew || teamId === -1) {

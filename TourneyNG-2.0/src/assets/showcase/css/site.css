@@ -1181,7 +1181,6 @@ a {
   cursor: pointer;
   position: relative;
   display: block;
-  background-image: url("../images/prime-showcases-notification-topbar-bg.png");
   -webkit-animation-duration: 1.5s;
   -moz-animation-duration: 1.5s;
   animation-duration: 1.5s;

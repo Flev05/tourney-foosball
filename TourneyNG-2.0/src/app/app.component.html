@@ -1,129 +1,173 @@
 <div class="layout-wrapper">
-    <div id="layout-topbar">
+
+    <!-- ================= TOPBAR ================= -->
+    <div id="layout-topbar" class="flex align-items-center justify-content-between px-3">
         <a class="menu-button" (click)="onMenuButtonClick($event)">
             <i class="pi pi-bars"></i>
         </a>
-        <a href="javascript:void(0)" class="logo" [routerLink]="['/']">
-            <img alt="logo" src="assets/showcase/images/logoTorneiNG.png" style="width:200px; border:2px solid red; display:block;"/>
+        <a class="logo" routerLink="/">
+            <img alt="logo"
+                 src="assets/showcase/images/logoTorneiNG.png"
+                 class="app-logo" />
         </a>
-        <ul class="topbar-menu">
-            <li>
-                <a href="javascript:void(0)" [routerLink]="['/']">Home</a>
-            </li>
-        </ul>
     </div>
-    <div class="layout-mask" 
-         *ngIf="menuActive" 
+
+    <!-- MASK -->
+    <div class="layout-mask"
+         *ngIf="menuActive"
          (click)="menuActive = false">
-    </div>    
-    <div id="layout-sidebar" [ngClass]="{'active': menuActive}">
-        <p *ngIf="loginService.isUserLogged">Utente [{{loginService.userLogged.username}}]</p>
+    </div>
+
+    <!-- ================= SIDEBAR ================= -->
+    <div id="layout-sidebar" [class.active]="menuActive">
+
+        <p *ngIf="loginService.isUserLogged">
+            Utente [{{ loginService.userLogged.username }}]
+        </p>
+
+        <!-- CLIENT SELECT -->
         <div *ngIf="clientsCBEnabled()" class="grid">
-            <div class="col-3">
-                Cliente:
-            </div>            
-            <div class="col-3">
-                <p-dropdown [options]="clientOptions" 
-                    [(ngModel)]="selectedClientOption" 
-                    optionLabel="label"
-                    (onChange)="onClientChange($event.value)">
+            <div class="col-4">Cliente:</div>
+            <div class="col-8">
+                <p-dropdown
+                        [options]="clientOptions"
+                        [(ngModel)]="selectedClientOption"
+                        optionLabel="label"
+                        (onChange)="onClientChange($event.value)">
                 </p-dropdown>
             </div>
-        </div>           
+        </div>
+
+        <!-- ================= HOME MENU ================= -->
         <div *ngIf="!loginService.isUserLogged" class="layout-menu">
-           <a id="home-id" #homemenutitle [class.active-menuitem]="homemenutitle.id == activeMenuId" 
-                    (click)="activeMenuId = (activeMenuId === homemenutitle.id ? null : homemenutitle.id)">
-                <img src="assets/showcase/images/icons/menu-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/menu.svg" class="layout-menu-icon-inactive"/>
+
+            <a (click)="toggleMenu('home')"
+               [class.active-menuitem]="activeMenuId === 'home'">
+
+                <i class="pi pi-home mr-2"></i>
                 <span>HOME</span>
             </a>
-            <div [ngClass]="{submenushow: (homemenutitle.id == activeMenuId), 'submenuhide': (homemenutitle.id != activeMenuId)}">                
-                <a [routerLink]="['/demo']"  (click)="menuActive = false">&#9679; Demo</a>
-                <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
+
+            <div *ngIf="activeMenuId === 'home'">
+                <a routerLink="/demo" (click)="menuActive=false">• Demo</a>
+                <a routerLink="/lease" (click)="menuActive=false">• Noleggio</a>
             </div>
+
         </div>
+
+        <!-- ================= ADMIN ================= -->
         <div *ngIf="loginService.isSuperUser()" class="layout-menu">
-            <a id="admin-id" #adminmenutitle [class.active-menuitem]="adminmenutitle.id == activeMenuId"
-                    (click)="activeMenuId = (activeMenuId === adminmenutitle.id ? null : adminmenutitle.id)">
-                <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
+
+            <a (click)="toggleMenu('admin')"
+               [class.active-menuitem]="activeMenuId === 'admin'">
+
+                <i class="pi pi-cog mr-2"></i>
                 <span *ngIf="loginService.isAtLeastOwner()">Clienti/Utenti</span>
                 <span *ngIf="loginService.isAdmin()">Reset Password</span>
             </a>
-            <div [ngClass]="{submenushow: (adminmenutitle.id == activeMenuId), 'submenuhide': (adminmenutitle.id != activeMenuId)}">
-                <a *ngIf="loginService.isDeveloper()"    [routerLink]="['/clients']"                (click)="menuActive = false">&#9679; Clienti</a>
-                <a *ngIf="loginService.isAtLeastOwner()" [routerLink]="['/users']"                  (click)="menuActive = false">&#9679; Utenti</a>
-                <a *ngIf="loginService.isAtLeastOwner()" [routerLink]="['/users/urclv']"            (click)="menuActive = false">&#9679; Associa</a>
-                <a *ngIf="loginService.isAtLeastAdmin()" [routerLink]="['/users/resetPasswordLv']"  (click)="menuActive = false">&#9679; Reset Password</a>
+
+            <div *ngIf="activeMenuId === 'admin'">
+                <a *ngIf="loginService.isDeveloper()" routerLink="/clients" (click)="menuActive=false">• Clienti</a>
+                <a *ngIf="loginService.isAtLeastOwner()" routerLink="/users" (click)="menuActive=false">• Utenti</a>
+                <a *ngIf="loginService.isAtLeastOwner()" routerLink="/users/urclv" (click)="menuActive=false">• Associa</a>
+                <a *ngIf="loginService.isAtLeastAdmin()" routerLink="/users/resetPasswordLv" (click)="menuActive=false">• Reset Password</a>
             </div>
+
         </div>
-        <div *ngIf="loginService.isUserAllowed()" class="layout-menu" >
-            <a id="manager-id" #managermenutitle [class.active-menuitem]="managermenutitle.id == activeMenuId"
-                    (click)="activeMenuId = (activeMenuId === managermenutitle.id ? null : managermenutitle.id)">
-                <img src="assets/showcase/images/icons/panel-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/panel.svg" class="layout-menu-icon-inactive"/>
+
+        <!-- ================= CONFIG ================= -->
+        <div *ngIf="loginService.isUserAllowed()" class="layout-menu">
+
+            <a (click)="toggleMenu('config')"
+               [class.active-menuitem]="activeMenuId === 'config'">
+
+                <i class="pi pi-sliders-h mr-2"></i>
                 <span>Configurazione</span>
             </a>
-            <div [ngClass]="{submenushow: (managermenutitle.id == activeMenuId), 'submenuhide': (managermenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/admintourney']" (click)="menuActive = false">&#9679; Tornei</a>
-                <a [routerLink]="['/adminplayer']" (click)="menuActive = false">&#9679; Giocatori</a>
-                <a [routerLink]="['/adminteam']" (click)="menuActive = false">&#9679; Squadre</a>
-                <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
+
+            <div *ngIf="activeMenuId === 'config'">
+                <a routerLink="/admintourney" (click)="menuActive=false">• Tornei</a>
+                <a routerLink="/adminplayer" (click)="menuActive=false">• Giocatori</a>
+                <a routerLink="/adminteam" (click)="menuActive=false">• Squadre</a>
             </div>
+
         </div>
+
+        <!-- ================= RESULTS ================= -->
         <div class="layout-menu">
-            <a id="tourney-id" #tourneymenutitle [class.active-menuitem]="tourneymenutitle.id == activeMenuId" 
-                    (click)="activeMenuId = (activeMenuId === tourneymenutitle.id ? null : tourneymenutitle.id)">
-                <img src="assets/showcase/images/icons/file-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/file.svg" class="layout-menu-icon-inactive"/>
+
+            <a (click)="toggleMenu('results')"
+               [class.active-menuitem]="activeMenuId === 'results'">
+
+                <i class="pi pi-chart-bar mr-2"></i>
                 <span>Risultati/Classifica</span>
             </a>
-            <div [ngClass]="{'submenushow': (tourneymenutitle.id == activeMenuId), 'submenuhide': (tourneymenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/showtourney']" (click)="menuActive = false">&#9679; Tornei</a>
-                <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']"  (click)="menuActive = false">&#9679; Noleggio</a>
+
+            <div *ngIf="activeMenuId === 'results'">
+                <a routerLink="/showtourney" (click)="menuActive=false">• Tornei</a>
             </div>
+
         </div>
-        <div *ngIf="!loginService.isUserLogged" class="layout-menu">
-            <a id="login1-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
-                <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
-                <span>Login</span>
+
+        <!-- ================= LOGIN / LOGOUT ================= -->
+        <div class="layout-menu">
+
+            <a (click)="toggleMenu('auth')"
+               [class.active-menuitem]="activeMenuId === 'auth'">
+
+                <i class="pi pi-user mr-2"></i>
+                <span>{{ loginService.isUserLogged ? 'Logout' : 'Login' }}</span>
             </a>
-            <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
-                <a [routerLink]="['/login']" (click)="menuActive = false">&#9679; Login</a>
-                <a *ngIf="!loginService.isUserLogged" [routerLink]="['/lease']" (click)="menuActive = false">&#9679; Noleggio</a>
+
+            <div *ngIf="activeMenuId === 'auth'">
+
+                <a *ngIf="!loginService.isUserLogged"
+                   routerLink="/login"
+                   (click)="menuActive=false">
+                    • Login
+                </a>
+
+                <a *ngIf="loginService.isUserLogged"
+                   (click)="logout($event)">
+                    • Logout
+                </a>
+
+                <a *ngIf="loginService.isUserLogged && !loginService.isFollower()"
+                   routerLink="/users/changePassword"
+                   (click)="menuActive=false">
+                    • Password
+                </a>
+
             </div>
+
         </div>
-        <div *ngIf="loginService.isUserLogged" class="layout-menu">
-            <a id="login2-id" #loginmenutitle [class.active-menuitem]="loginmenutitle.id == activeMenuId" (click)="activeMenuId = (activeMenuId === loginmenutitle.id ? null : loginmenutitle.id)">
-                <img src="assets/showcase/images/icons/data-active.svg" class="layout-menu-icon-active"/>
-                <img src="assets/showcase/images/icons/data.svg" class="layout-menu-icon-inactive"/>
-                <span>Logout</span>
-            </a>
-            <div [ngClass]="{'submenushow': (loginmenutitle.id == activeMenuId), 'submenuhide': (loginmenutitle.id != activeMenuId)}">
-                <a (click)="logout($event)">&#9679; Logout</a>
-                <a *ngIf="!loginService.isFollower()" [routerLink]="['users/changePassword']" (click)="menuActive = false">&#9679; Password</a>
-            </div>
-        </div>
+
     </div>
+
+    <!-- ================= CONTENT ================= -->
     <div id="layout-content">
-        <div>
-            <router-outlet></router-outlet>
-        </div>
-        <div *ngIf="!loginService.isUserLogged" class="content-section layout-footer clearfix">
-            <div class="grid" style="text-align: center;">
-                <div class="col-12" style="text-align: center;">
-                    <p><span>Tournaments 1.0</span></p>
-                    <p><span>Copyright © {{loginService.currentYear}}. All Rights Reserved</span></p>
-                    <p><span>Powered by Luciano Martino</span></p>
-                    <a class="home-button" [routerLink]="['/lease']">
-                        Noleggio
-                    </a>
-                </div>
+
+        <router-outlet></router-outlet>
+
+        <div *ngIf="!loginService.isUserLogged"
+             class="layout-footer text-center p-3">
+
+            <p>Tournaments 2.0</p>
+            <p>Copyright © {{ loginService.currentYear }}</p>
+            <p>Powered by Luciano Martino</p>
+
+            <a routerLink="/lease" class="p-button p-button-text">
+                Noleggio
+            </a>
+
+            <div class="mt-3">
+                <a href="https://www.facebook.com/CalcioBalillaPregnana/">
+                    <i class="pi pi-facebook"></i>
+                </a>
             </div>
-            <div class="footer-links">
-                <a href="https://www.facebook.com/CalcioBalillaPregnana/"><i class="pi pi-facebook"></i></a>
-            </div>
+
         </div>
+
     </div>
+
 </div>

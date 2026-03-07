@@ -120,5 +120,9 @@ export class AppComponent implements OnInit{
         let redirect = '/login';
         this.router.navigate([redirect]);
     }
+
+    toggleMenu(id: string) {
+        this.activeMenuId = this.activeMenuId === id ? null : id;
+    }
 }
 

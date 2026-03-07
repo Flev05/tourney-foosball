@@ -36,7 +36,7 @@ export class LoginDetailView extends AbstractListView {
 
     loginformGroup: FormGroup;
 
-    loginFailed: boolean = true;
+    loginFailed: boolean = false;
     loggedUsername: string = "";
 
     constructor(
@@ -97,6 +97,7 @@ export class LoginDetailView extends AbstractListView {
 
         if( lvo != undefined ) {
             this.loginService.setUserLogged(lvo);
+            this.loginFailed = false;
         } else {
             this.loginService.isUserLogged = false;
             this.loginFailed = true;

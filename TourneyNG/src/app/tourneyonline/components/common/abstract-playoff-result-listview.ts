@@ -50,6 +50,7 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
     onewayMeetings: Meeting[];
     roundtripMeetings: Meeting[];
     currentDay: number;
+    playoffPlayoutTabName : string = "";
 
     constructor( 
          protected redirect: string
@@ -73,8 +74,10 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.meetingPlayoffService.selectedTourney = this.selectedTourney;
         if(this.tourneyService.selectedPlayoff != null) {
             this.selectedPlayoff = this.tourneyService.selectedPlayoff;
+            this.playoffPlayoutTabName = this.selectedTourney.playoffTabName;
         } else {
             this.selectedPlayoff = this.tourneyService.selectedPlayout;
+            this.playoffPlayoutTabName = this.selectedTourney.playoutTabName;
         }
      
         this.classificationCols = this.tourneyService.classificationCols;
@@ -106,7 +109,13 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         console.log("[Days             " + this.roundDaysNo + "]");
         console.log("[PageSize         " + this.pageSize + "]");
 
-        if (this.selectedTourney.isOnewayPlayoff == "true") {
+        this.isRoundTrip = false;
+
+        let poType = this.selectedTourney.isOnewayPlayoff;
+        if(this.tourneyService.selectedPlayoff == null) {
+            poType = this.selectedTourney.isOnewayPlayout;
+        }
+        if (poType == "true") {
             this.allDaysNo = this.roundDaysNo;
         } else {
             this.isRoundTrip = true;

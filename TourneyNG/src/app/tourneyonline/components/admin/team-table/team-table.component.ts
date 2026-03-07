@@ -9,7 +9,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 import { Observable, of } from 'rxjs';
-import { ETeamOperation } from 'app/tourneyonline/domain/enumerations';
 import { Table } from 'primeng/table';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
@@ -34,7 +33,7 @@ export class TeamTableComponent extends AbstractListView {
 
     teamNameFilter: string;
     teamCount : number = 0;
-
+    
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
@@ -59,8 +58,20 @@ export class TeamTableComponent extends AbstractListView {
             this.teamService.tourneyTeams = this.tourneyTeams;
         }
         this.teamCount = this.teams.length;
+
+        setTimeout(() => {
+            if (this.table) {
+                this.table.filter(this.teamService.storedTeamFilter, 'teamName', 'contains');
+            }
+        }, 5);
     }
   
+    // 2. Save the filter as the user types
+    onFilterChange(value: string, table: Table) {
+        this.teamService.storedTeamFilter = value;
+        table.filter(value, 'teamName', 'contains');
+    }
+
     public gotoListView() {
         this.router.navigate([REDIRECT_TOURNEY_LV], { 
             queryParams: { tourneyTeams: this.tourneyTeams }
@@ -140,10 +151,7 @@ export class TeamTableComponent extends AbstractListView {
     private onDeleteComplete() {
         console.log("Entering onDeleteComplete()");
         if( !this.onDeleteTeamError ) {
-            let index: number = this.teams.indexOf(this.deleteTeam);
-            if(index > -1) {
-                this.teams.splice(index, 1);
-            }
+            this.teams = [...this.teams.filter(p => p.id !== this.deleteTeam.id)];
         }
     }
 }

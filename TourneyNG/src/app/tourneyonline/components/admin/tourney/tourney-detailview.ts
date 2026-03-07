@@ -128,8 +128,6 @@ export class TourneyDetailView extends AbstractDetailView {
     operatorVo: OperatorsVO;
     resultTool : EResultTool;
 
-    addTeamEnabled = false;
-    tourneyTeams = true;  
     chaosEnabled: boolean = false;
     isTeamsOrderedGroupname : boolean = false;
     

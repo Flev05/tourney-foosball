@@ -13,6 +13,7 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { LoginService } from 'app/tourneyonline/service/login-service';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TeamService } from 'app/tourneyonline/service/team-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: './player-detailview.html',
@@ -25,7 +26,13 @@ export class PlayerDetailView extends AbstractDetailView {
     onSavePlayerError: boolean;
     badRequest: boolean;
     newPlayerVO: PlayerVO;
-    
+
+    autoCompletePlayerName: Player; 
+    filteredPlayersSingle: Player[];
+    isRenaming = false;
+    newName = '';
+    tourneyTeams: boolean | undefined;
+
     constructor(
         protected location: Location,
         protected tourneyService: TourneyService,
@@ -33,19 +40,22 @@ export class PlayerDetailView extends AbstractDetailView {
         protected countryService: CountryService,
         protected loginService: LoginService,
         protected teamService: TeamService,
-        public playerService: PlayerService
+        public playerService: PlayerService,
+        private route: ActivatedRoute
     ) { 
         super(tourneyService, location);
     }
 
     ngOnInit() {
         console.log("PlayerDetailView.ngOnInit() ");
-
         super.ngOnInit();
+        this.route.queryParams.subscribe(params => {
+            this.tourneyTeams = params['tourneyTeams'] === 'true';
+        });
         this.countries = this.countryService.countries;
         this.selectedPlayer = this.playerService.selectedPlayer;
+        this.autoCompletePlayerName = this.selectedPlayer;
         this.playerAlreadyExists = false;
-
         if(this.playerService.newPlayer) {
             this.selectedPlayer.playerName = "";
             this.selectedPlayer.id = null; 
@@ -69,6 +79,9 @@ export class PlayerDetailView extends AbstractDetailView {
     }
 
     enableSaveButton() : string {
+        if(this.playerService.newPlayer ) {
+            return "";
+        }
         let n : String = this.selectedPlayer.playerName;
         if( n == undefined  ) {
             return  "disabled";
@@ -76,11 +89,38 @@ export class PlayerDetailView extends AbstractDetailView {
         return   n.trim() == "" ? "disabled" : "";
     }
 
-    onSubmit() {
+    prepareRename() {
+        this.newName = this.autoCompletePlayerName.playerName;
+        this.isRenaming = true;
+    }
+    
+    saveRename() {
+        if (!this.newName || this.newName.trim() === '') {
+            return;
+        } 
+        this.doSavePlayer(this.newName);
+    }
+
+    savePlayer() {
+        if (typeof this.autoCompletePlayerName === 'string') {
+            this.selectedPlayer.playerName= this.autoCompletePlayerName;
+        } else {
+            // This is an EXISTING team object
+            const existingId = this.autoCompletePlayerName.id;
+            let index = this.playerService.playerPool.findIndex( t => t.id === existingId);
+            if( index !== -1 ) {
+                this.selectedPlayer.playerName = this.playerService.playerPool[index].playerName;
+            }
+        }
+        this.doSavePlayer(this.selectedPlayer.playerName);
+    }
+
+    private doSavePlayer(newPlayerName : string) {
         this.selectedPlayer.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
+        this.selectedPlayer.playerName = newPlayerName;
         this.newPlayerVO = {
             id: this.selectedPlayer.id
-            , playerName: this.selectedPlayer.playerName
+            , playerName: newPlayerName
             , country: this.selectedPlayer.country
             , clientId: this.selectedPlayer.clientId
             , json: JSON.stringify(this.selectedPlayer)
@@ -88,24 +128,9 @@ export class PlayerDetailView extends AbstractDetailView {
         this.playerAlreadyExists = false;
         this.onSavePlayerError = false;
         const subscriber = this.playerService.savePlayer(this.newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
-        subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete());
-        this.updateTourney();
+        subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(  ));
     }
  
-    private updateTourney(): void {
-        console.log("Entering updateTourney()");
-        for( let t of this.selectedTourney.teams ) {
-            for( let p of t.players ) {
-                if( p.id == this.selectedPlayer.id ) {
-                    p = this.selectedPlayer;
-                }
-            }
-        }
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
-        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Save Tourney operation'));
-        subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
-    }
-    
     private newPlayerNext(tvo:PlayerVO) {
         console.log("newPlayerNext()");
         console.log(tvo.json);
@@ -122,19 +147,33 @@ export class PlayerDetailView extends AbstractDetailView {
         };
     }
 
-    private onSaveComplete() {
+    private onSaveComplete( ) {
         console.log("Entering onSaveComplete()");
         if( !this.onSavePlayerError ) {
-            if(this.playerService.newPlayer) {
-                let ppo: Player = JSON.parse(this.newPlayerVO.json);
-                ppo.country = this.newPlayerVO.country;
-                ppo.clientId = this.newPlayerVO.clientId;
-                ppo.playerName = this.newPlayerVO.playerName;
+            const isNewPlayer : boolean = this.newPlayerVO.id == null;
+            let ppo: Player = JSON.parse(this.newPlayerVO.json);
+            ppo.country = this.newPlayerVO.country;
+            ppo.clientId = this.newPlayerVO.clientId;
+            ppo.playerName = this.newPlayerVO.playerName;
+            if(isNewPlayer) {
                 this.playerService.playerPool.push(ppo);
             }
+            if( this.teamService.selectedTeam ) {
+                const player = this.teamService.selectedTeam.players.find( e => e.playerName == this.newPlayerVO.playerName); 
+                if( !player ) {
+                    this.teamService.selectedTeam.players.push(ppo);
+                    this.teamService.updateExistingTeam(this.teamService.selectedTeam
+                        , () => this.onSaveTeamComplete());
+                }
+            }
             this.playerService.newPlayer = false;
+
             super.goBack();
         }
+    }
+    
+    private onSaveTeamComplete(): void {
+        console.log("Entering onSaveTeamComplete()");
     }
 
     private savePlayerErrorHandler<T> (operation = 'operation', result?: T) {
@@ -158,5 +197,42 @@ export class PlayerDetailView extends AbstractDetailView {
     onError(n:any): any {
         let msgerr : string = 'Creazione/Modifica giocatore fallita';
         console.error(msgerr);
+    }
+
+    loadPlayersCompleteMethod(event: any) {
+        const query = event.query.toLowerCase();
+        this.filteredPlayersSingle = this.playerService.playerPool.filter(t =>
+            t.playerName.toLowerCase().includes(query)
+        );
+
+        const exactMatch = this.filteredPlayersSingle.some(t => t.playerName.toLowerCase() === query.toLowerCase());
+        if (!exactMatch && query.length > 2) {
+            this.filteredPlayersSingle.push({
+                id: -1, // Special ID to flag a new entry
+                playerName: query,
+                isNew: true
+            });
+        }
+    }
+
+    onPlayerSelect(event: Player) {
+        // 'event' is the object selected from the list
+        const playerId = event.id;
+        if (event.isNew || playerId === -1) {
+            this.prepareNewPlayer(event.playerName);
+        } else {
+            this.filteredPlayersSingle = this.playerService.playerPool.filter(p => p.id == playerId);
+            if(this.filteredPlayersSingle && this.filteredPlayersSingle.length > 0) {
+                let partialTeam = this.filteredPlayersSingle[0];
+                let index = this.playerService.playerPool.findIndex( t => t.playerName === partialTeam.playerName );
+                if( index !== -1 ) {
+                    this.selectedPlayer = this.playerService.playerPool[index];
+                }
+            }
+        }
+    }
+        
+    private prepareNewPlayer(palyerName: string) {
+        this.selectedPlayer = { id: 0, playerName: palyerName };
     }
 }

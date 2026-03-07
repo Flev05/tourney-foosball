@@ -15,7 +15,7 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
     static tabDvRedirect: string = "classification/lv/eliminatories";
     activeIndex: any;
     incompletePlayoffConfiguration: boolean;
-    selectedTabIndex: number; 
+    selectedTabIndex: number = 1; 
 
     constructor(
         protected tourneyService: TourneyService,

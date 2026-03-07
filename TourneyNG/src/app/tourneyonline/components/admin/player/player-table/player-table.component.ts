@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -8,6 +8,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Player } from 'app/tourneyonline/domain/player';
+import { Team } from 'app/tourneyonline/domain/team';
+import { Table } from 'primeng/table';
 
 const redirect: string = "adminplayer/dv";
 
@@ -17,23 +19,29 @@ const redirect: string = "adminplayer/dv";
     styleUrls: ['./player-table.component.css']
 })
 export class PlayerTableComponent extends AbstractListView {
-    @Input() playerLv: boolean | undefined;
+    @Input() tourneyTeams: boolean | undefined;    
     @Input() addPlayerEnabled: boolean | undefined;
-  
+    @Input() selectedTeam: Team | undefined;
+   
     cols: any[];
-    rows: any[];
-    selectedRow: any;
-
+    selectedRow: Player;
+    
     selectedPlayer: Player;
-    players: Player[];
+    players: Player[] = [];
     onDeletePlayerError: boolean;
     deletePlayer: Player;
+
+    // 1. Reference the table normally
+    @ViewChild('table') table: Table;
+
+    // 1. Change selectedRow (single) to selectedPlayers (array)
+    // selectedPlayers: Player[] = [];
 
     constructor(
         protected tourneyService: TourneyService,
         protected router: Router,
         protected location: Location,
-        protected playerService: PlayerService,
+        public    playerService: PlayerService,
         private   teamService: TeamService
     ) {
         super(redirect, tourneyService, router, location);
@@ -48,7 +56,7 @@ export class PlayerTableComponent extends AbstractListView {
     }
 
     private onComplete(): any {
-        console.log("Entering onComplete()");
+        console.log("Entering onComplete(tourneyTeams=" + this.tourneyTeams + ")");
         this.playerService.playerPool = this.playerService.playerPool.sort((p1,p2) => {
             if(p1.playerName < p2.playerName) {
                 return -1;
@@ -59,10 +67,44 @@ export class PlayerTableComponent extends AbstractListView {
             return 0;
         });
 
-        this.rows = this.players = this.playerService.playerPool;    
-        if( this.playerLv ) {
-            this.rows = this.teamService.selectedTeam.players;
+        this.playerService.selectedPlayers = [];
+        this.players = this.playerService.playerPool;    
+        if( this.selectedTeam && this.selectedTeam.players ) {
+            this.playerService.selectedPlayers = this.selectedTeam.players;
+            // 1. Create a Set of IDs for much faster lookup
+            const selectedIds = new Set(this.playerService.selectedPlayers.map(p => p.id));
+
+            // 2. Sort the array: selected players go to the top
+            this.players.sort((a, b) => {
+                const aSelected = selectedIds.has(a.id) ? 1 : 0;
+                const bSelected = selectedIds.has(b.id) ? 1 : 0;
+                
+                // Subtracting b from a puts the "1"s (selected) at the start
+                return bSelected - aSelected; 
+            });
+
+            // 3. Important: If using change detection, trigger a refresh
+            this.players = [...this.players];
         }
+        setTimeout(() => {
+            if (this.table) {
+                this.table.filter(this.playerService.storedPlayerFilter, 'playerName', 'contains');
+            }
+        }, 5);
+    }
+
+    // 2. Save the filter as the user types
+    onFilterChange(value: string, table: Table) {
+        this.playerService.storedPlayerFilter = value;
+        table.filter(value, 'playerName', 'contains');
+    }
+ 
+    isInitialMember(player: any): boolean {
+        if (!this.playerService.selectedPlayers || !player) {
+            return false;
+        }
+        // Check if the player ID is already in our selection array
+        return this.playerService.selectedPlayers.some(p => p.id === player.id);
     }
 
     create() {
@@ -73,13 +115,24 @@ export class PlayerTableComponent extends AbstractListView {
         this.gotoDetailView();
     }
 
-    onRowSelect(event) {
-        console.log(event.data);
+    public gotoListView() {
+        this.router.navigate([this.redirect], { 
+            queryParams: { tourneyTeams: this.tourneyTeams }
+        });
+    }
+
+    doUpdate(player: Player) {
+        console.log(player.playerName);
+        this.selectedRow = player;
         this.playerService.selectedPlayer = this.selectedRow;
         this.playerService.newPlayer = false;
         this.gotoDetailView();
     }
 
+    onRowUnselect(event: any) {
+        console.log('Player removed:', event.data.playerName);
+        // You can use this to update a counter or validation message
+    }
     goBack(): void {
         this.location.back();
     }
@@ -90,7 +143,6 @@ export class PlayerTableComponent extends AbstractListView {
         if(confirm(popup + "?")) {
             this.deletePlayer = player;
             const observer = this.playerService.deletePlayer(player, this.deletePlayerErrorHandler("Delete player operation"));
-
             observer.subscribe(n => super.next(n), e => this.subscribeErrorHandler(e), () => this.onDeleteComplete());
         }
     }
@@ -118,15 +170,17 @@ export class PlayerTableComponent extends AbstractListView {
     private onDeleteComplete() {
         console.log("Entering onDeleteComplete()");
         if( !this.onDeletePlayerError ) {
-            let index: number = this.players.indexOf(this.deletePlayer);
-            if(index > -1) {
-                this.players.splice(index, 1);
-                this.rows.splice(index, 1);
-            }
-            index = this.teamService.selectedTeam.players.indexOf(this.deletePlayer);
-            if(index > -1) {
-                this.teamService.selectedTeam.players.splice(index, 1);
+            this.players = [...this.players.filter(p => p.id !== this.deletePlayer.id)];
+            this.playerService.playerPool = [...this.playerService.playerPool.filter(p => p.id !== this.deletePlayer.id)];
+            if( this.teamService.selectedTeam ) {
+                this.teamService.selectedTeam.players = [...this.teamService.selectedTeam.players.filter(p => p.id !== this.deletePlayer.id)];
+                this.teamService.updateExistingTeam(this.teamService.selectedTeam
+                    , () => this.onSaveTeamComplete());
             }
         }
+    }
+       
+    private onSaveTeamComplete(): void {
+        console.log("Entering onSaveTeamComplete()");
     }
 }

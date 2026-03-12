@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { TourneyService } from '../../../service/tourney-service';
-import { Message, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Playoff } from '../../../domain/playoff';
 import { Combobox } from '../../../domain/tourney-combobox';
 
@@ -11,7 +11,8 @@ import { AbstractDetailView } from '../../../components/common/abstract-detailvi
 import { PlayoffRule } from '../../../domain/playoff-rule';
 
 @Component({
-    templateUrl: './rule-detailview.html'
+    templateUrl: './rule-detailview.html',
+    standalone: false
 })
 export class RuleDetailView extends AbstractDetailView {
     playoffConfigFormGroup: FormGroup;

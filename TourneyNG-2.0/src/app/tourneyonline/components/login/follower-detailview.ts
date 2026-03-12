@@ -12,7 +12,8 @@ import { TeamService } from '../../service/team-service';
 const REDIRECT_RESULT_LV : string = "/result/lv";
 const DEFAULT_PASSWORD = "4A97D80A588D25719C729A43B51AA9FC"; // torneionline
 @Component({
-    template: ""
+    template: "",
+    standalone: false
 })
 export class FollowerDetailView extends LoginDetailView {
     

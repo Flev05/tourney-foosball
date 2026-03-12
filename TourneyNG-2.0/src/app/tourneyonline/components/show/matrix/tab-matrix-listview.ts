@@ -17,7 +17,8 @@ const REDIRECT_PLAYOFF_MATRIX_LV = 'matrix/lv/playoffLv/dv';
 const REDIRECT_ELIMINATORY       = 'matrix/lv/eliminatoryLv/dv';
 
 @Component({
-    templateUrl: './tab-matrix-listview.html'
+    templateUrl: './tab-matrix-listview.html',
+    standalone: false
 })
 export class TabMatrixListView extends AbstractTabResultListView {
     constructor(

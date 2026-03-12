@@ -13,7 +13,8 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
 const redirect = '/clients/dv';
 
 @Component({
-    templateUrl: './client-listview.html'
+    templateUrl: './client-listview.html',
+    standalone: false
 })
 export class ClientListView extends AbstractListView {
 

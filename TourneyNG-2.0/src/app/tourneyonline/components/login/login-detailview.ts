@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Validators,FormControl,FormGroup,FormBuilder } from '@angular/forms';
-import { Message } from 'primeng/api';
 import { Login } from '../../domain/login';
 import { LoginService } from '../../service/login-service';
 import { Md5 } from "md5-typescript";
@@ -11,6 +10,7 @@ import { ClientService } from '../../service/client-service';
 import { ClientVO } from '../../domain/client-vo';
 import { AbstractListView } from '../common/abstract-listview';
 import { TourneyService } from '../../service/tourney-service';
+import { ToastMessageOptions } from 'primeng/api';
 
 const redirect : string = "/login/lv";
 @Component({
@@ -24,7 +24,8 @@ const redirect : string = "/login/lv";
         .ui-g-4 {
             width: 25mm;
         }
-  `]
+  `],
+    standalone: false
 })
 export class LoginDetailView extends AbstractListView {
     public static redirectToAdminTourney = '/admintourney';
@@ -32,7 +33,7 @@ export class LoginDetailView extends AbstractListView {
     
     formLogin: Login = new Login();
 
-    msgs: Message[] = [];
+    msgs: ToastMessageOptions[] = [];
 
     loginformGroup: FormGroup;
 

@@ -7,7 +7,8 @@ import { Location } from '@angular/common';
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
 @Component({
-    templateUrl: './team-listview.html'
+    templateUrl: './team-listview.html',
+    standalone: false
 })
 export class TeamListView extends AbstractListView {
     addTeamEnabled = false;

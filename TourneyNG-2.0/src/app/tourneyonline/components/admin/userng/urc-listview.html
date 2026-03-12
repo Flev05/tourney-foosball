@@ -62,25 +62,25 @@
         <tr>
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td>
-                <p-dropdown [options]="userOptions" 
+                <p-select [options]="userOptions" 
                     [(ngModel)]="rowData.userSelect" 
                     optionLabel="label"
                     placeholder="Utente">
-                </p-dropdown>
+                </p-select>
             </td>            
             <td>
-                <p-dropdown [options]="roleOptions" 
+                <p-select [options]="roleOptions" 
                     [(ngModel)]="rowData.roleSelect" 
                     optionLabel="label"
                     placeholder="Ruolo">
-                </p-dropdown>
+                </p-select>
             </td>           
             <td>
-                <p-dropdown [options]="clientOptions" 
+                <p-select [options]="clientOptions" 
                     [(ngModel)]="rowData.clientSelect" 
                     optionLabel="label"
                     placeholder="Cliente">
-                </p-dropdown>
+                </p-select>
             </td>            
             <td class="deleteColSize">
                 <button class="ui-button-danger" pButton icon="pi pi-remove" (click)="doDelete(rowData)"></button>

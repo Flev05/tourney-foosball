@@ -16,7 +16,8 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
             width: auto;
             table-layout: fixed;
         }
-  `]
+  `],
+    standalone: false
 })
 export class MatchListView extends AbstractListView {
     selectedMeeting: Meeting = new Meeting();

@@ -50,6 +50,8 @@ export class DisciplineService {
         this.disciplineOptions = [];
         for( let d of this.disciplines ) {
             let cb : Combobox = new Combobox();
+            cb.label = d.name;
+            cb.value = d.id;
             this.disciplineOptions.push(cb);
         }
         complete != null ? complete() : console.log();

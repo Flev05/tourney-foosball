@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { Message, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 import { Meeting } from '../../../domain/meeting';
 import { Playoff } from '../../../domain/playoff';
@@ -14,6 +14,7 @@ import { Observable, of } from 'rxjs';
 
 @Component({
     templateUrl: './meeting-rule-detailview.html',
+    standalone: false
 })
 export class MeetingRuleDetailView extends AbstractDetailView {
     selectedPlayoff: Playoff = new Playoff();

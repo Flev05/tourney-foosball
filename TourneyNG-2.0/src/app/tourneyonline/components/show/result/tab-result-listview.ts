@@ -30,7 +30,8 @@ const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
 const REDIRECT_ELIMINATORY       = 'result/lv/eliminatoryLv/dv';
 
 @Component({
-    templateUrl: './tab-result-listview.html'
+    templateUrl: './tab-result-listview.html',
+    standalone: false
 })
 export class TabResultListView extends AbstractTabResultListView {
     addTeamEnabled = false;

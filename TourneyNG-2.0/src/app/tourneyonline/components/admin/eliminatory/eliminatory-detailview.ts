@@ -7,7 +7,7 @@ import { Eliminatory } from '../../../domain/eliminatory';
 import { Meeting } from '../../../domain/meeting';
 import { Combobox } from '../../../domain/tourney-combobox';
 import { EliminatoryLevel } from '../../../domain/eliminatory-level';
-import { Message, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { TourneyService } from '../../../service/tourney-service';
 import { AbstractDetailView } from '../../../components/common/abstract-detailview';
 import { MeetingService } from '../../../service/meeting-service';
@@ -19,6 +19,7 @@ import { Country } from '../../../domain/country';
 
 @Component({
     templateUrl: './eliminatory-detailview.html',
+    standalone: false
 })
 export class EliminatoryDetailView extends AbstractDetailView {
     

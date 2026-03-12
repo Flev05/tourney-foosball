@@ -22,6 +22,7 @@ const ROUND_CHANGE_TEAMS_POPUP = "ATTENZIONE! L'operazione ricrea tutti gli inco
 
 @Component({
     templateUrl: './round-listview.html',
+    standalone: false
 })
 export class RoundListView extends AbstractListView {
     static meetingListviewRedirect: string = "adminround/lv/meetingLv";

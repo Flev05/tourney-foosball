@@ -15,7 +15,8 @@ import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './round-result-listview.html',
-    styleUrls: ['../classification/classification-view.css']
+    styleUrls: ['../classification/classification-view.css'],
+    standalone: false
 })
 export class RoundResultListView extends AbstractRoundResultListView {
     selectedClassificationRow: Classification = new Classification();

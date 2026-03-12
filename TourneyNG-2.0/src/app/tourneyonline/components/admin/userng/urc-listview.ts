@@ -19,7 +19,8 @@ import { ClientVO } from '../../../domain/client-vo';
 const redirect = '/users/urcdv';
 
 @Component({
-    templateUrl: './urc-listview.html'
+    templateUrl: './urc-listview.html',
+    standalone: false
 })
 export class UrcListView extends AbstractListView {
 

@@ -14,6 +14,7 @@ import { Team } from '../../../domain/team';
 
 @Component({
     templateUrl: './meeting-detailview.html',
+    standalone: false
 })
 export class MeetingDetailView extends AbstractDetailView {
 

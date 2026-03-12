@@ -9,6 +9,7 @@ import { DateFormatPipe } from '../../common/date-format-pipe';
 
 @Component({
     templateUrl: './classification-detailview.html',
+    standalone: false
 })
 export class ClassificationDetailView extends AbstractDetailView {
     public static redirect : string = "/classification/dv";

@@ -2,7 +2,6 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AbstractListView } from '../common/abstract-listview';
 import { TourneyService } from '../../service/tourney-service';
-import { Message } from 'primeng/api';
 import { Eliminatory } from '../../domain/eliminatory';
 import { EliminatoryLevel } from '../../domain/eliminatory-level';
 import { PhaseType, Direction } from '../../domain/enumerations';
@@ -18,6 +17,7 @@ import { Tourney } from '../../domain/tourney';
 import { EliminatoryLevelVO } from '../../domain/eliminatory-level.vo';
 import { EliminatoryVO } from '../../domain/eliminatory.vo';
 import { Injectable } from '@angular/core';
+import { ToastMessageOptions } from 'primeng/api';
  
 @Injectable()
 export abstract class AbstractEliminatoryListView extends AbstractListView {
@@ -32,7 +32,7 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
     eliminatoryRows: EliminatoryVO[] = [];
     eliminatorySelectedRow: EliminatoryVO = new EliminatoryVO();
 
-    msgs: Message[] = [];
+    msgs: ToastMessageOptions[] = [];
    
     eliminatoryLevels: Array<EliminatoryLevel> = [];
     eliminatoryBLevels: Array<EliminatoryLevel> = [];

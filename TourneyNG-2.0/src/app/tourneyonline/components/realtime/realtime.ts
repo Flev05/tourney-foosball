@@ -1,13 +1,14 @@
 import {Component,OnInit} from '@angular/core';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-import {Message} from 'primeng/api';
+import { ToastMessageOptions } from 'primeng/api';
 
 @Component({
-    templateUrl: './realtime.html'
+    templateUrl: './realtime.html',
+    standalone: false
 })
 export class Realtime implements OnInit {
     
-    msgs: Message[] = [];
+    msgs: ToastMessageOptions[] = [];
     
     userform: FormGroup;
     
@@ -29,7 +30,6 @@ export class Realtime implements OnInit {
         this.logged = !this.logged;
         this.msgs = [];
         this.msgs.push({severity:'info', summary:'OK', detail:'Accesso effettuato'});
-
     }
     
     get diagnostic() { return JSON.stringify(this.userform.value); }

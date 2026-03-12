@@ -14,7 +14,8 @@ import { CountryService } from '../../../service/country-service';
 const redirect = '/users/userdv';
 
 @Component({
-    templateUrl: './user-listview.html'
+    templateUrl: './user-listview.html',
+    standalone: false
 })
 export class UserListView extends AbstractListView {
 

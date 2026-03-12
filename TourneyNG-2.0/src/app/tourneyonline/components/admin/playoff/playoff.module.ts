@@ -4,7 +4,6 @@ import {FormsModule, ReactiveFormsModule}    from '@angular/forms';
 import {TableModule}  from 'primeng/table';
 import {DialogModule}  from 'primeng/dialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-import {SpinnerModule} from 'primeng/spinner';
 import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TooltipModule} from 'primeng/tooltip';
@@ -15,13 +14,10 @@ import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { CalendarModule } from 'primeng/calendar';
 
 import {PlayoffRoutingModule} from './playoff-routing.module';
 import { RuleListView } from './rule-listview';
@@ -29,6 +25,9 @@ import { RuleDetailView } from './rule-detailview';
 import { MeetingPageListView } from './meeting-page-listview';
 import { MeetingRuleDetailView } from './meeting-rule-detailview';
 import { DateFormatPipe } from '../../../components/common/date-format-pipe';
+import { SelectModule } from 'primeng/select';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @NgModule({
 	imports: [
@@ -36,9 +35,8 @@ import { DateFormatPipe } from '../../../components/common/date-format-pipe';
         ,FormsModule
         ,ReactiveFormsModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule
@@ -47,10 +45,10 @@ import { DateFormatPipe } from '../../../components/common/date-format-pipe';
         ,AutoCompleteModule
         ,RadioButtonModule
         ,CheckboxModule
-        ,SpinnerModule
+        ,InputNumberModule
         ,FieldsetModule
         ,TooltipModule
-        ,CalendarModule
+        ,DatePickerModule
         ,PlayoffRoutingModule
         ,AccordionModule
         ,PickListModule

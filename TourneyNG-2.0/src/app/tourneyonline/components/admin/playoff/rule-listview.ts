@@ -14,7 +14,8 @@ import { ClientService } from '../../../service/client-service';
 import { TourneyVO } from '../../../domain/tourney.vo';
 
 @Component({
-    templateUrl: './rule-listview.html'
+    templateUrl: './rule-listview.html',
+    standalone: false
 })
 export class RuleListView extends AbstractListView {
     static redirectToMeeting: string = "adminplayoff/lv/meetingLv";

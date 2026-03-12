@@ -62,6 +62,7 @@ const MIN_ELIMINATORY_TAB_INDEX: number = 2;
 
 @Component({
     templateUrl: './tourney-detailview.html',
+    standalone: false
 })
 export class TourneyDetailView extends AbstractDetailView {
     static redirect = 'admintourney/dv';

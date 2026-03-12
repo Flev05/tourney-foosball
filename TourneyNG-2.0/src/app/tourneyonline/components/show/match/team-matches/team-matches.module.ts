@@ -4,11 +4,10 @@ import { TeamMatchesComponent } from './team-matches.component';
 import { TableModule } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { SelectModule } from 'primeng/select';
 
 @NgModule({
   declarations: [TeamMatchesComponent],
@@ -17,9 +16,8 @@ import { CommonModule } from '@angular/common';
     ,FormsModule
     ,ReactiveFormsModule
     ,PanelModule
-    ,DropdownModule
+    ,SelectModule
     ,InputTextModule
-    ,InputTextareaModule
     ,ButtonModule
     ,TableModule
   ] 

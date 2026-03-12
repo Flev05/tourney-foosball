@@ -14,7 +14,8 @@ import { UrcService } from '../../../service/urc-service';
 import { OperatorDetailView } from './operator-detailview';
 
 @Component({
-    templateUrl: './operator-picklist.html'
+    templateUrl: './operator-picklist.html',
+    standalone: false
 })
 export class OperatorPickList extends AbstractListView {
     availableOperators: string[] = [];

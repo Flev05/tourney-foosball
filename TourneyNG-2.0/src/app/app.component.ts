@@ -10,33 +10,34 @@ import { SelectItem } from 'primeng/api';
 const redirectTourneyListView = "/login/tourneyLv";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  animations: [
-      trigger('overlayState', [
-          state('hidden', style({
-              opacity: 0
-          })),
-          state('visible', style({
-              opacity: 1
-          })),
-          transition('visible => hidden', animate('400ms ease-in')),
-          transition('hidden => visible', animate('400ms ease-out'))
-      ]),     
-      trigger('notificationTopbar', [
-        state('hidden', style({
-          height: '0',
-          opacity: 0
-        })),
-        state('visible', style({
-          height: '*',
-          opacity: 1
-        })),
-        transition('visible => hidden', animate('400ms ease-in')),
-        transition('hidden => visible', animate('400ms ease-out'))
-      ])
-  ],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    animations: [
+        trigger('overlayState', [
+            state('hidden', style({
+                opacity: 0
+            })),
+            state('visible', style({
+                opacity: 1
+            })),
+            transition('visible => hidden', animate('400ms ease-in')),
+            transition('hidden => visible', animate('400ms ease-out'))
+        ]),
+        trigger('notificationTopbar', [
+            state('hidden', style({
+                height: '0',
+                opacity: 0
+            })),
+            state('visible', style({
+                height: '*',
+                opacity: 1
+            })),
+            transition('visible => hidden', animate('400ms ease-in')),
+            transition('hidden => visible', animate('400ms ease-out'))
+        ])
+    ],
+    standalone: false
 })
 
 export class AppComponent implements OnInit{
@@ -85,7 +86,8 @@ export class AppComponent implements OnInit{
         return en;
     }
         
-    onClientChange(cb: Combobox) {
+    onClientChange(event: any) {
+        const cb = event.value;
         console.log(cb);
         const sc = this.clientService.selectedClients.find(c => c.id == cb.value);
         if( sc )

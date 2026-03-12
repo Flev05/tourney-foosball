@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: './player-detailview.html',
+    standalone: false
 })
 export class PlayerDetailView extends AbstractDetailView {
     selectedPlayer: Player = new Player();

@@ -17,6 +17,7 @@ import { Country } from 'app/tourneyonline/domain/country';
 
 @Component({
     templateUrl: './eliminatory-standalone-detailview.html',
+    standalone: false
 })
 export class StandaloneEliminatoryDetailView extends AbstractDetailView {
     

@@ -15,6 +15,7 @@ import { Player } from 'app/tourneyonline/domain/player';
 
 @Component({
     templateUrl: './team-detailview.html',
+    standalone: false
 })
 export class TeamDetailView extends AbstractDetailView {
     public static redirect: string = "adminteam/dv";

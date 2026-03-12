@@ -4,14 +4,13 @@ import { PlayerChooserComponent } from './player-chooser.component';
 import { TableModule } from 'primeng/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { SelectModule } from 'primeng/select';
 
 
 @NgModule({
@@ -21,9 +20,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     ,FormsModule
     ,ReactiveFormsModule
     ,PanelModule
-    ,DropdownModule
+    ,SelectModule
     ,InputTextModule
-    ,InputTextareaModule
     ,ButtonModule
     ,MessagesModule
     ,MessageModule

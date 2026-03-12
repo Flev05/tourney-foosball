@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import {Message, MessageService} from 'primeng/api';
+import { MessageService} from 'primeng/api';
 
 import { AbstractListView } from '../../../components/common/abstract-listview';
 import { TourneyService } from '../../../service/tourney-service';
@@ -11,7 +11,8 @@ import { Final } from '../../../domain/final';
 import { PhaseType } from '../../../domain/enumerations';
 
 @Component({
-    templateUrl: './objective-listview.html'
+    templateUrl: './objective-listview.html',
+    standalone: false
 })
 export class ObjectiveListView extends AbstractListView {
     position1: number = 0;

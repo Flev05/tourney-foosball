@@ -16,7 +16,8 @@ const redirect: string = "adminplayer/dv";
 @Component({
     selector: 'app-player-table',
     templateUrl: './player-table.component.html',
-    styleUrls: ['./player-table.component.css']
+    styleUrls: ['./player-table.component.css'],
+    standalone: false
 })
 export class PlayerTableComponent extends AbstractListView {
     @Input() addPlayerEnabled: boolean | undefined;

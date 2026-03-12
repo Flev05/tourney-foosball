@@ -4,7 +4,6 @@ import {FormsModule, ReactiveFormsModule}    from '@angular/forms';
 import {TableModule}  from 'primeng/table';
 import {DialogModule}  from 'primeng/dialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-import {SpinnerModule} from 'primeng/spinner';
 import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TooltipModule} from 'primeng/tooltip';
@@ -13,13 +12,10 @@ import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
-import { CalendarModule } from 'primeng/calendar';
 
 import {ResultRoutingModule} from './result-routing.module';
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
@@ -33,6 +29,9 @@ import { TabResultListView } from './tab-result-listview';
 import { PlayoffResultListView } from './playoff-result-listview';
 import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/level-service';
 import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/team-table.module';
+import { SelectModule } from 'primeng/select';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @NgModule({
 	imports: [
@@ -40,9 +39,8 @@ import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/t
         ,FormsModule
         ,ReactiveFormsModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule
@@ -51,10 +49,10 @@ import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/t
         ,AutoCompleteModule
         ,RadioButtonModule
         ,CheckboxModule
-        ,SpinnerModule
+        ,InputNumberModule
         ,FieldsetModule
         ,TooltipModule
-        ,CalendarModule
+        ,DatePickerModule
         ,BlockUIModule
         ,ResultRoutingModule
         ,AccordionModule

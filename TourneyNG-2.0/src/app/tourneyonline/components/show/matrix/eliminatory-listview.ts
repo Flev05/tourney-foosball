@@ -12,7 +12,8 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 const matrixDvRedirect: string = "matrix/lv/dv";
 @Component({
     templateUrl: './eliminatory-listview.html',
-    styleUrls: ['../classification/classification-view.css']
+    styleUrls: ['../classification/classification-view.css'],
+    standalone: false
 })
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
 

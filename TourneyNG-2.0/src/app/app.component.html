@@ -1,5 +1,4 @@
-<div class="layout-wrapper">
-
+<div>
     <!-- ================= TOPBAR ================= -->
     <div id="layout-topbar" class="flex align-items-center justify-content-between px-3">
         <a class="menu-button" (click)="onMenuButtonClick($event)">
@@ -11,16 +10,9 @@
                  class="app-logo" />
         </a>
     </div>
-
-    <!-- MASK -->
-    <div class="layout-mask"
-         *ngIf="menuActive"
-         (click)="menuActive = false">
-    </div>
-
+ 
     <!-- ================= SIDEBAR ================= -->
     <div id="layout-sidebar" [class.active]="menuActive">
-
         <p *ngIf="loginService.isUserLogged">
             Utente [{{ loginService.userLogged.username }}]
         </p>
@@ -29,119 +21,95 @@
         <div *ngIf="clientsCBEnabled()" class="grid">
             <div class="col-4">Cliente:</div>
             <div class="col-8">
-                <p-dropdown
+                <p-select
                         [options]="clientOptions"
                         [(ngModel)]="selectedClientOption"
                         optionLabel="label"
-                        (onChange)="onClientChange($event.value)">
-                </p-dropdown>
+                        (onChange)="onClientChange($event)">
+                </p-select>
             </div>
         </div>
 
         <!-- ================= HOME MENU ================= -->
         <div *ngIf="!loginService.isUserLogged" class="layout-menu">
-
             <a (click)="toggleMenu('home')"
                [class.active-menuitem]="activeMenuId === 'home'">
-
                 <i class="pi pi-home mr-2"></i>
                 <span>HOME</span>
             </a>
-
             <div *ngIf="activeMenuId === 'home'">
                 <a routerLink="/demo" (click)="menuActive=false">• Demo</a>
                 <a routerLink="/lease" (click)="menuActive=false">• Noleggio</a>
             </div>
-
         </div>
 
         <!-- ================= ADMIN ================= -->
         <div *ngIf="loginService.isSuperUser()" class="layout-menu">
-
             <a (click)="toggleMenu('admin')"
                [class.active-menuitem]="activeMenuId === 'admin'">
-
                 <i class="pi pi-cog mr-2"></i>
                 <span *ngIf="loginService.isAtLeastOwner()">Clienti/Utenti</span>
                 <span *ngIf="loginService.isAdmin()">Reset Password</span>
             </a>
-
             <div *ngIf="activeMenuId === 'admin'">
                 <a *ngIf="loginService.isDeveloper()" routerLink="/clients" (click)="menuActive=false">• Clienti</a>
                 <a *ngIf="loginService.isAtLeastOwner()" routerLink="/users" (click)="menuActive=false">• Utenti</a>
                 <a *ngIf="loginService.isAtLeastOwner()" routerLink="/users/urclv" (click)="menuActive=false">• Associa</a>
                 <a *ngIf="loginService.isAtLeastAdmin()" routerLink="/users/resetPasswordLv" (click)="menuActive=false">• Reset Password</a>
             </div>
-
         </div>
 
         <!-- ================= CONFIG ================= -->
         <div *ngIf="loginService.isUserAllowed()" class="layout-menu">
-
             <a (click)="toggleMenu('config')"
                [class.active-menuitem]="activeMenuId === 'config'">
 
                 <i class="pi pi-sliders-h mr-2"></i>
                 <span>Configurazione</span>
             </a>
-
             <div *ngIf="activeMenuId === 'config'">
                 <a routerLink="/admintourney" (click)="menuActive=false">• Tornei</a>
                 <a routerLink="/adminplayer" (click)="menuActive=false">• Giocatori</a>
                 <a routerLink="/adminteam" (click)="menuActive=false">• Squadre</a>
             </div>
-
         </div>
 
         <!-- ================= RESULTS ================= -->
         <div class="layout-menu">
-
             <a (click)="toggleMenu('results')"
                [class.active-menuitem]="activeMenuId === 'results'">
-
                 <i class="pi pi-chart-bar mr-2"></i>
                 <span>Risultati/Classifica</span>
             </a>
-
             <div *ngIf="activeMenuId === 'results'">
                 <a routerLink="/showtourney" (click)="menuActive=false">• Tornei</a>
             </div>
-
         </div>
 
         <!-- ================= LOGIN / LOGOUT ================= -->
         <div class="layout-menu">
-
             <a (click)="toggleMenu('auth')"
                [class.active-menuitem]="activeMenuId === 'auth'">
-
                 <i class="pi pi-user mr-2"></i>
                 <span>{{ loginService.isUserLogged ? 'Logout' : 'Login' }}</span>
             </a>
-
             <div *ngIf="activeMenuId === 'auth'">
-
                 <a *ngIf="!loginService.isUserLogged"
                    routerLink="/login"
                    (click)="menuActive=false">
                     • Login
                 </a>
-
                 <a *ngIf="loginService.isUserLogged"
                    (click)="logout($event)">
                     • Logout
                 </a>
-
                 <a *ngIf="loginService.isUserLogged && !loginService.isFollower()"
                    routerLink="/users/changePassword"
                    (click)="menuActive=false">
                     • Password
                 </a>
-
             </div>
-
         </div>
-
     </div>
 
     <!-- ================= CONTENT ================= -->
@@ -149,25 +117,18 @@
 
         <router-outlet></router-outlet>
 
-        <div *ngIf="!loginService.isUserLogged"
-             class="layout-footer text-center p-3">
-
+        <div *ngIf="!loginService.isUserLogged" class="layout-footer text-center p-3">
             <p>Tournaments 2.0</p>
             <p>Copyright © {{ loginService.currentYear }}</p>
             <p>Powered by Luciano Martino</p>
-
             <a routerLink="/lease" class="p-button p-button-text">
                 Noleggio
             </a>
-
             <div class="mt-3">
                 <a href="https://www.facebook.com/CalcioBalillaPregnana/">
                     <i class="pi pi-facebook"></i>
                 </a>
             </div>
-
         </div>
-
     </div>
-
 </div>

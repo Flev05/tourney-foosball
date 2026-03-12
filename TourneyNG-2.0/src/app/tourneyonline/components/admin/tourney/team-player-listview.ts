@@ -20,6 +20,7 @@ const REDIRECT_TEAM_DV   = "admintourney/dv/updateteam";
 
 @Component({
     templateUrl: './team-player-listview.html',
+    standalone: false
 })
 export class TeamPlayerListView extends AbstractDetailView {
 

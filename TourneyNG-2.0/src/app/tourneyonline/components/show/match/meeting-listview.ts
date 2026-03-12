@@ -16,7 +16,8 @@ const redirect = '/match/matchlv';
             width: auto;
             table-layout: fixed;
         }
-  `]
+  `],
+    standalone: false
 })
 export class MeetingListView extends AbstractListView {
     selectedMeeting : Meeting = new Meeting();

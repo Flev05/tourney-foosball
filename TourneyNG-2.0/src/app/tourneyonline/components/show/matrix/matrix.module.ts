@@ -4,7 +4,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule}  from 'primeng/table';
 import {DialogModule}  from 'primeng/dialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-import {SpinnerModule} from 'primeng/spinner';
 import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TooltipModule} from 'primeng/tooltip';
@@ -13,13 +12,10 @@ import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { CalendarModule } from 'primeng/calendar';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
@@ -33,6 +29,9 @@ import { LevelService } from 'app/tourneyonline/components/admin/eliminatory/lev
 import { RoundMatrixListView } from './round-matrix-listview';
 import { PlayoffMatrixListView } from './playoff-matrix-listview';
 import { MatrixService } from './matrix-service';
+import { SelectModule } from 'primeng/select';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @NgModule({
 	imports: [
@@ -41,9 +40,8 @@ import { MatrixService } from './matrix-service';
         ,FormsModule
         ,ReactiveFormsModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule
@@ -52,10 +50,10 @@ import { MatrixService } from './matrix-service';
         ,AutoCompleteModule
         ,RadioButtonModule
         ,CheckboxModule
-        ,SpinnerModule
+        ,InputNumberModule
         ,FieldsetModule
         ,TooltipModule
-        ,CalendarModule
+        ,DatePickerModule
         ,AccordionModule
         ,PickListModule
         ,MessagesModule

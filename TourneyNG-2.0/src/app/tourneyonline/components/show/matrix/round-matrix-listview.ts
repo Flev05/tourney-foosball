@@ -14,7 +14,8 @@ import { MatrixService } from './matrix-service';
 
 @Component({
     templateUrl: './round-matrix-listview.html',
-    styleUrls: ['./matrix-view.css','../classification/classification-view.css']
+    styleUrls: ['./matrix-view.css', '../classification/classification-view.css'],
+    standalone: false
 })
 export class RoundMatrixListView extends AbstractRoundResultListView {
     roundName: string = "";

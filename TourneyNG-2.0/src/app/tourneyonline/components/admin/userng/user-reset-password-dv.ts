@@ -3,10 +3,10 @@ import {FormControl,FormGroup,FormBuilder} from '@angular/forms';
 
 import { Location } from '@angular/common';
 import { Password } from '../../../domain/password';
-import { Message } from 'primeng/api';
 import { UserService } from '../../../service/user-service';
 import { Md5 } from 'md5-typescript';
 import { LoginService } from '../../../service/login-service';
+import { ToastMessageOptions } from 'primeng/api';
 
 @Component({
     templateUrl: './user-reset-password-dv.html',
@@ -19,13 +19,14 @@ import { LoginService } from '../../../service/login-service';
         .ui-g-4 {
             width: 30mm;
         }
-  `]
+  `],
+    standalone: false
 })
 export class UserResetPasswordDv implements OnInit {
 
     formLogin: Password = new Password();
 
-    msgs: Message[] = [];
+    msgs: ToastMessageOptions[] = [];
 
     userform: FormGroup;
 

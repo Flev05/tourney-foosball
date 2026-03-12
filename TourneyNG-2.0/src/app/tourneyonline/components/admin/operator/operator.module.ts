@@ -4,7 +4,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {AutoCompleteModule} from 'primeng/autocomplete';
-import {SpinnerModule} from 'primeng/spinner';
 import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TooltipModule} from 'primeng/tooltip';
@@ -12,13 +11,10 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { CalendarModule } from 'primeng/calendar';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
@@ -28,6 +24,9 @@ import { DateFormatPipe } from '../../../components/common/date-format-pipe';
 import { OperatorRoutingModule } from './operator-routing.module';
 import { OperatorPickList } from './operator-picklist';
 import { PickListModule } from 'primeng/picklist';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
 	imports: [
@@ -35,9 +34,8 @@ import { PickListModule } from 'primeng/picklist';
         ,FormsModule
         ,ReactiveFormsModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule
@@ -46,10 +44,10 @@ import { PickListModule } from 'primeng/picklist';
         ,AutoCompleteModule
         ,RadioButtonModule
         ,CheckboxModule
-        ,SpinnerModule
+        ,InputNumberModule
         ,FieldsetModule
         ,TooltipModule
-        ,CalendarModule
+        ,DatePickerModule
         ,OperatorRoutingModule
         ,MessagesModule
         ,MessageModule

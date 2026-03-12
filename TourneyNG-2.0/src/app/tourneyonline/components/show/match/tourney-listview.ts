@@ -21,7 +21,8 @@ const redirect = '/match/meetinglv';
             width: auto;
             table-layout: fixed;
         }
-    `]
+    `],
+    standalone: false
 })
 export class MatchTourneyListView extends AbstractTourneyListView {
     constructor(protected override tourneyService: TourneyService

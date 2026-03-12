@@ -11,7 +11,8 @@ import { DisciplineService } from 'app/tourneyonline/service/discipline-service'
 import { CountryService } from 'app/tourneyonline/service/country-service';
 
 @Component({
-      templateUrl: './tourney-listview.html'   
+    templateUrl: './tourney-listview.html',
+    standalone: false
 })
 export class ResultTourneyListView extends AbstractTourneyListView {
     static redirect: string = '/result/lv';

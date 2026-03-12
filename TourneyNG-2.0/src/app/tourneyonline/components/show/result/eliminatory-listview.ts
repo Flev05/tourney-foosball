@@ -17,8 +17,8 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     templateUrl: './eliminatory-listview.html',
-    styleUrls: ['../classification/classification-view.css']
-    
+    styleUrls: ['../classification/classification-view.css'],
+    standalone: false
 })
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
     constructor(

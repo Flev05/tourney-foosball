@@ -62,17 +62,17 @@
                 <div class="ui-g-4">
                     <label for="positionId">Classificata</label>
                 </div>
-                <p-dropdown id="positionId" [options]="positions" [(ngModel)]="row.fromRound.position" optionLabel="label"></p-dropdown>
+                <p-select id="positionId" [options]="positions" [(ngModel)]="row.fromRound.position" optionLabel="label"></p-select>
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-4">
                     <label for="roundId">Girone</label>
                 </div>
                 <div class="col-3">
-                    <p-dropdown id="roundId" [options]="rounds" [(ngModel)]="row.fromRound.round" 
+                    <p-select id="roundId" [options]="rounds" [(ngModel)]="row.fromRound.round" 
                     optionLabel="label" 
                     placeholder="Selezionare">
-                </p-dropdown>
+                </p-select>
                 </div>
             </div>
             <div *ngIf="isPlayoff" class="ui-g-12">
@@ -80,10 +80,10 @@
                     <label for="playoffId">Playoff</label>
                 </div>
                 <div class="col-3">
-                    <p-dropdown id="playoffId" [options]="playoffs" [(ngModel)]="row.fromPlayoff.round" 
+                    <p-select id="playoffId" [options]="playoffs" [(ngModel)]="row.fromPlayoff.round" 
                     optionLabel="label"
                     placeholder="Selezionare">
-                </p-dropdown>
+                </p-select>
                 </div>
             </div>
         </div>       

@@ -8,7 +8,8 @@ const redirect: string = "adminplayer/dv";
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
 @Component({
-    templateUrl: './player-listview.html'
+    templateUrl: './player-listview.html',
+    standalone: false
 })
 export class PlayerListView extends AbstractListView {
     playerLv : boolean = false;

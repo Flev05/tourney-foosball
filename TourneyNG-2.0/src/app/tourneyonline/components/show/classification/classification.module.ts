@@ -8,9 +8,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { AccordionModule } from 'primeng/accordion';
@@ -23,6 +21,7 @@ import { ClassificationEliminatoryListView } from './eliminatory-listview';
 import { ClassificationDetailView } from './classification-detailview';
 import { PlayerTableModule } from '../../admin/player/player-table/player-table.module';
 import { TeamMatchesModule } from '../match/team-matches/team-matches.module';
+import { SelectModule } from 'primeng/select';
 
 @NgModule({
         imports: [
@@ -31,9 +30,8 @@ import { TeamMatchesModule } from '../match/team-matches/team-matches.module';
         ,ReactiveFormsModule
         ,AccordionModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule

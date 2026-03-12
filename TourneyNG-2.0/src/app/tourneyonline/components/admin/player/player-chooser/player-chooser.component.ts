@@ -11,7 +11,8 @@ import { TourneyVO } from '../../../../domain/tourney.vo';
 @Component({
     selector: 'app-player-chooser',
     templateUrl: './player-chooser.component.html',
-    styleUrls: ['./player-chooser.component.css']
+    styleUrls: ['./player-chooser.component.css'],
+    standalone: false
 })
 export class PlayerChooserComponent extends AbstractDetailView {
 

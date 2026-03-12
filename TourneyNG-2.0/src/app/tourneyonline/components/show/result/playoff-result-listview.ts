@@ -16,7 +16,8 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 
 @Component({
     templateUrl: './playoff-result-listview.html',
-    styleUrls: ['../classification/classification-view.css']
+    styleUrls: ['../classification/classification-view.css'],
+    standalone: false
 })
 export class PlayoffResultListView extends AbstractPlayoffResultListView {
     addTeamEnabled = false;

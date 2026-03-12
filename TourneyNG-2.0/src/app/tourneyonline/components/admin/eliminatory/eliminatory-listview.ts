@@ -14,7 +14,8 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 
 @Component({
-    templateUrl: './eliminatory-listview.html'
+    templateUrl: './eliminatory-listview.html',
+    standalone: false
 })
 export class EliminatoryListView extends AbstractListView {
     selectedEliminatoryLevel:  EliminatoryLevel = new EliminatoryLevel();

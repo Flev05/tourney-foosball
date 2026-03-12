@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Message } from 'primeng/api';
 import { Meeting } from '../../../domain/meeting';
 import { TourneyService } from '../../../service/tourney-service';
 import { Playoff } from '../../../domain/playoff';
@@ -9,16 +8,18 @@ import { TableCols } from '../../../domain/table-cols';
 import { MeetingDb } from '../../../domain/meeting-db';
 import { AbstractRuleListView } from '../../../components/common/abstract-rule-listview';
 import { MeetingPlayoffService } from './meeting-playoff-service';
+import { ToastMessageOptions } from 'primeng/api';
 
 @Component({
-    templateUrl: './meeting-page-listview.html'
+    templateUrl: './meeting-page-listview.html',
+    standalone: false
 })
 export class MeetingPageListView extends AbstractRuleListView {
     static redirect: string = "adminplayoff/lv/meetingLv/playoffRuledv";
     meetingsCols: TableCols[] = [];
     selectedRow: Meeting = new Meeting();
 
-    msgs: Message[] = [];
+    msgs: ToastMessageOptions[] = [];
 
     selectedPlayoff: Playoff = new Playoff();
     isRoundTrip: boolean = true;

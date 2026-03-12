@@ -16,7 +16,8 @@ import { LoginService } from '../../../service/login-service';
           margin-top: .25em;
           display: block;
         }
-  `]
+  `],
+    standalone: false
 })
 export class ClientDetailView extends AbstractDetailView {
 

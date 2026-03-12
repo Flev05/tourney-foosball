@@ -68,11 +68,11 @@
                 Classificata
             </div>
             <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
-                <p-dropdown id="positionId" 
+                <p-select id="positionId" 
                     [options]="positions" 
                     formControlName="position1" 
                     optionLabel="label">
-                </p-dropdown>
+                </p-select>
             </div>
         </div>
         
@@ -81,11 +81,11 @@
                 Girone
             </div>
             <div class="col-3"  pTooltip="Lasciare in bianco significa che passano le migliori {{position1.value}}° classificate">
-                <p-dropdown id="roundId" 
+                <p-select id="roundId" 
                     [options]="rounds" 
                     formControlName="round1" 
                     optionLabel="label">
-                </p-dropdown>
+                </p-select>
             </div>
         </div>
 
@@ -94,11 +94,11 @@
                     Playoff
             </div>
             <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
-                <p-dropdown id="playoffId" 
+                <p-select id="playoffId" 
                     [options]="playoffs" 
                     formControlName="playoff1" 
                     optionLabel="label">
-                </p-dropdown>
+                </p-select>
             </div>
         </div>
     
@@ -110,11 +110,11 @@
                     Classificata
                 </div>
                 <div class="col-3" >
-                    <p-dropdown id="vin" 
+                    <p-select id="vin" 
                         [options]="positions" 
                         formControlName="position2" 
                         optionLabel="label">
-                    </p-dropdown>
+                    </p-select>
                 </div>
             </div>
 
@@ -123,11 +123,11 @@
                     Girone
                 </div>
                 <div class="col-3" pTooltip="Lasciare in bianco significa che passano le migliori {{position2.value}}° classificate">
-                    <p-dropdown id="round" 
+                    <p-select id="round" 
                         [options]="rounds" 
                         formControlName="round2" 
                         optionLabel="label">
-                    </p-dropdown>
+                    </p-select>
                 </div>
             </div>
 
@@ -136,11 +136,11 @@
                     Playoff
                 </div>
                 <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
-                    <p-dropdown id="playoff"    
+                    <p-select id="playoff"    
                         [options]="playoffs" 
                         formControlName="playoff2" 
                         optionLabel="label">
-                    </p-dropdown>
+                    </p-select>
                 </div>
             </div>
         </div>   
@@ -154,11 +154,11 @@
                 Data e ora:
             </div>
             <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
-                <p-calendar formControlName="meetingDate1" 
+                <p-datepicker formControlName="meetingDate1" 
                     [locale]="it" 
                     dateFormat="dd/mm/yy" 
                     [showTime]="true">
-                </p-calendar>
+                </p-datepicker>
             </div>
         </div>
 
@@ -211,11 +211,11 @@
                     Data e ora:
                 </div>
                 <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
-                    <p-calendar formControlName="meetingDate2" 
+                    <p-datepicker formControlName="meetingDate2" 
                         [locale]="it" 
                         dateFormat="dd/mm/yy" 
                         [showTime]="true">
-                    </p-calendar>
+                    </p-datepicker>
                 </div>
             </div>
 

@@ -17,7 +17,8 @@ import { RoleVO } from '../../../domain/role-vo';
 import { LoginService } from '../../../service/login-service';
 
 @Component({
-    templateUrl: './user-detailview.html' 
+    templateUrl: './user-detailview.html',
+    standalone: false
 })
 export class UserDetailView extends AbstractDetailView {
     selectedUser: UserVO = new UserVO();

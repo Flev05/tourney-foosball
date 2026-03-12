@@ -14,7 +14,8 @@ import { OperatorDetailView } from './operator-detailview';
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
 @Component({
-    templateUrl: './operator-listview.html'
+    templateUrl: './operator-listview.html',
+    standalone: false
 })
 export class OperatorListView extends AbstractListView {
     

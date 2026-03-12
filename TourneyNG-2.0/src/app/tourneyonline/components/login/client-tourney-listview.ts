@@ -4,7 +4,8 @@ import { LoginService } from '../../service/login-service';
 import { LoginDetailView } from './login-detailview';
 
 @Component({
-    template: ""
+    template: "",
+    standalone: false
 })
 export class ClientTourneyListView implements OnInit {
     constructor(

@@ -13,7 +13,8 @@ import { LoginService } from '../../../service/login-service';
 const redirect = '/users/resetPasswordDv';
 
 @Component({
-    templateUrl: './user-reset-password-lv.html'
+    templateUrl: './user-reset-password-lv.html',
+    standalone: false
 })
 export class UserResetPasswordLv extends AbstractListView  {
     selectedUser: UserVO = new UserVO();

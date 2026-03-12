@@ -9,7 +9,8 @@ import { Round } from 'app/tourneyonline/domain/round';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
-    templateUrl: './tab-listview.html'
+    templateUrl: './tab-listview.html',
+    standalone: false
 })
 export class ClassificationTabListView extends AbstractEliminatoryListView {
     static tabDvRedirect: string = "classification/lv/eliminatories";

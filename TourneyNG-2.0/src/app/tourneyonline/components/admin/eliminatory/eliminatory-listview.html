@@ -94,17 +94,24 @@
             <div class="col-3" tooltipPosition="right"
                     pTooltip="Indicare se le eliminazioni dirette sono di solo andata o andata e ritorno">
                 <p-radioButton name="isOnewayGroupname" 
-                    label="Solo andata" 
+                    inputId="eliminazioniId1" 
                     value="true" 
                     [(ngModel)]="levelService.isOneway"
                     (onClick)="onOnewayClick()">
                 </p-radioButton>
+                <label for="eliminazioniId1">
+                    Solo andata
+                </label>
+
                 <p-radioButton name="isOnewayGroupname" 
-                    label="Andata e ritorno" 
+                    inputId="eliminazioniId2" 
                     value="false" 
                     [(ngModel)]="levelService.isOneway"
                     (onClick)="onRoundtripClick()">
                 </p-radioButton>
+                <label for="eliminazioniId2">
+                    Andata e ritorno
+                </label>
             </div>
         </div>
         <div class="grid">
@@ -112,11 +119,11 @@
                 Partite:
             </div>
             <div class="col-3">
-                <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.maxMatchesPerMeeting" tooltipPosition="right"
+                <p-inputNumber [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.maxMatchesPerMeeting" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Numero di partite in ciascun incontro"
                     (onChange)="onEliminatorySpinnerChange($event)">
-                </p-spinner>
+                </p-inputNumber>
             </div>
         </div>
         <div class="grid" *ngIf="selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.allMatchesEnabled">
@@ -127,16 +134,23 @@
                     pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite">
                 <div class="ui-g radiobuttons">
                     <p-radioButton name="allEliminatoryMatchesGroupname" 
-                        label="Tutte le partite" 
+                        inputId="allEliminatoryMatchesGroupnameId1" 
                         value="true" 
                         [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.isAllMatches"
                         (onClick)="onAllEliminatoryMatchesClick()">
                     </p-radioButton>
+                    <label for="allEliminatoryMatchesGroupnameId1">
+                        Tutte le partite
+                    </label>
+
                     <p-radioButton name="allEliminatoryMatchesGroupname" 
-                        label="Al Meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite" 
+                        inputId="allEliminatoryMatchesGroupnameId2"
                         value="false" 
                         [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.isAllMatches">
                     </p-radioButton>
+                    <label for="allEliminatoryMatchesGroupnameId2">
+                        Al Meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite
+                    </label>
                 </div>
             </div>        
         </div>
@@ -145,10 +159,10 @@
                 Goal:
             </div>
             <div class="col-3">
-                <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsNeededToWin" tooltipPosition="right"
+                <p-inputNumber [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsNeededToWin" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
-                </p-spinner>
+                </p-inputNumber>
             </div>
         </div>
         <div *ngIf="selectedTourney.tourneyType=='time' || selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true'" class="grid">
@@ -156,10 +170,10 @@
                 Vittoria:
             </div>
             <div class="col-3">
-                <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchWinnerScores" tooltipPosition="right"
+                <p-inputNumber [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchWinnerScores" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Punti assegnati in caso di vittoria">
-                </p-spinner>
+                </p-inputNumber>
             </div>
             <div class="col-3">
                 punti
@@ -170,10 +184,10 @@
                 Pareggio:
             </div>
             <div class="col-3">
-                <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchBalanceScores" tooltipPosition="right"
+                <p-inputNumber [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchBalanceScores" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Punti assegnati in caso di pareggio">
-                </p-spinner>
+                </p-inputNumber>
             </div>
             <div class="col-3">
                 punti
@@ -185,10 +199,10 @@
                 Vittoria (Golden goal o Tie break):
             </div>
             <div class="col-3">
-                <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
+                <p-inputNumber [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakWin" tooltipPosition="right"
                     [min]="1"
                     pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
-                </p-spinner>
+                </p-inputNumber>
             </div>                
             <div class="col-3">
                 punti
@@ -200,10 +214,10 @@
                 Sconfitta (Golden goal o Tie break):
             </div>
             <div class="col-3">
-                <p-spinner [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
+                <p-inputNumber [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakDefeat" tooltipPosition="right"
                     [min]="0"
                     pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
-                </p-spinner>
+                </p-inputNumber>
             </div>                            
             <div class="col-3">
                 punti

@@ -11,7 +11,8 @@ import { MeetingRoundService } from './meeting-round-service';
 import { Meta } from '@angular/platform-browser';
 
 @Component({
-    templateUrl: './meeting-page-listview.html'
+    templateUrl: './meeting-page-listview.html',
+    standalone: false
 })
 export class MeetingListView extends AbstractListView {
     @Input() showCurrentPageReport: boolean = true;

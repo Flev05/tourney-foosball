@@ -1,12 +1,13 @@
 import {Component} from '@angular/core';
 import {Validators,FormControl,FormGroup,FormBuilder} from '@angular/forms';
-import {Message, MessageService} from 'primeng/api';
+import { MessageService, ToastMessageOptions} from 'primeng/api';
 
 @Component({
-    templateUrl: './lease.component.html'
+    templateUrl: './lease.component.html',
+    standalone: false
 })
 export class LeaseComponent {
-    msgs: Message[] = [];
+    msgs: ToastMessageOptions[] = [];
     
     userform: FormGroup;
     

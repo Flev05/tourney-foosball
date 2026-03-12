@@ -20,7 +20,8 @@ const DEFAULT_OPERATOR_PASSWORD: string = "torneionline";
 const REDIRECT_TOURNEY_DV   = 'adminoperator/dv';
 
 @Component({
-    templateUrl: './operator-detailview.html' 
+    templateUrl: './operator-detailview.html',
+    standalone: false
 })
 export class OperatorDetailView extends UserDetailView {
     public static redirect: string = REDIRECT_TOURNEY_DV;

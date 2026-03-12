@@ -10,17 +10,16 @@ import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
-import {AutoCompleteModule} from 'primeng/autocomplete';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FieldsetModule } from 'primeng/fieldset';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
 import {ClientRoutingModule} from './client-routing.module';
 import {ClientListView} from './client-listview';
 import {ClientDetailView} from './client-detailview';
+import { SelectModule } from 'primeng/select';
 
 @NgModule({
 	imports: [
@@ -28,9 +27,8 @@ import {ClientDetailView} from './client-detailview';
         ,FormsModule
         ,ReactiveFormsModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule

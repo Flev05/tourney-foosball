@@ -5,7 +5,6 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {TableModule}  from 'primeng/table';
 import {DialogModule}  from 'primeng/dialog';
-import {SpinnerModule} from 'primeng/spinner';
 import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {TooltipModule} from 'primeng/tooltip';
@@ -17,13 +16,10 @@ import { MessageModule } from 'primeng/message';
 import { BlockUIModule } from 'primeng/blockui';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { PickListModule } from 'primeng/picklist';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { CalendarModule } from 'primeng/calendar';
 import { TourneyRoutingModule} from './tourney-routing.module';
 import { TourneyListView} from './tourney-listview';
 import { TourneyDetailView} from './tourney-detailview';
@@ -39,6 +35,9 @@ import { TeamModule } from 'app/tourneyonline/components/admin/team/team.module'
 import { NewTourneyDetailView } from './new-tourney-detailview';
 import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/team-table.module';
 import { PlayerChooserModule } from '../player/player-chooser/player-chooser.module';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
 	imports: [
@@ -46,9 +45,8 @@ import { PlayerChooserModule } from '../player/player-chooser/player-chooser.mod
         ,FormsModule
         ,ReactiveFormsModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule
@@ -57,10 +55,10 @@ import { PlayerChooserModule } from '../player/player-chooser/player-chooser.mod
         ,AutoCompleteModule
         ,RadioButtonModule
         ,CheckboxModule
-        ,SpinnerModule
+        ,InputNumberModule
         ,FieldsetModule
         ,TooltipModule
-        ,CalendarModule
+        ,DatePickerModule
         ,PickListModule
         ,ScrollPanelModule
         ,AccordionModule

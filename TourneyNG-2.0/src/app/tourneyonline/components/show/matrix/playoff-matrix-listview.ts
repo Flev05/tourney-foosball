@@ -14,7 +14,8 @@ import { CellCombobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 @Component({
     templateUrl: './playoff-matrix-listview.html',
-    styleUrls: ['./matrix-view.css','../classification/classification-view.css']
+    styleUrls: ['./matrix-view.css', '../classification/classification-view.css'],
+    standalone: false
 })
 export class PlayoffMatrixListView extends AbstractPlayoffResultListView {
     roundName: string = "";

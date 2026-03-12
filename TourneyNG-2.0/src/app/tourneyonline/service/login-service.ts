@@ -30,7 +30,7 @@ export class LoginService {
     { 
         console.log("Constructor of LoginService");
         this.isUserLogged = false;
-        this.currentYear="2023";
+        this.currentYear  = "" + new Date().getFullYear();
     }
 
     isDeveloper(): boolean {

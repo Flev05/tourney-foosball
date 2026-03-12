@@ -21,7 +21,8 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 const FREEZE_RESULT_POPUP: string = "Attenzione! La conferma di tale scelta convalida definitivamente tutti i dati dell'incontro! Confermi?"
 const ON_RESET_POPUP: string = "Attenzione! La conferma di tale scelta azzera tutti i dati dell'incontro! Solo l'aministratore lo può riabilitare. Confermi?"
 @Component({
-    templateUrl: './meeting-detailview.html' 
+    templateUrl: './meeting-detailview.html',
+    standalone: false
 })
 export class MeetingDetailView extends AbstractDetailView {
     static redirect: string = "";

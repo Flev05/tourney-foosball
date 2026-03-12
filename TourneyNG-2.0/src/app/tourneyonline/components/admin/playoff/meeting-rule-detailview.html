@@ -74,12 +74,12 @@
     </div>
     <div class="col-3" tooltipPosition="right"
             pTooltip="Indicare la data e ora di inizio dell'incontro.">
-        <p-calendar [(ngModel)]="selectedMeeting.datetime" 
+        <p-datepicker [(ngModel)]="selectedMeeting.datetime" 
             [locale]="it" 
             dateFormat="dd/mm/yy" 
             [showIcon]="true"
             [showTime]="false">
-        </p-calendar>
+        </p-datepicker>
     </div>   
 </div>
 <div class="ui-dialog-buttonpane ui-helper-clearfix">

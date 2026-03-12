@@ -11,9 +11,7 @@ import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -25,29 +23,29 @@ import {UserResetPasswordDv} from './user-reset-password-dv';
 import { UrcListView } from './urc-listview';
 import { UserDetailView } from './user-detailview';
 import { UserListView } from './user-listview';
+import { SelectModule } from 'primeng/select';
 
 @NgModule({
 	imports: [
-                CommonModule
-                ,FormsModule
-                ,ReactiveFormsModule
-                ,PanelModule
-                ,DropdownModule
-                ,InputTextModule
-                ,InputTextareaModule
-                ,ButtonModule
-                ,TabViewModule
-                ,TableModule
-                ,DialogModule
-                ,SliderModule
-                ,ToastModule
-                ,AutoCompleteModule
-                ,RadioButtonModule
-                ,FieldsetModule
-                ,AccordionModule
-                ,MessagesModule
-                ,MessageModule
-                ,UserRoutingModule
+        CommonModule
+        ,FormsModule
+        ,ReactiveFormsModule
+        ,PanelModule
+        ,SelectModule
+        ,InputTextModule
+        ,ButtonModule
+        ,TabViewModule
+        ,TableModule
+        ,DialogModule
+        ,SliderModule
+        ,ToastModule
+        ,AutoCompleteModule
+        ,RadioButtonModule
+        ,FieldsetModule
+        ,AccordionModule
+        ,MessagesModule
+        ,MessageModule
+        ,UserRoutingModule
 	],
 	declarations: [
                 UrcListView

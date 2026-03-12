@@ -17,7 +17,8 @@ const MAXTRIX_LV  = '/matrix/lv';
 const RESULT_LV = '/result/lv';
 
 @Component({
-    templateUrl: './tourney-listview.html'
+    templateUrl: './tourney-listview.html',
+    standalone: false
 })
 export class TourneyResultListView extends AbstractTourneyListView {
     public static REDIRECT_TOURNEY_LV  = 'showtourney/';

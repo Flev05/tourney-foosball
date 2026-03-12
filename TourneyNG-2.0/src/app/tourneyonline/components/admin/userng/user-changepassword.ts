@@ -20,7 +20,8 @@ import { MessageService } from 'primeng/api';
         .col-2 {
             width: 47mm;
         }
-  `]
+  `],
+    standalone: false
 })
 export class UserChangePassword implements OnInit {
 

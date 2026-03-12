@@ -37,13 +37,13 @@
         </div>
         <div class="col-5" tooltipPosition="right" 
                 pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
-            <p-dropdown id="teams1RoundId" 
+            <p-select id="teams1RoundId" 
                 [options]="teams4RoundCombobox" 
                 [(ngModel)]="teamName1CB"  
                 optionLabel="label"
                 (onChange)="onTeam1Change($event.value)" 
                 placeholder="Seleziona">
-            </p-dropdown>
+            </p-select>
         </div>  
     </div>
     <div class="grid">
@@ -52,13 +52,13 @@
         </div>
         <div class="col-5" tooltipPosition="right" 
                 pTooltip="Selezionare la squadra dalla lista di squadre in combo box">
-            <p-dropdown id="teams2RoundId" 
+            <p-select id="teams2RoundId" 
                 [options]="teams4RoundCombobox" 
                 [(ngModel)]="teamName2CB"  
                 optionLabel="label"
                 (onChange)="onTeam2Change($event.value)" 
                 placeholder="Seleziona">
-            </p-dropdown>
+            </p-select>
         </div>                  
     </div>
 </div>
@@ -105,12 +105,12 @@
         </div>
         <div class="col-3" tooltipPosition="right"
                 pTooltip="Indicare la data e ora di inizio dell'incontro.">
-            <p-calendar [(ngModel)]="selectedMeeting.datetime" 
+            <p-datepicker [(ngModel)]="selectedMeeting.datetime" 
                 [locale]="it" 
                 dateFormat="dd/mm/yy" 
                 [showIcon]="true"
                 [showTime]="false">
-            </p-calendar>
+            </p-datepicker>
         </div>            
     </div>
 </div>

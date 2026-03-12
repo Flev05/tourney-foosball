@@ -12,7 +12,8 @@ import { EliminatoryVO } from '../../../domain/eliminatory.vo';
 import { TableCols } from '../../../domain/table-cols';
 
 @Component({
-    templateUrl: './eliminatory-standalone-listview.html'
+    templateUrl: './eliminatory-standalone-listview.html',
+    standalone: false
 })
 export class StandaloneEliminatoryListView extends AbstractListView {
 

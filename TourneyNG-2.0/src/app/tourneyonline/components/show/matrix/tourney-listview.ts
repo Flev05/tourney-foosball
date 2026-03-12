@@ -14,7 +14,8 @@ import { CountryService } from 'app/tourneyonline/service/country-service';
 const redirect = '/matrix/lv';
 
 @Component({
-    templateUrl: './tourney-listview.html'
+    templateUrl: './tourney-listview.html',
+    standalone: false
 })
 export class MatrixTourneyListView extends AbstractTourneyListView {
     constructor(protected override tourneyService: TourneyService

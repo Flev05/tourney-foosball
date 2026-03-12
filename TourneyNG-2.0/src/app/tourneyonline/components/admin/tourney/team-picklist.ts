@@ -13,7 +13,8 @@ import { ClientService } from '../../../service/client-service';
 import { Observable, of } from 'rxjs';
 
 @Component({
-    templateUrl: './team-picklist.html'
+    templateUrl: './team-picklist.html',
+    standalone: false
 })
 export class TeamPickList extends AbstractListView {
 

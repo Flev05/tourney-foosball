@@ -22,7 +22,8 @@ import { Player } from 'app/tourneyonline/domain/player';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
-    templateUrl: './tourney-listview.html'
+    templateUrl: './tourney-listview.html',
+    standalone: false
 })
 export class TourneyListView extends AbstractTourneyListView {
     tourneyFormGroup: FormGroup;

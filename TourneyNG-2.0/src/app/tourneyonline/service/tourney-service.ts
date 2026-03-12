@@ -612,6 +612,8 @@ export class TourneyService extends AbstractService {
     /** PUT: update the tourney on the server */
     private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let url = updateTourneyUrl;
+        const json = JSON.stringify(tvo);
+        console.log(json);
         const ob : Observable<TourneyVO> = this.http.put<TourneyVO>(url, tvo, httpOptions);
         return ob.pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),
@@ -1065,7 +1067,10 @@ export class TourneyService extends AbstractService {
      * Creates a new Classification in function of the received parameters
      */
     public newClassification(teamName: string, initialPoints: number): Classification {
-        return new Classification();
+        const c = new Classification();
+        c.teamName = teamName
+        c.points = initialPoints;
+        return c;
     }
 
     /**
@@ -1082,14 +1087,14 @@ export class TourneyService extends AbstractService {
         round.classification = classificationList;
     }
 
-    public cloneRounds(rounds: Round[]): Round[] {
-        let clonedRounds: Array<Round> = new Array<Round>();
-        for(let r of rounds) {
-            let newRound = this.cloneRound(r);
-            clonedRounds.push(newRound);
-        }
-        return clonedRounds;
-    }
+    // public cloneRounds(rounds: Round[]): Round[] {
+    //     let clonedRounds: Array<Round> = new Array<Round>();
+    //     for(let r of rounds) {
+    //         let newRound = this.cloneRound(r);
+    //         clonedRounds.push(newRound);
+    //     }
+    //     return clonedRounds;
+    // }
 
     public cloneRound(r: Round) : Round {
         let newRound : Round = { direction: r.direction

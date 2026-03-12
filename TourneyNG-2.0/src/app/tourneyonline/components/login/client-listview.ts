@@ -11,7 +11,8 @@ import { AbstractListView } from '../common/abstract-listview';
 import { LoginDetailView } from './login-detailview';
 
 @Component({
-    templateUrl: './client-listview.html'
+    templateUrl: './client-listview.html',
+    standalone: false
 })
 export class ClientLoginListView extends AbstractListView {
     selectedClient: ClientVO = new ClientVO();

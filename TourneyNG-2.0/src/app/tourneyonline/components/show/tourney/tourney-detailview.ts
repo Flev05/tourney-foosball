@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 
 @Component({
-    templateUrl: './tourney-detailview.html'
+    templateUrl: './tourney-detailview.html',
+    standalone: false
 })
 export class TourneyDetailView extends AbstractDetailView {
     constructor(

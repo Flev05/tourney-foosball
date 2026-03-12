@@ -13,6 +13,7 @@ import { MatrixService } from './matrix-service';
 @Component({
     styleUrls: ['./matrix-view.css'],
     templateUrl: './eliminatory-matrix-view.html',
+    standalone: false
 })
 export class MatrixDetailView extends AbstractDetailView {
     selectedRound: Round = new Round();

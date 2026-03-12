@@ -16,9 +16,10 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
 @Component({
-  selector: 'app-team-table',
-  templateUrl: './team-table.component.html',
-  styleUrls: ['./team-table.component.css']
+    selector: 'app-team-table',
+    templateUrl: './team-table.component.html',
+    styleUrls: ['./team-table.component.css'],
+    standalone: false
 })
 export class TeamTableComponent extends AbstractListView {
     @Input() addTeamEnabled: boolean | undefined;

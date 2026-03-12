@@ -9,9 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
@@ -24,6 +22,7 @@ import {LoginDetailView} from './login-detailview';
 import { ClientLoginListView } from './client-listview';
 import { ClientTourneyListView } from './client-tourney-listview';
 import { FollowerDetailView } from './follower-detailview';
+import { SelectModule } from 'primeng/select';
 
 @NgModule({
 	imports: [
@@ -33,9 +32,8 @@ import { FollowerDetailView } from './follower-detailview';
         ,LoginRoutingModule
         ,ToastModule
         ,PanelModule
-        ,DropdownModule
+        ,SelectModule
         ,InputTextModule
-        ,InputTextareaModule
         ,ButtonModule
         ,TabViewModule
         ,TableModule

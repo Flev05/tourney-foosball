@@ -9,7 +9,8 @@ import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 
 @Component({
-    templateUrl: './eliminatory-listview.html'
+    templateUrl: './eliminatory-listview.html',
+    standalone: false
 })
 export class ClassificationEliminatoryListView extends AbstractEliminatoryListView {
     static autoRedirect: string = 'classification/lv/dv';

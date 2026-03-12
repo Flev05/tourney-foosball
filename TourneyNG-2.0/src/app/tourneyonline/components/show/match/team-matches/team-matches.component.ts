@@ -9,7 +9,8 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 @Component({
     selector: 'app-team-matches',
     templateUrl: './team-matches.component.html',
-    styleUrls: ['./team-matches.component.css']
+    styleUrls: ['./team-matches.component.css'],
+    standalone: false
 })
 export class TeamMatchesComponent implements OnInit {
     @Input() teamName: string = "";

@@ -8,7 +8,8 @@ import { PlayerService } from '../../../service/player-service';
 import { TeamService } from '../../../service/team-service';
 
 @Component({
-    template: ""
+    template: "",
+    standalone: false
 })
 export class NewTourneyDetailView implements OnInit {
     static redirect: string = 'admintourney/newdv';

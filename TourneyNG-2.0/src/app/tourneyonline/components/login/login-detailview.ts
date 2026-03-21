@@ -60,7 +60,7 @@ export class LoginDetailView extends AbstractListView {
     }
 
     override ngOnInit() {
-        this.loginService.blockedDocument = false;
+        // this.loginService.blockedDocument = false;
         this.formLogin.id = 1;
 
         this.loggedUsername = this.loginService.userLogged==undefined ? '' : this.loginService.userLogged.username;
@@ -99,6 +99,7 @@ export class LoginDetailView extends AbstractListView {
         if( lvo != undefined ) {
             this.loginService.setUserLogged(lvo);
             this.loginFailed = false;
+            this.loginService.isUserLogged = true;
         } else {
             this.loginService.isUserLogged = false;
             this.loginFailed = true;

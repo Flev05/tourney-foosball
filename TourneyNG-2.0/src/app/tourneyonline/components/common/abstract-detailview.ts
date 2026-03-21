@@ -9,8 +9,6 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export abstract class AbstractDetailView extends AbstractView {
 
-    blockedDocument: boolean = false;
-
     constructor(
         protected override tourneyService: TourneyService,
         protected override location: Location,
@@ -37,7 +35,4 @@ export abstract class AbstractDetailView extends AbstractView {
         console.log(e);
     }
 
-    protected unBlockDocument(): void {
-        this.blockedDocument = false;
-    }
 }

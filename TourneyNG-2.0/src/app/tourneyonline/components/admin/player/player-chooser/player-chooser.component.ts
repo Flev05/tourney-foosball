@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { PlayerService } from '../../../../service/player-service';
-import { Player } from '../../../../domain/player';
-import { TourneyService } from '../../../../service/tourney-service';
-import { Tourney } from '../../../../domain/tourney';
-import { AbstractDetailView } from '../../../../components/common/abstract-detailview';
-import { ClientService } from '../../../../service/client-service';
-import { TourneyVO } from '../../../../domain/tourney.vo';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { Player } from 'app/tourneyonline/domain/player';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
 @Component({
     selector: 'app-player-chooser',

@@ -8,7 +8,6 @@ import {MatchRoutingModule} from './match-routing.module';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
 import {OrderListModule} from 'primeng/orderlist';
 
@@ -18,6 +17,7 @@ import {MeetingListView} from './meeting-listview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { SelectModule } from 'primeng/select';
 import { TeamMatchesModule } from './team-matches/team-matches.module';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -28,7 +28,7 @@ import { TeamMatchesModule } from './team-matches/team-matches.module';
         SelectModule,
         InputTextModule,
         ButtonModule,
-        TabViewModule,
+        TabsModule,
         TableModule,
         OrderListModule,
         DialogModule,

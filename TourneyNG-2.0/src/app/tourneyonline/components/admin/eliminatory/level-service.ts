@@ -61,11 +61,6 @@ export class LevelService extends AbstractEliminatoryListView {
         this.eliminatoryLevels = this.prepareEliminationTree(teamCount);
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
 
-        if( !this.isStandAlone(this.selectedTourney) ) {
-            let startPosition: number = 0;
-            // We would to skip it unless configured to have the unique big classification on all rounds... like the new champions league
-            // this.prepareAutomaticEliminatoryRules(this.eliminatoryLevels, teamCount, startPosition);
-        }
         this.eliminatoryLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryLevels, teamCount);
     }
 
@@ -87,10 +82,10 @@ export class LevelService extends AbstractEliminatoryListView {
             let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, topLevel, topLevelTeamNo);   
             eliminatoryLevels.push(el);
         }
-        if( this.isStandAlone(this.selectedTourney) ) {
-            let topEL: EliminatoryLevel = eliminatoryLevels[0];
-            this.prepareStandaloneTopLevel(topEL);
-        }
+        // if( this.isStandAlone(this.selectedTourney) ) {
+        //     let topEL: EliminatoryLevel = eliminatoryLevels[0];
+        //     this.prepareStandaloneTopLevel(topEL);
+        // }
         if ( topLevelTeamNo >= 4 ) { // if we have at least 4 teams we can create a match for 3° and 4° position
             this.addOptionalLevel(eliminatoryLevels);            
         }
@@ -202,48 +197,39 @@ export class LevelService extends AbstractEliminatoryListView {
      * 
      * @param teamCount the number of teams to allocate on the top eliminatory level
      */
-    private prepareStandaloneTopLevel(topLevel : EliminatoryLevel): void {
-        console.log("Entering prepareStandaloneTopLevel()");
-
-        if( !this.isSomeTeamsChanged(topLevel) ) {
-            console.log("There are the same teams, nothing todo!");
-            return;            
-        }
-        
-        this.cleanExTopLevel(topLevel);
-
-        let tmpTeams: Array<Team> = this.sortAndPad(this.selectedTourney.teams);
-
-        let ascTeam: Array<Team> = new Array<Team>();
-        for(let i=0; i<tmpTeams.length/2; i++) {
-            let c: Team = tmpTeams[i];
-            ascTeam.push(c);
-        }
-        let descTeam: Array<Team> = new Array<Team>();
-        for(let i=tmpTeams.length-1; i>=tmpTeams.length/2; i--) {
-            let c: Team = tmpTeams[i];
-            descTeam.push(c);
-        }
-
-        let topLevelEliminatories = topLevel.eliminatories;
-
-        for(let i=0; i<ascTeam.length; i++) {
-            let t1: Team = ascTeam[i];
-            let t2: Team = descTeam[i];
-            
-            let e: Eliminatory = topLevelEliminatories[i];
-            e.round.teamNames = [t1.teamName, t2.teamName];
-            
-            let isSkiping = t1.isDummy || t2.isDummy;
-            let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, isSkiping);
-            e.round.onewayMeetings = [m1];
-            e.isSkiping = e.isSkiping || m1.isSkiping;
-            
-            let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, isSkiping);
-            e.round.roundtripMeetings = [m2];
-            e.isSkiping = e.isSkiping || m2.isSkiping;
-        }
-    } 
+    // private prepareStandaloneTopLevel(topLevel : EliminatoryLevel): void {
+    //     console.log("Entering prepareStandaloneTopLevel()");
+    //     if( !this.isSomeTeamsChanged(topLevel) ) {
+    //         console.log("There are the same teams, nothing todo!");
+    //         return;            
+    //     }      
+    //     this.cleanExTopLevel(topLevel);
+    //     let tmpTeams: Array<Team> = this.sortAndPad(this.selectedTourney.teams);
+    //     let ascTeam: Array<Team> = new Array<Team>();
+    //     for(let i=0; i<tmpTeams.length/2; i++) {
+    //         let c: Team = tmpTeams[i];
+    //         ascTeam.push(c);
+    //     }
+    //     let descTeam: Array<Team> = new Array<Team>();
+    //     for(let i=tmpTeams.length-1; i>=tmpTeams.length/2; i--) {
+    //         let c: Team = tmpTeams[i];
+    //         descTeam.push(c);
+    //     }
+    //     let topLevelEliminatories = topLevel.eliminatories;
+    //     for(let i=0; i<ascTeam.length; i++) {
+    //         let t1: Team = ascTeam[i];
+    //         let t2: Team = descTeam[i];
+    //         let e: Eliminatory = topLevelEliminatories[i];
+    //         e.round.teamNames = [t1.teamName, t2.teamName];
+    //         let isSkiping = t1.isDummy || t2.isDummy;
+    //         let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, isSkiping);
+    //         e.round.onewayMeetings = [m1];
+    //         e.isSkiping = e.isSkiping || m1.isSkiping;
+    //         let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, isSkiping);
+    //         e.round.roundtripMeetings = [m2];
+    //         e.isSkiping = e.isSkiping || m2.isSkiping;
+    //     }
+    // } 
 
     /**
      * Computes the differences from the team list in the selected torney against the team 
@@ -388,6 +374,22 @@ export class LevelService extends AbstractEliminatoryListView {
         }
         
         let e: Eliminatory = new Eliminatory();
+        e.isSkiping = false;
+        let elid = this.tourneyService.getSequenceNumber();
+        e.id = elid;
+        e.round.id = elid;
+        e.round.name = eName;
+        e.round.onewayCurrentDay = 1;
+        e.round.roundtripCurrentDay = 1;
+        e.round.type = RoundType.E;
+        e.round.pageSize = 1;
+        e.round.daysNo = 1;
+        e.round.direction = Direction.OneWay;
+        e.round.teamNames = [t1.teamName, t2.teamName];
+        e.round.classification = [];
+        e.round.onewayMeetings = [];
+        e.round.roundtripMeetings = [];
+
         let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, pr1, pr2, 1, Direction.OneWay, false);
         let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, pr2, pr1, 2, Direction.RoundTrip, false);
         

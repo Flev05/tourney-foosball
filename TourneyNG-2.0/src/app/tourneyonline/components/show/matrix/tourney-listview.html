@@ -1,55 +1,63 @@
 <div class="content-section introduction">
-    <div>
-        <span class="feature-title">Matrice</span>
-        <span>Matrice dei punti per tornei di durata giornalieria</span>
-    </div>
+  <div>
+    <span class="feature-title">Matrice</span>
+    <span>Matrice dei punti per tornei di durata giornalieria</span>
+  </div>
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Introduzione">
-            
-    <p>
-        La matrice dei punti è pensata per essere utilizzata nei tornei a punti di durata giornaliera 
-        in modo da riportare velocemente solo i punti conquistati dalle 2 squadre che si incontrano,
-        senza segnare le reti realizzate.
-    </p>    
-    <p>
-        La matrice è organizzata in modo tale che le righe e le colonne riportino delle lettere 
-        in rappresentanza di ciascuna squadra.
-    </p>
-    <p>
-        Per maggiori informazioni si vedano le istruzioni della vista di dettaglio della matrice.
-    </p>
-    </p-accordionTab>
-</p-accordion>    
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Introduzione
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          La matrice dei punti è pensata per essere utilizzata nei tornei a punti di durata giornaliera
+          in modo da riportare velocemente solo i punti conquistati dalle 2 squadre che si incontrano,
+          senza segnare le reti realizzate.
+        </p>
+        <p>
+          La matrice è organizzata in modo tale che le righe e le colonne riportino delle lettere
+          in rappresentanza di ciascuna squadra.
+        </p>
+        <p>
+          Per maggiori informazioni si vedano le istruzioni della vista di dettaglio della matrice.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 </div>
 
-<div *ngIf="serverUnreachable" style="margin-top:30px">
+@if (serverUnreachable) {
+  <div style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
-</div>   
+  </div>
+}
 
-<p-table [columns]="cols" 
-    [value]="rows" 
-    [responsive]="true"
-    selectionMode="single" 
-    [(selection)]="selectedRow" 
-    (onRowSelect)="onRowSelect($event)" >
+<p-table [columns]="cols"
+  [value]="rows"
+  selectionMode="single"
+  [(selection)]="selectedRow"
+  (onRowSelect)="onRowSelect($event)" >
 
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-        </tr>
-    </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      @for (col of columns; track col) {
+        <th>
+          {{col.header}}
+        </th>
+      }
+    </tr>
+  </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="rowData">
-            <td *ngFor="let col of columns">
-                <span class="ui-column-title">{{col.header}}</span>
-                {{rowData[col.field]}}
-            </td>
-        </tr>
-    </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="rowData">
+      @for (col of columns; track col) {
+        <td>
+          {{rowData[col.field]}}
+        </td>
+      }
+    </tr>
+  </ng-template>
 </p-table>

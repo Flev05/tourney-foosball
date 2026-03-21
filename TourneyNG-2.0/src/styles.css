@@ -247,3 +247,16 @@ body .ui-buttonset.ui-button-danger > .ui-button.ui-state-default {
         font-size: 0.9rem;
     }
 }
+
+/* Target all PrimeNG tables for a compact look */
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 0.4rem 0.5rem !important; /* Adjust these values as needed */
+}
+
+/* Ensure icons and buttons inside the table don't force the row to be tall */
+.p-datatable .p-button.p-button-sm {
+    padding: 0.25rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}

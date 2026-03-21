@@ -6,10 +6,10 @@ import {LeaseRoutingModule} from './lease-routing.module';
 import {PanelModule} from 'primeng/panel';
 import {InputTextModule} from 'primeng/inputtext';
 import {ButtonModule} from 'primeng/button';
-import {TabViewModule} from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SelectModule } from 'primeng/select';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
   imports: [
@@ -20,7 +20,7 @@ import { SelectModule } from 'primeng/select';
     SelectModule,
     InputTextModule,
     ButtonModule,
-    TabViewModule,
+    TabsModule,
     LeaseRoutingModule,
     ToastModule
   ],

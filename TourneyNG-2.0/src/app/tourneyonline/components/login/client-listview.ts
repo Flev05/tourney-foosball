@@ -41,7 +41,7 @@ export class ClientLoginListView extends AbstractListView {
         let loggedUserId = this.loginService.userLogged.id;
         this.loggedUsername = this.loginService.userLogged.username;
 
-        this.loginService.blockedDocument = true;
+        // this.loginService.blockedDocument = true;
 
         const subsrciber = this.clientService.loadAllClients(loggedUserId, this.loadClientsErrorHandler('loadAllClients()'));
         subsrciber.subscribe(cs => this.onNext(cs), e => this.onError(e));
@@ -54,12 +54,12 @@ export class ClientLoginListView extends AbstractListView {
         
         this.clientService.setSelectClients(this.clients);
 
-        this.loginService.blockedDocument = false;
+        // this.loginService.blockedDocument = false;
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-            this.loginService.blockedDocument = false;
+            // this.loginService.blockedDocument = false;
             
             this.onLoadClientError = true;
 
@@ -78,7 +78,7 @@ export class ClientLoginListView extends AbstractListView {
 
     onRowSelect(event : any ) {
         console.log(event.data);
-        this.loginService.blockedDocument = true;
+        // this.loginService.blockedDocument = true;
         const sc = this.clientService.selectedClients.find(c => c.id == this.selectedClient.id);
         if( sc == undefined ) return;
         this.clientService.setSelectedClient(sc);

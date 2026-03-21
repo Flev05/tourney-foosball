@@ -13,9 +13,7 @@ import {AccordionModule} from 'primeng/accordion';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
 import {OperatorListView} from './operator-listview';
@@ -27,6 +25,8 @@ import { PickListModule } from 'primeng/picklist';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastModule } from 'primeng/toast';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -37,7 +37,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -49,7 +49,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,TooltipModule
         ,DatePickerModule
         ,OperatorRoutingModule
-        ,MessagesModule
+        ,ToastModule
         ,MessageModule
         ,AccordionModule
         ,PickListModule

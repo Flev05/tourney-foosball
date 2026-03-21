@@ -6,10 +6,8 @@ import { MessageService } from 'primeng/api';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import {AccordionModule} from 'primeng/accordion';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
-import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
@@ -24,6 +22,7 @@ import { UrcListView } from './urc-listview';
 import { UserDetailView } from './user-detailview';
 import { UserListView } from './user-listview';
 import { SelectModule } from 'primeng/select';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -34,7 +33,7 @@ import { SelectModule } from 'primeng/select';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -43,7 +42,6 @@ import { SelectModule } from 'primeng/select';
         ,RadioButtonModule
         ,FieldsetModule
         ,AccordionModule
-        ,MessagesModule
         ,MessageModule
         ,UserRoutingModule
 	],

@@ -89,8 +89,8 @@ export class PlayerDetailView extends AbstractDetailView {
         }
         return   n.trim() == "" ? "disabled" : "";
     }
-
-        prepareRename() {
+    
+    prepareRename() {
         this.newName = this.autoCompletePlayerName.playerName;
         this.isRenaming = true;
     }
@@ -202,19 +202,23 @@ export class PlayerDetailView extends AbstractDetailView {
     }
 
     loadPlayersCompleteMethod(event: any) {
-        const query = event.query.toLowerCase();
-        this.filteredPlayersSingle = this.playerService.playerPool.filter(t =>
-            t.playerName.toLowerCase().includes(query)
-        );
-
-        const exactMatch = this.filteredPlayersSingle.some(t => t.playerName.toLowerCase() === query.toLowerCase());
-        if (!exactMatch && query.length > 2) {
-            const p : Player = new Player();
-            p.id = -1;
-            p.playerName = query;
-            p.isNew = true;
-            this.filteredPlayersSingle.push(p);
-        }
+        if (!event.query) {
+            this.filteredPlayersSingle = [...this.playerService.playerPool]; // Show all when dropdown clicked
+        } else {
+            const query = event.query.toLowerCase();
+            this.filteredPlayersSingle = this.playerService.playerPool.filter(t =>
+                t.playerName.toLowerCase().includes(query)
+            );
+    
+            const exactMatch = this.filteredPlayersSingle.some(t => t.playerName.toLowerCase() === query.toLowerCase());
+            if (!exactMatch && query.length > 2) {
+                const p : Player = new Player();
+                p.id = -1;
+                p.playerName = query;
+                p.isNew = true;
+                this.filteredPlayersSingle.push(p);
+            }
+        }   
     }
 
     onPlayerSelect(event: any) {

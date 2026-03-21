@@ -11,12 +11,10 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 import {PaginatorModule} from 'primeng/paginator';
-import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
 import { DateFormatPipe } from '../../../components/common/date-format-pipe';
 
@@ -27,6 +25,8 @@ import { MeetingListView } from './meeting-page-listview';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ToastModule } from 'primeng/toast';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -37,7 +37,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -50,7 +50,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,DatePickerModule
         ,AccordionModule
         ,PickListModule
-        ,MessagesModule
+        ,ToastModule
         ,MessageModule
         ,RoundRoutingModule 
         ,PaginatorModule

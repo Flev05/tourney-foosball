@@ -9,7 +9,7 @@
     <p>Vista elenco di tutte le partite appartenenti all'incontro selezionato</p>
 </div>
 
-<p-table [value]="rows" [responsive]="true">
+<p-table [value]="rows">
     <ng-template pTemplate="caption">
         <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
         {{selectedTourney.tourneyName}} - {{selectedTourney.datetime}}

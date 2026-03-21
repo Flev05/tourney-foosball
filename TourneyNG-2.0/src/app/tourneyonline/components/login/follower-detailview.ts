@@ -48,7 +48,7 @@ export class FollowerDetailView extends LoginDetailView {
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
 
-        this.loginService.blockedDocument = false;
+        // this.loginService.blockedDocument = false;
     }
 
     protected override onComplete() {

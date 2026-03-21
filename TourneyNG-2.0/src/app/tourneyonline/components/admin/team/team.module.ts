@@ -14,9 +14,7 @@ import {PickListModule} from 'primeng/picklist';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import {TeamDetailView} from './team-detailview';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
@@ -27,6 +25,8 @@ import { TeamListView } from './team-listview';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TabsModule } from 'primeng/tabs';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     declarations: [
@@ -41,7 +41,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -52,7 +52,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,FieldsetModule
         ,TooltipModule
         ,DatePickerModule
-        ,MessagesModule
+        ,ToastModule
         ,MessageModule
         ,AccordionModule
         ,PickListModule      

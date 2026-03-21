@@ -118,15 +118,15 @@ export class TourneyService extends AbstractService {
     redirect: string = "";
 
     classificationCols: TableCols[] = [
-        { field: 'teamName',      header: 'Team', style: 'team'},
-        { field: 'points',        header: 'Pt.',  style: 'points'},
-        { field: 'played',        header: 'G',    style: 'points'},
-        // { field: 'won',           header: 'V'},
-        // { field: 'lost',          header: 'P'},
+        { field: 'teamName',      header: 'Team'},
+        { field: 'points',        header: 'Pt.'},
+        { field: 'played',        header: 'G'},
+        { field: 'won',           header: 'V'},
+        { field: 'lost',          header: 'P'},
         // { field: 'balanced',      header: 'N'},
         // { field: 'goalsDone',     header: 'Gf'},
         // { field: 'goalsConceded', header: 'Gs'},
-        // { field: 'goalsDiff',     header: 'D'},
+        { field: 'goalsDiff',     header: 'D'},
     ];
 
     classificationReducedCols: TableCols[] = [
@@ -166,6 +166,7 @@ export class TourneyService extends AbstractService {
         super();
         console.log("Constructor of TourneyService");
         this.sequenceNumber++;
+        this.selectedTabIndex = 0;
     }
     
     prepareEliminatoriesComboBoxes(teamsNo : number): Combobox[] {
@@ -411,7 +412,7 @@ export class TourneyService extends AbstractService {
      */
     public updateTourneyWithCleanAll(t : Tourney, complete: () => void ) : void  {
         this.onSaveTourneyError = false;
-        this.clearTourneyMeetings(t, 0);
+        // this.clearTourneyMeetings(t, 0);
         let tvo : TourneyVO = this.prepareTourneyVO(t, this.clientService.selectedClient);
         let url = updateTourneyUrl;
         console.log("Invoking put method on URL: [" + url + "]");
@@ -1173,30 +1174,30 @@ export class TourneyService extends AbstractService {
     private cloneClassifications(classifications: Classification[]): Classification[] {
         let cloneClassifications: Array<Classification> = new Array<Classification>();
         for(let c of classifications) {
-            let nc = this.cloneClassification(c);
+            let nc = {...c};
             cloneClassifications.push(nc);
         }
         return cloneClassifications; 
     }
 
-    public cloneClassification(c: Classification) : Classification {
-        let nc : Classification = new Classification();
-        nc.id = c.id;
-        nc.balanced = c.balanced;
-        nc.teamName = c.teamName;
-        nc.points = c.points;
-        nc.played = c.played;
-        nc.won = c.won;
-        nc.lost = c.lost;
-        nc.balanced = c.balanced;
-        nc.penalty = c.penalty;
-        nc.goalsDone = c.goalsDone;
-        nc.goalsDiff = c.goalsDiff;
-        nc.goalsConceded = c.goalsConceded;
-        nc.notResolveble = c.notResolveble;
-        nc.roundIndex = c.roundIndex;
-        return nc;
-    }
+    // public cloneClassification(c: Classification) : Classification {
+    //     let nc : Classification = new Classification();
+    //     nc.id = c.id;
+    //     nc.balanced = c.balanced;
+    //     nc.teamName = c.teamName;
+    //     nc.points = c.points;
+    //     nc.played = c.played;
+    //     nc.won = c.won;
+    //     nc.lost = c.lost;
+    //     nc.balanced = c.balanced;
+    //     nc.penalty = c.penalty;
+    //     nc.goalsDone = c.goalsDone;
+    //     nc.goalsDiff = c.goalsDiff;
+    //     nc.goalsConceded = c.goalsConceded;
+    //     nc.notResolveble = c.notResolveble;
+    //     nc.roundIndex = c.roundIndex;
+    //     return nc;
+    // }
 
     /**
      * Prepares the classification relatid to the selected eliminaory 
@@ -1377,8 +1378,7 @@ export class TourneyService extends AbstractService {
         for (let round of rounds) {
             let r = 0;
             for (let oc of round.classification) {
-
-                let c = this.cloneClassification(oc);
+                let c = {...oc};
                 rows.push(c);
 
                 let played = c.played / maxMatchesPerMeeting;
@@ -1470,52 +1470,6 @@ export class TourneyService extends AbstractService {
         return new TourneyVO();
     }
 
-    /**
-     * Clears tourney local meetings array before create che JSON string to save on the Back End
-     */
-    public clearTourneyMeetings(tourney: Tourney, roundTabChangedNo : number) {
-        if( roundTabChangedNo >= 5 ) {
-            this.cleanEliminatoryMeetings(tourney);
-            return;
-        }
-        if( roundTabChangedNo >= 4 ) {
-            this.cleanPlayOffMeetings(tourney);
-            this.cleanPlayoutMeeting(tourney); 
-            this.cleanEliminatoryMeetings(tourney);
-            return;
-        }
-        if( roundTabChangedNo >= 3 ) {
-            this.cleanRoundMeetings(tourney);            
-            this.cleanPlayOffMeetings(tourney);
-            this.cleanPlayoutMeeting(tourney); 
-            this.cleanEliminatoryMeetings(tourney);
-            return;
-        } 
-    }
-
-    private cleanRoundMeetings(tourney: Tourney) {
-        for (let r of tourney.roundVO.rounds) {
-            r.onewayMeetings = [];
-            r.roundtripMeetings = [];
-            // r.classification = [];
-        }
-    }
-
-    private cleanPlayOffMeetings(tourney: Tourney) {
-        for (let p of tourney.playoffVO.playoffs) {
-            p.round.onewayMeetings = [];
-            p.round.roundtripMeetings = [];
-        }
-    }
-
-    private cleanEliminatoryMeetings(tourney: Tourney) {
-        for (let el of tourney.eliminatoryLevels) {
-            for (let e of el.eliminatories) {
-                e.round.onewayMeetings = [];
-                e.round.roundtripMeetings = [];
-            }
-        }
-    }
 
     public cleanRoundMeeting(t: Tourney): Tourney  {
         for(let r of t.roundVO.rounds) {

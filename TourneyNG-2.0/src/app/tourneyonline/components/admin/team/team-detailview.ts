@@ -248,23 +248,28 @@ export class TeamDetailView extends AbstractDetailView {
     override onError(message:any): any {
         console.error(message);
     }
+    
     onComplete(message:any): any {
         super.goBack();
     }
     
     loadTeamsCompleteMethod(event: any) {
-        const query = event.query.toLowerCase();
-        this.filteredTeamsSingle = this.getAvailableTeams().filter(t =>
-            t.teamName.toLowerCase().includes(query)
-        );
-
-        const exactMatch = this.filteredTeamsSingle.some(t => t.teamName.toLowerCase() === query.toLowerCase());
-        if (!exactMatch && query.length > 2) {
-            const t : Team = new Team();
-            t.id = -1;
-            t.teamName = query;
-            t.isNew = true;
-            this.filteredTeamsSingle.push(t);
+        if (!event.query) {
+            this.filteredTeamsSingle = [...this.allTeams]; // Show all when dropdown clicked
+        } else {
+            const query = event.query.toLowerCase();
+            this.filteredTeamsSingle = this.getAvailableTeams().filter(t =>
+                t.teamName.toLowerCase().includes(query)
+            );
+    
+            const exactMatch = this.filteredTeamsSingle.some(t => t.teamName.toLowerCase() === query.toLowerCase());
+            if (!exactMatch && query.length > 2) {
+                const t : Team = new Team();
+                t.id = -1;
+                t.teamName = query;
+                t.isNew = true;
+                this.filteredTeamsSingle.push(t);
+            }
         }
     }
 

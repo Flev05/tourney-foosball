@@ -15,7 +15,6 @@ import { DialogModule } from 'primeng/dialog';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
 
 import {ObjectiveListView} from './objective-listview';
@@ -23,6 +22,7 @@ import { ObjectiveRoutingModule } from './objective-routing.module';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -33,7 +33,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,SliderModule
         ,AutoCompleteModule

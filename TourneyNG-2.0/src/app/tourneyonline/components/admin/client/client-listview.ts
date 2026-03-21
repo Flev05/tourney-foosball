@@ -42,7 +42,7 @@ export class ClientListView extends AbstractListView {
 
     override ngOnInit() {
         console.log("ClientListView.ngOnInit()");
-        this.loginService.blockedDocument = false;
+        // this.loginService.blockedDocument = false;
         this.clientService.newClient = false;
 
         this.onLoadClientError = false;

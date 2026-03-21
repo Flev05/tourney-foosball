@@ -1,85 +1,88 @@
 <div class="content-section introduction">
-    <div>
-        <span class="feature-title">Tempo Reale</span>
-        <span>Pagina per la consultazione in tempo reale dello svolgimento del torneo</span>
-    </div>
+  <div>
+    <span class="feature-title">Tempo Reale</span>
+    <span>Pagina per la consultazione in tempo reale dello svolgimento del torneo</span>
+  </div>
 </div>
 
 <div class="content-section documentation">
 
-    <p>Da questa pagina è possibile consultare lo svolgimento del torneo in tempo reale.
-        La funzionalità è di interesse soprattutto per i partecipanti che desiderano
-        avere l'informazione sulle posizioni di classifica il più presto possibile
-    </p>
-    <p>Per poter consultare risultati e classifica di un torneo, bisogna essere
-        in possesso del suo codice di accesso.
-    </p>
+  <p>Da questa pagina è possibile consultare lo svolgimento del torneo in tempo reale.
+    La funzionalità è di interesse soprattutto per i partecipanti che desiderano
+    avere l'informazione sulle posizioni di classifica il più presto possibile
+  </p>
+  <p>Per poter consultare risultati e classifica di un torneo, bisogna essere
+    in possesso del suo codice di accesso.
+  </p>
 
-    <h4>Codice di accesso</h4>
-    <p>Il codice di accesso viene generato automaticamente dal sistema e consegnato al gestore del torneo
-        al momento della creazione.
-        Deve essere cura del gestore diffondere o consegnare personalmente il codice di accesso a ciascun partecipante
-        con le indicazioni su come accedere e consultare le strutture del torneo.
-    </p>
+  <h4>Codice di accesso</h4>
+  <p>Il codice di accesso viene generato automaticamente dal sistema e consegnato al gestore del torneo
+    al momento della creazione.
+    Deve essere cura del gestore diffondere o consegnare personalmente il codice di accesso a ciascun partecipante
+    con le indicazioni su come accedere e consultare le strutture del torneo.
+  </p>
 
-    <h4>Accesso</h4>
-    <p>Per la consultazione in tempo reale, il partecipante deve:</p>
-    <ul>
-        <li>Accedere alla pagina di login del programma dei torneiNG al link 
-            <a href="http://tourney.erebus-soft.com">tourney.erebus-soft.com</a> 
-        </li>
-        <li>Inserire il codice torneo nella casella</li>
-        <li>Click sul bottone Accedi</li>
-        <li>Navigare sulla classifica o sulle partite di interesse</li>
-    </ul>        
+  <h4>Accesso</h4>
+  <p>Per la consultazione in tempo reale, il partecipante deve:</p>
+  <ul>
+    <li>Accedere alla pagina di login del programma dei torneiNG al link
+      <a href="http://tourney.erebus-soft.com">tourney.erebus-soft.com</a>
+    </li>
+    <li>Inserire il codice torneo nella casella</li>
+    <li>Click sul bottone Accedi</li>
+    <li>Navigare sulla classifica o sulle partite di interesse</li>
+  </ul>
 </div>
 
 <div class="content-section implementation">
-    <p-toast [position]="'top-right'"></p-toast>
+  <p-toast [position]="'top-right'"></p-toast>
 
-    <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
-        <p-panel>
-            <div class="ui-grid responsive pad ui-fluid">
-                <div class="grid">
-                    <div class="col-2">
-                        Codice Torneo:
-                    </div>
-                    <div class="col-6">
-                        <input pInputText type="text" formControlName="codiceTorneo" placeholder="Obbligatorio"/>
-                    </div>
-                    <div class="col-4">
-                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['codiceTorneo'].valid&&userform.controls['codiceTorneo'].dirty">
-                            <i class="pi pi-close"></i>
-                            Il codice torneo è obbligatorio
-                        </div>
-                    </div>
-                </div>
+  <form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+    <p-panel>
+      <div class="ui-grid responsive pad ui-fluid">
+        <div class="grid">
+          <div class="col-2">
+            Codice Torneo:
+          </div>
+          <div class="col-6">
+            <input pInputText type="text" formControlName="codiceTorneo" placeholder="Obbligatorio"/>
+          </div>
+          <div class="col-4">
+            @if (!userform.controls['codiceTorneo'].valid&&userform.controls['codiceTorneo'].dirty) {
+              <div class="ui-message ui-messages-error ui-corner-all">
+                <i class="pi pi-close"></i>
+                Il codice torneo è obbligatorio
+              </div>
+            }
+          </div>
+        </div>
 
-                <div class="grid">
-                    <div class="col-2"></div>
-                    <div class="col-6">
-                        <button pButton type="submit" label="Accedi" [disabled]="!userform.valid"></button>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!logged">
-                        <i class="pi pi-close"></i>
-                        Accesso fallito
-                    </div>
-                </div>
+        <div class="grid">
+          <div class="col-2"></div>
+          <div class="col-6">
+            <button pButton type="submit" label="Accedi" [disabled]="!userform.valid"></button>
+          </div>
+        </div>
+        <div class="col-4">
+          @if (!logged) {
+            <div class="ui-message ui-messages-error ui-corner-all">
+              <i class="pi pi-close"></i>
+              Accesso fallito
             </div>
-        </p-panel>
+          }
+        </div>
+      </div>
+    </p-panel>
 
-    </form>    
+  </form>
 </div>
 
 <div class="content-section documentation">
-    <h4>Consultazione svolgimento</h4>
-    <p>Una volta effettuato l'accesso con successo, potete consultare in tempo reale:</p>
-    <ul>
-        <li>I risultati delle partite</li>
-        <li>La classifica aggiornata</li>
-    </ul>        
+  <h4>Consultazione svolgimento</h4>
+  <p>Una volta effettuato l'accesso con successo, potete consultare in tempo reale:</p>
+  <ul>
+    <li>I risultati delle partite</li>
+    <li>La classifica aggiornata</li>
+  </ul>
 </div>
 
-        

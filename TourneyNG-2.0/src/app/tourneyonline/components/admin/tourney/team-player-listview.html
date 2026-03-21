@@ -1,155 +1,161 @@
 <div class="content-section introduction">
-    <div>
-        <span class="feature-title">Dettaglio squadra e giocatori che la compongono</span>        
-        <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
-        <h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
-    </div>
+  <div>
+    <span class="feature-title">Dettaglio squadra e giocatori che la compongono</span>
+    <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+    <h4><span>Squadra: {{autoCompleteTeamName}}</span></h4>
+  </div>
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">                        
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
         <p>
-            La vista contiene le informazioni di dettaglio e la vista elenco dei giocatori della squadra.
-            Potete gestire la lista dei giocatori della squadra.
+          La vista contiene le informazioni di dettaglio e la vista elenco dei giocatori della squadra.
+          Potete gestire la lista dei giocatori della squadra.
         </p>
         <ul>
-            <li>Gestire la lista dei giocatori</li>
-            <li>Aprire la vista di dettaglio di un singolo giocatore</li>
-        </ul>        
+          <li>Gestire la lista dei giocatori</li>
+          <li>Aprire la vista di dettaglio di un singolo giocatore</li>
+        </ul>
 
         <h4>Gestire la lista dei giocatori</h4>
         <p>
-            Con il bottone Gestisci Giocatori si apre una vista in cui potere spostare i giocatori dalla lista di quelli disponibili
-            a livello di organizzazione a quella che compone la squadra. Si veda la descrizione nella vista corrispondnte per maggiori dettagli.
+          Con il bottone Gestisci Giocatori si apre una vista in cui potere spostare i giocatori dalla lista di quelli disponibili
+          a livello di organizzazione a quella che compone la squadra. Si veda la descrizione nella vista corrispondnte per maggiori dettagli.
         </p>
 
         <h4>Aprire la vista di dettaglio di un singolo giocatore</h4>
         <p>
-            Con un click sulla riga di un giocatore della lista, si apre la corrispondente vista di dettaglio dalla quale potete
-            modificare le informazioni del giocatore. Si veda la descrizione nella vista corrispondnte per maggiori dettagli.
+          Con un click sulla riga di un giocatore della lista, si apre la corrispondente vista di dettaglio dalla quale potete
+          modificare le informazioni del giocatore. Si veda la descrizione nella vista corrispondnte per maggiori dettagli.
 
         </p>
         <p>
-            Il giocatore così creato farà parte della squadra selezionata e del pool di giocatori disponibili per tutti
-            i tornei.
+          Il giocatore così creato farà parte della squadra selezionata e del pool di giocatori disponibili per tutti
+          i tornei.
         </p>
         <p>
-            Alla fine dell'operazione di creazione, dovete salvare esplicatmente con il bottone Salva
+          Alla fine dell'operazione di creazione, dovete salvare esplicatmente con il bottone Salva
         </p>
 
         <h4>Dettaglio Squadra</h4>
         <p>
-            Con il bottone Dettaglio Squadra, si naviga verso la vista la lista di dettaglio  
-            della squadra dove potete modificare i dati anagrafici della squadra.
+          Con il bottone Dettaglio Squadra, si naviga verso la vista la lista di dettaglio
+          della squadra dove potete modificare i dati anagrafici della squadra.
         </p>
-
-    </p-accordionTab>
-</p-accordion>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+  <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
 
 <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
-    <div class="grid">
-        <div class="col-3">
-            Squadra*:
-        </div>
-        <div class="col-5" pTooltip="Inserire il nome della squadra." >
-            <p-autoComplete id="team-id" 
-                [(ngModel)]="autoCompleteTeamName" 
-                [suggestions]="filteredTeamsSingle" 
-                (completeMethod)="searchTeam($event)" 
-                placeholder="Nome Squadra" 
-                [minLength]="1">
-            </p-autoComplete>
-        </div>
+  <div class="grid">
+    <div class="col-3">
+      Squadra*:
     </div>
-        
-    <div class="grid">
-        <div class="col-3">
-            Via:
-        </div>
-        <div class="col-5" pTooltip="Inserire la via della squadra.">
-            <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
-        </div>
+    <div class="col-5" pTooltip="Inserire il nome della squadra." >
+      <p-autoComplete id="team-id"
+        [(ngModel)]="autoCompleteTeamName"
+        [suggestions]="filteredTeamsSingle"
+        (completeMethod)="searchTeam($event)"
+        placeholder="Nome Squadra"
+        [minLength]="1">
+      </p-autoComplete>
     </div>
+  </div>
 
-    <div class="grid">
-        <div class="col-3">
-            <label for="country-id">Comune:</label>
-        </div>
-        <div class="col-5">
-            <p-autoComplete id="country-id" 
-                [(ngModel)]="selectedTeam.country" 
-                [suggestions]="filteredCountriesSingle" 
-                (completeMethod)="searchCountry($event)" 
-                field="city"
-                placeholder="Comune" 
-                [minLength]="1">
-            </p-autoComplete>
-        </div>
+  <div class="grid">
+    <div class="col-3">
+      Via:
     </div>
+    <div class="col-5" pTooltip="Inserire la via della squadra.">
+      <input pInputText type="text" [(ngModel)]="selectedTeam.address"/>
+    </div>
+  </div>
 
-    <div class="grid">
-        <div class="col-3">
-            Indirizzo:
-        </div>
-        <div class="col-8">
-            {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
-            + " (" + selectedTeam.country.provinceCode +")" : "" }}
-        </div>
-    </div> 
+  <div class="grid">
+    <div class="col-3">
+      <label for="country-id">Comune:</label>
+    </div>
+    <div class="col-5">
+      <p-autoComplete id="country-id"
+        [(ngModel)]="selectedTeam.country"
+        [suggestions]="filteredCountriesSingle"
+        (completeMethod)="searchCountry($event)"
+        field="city"
+        placeholder="Comune"
+        [minLength]="1">
+      </p-autoComplete>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="col-3">
+      Indirizzo:
+    </div>
+    <div class="col-8">
+      {{selectedTeam.address}} {{selectedTeam.country != undefined ? " - " + selectedTeam.country.zipCode + " " + selectedTeam.country.city
+      + " (" + selectedTeam.country.provinceCode +")" : "" }}
+    </div>
+  </div>
 </div>
 
 <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
-    <p-table 
-        [columns]="playerCols" 
-        [value]="selectedTeam.players" 
-        selectionMode="single" 
-        [(selection)]="selectedPlayer" 
-        (onRowSelect)="onPlayerRowSelect($event)"
-        [responsive]="true" 
-        [scrollable]="true" 
-        scrollHeight="250px">
-    
-        <ng-template pTemplate="caption" let-rowData>
-            <div style="text-align:left">
-                <button pButton type="button" icon="pi pi-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
-            </div>
-        </ng-template>      
+  <p-table
+    [columns]="playerCols"
+    [value]="selectedTeam.players"
+    selectionMode="single"
+    [(selection)]="selectedPlayer"
+    (onRowSelect)="onPlayerRowSelect($event)"
+    responsiveLayout="scroll"
+    [scrollable]="true"
+    scrollHeight="250px">
 
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <th style="width: 15mm;">N°</th>
-                <th *ngFor="let col of columns">
-                    {{col.header}}
-                </th>
-            </tr>
-        </ng-template>
-    
-        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-            <tr [pSelectableRow]="rowData">
-                <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-                <td *ngFor="let col of columns">
-                    <span class="ui-column-title">{{col.header}}</span>
-                    {{rowData[col.field]}}
-                </td>
-            </tr>
-        </ng-template>  
+    <ng-template pTemplate="caption" let-rowData>
+      <div style="text-align:left">
+        <button pButton type="button" icon="pi pi-user-plus" label="{{playerLabel}}" (click)="goToPickList()"></button>
+      </div>
+    </ng-template>
 
-        <ng-template pTemplate="summary" let-rowData>
-            <button class="ui-button-success" 
-                pButton (click)="saveTourneyTeam()" 
-                icon="pi pi-save" 
-                label="Salva" 
-                [disabled]="enableSaveButton()">
-            </button>  
-        </ng-template>      
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 15mm;">N°</th>
+        @for (col of columns; track col) {
+          <th>
+            {{col.header}}
+          </th>
+        }
+      </tr>
+    </ng-template>
 
-    </p-table>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+        @for (col of columns; track col) {
+          <td>
+            {{rowData[col.field]}}
+          </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary" let-rowData>
+      <button class="ui-button-success"
+        pButton (click)="saveTourneyTeam()"
+        icon="pi pi-save"
+        label="Salva"
+        [disabled]="enableSaveButton()">
+      </button>
+    </ng-template>
+
+  </p-table>
 </div>
 
- 

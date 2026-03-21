@@ -1,67 +1,78 @@
-<p-table #table [responsive]="true" 
-        [columns]="cols" 
-        [value]="teams" 
-        selectionMode="single"
-        [(selection)]="selectedTeam" 
-        (onRowSelect)="onRowSelect($event)" 
-        [scrollable]="true" 
-        scrollHeight="250px">
+<p-table #table 
+  responsiveLayout="scroll"
+  dataKey="id"
+  size="small"
+  [columns]="cols"
+  [value]="teams"
+  selectionMode="single"
+  [(selection)]="selectedTeam"
+  (onRowSelect)="onRowSelect($event)"
+  [scrollable]="true"
+  scrollHeight="400px">
 
-    <ng-template *ngIf="addTeamEnabled" pTemplate="caption">
-        <div style="text-align:left">
-            <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Nuova Squadra" ></button>
-        </div>
+  @if (!loginService.isFollower() && addTeamEnabled) {
+    <ng-template pTemplate="caption">
+      <div style="text-align:center">
+        <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Nuova Squadra" ></button>
+      </div>
     </ng-template>
+  }
 
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th style="width: 15mm;">N°</th>
-            <th>Nome</th>
-            <th>Indirizzo</th>
-            <th>ASD</th>
-            <th *ngIf="addTeamEnabled" style="width: 15mm;"></th>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 15mm;">N°</th>
+      <th>Nome</th>
+      <th>Indirizzo</th>
+      <th>ASD</th>
+      @if (!loginService.isFollower() && addTeamEnabled) {
+        <th style="width: 15mm;"></th>
+      }
+    </tr>
+    <tr>
+      <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : teams.length }}</th>
+      <th>
+        <input
+          style="width: 100%;"
+          type="text"
+          pInputText placeholder="Cerca per nome"
+          [value]="teamService.storedTeamFilter"
+          (input)="onFilterChange($any($event.target).value, table)">
+        </th>
+        <th></th>
+        <th>
+          <input
+            style="width: 100%;"
+            type="text"
+            pInputText
+            placeholder="Cerca per ASD"
+            (input)="table.filter($any($event.target).value.trim(), 'asd', 'contains')">
+          </th>
+          @if (!loginService.isFollower() && addTeamEnabled) {
+            <th style="width: 15mm;">X</th>
+          }
         </tr>
-        <tr>
-            <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : teams.length }}</th>
-            <th>
-                <input 
-                    style="width: 100%;" 
-                    type="text" 
-                    pInputText placeholder="Cerca per nome" 
-                    [value]="teamService.storedTeamFilter"
-                    (input)="onFilterChange($any($event.target).value, table)">
-            </th>
-            <th></th>
-            <th>
-                <input 
-                    style="width: 100%;" 
-                    type="text" 
-                    pInputText 
-                    placeholder="Cerca per ASD" 
-                    (input)="table.filter($any($event.target).value.trim(), 'asd', 'contains')">
-            </th>
-            <th *ngIf="addTeamEnabled" style="width: 15mm;">X</th>
-        </tr>
-    </ng-template>
+      </ng-template>
 
-    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData">
-            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
-            <td style="text-align: center;">{{rowData['teamName']}}</td>
-            <td style="text-align: center;">{{rowData['address']}} - {{rowData.country?.zipCode}} - {{ rowData.country?.city }} ({{ rowData.country?.provinceCode }})</td>
-            <td style="text-align: center;">{{rowData['asd']}}</td>            
-            <td *ngIf="addTeamEnabled" style="width: 15mm; text-align: center;">
-                <button class="p-button-danger p-button-sm" 
-                    pButton icon="pi pi-trash" 
-                    (click)="doDelete(rowData)">
-                </button>
-            </td>                
+          <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+          <td style="text-align: center;">{{rowData['teamName']}}</td>
+          <td style="text-align: center;">{{rowData['address']}} - {{rowData.country?.zipCode}} - {{ rowData.country?.city }} ({{ rowData.country?.provinceCode }})</td>
+          <td style="text-align: center;">{{rowData['asd']}}</td>
+          @if (!loginService.isFollower() && addTeamEnabled) {
+            <td style="width: 15mm; text-align: center;">
+              <button class="p-button-danger p-button-sm"
+                pButton icon="pi pi-trash"
+                (click)="doDelete(rowData)">
+              </button>
+            </td>
+          }
         </tr>
-    </ng-template>
+      </ng-template>
 
-    <ng-template pTemplate="summary">
+      <ng-template pTemplate="summary">
         <div style="text-align:center" >
-            {{ table.filteredValue ? table.filteredValue.length : teams.length }}
+          {{ table.filteredValue ? table.filteredValue.length : teams.length }}
         </div>
-    </ng-template>
-</p-table>
+      </ng-template>
+    </p-table>

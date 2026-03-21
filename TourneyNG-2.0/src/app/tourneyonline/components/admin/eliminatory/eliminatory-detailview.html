@@ -1,277 +1,300 @@
 <div class="content-section introduction">
-    <div>
-        <span class="feature-title">{{tourneyService.eliminatoryTabName}}</span>        
-        <h3><span>{{tourneyService.selectedEliminatoryLevel.name}} {{selectedTourney.tourneyName}}</span></h3>
-        <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>        
-    </div>
+  <div>
+    <span class="feature-title">{{tourneyService.eliminatoryTabName}}</span>
+    <h3><span>{{tourneyService.selectedEliminatoryLevel.name}} {{selectedTourney.tourneyName}}</span></h3>
+    <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
+  </div>
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">                        
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
         <p>
-            La vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai 
-            gironi all'italiana e/o playoff al primo livello di partenza per le eliminazioni dirette.
+          La vista contiene le combo box per la configurazione delle regole per il passaggio del turno dai
+          gironi all'italiana e/o playoff al primo livello di partenza per le eliminazioni dirette.
         </p>
- 
+
         <h4>1) Regole o squadre per il passaggio del turno</h4>
         <p>
-            Il sistema vi propone una soluzione d'ufficio a partire dai precedenti turni di qualificazione.
-            Se esistono i playoff, le regole sono relative ai playoff altrimenti si riferiscono ai gironi all'italiana. 
+          Il sistema vi propone una soluzione d'ufficio a partire dai precedenti turni di qualificazione.
+          Se esistono i playoff, le regole sono relative ai playoff altrimenti si riferiscono ai gironi all'italiana.
         </p>
         <p>
-            Se avete bisogno di regole miste che prelevano squadre sia dai playoff che dai gironi all'italiana,
-            potete modificare le regole a vostro piacimento selezionando opportunamente posizioni di classifica e nomi
-            dei gironi dalle corrispondenti combo box. 
+          Se avete bisogno di regole miste che prelevano squadre sia dai playoff che dai gironi all'italiana,
+          potete modificare le regole a vostro piacimento selezionando opportunamente posizioni di classifica e nomi
+          dei gironi dalle corrispondenti combo box.
         </p>
         <p>
-            Attenzione! Se il torneo contiene i playoff e volete creare delle regole di passaggio del turno
-            sia dai gironi all'italiana che dai playoff, non potete selezionare entrambi i gironi 
-            (all'italiana e plyoff) ma in modo esclusivo, altrimenti il sistema non ve li accetta.
+          Attenzione! Se il torneo contiene i playoff e volete creare delle regole di passaggio del turno
+          sia dai gironi all'italiana che dai playoff, non potete selezionare entrambi i gironi
+          (all'italiana e plyoff) ma in modo esclusivo, altrimenti il sistema non ve li accetta.
         </p>
         <p>
-            Se avete selezionato un livello più basso, la vista non contiene questa sezione di configurazione.
+          Se avete selezionato un livello più basso, la vista non contiene questa sezione di configurazione.
         </p>
 
         <h4>2) Data e luogo dell'incontro andata/ritorno</h4>
         <p>
-            A prescindere dal livello di eliminazione che avete selezionato e dalla modalità di compilazione delle regole, 
-            la vista contiene le boxes per inserire la data e il luogo degli incontri differenziando il turno di andata da quello 
-            di ritorno, se esiste.
+          A prescindere dal livello di eliminazione che avete selezionato e dalla modalità di compilazione delle regole,
+          la vista contiene le boxes per inserire la data e il luogo degli incontri differenziando il turno di andata da quello
+          di ritorno, se esiste.
         </p>
-    </p-accordionTab>
-</p-accordion>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 </div>
-<div *ngIf="serverUnreachable" style="margin-top:30px">
+@if (serverUnreachable) {
+  <div style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
-</div>   
+  </div>
+}
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-</div>                  
+  <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>
 <form [formGroup]="eliminatoryFormGroup" >
 
-    <div *ngIf="isDoubleSelection" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
-        <div style="margin-top:30px">
-            <p-message 
-                severity="error" 
-                text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
-            </p-message>
-        </div>   
+  @if (isDoubleSelection) {
+    <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+      <div style="margin-top:30px">
+        <p-message
+          severity="error"
+          text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
+        </p-message>
+      </div>
     </div>
+  }
 
-    <h4 *ngIf="isRulesEnabled()">Regole di accoppiamento</h4>
+  @if (isRulesEnabled()) {
+    <h4>Regole di accoppiamento</h4>
+  }
 
-    <div *ngIf="isRulesEnabled()" class="ui-fluid">
-        <div class="grid">
-            <div class="col-3">
-                Classificata
-            </div>
-            <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
-                <p-select id="positionId" 
-                    [options]="positions" 
-                    formControlName="position1" 
-                    optionLabel="label">
-                </p-select>
-            </div>
-        </div>
-        
-        <div class="grid">
-            <div class="col-3" >
-                Girone
-            </div>
-            <div class="col-3"  pTooltip="Lasciare in bianco significa che passano le migliori {{position1.value}}° classificate">
-                <p-select id="roundId" 
-                    [options]="rounds" 
-                    formControlName="round1" 
-                    optionLabel="label">
-                </p-select>
-            </div>
-        </div>
-
-        <div *ngIf="isPlayoff" class="grid">
-            <div class="col-3" >
-                    Playoff
-            </div>
-            <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
-                <p-select id="playoffId" 
-                    [options]="playoffs" 
-                    formControlName="playoff1" 
-                    optionLabel="label">
-                </p-select>
-            </div>
-        </div>
-    
-        <h4>Vs</h4> 
-
-        <div *ngIf="isTopLevel">
-            <div class="grid">
-                <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
-                    Classificata
-                </div>
-                <div class="col-3" >
-                    <p-select id="vin" 
-                        [options]="positions" 
-                        formControlName="position2" 
-                        optionLabel="label">
-                    </p-select>
-                </div>
-            </div>
-
-            <div class="grid">
-                <div class="col-3" >
-                    Girone
-                </div>
-                <div class="col-3" pTooltip="Lasciare in bianco significa che passano le migliori {{position2.value}}° classificate">
-                    <p-select id="round" 
-                        [options]="rounds" 
-                        formControlName="round2" 
-                        optionLabel="label">
-                    </p-select>
-                </div>
-            </div>
-
-            <div *ngIf="isPlayoff" class="grid">
-                <div class="col-3" >
-                    Playoff
-                </div>
-                <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
-                    <p-select id="playoff"    
-                        [options]="playoffs" 
-                        formControlName="playoff2" 
-                        optionLabel="label">
-                    </p-select>
-                </div>
-            </div>
-        </div>   
-    </div>  
-
-    <h4>Andata</h4>
-
+  @if (isRulesEnabled()) {
     <div class="ui-fluid">
-        <div class="grid">
-            <div class="col-3">
-                Data e ora:
-            </div>
-            <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
-                <p-datepicker formControlName="meetingDate1" 
-                    [locale]="it" 
-                    dateFormat="dd/mm/yy" 
-                    [showTime]="true">
-                </p-datepicker>
-            </div>
+      <div class="grid">
+        <div class="col-3">
+          Classificata
         </div>
-
-        <div class="grid">
-            <div class="col-3">
-                Via:
-            </div>
-            <div class="col-5">
-                <input pInputText type="text" formControlName="address1"/>
-            </div>
-            <div class="col-4">
-                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address1'].valid
-                    && eliminatoryFormGroup.controls['address1'].dirty">
-                    <i class="pi pi-close"></i>
-                    <span *ngIf="eliminatoryFormGroup.controls['address1']?.errors?.['required']">
-                        La via dell'incontro di andata è obbligatoria
-                    </span>
-                </div>
-            </div>
+        <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
+          <p-select id="positionId"
+            [options]="positions"
+            formControlName="position1"
+            optionLabel="label">
+          </p-select>
         </div>
-
-        <div class="grid">
-            <div class="col-3">
-                Comune:
-            </div>
-            <div class="col-5">
-                <p-autoComplete id="country-id" formControlName="country1" 
-                    [suggestions]="filteredCountriesSingle" 
-                    (completeMethod)="searchCountry($event)" field="city"
-                    placeholder="Comune" [minLength]="1">
-                </p-autoComplete>
-            </div>
+      </div>
+      <div class="grid">
+        <div class="col-3" >
+          Girone
         </div>
-
+        <div class="col-3"  pTooltip="Lasciare in bianco significa che passano le migliori {{position1.value}}° classificate">
+          <p-select id="roundId"
+            [options]="rounds"
+            formControlName="round1"
+            optionLabel="label">
+          </p-select>
+        </div>
+      </div>
+      @if (isPlayoff) {
         <div class="grid">
-            <div class="col-3">
-                Indirizzo:
+          <div class="col-3" >
+            Playoff
+          </div>
+          <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
+            <p-select id="playoffId"
+              [options]="playoffs"
+              formControlName="playoff1"
+              optionLabel="label">
+            </p-select>
+          </div>
+        </div>
+      }
+      <h4>Vs</h4>
+      @if (isTopLevel) {
+        <div>
+          <div class="grid">
+            <div class="col-3" pTooltip="Inserire la posizione di classifica che deve avere una squadra nel suo girone per passare alle eliminazioni dirette">
+              Classificata
             </div>
-            <div class="col-8">
-                {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
-                + " (" + m1.country.provinceCode +")" : "" }}
+            <div class="col-3" >
+              <p-select id="vin"
+                [options]="positions"
+                formControlName="position2"
+                optionLabel="label">
+              </p-select>
             </div>
-        </div>                  
-
-        <h4 *ngIf="!isOneway" >Ritorno</h4>
-        
-        <div *ngIf="!isOneway">
+          </div>
+          <div class="grid">
+            <div class="col-3" >
+              Girone
+            </div>
+            <div class="col-3" pTooltip="Lasciare in bianco significa che passano le migliori {{position2.value}}° classificate">
+              <p-select id="round"
+                [options]="rounds"
+                formControlName="round2"
+                optionLabel="label">
+              </p-select>
+            </div>
+          </div>
+          @if (isPlayoff) {
             <div class="grid">
-                <div class="col-3">
-                    Data e ora:
-                </div>
-                <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
-                    <p-datepicker formControlName="meetingDate2" 
-                        [locale]="it" 
-                        dateFormat="dd/mm/yy" 
-                        [showTime]="true">
-                    </p-datepicker>
-                </div>
+              <div class="col-3" >
+                Playoff
+              </div>
+              <div class="col-3" pTooltip="Selezionare un girone di playoff in alternativa ad un girone all'italiana">
+                <p-select id="playoff"
+                  [options]="playoffs"
+                  formControlName="playoff2"
+                  optionLabel="label">
+                </p-select>
+              </div>
             </div>
+          }
+        </div>
+      }
+    </div>
+  }
 
-            <div class="grid">
-                <div class="col-3">
-                    Via:
-                </div>
-                <div class="col-5">
-                    <input pInputText type="text" formControlName="address2"/>
-                </div>
-                <div class="col-4">
-                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!eliminatoryFormGroup.controls['address2'].valid
-                            && eliminatoryFormGroup.controls['address2'].dirty">
-                        <i class="pi pi-close"></i>
-                        <span *ngIf="eliminatoryFormGroup.controls['address2']?.errors?.['required']">
-                            La via dell'incontro di ritorno è obbligatoria
-                        </span>
-                    </div>
-                </div>
-            </div>
+  <h4>Andata</h4>
 
-            <div class="grid">
-                <div class="col-3">
-                    Comune:
-                </div>
-                <div class="col-5">
-                    <p-autoComplete id="country-id" formControlName="country2" 
-                        [suggestions]="filteredCountriesSingle" 
-                        (completeMethod)="searchCountry($event)" field="city"
-                        placeholder="Comune" [minLength]="1">
-                    </p-autoComplete>
-                </div>
-            </div>
-
-            <div class="grid">
-                <div class="col-3">
-                    Indirizzo:
-                </div>
-                <div class="col-8">
-                    {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
-                    + " (" + m2.country.provinceCode +")" : "" }}
-                </div>
-            </div>      
-        </div>                                               
+  <div class="ui-fluid">
+    <div class="grid">
+      <div class="col-3">
+        Data e ora:
+      </div>
+      <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
+        <p-datepicker formControlName="meetingDate1"
+          dateFormat="dd/mm/yy"
+          [showTime]="true">
+        </p-datepicker>
+      </div>
     </div>
 
-    <div *ngIf="isDoubleSelection" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
-        <div style="margin-top:30px">
-            <p-message 
-                severity="error" 
-                text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
-            </p-message>
-        </div>   
+    <div class="grid">
+      <div class="col-3">
+        Via:
+      </div>
+      <div class="col-5">
+        <input pInputText type="text" formControlName="address1"/>
+      </div>
+      <div class="col-4">
+        @if (!eliminatoryFormGroup.controls['address1'].valid
+          && eliminatoryFormGroup.controls['address1'].dirty) {
+          <div class="ui-message ui-messages-error ui-corner-all">
+            <i class="pi pi-close"></i>
+            @if (eliminatoryFormGroup.controls['address1']?.errors?.['required']) {
+              <span>
+                La via dell'incontro di andata è obbligatoria
+              </span>
+            }
+          </div>
+        }
+      </div>
     </div>
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" class="ui-button-success" icon="pi pi-save" pButton (click)="done()" label="Salva"></button>
-    </div>                      
-</form>   
- 
+
+    <div class="grid">
+      <div class="col-3">
+        Comune:
+      </div>
+      <div class="col-5">
+        <p-autoComplete id="country-id" formControlName="country1"
+          [suggestions]="filteredCountriesSingle"
+          (completeMethod)="searchCountry($event)" 
+          field="city"
+          optionLabel="city"
+          placeholder="Comune" [minLength]="1">
+        </p-autoComplete>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-3">
+        Indirizzo:
+      </div>
+      <div class="col-8">
+        {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
+        + " (" + m1.country.provinceCode +")" : "" }}
+      </div>
+    </div>
+
+    @if (!isOneway) {
+      <h4 >Ritorno</h4>
+    }
+
+    @if (!isOneway) {
+      <div>
+        <div class="grid">
+          <div class="col-3">
+            Data e ora:
+          </div>
+          <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
+            <p-datepicker formControlName="meetingDate2"
+              dateFormat="dd/mm/yy"
+              [showTime]="true">
+            </p-datepicker>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3">
+            Via:
+          </div>
+          <div class="col-5">
+            <input pInputText type="text" formControlName="address2"/>
+          </div>
+          <div class="col-4">
+            @if (!eliminatoryFormGroup.controls['address2']?.valid
+              && eliminatoryFormGroup.controls['address2']?.dirty) {
+              <div class="ui-message ui-messages-error ui-corner-all">
+                <i class="pi pi-close"></i>
+                @if (eliminatoryFormGroup.controls['address2']?.errors?.['required']) {
+                  <span>
+                    La via dell'incontro di ritorno è obbligatoria
+                  </span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3">
+            Comune:
+          </div>
+          <div class="col-5">
+            <p-autoComplete id="country-id" formControlName="country2"
+              [suggestions]="filteredCountriesSingle"
+              (completeMethod)="searchCountry($event)" field="city"
+              placeholder="Comune" [minLength]="1">
+            </p-autoComplete>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3">
+            Indirizzo:
+          </div>
+          <div class="col-8">
+            {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
+            + " (" + m2.country.provinceCode +")" : "" }}
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (isDoubleSelection) {
+    <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+      <div style="margin-top:30px">
+        <p-message
+          severity="error"
+          text="Attenzione! Non si possono selezionare Gironi e Playoff in contemporanea!">
+        </p-message>
+      </div>
+    </div>
+  }
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" class="ui-button-success" icon="pi pi-save" pButton (click)="done()" label="Salva"></button>
+  </div>
+</form>

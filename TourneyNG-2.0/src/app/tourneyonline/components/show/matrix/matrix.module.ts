@@ -14,9 +14,7 @@ import {PickListModule} from 'primeng/picklist';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
 import {MatrixRoutingModule} from './matrix-routing.module';
@@ -32,10 +30,11 @@ import { MatrixService } from './matrix-service';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TabsModule } from 'primeng/tabs';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
 	imports: [
-
 		CommonModule
         ,FormsModule
         ,ReactiveFormsModule
@@ -43,7 +42,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -56,7 +55,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,DatePickerModule
         ,AccordionModule
         ,PickListModule
-        ,MessagesModule
+        ,ToastModule 
         ,MessageModule
         ,MatrixRoutingModule
     ],

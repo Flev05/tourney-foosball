@@ -1,0 +1,2206 @@
+{
+    "id": 109,
+    "wizardModeIndex": 6,
+    "datetime": "2025-03-19T20:00:00.000Z",
+    "tourneyName": "Pregnanito 2026",
+    "isDaily": "true",
+    "address": "Vis del Pregnanito 0",
+    "tourneyType": "score",
+    "access": "public",
+    "objectives": [
+    ],
+    "resultTool": "Complete",
+    "roundVO": {
+        "direction": "A",
+        "matchBalanceScores": 1,
+        "matchWinnerScores": 3,
+        "pointsNeededToWin": 7,
+        "pointsGoldenGoalTieBreakWin": 2,
+        "pointsGoldenGoalTieBreakDefeat": 1,
+        "maxMatchesPerMeeting": 1,
+        "isAllMatches": "true",
+        "isRoundAutoGen": "true",
+        "allMatchesEnabled": false,
+        "rounds": [
+            {
+                "id": 1053,
+                "direction": "A",
+                "name": "Girone.A",
+                "label": "",
+                "type": "round",
+                "pageSize": 9,
+                "daysNo": 17,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "1954",
+                    "MULTISERVICE",
+                    "CHO' SETE",
+                    "TullioTeam",
+                    "RoccoHard",
+                    "DAGADOSS",
+                    "Eleven",
+                    "GinTeam",
+                    "GLI SMANETTONI",
+                    "I PELATI",
+                    "I PUSSEE BEJ",
+                    "PelaTeam",
+                    "I TITANI DEL BILIARDINO",
+                    "Trumb�",
+                    "SASA' BOYS",
+                    "Invincibili",
+                    "INOXIDABILI 2.0",
+                    "PATAGARRI"
+                ],
+                "teamNo": "18",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": 1054,
+                        "teamName": "1954",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1055,
+                        "teamName": "MULTISERVICE",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1056,
+                        "teamName": "CHO' SETE",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1057,
+                        "teamName": "TullioTeam",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1058,
+                        "teamName": "RoccoHard",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1059,
+                        "teamName": "DAGADOSS",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1060,
+                        "teamName": "Eleven",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1061,
+                        "teamName": "GinTeam",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1062,
+                        "teamName": "GLI SMANETTONI",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1063,
+                        "teamName": "I PELATI",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1064,
+                        "teamName": "I PUSSEE BEJ",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1065,
+                        "teamName": "PelaTeam",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1066,
+                        "teamName": "I TITANI DEL BILIARDINO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1067,
+                        "teamName": "Trumb�",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1068,
+                        "teamName": "SASA' BOYS",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1069,
+                        "teamName": "Invincibili",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1070,
+                        "teamName": "INOXIDABILI 2.0",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": 1071,
+                        "teamName": "PATAGARRI",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": false,
+                        "roundIndex": 0
+                    }
+                ]
+            }
+        ],
+        "bestOfWinner": 1
+    },
+    "playoffVO": {
+        "direction": "A",
+        "matchWinnerScores": 3,
+        "matchBalanceScores": 1,
+        "pointsNeededToWin": 9,
+        "pointsGoldenGoalTieBreakWin": 2,
+        "pointsGoldenGoalTieBreakDefeat": 1,
+        "maxMatchesPerMeeting": 1,
+        "isAllMatches": "true",
+        "allMatchesEnabled": true,
+        "bestOfWinner": 0,
+        "isPlayoffAutoGen": "true",
+        "playoffs": [
+        ]
+    },
+    "isOnewayPlayoff": "true",
+    "playoutVO": {
+        "direction": "A",
+        "matchBalanceScores": 1,
+        "matchWinnerScores": 3,
+        "pointsNeededToWin": 9,
+        "pointsGoldenGoalTieBreakWin": 2,
+        "pointsGoldenGoalTieBreakDefeat": 1,
+        "maxMatchesPerMeeting": 1,
+        "isAllMatches": "true",
+        "isPlayoffAutoGen": "true",
+        "allMatchesEnabled": true,
+        "playoffs": [
+        ]
+    },
+    "isOnewayPlayout": "true",
+    "eliminatoryLevels": [
+        {
+            "id": 4,
+            "name": "Ottavi di finale",
+            "level": 4,
+            "isTopLevel": true,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 16,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Quarti di finale",
+            "level": 3,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 16,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Semi finale",
+            "level": 2,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 16,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "name": "Finalissima 1� e 2� posto",
+            "level": 1,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 16,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "name": "Finalina 3� e 4� posto",
+            "level": 1,
+            "isTopLevel": false,
+            "isOptional": true,
+            "direction": "A",
+            "topLevelTeamNo": 4,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": null,
+                    "round": {
+                        "id": 0,
+                        "direction": "A",
+                        "name": "",
+                        "label": "",
+                        "type": "round",
+                        "pageSize": 0,
+                        "daysNo": 0,
+                        "onewayCurrentDay": 0,
+                        "roundtripCurrentDay": 0,
+                        "teamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": false,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        }
+    ],
+    "eliminatoryBLevels": [
+    ],
+    "teams": [
+        {
+            "id": 370,
+            "teamName": "1954",
+            "players": [
+                {
+                    "playerName": "Emillio Cattaneo",
+                    "id": 152,
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "address": "Via Varese, 5",
+                    "phoneNumber": "331 648 6405"
+                },
+                {
+                    "playerName": "Salvatore Cavaliere",
+                    "id": 92,
+                    "address": "Via del Salvatore Cavaliere",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "349 606 2458"
+                }
+            ],
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "address": "Emilio Cattaneo - Salvatore Cavaliere",
+            "clientId": 2,
+            "operators": [
+            ]
+        },
+        {
+            "id": 430,
+            "teamName": "CHO' SETE",
+            "players": [
+            ],
+            "address": "Via del Chelsea",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 338,
+            "teamName": "DAGADOSS",
+            "players": [
+                {
+                    "playerName": "Roberto Bergamaschi",
+                    "id": 73,
+                    "address": "Via Novara, 26",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "328 422 9440"
+                },
+                {
+                    "playerName": "Antonio Scaramuzzi",
+                    "id": 72,
+                    "address": "Via di Antonio Scaramuzzi",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "340 64 95 283"
+                }
+            ],
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ],
+            "address": "Roberto Bergamaschi, Antonio Scaramuzzi",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            }
+        },
+        {
+            "id": 360,
+            "teamName": "Eleven",
+            "players": [
+                {
+                    "playerName": "Raimondo Brancaccio",
+                    "id": 108,
+                    "address": "Via N. Sauro, 6",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "329 901 1809"
+                },
+                {
+                    "playerName": "Pier",
+                    "id": 109,
+                    "address": "Via del Pier",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2
+                }
+            ],
+            "address": "Raimondo Brancaccio - Antonio Carrannante",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 421,
+            "teamName": "GinTeam",
+            "players": [
+                {
+                    "playerName": "Roberto Astolfoni",
+                    "id": 396,
+                    "address": "Via degli Astolfoni, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Giuseppe Arrigo",
+                    "id": 222,
+                    "address": "Via Giuseppe Arrigo, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "320 041 8735",
+                    "clientId": 2
+                }
+            ],
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "address": "Roberto Astolfoni, Giuseppe Arrigo",
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 427,
+            "teamName": "GLI SMANETTONI",
+            "players": [
+                {
+                    "playerName": "Alice Invernizzi",
+                    "id": 247,
+                    "address": "Via Alice Invernizzi, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "347 366 1025",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Luca Sottocornola",
+                    "id": 248,
+                    "address": "Via Luca Sottocornola, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "335356638",
+                    "clientId": 2
+                }
+            ],
+            "address": "Alice Invernizzi - Luca Sottocornola",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 428,
+            "teamName": "I PELATI",
+            "players": [
+            ],
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 433,
+            "teamName": "I PUSSEE BEJ",
+            "players": [
+            ],
+            "address": "Marcello Massucci - Andrea Ronca",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 431,
+            "teamName": "I TITANI DEL BILIARDINO",
+            "players": [
+            ],
+            "address": "Valter, Andrea Bergamaschi",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 426,
+            "teamName": "INOXIDABILI 2.0",
+            "players": [
+                {
+                    "playerName": "Ivan Colombo",
+                    "id": 191,
+                    "address": "Via Ivan Colombo",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "333 908 7006"
+                },
+                {
+                    "playerName": "Luigi Chiarenza",
+                    "id": 113,
+                    "address": "Via di Luigi Chiarenza",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "+39 347 352 0000",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Simone Di Carlo",
+                    "id": 192,
+                    "address": "Via Simone Do Carlo, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "345 320 1142"
+                },
+                {
+                    "playerName": "Francesco Gettato",
+                    "id": 193,
+                    "address": "Via Francesco Gettato",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "348 725 3181"
+                }
+            ],
+            "address": "Luigi Chiarenza, Ivan, Simone, Francesco",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 422,
+            "teamName": "Invincibili",
+            "players": [
+                {
+                    "playerName": "Pino Selini",
+                    "id": 91,
+                    "address": "Via di Pino Selini, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "349 39 03 607",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Savino Caporale",
+                    "id": 122,
+                    "address": "Via Savino Caporale, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "339 32 65 533"
+                }
+            ],
+            "address": "Pino Selini, Savino, Davide",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 429,
+            "teamName": "MULTISERVICE",
+            "players": [
+            ],
+            "address": "Via della m haifa,0",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 425,
+            "teamName": "PATAGARRI",
+            "players": [
+            ],
+            "address": "Stefano Bonuomo - Tore",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 420,
+            "teamName": "PelaTeam",
+            "players": [
+                {
+                    "playerName": "Luciano Martino",
+                    "id": 68,
+                    "address": "Via Nilde Iotti, 8",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "339 78 58 194",
+                    "email": "luciano.martino@gmail.com",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Vittorio Rigamonti",
+                    "id": 69,
+                    "address": "Via Nilde Iotti, 8",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "email": "rigazilla@gmail.com",
+                    "phoneNumber": "348 22 42 964",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Alberto Parola",
+                    "id": 70,
+                    "address": "Via di Alberto Parola",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "3939850016"
+                },
+                {
+                    "playerName": "Massimiliano Zatta",
+                    "id": 71,
+                    "address": "Via di Massimiliano Ratta",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "3334169507"
+                }
+            ],
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "address": "Luciano, Vittorio, Alberto, Max",
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 424,
+            "teamName": "RoccoHard",
+            "players": [
+                {
+                    "playerName": "Orlando Zambrella",
+                    "id": 86,
+                    "address": "Via dello Zambrella",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "339 24 52 880",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Haimar",
+                    "id": 115,
+                    "address": "Via di Haimar",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "clientId": 2,
+                    "phoneNumber": "391 73 77 508"
+                }
+            ],
+            "clientId": 2,
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "address": "Orlando Zambrella - Haimar",
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 432,
+            "teamName": "SASA' BOYS",
+            "players": [
+                {
+                    "playerName": "Salvatore Amoroso",
+                    "id": 99,
+                    "address": "Via Trento, 6",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "334 36 92 936",
+                    "clientId": 2
+                },
+                {
+                    "id": 104,
+                    "playerName": "Salvatore De Luca",
+                    "clientId": 2,
+                    "country": null
+                }
+            ],
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "address": "Amoroso, Sasa, Paolo",
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 423,
+            "teamName": "Trumb�",
+            "players": [
+                {
+                    "playerName": "Michele Montelone",
+                    "id": 66,
+                    "address": "Via di Michele Monteleone",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "392 83 81 661",
+                    "clientId": 2
+                },
+                {
+                    "playerName": "Davide Melito",
+                    "id": 164,
+                    "country": {
+                        "id": 4973,
+                        "city": "PARABIAGO",
+                        "cityCode": "G324",
+                        "provinceCode": "MI",
+                        "zipCode": "20015",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "324 603 0824",
+                    "clientId": 2,
+                    "address": "Via del Davide Melito, 0"
+                }
+            ],
+            "address": "Michele Montelone - Davide Melito",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        },
+        {
+            "id": 434,
+            "teamName": "TullioTeam",
+            "players": [
+                {
+                    "id": 205,
+                    "playerName": "Mauro",
+                    "address": "Via del Mauro, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "339 64 61 703",
+                    "clientId": 2
+                },
+                {
+                    "id": 204,
+                    "playerName": "Tulio Castoldi",
+                    "address": "Via di Tulio, 0",
+                    "country": {
+                        "id": 5542,
+                        "city": "PREGNANA MILANESE",
+                        "cityCode": "H026",
+                        "provinceCode": "MI",
+                        "zipCode": "20010",
+                        "countryCode": "IT"
+                    },
+                    "phoneNumber": "334 99 24 416",
+                    "clientId": 2
+                }
+            ],
+            "address": "Tullio, Mauro, Elisa",
+            "country": {
+                "id": 5542,
+                "city": "PREGNANA MILANESE",
+                "cityCode": "H026",
+                "provinceCode": "MI",
+                "zipCode": "20010",
+                "countryCode": "IT"
+            },
+            "clientId": 2,
+            "operators": [
+                "rbrancaccio",
+                "samoroso",
+                "vbergamaschi"
+            ]
+        }
+    ],
+    "playersPerTeam": 1,
+    "phases": [
+        "eliminatory",
+        "round"
+    ],
+    "eliminatoryMode": "auto",
+    "teamSortType": "original",
+    "isOnewayRound": "false",
+    "teamsWeightEnabled": "random",
+    "discipline": {
+        "id": 1,
+        "name": "Calcio Balilla",
+        "description": ""
+    },
+    "isEliminatoryAutoGen": "true",
+    "followerName": "Pregnanito2026",
+    "selectedTeams4RoundCB": {
+        "label": "Seleziona",
+        "value": 0
+    },
+    "selectedTeams4PlayoffsCB": {
+        "label": "Seleziona",
+        "value": 0
+    },
+    "selectedPlayoffsCB": {
+        "label": "Seleziona",
+        "value": 0
+    },
+    "selectedEliminatoryTeamsCB": {
+        "label": "16",
+        "value": 16
+    },
+    "selectedRoundsNumCB": {
+        "label": "1",
+        "value": 1
+    },
+    "eliminatoryTabName": "Playoff/Eliminazioni",
+    "eliminatoryBTabName": "Eliminazioni Dirette B",
+    "country": {
+        "id": 5542,
+        "city": "PREGNANA MILANESE",
+        "cityCode": "H026",
+        "provinceCode": "MI",
+        "zipCode": "20010",
+        "countryCode": "IT"
+    },
+    "selectedTabIndex": 0,
+    "clientVO": {
+        "id": 2,
+        "businessName": "CBP Calcio Balilla Pregnana",
+        "address": "Via Roma, 110",
+        "phoneNumber": "339 78 58 194",
+        "email": "info@calciobalillapregnana.it",
+        "siteUrl": "www.calciobalillapregnana.it",
+        "country": {
+            "id": 5542,
+            "city": "PREGNANA MILANESE",
+            "cityCode": "H026",
+            "provinceCode": "MI",
+            "zipCode": "20010",
+            "countryCode": "IT"
+        }
+    },
+    "terminatedRounds": [
+        "terminatedRounds"
+    ],
+    "chaosEnabled": false,
+    "roundTabName": "Qualificazioni",
+    "teamsChanged": false
+}

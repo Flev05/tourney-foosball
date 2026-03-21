@@ -64,9 +64,9 @@ export class MeetingListView extends AbstractListView {
         }
     }
 
-    override onChangeTab(e : any) {
-        let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
+    override onTabChange(e : any) {
+        let index=e;
+        console.log("Entering onTabChange(): tab=" + index);
         this.meetingRoundService.selectedTabIndex = index; 
     }
 

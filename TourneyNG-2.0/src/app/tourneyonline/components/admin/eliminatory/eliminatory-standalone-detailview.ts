@@ -48,6 +48,12 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
     ) { 
         super(tourneyService, location);
         this.eliminatoryFormGroup = this.fb.group({
+            meetingDate1: [new Date()],
+            meetingDate2: [new Date()],
+            address1: "",
+            address2: "",
+            country1: "",
+            country2: "",
             username: [''],
             password: ['']
         });
@@ -66,33 +72,34 @@ export class StandaloneEliminatoryDetailView extends AbstractDetailView {
         this.isOneway = this.selectedEliminatoryLevel.abstractRoundVO.direction == Direction.OneWay;
         this.isTopLevel = this.selectedEliminatoryLevel.isTopLevel;
 
-        this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
-
+        
         this.isStandalone = this.levelService.isStandAlone(this.selectedTourney);
-
-        if(this.m1.country!=undefined) {
+        
+        if( this.selectedEliminatory.round.onewayMeetings && this.selectedEliminatory.round.onewayMeetings.length > 0 ) {
+            this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
+        }
+        if(this.m1 && this.m1.country ) {
             this.fullAddress1 = this.m1.address + " - " 
                 + this.m1.country.zipCode + " " + this.m1.country.city
                 + " (" + this.m1.country.provinceCode +")";
         }
 
-        this.m2 = this.m1;
         if(!this.isOneway) {
-            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            if(this.m2.country!=undefined) {
-                this.fullAddress2 = this.m2.address + " - " 
-                    + this.m2.country.zipCode + " " + this.m2.country.city
-                    + " (" + this.m2.country.provinceCode +")";
+            if( this.selectedEliminatory.round.roundtripMeetings && this.selectedEliminatory.round.roundtripMeetings.length > 0 ) {
+                this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+                if( this.m2.country ) {
+                    this.fullAddress2 = this.m2.address + " - " 
+                        + this.m2.country.zipCode + " " + this.m2.country.city
+                        + " (" + this.m2.country.provinceCode +")";
+                }
             }
         }
 
         this.eliminatoryFormGroup = this.fb.group({
-
             'meetingDate1': new FormControl(new Date(this.m1.datetime)),
             'address1': new FormControl(this.m1.address, Validators.compose([Validators.required])),
             'country1': new FormControl(this.m1.country),
-
-            'meetingDate2': new FormControl(new Date(this.m2.datetime)),
+            'meetingDate2': new FormControl(new Date( this.m2.datetime)),
             'address2': new FormControl(this.m2.address, Validators.compose([Validators.required])),
             'country2': new FormControl(this.m2.country),    
         });

@@ -7,29 +7,34 @@
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Introduzione">            
-        <p>
-            Da questa vista potete aggiungere o rimuovere i giocatori di una squadra selezionandoli da quelli disponibili.
-        </p>
-
-        <p>
-            L'area di destra "Selezionati", elenca i giocatori che compongono la Squadra
-            mentre quella di sinistra "Disponibili", elenca tutti i giocatori disponibili.
-        </p>
-        <p>
-            Potete spostare i giocatori dall'area di destra 
-            all'area di sinistra e viceversa sempicemnte trascinando il nome del giocatore, oppure potete seleazionare il giocatore
-            di interesse ed usare uno dei bottoni di fianco preposto per l'operazione desiderata.           
-        </p>
-        <h4>Nuovo Giocatore</h4>
-        <p>
-            Con il bottone Nuovo Giocatore, si apre la vista di dettaglio di anagrafica del giocatore nella quale 
-            potete inserire i suoi dati e salvarli nella lista dei disponibili. La stessa operazione può essere eseguita anche 
-            a livello globale al link:
-            <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>    
-        </p>
-    </p-accordionTab>
+<p-accordion value="-1">
+    <p-accordion-panel value="0">         
+        <p-accordion-header>
+            Introduzione
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Da questa vista potete aggiungere o rimuovere i giocatori di una squadra selezionandoli da quelli disponibili.
+            </p>
+    
+            <p>
+                L'area di destra "Selezionati", elenca i giocatori che compongono la Squadra
+                mentre quella di sinistra "Disponibili", elenca tutti i giocatori disponibili.
+            </p>
+            <p>
+                Potete spostare i giocatori dall'area di destra 
+                all'area di sinistra e viceversa sempicemnte trascinando il nome del giocatore, oppure potete seleazionare il giocatore
+                di interesse ed usare uno dei bottoni di fianco preposto per l'operazione desiderata.           
+            </p>
+            <h4>Nuovo Giocatore</h4>
+            <p>
+                Con il bottone Nuovo Giocatore, si apre la vista di dettaglio di anagrafica del giocatore nella quale 
+                potete inserire i suoi dati e salvarli nella lista dei disponibili. La stessa operazione può essere eseguita anche 
+                a livello globale al link:
+                <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>    
+            </p>
+        </p-accordion-content>           
+    </p-accordion-panel>
 </p-accordion>
 </div>
 
@@ -54,7 +59,7 @@
         [target]="targetPlayers" 
         sourceHeader="Disponibili {{availablePlayers.length}}" 
         targetHeader="Selezionati {{targetPlayers.length}}" 
-        [responsive]="true"
+        responsiveLayout="scroll"
         dragdrop="true" 
         dragdropScope="players" 
         (onMoveToTarget)="onMoveToTarget($event)"

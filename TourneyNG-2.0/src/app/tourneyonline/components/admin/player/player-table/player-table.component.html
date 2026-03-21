@@ -1,23 +1,26 @@
 
 <p-table #table 
         dataKey="id"
+        size="small"
         [columns]="cols" 
         [value]="players" 
-        [responsive]="true" 
+        responsiveLayout="scroll" 
         [(selection)]="playerService.selectedPlayers" 
         [scrollable]="true" 
-        scrollHeight="250px">
+        scrollHeight="400px">
 
-    <ng-template *ngIf="addPlayerEnabled" pTemplate="caption">
-        <div style="text-align:center" >
-            <button pButton icon="pi pi-plus" 
-                type="button" 
-                (click)="create()" 
-                label="Nuovo Giocatore" 
-                pTooltip="Crea un nuovo giocatore non esistente in lista.">
-            </button>
-        </div>
-    </ng-template>
+        @if (addPlayerEnabled) {  
+            <ng-template *ngIf="addPlayerEnabled" pTemplate="caption">
+                <div style="text-align:center" >
+                    <button pButton icon="pi pi-plus" 
+                        type="button" 
+                        (click)="create()" 
+                        label="Nuovo Giocatore" 
+                        pTooltip="Crea un nuovo giocatore non esistente in lista.">
+                    </button>
+                </div>
+            </ng-template>
+        }
 
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -47,25 +50,26 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="rowData"  [ngClass]="{'already-selected-row': isInitialMember(rowData)}">
+        <tr [pSelectableRow]="rowData" [ngClass]="{'already-selected-row': isInitialMember(rowData)}">
             <td style="width: 3em">
                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>            
             <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
             <td *ngFor="let col of columns">
-                <span class="ui-column-title">{{col.header}}</span>
                 {{rowData[col.field]}}
             </td>
-            <td *ngIf="addPlayerEnabled" style="width: 15mm;" pTooltip="Apre la vista di dettaglio del giocatore sulla riga per la modifica dei campi.">
+            <td *ngIf="addPlayerEnabled" style="width: 15mm;" >
                 <button class="p-button-success p-button-sm" 
                     pButton icon="pi pi-pencil"
-                    (click)="doUpdate(rowData)">
+                    (click)="doUpdate(rowData)"
+                    pTooltip="Apre la vista di dettaglio del giocatore sulla riga per la modifica dei campi.">
                 </button>
             </td>        
-            <td *ngIf="addPlayerEnabled" style="width: 15mm;" pTooltip="Rimuove il giocatore sulla riga.">
+            <td *ngIf="addPlayerEnabled" style="width: 15mm;">
                 <button class="p-button-danger p-button-sm" 
                     pButton icon="pi pi-trash" 
-                    (click)="doDelete(rowData)">
+                    (click)="doDelete(rowData)"
+                    pTooltip="Rimuove il giocatore sulla riga.">
                 </button>
         </tr>
     </ng-template>  

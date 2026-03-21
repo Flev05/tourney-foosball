@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule }    from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { InputTextModule }  from 'primeng/inputtext';
@@ -10,9 +9,7 @@ import { ButtonModule }  from 'primeng/button';
 import { TableModule }  from 'primeng/table';
 import { OrderListModule } from 'primeng/orderlist';
 import { DialogModule }  from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
 import { PanelMenuModule } from 'primeng/panelmenu';
-import {SidebarModule} from 'primeng/sidebar';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './tourneyonline/components/home/home.component';
  
@@ -22,6 +19,8 @@ import { TeamModule } from './tourneyonline/components/admin/team/team.module';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { SelectModule } from 'primeng/select';
+import { DrawerModule } from 'primeng/drawer';
+import { provideAnimations } from '@angular/platform-browser/animations'; 
 
 const forDevelopEnvOnly: any[] = [];
 
@@ -33,7 +32,6 @@ const forDevelopEnvOnly: any[] = [];
     , imports: [BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule,
         AppRoutingModule,
         TableModule,
         OrderListModule,
@@ -42,8 +40,7 @@ const forDevelopEnvOnly: any[] = [];
         ButtonModule,
         PanelMenuModule,
         DateFormatModule,
-        DropdownModule,
-        SidebarModule,
+        DrawerModule,
         TeamModule,
         SelectModule,
         ...forDevelopEnvOnly
@@ -57,7 +54,8 @@ const forDevelopEnvOnly: any[] = [];
             theme: {
                 preset: Aura
             }
-        })
+        }),
+        provideAnimations()
     ] })
 export class AppModule { 
 }

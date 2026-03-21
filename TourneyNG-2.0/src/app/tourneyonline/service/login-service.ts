@@ -21,7 +21,7 @@ export class LoginService {
 
     userLogged   : Login = new Login();
     isUserLogged : boolean = false;
-    blockedDocument: boolean = false;
+    // blockedDocument: boolean = false;
     currentYear: string;
 
     constructor(private http: HttpClient

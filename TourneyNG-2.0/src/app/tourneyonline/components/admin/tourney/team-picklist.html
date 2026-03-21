@@ -6,25 +6,30 @@
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">            
-        <p>
-            Da questa vista potete aggiungere una o più squadre selezionandole da quelle disponibili nella area di sinistra.
-            Se la squadra non esiste, la potete creare con il bottone: Nuova Squadra
-        </p>
-        <p>
-            Le radio button: Ordinamento Casuale/Test di serie, indicano se le squadre sono inserite in ordine casuale oppure come teste di serie 
-            e quindi in prima posizione deve essere inserita la squadra più forte e per ultima quella più debole secondo un vostro criterio 
-            di classifica del rancking utilizzato. 
-        </p>
-        <p>
-            Il programma terrà conto di tale scelta ed organizzarà gli incontri del girone in funzione del loro ordine.
-        </p>
-        <p>
-            Attenzione! Quando inserite o rimuovete una squadra dal torneo, il sistema rimuove tutti i gironi, playoff
-            ed eliminazioni dirette precedentemente definiti, va in wizard mode e quindi dovete ricompilare tutte le schede corrispondenti.
-        </p>        
-    </p-accordionTab>
+<p-accordion value="-1">
+    <p-accordion-panel value="0">    
+        <p-accordion-header>
+            Istruzioni
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Da questa vista potete aggiungere una o più squadre selezionandole da quelle disponibili nella area di sinistra.
+                Se la squadra non esiste, la potete creare con il bottone: Nuova Squadra
+            </p>
+            <p>
+                Le radio button: Ordinamento Casuale/Test di serie, indicano se le squadre sono inserite in ordine casuale oppure come teste di serie 
+                e quindi in prima posizione deve essere inserita la squadra più forte e per ultima quella più debole secondo un vostro criterio 
+                di classifica del rancking utilizzato. 
+            </p>
+            <p>
+                Il programma terrà conto di tale scelta ed organizzarà gli incontri del girone in funzione del loro ordine.
+            </p>
+            <p>
+                Attenzione! Quando inserite o rimuovete una squadra dal torneo, il sistema rimuove tutti i gironi, playoff
+                ed eliminazioni dirette precedentemente definiti, va in wizard mode e quindi dovete ricompilare tutte le schede corrispondenti.
+            </p>        
+        </p-accordion-content>                
+    </p-accordion-panel>
 </p-accordion>
 </div>
 
@@ -76,7 +81,7 @@
             [target]="targetTeams" 
             sourceHeader="Disponibili {{availableTeams.length}}" 
             targetHeader="Selezionati {{targetTeams.length}}" 
-            [responsive]="true"
+            responsiveLayout="scroll"
             dragdrop="true" 
             dragdropScope="teams" 
             [sourceStyle]="{'height':'400px'}" 

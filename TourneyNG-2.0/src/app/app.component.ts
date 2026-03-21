@@ -114,6 +114,7 @@ export class AppComponent implements OnInit{
     logout(event : any) {
         this.menuActive = false;
         // this.clientService.selectedClient = null;
+        this.loginService.isUserLogged = false;
         this.loginService.sendLogout().subscribe(() => this.goHome());  
     }
 

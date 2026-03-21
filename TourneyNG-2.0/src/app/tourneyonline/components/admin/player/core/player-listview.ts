@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AbstractListView } from '../../../../components/common/abstract-listview';
-import { TourneyService } from '../../../../service/tourney-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
 const redirect: string = "adminplayer/dv";
 const REDIRECT_TOURNEY_LV   = 'admintourney/';

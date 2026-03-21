@@ -11,14 +11,12 @@ import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import { PanelModule } from 'primeng/panel';
 import {AccordionModule} from 'primeng/accordion';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { BlockUIModule } from 'primeng/blockui';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { PickListModule } from 'primeng/picklist';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
 import { TourneyRoutingModule} from './tourney-routing.module';
 import { TourneyListView} from './tourney-listview';
@@ -38,6 +36,9 @@ import { PlayerChooserModule } from '../player/player-chooser/player-chooser.mod
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TabsModule } from 'primeng/tabs';
+import { ToastModule } from 'primeng/toast';
+
 
 @NgModule({
 	imports: [
@@ -48,7 +49,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -62,7 +63,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,PickListModule
         ,ScrollPanelModule
         ,AccordionModule
-        ,MessagesModule
+        ,ToastModule 
         ,MessageModule
         ,BlockUIModule
 		,TourneyRoutingModule

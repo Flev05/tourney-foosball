@@ -4,13 +4,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import { OrderListModule } from 'primeng/orderlist';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { SliderModule } from 'primeng/slider';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { AccordionModule } from 'primeng/accordion';
 
 import { ClassificationTabListView } from './tab-listview';
@@ -22,6 +20,8 @@ import { ClassificationDetailView } from './classification-detailview';
 import { PlayerTableModule } from '../../admin/player/player-table/player-table.module';
 import { TeamMatchesModule } from '../match/team-matches/team-matches.module';
 import { SelectModule } from 'primeng/select';
+import { TabsModule } from 'primeng/tabs';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
         imports: [
@@ -33,13 +33,13 @@ import { SelectModule } from 'primeng/select';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,OrderListModule
         ,DialogModule
         ,SliderModule
         ,ClassificationRoutingModule
-        ,MessagesModule
+        ,ToastModule 
         ,MessageModule
         ,PlayerTableModule
         ,TeamMatchesModule

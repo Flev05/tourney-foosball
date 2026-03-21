@@ -186,12 +186,13 @@ export abstract class AbstractPlayoffResultListView extends AbstractRuleListView
         this.playoffClassification = this.tourneyService.prepareRoundsGui(this.selectedTourney.playoffVO.maxMatchesPerMeeting, [playoff.round]);
     }
 
-    override onChangeTab(e: { index: any; }) {
-        let index=e.index;
+    override onTabChange(value: string | number | undefined) {
+        if (value === undefined) return;
+        let index=value;
         if( index == 2 ) {
             this.ngOnInit();
         }
-        this.tourneyService.selectedPlayoffTabIndex = index;
+        this.tourneyService.selectedPlayoffTabIndex = Number(index);
         this.currentDay = this.selectedPlayoff.round.roundtripCurrentDay;
     }
   

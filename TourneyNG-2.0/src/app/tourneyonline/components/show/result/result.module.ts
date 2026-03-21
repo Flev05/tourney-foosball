@@ -10,14 +10,12 @@ import {TooltipModule} from 'primeng/tooltip';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
-import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 
 import {ResultRoutingModule} from './result-routing.module';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
 import { BlockUIModule } from 'primeng/blockui';
 import { ResultTourneyListView } from './tourney-listview';
@@ -32,6 +30,8 @@ import { TeamTableModule } from 'app/tourneyonline/components/admin/team-table/t
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TabsModule } from 'primeng/tabs';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
 	imports: [
@@ -42,7 +42,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule 
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -57,7 +57,7 @@ import { DatePickerModule } from 'primeng/datepicker';
         ,ResultRoutingModule
         ,AccordionModule
         ,PickListModule
-        ,MessagesModule
+        ,ToastModule 
         ,MessageModule
         ,TeamTableModule
     ],

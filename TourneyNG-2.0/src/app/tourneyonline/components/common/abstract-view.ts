@@ -110,7 +110,7 @@ export abstract class AbstractView implements OnInit {
     
     searchCountry(event : any) {
         let query = event.query;
-        this.filteredCountriesSingle =this.filterCountry(query, this.countries);
+        this.filteredCountriesSingle = [...this.filterCountry(query, this.countries)];
     }
 
     //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side

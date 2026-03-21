@@ -56,9 +56,9 @@ export class ClassificationTabListView extends AbstractEliminatoryListView {
         }
     }
     
-    override onChangeTab(e : any) {
-        let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
+    override onTabChange(e : any) {
+        let index=e;
+        console.log("Entering onTabChange(): tab=" + index);
         this.activeIndex = index;
         this.selectedTabIndex = this.activeIndex;
     }

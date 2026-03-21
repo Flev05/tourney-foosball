@@ -71,9 +71,9 @@ export class MeetingPageListView extends AbstractRuleListView {
         subsbr.subscribe(t => this.onCompleteLoad(t), e => this.onError(e) );
     }
    
-    override onChangeTab(e : any) {
-        let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
+    override onTabChange(e : any) {
+        let index=e;
+        console.log("Entering onTabChange(): tab=" + index);
         this.meetingPlayoffService.selectedTabIndex = index; 
     }
     

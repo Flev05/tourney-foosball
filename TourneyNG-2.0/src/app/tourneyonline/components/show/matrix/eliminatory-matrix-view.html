@@ -1,103 +1,117 @@
 <div class="content-section introduction">
-    <div>
-        <span class="feature-title">Matrice dei punti eliminatorie</span>
-        <span>Vista di dettaglio della matrice dei punti</span>
-    </div>
+  <div>
+    <span class="feature-title">Matrice dei punti eliminatorie</span>
+    <span>Vista di dettaglio della matrice dei punti</span>
+  </div>
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">   
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
         <p>
-            Da questa vista potete modificare i dati della matrice dei punti per l'eliminatoria selezionata.        
+          Da questa vista potete modificare i dati della matrice dei punti per l'eliminatoria selezionata.
         </p>
         <p>
-            Alla fine dell'incontro, si devono segnare i punti conquistati solo sulla riga della squadra
-            che gioca in casa, l'altra viene aggiornata automaticamente.
+          Alla fine dell'incontro, si devono segnare i punti conquistati solo sulla riga della squadra
+          che gioca in casa, l'altra viene aggiornata automaticamente.
         </p>
         <p>
-            Per esempio, supponiamo di avere un torneo da 5 squadre rappresentate dalle lettere A, B, C, D, E.
+          Per esempio, supponiamo di avere un torneo da 5 squadre rappresentate dalle lettere A, B, C, D, E.
         </p>
         <p>
-            Quando giocano B contro E, si deve compilare solo una cella: quella alle coordinate [B,E].
-            L'altra, quella alle coordinate [E,B], viene compilata automaticamente dal programma. 
+          Quando giocano B contro E, si deve compilare solo una cella: quella alle coordinate [B,E].
+          L'altra, quella alle coordinate [E,B], viene compilata automaticamente dal programma.
         </p>
         <p>
-            Se la squadra B vince e conquista 2 punti, e la squadra B perde e conquista un solo punto,
-            vanno inseriti solo i 2 punti della cella [B,E], la cella [E,B] viene automaticamente impostata ad 1.
+          Se la squadra B vince e conquista 2 punti, e la squadra B perde e conquista un solo punto,
+          vanno inseriti solo i 2 punti della cella [B,E], la cella [E,B] viene automaticamente impostata ad 1.
         </p>
         <p>
-            Allo stesso modo se la squadra B perde, impostare 0 punti nella cella [B,E], 
-            la cella [E,B] viene automaticamente impostata a 3.
+          Allo stesso modo se la squadra B perde, impostare 0 punti nella cella [B,E],
+          la cella [E,B] viene automaticamente impostata a 3.
         </p>
-    </p-accordionTab>
-</p-accordion>        
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 </div>
 
-<div *ngIf="serverUnreachable" style="margin-top:30px">
+@if (serverUnreachable) {
+  <div style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
-</div>   
+  </div>
+}
 
 <div class="content-section implementation">
-    <h3>Torneo [{{selectedTourney.tourneyName}}]</h3> 
-    <h4>Eliminatoria [{{selectedRound.name}}]</h4> 
+  <h3>Torneo [{{selectedTourney.tourneyName}}]</h3>
+  <h4>Eliminatoria [{{selectedRound.name}}]</h4>
 
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-        <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-    </div>
-    
-    <p-table [columns]="cols" [value]="matrix.rows">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <th *ngFor="let col of columns">
-                    {{col.header}}                                
-                </th>
-            </tr>
-        </ng-template>                                     
-    
-        <ng-template pTemplate="body" let-rowData let-columns="columns">
-            <tr [pSelectableRow]="rowData" >
-                <td pEditableColumn *ngFor="let col of columns; index as i" [ngClass]="rowData.cells[i].style">
-                    <p-cellEditor *ngIf="rowData.cells[i].isEditable"  >
-                        <ng-template pTemplate="input" >
-                            <p-select [options]="rowData.cells[i].options" 
-                                [(ngModel)]="rowData.cells[i].points" 
-                                optionLabel="label"
-                                [style]="{'width':'100%'}"
-                                placeholder="Punti"
-                                (onChange)="onPointChange($event.value)">                                
-                            </p-select>
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{rowData.cells[i].points.label}}
-                        </ng-template>                        
-                    </p-cellEditor>
-                   
-                    <label *ngIf="!rowData.cells[i].isEditable">
-                        {{rowData.cells[i].field}}
-                    </label>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+  </div>
 
-                    <label *ngIf="rowData.cells[i].isTotal">
-                        {{rowData.cells[i].points.value}}
-                    </label>
-                </td>            
-            </tr>
-        </ng-template>
-    </p-table> 
-    <p-table [columns]="legendCols"
-        [value]="legendRows"
-        [responsive]="true">
-        <ng-template pTemplate="caption">
-            Legenda
-        </ng-template>
-        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">            
-            <tr>
-                <td *ngFor="let col of columns">
-                    <span class="ui-column-title">{{col.header}}</span>
-                    {{rowData[col.field]}}
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>       
+  <p-table [columns]="cols" [value]="matrix.rows">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        @for (col of columns; track col) {
+          <th>
+            {{col.header}}
+          </th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData" >
+        @for (col of columns; track col; let i = $index) {
+          <td pEditableColumn [ngClass]="rowData.cells[i].style">
+            @if (rowData.cells[i].isEditable) {
+              <p-cellEditor  >
+                <ng-template pTemplate="input" >
+                  <p-select [options]="rowData.cells[i].options"
+                    [(ngModel)]="rowData.cells[i].points"
+                    optionLabel="label"
+                    [style]="{'width':'100%'}"
+                    placeholder="Punti"
+                    (onChange)="onPointChange($event.value)">
+                  </p-select>
+                </ng-template>
+                <ng-template pTemplate="output">
+                  {{rowData.cells[i].points.label}}
+                </ng-template>
+              </p-cellEditor>
+            }
+            @if (!rowData.cells[i].isEditable) {
+              <label>
+                {{rowData.cells[i].field}}
+              </label>
+            }
+            @if (rowData.cells[i].isTotal) {
+              <label>
+                {{rowData.cells[i].points.value}}
+              </label>
+            }
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-table [columns]="legendCols"
+    [value]="legendRows">
+    <ng-template pTemplate="caption">
+      Legenda
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <tr>
+        @for (col of columns; track col) {
+          <td>
+            {{rowData[col.field]}}
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
- 

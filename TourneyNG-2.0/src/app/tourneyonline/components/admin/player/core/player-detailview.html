@@ -1,195 +1,231 @@
 <div class="content-section introduction">
-    <div>
-        <span class="feature-title">Vista di dettaglio anagrafica giocatore</span>
-        <h4><span>Giocatore: {{selectedPlayer.playerName}}</span></h4>
-    </div>
+  <div>
+    <span class="feature-title">Vista di dettaglio anagrafica giocatore</span>
+    <h4><span>Giocatore: {{selectedPlayer.playerName}}</span></h4>
+  </div>
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">                        
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
         <p>Vista di dettaglio anagrafica giocatore.
-            Da questa vista potete creare o modificare ma non rimuovere l'anagrafica di un giocatore, la rimozione va fatta nella list view.
+          Da questa vista potete creare o modificare ma non rimuovere l'anagrafica di un giocatore, la rimozione va fatta nella list view.
         </p>
 
         <h4>Creare una nuova anagrafica giocatore</h4>
-        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con 
-            il bottone Salva.
-            I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+        <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con
+          il bottone Salva.
+          I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
         </p>
 
         <h4>Modificare anagrafica giocatore</h4>
         <p>Si possono modificare tutti i campi esistenti; quelli obbligatori, contrassegnati con l'asterisco (*),
-            non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
-            essere svuotati.
+          non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+          essere svuotati.
         </p>
         <p>
-            Alla fine dell'operazione salvare con il bottone Salva
+          Alla fine dell'operazione salvare con il bottone Salva
         </p>
-    </p-accordionTab>
-</p-accordion>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 </div>
- 
+
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
-</div>                  
-
-<div *ngIf="!enabledModify()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
-    <div class="grid">
-        <div class="col-2">
-            Nome:
-        </div>
-        <div class="col-5">
-            {{selectedPlayer.playerName}}
-        </div>
-    </div>
-    <div class="grid">
-        <div class="col-2">
-            Tessera:
-        </div>
-        <div class="col-5">
-            {{selectedPlayer.code}}
-        </div>
-    </div>
-    <div class="grid">
-        <div class="col-2">
-            Indirizzo:
-        </div>
-        <div class="col-8">
-            {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
-            + " (" + selectedPlayer.country.provinceCode +")" : "" }}
-        </div>
-    </div> 
-
-    <div class="grid">
-        <div class="col-2">
-            Telefono:
-        </div>
-        <div class="col-5">
-            {{selectedPlayer.phoneNumber}}
-        </div>
-    </div>
-    <div class="grid">
-        <div class="col-2">
-            Email:
-        </div>
-        <div class="col-5">
-            {{selectedPlayer.email}}
-        </div>
-    </div>
+  <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
 </div>
-    
-<div *ngIf="enabledModify()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+
+@if (!enabledModify()) {
+  <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+      <div class="col-2">
+        Nome:
+      </div>
+      <div class="col-5">
+        {{selectedPlayer.playerName}}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-2">
+        Tessera:
+      </div>
+      <div class="col-5">
+        {{selectedPlayer.code}}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-2">
+        Indirizzo:
+      </div>
+      <div class="col-8">
+        {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+        + " (" + selectedPlayer.country.provinceCode +")" : "" }}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-2">
+        Telefono:
+      </div>
+      <div class="col-5">
+        {{selectedPlayer.phoneNumber}}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-2">
+        Email:
+      </div>
+      <div class="col-5">
+        {{selectedPlayer.email}}
+      </div>
+    </div>
+  </div>
+}
+
+@if (enabledModify()) {
+  <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <p>
-        I campi contrassegnati con * sono obbligatori!
+      I campi contrassegnati con * sono obbligatori!
     </p>
     <div class="grid">
-        <div class="col-3">
-            Nominativo*:
-        </div>
-        <div class="col-5" pTooltip="Il nome del giocatore è obbligatorio, può essere anche un nick name.">                                
-            <input pInputText type="text" [(ngModel)]="selectedPlayer.playerName"/>
-        </div>
-    </div>
-    <div class="grid">
-        <div class="col-3">
-            Tessera:
-        </div>
-        <div class="col-5" pTooltip="Inserire il codice della tessera del giocatore.">
-            <input pInputText type="text" [(ngModel)]="selectedPlayer.code"/>
-        </div>
-    </div>    
-        
-    <div class="grid">
-        <div class="col-3" pTooltip="Inserire la via di residenza del giocatore.">
-            Via:
-        </div>
-        <div class="col-5">
-            <input pInputText type="text" [(ngModel)]="selectedPlayer.address"/>
-        </div>
-    </div>
-                                    
-    <div class="grid">
-        <div class="col-3">
-            <label for="country-id">Comune:</label>
-        </div>
-        <div class="col-5">
-            <p-autoComplete id="palyer-id" 
-                pTooltip="Permette di cercare un giocatore, selezionarlo o inserire uno nuovo." 
-                [(ngModel)]="autoCompletePlayerName" 
-                [suggestions]="filteredPlayersSingle" 
-                (completeMethod)="loadPlayersCompleteMethod($event)" 
-                (onSelect)="onPlayerSelect($event)"
-                field="playerName"
-                [forceSelection]="false"
-                [dropdown]="true"
-                placeholder="Nome Giocatore">            
-            </p-autoComplete>     
-            
-            <button pButton type="button" 
-                pTooltip="Permette di modficare il nome di un giocatore senza rimovere e ricreare." 
-                icon="fa fa-pencil" 
-                class="ui-button-warn" 
-                *ngIf="autoCompletePlayerName.id != null && autoCompletePlayerName.id > 0"
-                (click)="prepareRename()">
-            </button>   
-        </div>
-        <div *ngIf="isRenaming" style="margin-top: 10px;">
-            <input type="text" pInputText [(ngModel)]="newName" placeholder="Nuovo nome..." />
-            <button pButton label="Salva" (click)="saveRename()"></button>
-            <button pButton label="Annulla" class="ui-button-secondary" (click)="isRenaming = false"></button>
-        </div>
-    </div>           
-
-    <div class="grid">
-        <div class="col-3">
-            Indirizzo:
-        </div>
-        <div class="col-8">
-            {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
-            + " (" + selectedPlayer.country.provinceCode +")" : "" }}
-        </div>
-    </div>             
-                
-    <div class="grid">
-        <div class="col-3">
-            Telefono:
-        </div>
-        <div class="col-5" pTooltip="Inserire il numero di telefono del giocatore.">
-            <input pInputText type="text" [(ngModel)]="selectedPlayer.phoneNumber"/>
-        </div>
+      <div class="col-3">
+        Nominativo*:
+      </div>
+      <p-autoComplete id="palyer-id"
+            pTooltip="Permette di cercare un giocatore, selezionarlo o inserire uno nuovo."
+            [(ngModel)]="autoCompletePlayerName"
+            [suggestions]="filteredPlayersSingle"
+            (completeMethod)="loadPlayersCompleteMethod($event)"
+            (onSelect)="onPlayerSelect($event)"
+            field="playerName"
+            optionLabel="playerName"
+            [forceSelection]="false"
+            [dropdown]="true"
+            placeholder="Nome Giocatore">
+        </p-autoComplete>
+        @if (autoCompletePlayerName.id != null && autoCompletePlayerName.id > 0) {
+          <button pButton type="button"
+            pTooltip="Permette di modficare il nome di un giocatore senza rimovere e ricreare."
+            icon="pi pi-pencil"
+            class="ui-button-warn"
+            (click)="prepareRename()">
+          </button>
+        }
+      </div>
     </div>
 
     <div class="grid">
-        <div class="col-3">
-            E-mail:
-        </div>
-        <div class="col-5" pTooltip="Inserire l'indirizzo e-mail del giocatore.">
-            <input pInputText type="text" [(ngModel)]="selectedPlayer.email"/>
-        </div>
+      <div class="col-3" pTooltip="Inserire la via di residenza del giocatore.">
+        Via:
+      </div>
+      <div class="col-12 md:col-8">
+        <input pInputText 
+              type="text" 
+              class="w-full" 
+              [(ngModel)]="selectedPlayer.address" 
+              pTooltip="Inserire l'indirizzo del giocatore"
+              placeholder="Indirizzo"/>
+      </div>      
     </div>
-</div>
-
-<div *ngIf="enabledModify()" class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <div class="grid">
-        <div class="col-2">
-            <button class="ui-button-success" 
-                pButton (click)="savePlayer()"                 
-                icon="pi pi-save" 
-                label="Salva" 
-                [disabled]="enableSaveButton()">
-            </button>            
-        </div>
+      <div class="col-3">
+        <label for="country-id">Comune:</label>
+      </div>
+      <div class="col-5">
+        <p-autoComplete id="country-id"
+            [(ngModel)]="selectedPlayer.country"
+            [suggestions]="filteredCountriesSingle"
+            (completeMethod)="searchCountry($event)"
+            field="city"
+            optionLabel="city"
+            placeholder="Comune"
+            [minLength]="1"
+            [fluid]="true"
+            variant="filled"> 
+          <ng-template pTemplate="item" let-country>
+              <div class="flex align-items-center">
+                  <span>{{ country.city }}</span>
+              </div>
+          </ng-template>          
+        </p-autoComplete>
+      </div>
     </div>
-</div>
+    <div class="grid">
+      <div class="col-3">
+        Indirizzo:
+      </div>
+      <div class="col-8">
+        {{selectedPlayer.address}} {{selectedPlayer.country != undefined ? " - " + selectedPlayer.country.zipCode + " " + selectedPlayer.country.city
+        + " (" + selectedPlayer.country.provinceCode +")" : "" }}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-3">
+        Telefono:
+      </div>
+      <div class="col-5" pTooltip="Inserire il numero di telefono del giocatore.">
+        <input pInputText type="text" [(ngModel)]="selectedPlayer.phoneNumber"/>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-3">
+        E-mail:
+      </div>
+      <div class="col-12 md:col-8">
+        <input pInputText 
+              type="text" 
+              class="w-full" 
+              [(ngModel)]="selectedPlayer.email" 
+              pTooltip="Inserire l'indirizzo e-mail del giocatore"
+              placeholder="Indirizzo Email"/>
+      </div>           
+  </div>
+  <div class="grid">
+      <div class="col-3">
+        Tessera:
+      </div>
+      <div class="col-5" pTooltip="Inserire il codice della tessera del giocatore.">
+        <input pInputText type="text" [(ngModel)]="selectedPlayer.code"/>
+      </div>
+  </div>
+}
 
-<div *ngIf="badRequest" style="margin-top:30px">
+@if (enabledModify()) {
+  <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+      <div class="col-2">
+        <button class="ui-button-success"
+          pButton (click)="savePlayer()"
+          icon="pi pi-save"
+          label="Salva"
+          [disabled]="enableSaveButton()">
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (badRequest) {
+  <div style="margin-top:30px">
     <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
-</div>   
+  </div>
+}
 
-<div *ngIf="playerAlreadyExists" style="margin-top:30px">
+@if (playerAlreadyExists) {
+  <div style="margin-top:30px">
     <p-message severity="error" text="Esiste già un giocatore con nome {{selectedPlayer.playerName}}. Cambiare nome e riprovare!"></p-message>
-</div>    
- 
+  </div>
+}
 
- 
+<p-dialog header="Rinomina Giocatore" [(visible)]="isRenaming" [modal]="true" appendTo="body" [style]="{width: '50vw'}">
+    <div class="flex flex-column gap-3">
+        <input type="text" pInputText [(ngModel)]="newName" placeholder="Nuovo nome..." class="w-full" />
+        <div class="flex justify-content-end gap-2">
+            <button pButton label="Annulla" class="p-button-secondary" (click)="isRenaming = false"></button>
+            <button pButton label="Salva" (click)="saveRename()"></button>
+        </div>
+    </div>
+</p-dialog>

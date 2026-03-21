@@ -88,6 +88,7 @@ export class MeetingService extends AbstractService {
     { 
         super();
         console.log("Constructor of MeetingService");
+        this.selectedResultTabIndex = 0;
     }
 
     public extractRoundMeetings(round: Round, mdbList: MeetingDb[] ) {

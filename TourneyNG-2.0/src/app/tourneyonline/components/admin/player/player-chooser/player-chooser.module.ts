@@ -7,10 +7,10 @@ import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -23,7 +23,7 @@ import { SelectModule } from 'primeng/select';
     ,SelectModule
     ,InputTextModule
     ,ButtonModule
-    ,MessagesModule
+    ,ToastModule
     ,MessageModule
     ,TableModule
     ,AutoCompleteModule

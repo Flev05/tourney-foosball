@@ -6,47 +6,52 @@
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">              
-        <p>
-            Vista elenco di tutte le squadre della società
-        </p>
-        <p>
-            Da questa vista potete eseguire le seguenti operazioni:
-        </p>
-        <ul>
-            <li>Creare una nuova squadra</li>
-            <li>Selezionare una squadra esistente</li>
-            <li>Rimuovere una squadra esistente</li>
-        </ul>
-
-        <h4>Creare una nuova squadra</h4>
-        <p>
-            Con il bottone Aggiungi Squadra si apre la vista di dettaglio dalla quale compilare l'anagrafica di una nuova squadra.
-            La squadra creata sarà disponibile per essere inserita in qualsiasi torneo.
-        </p>            
-        <p>        
-            Attenzione: una modifica a livello di squadra, non viene riflessa automaticamente a livello globale
-            già inclusa in un torneo. Per avere le modifiche apportate sulla squadra, bisogna rimuoverla dal torneo e ricaricarla.
-        </p>
-        
-        <h4>Selezionare una squadra esistente</h4>
-        <p>
-            Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
-        </p>
+<p-accordion value="-1">
+    <p-accordion-panel value="0">      
+        <p-accordion-header>
+            Istruzioni
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Vista elenco di tutte le squadre della società
+            </p>
+            <p>
+                Da questa vista potete eseguire le seguenti operazioni:
+            </p>
+            <ul>
+                <li>Creare una nuova squadra</li>
+                <li>Selezionare una squadra esistente</li>
+                <li>Rimuovere una squadra esistente</li>
+            </ul>
+    
+            <h4>Creare una nuova squadra</h4>
+            <p>
+                Con il bottone Aggiungi Squadra si apre la vista di dettaglio dalla quale compilare l'anagrafica di una nuova squadra.
+                La squadra creata sarà disponibile per essere inserita in qualsiasi torneo.
+            </p>            
+            <p>        
+                Attenzione: una modifica a livello di squadra, non viene riflessa automaticamente a livello globale
+                già inclusa in un torneo. Per avere le modifiche apportate sulla squadra, bisogna rimuoverla dal torneo e ricaricarla.
+            </p>
             
-        <h4>Rimuovere una squadra esistente</h4>
-        <p>
-            Si può rimuovere una squadra esistente con il bottore X collocato a fine riga.
-            Il sistema chiederà conferma con una popup dialog box e, solo se si conferma, la squadra
-            sarà rimossa a livello di sistema.
-        </p>  
-        <p>
-            Attenzione! 
-            La rimozione della squadra è a livello globale, nel senso che non può essere inserito in nuovi tornei, ma non viene rimossa
-            dai tornei preesistenti.            
-        </p>      
-    </p-accordionTab>
+            <h4>Selezionare una squadra esistente</h4>
+            <p>
+                Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio
+            </p>
+                
+            <h4>Rimuovere una squadra esistente</h4>
+            <p>
+                Si può rimuovere una squadra esistente con il bottore X collocato a fine riga.
+                Il sistema chiederà conferma con una popup dialog box e, solo se si conferma, la squadra
+                sarà rimossa a livello di sistema.
+            </p>  
+            <p>
+                Attenzione! 
+                La rimozione della squadra è a livello globale, nel senso che non può essere inserito in nuovi tornei, ma non viene rimossa
+                dai tornei preesistenti.            
+            </p>      
+        </p-accordion-content>                
+    </p-accordion-panel>
 </p-accordion>    
 </div>
 

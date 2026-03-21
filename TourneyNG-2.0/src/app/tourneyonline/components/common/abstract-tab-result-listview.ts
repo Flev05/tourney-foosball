@@ -212,9 +212,9 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         }
     }
  
-    override onChangeTab(e : any) {
-        var index = e.index;
-        console.log("Entering onChangeTab(" +index+ ")");
+    override onTabChange(e : any) {
+        var index = e;
+        console.log("Entering onTabChange(" +index+ ")");
         this.meetingService.selectedResultTabIndex = index;
         let elIndex = 0;
         if( this.containsRound() && this.containsPlayoff() && this.containsPlayout() ) {

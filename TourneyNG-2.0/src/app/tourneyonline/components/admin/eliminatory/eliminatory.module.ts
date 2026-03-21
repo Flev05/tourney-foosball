@@ -11,12 +11,10 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {AccordionModule} from 'primeng/accordion';
 import {PickListModule} from 'primeng/picklist';
 import { DialogModule } from 'primeng/dialog';
-import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
 
 import {EliminatoryRoutingModule} from './eliminatory-routing.module';
@@ -24,11 +22,14 @@ import {StandaloneEliminatoryListView} from './eliminatory-standalone-listview';
 import {EliminatoryListView} from './eliminatory-listview';
 import {StandaloneEliminatoryDetailView} from './eliminatory-standalone-detailview';
 import { EliminatoryDetailView } from './eliminatory-detailview';
-import { DateFormatPipe } from '../../../components/common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { LevelService } from './level-service';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastModule } from 'primeng/toast';
+import { TabsModule } from 'primeng/tabs';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
 	imports: [
@@ -39,7 +40,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,SliderModule
         ,AutoCompleteModule
@@ -53,7 +54,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,AccordionModule
         ,PickListModule
         ,DialogModule
-        ,MessagesModule
+        ,ToastModule
         ,MessageModule
     ],
 	declarations: [StandaloneEliminatoryListView
@@ -61,6 +62,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,StandaloneEliminatoryDetailView        
         ,EliminatoryDetailView        
     ]
-    ,providers: [DateFormatPipe, LevelService]
+    ,providers: [DateFormatPipe
+        , LevelService
+        , MessageService
+    ]
 })
 export class EliminatoryModule {}

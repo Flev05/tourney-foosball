@@ -54,5 +54,11 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.tourneyService.selectedRound = this.eliminatorySelectedRow.eliminatory.round;
         this.gotoDetailView();
     }
+
+    override onTabChange(value: string | number | undefined) {
+        super.onTabChange(value);
+        let index=value;
+        console.log("Entering onTabChange("+index+")");
+    }
 }
 

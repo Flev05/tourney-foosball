@@ -23,9 +23,9 @@ export abstract class AbstractListView extends AbstractView {
         super.ngOnInit();
     }
     
-    onChangeTab( e: { index: any; } ) {
-        let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
+    onTabChange( value: string | number | undefined ) {
+        let index=value;
+        console.log("Entering onTabChange(): tab=" + index);
     }
     
     protected gotoDetailView(): void {

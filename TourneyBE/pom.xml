@@ -13,8 +13,8 @@
     <properties>
         <!-- maven-compiler-plugin -->
         <java.version>21</java.version>		   
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
 
         <!-- A base list of dependency and plug-in version used in the various quick starts. -->
         <version.wildfly.maven.plugin>1.2.0.Final</version.wildfly.maven.plugin>

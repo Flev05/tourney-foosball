@@ -13,20 +13,20 @@ import {AccordionModule} from 'primeng/accordion';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 
 import {PlayerListView} from './player-listview';
 import {PlayerDetailView} from './player-detailview';
-import { DateFormatPipe } from '../../../../components/common/date-format-pipe';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import {PlayerRoutingModule} from './player-routing.module';
 import { PlayerTableModule } from '../../player/player-table/player-table.module';
 import { PlayerChooserModule } from '../../player/player-chooser/player-chooser.module';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastModule } from 'primeng/toast';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -37,7 +37,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
@@ -48,7 +48,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,FieldsetModule
         ,TooltipModule
         ,DatePickerModule
-        ,MessagesModule
+        ,ToastModule
         ,MessageModule
         ,PlayerRoutingModule
         ,AccordionModule

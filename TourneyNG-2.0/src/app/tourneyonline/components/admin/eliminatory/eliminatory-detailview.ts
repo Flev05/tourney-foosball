@@ -3,19 +3,19 @@ import { Location } from '@angular/common';
 
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
-import { Eliminatory } from '../../../domain/eliminatory';
-import { Meeting } from '../../../domain/meeting';
-import { Combobox } from '../../../domain/tourney-combobox';
-import { EliminatoryLevel } from '../../../domain/eliminatory-level';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { MessageService } from 'primeng/api';
-import { TourneyService } from '../../../service/tourney-service';
-import { AbstractDetailView } from '../../../components/common/abstract-detailview';
-import { MeetingService } from '../../../service/meeting-service';
-import { MeetingDb } from '../../../domain/meeting-db';
-import { Direction } from '../../../domain/enumerations';
-import { CountryService } from '../../../service/country-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { LevelService } from './level-service';
-import { Country } from '../../../domain/country';
+import { Country } from 'app/tourneyonline/domain/country';
 
 @Component({
     templateUrl: './eliminatory-detailview.html',
@@ -61,6 +61,8 @@ export class EliminatoryDetailView extends AbstractDetailView {
     ) { 
         super(tourneyService, location);
         this.eliminatoryFormGroup = this.fb.group({
+            meetingDate1: [new Date()],
+            meetingDate2: [new Date()],
             username: [''],
             password: ['']
         });
@@ -86,41 +88,35 @@ export class EliminatoryDetailView extends AbstractDetailView {
 
         this.playoffs = this.tourneyService.playoffsCombobox;
 
-        this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
-        this.m1.datetime = new Date(this.m1.datetime);
-        if(this.m1.country!=undefined) {
-            this.fullAddress1 = this.m1.address + " - " 
-                + this.m1.country.zipCode + " " + this.m1.country.city
-                + " (" + this.m1.country.provinceCode +")";
+        if( this.selectedEliminatory.round.onewayMeetings && this.selectedEliminatory.round.onewayMeetings.length > 0 ) {
+            this.m1 = this.selectedEliminatory.round.onewayMeetings[0];
+            this.m1.datetime = new Date(this.m1.datetime == null ? new Date() : this.m1.datetime);
+            if(this.m1.country!=undefined) {
+                this.fullAddress1 = this.m1.address + " - " 
+                    + this.m1.country.zipCode + " " + this.m1.country.city
+                    + " (" + this.m1.country.provinceCode +")";
+            }
+            this.m2 = this.m1;
+            if(!this.isOneway && this.selectedEliminatory.round.roundtripMeetings && this.selectedEliminatory.round.roundtripMeetings.length > 0) {
+                this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
+                this.m2.datetime = new Date(this.m2.datetime == null ? new Date() : this.m2.datetime);
+                if(this.m2.country!=undefined) {
+                    this.fullAddress2 = this.m2.address + " - " 
+                        + this.m2.country.zipCode + " " + this.m2.country.city
+                        + " (" + this.m2.country.provinceCode +")";
+                }
+                if(this.m2.datetime.getTime() < this.m1.datetime.getTime()) {
+                    this.m2.datetime = this.m1.datetime;
+                }
+            }
         }
  
-        this.m2 = this.m1;
-        if(!this.isOneway) {
-            this.m2 = this.selectedEliminatory.round.roundtripMeetings[0];
-            this.m2.datetime = new Date(this.m2.datetime);
-            if(this.m2.country!=undefined) {
-                this.fullAddress2 = this.m2.address + " - " 
-                    + this.m2.country.zipCode + " " + this.m2.country.city
-                    + " (" + this.m2.country.provinceCode +")";
-            }
-            if(this.m2.datetime.getTime() < this.m1.datetime.getTime()) {
-                this.m2.datetime = this.m1.datetime;
-            }
-        }
-
         let team1CB = {label:"", value: 0};
         let team2CB = {label:"", value: 0};
 
         this.isDoubleSelection = false;
 
-        // this.position1 = this.selectedEliminatory.rule1.fromRound.position.value > 0 ?
-        //     this.selectedEliminatory.rule1.fromRound.position : this.selectedEliminatory.rule1.fromPlayoff.position;
-        // this.position2 = this.selectedEliminatory.rule2.fromRound.position.value > 0 ?
-        //     this.selectedEliminatory.rule2.fromRound.position : this.selectedEliminatory.rule2.fromPlayoff.position;
-
-
         this.eliminatoryFormGroup = this.fb.group({
-
             'meetingDate1':  new FormControl(this.m1.datetime),
             'address1':  new FormControl(this.m1.address),
             'country1':  new FormControl(this.m1.country),
@@ -132,16 +128,7 @@ export class EliminatoryDetailView extends AbstractDetailView {
             'positions':  new FormControl(this.positions),
             'rounds':  new FormControl(this.rounds),
             'playoffs':  new FormControl(this.playoffs),
-
-            // 'position1':  new FormControl(this.position1),
-            // 'round1':  new FormControl(this.selectedEliminatory.rule1.fromRound.round),
-            // 'playoff1':  new FormControl(this.selectedEliminatory.rule1.fromPlayoff.round),
-            // 'position2':  new FormControl(this.position2),            
-            // 'round2':  new FormControl(this.selectedEliminatory.rule2.fromRound.round),
-            // 'playoff2':  new FormControl(this.selectedEliminatory.rule2.fromPlayoff.round),            
-
             'availableTeams': new FormControl(this.availableTeams),    
-
             'team1': new FormControl(team1CB),    
             'team2': new FormControl(team2CB),    
         });

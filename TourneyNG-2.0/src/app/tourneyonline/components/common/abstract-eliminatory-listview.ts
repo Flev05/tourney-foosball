@@ -195,8 +195,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for(let i=0; i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
-            let onewayDatetime    = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
-            let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
+            const od = e.round.onewayMeetings.length > 0 ? e.round.onewayMeetings[0].datetime : new Date();
+            let onewayDatetime    = this.dateFormatPipe.transform(od);
+            const or = e.round.onewayMeetings.length > 0 ? e.round.roundtripMeetings[0].datetime : new Date();
+            let roundtripDatetime = this.dateFormatPipe.transform(or);
 
             let evo: EliminatoryVO = {eliminatory:e
                 , rowNumber: i+1
@@ -256,10 +258,10 @@ export abstract class AbstractEliminatoryListView extends AbstractListView {
         for(let i=0; i<this.eliminatories.length; i++) {
             let e = this.eliminatories[i];
 
-            let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings[0].datetime);
+            let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings.length == 0 ? new Date() : e.round.onewayMeetings[0].datetime);
             let position1       = this.getPosition1(e);
             let position2       = this.getPosition2(e);
-            let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings[0].datetime);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings.length == 0 ? new Date() : e.round.roundtripMeetings[0].datetime);
 
             let evo: EliminatoryVO = {eliminatory:e
                 , rowNumber: i+1

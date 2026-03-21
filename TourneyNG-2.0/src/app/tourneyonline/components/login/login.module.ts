@@ -11,9 +11,7 @@ import { MessageService } from 'primeng/api';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { BlockUIModule } from 'primeng/blockui';
 
@@ -23,6 +21,7 @@ import { ClientLoginListView } from './client-listview';
 import { ClientTourneyListView } from './client-tourney-listview';
 import { FollowerDetailView } from './follower-detailview';
 import { SelectModule } from 'primeng/select';
+import { TabsModule } from 'primeng/tabs';
 
 @NgModule({
 	imports: [
@@ -35,13 +34,12 @@ import { SelectModule } from 'primeng/select';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule
         ,TableModule
         ,DialogModule
         ,SliderModule
         ,AutoCompleteModule
         ,AccordionModule
-        ,MessagesModule
         ,MessageModule
         ,BlockUIModule
 	],

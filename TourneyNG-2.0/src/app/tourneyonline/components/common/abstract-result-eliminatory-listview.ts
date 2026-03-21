@@ -13,7 +13,6 @@ import { LevelService } from '../admin/eliminatory/level-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { Direction, MeetingStatus, RoundType } from '../../domain/enumerations';
 import { Injectable } from '@angular/core';
-import { TourneyVO } from '../../domain/tourney.vo';
 import { ClientService } from '../../service/client-service';
  
 @Injectable()
@@ -53,9 +52,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.ngOnInit(); 
     }
 
-    override onChangeTab(e: { index: any; }) {
-        let index=e.index;
-        console.log("Entering onChangeTab("+index+")");
+    override onTabChange(value: string | number | undefined) {
+        super.onTabChange(value);
+        let index=value;
+        console.log("Entering onTabChange("+index+")");
     }
 
     protected onLoadComplete(eliminatoryLevels : Array<EliminatoryLevel>, isLevelB : boolean): void {
@@ -106,7 +106,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * 
      * We need of a list of the best position teams in their rounds: the list of the 1°, the list of the 2°, the 3°, and so on
      * It is necessary when we have to create the new couple between the 1-st and the winner of the playoffs. 
-     * After that, the first eliminatione level will contain the union of those
+     * After that, the first elimination level will contain the union of those
      * teams coming from the rounds and those coming from the playoffs.
      *  
      * In the 2-nd case, we would not use the unique classification on all rounds unless configured.
@@ -114,7 +114,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * of the rounds anywhere they are coming from, every round has the same weight of each other so we select the best teams from
      * each round on their classification base. 
      * 
-     * First off all we have to check if the number of teams we want to pass to
+     * First of all, we have to check if the number of teams we want to pass to
      * the elimination phase, is a power of 2, like 4, 8, 16, 32,.... 
      * If it does not, we have to create the playoff
      * on the spare teams to eliminate them and have the correct power of 2 teams.

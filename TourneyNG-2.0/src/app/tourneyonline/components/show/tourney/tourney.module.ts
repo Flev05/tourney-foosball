@@ -14,8 +14,8 @@ import {PickListModule} from 'primeng/picklist';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TabViewModule } from 'primeng/tabview';
 import { SliderModule } from 'primeng/slider';
+import { TabsModule } from 'primeng/tabs';
 
 import { DateFormatPipe } from '../../common/date-format-pipe';
 import { TourneyRoutingModule } from './tourney-routing.module';
@@ -34,7 +34,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ,SelectModule
         ,InputTextModule
         ,ButtonModule
-        ,TabViewModule
+        ,TabsModule 
         ,TableModule
         ,DialogModule
         ,SliderModule

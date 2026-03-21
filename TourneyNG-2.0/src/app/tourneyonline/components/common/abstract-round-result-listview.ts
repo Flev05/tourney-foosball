@@ -17,7 +17,6 @@ import { Direction } from '../../domain/enumerations';
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 
 import { Injectable } from '@angular/core';
-import { retry } from 'rxjs';
  
 @Injectable()
 export abstract class  AbstractRoundResultListView extends AbstractListView {
@@ -83,10 +82,12 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.onCompleteLoad(this.selectedTourney.roundVO.maxMatchesPerMeeting);
     }
 
-    override onChangeTab(e: { index: any; }) {
-        let index=e.index;
-        console.log("Entering onChangeTab(): tab=" + index);
-        this.tourneyService.selectedRoundTabIndex = index;
+    override onTabChange(value: string | number | undefined) {
+        if (value === undefined) return;
+        super.onTabChange(value);
+        let index=value;
+        console.log("Entering onTabChange(): tab=" + index);
+        this.tourneyService.selectedRoundTabIndex = Number(value);
         if( index == 2 ) {
             this.ngOnInit();
         }

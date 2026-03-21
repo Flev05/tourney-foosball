@@ -6,19 +6,24 @@
 </div>
 
 <div class="content-section documentation">
-<p-accordion>
-    <p-accordionTab header="Istruzioni">            
-        <p>
-            Da questa vista potete aggiungere una o più operatori selezionandole da quelli disponibili.
-            Se l'operatore non esiste, lo potete creare con il bottone Nuovo Operatore
-        </p>
-        <p>
-            Attenzione! Quando create un nuovo operatore, esso è visibile per tutti i tornei della società 
-            in modo che possa essere riusato in più tornei senza doverso ricreare.
-            Quadno lo rimuovete da un torneo, il sistema lo rimuove solo dal torneo selezionato ma non dal database 
-            quindi resta disponibile per altri nuovi tornei.
-        </p>        
-    </p-accordionTab>
+<p-accordion >
+    <p-accordion-panel value="0">    
+        <p-accordion-header>
+            Istruzioni
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Da questa vista potete aggiungere una o più operatori selezionandole da quelli disponibili.
+                Se l'operatore non esiste, lo potete creare con il bottone Nuovo Operatore
+            </p>
+            <p>
+                Attenzione! Quando create un nuovo operatore, esso è visibile per tutti i tornei della società 
+                in modo che possa essere riusato in più tornei senza doverso ricreare.
+                Quadno lo rimuovete da un torneo, il sistema lo rimuove solo dal torneo selezionato ma non dal database 
+                quindi resta disponibile per altri nuovi tornei.
+            </p>        
+        </p-accordion-content>                
+    </p-accordion-panel>
 </p-accordion>
 </div>
 
@@ -38,7 +43,7 @@
     <p-pickList [source]="availableOperators" [target]="targetOperators" 
             sourceHeader="Disponibili {{availableOperators.length}}" 
             targetHeader="Selezionati {{targetOperators.length}}" 
-            [responsive]="true"
+            responsiveLayout="scroll"
             dragdrop="true" 
             dragdropScope="operators"
             [sourceStyle]="{'height':'400px'}" 

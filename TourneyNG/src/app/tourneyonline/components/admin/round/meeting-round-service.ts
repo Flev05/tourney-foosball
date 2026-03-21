@@ -542,21 +542,23 @@ export class MeetingRoundService extends MeetingService {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
 
+        let isAbsoluteFirstPAge = true;
+
         let i = 0;
         for (let r of  rounds ) {
-            // 1. If it's not the first round, add a new page
-            if (!this.isFirstRound) {
-                doc.addPage();
-            }
-            this.isFirstRound = false;
             // 2. Prepare the data just for THIS specific round
             this.prepareMeetingsMap(r);
-            let meetings: MeetingDto[] = [];
             // (Populate roundMeetings instead of a global meetings array)  
             let rn = roundName + " " + String.fromCharCode(65 + i);
             i++;
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let ms = this.getOnewayMeetingsOfDay(md);
+                // 1. If it's not the first round, add a new page
+                if (!isAbsoluteFirstPAge) {
+                    doc.addPage();
+                }
+                isAbsoluteFirstPAge = false;
+                let meetings: MeetingDto[] = [];
                 let newDate = new Date(ms[0].datetime);
                 let range = this.dateFormatPipe.transform(newDate);
                 let dto: MeetingDto = {round: rn, direction: "Andata,", separator: true, md: md, days: r.daysNo, weekRange: range};
@@ -569,25 +571,24 @@ export class MeetingRoundService extends MeetingService {
                         meetings.push(dto);
                     }
                 }
+                this.printMeetingsByDirection(doc, rn, meetings);
             } 
-            this.printMeetingsByDirection(doc, rn, meetings);
         }
 
         if ( both ) {
              i = 0;
             for (let r of rounds) {
-                // 1. If it's not the first round, add a new page
-                if (!this.isFirstRound) {
-                    doc.addPage();
-                }
-                this.isFirstRound = false;
                 // 2. Prepare the data just for THIS specific round
                 this.prepareMeetingsMap(r);
-                let meetings: MeetingDto[] = [];
                 let rn = roundName + " " + String.fromCharCode(65 + i);
                 i++;
                 for( let md = 1; md <= r.daysNo; md ++ ) {
                     let ms = this.getRoundtripMeetingsOfDay(md);
+                    if (!isAbsoluteFirstPAge) {
+                        doc.addPage();
+                    }
+                    isAbsoluteFirstPAge = false;
+                    let meetings: MeetingDto[] = [];
                     let newDate = new Date(ms[0].datetime);
                     let range = this.dateFormatPipe.transform(newDate);
                     let dto: MeetingDto = {round: rn, direction: "Ritorno,", separator: true, md: md, days: r.daysNo, weekRange: range};
@@ -600,15 +601,15 @@ export class MeetingRoundService extends MeetingService {
                             meetings.push(dto);
                         }
                     }
+                    this.printMeetingsByDirection(doc, rn, meetings);
                 } 
-                this.printMeetingsByDirection(doc, rn, meetings);
             }
         }
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
     }
     
     // 3. Add a Title for this specific Round page
-    private printMeetingsByDirection(doc: jsPDF, roundName: string, meetings: any[]) {
+    private printMeetingsByDirection(doc: jsPDF, roundName: string, meetings: MeetingDto[]) {
         doc.setFontSize(16);
         doc.text(`${this.selectedTourney.tourneyName} - ${roundName}`, 14, 15);
         // 4. Draw the table starting slightly below the text
@@ -658,49 +659,52 @@ export class MeetingRoundService extends MeetingService {
     }
 
     public formatRoundData(meetings: MeetingDto[]): any[] {
-        return meetings.map((dto) => {
+        const tableRows: any[] = [];
+
+        meetings.forEach((dto) => {
+            // 1. Handle Separator Row
             if (dto.separator) {
-                return [{
-                        content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
-                        colSpan: 5,
-                        styles: { 
-                            minCellHeight: 5,
-                            halign: 'center', 
-                            fillColor: [220, 220, 200, 220, 220] as [number, number, number, number, number], // Cast as a Tuple
-                            fontStyle: 'bold' 
-                        }
-                    }
-                ];
-            }
-            if (dto.signLine) {
-                // 3. The "Line Row" (This creates the 10mm gap + the line)
-                const spacerRow = [{
-                    content: '', // Empty content
+                tableRows.push([{
+                    content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
                     colSpan: 5,
                     styles: { 
-                        minCellHeight: 10,             // Your 10mm gap
-                        lineColor: [0, 0, 0],          // Black line (use lineColor for the border)
-                        lineWidth: { 
-                            bottom: 1.0,               // 1.0 is a strong bold line; try 1.5 for extra bold
-                            top: 0, 
-                            left: 0, 
-                            right: 0 
-                        }
+                        minCellHeight: 5,
+                        halign: 'center', 
+                        fillColor: [220, 220, 200], // Fixed: jsPDF uses [r, g, b]
+                        fontStyle: 'bold' 
                     }
-                }];
-                return spacerRow;
+                }]);
+                return; // Move to next dto
             }
 
-            // 2. The Meeting Row
-            const meetingRow = [
-                this.dateFormatPipe.transformWeek(dto.meeting.datetime),
-                dto.meeting.teamName1,
-                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points1,
-                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points2,
-                dto.meeting.teamName2
-            ];
+            // 2. Handle Signature/Spacer Row
+            if (dto.signLine) {
+                tableRows.push([{
+                    content: '',
+                    colSpan: 5,
+                    styles: { 
+                        minCellHeight: 10,
+                        lineColor: [0, 0, 0],
+                        lineWidth: { bottom: 1.0, top: 0, left: 0, right: 0 }
+                    }
+                }]);
+                return;
+            }
 
-            return meetingRow;
+            // 3. Handle Meeting Rows (The Fix)
+            // We loop through matches and push a NEW row for each match
+            dto.meeting.matches.forEach(m => {
+                const row = [
+                    this.dateFormatPipe.transformWeek(dto.meeting.datetime),
+                    dto.meeting.teamName1,
+                    (m.score1 === 0 && m.score2 === 0) ? '' : m.score1,
+                    (m.score1 === 0 && m.score2 === 0) ? '' : m.score2,
+                    dto.meeting.teamName2
+                ];
+                tableRows.push(row);
+            });
         });
-    }    
+
+        return tableRows;
+    } 
 }

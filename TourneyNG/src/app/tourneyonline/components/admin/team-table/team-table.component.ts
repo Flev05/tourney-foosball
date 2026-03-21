@@ -12,6 +12,7 @@ import { Observable, of } from 'rxjs';
 import { Table } from 'primeng/table';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -40,6 +41,7 @@ export class TeamTableComponent extends AbstractListView {
         protected location: Location,
         private   teamService: TeamService,
         private clientService: ClientService,
+        public loginService: LoginService
     ) {
         super(TeamDetailView.redirect, tourneyService, router, location);
     }

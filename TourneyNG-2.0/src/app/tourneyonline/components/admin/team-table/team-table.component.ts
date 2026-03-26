@@ -13,6 +13,7 @@ import { Table } from 'primeng/table';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { Player } from 'app/tourneyonline/domain/player';
 
 const REDIRECT_TOURNEY_LV   = 'admintourney/';
 
@@ -25,6 +26,8 @@ const REDIRECT_TOURNEY_LV   = 'admintourney/';
 export class TeamTableComponent extends AbstractListView {
     @Input() addTeamEnabled: boolean | undefined;
     @Input() tourneyTeams: boolean | undefined;
+    @Input() chaosEnabled: boolean | undefined;
+    
     @ViewChild('table') table!: Table; // This gives us access to the #table from HTML
     
     cols: TableCols[] = TeamService.cols;
@@ -41,7 +44,7 @@ export class TeamTableComponent extends AbstractListView {
         protected override router: Router,
         protected override location: Location,
         public   teamService: TeamService,
-        private clientService: ClientService,
+        private  clientService: ClientService,
         public   loginService: LoginService,
     ) {
         super(TeamDetailView.redirect, tourneyService, router, location);
@@ -81,7 +84,7 @@ export class TeamTableComponent extends AbstractListView {
         });
     }
 
-    create() {
+    newTeam() {
         this.selectedTeam = new Team();
         this.teamService.selectedTeam = this.selectedTeam;
         this.teamService.newTeam = true;
@@ -155,5 +158,78 @@ export class TeamTableComponent extends AbstractListView {
         if( !this.onDeleteTeamError ) {
             this.teams = [...this.teams.filter(p => p.id !== this.deleteTeam.id)];
         }
+    }
+
+    createChaos() {
+        console.log("Entering createChaos()");
+    
+        this.teams = this.generateTeams();;
+
+        for( let t of this.teams ) {
+            this.teamService.saveTeam(t
+                    , t.teamName
+                    , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
+                    , () =>  {} ); 
+        }
+
+        this.selectedTourney.teams = this.teams;
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {} );
+    }
+    
+    private generateTeams(): Team[] {
+        const teamList: Team[] = [];
+
+        // 1. Shuffle helper to ensure randomness
+        const shuffle = (array: Player[]) => array.sort(() => Math.random() - 0.5);
+
+        let defenders = shuffle([...this.selectedTourney.defenderPlayers]);
+        let offenders = shuffle([...this.selectedTourney.offenderPlayers]);
+        let jollies = shuffle([...this.selectedTourney.jollyPlayers]);
+
+        // 2. Equalize lists using Jolly players
+        while (defenders.length < offenders.length && jollies.length > 0) {
+            defenders.push(jollies.pop()!);
+        }
+        while (offenders.length < defenders.length && jollies.length > 0) {
+            offenders.push(jollies.pop()!);
+        }
+
+        // 3. Create pairs based on the smaller list size
+        const pairCount = Math.min(defenders.length, offenders.length);
+
+        for (let i = 0; i < pairCount; i++) {
+            const team = new Team();
+            team.id = i + 1;
+            team.teamName = `${defenders[i].playerName} - ${offenders[i].playerName}`;
+            team.players = [defenders[i], offenders[i]];
+            teamList.push(team);
+        }
+
+        // 4. Handle the "N+1" scenario (The Remainder)
+        // If one list is still longer, add those players to the LAST team created
+        const leftovers = defenders.length > offenders.length 
+            ? defenders.slice(pairCount) 
+            : offenders.slice(pairCount);
+
+        const evenLen = Math.floor(leftovers.length / 2);
+        for( let i=0; i<evenLen; i++ ) {
+            let p1 = leftovers[i];
+            let p2 = leftovers[evenLen - i - 1];
+            let t = new Team();
+            t.players.push(p1);
+            t.players.push(p2);
+            t.teamName = `${p1.playerName} - ${p2.playerName}`;
+            teamList.push(t);
+        }    
+
+        if( leftovers.length % 2 == 1 ) {
+            const lastTeam = teamList[teamList.length - 1];
+            lastTeam.teamName = `${lastTeam.teamName} + ${leftovers[leftovers.length-1].playerName}`;
+            lastTeam.players.push(...leftovers);
+        }    
+
+        return teamList;
     }
 }

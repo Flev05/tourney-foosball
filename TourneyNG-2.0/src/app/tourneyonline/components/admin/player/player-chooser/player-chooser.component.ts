@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Player } from 'app/tourneyonline/domain/player';
@@ -6,6 +6,9 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { PlayerVO } from 'app/tourneyonline/domain/player-vo';
+import { Observable, of } from 'rxjs';
+import { Table } from 'primeng/table';
 
 @Component({
     selector: 'app-player-chooser',
@@ -14,6 +17,7 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
     standalone: false
 })
 export class PlayerChooserComponent extends AbstractDetailView {
+    @ViewChild('table') table!: Table; // This gives us access to the #table from HTML
 
     defenderPlayers: Player[] = [];
     offenderPlayers: Player[] = [];
@@ -29,7 +33,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
     filteredJollyPlayers: Player[] = [];
     filteredOffenderPlayers: Player[] = [];
 
-    editingPlayerId: number | null = null;
+    playerToAdd: Player  | null = null;
+    editingPlayer: Player | null = null;
+    previousPlayer: Player | null = null;
 
     constructor(protected override location: Location
         , private playerService: PlayerService
@@ -41,6 +47,24 @@ export class PlayerChooserComponent extends AbstractDetailView {
 
     override ngOnInit(): void {
         super.ngOnInit();
+        if( this.playerService.playerPool.length == 0 ) {
+            this.playerService.loadAllPlayers( () => this.onComplete() );
+        } else {
+            this.onComplete();
+        }        
+    }
+
+    private onComplete(): any {
+        console.log("Entering onComplete()");
+        this.playerService.playerPool = this.playerService.playerPool.sort((p1,p2) => {
+            if(p1.playerName < p2.playerName) {
+                return -1;
+            }
+            if(p1.playerName > p2.playerName) {
+                return 1;
+            }
+            return 0;
+        });
         this.allPlayers = [...this.playerService.playerPool];
         this.defenderPlayers = this.selectedTourney.defenderPlayers == undefined ? [] : this.selectedTourney.defenderPlayers;
         this.jollyPlayers = this.selectedTourney.jollyPlayers == undefined ? [] : this.selectedTourney.jollyPlayers;
@@ -84,9 +108,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
 
     isPlayerUsed(player: Player): boolean {
         return (
-            this.defenderPlayers.some(p => p.id === player.id) ||
-            this.offenderPlayers.some(p => p.id === player.id) ||
-            this.jollyPlayers.some(p => p.id === player.id)
+            this.defenderPlayers.some(p => player.id != null && p.id === player.id ) ||
+            this.offenderPlayers.some(p => player.id != null && p.id === player.id) ||
+            this.jollyPlayers.some(p => player.id != null && p.id === player.id)
         );
     }
 
@@ -94,6 +118,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         const used = this.getUsedIds();
         return this.allPlayers.filter(p => !used.has(p.id));
     }
+
     private getUsedIds(): Set<number | null> {
         return new Set([
             ...this.defenderPlayers.map(p => p.id),
@@ -105,22 +130,79 @@ export class PlayerChooserComponent extends AbstractDetailView {
     // -----------------------------
     // Add Players
     // -----------------------------
-
     addDefender() {
         if (!this.selectedDefenderToAdd) {
             return;
         }
-        this.defenderPlayers.push(this.selectedDefenderToAdd);
+        this.playerToAdd = null;
+        // CASE 1: User selected an existing Player object
+        if (typeof this.selectedDefenderToAdd === 'object') {
+            this.playerToAdd = this.selectedDefenderToAdd;
+        } else { // CASE 2: User typed a new name (string)
+            const typedName = (this.selectedDefenderToAdd as string).trim();
+            if (!typedName) {
+                return;
+            }
+
+            // Check if already exists (case insensitive)
+            const existing = this.allPlayers.find(p =>
+                p.playerName?.toLowerCase() === typedName.toLowerCase()
+            );
+
+            if (existing) {
+                this.playerToAdd = existing;
+            } else {
+                // Create new Player
+                this.playerToAdd = new Player();
+                this.playerToAdd.playerName = typedName;
+                this.allPlayers.push(this.playerToAdd);
+                this.doSavePlayer(this.playerToAdd);
+            }
+        }
+
+        // Avoid duplicates across lists
+        if (this.isPlayerUsed(this.playerToAdd)) {
+            return;
+        }
+
+        this.defenderPlayers.push(this.playerToAdd);
         this.updateTourney();
         this.selectedDefenderToAdd = undefined;
         this.filteredDefenderPlayers = [];
     }
-    
+
     addJolly() {
         if (!this.selectedJollyToAdd) {
             return;
-        } 
-        this.jollyPlayers.push(this.selectedJollyToAdd);
+        }
+        this.playerToAdd = null;
+        // CASE 1: User selected an existing Player object
+        if (typeof this.selectedJollyToAdd === 'object') {
+            this.playerToAdd = this.selectedJollyToAdd;
+        } else { // CASE 2: User typed a new name (string)
+            const typedName = (this.selectedJollyToAdd as string).trim();
+            if (!typedName) {
+                return;
+            }
+            // Check if already exists (case insensitive)
+            const existing = this.allPlayers.find(p =>
+                p.playerName?.toLowerCase() === typedName.toLowerCase()
+            );
+            if (existing) {
+                this.playerToAdd = existing;
+            } else {
+                // Create new Player
+                this.playerToAdd = new Player();
+                this.playerToAdd.playerName = typedName;
+                this.allPlayers.push(this.playerToAdd);
+                this.doSavePlayer(this.playerToAdd);
+            }
+        }
+        // Avoid duplicates across lists
+        if (this.isPlayerUsed(this.playerToAdd)) {
+            return;
+        }
+        this.jollyPlayers.push(this.playerToAdd);
         this.updateTourney();
         this.selectedJollyToAdd = undefined;
         this.filteredJollyPlayers = [];
@@ -130,11 +212,70 @@ export class PlayerChooserComponent extends AbstractDetailView {
         if (!this.selectedOffenderToAdd) {
             return;
         }
-        this.offenderPlayers.push(this.selectedOffenderToAdd);
+        this.playerToAdd = new Player();
+        // CASE 1: User selected an existing Player object
+        if (typeof this.selectedOffenderToAdd === 'object') {
+            this.playerToAdd = this.selectedOffenderToAdd;
+        } else { // CASE 2: User typed a new name (string)
+            const typedName = (this.selectedOffenderToAdd as string).trim();
+            if (!typedName) {
+                return;
+            }
+            // Check if already exists (case insensitive)
+            const existing = this.allPlayers.find(p =>
+                p.playerName?.toLowerCase() === typedName.toLowerCase()
+            );
+            if (existing) {
+               this.playerToAdd = existing;
+            } else {
+                // Create new Player
+                this.playerToAdd = new Player();
+                this.playerToAdd.playerName = typedName;
+                this.allPlayers.push(this.playerToAdd);
+                this.doSavePlayer(this.playerToAdd);
+            }
+        }
+        // Avoid duplicates across lists
+        if (this.isPlayerUsed(this.playerToAdd)) {
+            return;
+        }
+        this.offenderPlayers.push(this.playerToAdd);
         this.updateTourney();
         this.selectedOffenderToAdd = undefined;
         this.filteredOffenderPlayers = [];
-    }    
+    }
+
+    private doSavePlayer(newPlayer : Player) {
+        const newPlayerVO : PlayerVO = {
+            id: newPlayer.id
+            , playerName: newPlayer.playerName
+            , country: newPlayer.country
+            , clientId: this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id
+            , json: JSON.stringify(newPlayer)
+        };
+        const subscriber = this.playerService.savePlayer(newPlayerVO, this.savePlayerErrorHandler('Create player operation'));
+        subscriber.subscribe(cs => this.newPlayerNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete( ));
+    }
+     
+    private newPlayerNext(tvo:PlayerVO) {
+        console.log("newPlayerNext()");
+        console.log(tvo.json);
+        if( this.playerToAdd != null ) {
+            this.playerToAdd.id = tvo.id;
+        }        
+    }
+
+    private savePlayerErrorHandler<T> (operation = 'operation', result?: T) {
+        return (res: any): Observable<T> => {
+            console.log("Entering savePlayerErrorHandler()");
+            console.log(`${operation} failed!`);
+            console.error(res); // log to console instead
+            return of(result as T);
+        };
+    }
+    private onSaveComplete( ) {
+        console.log("Entering onSaveComplete()");
+    }
 
     // -----------------------------
     // Remove Players
@@ -204,18 +345,20 @@ export class PlayerChooserComponent extends AbstractDetailView {
     }
 
     // -----------------------------
-    // Editing
+    // Editing Defender
     // -----------------------------
-
     enableEdit(player: Player) {
-        this.editingPlayerId = player.id;
+        this.previousPlayer =  {...player};
+        this.editingPlayer =  player;
     }
-
-    disableEdit() {
-        this.editingPlayerId = null;
+    saveAndDisableEdit(player: Player) {
+        if(this.previousPlayer !== player)  {
+            this.doSavePlayer(player);
+            this.previousPlayer = null;
+        }   
+        this.editingPlayer = null;
     }
-
     isEditing(player: Player): boolean {
-        return this.editingPlayerId === player.id;
+        return this.editingPlayer === player;
     }
 }

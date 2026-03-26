@@ -15,11 +15,11 @@ import { ClientVO } from './client-vo';
 import { Player } from './player';
 
 export class Tourney {
-    id: number = 0;
+    id: number | null =  null;
     
     tourneyName    : string = "";
     calendar       : string = "";
-    roundTabName   : string = "";
+    roundTabName   : string = "Gironi";
     playoffTabName  : string = "";
     playoutTabName  : string = "";
     eliminatoryTabName  : string = "";

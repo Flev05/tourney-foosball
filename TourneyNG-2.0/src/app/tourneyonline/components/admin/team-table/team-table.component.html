@@ -11,19 +11,30 @@
   scrollHeight="400px">
 
   @if (!loginService.isFollower() && addTeamEnabled) {
-    <ng-template pTemplate="caption">
-      <div style="text-align:center">
-        <button pButton icon="pi pi-plus" type="button" (click)="create()" label="Nuova Squadra" ></button>
-      </div>
-    </ng-template>
+    @if (!chaosEnabled) {
+      <ng-template pTemplate="caption">
+        <div style="text-align:center">
+          <button pButton icon="pi pi-plus" type="button" (click)="newTeam()" label="Nuova Squadra" ></button>
+        </div>
+      </ng-template>
+    }
+    @if (chaosEnabled) {
+      <ng-template pTemplate="caption">
+        <div style="text-align:center">
+          <button pButton icon="pi pi-plus" type="button" (click)="createChaos()" label="BARAONDA" ></button>
+        </div>
+      </ng-template>
+    }
   }
 
   <ng-template pTemplate="header" let-columns>
     <tr>
       <th style="width: 15mm;">N°</th>
       <th>Nome</th>
-      <th>Indirizzo</th>
-      <th>ASD</th>
+      @if (!chaosEnabled) {
+        <th>Indirizzo</th>
+        <th>ASD</th>
+      }
       @if (!loginService.isFollower() && addTeamEnabled) {
         <th style="width: 15mm;"></th>
       }
@@ -38,16 +49,18 @@
           [value]="teamService.storedTeamFilter"
           (input)="onFilterChange($any($event.target).value, table)">
         </th>
-        <th></th>
-        <th>
-          <input
-            style="width: 100%;"
-            type="text"
-            pInputText
-            placeholder="Cerca per ASD"
-            (input)="table.filter($any($event.target).value.trim(), 'asd', 'contains')">
+        @if (!chaosEnabled) {
+          <th></th>
+          <th>
+            <input
+              style="width: 100%;"
+              type="text"
+              pInputText
+              placeholder="Cerca per ASD"
+              (input)="table.filter($any($event.target).value.trim(), 'asd', 'contains')">
           </th>
-          @if (!loginService.isFollower() && addTeamEnabled) {
+          }
+          @if (!loginService.isFollower() && addTeamEnabled && !chaosEnabled) {
             <th style="width: 15mm;">X</th>
           }
         </tr>
@@ -57,9 +70,11 @@
         <tr [pSelectableRow]="rowData">
           <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
           <td style="text-align: center;">{{rowData['teamName']}}</td>
-          <td style="text-align: center;">{{rowData['address']}} - {{rowData.country?.zipCode}} - {{ rowData.country?.city }} ({{ rowData.country?.provinceCode }})</td>
-          <td style="text-align: center;">{{rowData['asd']}}</td>
-          @if (!loginService.isFollower() && addTeamEnabled) {
+          @if (!chaosEnabled) {
+            <td style="text-align: center;">{{rowData['address']}} - {{rowData.country?.zipCode}} - {{ rowData.country?.city }} ({{ rowData.country?.provinceCode }})</td>
+            <td style="text-align: center;">{{rowData['asd']}}</td>
+          }
+          @if (!loginService.isFollower() && addTeamEnabled && !chaosEnabled) {
             <td style="width: 15mm; text-align: center;">
               <button class="p-button-danger p-button-sm"
                 pButton icon="pi pi-trash"

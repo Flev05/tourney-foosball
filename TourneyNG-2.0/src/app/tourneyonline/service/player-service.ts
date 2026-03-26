@@ -115,7 +115,7 @@ export class PlayerService {
             catchError(selector)
         );
     }
-    
+     
     savePlayer(pvo: PlayerVO, selector: (err: any, caught: Observable<PlayerVO> ) => Observable<PlayerVO> ): Observable<PlayerVO> {
         
         if(pvo.id == null) {

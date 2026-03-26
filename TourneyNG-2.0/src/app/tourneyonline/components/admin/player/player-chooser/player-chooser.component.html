@@ -10,25 +10,26 @@
         (completeMethod)="filterDefenderPlayers($event)"
         field="playerName"
         optionLabel="playerName"
-        [forceSelection]="true"
+        [forceSelection]="false"
         [dropdown]="true"
         placeholder="Cerca">
       </p-autoComplete>
       <button pButton
         type="button"
         icon="pi pi-plus-circle"
-        (click)="addDefender()">
+        (click)="addDefender()"
+        title="Aggiunge un difensore alla lista">
       </button>
     </div>
 
-    <p-table
+    <p-table #table 
       [value]="defenderPlayers"
       [scrollable]="true"
-      scrollHeight="200px">
+      scrollHeight="400px">
 
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 15mm; text-align: center;">N°</th>
+          <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : defenderPlayers.length }}</th>
           <th>Nome</th>
           <th>Azioni</th>
         </tr>
@@ -39,8 +40,7 @@
           <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
           <td>
             @if (isEditing(player)) {
-              <input
-                pInputText
+              <input pInputText
                 [(ngModel)]="player.playerName" />
             }
             @if (!isEditing(player)) {
@@ -57,15 +57,13 @@
             @if (!isEditing(player)) {
               <button pButton icon="pi pi-pencil"
                 class="p-button-info p-button-sm"
-                (click)="enableEdit(player)"
-                >
+                (click)="enableEdit(player)">
               </button>
             }
             @if (isEditing(player)) {
               <button pButton icon="pi pi-check"
                 class="p-button-success p-button-sm"
-                (click)="disableEdit()"
-                >
+                (click)="saveAndDisableEdit(player)">
               </button>
             }
             <button pButton icon="pi pi-trash"
@@ -87,25 +85,26 @@
         (completeMethod)="filterJollyPlayers($event)"
         field="playerName"
         optionLabel="playerName"
-        [forceSelection]="true"
+        [forceSelection]="false"
         [dropdown]="true"
         placeholder="Cerca">
       </p-autoComplete>
       <button pButton
         type="button"
         icon="pi pi-plus-circle"
-        (click)="addJolly()">
+        (click)="addJolly()"
+        title="Aggiunge un jolly alla lista">
       </button>
     </div>
 
-    <p-table
+    <p-table #table 
       [value]="jollyPlayers"
       [scrollable]="true"
-      scrollHeight="200px">
+      scrollHeight="400px">
 
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 15mm; text-align: center;">N°</th>
+          <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : jollyPlayers.length }}</th>
           <th>Nome</th>
           <th style="width:200px">Azioni</th>
         </tr>
@@ -148,25 +147,26 @@
         (completeMethod)="filterOffenderPlayers($event)"
         field="playerName"
         optionLabel="playerName"
-        [forceSelection]="true"
+        [forceSelection]="false"
         [dropdown]="true"
         placeholder="Cerca">
       </p-autoComplete>
       <button pButton
         type="button"
         icon="pi pi-plus-circle"
-        (click)="addOffender()">
+        (click)="addOffender()"
+        title="Aggiunge un attaccante alla lista">
       </button>
     </div>
 
-    <p-table
+    <p-table #table 
       [value]="offenderPlayers"
       [scrollable]="true"
-      scrollHeight="200px">
+      scrollHeight="400px">
 
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 15mm; text-align: center;">N°</th>
+          <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : offenderPlayers.length }}</th>
           <th>Nome</th>
           <th>Azioni</th>
         </tr>
@@ -195,15 +195,13 @@
             @if (!isEditing(player)) {
               <button pButton icon="pi pi-pencil"
                 class="p-button-info p-button-sm"
-                (click)="enableEdit(player)"
-                >
+                (click)="enableEdit(player)">
               </button>
             }
             @if (isEditing(player)) {
               <button pButton icon="pi pi-check"
                 class="p-button-success p-button-sm"
-                (click)="disableEdit()"
-                >
+                (click)="saveAndDisableEdit(player)">
               </button>
             }
             <button pButton icon="pi pi-trash"
@@ -216,3 +214,4 @@
     </p-table>
   </div>
 </div>
+

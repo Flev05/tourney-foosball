@@ -7,5 +7,5 @@ export class UserRoleClientVO {
     userVo       : UserVO = new UserVO();
     roleVo       : RoleVO = new RoleVO();
     clientVO     : ClientVO = new ClientVO();
-    tourneyId?   : number;
+    tourneyId    : number | null = null;
 }

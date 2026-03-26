@@ -20,8 +20,6 @@
   </div>
 }
 
-<p-blockUI [blocked]="meetingService.blockedDocument"></p-blockUI>
-
 <p-tabs [value]="tourneyService.selectedRoundTabIndex" (valueChange)="onTabChange($event)">
   <p-tablist>
       <p-tab [value]="0">Andata</p-tab>

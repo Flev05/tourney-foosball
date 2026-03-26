@@ -149,7 +149,7 @@ export class UserService {
     } */
 
     /** Detach the operator relation between tourney and operatorSS */
-    deleteOperator(userId: number, clientId: number, tourneyId: number, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
+    deleteOperator(userId: number, clientId: number, tourneyId: number| null, selector: (err: any, caught: Observable<UserVO> ) => Observable<UserVO> ): Observable<UserVO> {
         const url = userUrl + "/deleteOperator?userId=" + userId+ "&clientId=" + clientId + "&tourneyId=" + tourneyId;
         console.log(url);
 

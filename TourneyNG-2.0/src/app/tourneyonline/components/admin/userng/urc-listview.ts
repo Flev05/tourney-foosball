@@ -224,12 +224,12 @@ export class UrcListView extends AbstractListView {
             let cvo: ClientVO | undefined  = this.clientService.selectedClients.find( c => c.businessName == row.clientSelect.label );
             if( cvo == undefined ) continue;
 
-            let urc : UserRoleClientVO = {
-                  id: row.id
-                , userVo: urcUserVo.userVo
-                , roleVo: roleVo
-                , clientVO: cvo
-            }
+            let urc : UserRoleClientVO = new UserRoleClientVO();
+            urc.id = 
+            urc.id = row.id;
+            urc.userVo = urcUserVo.userVo;
+            urc.roleVo = roleVo;
+            urc.clientVO = cvo;
 
             const subscriber = this.urcService.saveUrc(urc, this.saveUserErrorHandler('Create User operation'));
             subscriber.subscribe(cs => this.onSubmitNext(cs)  );

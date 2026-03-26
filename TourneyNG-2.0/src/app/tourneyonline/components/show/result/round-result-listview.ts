@@ -47,7 +47,6 @@ export class RoundResultListView extends AbstractRoundResultListView {
         super.ngOnInit();
         this.onewayCurrentDay = this.selectedRound.onewayCurrentDay;
         this.roundtripCurrentDay = this.selectedRound.roundtripCurrentDay;
-        this.meetingService.blockedDocument = false;
 
         this.teamService.setMeetingAddress(this.onewayMeetings, this.roundtripMeetings);
     }

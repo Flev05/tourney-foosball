@@ -3,7 +3,7 @@ import { Country } from "./country";
 import { MeetingDb } from "./meeting-db";
 
 export class TourneyVO {
-    id             : number = 0;    
+    id             : number | null = null;    
     tourneyName    : string = "";
     clonedFromTourneyName    : string = "";
     calendar       : string = "";

@@ -147,8 +147,7 @@ export class PlayerDetailView extends AbstractDetailView {
             return of(result as T);
         };
     }
-
-
+    
     private onSaveComplete( ) {
         console.log("Entering onSaveComplete()");
         if( !this.onSavePlayerError ) {

@@ -297,7 +297,7 @@ export class TourneyService extends AbstractService {
     /**
      * Loads the tourney selected by its id previously loaded from the list view
      */
-    loadTourneyById(tourneyId : number, complete: () => void, error: (em: any) => any ): void {
+    loadTourneyById(tourneyId : number| null, complete: () => void, error: (em: any) => any ): void {
         let url = loadTourneyByIdUrl + "/" + tourneyId
         console.log("loadTourneyById(): " + url);
 

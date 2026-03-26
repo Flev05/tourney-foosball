@@ -683,49 +683,52 @@ export class MeetingRoundService extends MeetingService {
     }
 
     public formatRoundData(meetings: MeetingDto[]): any[] {
-        return meetings.map((dto) => {
+        const tableRows: any[] = [];
+
+        meetings.forEach((dto) => {
+            // 1. Handle Separator Row
             if (dto.separator) {
-                return [{
-                        content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
-                        colSpan: 5,
-                        styles: { 
-                            minCellHeight: 5,
-                            halign: 'center', 
-                            fillColor: [220, 220, 200, 220, 220] as [number, number, number, number, number], // Cast as a Tuple
-                            fontStyle: 'bold' 
-                        }
-                    }
-                ];
-            }
-            if (dto.signLine) {
-                // 3. The "Line Row" (This creates the 10mm gap + the line)
-                const spacerRow = [{
-                    content: '', // Empty content
+                tableRows.push([{
+                    content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
                     colSpan: 5,
                     styles: { 
-                        minCellHeight: 10,             // Your 10mm gap
-                        lineColor: [0, 0, 0],          // Black line (use lineColor for the border)
-                        lineWidth: { 
-                            bottom: 1.0,               // 1.0 is a strong bold line; try 1.5 for extra bold
-                            top: 0, 
-                            left: 0, 
-                            right: 0 
-                        }
+                        minCellHeight: 5,
+                        halign: 'center', 
+                        fillColor: [220, 220, 200], // Fixed: jsPDF uses [r, g, b]
+                        fontStyle: 'bold' 
                     }
-                }];
-                return spacerRow;
+                }]);
+                return; // Move to next dto
             }
 
-            // 2. The Meeting Row
-            const meetingRow = [
-                this.dateFormatPipe.transformWeek(dto.meeting.datetime),
-                dto.meeting.teamName1,
-                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points1,
-                dto.meeting.points1 === 0 && dto.meeting.points2 === 0 ? '' : dto.meeting.points2,
-                dto.meeting.teamName2
-            ];
+            // 2. Handle Signature/Spacer Row
+            if (dto.signLine) {
+                tableRows.push([{
+                    content: '',
+                    colSpan: 5,
+                    styles: { 
+                        minCellHeight: 10,
+                        lineColor: [0, 0, 0],
+                        lineWidth: { bottom: 1.0, top: 0, left: 0, right: 0 }
+                    }
+                }]);
+                return;
+            }
 
-            return meetingRow;
+            // 3. Handle Meeting Rows
+            // We loop through matches and push a NEW row for each match
+            dto.meeting.matches.forEach(m => {
+                const row = [
+                    this.dateFormatPipe.transformWeek(dto.meeting.datetime),
+                    dto.meeting.teamName1,
+                    (m.score1 === 0 && m.score2 === 0) ? '' : m.score1,
+                    (m.score1 === 0 && m.score2 === 0) ? '' : m.score2,
+                    dto.meeting.teamName2
+                ];
+                tableRows.push(row);
+            });
         });
-    }    
+
+        return tableRows;
+    } 
 }

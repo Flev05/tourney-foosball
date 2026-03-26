@@ -937,45 +937,48 @@
               Baraonda
             </label>
 
-          <div class="ui-g radiobuttons">
-            <p-radioButton name="isTeamsOrderedGroupname"
-              inputId="isTeamsOrderedGroupname1"
-              pTooltip="Indicare se le squadre sono scelte in ordine casuale"
-              value="random"
-              [(ngModel)]="selectedTourney.teamsWeightEnabled">
-            </p-radioButton>
-            <label for="isTeamsOrderedGroupname1">
-              Random
-            </label>
-
-            <p-radioButton name="isTeamsOrderedGroupname"
-              inputId="isTeamsOrderedGroupname2"
-              pTooltip="Indicare se le squadre sono scelte ordinate come teste di serie"
-              value="topseed"
-              [(ngModel)]="selectedTourney.teamsWeightEnabled">
-            </p-radioButton>
-            <label for="isTeamsOrderedGroupname2">
-              Teste di serie
-            </label>
-
-            <p-radioButton name="isTeamsOrderedGroupname"
-              inputId="isTeamsOrderedGroupnameId3"
-              pTooltip="Indicare se le squadre sono Random ma ragguppate per appartenenza tipo per ASD o società"
-              value="group"
-              [(ngModel)]="selectedTourney.teamsWeightEnabled">
-            </p-radioButton>
-            <label for="isTeamsOrderedGroupnameId3">
-              Gruppi
-            </label>
-
-          </div>
+          @if (!selectedTourney.chaosEnabled) {
+            <div class="ui-g radiobuttons">
+              <p-radioButton name="isTeamsOrderedGroupname"
+                inputId="isTeamsOrderedGroupname1"
+                pTooltip="Indicare se le squadre sono scelte in ordine casuale"
+                value="random"
+                [(ngModel)]="selectedTourney.teamsWeightEnabled">
+              </p-radioButton>
+              <label for="isTeamsOrderedGroupname1">
+                Random
+              </label>
+  
+              <p-radioButton name="isTeamsOrderedGroupname"
+                inputId="isTeamsOrderedGroupname2"
+                pTooltip="Indicare se le squadre sono scelte ordinate come teste di serie"
+                value="topseed"
+                [(ngModel)]="selectedTourney.teamsWeightEnabled">
+              </p-radioButton>
+              <label for="isTeamsOrderedGroupname2">
+                Teste di serie
+              </label>
+  
+              <p-radioButton name="isTeamsOrderedGroupname"
+                inputId="isTeamsOrderedGroupnameId3"
+                pTooltip="Indicare se le squadre sono Random ma raggruppate per appartenenza tipo per ASD o società"
+                value="group"
+                [(ngModel)]="selectedTourney.teamsWeightEnabled">
+              </p-radioButton>
+              <label for="isTeamsOrderedGroupnameId3">
+                Gruppi
+              </label>
+            </div>
+          }
         </div>
       
         <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
           @if (selectedTourney.chaosEnabled) {
             <app-player-chooser></app-player-chooser>
           }
-          <app-team-table [addTeamEnabled]="true" [tourneyTeams]="true"></app-team-table>
+          
+          <app-team-table [addTeamEnabled]="true" [tourneyTeams]="true" [chaosEnabled]="selectedTourney.chaosEnabled"></app-team-table>
+
           @if (!isInWizardMode()) {
             <button pButton type="button"
               class="ui-button-success"
@@ -1017,7 +1020,7 @@
     </p-tabpanel>
 
     @if (containsRound()) {
-      <p-tabpanel [value]="3" title="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}">
+      <p-tabpanel [value]="3" title="{{selectedTourney.roundTabName==''?'Gironi':selectedTourney.roundTabName}}">
         <p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
@@ -2527,7 +2530,7 @@
                 </td>
               }
               <td style="width: 15mm;">
-                <button class="ui-button-danger" pButton icon="pi pi-remove" (click)="deleteOperator(rowData)"></button>
+                <button class="ui-button-danger" pButton icon="pi pi-trash" (click)="deleteOperator(rowData)"></button>
               </td>
             </tr>
           </ng-template>

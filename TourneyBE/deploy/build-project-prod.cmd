@@ -9,7 +9,7 @@ rem set TOURNEY_DIR=C:\views\EREBUS\Tourney
 rem Laptop GMKtec
 set TOURNEY_DIR=C:\views\EREBUS\Tourney-2.0
 
-set FE_DIR=%TOURNEY_DIR%\TourneyNG-2.0
+set FE_DIR=%TOURNEY_DIR%\TourneyNG
 set BE_DIR=%TOURNEY_DIR%\TourneyBE
 
 set WEB_CONTENT_DIR=%BE_DIR%\WebContent

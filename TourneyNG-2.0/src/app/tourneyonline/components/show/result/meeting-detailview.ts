@@ -141,7 +141,6 @@ export class MeetingDetailView extends AbstractDetailView {
             }
         }
         console.log("Exiting from MeetingDetailView.ngOnInit()");
-        this.meetingService.blockedDocument=false;
     }
 
     private computeTotals() {
@@ -236,7 +235,6 @@ export class MeetingDetailView extends AbstractDetailView {
 
     onTerminatedClick() {
         console.log("Entering onTerminatedClick()");
-        this.meetingService.blockedDocument = true;
         this.selectedMeeting.status = MeetingStatus.Terminated;
         for(let i=0; i<this.matches.length; i++) {
             let m = this.matches[i];

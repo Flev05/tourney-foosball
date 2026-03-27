@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -6,7 +6,6 @@ import { TeamService } from 'app/tourneyonline/service/team-service';
 import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { TeamDetailView } from '../team/team-detailview';
 import { Observable, of } from 'rxjs';
 import { Table } from 'primeng/table';
@@ -27,10 +26,18 @@ export class TeamTableComponent extends AbstractListView {
     @Input() addTeamEnabled: boolean | undefined;
     @Input() tourneyTeams: boolean | undefined;
     @Input() chaosEnabled: boolean | undefined;
-    
     @ViewChild('table') table!: Table; // This gives us access to the #table from HTML
+    // Define the Output emitter
+    @Output() teamChanged = new EventEmitter<Team>();
     
-    cols: TableCols[] = TeamService.cols;
+    // cols: TableCols[] = TeamService.cols;
+    cols = [
+        { field: 'player0', header: 'DIFENSORE' },
+        { field: 'player1', header: 'ATTACCANTE' },
+        // You can easily add more here later:
+        // { field: 'teamName', header: 'Squadra' }
+    ];
+
     selectedTeam: Team = new Team();
     teams: Team[] = [];
     deleteTeam: Team = new Team();
@@ -56,14 +63,27 @@ export class TeamTableComponent extends AbstractListView {
         this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
     }
   
+    // Call this method whenever a team is modified/saved
+    onTeamUpdate(team: Team) {
+        this.teamChanged.emit(team);
+    }
+
     private onLoadTeamsComplete(): any {
         this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
         console.log("Loaded [" + this.teams.length + "] pool teams");
         if( this.tourneyTeams ) {
             this.teams = this.tourneyService.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
             this.teamService.tourneyTeams = this.tourneyTeams;
+            if( this.tourneyService.selectedTourney.teamsChanged) {
+                this.onTeamUpdate(this.selectedTeam);
+                this.tourneyService.selectedTourney.teamsChanged = false;
+            }
         }
         this.teamCount = this.teams.length;
+
+        if( this.teamService.newTeam == true ) {
+            this.onTeamUpdate(this.selectedTeam);
+        }
 
         setTimeout(() => {
             if (this.table) {
@@ -100,7 +120,7 @@ export class TeamTableComponent extends AbstractListView {
     
     protected override gotoDetailView(): void {
         this.router.navigate([this.redirect], { 
-            queryParams: { tourneyTeams: this.tourneyTeams }
+            queryParams: { tourneyTeams: this.tourneyTeams, chaosEnabled:this.chaosEnabled }
         });
     }
 
@@ -109,6 +129,7 @@ export class TeamTableComponent extends AbstractListView {
         let popup = 'Sicuro di voler rimuovere la squadra: ' + team.teamName ;
         this.deleteTeam = team;
         if(confirm(popup)) {
+            this.onTeamUpdate(team);
             let index: number = this.teams.indexOf(this.deleteTeam);
             if( this.tourneyTeams ) { // the DELETE will apply only on the teams belonging to the tourney, not the one in the pool
                 if(index > -1) {
@@ -163,7 +184,7 @@ export class TeamTableComponent extends AbstractListView {
     createChaos() {
         console.log("Entering createChaos()");
     
-        this.teams = this.generateTeams();;
+        this.teams = this.generateChaosTeams();
 
         for( let t of this.teams ) {
             this.teamService.saveTeam(t
@@ -175,10 +196,10 @@ export class TeamTableComponent extends AbstractListView {
         this.selectedTourney.teams = this.teams;
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {} );
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.onTeamUpdate(this.teams[0]));
     }
     
-    private generateTeams(): Team[] {
+    private generateChaosTeams(): Team[] {
         const teamList: Team[] = [];
 
         // 1. Shuffle helper to ensure randomness
@@ -226,8 +247,7 @@ export class TeamTableComponent extends AbstractListView {
 
         if( leftovers.length % 2 == 1 ) {
             const lastTeam = teamList[teamList.length - 1];
-            lastTeam.teamName = `${lastTeam.teamName} + ${leftovers[leftovers.length-1].playerName}`;
-            lastTeam.players.push(...leftovers);
+            lastTeam.players.push(leftovers[leftovers.length-1]);
         }    
 
         return teamList;

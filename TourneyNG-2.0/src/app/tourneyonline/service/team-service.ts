@@ -211,7 +211,7 @@ export class TeamService {
     updateExistingTeam(selectedTeam : Team, complete: () => void) {
         this.selectedTeam = selectedTeam;
         this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
-        this.selectedTeam.players = this.playerService.selectedPlayers;
+        // this.selectedTeam.players = this.playerService.selectedPlayers;
         let tvo : TeamVO = {
             id: this.selectedTeam.id
             , teamName: this.selectedTeam.teamName

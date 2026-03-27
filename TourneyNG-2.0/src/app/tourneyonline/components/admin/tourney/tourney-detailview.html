@@ -1,12 +1,4 @@
-<div class="content-section introduction">
-  <div>
-    <h2>Vista di dettaglio torneo: {{selectedTourney.tourneyName}}</h2>
-  </div>
-</div>
-
-<p-blockUI [blocked]="blockedDocument"></p-blockUI>
-
-<div class="content-section documentation">
+<!-- div class="content-section documentation">
   <p-accordion value="-1">
     <p-accordion-panel value="0">
       <p-accordion-header>
@@ -280,10 +272,21 @@
       </p-accordion-content>
     </p-accordion-panel>
   </p-accordion>
-</div>
+</div -->
 
-<div class="ui-dialog-buttonpane ui-helper-clearfix">
-  <button class="ui-button-success" type="button" icon="pi pi-arrow-left" pButton (click)="gotoListView()" label="Elenco Tornei"></button>
+<div class="header-toolbar">
+  <div class="toolbar-side">
+    <button 
+      pButton 
+      type="button" 
+      icon="pi pi-arrow-left" 
+      class="p-button-success" 
+      (click)="gotoListView()" 
+      label="Elenco Tornei">
+    </button>
+  </div>
+  <h2 class="toolbar-title">{{selectedTourney.tourneyName}}</h2>
+  <div class="toolbar-side"></div>
 </div>
 
 <p-tabs [value]="tourneyService.selectedTabIndex" (valueChange)="onTabChange($event)">
@@ -310,7 +313,7 @@
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel [value]="0" title="Generalità">
-      <p-accordion value="-1">
+      <!--p-accordion value="-1">
         <p-accordion-panel value="0">
           <p-accordion-header>
             Istruzioni
@@ -367,7 +370,7 @@
             </p>
           </p-accordion-content>
         </p-accordion-panel>
-      </p-accordion>
+      </p-accordion-->
 
       <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
         <p>
@@ -521,7 +524,7 @@
     </p-tabpanel>
 
     <p-tabpanel [value]="1" title="Modalità">
-      <p-accordion value="-1">
+      <!--p-accordion value="-1">
         <p-accordion-panel value="0">
           <p-accordion-header>
             Istruzioni
@@ -595,7 +598,7 @@
             </p>
           </p-accordion-content>
         </p-accordion-panel>
-      </p-accordion>
+      </p-accordion-->
 
       @if (!modeTabEnabled) {
         <div style="margin-top:30px">
@@ -860,7 +863,7 @@
     </p-tabpanel>
 
     <p-tabpanel [value]="2" title="Squadre({{selectedTourney.teams.length}})">
-      <p-accordion value="-1">
+      <!--p-accordion value="-1">
         <p-accordion-panel value="0">
           <p-accordion-header>
             Istruzioni
@@ -914,7 +917,7 @@
             </p>
           </p-accordion-content>
         </p-accordion-panel>
-      </p-accordion>
+      </p-accordion-->
 
       @if (!teamTabEnabled) {
         <div style="margin-top:30px">
@@ -977,7 +980,11 @@
             <app-player-chooser></app-player-chooser>
           }
           
-          <app-team-table [addTeamEnabled]="true" [tourneyTeams]="true" [chaosEnabled]="selectedTourney.chaosEnabled"></app-team-table>
+          <app-team-table 
+            [addTeamEnabled]="true" 
+            [tourneyTeams]="true" 
+            [chaosEnabled]="selectedTourney.chaosEnabled"
+            (teamChanged)="handleTeamChange($event)"> </app-team-table>
 
           @if (!isInWizardMode()) {
             <button pButton type="button"
@@ -1021,7 +1028,7 @@
 
     @if (containsRound()) {
       <p-tabpanel [value]="3" title="{{selectedTourney.roundTabName==''?'Gironi':selectedTourney.roundTabName}}">
-        <p-accordion value="-1">
+        <!--p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
               Istruzioni
@@ -1070,7 +1077,7 @@
               </p>
             </p-accordion-content>
           </p-accordion-panel>
-        </p-accordion>
+        </p-accordion-->
         @if (!roundTabEnabled) {
           <div style="margin-top:30px">
             <p-message
@@ -1351,7 +1358,6 @@
             </p-fieldset>
             <p-table [columns]="roundCols"
               [value]="roundRows"
-              responsiveLayout="scroll"
               selectionMode="single"
               [(selection)]="selectedRound"
               (onRowSelect)="onRoundRowSelect($event)"
@@ -1421,7 +1427,7 @@
 
     @if (containsPlayoff()) {
       <p-tabpanel [value]="4" title="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}">
-        <p-accordion value="-1">
+        <!--p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
               Istruzioni
@@ -1457,7 +1463,7 @@
               </p>
             </p-accordion-content>
           </p-accordion-panel>
-        </p-accordion>
+        </p-accordion-->
         @if (!playoffTabEnabled) {
           <div style="margin-top:30px">
             <p-message
@@ -1738,7 +1744,6 @@
             </p-fieldset>
             <p-table [columns]="playoffCols"
               [value]="playoffRows"
-              responsiveLayout="scroll"
               selectionMode="single"
               [(selection)]="selectedPlayoff"
               (onRowSelect)="onPlayoffRowSelect($event)"
@@ -1808,7 +1813,7 @@
 
     @if (containsPlayout()) {
       <p-tabpanel [value]="5" title="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}">
-        <p-accordion value="-1">
+        <!--p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
               Istruzioni
@@ -1827,7 +1832,7 @@
               </p>
             </p-accordion-content>
           </p-accordion-panel>
-        </p-accordion>
+        </p-accordion-->
         @if (!playoutTabEnabled) {
           <div style="margin-top:30px">
             <p-message
@@ -2052,7 +2057,6 @@
             </p-fieldset>
             <p-table [columns]="playoffCols"
               [value]="playoutRows"
-              responsiveLayout="scroll"
               selectionMode="single"
               [(selection)]="selectedPlayout"
               (onRowSelect)="onPlayoutRowSelect($event)"
@@ -2122,7 +2126,7 @@
 
     @if (containsEliminatory()) {
       <p-tabpanel [value]="6" title="{{selectedTourney.eliminatoryTabName}}">
-        <p-accordion value="-1">
+        <!--p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
               Istruzioni
@@ -2238,7 +2242,7 @@
               </p>
             </p-accordion-content>
           </p-accordion-panel>
-        </p-accordion>
+        </p-accordion-->
         @if (!eliminatoryTabEnabled) {
           <div style="margin-top:30px">
             <p-message
@@ -2294,7 +2298,6 @@
             }
             <p-table [columns]="eliminatoryLevelCols"
               [value]="eliminatoryLevelRows"
-              responsiveLayout="scroll"
               selectionMode="single"
               (onRowSelect)="onEliminatoryLevelRowSelect($event)">
               <ng-template pTemplate="header" let-columns>
@@ -2359,7 +2362,7 @@
 
     @if (containsEliminatoryB()) {
       <p-tabpanel [value]="7" title="{{selectedTourney.eliminatoryBTabName}}">
-        <p-accordion value="-1">
+        <!-- p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
               Istruzioni
@@ -2371,7 +2374,7 @@
               </p>
             </p-accordion-content>
           </p-accordion-panel>
-        </p-accordion>
+        </p-accordion-->
         @if (!eliminatoryBTabEnabled) {
           <div style="margin-top:30px">
             <p-message
@@ -2384,7 +2387,6 @@
           <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
             <p-table [columns]="eliminatoryLevelCols"
               [value]="eliminatoryBLevelRows"
-              responsiveLayout="scroll"
               selectionMode="single"
               (onRowSelect)="onEliminatoryBLevelRowSelect($event)">
               <ng-template pTemplate="header" let-columns>
@@ -2448,7 +2450,7 @@
     }
 
     <p-tabpanel [value]="8" title="Operatori">
-      <p-accordion value="-1">
+      <!--p-accordion value="-1">
         <p-accordion-panel value="0">
           <p-accordion-header>
             Istruzioni
@@ -2488,7 +2490,7 @@
             </p>
           </p-accordion-content>
         </p-accordion-panel>
-      </p-accordion>
+      </p-accordion-->
 
       <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
         <div style="text-align:left">
@@ -2501,7 +2503,6 @@
 
         <p-table [columns]="operatorCols"
           [value]="operators"
-          responsiveLayout="scroll"
           [scrollable]="true"
           scrollHeight="500px">
 

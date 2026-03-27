@@ -40,6 +40,7 @@ export class TeamDetailView extends AbstractDetailView {
     filteredTeamsSingle: Team[] = [];
     isRenaming = false;
     newName = '';
+    chaosEnabled: boolean = false; 
 
     constructor(
         protected override location: Location,
@@ -60,9 +61,10 @@ export class TeamDetailView extends AbstractDetailView {
         this.selectedTeam = this.teamService.selectedTeam;
         this.isRoundAutoGen = this.teamService.isRoundAutoGen;
 
+        // Note: Query params are strings, so we convert back to boolean
         this.route.queryParams.subscribe(params => {
-            // Note: Query params are strings, so we convert back to boolean
             this.tourneyTeams = params['tourneyTeams'] === 'true';
+            this.chaosEnabled = params['chaosEnabled'] === 'true';
         });
 
         // this.selectedRound = null;

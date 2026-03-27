@@ -37,8 +37,6 @@
   </ng-template>
 </p-table>
 
-<p-blockUI [blocked]="meetingService.blockedDocument"></p-blockUI>
-
 @if (roundsNotTerminated) {
   <div style="margin-top:30px">
     <p-message severity="error" text="Attenzione! I gironi precedenti non sono ancora terminati. Spostare le squadre solo quando tutte le partite saranno terminate.">

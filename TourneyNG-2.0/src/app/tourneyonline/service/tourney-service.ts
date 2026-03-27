@@ -614,7 +614,7 @@ export class TourneyService extends AbstractService {
     private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let url = updateTourneyUrl;
         const json = JSON.stringify(tvo);
-        console.log(json);
+        // console.log(json);
         const ob : Observable<TourneyVO> = this.http.put<TourneyVO>(url, tvo, httpOptions);
         return ob.pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),

@@ -83,7 +83,11 @@ export class PlayerTableComponent extends AbstractListView {
             });
 
             // 3. Important: If using change detection, trigger a refresh
-            this.players = [...this.players];
+            if( this.addPlayerEnabled ) {
+                this.players = [...this.players];
+            } else {
+                this.players = [...this.selectedTeam.players];
+            }
         }
         setTimeout(() => {
             if (this.table) {

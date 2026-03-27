@@ -94,17 +94,19 @@
       <div class="col-3">
         Nominativo*:
       </div>
-      <p-autoComplete id="palyer-id"
-            pTooltip="Permette di cercare un giocatore, selezionarlo o inserire uno nuovo."
-            [(ngModel)]="autoCompletePlayerName"
-            [suggestions]="filteredPlayersSingle"
-            (completeMethod)="loadPlayersCompleteMethod($event)"
-            (onSelect)="onPlayerSelect($event)"
-            field="playerName"
-            optionLabel="playerName"
-            [forceSelection]="false"
-            [dropdown]="true"
-            placeholder="Nome Giocatore">
+      <div class="col-8">
+        <p-autoComplete id="palyer-id"
+              pTooltip="Permette di cercare un giocatore, selezionarlo o inserire uno nuovo."
+              [(ngModel)]="autoCompletePlayerName"
+              [suggestions]="filteredPlayersSingle"
+              (completeMethod)="loadPlayersCompleteMethod($event)"
+              (onSelect)="onPlayerSelect($event)"
+              field="playerName"
+              optionLabel="playerName"
+              [forceSelection]="false"
+              [dropdown]="true"
+              class="w-full" 
+              placeholder="Nome Giocatore">
         </p-autoComplete>
         @if (autoCompletePlayerName.id != null && autoCompletePlayerName.id > 0) {
           <button pButton type="button"
@@ -116,12 +118,11 @@
         }
       </div>
     </div>
-
     <div class="grid">
       <div class="col-3" pTooltip="Inserire la via di residenza del giocatore.">
         Via:
       </div>
-      <div class="col-12 md:col-8">
+      <div class="col-8">
         <input pInputText 
               type="text" 
               class="w-full" 
@@ -134,7 +135,7 @@
       <div class="col-3">
         <label for="country-id">Comune:</label>
       </div>
-      <div class="col-5">
+      <div class="col-8">
         <p-autoComplete id="country-id"
             [(ngModel)]="selectedPlayer.country"
             [suggestions]="filteredCountriesSingle"
@@ -166,15 +167,18 @@
       <div class="col-3">
         Telefono:
       </div>
-      <div class="col-5" pTooltip="Inserire il numero di telefono del giocatore.">
-        <input pInputText type="text" [(ngModel)]="selectedPlayer.phoneNumber"/>
+      <div class="col-8">
+        <input pInputText type="text" 
+          [(ngModel)]="selectedPlayer.phoneNumber"
+          class="w-full" 
+          pTooltip="Inserire il numero di telefono del giocatore."/>
       </div>
     </div>
     <div class="grid">
       <div class="col-3">
         E-mail:
       </div>
-      <div class="col-12 md:col-8">
+      <div class="col-8">
         <input pInputText 
               type="text" 
               class="w-full" 
@@ -187,9 +191,14 @@
       <div class="col-3">
         Tessera:
       </div>
-      <div class="col-5" pTooltip="Inserire il codice della tessera del giocatore.">
-        <input pInputText type="text" [(ngModel)]="selectedPlayer.code"/>
+      <div class="col-8">
+        <input pInputText type="text" 
+          [(ngModel)]="selectedPlayer.code" 
+          class="w-full" 
+          pTooltip="Inserire il codice della tessera del giocatore."
+          placeholder="Tessera"/>
       </div>
+  </div>
   </div>
 }
 

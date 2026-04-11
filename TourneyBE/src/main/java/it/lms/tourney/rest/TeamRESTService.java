@@ -33,10 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 @Slf4j
 public class TeamRESTService extends AbstractRESTService {
-
 	@Inject
 	private TeamDao teamDao;
-
 	@Inject
 	private SessionDao sessionDao;
 
@@ -48,13 +46,8 @@ public class TeamRESTService extends AbstractRESTService {
 	@Path("/loadByClientId/{clientId:[0-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TeamVO> loadByClientId(@PathParam("clientId") Integer clientId) {
-
-		log.debug("{}", logId() + "GET: loadByClientId(" + clientId + ")");
-
+		log.info("{}", logId() + "GET: loadByClientId(" + clientId + ")");
 		List<Team> teamList = teamDao.findTeamsByClientId(clientId);
-
-		// teamList.forEach(t -> logger.debug(t.getJson()));
-
 		return teamList.stream().map(tpo -> converter.convertTeamPoVo(tpo)).collect(Collectors.toList());
 	}
 

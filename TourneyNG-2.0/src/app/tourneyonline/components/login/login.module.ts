@@ -1,6 +1,8 @@
 import {NgModule}     from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,ReactiveFormsModule}    from '@angular/forms';
+import { PasswordModule } from 'primeng/password';
+
 import { TableModule }  from 'primeng/table';
 import { DialogModule }  from 'primeng/dialog';
 import {AccordionModule} from 'primeng/accordion';
@@ -42,6 +44,7 @@ import { TabsModule } from 'primeng/tabs';
         ,AccordionModule
         ,MessageModule
         ,BlockUIModule
+        ,PasswordModule
 	],
 	declarations: [
                   LoginDetailView

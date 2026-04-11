@@ -260,3 +260,37 @@ body .ui-buttonset.ui-button-danger > .ui-button.ui-state-default {
     height: 1.5rem;
     width: 1.5rem;
 }
+
+.header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--surface-card); /* Using PrimeNG CSS variables */
+  border-bottom: 1px solid var(--surface-border);
+  gap: 1rem;
+}
+
+.toolbar-side {
+  flex: 1; /* This makes both the left and right containers equal width */
+  display: flex;
+}
+
+/* Align the right spacer to the end just in case you add an icon later */
+.toolbar-side:last-child {
+  justify-content: flex-end;
+}
+
+.toolbar-title {
+  margin: 0;
+  text-align: center;
+  flex: 2; /* Gives the title more space than the sides */
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  
+  /* Text handling for long names */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

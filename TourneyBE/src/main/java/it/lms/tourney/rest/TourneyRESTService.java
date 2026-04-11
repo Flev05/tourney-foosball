@@ -523,7 +523,7 @@ public class TourneyRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteTourney(@PathParam("id") Integer id) {
 
-		log.debug(logId() + "DELETE: deleteTourney(" + id + ")");
+		log.info(logId() + "DELETE: deleteTourney(" + id + ")");
 
 		List<User> userList = urcDao.findFollowerByTourneyId(id);
 		urcDao.deleteUrcByTourney(id);

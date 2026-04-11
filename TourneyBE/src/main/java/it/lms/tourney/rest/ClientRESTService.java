@@ -34,13 +34,11 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 @Slf4j
 public class ClientRESTService extends AbstractRESTService {
-
 	@Inject
 	private ClientDao clientDao;
-
 	@Inject
 	private UserDao userDao;
-
+	
 	@Inject
 	@ConverterObject
 	private Converter converter;
@@ -50,7 +48,7 @@ public class ClientRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ClientVO> loadByUserId(@PathParam("userId") Integer userId) {
 
-		log.debug(logId() + "GET: loadByUserId()");
+		log.debug(logId() + "GET: loadByUserId({})", userId);
 
 		List<ClientVO> clientVoList = new ArrayList<>();
 		if (userDao.isDeveloperUser(userId)) {
@@ -151,24 +149,16 @@ public class ClientRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateClient(ClientVO cvo) {
-
-		log.debug(logId() + "PUT: updateClient(" + cvo + ")");
-
+		log.info(logId() + "PUT: updateClient(" + cvo + ")");
 		Client cpo = prepareClientPo(cvo);
-
 		clientDao.update(cpo);
-
 		Response.ResponseBuilder builder = Response.ok().entity(cvo);
-
 		return builder.build();
 	}
 
 	private Client prepareClientPo(ClientVO cvo) {
-
-		log.debug(logId() + "Entering prepareClientPo()");
-
+		log.info(logId() + "Entering prepareClientPo()");
 		Client cpo = new Client();
-
 		cpo.setId(cvo.getId());
 		cpo.setAddress(cvo.getAddress().trim());
 		cpo.setBusinessName(cvo.getBusinessName().trim());
@@ -188,14 +178,12 @@ public class ClientRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteClient(@PathParam("id") Integer id) {
-
-		log.debug(logId() + "DELETE: deleteClient(" + id + ")");
-
+		log.info(logId() + "DELETE: deleteClient(" + id + ")");
+	
 		Client client = clientDao.getById(id);
 		clientDao.delete(client);
 
 		Response.ResponseBuilder builder = Response.ok();
-
 		return builder.build();
 	}
 }

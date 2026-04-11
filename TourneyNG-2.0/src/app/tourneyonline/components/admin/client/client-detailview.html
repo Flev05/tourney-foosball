@@ -40,7 +40,7 @@
 
 <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
   <div class="grid">
-    <div class="col-2">
+    <div class="col-1">
       Nominativo*:
     </div>
     @if (!userEnabled) {
@@ -49,15 +49,15 @@
       </div>
     }
     @if (userEnabled) {
-      <div class="col-6">
-        <input pInputText type="text" [(ngModel)]="selectedClient.businessName"
+      <div class="col-8">
+        <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.businessName"
           placeholder="Nome e cognome o ragione sociale del cliente"/>
         </div>
       }
     </div>
 
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         Via*:
       </div>
       @if (!userEnabled) {
@@ -65,15 +65,15 @@
           {{selectedClient.address}}
         </div>
       }
-      <div class="col-5">
+      <div class="col-8">
         @if (userEnabled) {
-          <input pInputText type="text" [(ngModel)]="selectedClient.address"/>
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.address"/>
         }
       </div>
     </div>
 
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         Indirizzo:
       </div>
       <div class="col-8">
@@ -85,7 +85,7 @@
     </div>
 
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         <label for="country-id">Comune*:</label>
       </div>
       @if (!userEnabled) {
@@ -95,14 +95,16 @@
       }
 
       @if (userEnabled) {
-        <div class="col-5">
+        <div class="col-8">
           <p-autoComplete id="country-id"
             [(ngModel)]="selectedClient.country"
             [suggestions]="filteredCountriesSingle"
             (completeMethod)="searchCountry($event)"
             field="city"
+            class="w-full" 
             optionLabel="city"
             placeholder="Comune"
+            [fluid]="true"
             [minLength]="1">
           </p-autoComplete>
         </div>
@@ -110,7 +112,7 @@
     </div>
 
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         Telefono*:
       </div>
       @if (!userEnabled) {
@@ -118,15 +120,15 @@
           {{selectedClient.phoneNumber}}
         </div>
       }
-      <div class="col-5">
+      <div class="col-8">
         @if (userEnabled) {
-          <input pInputText type="text" [(ngModel)]="selectedClient.phoneNumber" placeholder="Obbligatorio"/>
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.phoneNumber" placeholder="Obbligatorio"/>
         }
       </div>
     </div>
 
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         E-mail*:
       </div>
       @if (!userEnabled) {
@@ -135,14 +137,14 @@
         </div>
       }
       @if (userEnabled) {
-        <div class="col-5">
-          <input pInputText type="text" [(ngModel)]="selectedClient.email" placeholder="Obbligatoria"/>
+        <div class="col-8">
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.email" placeholder="Obbligatoria"/>
         </div>
       }
     </div>
 
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         Sito Internet:
       </div>
       @if (!userEnabled) {
@@ -151,8 +153,8 @@
         </div>
       }
       @if (userEnabled) {
-        <div class="col-5">
-          <input pInputText type="text" [(ngModel)]="selectedClient.siteUrl" placeholder="Sito del cliente se c'è"/>
+        <div class="col-8">
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.siteUrl" placeholder="Sito del cliente se c'è"/>
         </div>
       }
     </div>
@@ -160,7 +162,7 @@
 
   <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <div class="grid">
-      <div class="col-2">
+      <div class="col-1">
         <button class="ui-button-success"
           pButton (click)="onSubmit()"
           icon="pi pi-save"

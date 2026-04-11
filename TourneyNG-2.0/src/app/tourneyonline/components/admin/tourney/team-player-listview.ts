@@ -82,10 +82,9 @@ export class TeamPlayerListView extends AbstractDetailView {
             }
         }
 
-        this.teamService.saveTeam( this.selectedTeam
-            , this.autoCompleteTeamName
-            , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
+        this.teamService.updateExistingTeam( this.selectedTeam
             , () => this.saveTeamOnComplete());
+
         this.teamService.newTeam = false;
         if( this.previousTeamName !== this.autoCompleteTeamName ) {
             this.meetingService.updateOnChangeTeamName(this.selectedTourney, this.previousTeamName, this.autoCompleteTeamName);

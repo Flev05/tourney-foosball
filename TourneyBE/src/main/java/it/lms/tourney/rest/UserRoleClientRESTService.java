@@ -42,19 +42,14 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 @Slf4j
 public class UserRoleClientRESTService extends AbstractRESTService {
-
 	@Inject
 	private UserDao userDao;
-
 	@Inject
 	private TourneyDao tourneyDao;
-
 	@Inject
 	private UserRoleClientDao urcDao;
-
 	@Inject
 	RoleDao roleDao;
-
 	@Inject
 	ClientDao clientDao;
 
@@ -142,14 +137,10 @@ public class UserRoleClientRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUrc(@PathParam("id") Integer id) {
-
-		log.debug(logId() + "DELETE: deleteUrc(" + id + ")");
-
+		log.info(logId() + "DELETE: deleteUrc(" + id + ")");
 		UserRoleClient urc = urcDao.findById(id);
 		urcDao.delete(urc);
-
 		Response.ResponseBuilder builder = Response.ok();
-
 		return builder.build();
 	}
 

@@ -30,101 +30,105 @@
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel [value]="0" title="Andata">
-      <p-table [columns]="cols"
-        [value]="onewayMeetings"
-        selectionMode="single"
-        [(selection)]="selectedRow"
-        (onRowSelect)="onRowSelect($event)">
-  
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <td>
-              <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
-            </td>
-            <td style="text-align: center; font-weight: bold;">
-              <div>{{getHeaderOneway()}}</div>
-              <div>{{getWeekOneway()}}</div>
-            </td>
-            <td style="text-align: right;">
-              <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
-            </td>
-          </tr>
-        </ng-template>
-  
-        <ng-template pTemplate="body" let-rowData>
-          <tr [pSelectableRow]="rowData">
-            <td class="leftTeamName">
-              {{rowData.teamName1}}
-            </td>
-            <td class="centralPoints">
-              <div>
-                <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
-              </div>
-              <div style="text-align: center; font-weight: bold;">
-                {{rowData.vpoints1}} - {{rowData.vpoints2}}
-              </div>
-                          <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                                  ,'inProgress': rowData.status === 'In Corso'
-                                  ,'terminated': rowData.status === 'Terminata'
-                                  ,'confirmed': rowData.status === 'Convalidata'}">
-                {{rowData.status}}
-              </div>
-            </td>
-            <td class="rightTeamName">
-              {{rowData.teamName2}}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-tabpanel>
-  
-    @if (isRoundTrip) {
-      <p-tabpanel [value]="1" title="Ritorno">
-        <p-table
-          [columns]="cols"
-          [value]="roundtripMeetings"
+      <div class="flex justify-content-center w-full mt-4">
+        <p-table [columns]="cols"
+          [value]="onewayMeetings"
           selectionMode="single"
           [(selection)]="selectedRow"
-          (onRowSelect)="onRowSelect($event)">
+          (onRowSelect)="onRowSelect($event)"
+          class="w-full">
           <ng-template pTemplate="header" let-columns>
             <tr>
               <td>
-                <button type="button" icon="pi pi-backward" pButton (click)="prevRoundtripDay()"></button>
+                <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
               </td>
               <td style="text-align: center; font-weight: bold;">
-                <div>{{getHeaderRoundtrip()}}</div>
-                <div>{{getWeekRoundtrip()}}</div>
+                <div>{{getHeaderOneway()}}</div>
+                <div>{{getWeekOneway()}}</div>
               </td>
               <td style="text-align: right;">
-                <button type="button" icon="pi pi-forward" pButton (click)="nextRoundtripDay()"></button>
+                <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
               </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData>
             <tr [pSelectableRow]="rowData">
-              <td class="leftTeamName">
+              <td class="leftTeamName" style="width: 35%; text-align: right;">
                 {{rowData.teamName1}}
               </td>
-              <td class="centralPoints">
+              <td class="centralPoints" style="width: 30%; text-align: center;">
                 <div>
                   <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
                 </div>
-                <div>
-                  <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>
+                <div style="text-align: center; font-weight: bold;">
+                  {{rowData.vpoints1}} - {{rowData.vpoints2}}
                 </div>
-                          <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                                  ,'inProgress': rowData.status === 'In Corso'
-                                  ,'terminated': rowData.status === 'Terminata'
-                                  ,'confirmed': rowData.status === 'Convalidata'}">
+                  <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                          ,'inProgress': rowData.status === 'In Corso'
+                          ,'terminated': rowData.status === 'Terminata'
+                          ,'confirmed': rowData.status === 'Convalidata'}">
                   {{rowData.status}}
                 </div>
               </td>
-              <td class="rightTeamName">
+              <td class="rightTeamName" style="width: 35%; text-align: left;">
                 {{rowData.teamName2}}
               </td>
             </tr>
           </ng-template>
         </p-table>
+      </div>
+    </p-tabpanel>
+  
+    @if (isRoundTrip) {
+      <p-tabpanel [value]="1" title="Ritorno">
+        <div class="flex justify-content-center w-full mt-4">
+          <p-table
+            [columns]="cols"
+            [value]="roundtripMeetings"
+            selectionMode="single"
+            [(selection)]="selectedRow"
+            (onRowSelect)="onRowSelect($event)"
+            class="w-full">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <td>
+                  <button type="button" icon="pi pi-backward" pButton (click)="prevRoundtripDay()"></button>
+                </td>
+                <td style="text-align: center; font-weight: bold;">
+                  <div>{{getHeaderRoundtrip()}}</div>
+                  <div>{{getWeekRoundtrip()}}</div>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" icon="pi pi-forward" pButton (click)="nextRoundtripDay()"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+              <tr [pSelectableRow]="rowData">
+                <td class="leftTeamName" style="width: 35%; text-align: right;">
+                  {{rowData.teamName1}}
+                </td>
+                <td class="centralPoints" style="width: 30%; text-align: center;">
+                  <div>
+                    <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
+                  </div>
+                  <div>
+                    <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>
+                  </div>
+                            <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                    ,'inProgress': rowData.status === 'In Corso'
+                                    ,'terminated': rowData.status === 'Terminata'
+                                    ,'confirmed': rowData.status === 'Convalidata'}">
+                    {{rowData.status}}
+                  </div>
+                </td>
+                <td class="rightTeamName" style="width: 35%; text-align: left;">
+                  {{rowData.teamName2}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
       </p-tabpanel>
     }
   

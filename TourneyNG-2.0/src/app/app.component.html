@@ -75,7 +75,7 @@
                 <a routerLink="/users" (click)="menuActive=false">• Utenti</a>
               }
               @if (loginService.isAtLeastOwner()) {
-                <a routerLink="/users/urclv" (click)="menuActive=false">• Associa</a>
+                <a routerLink="/users/urclv" (click)="menuActive=false">• Utenti/Clienti</a>
               }
               @if (loginService.isAtLeastAdmin()) {
                 <a routerLink="/users/resetPasswordLv" (click)="menuActive=false">• Reset Password</a>
@@ -91,7 +91,7 @@
           <a (click)="toggleMenu('config')"
             [class.active-menuitem]="activeMenuId === 'config'">
             <i class="pi pi-sliders-h mr-2"></i>
-            <span>Configurazione</span>
+            <span>Tornei/Squadre/Giocatori</span>
           </a>
           @if (activeMenuId === 'config') {
             <div>

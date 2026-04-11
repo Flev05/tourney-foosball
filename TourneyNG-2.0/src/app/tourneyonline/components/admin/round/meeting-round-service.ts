@@ -260,18 +260,13 @@ export class MeetingRoundService extends MeetingService {
     }
 
     public onCompleteLoad(round: Round, mdbList: MeetingDb[], complete: () => void ) {
-
         this.mdbList = mdbList;
-        
         this.extractRoundMeetings(round, mdbList);
-
         this.makeTeamName(round.onewayMeetings);
         this.makeTeamName(round.roundtripMeetings);
-
         let allDaysNo = round.daysNo;
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
-
         this.prepareCaption(meetingsNo, allDaysNo, round);
         complete();
     }
@@ -287,18 +282,13 @@ export class MeetingRoundService extends MeetingService {
      * Prepares the meetings only if there was the changes in the teams or in the round configurations
      */
     private prepareMeetings(round : Round) {
-
         let teams: string[] = [...round.teamNames];
-        
         if( teams.length % 2 > 0 ) {
             let dummyTeam = MeetingService.SKIPING_TEAM;
             teams.push(dummyTeam);
         }
-
         this.applyBergerAlgorithm(round, teams);
-
         this.completeMeetings(round);
-
         round.pageSize = round.onewayMeetings.length / round.daysNo
         console.log("[Meetings " + round.onewayMeetings.length + "]");
         console.log("[Days     " + round.daysNo + "]");
@@ -388,7 +378,6 @@ export class MeetingRoundService extends MeetingService {
     }
 
     private whereCondition(m: Meeting, t1: string | null, t2: string | null) : boolean {
-
         return m.teamName1 == t1 && m.teamName2 == t2;
     }
 
@@ -468,19 +457,11 @@ export class MeetingRoundService extends MeetingService {
 
     public shiftOnewayDay( currentDay : number) : any[] | undefined {
         this.onewayDays = this.onewayMeetingDaysMap.get(currentDay);
-        // for( let d of this.onewayDays ) {
-        //     d.teamName1 = d.teamName1;
-        //     d.teamName2 = d.teamName2;
-        // }
         return this.onewayDays;
     }
 
     public shiftRoundtripDay( currentDay : number ) : any[] | undefined  {
         this.roundtripDays = this.roundtripMeetingDaysMap.get(currentDay);
-        // for( let d of this.roundtripDays ) {
-        //     d.teamName1 = d.teamName1;
-        //     d.teamName2 = d.teamName2;
-        // }
         return this.roundtripDays;
     }
 

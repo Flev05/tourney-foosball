@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Validators,FormControl,FormGroup,FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, Validators,FormControl,FormGroup,FormBuilder } from '@angular/forms';
 import { Login } from '../../domain/login';
 import { LoginService } from '../../service/login-service';
 import { Md5 } from "md5-typescript";
@@ -53,9 +53,9 @@ export class LoginDetailView extends AbstractListView {
             ,   router 
             ,   location);
             
-            this.loginformGroup = this.fb.group({
-                'username': new FormControl(this.loggedUsername, Validators.required),
-                'password': new FormControl("", Validators.required),
+            this.loginformGroup = new FormGroup({
+                username: new FormControl('', Validators.required),
+                password: new FormControl('', Validators.required)
             });
     }
 
@@ -71,25 +71,25 @@ export class LoginDetailView extends AbstractListView {
         });
     }
 
-    onSubmit(value: string) {
-        if( this.loginformGroup == null ) return;
-  
-        const lgf = this.loginformGroup.get('username');
-        if( lgf == null ) return;
-        this.formLogin.username = lgf.value;
-
-        const pgf = this.loginformGroup.get('password');
-        if( pgf == null ) return;
-        let md5 = Md5.init(pgf.value);
-
-        this.formLogin.password = md5.toUpperCase();
-        console.log("MD5(password)=" + this.formLogin.password);
-        
-        this.loginService.isUserLogged = true;
-        this.loginFailed = false;
-
-        const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
-        subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
+    onSubmit() {
+        if (this.loginformGroup.valid) {
+            const lgf = this.loginformGroup.get('username');
+            if( lgf == null ) return;
+            this.formLogin.username = lgf.value;
+    
+            const pgf = this.loginformGroup.get('password');
+            if( pgf == null ) return;
+            let md5 = Md5.init(pgf.value);
+    
+            this.formLogin.password = md5.toUpperCase();
+            console.log("MD5(password)=" + this.formLogin.password);
+            
+            this.loginService.isUserLogged = true;
+            this.loginFailed = false;
+    
+            const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
+            subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
+        }
     }
 
     protected onNext(lvo: Login) {

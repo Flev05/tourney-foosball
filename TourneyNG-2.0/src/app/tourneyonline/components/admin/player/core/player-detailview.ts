@@ -29,6 +29,7 @@ export class PlayerDetailView extends AbstractDetailView {
     isRenaming = false;
     newName = '';
     tourneyTeams: boolean | undefined;    
+    chaosEnabled: boolean = false;    
     
     constructor(
         protected override location: Location,
@@ -49,6 +50,7 @@ export class PlayerDetailView extends AbstractDetailView {
         super.ngOnInit();
         this.route.queryParams.subscribe(params => {
             this.tourneyTeams = params['tourneyTeams'] === 'true';
+            this.chaosEnabled = params['chaosEnabled'] === 'true';
         });        
         this.countries = this.countryService.countries;
         this.selectedPlayer = this.playerService.selectedPlayer;

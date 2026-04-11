@@ -67,8 +67,17 @@ export class PlayerChooserComponent extends AbstractDetailView {
         });
         this.allPlayers = [...this.playerService.playerPool];
         this.defenderPlayers = this.selectedTourney.defenderPlayers == undefined ? [] : this.selectedTourney.defenderPlayers;
+        this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
         this.jollyPlayers = this.selectedTourney.jollyPlayers == undefined ? [] : this.selectedTourney.jollyPlayers;
+        this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
         this.offenderPlayers = this.selectedTourney.offenderPlayers == undefined ? [] :  this.selectedTourney.offenderPlayers;
+        this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
     }
 
     private updateTourney(): void {
@@ -169,6 +178,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.updateTourney();
         this.selectedDefenderToAdd = undefined;
         this.filteredDefenderPlayers = [];
+        this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
     }
 
     addJolly() {
@@ -206,6 +218,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.updateTourney();
         this.selectedJollyToAdd = undefined;
         this.filteredJollyPlayers = [];
+        this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
     }
 
     addOffender() {
@@ -243,6 +258,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.updateTourney();
         this.selectedOffenderToAdd = undefined;
         this.filteredOffenderPlayers = [];
+        this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
     }
 
     private doSavePlayer(newPlayer : Player) {

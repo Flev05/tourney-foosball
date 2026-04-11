@@ -77,27 +77,30 @@
               <div style="margin-bottom: 10px;">
                 @if (loginService.isUserAllowed()) {
                   <p-checkbox name="terminatedRoundsGroupname"
-                    label="Gironi terminati"
+                    inputId="terminatedRoundsGroupnameId"
                     pTooltip="Selezionare solo quando tutti i gironi sono terminati"
                     value="terminatedRounds"
                     [(ngModel)]="selectedTourney.terminatedRounds"
                     (onChange)="onTerminateRoundChange($event)" >
                   </p-checkbox>
+                  <label for="terminatedPlayoffsGroupnameId" class="mb-0">
+                    Gironi terminati
+                  </label>
                 }
+                <button type="button"
+                  icon="pi pi-file-pdf"
+                  pButton (click)="printPdfMeeting()"
+                  label="Incontri"
+                  class="ui-button-success">
+                </button>
+                <button type="button"
+                  icon="pi pi-file-pdf"
+                  pButton (click)="printPdfClassification()"
+                  label="Classifica"
+                  class="ui-button-success"
+                  style="margin-left: 5mm;">
+                </button>
               </div>
-              <button type="button"
-                icon="pi pi-file-pdf"
-                pButton (click)="printPdfMeeting()"
-                label="Incontri"
-                class="ui-button-success">
-              </button>
-              <button type="button"
-                icon="pi pi-file-pdf"
-                pButton (click)="printPdfClassification()"
-                label="Classifica"
-                class="ui-button-success"
-                style="margin-left: 5mm;">
-              </button>
             </ng-template>
           </p-table>
         </p-tabpanel>
@@ -134,12 +137,15 @@
             @if (loginService.isUserAllowed()) {
               <ng-template pTemplate="summary">
                 <p-checkbox name="terminatedPlayoffsGroupname"
-                  label="Playoff terminati"
+                  inputId="terminatedPlayoffsGroupnameId"
                   pTooltip="Selezionare solo quando tutti i gironi di PLAYOFF sono terminati"
                   value="terminatedRounds"
                   [(ngModel)]="selectedTourney.terminatedPlayoffs"
                   (onChange)="onTerminatePlayoffChange($event)">
                 </p-checkbox>
+                <label for="terminatedPlayoffsGroupnameId" class="mb-0">
+                  Playoff terminati
+                </label>
               </ng-template>
             }
             <ng-template pTemplate="summary">
@@ -304,7 +310,7 @@
         </p-tabpanel>
       }
       <p-tabpanel [value]="5" title="Teams({{selectedTourney.teams.length}})">
-        <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="tourneyTeams"></app-team-table>
+        <app-team-table [addTeamEnabled]="true" [tourneyTeams]="true" [chaosEnabled]="selectedTourney.chaosEnabled"></app-team-table>
       </p-tabpanel>
     </p-tabpanels>
 </p-tabs>

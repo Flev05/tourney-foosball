@@ -57,7 +57,6 @@ const classificationLabel = "°";
   providedIn: 'root'
 })
 export class TourneyService extends AbstractService {
-
     public FIRST_COMBO_ITEM: Combobox =  { label: "Seleziona", value: 0 };
 
     tourneys: Tourney[] = []; 
@@ -82,7 +81,7 @@ export class TourneyService extends AbstractService {
 
     firstTime : boolean = true;
     selectedResultTabIndex: number = 0; 
-    selectedTabIndex: number = 0; 
+    selectedTabIndex: number; 
     private sequenceNumber: number = 1000;
     playoffsConfig: boolean = false;
 
@@ -614,7 +613,7 @@ export class TourneyService extends AbstractService {
     private updateTourneyDb (tvo: TourneyVO , selector: (err: any, caught: Observable<TourneyVO> ) => Observable<TourneyVO> ): Observable<TourneyVO> {
         let url = updateTourneyUrl;
         const json = JSON.stringify(tvo);
-        console.log(json);
+        // console.log(json);
         const ob : Observable<TourneyVO> = this.http.put<TourneyVO>(url, tvo, httpOptions);
         return ob.pipe(
             tap(_ => this.log('updated TourneyDb url=' + url)),
@@ -942,59 +941,6 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Do a simple round classification in function of each best team. 
-     * The first round will be the one with the best team having the one at the first position among all the rounds
-     * 
-     * @param rounds the round list to sort
-     
-    public simpleRoundClassificationDeprecated(rounds: Array<Round>):  Array<Round> {
-         let sortedRounds: Array<Round> = rounds.sort((r1, r2) => {
-            let c1: Array<Classification> = r1.classification;
-            let c2: Array<Classification> = r2.classification;
-            // Sort on the points basis
-            if( c1[0].points > c2[0].points) {
-                return 1;
-            };
-            if( c1[0].points < c2[0].points) {
-                return -1;
-            };
-            if( c1[0].points  == c2[0].points) {
-                // Sort on the matches played basis
-                if(c1[0].played > c2[0].played ) {
-                    return 1;
-                }
-                if(c1[0].played < c2[0].played ) {
-                    return -1;
-                }
-                // Sort on the Goals diff basis
-                if(c1[0].goalsDiff > c2[0].goalsDiff ) {
-                    return 1;
-                }
-                if(c1[0].goalsDiff < c2[0].goalsDiff ) {
-                    return -1;
-                }
-                // Sort on the Goals done basis
-                if(c1[0].goalsDone > c2[0].goalsDone ) {
-                    return 1;
-                }
-                if(c1[0].goalsDone < c2[0].goalsDone ) {
-                    return -1;
-                }
-                // Sort on the Goals Conceded basis
-                if(c1[0].goalsConceded > c2[0].goalsConceded ) {
-                    return 1;
-                }
-                if(c1[0].goalsConceded < c2[0].goalsConceded ) {
-                    return -1;
-                }
-                return 0;
-            };
-        });
-        return sortedRounds;
-    }
-    */
-
-    /**
      * Returns a simple team classification on all the received rounds as packing the 1° positions, the 2° posistion,
      * the 3° positions, and so on. 
      * 
@@ -1088,15 +1034,6 @@ export class TourneyService extends AbstractService {
         round.classification = classificationList;
     }
 
-    // public cloneRounds(rounds: Round[]): Round[] {
-    //     let clonedRounds: Array<Round> = new Array<Round>();
-    //     for(let r of rounds) {
-    //         let newRound = this.cloneRound(r);
-    //         clonedRounds.push(newRound);
-    //     }
-    //     return clonedRounds;
-    // }
-
     public cloneRound(r: Round) : Round {
         let newRound : Round = { direction: r.direction
         , id: r.id
@@ -1179,26 +1116,7 @@ export class TourneyService extends AbstractService {
         }
         return cloneClassifications; 
     }
-
-    // public cloneClassification(c: Classification) : Classification {
-    //     let nc : Classification = new Classification();
-    //     nc.id = c.id;
-    //     nc.balanced = c.balanced;
-    //     nc.teamName = c.teamName;
-    //     nc.points = c.points;
-    //     nc.played = c.played;
-    //     nc.won = c.won;
-    //     nc.lost = c.lost;
-    //     nc.balanced = c.balanced;
-    //     nc.penalty = c.penalty;
-    //     nc.goalsDone = c.goalsDone;
-    //     nc.goalsDiff = c.goalsDiff;
-    //     nc.goalsConceded = c.goalsConceded;
-    //     nc.notResolveble = c.notResolveble;
-    //     nc.roundIndex = c.roundIndex;
-    //     return nc;
-    // }
-
+ 
     /**
      * Prepares the classification relatid to the selected eliminaory 
      */
@@ -1369,7 +1287,6 @@ export class TourneyService extends AbstractService {
      *   Prepares the classification rows for Round, Playoff  and Eliminatoryformat  
      */
      prepareRoundsGui(maxMatchesPerMeeting : number, rounds: Round[]): any[] {
-
         let row : number = 0;
         let rows: any[] = [];
 
@@ -1416,7 +1333,6 @@ export class TourneyService extends AbstractService {
      *  Prepares the classification rows for Eliminatory format  
      */
     prepareEliminatoryRoundsGui(rounds: Round[]): any[] {
-
         let row : number = 0;
         let rows: any[] = [];
 
@@ -1451,7 +1367,6 @@ export class TourneyService extends AbstractService {
                 row++;                
             }
         }
-
         return rows;
     }
 
@@ -1469,7 +1384,6 @@ export class TourneyService extends AbstractService {
         }
         return new TourneyVO();
     }
-
 
     public cleanRoundMeeting(t: Tourney): Tourney  {
         for(let r of t.roundVO.rounds) {
@@ -1524,5 +1438,249 @@ export class TourneyService extends AbstractService {
     public makeClassificationName(sc: Classification, roundName: string): void {
         this.selectedClassificationRow =  sc;
         this.classificationName = roundName ;
+    }
+
+    /**
+     * Change the team name in every tourney structure received as parameter
+     *     roundVO                    : RoundVO = new RoundVO();
+         playoffVO                  : PlayoffVO = new PlayoffVO();
+         playoutVO                  : PlayoffVO = new PlayoffVO();
+     
+         eliminatoryLevels          : Array<EliminatoryLevel> = [];
+         eliminatoryBLevels         : Array<EliminatoryLevel>  = [];
+
+     * @param selectedTourney 
+     */
+    public updateEveryThinkOnTeamChange(selectedTourney: Tourney, previousTeamName : string, newTeamName : string) {
+        const ttIndex = selectedTourney.teams.findIndex(t => t.teamName === previousTeamName);
+        if (ttIndex !== -1) {
+            selectedTourney.teams[ttIndex].teamName = newTeamName;
+        }  
+        if( selectedTourney.roundVO ) {
+            let rounds = selectedTourney.roundVO.rounds;
+            for( let r of rounds ) {
+                const ttIndex = r.teamNames.findIndex(t => t === previousTeamName);
+                if (ttIndex !== -1) {
+                    r.teamNames[ttIndex] = newTeamName;
+                } 
+                if( r.classification ) {
+                    for( let c of r.classification ) {
+                        if( c.teamName === previousTeamName ) {
+                            c.teamName = newTeamName;
+                        }
+                    }
+                }
+                if( r.onewayMeetings ) {
+                    for( let m of r.onewayMeetings) {
+                        if( m.teamName1 === previousTeamName ) {
+                            m.teamName1 = newTeamName;
+                        }        
+                        if( m.teamName2 === previousTeamName ) {
+                            m.teamName2 = newTeamName;
+                        }        
+                        let observer = this.meetingService.saveRoundMeetingDb(m, selectedTourney.id, r.id, e => {});
+                        observer.subscribe(m => {}, e => {});
+                    }
+                }
+                if( r.roundtripMeetings ){
+                    for( let m of r.roundtripMeetings) {
+                        if( m.teamName1 === previousTeamName ) {
+                            m.teamName1 = newTeamName;
+                        }        
+                        if( m.teamName2 === previousTeamName ) {
+                            m.teamName2 = newTeamName;
+                        }        
+                        let observer = this.meetingService.saveRoundMeetingDb(m, selectedTourney.id, r.id, e => {});
+                        observer.subscribe(m => {}, e => {});
+                    }        
+                }
+            }        
+        }
+        if( selectedTourney.playoffVO ) {
+            let playoffs = selectedTourney.playoffVO.playoffs;
+            if( playoffs ) {
+                for( let po of playoffs ) {
+                    if( po.round ) {
+                        const ttIndex = po.round.teamNames.findIndex(t => t === previousTeamName);
+                        if (ttIndex !== -1) {
+                            po.round.teamNames[ttIndex] = newTeamName;
+                        } 
+                        if( po.round.classification ) {
+                            for( let c of po.round.classification ) {
+                                if( c.teamName === previousTeamName ) {
+                                    c.teamName = newTeamName;
+                                }
+                            }
+                        }
+                        if( po.round.onewayMeetings ){
+                            for( let m of po.round.onewayMeetings) {
+                                if( m.teamName1 === previousTeamName ) {
+                                    m.teamName1 = newTeamName;
+                                }        
+                                if( m.teamName2 === previousTeamName ) {
+                                    m.teamName2 = newTeamName;
+                                }        
+                                let observer = this.meetingService.savePlayoffMeetingDb(m, selectedTourney.id, po.round.id, e => {});
+                                observer.subscribe(m => {}, e => {});
+                            }        
+                        }
+                        if( po.round.roundtripMeetings ){
+                            for( let m of po.round.roundtripMeetings) {
+                                if( m.teamName1 === previousTeamName ) {
+                                    m.teamName1 = newTeamName;
+                                }        
+                                if( m.teamName2 === previousTeamName ) {
+                                    m.teamName2 = newTeamName;
+                                }
+                                let observer = this.meetingService.savePlayoffMeetingDb(m, selectedTourney.id, po.round.id, e => {});
+                                observer.subscribe(m => {}, e => {});     
+                            }        
+                        }
+                    }
+                }                    
+            }
+        }
+        if( selectedTourney.playoutVO ) {
+            let playouts = selectedTourney.playoutVO.playoffs;
+            if( playouts ) {
+                for( let po of playouts ) {
+                    if( po.round ) {
+                        const ttIndex = po.round.teamNames.findIndex(t => t === previousTeamName);
+                        if (ttIndex !== -1) {
+                            po.round.teamNames[ttIndex] = newTeamName;
+                        } 
+                        if( po.round.classification ) {
+                            for( let c of po.round.classification ) {
+                                if( c.teamName === previousTeamName ) {
+                                    c.teamName = newTeamName;
+                                }
+                            }
+                        }
+                        if( po.round.onewayMeetings ){
+                            for( let m of po.round.onewayMeetings) {
+                                if( m.teamName1 === previousTeamName ) {
+                                    m.teamName1 = newTeamName;
+                                }        
+                                if( m.teamName2 === previousTeamName ) {
+                                    m.teamName2 = newTeamName;
+                                }        
+                                let observer = this.meetingService.savePlayoutMeetingDb(m, selectedTourney.id, po.round.id, e => {});
+                                observer.subscribe(m => {}, e => {});     
+                            }        
+                        }
+                        if( po.round.roundtripMeetings ){
+                            for( let m of po.round.roundtripMeetings) {
+                                if( m.teamName1 === previousTeamName ) {
+                                    m.teamName1 = newTeamName;
+                                }        
+                                if( m.teamName2 === previousTeamName ) {
+                                    m.teamName2 = newTeamName;
+                                }        
+                                let observer = this.meetingService.savePlayoutMeetingDb(m, selectedTourney.id, po.round.id, e => {});
+                                observer.subscribe(m => {}, e => {});     
+                            }        
+                        }
+                    }
+                }        
+            }
+        }
+        if( selectedTourney.eliminatoryLevels ) {
+            let elList : EliminatoryLevel[] = selectedTourney.eliminatoryLevels;   
+            if( elList ) {
+                for( let el of elList ) {
+                    let eList = el.eliminatories;
+                    if( elList ) {
+                        for( let e of eList ) {
+                            if( e.round ) {
+                                const ttIndex = e.round.teamNames.findIndex(t => t === previousTeamName);
+                                if (ttIndex !== -1) {
+                                    e.round.teamNames[ttIndex] = newTeamName;
+                                } 
+                                if( e.round.classification ) {
+                                    for( let c of e.round.classification ) {
+                                        if( c.teamName === previousTeamName ) {
+                                            c.teamName = newTeamName;
+                                        }
+                                    }
+                                }
+                                if( e.round.onewayMeetings ) {
+                                    for( let m of e.round.onewayMeetings) {
+                                        if( m.teamName1 === previousTeamName ) {
+                                            m.teamName1 = newTeamName;
+                                        }        
+                                        if( m.teamName2 === previousTeamName ) {
+                                            m.teamName2 = newTeamName;
+                                        }
+                                        let observer = this.meetingService.saveEliminatoryMeetingDb(m, selectedTourney.id, e.round.id, e => {});
+                                        observer.subscribe(m => {}, e => {});     
+                                    }
+                                } 
+                                if( e.round.roundtripMeetings ) {
+                                    for( let m of e.round.roundtripMeetings) {
+                                        if( m.teamName1 === previousTeamName ) {
+                                            m.teamName1 = newTeamName;
+                                        }        
+                                        if( m.teamName2 === previousTeamName ) {
+                                            m.teamName2 = newTeamName;
+                                        }        
+                                        let observer = this.meetingService.saveEliminatoryMeetingDb(m, selectedTourney.id, e.round.id, e => {});
+                                        observer.subscribe(m => {}, e => {});     
+                                    }
+                                } 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if( selectedTourney.eliminatoryBLevels ) {
+            let elList : EliminatoryLevel[] = selectedTourney.eliminatoryBLevels;   
+            if( elList ) {
+                for( let el of elList ) {
+                    let eList = el.eliminatories;
+                    if( elList ) {
+                        for( let e of eList ) {
+                            if( e.round ) {
+                                const ttIndex = e.round.teamNames.findIndex(t => t === previousTeamName);
+                                if (ttIndex !== -1) {
+                                    e.round.teamNames[ttIndex] = newTeamName;
+                                } 
+                                if( e.round.classification ) {
+                                    for( let c of e.round.classification ) {
+                                        if( c.teamName === previousTeamName ) {
+                                            c.teamName = newTeamName;
+                                        }
+                                    }
+                                }
+                                if( e.round.onewayMeetings ) {
+                                    for( let m of e.round.onewayMeetings) {
+                                        if( m.teamName1 === previousTeamName ) {
+                                            m.teamName1 = newTeamName;
+                                        }        
+                                        if( m.teamName2 === previousTeamName ) {
+                                            m.teamName2 = newTeamName;
+                                        }        
+                                        let observer = this.meetingService.saveEliminatoryBMeetingDb(m, selectedTourney.id, e.round.id, e => {});
+                                        observer.subscribe(m => {}, e => {});     
+                                    }
+                                } 
+                                if( e.round.roundtripMeetings ) {
+                                    for( let m of e.round.roundtripMeetings) {
+                                        if( m.teamName1 === previousTeamName ) {
+                                            m.teamName1 = newTeamName;
+                                        }        
+                                        if( m.teamName2 === previousTeamName ) {
+                                            m.teamName2 = newTeamName;
+                                        }        
+                                        let observer = this.meetingService.saveEliminatoryBMeetingDb(m, selectedTourney.id, e.round.id, e => {});
+                                        observer.subscribe(m => {}, e => {});     
+                                    }
+                                } 
+                            }
+                        } 
+                    }
+                }
+            }            
+        }
     }
 }

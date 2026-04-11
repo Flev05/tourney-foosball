@@ -255,7 +255,6 @@ export class MeetingDetailView extends AbstractDetailView {
         this.save(true);
     }
 
-
     plus1(m: Match): void {
         this.selectedMeeting.status = MeetingStatus.InProgress;
         let ii = m.id;

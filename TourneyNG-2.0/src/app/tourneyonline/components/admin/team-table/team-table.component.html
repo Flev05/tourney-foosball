@@ -73,16 +73,16 @@
     @if (!loginService.isFollower() && addTeamEnabled) {
         <ng-template pTemplate="caption">
           <div style="text-align:center">
-            <button pButton icon="pi pi-plus" type="button" (click)="newTeam()" label="Nuova Squadra" ></button>
+            <button pButton icon="pi pi-plus" type="button" (click)="newTeam()" label="Aggiungi Squadra" ></button>
           </div>
         </ng-template>
     }
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th style="width: 15mm;">N°</th>
-        <th>Nome</th>
-          <th>Indirizzo</th>
-          <th>ASD</th>
+        <th style="text-align: center;">Nome</th>
+        <th style="text-align: center;">Indirizzo</th>
+        <th style="text-align: center;">ASD</th>
         @if (!loginService.isFollower() && addTeamEnabled) {
           <th style="width: 15mm;"></th>
         }

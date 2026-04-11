@@ -186,12 +186,12 @@ export class TeamTableComponent extends AbstractListView {
     
         this.teams = this.generateChaosTeams();
 
-        for( let t of this.teams ) {
-            this.teamService.saveTeam(t
-                    , t.teamName
-                    , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
-                    , () =>  {} ); 
-        }
+        // for( let t of this.teams ) {
+        //     this.teamService.saveTeam(t
+        //             , t.teamName
+        //             , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
+        //             , () =>  {} ); 
+        // }
 
         this.selectedTourney.teams = this.teams;
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);

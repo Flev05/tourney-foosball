@@ -58,7 +58,6 @@ export class TeamService {
     isRoundAutoGen: string = "";
     tourneyTeams: boolean = false;
     
-    
     constructor(private http: HttpClient
         , private clientService: ClientService
         , private playerService: PlayerService
@@ -211,7 +210,6 @@ export class TeamService {
     updateExistingTeam(selectedTeam : Team, complete: () => void) {
         this.selectedTeam = selectedTeam;
         this.selectedTeam.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
-        // this.selectedTeam.players = this.playerService.selectedPlayers;
         let tvo : TeamVO = {
             id: this.selectedTeam.id
             , teamName: this.selectedTeam.teamName
@@ -223,24 +221,25 @@ export class TeamService {
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
     }
 
-    saveTeam( selectedTeam : Team
-            , newTeamName: string
-            , message : string
-            , complete: () => void) 
-    {        
-        if( this.newTeam ) {
-            let foundTeam = this.teamPool.find( t => t.teamName.toUpperCase() == newTeamName.toUpperCase() );
-            if( foundTeam != undefined) {
-                if(!confirm(message)) {
-                    return;
-                }
-            }  
-            selectedTeam.id = null;
-        }
-
-        selectedTeam.teamName = newTeamName;
-        this.updateExistingTeam(selectedTeam, complete);
-    } 
+    // saveTeam( selectedTeam : Team
+    //         , newTeamName: string
+    //         , message : string
+    //         , complete: () => void) 
+    // {        
+    //     if( newTeamName ) {
+    //         let foundTeam = this.teamPool.find( t => t.teamName.toUpperCase() == newTeamName.toUpperCase() );
+    //         if( foundTeam != undefined) {
+    //             if( foundTeam.id !== selectedTeam.id ) {
+    //                 if(!confirm(message)) {
+    //                     return;
+    //                 }
+    //             }
+    //         }  
+    //         selectedTeam.id = null;
+    //     }
+    //     selectedTeam.teamName = newTeamName;
+    //     this.updateExistingTeam(selectedTeam, complete);
+    // } 
 
     public addMissingTeam(st: Team ): void {
         this.selectedTeam = st;

@@ -76,16 +76,15 @@
         class="ui-button-danger">
       </button>
     }
-    <button type="button"
+    <!--button type="button"
       icon="pi pi-file-excel-o"
       pButton (click)="printExcelMeeting()"
       label="Stampa"
       class="ui-button-success">
-    </button>
+    </button-->
   </div>
 
-  <p-table responsiveLayout="scroll"
-    [columns]="cols"
+  <p-table [columns]="cols"
     [value]="teams"
     [scrollable]="true"
     scrollHeight="500px">

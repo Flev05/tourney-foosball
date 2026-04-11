@@ -146,6 +146,7 @@ export class TourneyDetailView extends AbstractDetailView {
     isTeamsOrderedGroupname : boolean = false;
     
     private tabChangedIndex : number = 0;
+    // selectedTabIndex: number = 0;
 
     constructor(
         protected override location: Location,
@@ -164,7 +165,6 @@ export class TourneyDetailView extends AbstractDetailView {
         public urcService: UrcService 
     ) { 
         super(tourneyService, location);
-        this.tourneyService.selectedTabIndex = 0;
         this.tourneyService.selectedResultTabIndex = 0;
     }
 
@@ -956,12 +956,11 @@ export class TourneyDetailView extends AbstractDetailView {
     onRoundTeamsChangeNoConfirm(cb: Combobox) {
         let R: number = this.selectedTourney.selectedRoundsNumCB.value == null ? 0 : this.selectedTourney.selectedRoundsNumCB.value;
         let T: number = this.selectedTourney.teams.length;
-        
-        let randomTeams = this.prepareTourneyTeams(T, R);
-
+              
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
-
+        
+        let randomTeams = this.prepareTourneyTeams(T, R);
         this.prepareTourneyRounds(R, randomTeams);
 
         for( let r of this.selectedTourney.roundVO.rounds ) {

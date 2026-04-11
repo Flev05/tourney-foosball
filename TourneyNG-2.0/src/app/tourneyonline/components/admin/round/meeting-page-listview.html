@@ -45,7 +45,6 @@
       <p-tabpanel [value]="0" title="ANDATA ({{allDaysNo}} giornate)">
         <p-table [columns]="cols"
           [value]="onewayMeetings"
-          responsiveLayout="scroll"
           selectionMode="single"
           [(selection)]="selectedRow"
           (onRowSelect)="onRowSelect($event)"

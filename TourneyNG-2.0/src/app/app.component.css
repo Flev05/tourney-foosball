@@ -15,6 +15,12 @@
     z-index: 999;
     /* ... your other sidebar styles ... */
     transition: transform 0.3s; /* Smooth sliding */
+    color: var(--text-color);
+}
+
+/* Ensure labels inside the grid are visible */
+#layout-sidebar .grid {
+    color: var(--text-color);
 }
 
 #layout-topbar {
@@ -29,4 +35,17 @@
     width: 100%;
     z-index: 1000; /* Highest priority */
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+}
+
+/* Target the span and icon inside an active menu item */
+.active-menuitem span, 
+.active-menuitem i {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
+
+/* Optional: if the active background is too bright, 
+   you can force a subtle background instead */
+.active-menuitem {
+    background-color: var(--surface-hover) !important;
 }

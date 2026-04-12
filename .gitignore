@@ -30,6 +30,8 @@ atlassian-ide-plugin.xml
 *.log
 build.metadata
 
+**/.vscode
+**/.angular
 **/.project
 **/.classpath
 **/.settings/
@@ -55,10 +57,10 @@ build.metadata
 **/gradle.properties
 **/local.properties
 **/dist/
-**/TourneyNG-2.0/e2e/
 **/TourneyNG/src/assets/components/
+**/TourneyNG/src/app/components/
+**/TourneyNG-2.0/e2e/
 **/TourneyNG-2.0/src/assets/showcase/favicon/
 **/TourneyNG-2.0/src/assets/showcase/images/
 **/TourneyNG-2.0/src/app/components/
-#**/TourneyNG/src/app/components/
 

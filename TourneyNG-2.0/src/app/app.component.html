@@ -1,219 +1,215 @@
-<div>
-  <!-- ================= TOPBAR ================= -->
-  <div id="layout-topbar" class="flex align-items-center justify-content-between px-3">
-    <a class="menu-button" (click)="onMenuButtonClick($event)">
-      <i class="pi pi-bars"></i>
+<!-- ================= TOPBAR ================= -->
+<div id="layout-topbar" class="flex align-items-center justify-content-between px-3">
+  <a class="menu-button" (click)="onMenuButtonClick($event)">
+    <i class="pi pi-bars"></i>
+  </a>
+  <a class="logo" routerLink="/">
+    <img alt="logo"
+      src="assets/showcase/images/logoTorneiNG.png"
+      class="app-logo" />
     </a>
-    <a class="logo" routerLink="/">
-      <img alt="logo"
-        src="assets/showcase/images/logoTorneiNG.png"
-        class="app-logo" />
-      </a>
-    </div>
+  </div>
 
-    <!-- ================= SIDEBAR ================= -->
-    <div id="layout-sidebar" 
-      [class.active]="menuActive"
-      class="surface-overlay border-right-1 surface-border shadow-2">
-      @if (loginService.isUserLogged) {
-        <p>
-          Utente [{{ loginService.userLogged.username }}]
-        </p>
-      }
+  <!-- ================= SIDEBAR ================= -->
+  <div id="layout-sidebar" 
+    [class.active]="menuActive"
+    class="surface-overlay border-right-1 surface-border shadow-2 text-color">
+    @if (loginService.isUserLogged) {
+      <p class="px-3 py-2 font-bold">
+        Utente [{{ loginService.userLogged.username }}]
+      </p>
+    }
 
-      <!-- CLIENT SELECT -->
-      @if (clientsCBEnabled()) {
-        <div class="grid">
-          <div class="col-4">Cliente:</div>
-          <div class="col-8">
-            <p-select
-              [options]="clientOptions"
-              [(ngModel)]="selectedClientOption"
-              optionLabel="label"
-              (onChange)="onClientChange($event)">
-            </p-select>
-          </div>
+    <!-- CLIENT SELECT -->
+    @if (clientsCBEnabled()) {
+      <div class="grid p-3 text-color">
+        <div class="col-4 flex align-items-center">Cliente:</div>
+        <div class="col-8">
+          <p-select
+            [options]="clientOptions"
+            [(ngModel)]="selectedClientOption"
+            optionLabel="label"
+            (onChange)="onClientChange($event)"
+            class="w-full">
+          </p-select>
         </div>
-      }
+      </div>
+    }
 
-      <!-- ================= HOME MENU ================= -->
-      @if (!loginService.isUserLogged) {
-        <div class="layout-menu">
-          <a (click)="toggleMenu('home')"
-            [class.active-menuitem]="activeMenuId === 'home'">
-            <i class="pi pi-home mr-2"></i>
-            <span>HOME</span>
-          </a>
-          @if (activeMenuId === 'home') {
-            <div>
-              <a routerLink="/demo" (click)="menuActive=false">• Demo</a>
-              <a routerLink="/lease" (click)="menuActive=false">• Noleggio</a>
-            </div>
-          }
-        </div>
-      }
-
-      <!-- ================= ADMIN ================= -->
-      @if (loginService.isSuperUser()) {
-        <div class="layout-menu">
-          <a (click)="toggleMenu('admin')"
-            [class.active-menuitem]="activeMenuId === 'admin'">
-            <i class="pi pi-cog mr-2"></i>
-            @if (loginService.isAtLeastOwner()) {
-              <span>Clienti/Utenti</span>
-            }
-            @if (loginService.isAdmin()) {
-              <span>Reset Password</span>
-            }
-          </a>
-          @if (activeMenuId === 'admin') {
-            <div>
-              @if (loginService.isDeveloper()) {
-                <a routerLink="/clients" (click)="menuActive=false">• Clienti</a>
-              }
-              @if (loginService.isAtLeastOwner()) {
-                <a routerLink="/users" (click)="menuActive=false">• Utenti</a>
-              }
-              @if (loginService.isAtLeastOwner()) {
-                <a routerLink="/users/urclv" (click)="menuActive=false">• Utenti/Clienti</a>
-              }
-              @if (loginService.isAtLeastAdmin()) {
-                <a routerLink="/users/resetPasswordLv" (click)="menuActive=false">• Reset Password</a>
-              }
-            </div>
-          }
-        </div>
-      }
-
-      <!-- ================= CONFIG ================= -->
-      @if (loginService.isUserAllowed()) {
-        <div class="layout-menu">
-          <a (click)="toggleMenu('config')"
-            [class.active-menuitem]="activeMenuId === 'config'">
-            <i class="pi pi-sliders-h mr-2"></i>
-            <span>Tornei/Squadre/Giocatori</span>
-          </a>
-          @if (activeMenuId === 'config') {
-            <div>
-              <a routerLink="/admintourney" (click)="menuActive=false">• Tornei</a>
-              <a routerLink="/adminplayer" (click)="menuActive=false">• Giocatori</a>
-              <a routerLink="/adminteam" (click)="menuActive=false">• Squadre</a>
-            </div>
-          }
-        </div>
-      }
-
-      <!-- ================= RESULTS ================= -->
+    <!-- ================= HOME MENU ================= -->
+    @if (!loginService.isUserLogged) {
       <div class="layout-menu">
-        <a (click)="toggleMenu('results')"
-          [class.active-menuitem]="activeMenuId === 'results'">
-          <i class="pi pi-chart-bar mr-2"></i>
-          <span>Risultati/Classifica</span>
+        <a (click)="toggleMenu('home')"
+          [class.active-menuitem]="activeMenuId === 'home'"
+          class="text-color-secondary no-underline hover:text-primary transition-colors">
+          <i class="pi pi-home mr-2" 
+            [style.color]="activeMenuId === 'home' ? 'var(--primary-color)' : 'var(--text-color)'">
+          </i>
+          <span class="font-medium" 
+            [style.color]="activeMenuId === 'home' ? 'var(--primary-color)' : 'var(--text-color)'">
+            HOME
+          </span>
         </a>
-        @if (activeMenuId === 'results') {
-          <div>
-            <a routerLink="/showtourney" (click)="menuActive=false">• Tornei</a>
-          </div>
-        }
-      </div>
-
-      <div class="layout-menu">
-        @if (!loginService.isUserLogged) {
-          <a (click)="toggleMenu('auth')"
-            [class.active-menuitem]="activeMenuId === 'auth'">
-            <i class="pi pi-sign-in"></i>
-            <span>Login</span>
-          </a>
-          @if (activeMenuId === 'auth') {          
-            <div>
-              <a routerLink="/login" (click)="menuActive=false">
-                <i class="pi pi-sign-in"></i>
-                Login
-              </a>
-            </div>
-          }
-        }
-
-        @if (loginService.isUserLogged) {
-          <a (click)="toggleMenu('auth')"
-            [class.active-menuitem]="activeMenuId === 'auth'">
-            <i class="pi pi-sign-out"></i>
-            <span>Logout</span>
-          </a>
-
-          @if (activeMenuId === 'auth') {          
-            <div>
-              <a (click)="logout($event)">
-                <i class="pi pi-sign-out"></i>
-                Logout
-              </a>
-               @if (!loginService.isFollower()) {
-                  <a
-                    routerLink="/users/changePassword"
-                    (click)="menuActive=false">
-                    <i class="pi pi-key"></i>
-                    Password
-                  </a>
-                }
-            </div>
-          }
-        }
-      </div>
-
-
-      <!-- ================= LOGIN / LOGOUT ================= 
-      <div class="layout-menu">
-        <a (click)="toggleMenu('auth')"
-          [class.active-menuitem]="activeMenuId === 'auth'">
-          <span>{{ loginService.isUserLogged ? 'Logout' : 'Login' }}</span>
-        </a>
-        @if (activeMenuId === 'auth') {
-          <div>
-            @if (!loginService.isUserLogged) {
-              <a routerLink="/login" (click)="menuActive=false">
-                <i class="pi pi-sign-in"></i>
-                Login
-              </a>
-            }
-            @if (loginService.isUserLogged) {
-              <a (click)="logout($event)">
-                <i class="pi pi-sign-out"></i>
-                Logout
-              </a>
-            }
-            @if (loginService.isUserLogged && !loginService.isFollower()) {
-              <a
-                routerLink="/users/changePassword"
-                (click)="menuActive=false">
-                • Password
-              </a>
-            }
-          </div>
-        }
-      </div>
--->
-
-    </div>
-
-    <!-- ================= CONTENT ================= -->
-    <div id="layout-content">
-
-      <router-outlet></router-outlet>
-
-      @if (!loginService.isUserLogged) {
-        <div class="layout-footer text-center p-3">
-          <p>Tournaments 2.0</p>
-          <p>Copyright © {{ loginService.currentYear }}</p>
-          <p>Powered by Luciano Martino</p>
-          <a routerLink="/lease" class="p-button p-button-text">
-            Noleggio
-          </a>
-          <div class="mt-3">
-            <a href="https://www.facebook.com/CalcioBalillaPregnana/">
-              <i class="pi pi-facebook"></i>
+        @if (activeMenuId === 'home') {
+          <div class="ml-4 flex flex-column gap-2 mt-2">
+            <a routerLink="/demo" 
+              (click)="menuActive=false" 
+              class="text-color-secondary no-underline hover:text-primary transition-colors">
+              • Demo
+            </a>
+            <a routerLink="/lease" 
+              (click)="menuActive=false" 
+              class="text-color-secondary no-underline hover:text-primary transition-colors">
+              • Noleggio
             </a>
           </div>
+        }
+      </div>
+    }
+
+    <!-- ================= ADMIN ================= -->
+    @if (loginService.isSuperUser()) {
+      <div class="layout-menu border-top-1 surface-border pt-2 mt-2">
+        <a (click)="toggleMenu('admin')"
+          [class.active-menuitem]="activeMenuId === 'admin'"
+          class="text-color-secondary no-underline hover:text-primary transition-colors">          
+          <i class="pi pi-cog mr-2"></i>
+          @if (loginService.isAtLeastOwner()) {
+            <span class="font-medium text-color">Clienti/Utenti</span>
+          }
+          @if (loginService.isAdmin()) {
+            <span class="font-medium text-color">Reset Password</span>
+          }
+        </a>
+        @if (activeMenuId === 'admin') {
+          <div class="ml-4 flex flex-column gap-2 mt-1">
+            @if (loginService.isDeveloper()) {
+              <a routerLink="/clients" (click)="menuActive=false" 
+                class="text-color-secondary no-underline hover:text-primary p-2 transition-colors">
+                • Clienti
+              </a>
+            }
+            @if (loginService.isAtLeastOwner()) {
+              <a routerLink="/users" (click)="menuActive=false" 
+                class="text-color-secondary no-underline hover:text-primary p-2 transition-colors">
+                • Utenti
+              </a>
+            }
+            @if (loginService.isAtLeastOwner()) {
+              <a routerLink="/users/urclv" (click)="menuActive=false" 
+                class="text-color-secondary no-underline hover:text-primary p-2 transition-colors">
+                • Utenti/Clienti
+              </a>
+            }
+            @if (loginService.isAtLeastAdmin()) {
+              <a routerLink="/users/resetPasswordLv" (click)="menuActive=false" 
+                class="text-color-secondary no-underline hover:text-primary p-2 transition-colors">
+                • Reset Password
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ================= CONFIG ================= -->
+    @if (loginService.isUserAllowed()) {
+      <div class="layout-menu">
+        <a (click)="toggleMenu('config')"
+          [class.active-menuitem]="activeMenuId === 'config'"
+          class="text-color-secondary no-underline hover:text-primary transition-colors">
+          <i class="pi pi-cog mr-2"></i>
+          <span class="font-medium text-color">Tornei/Squadre/Giocatori</span>
+        </a>
+        @if (activeMenuId === 'config') {
+          <div>
+            <a routerLink="/admintourney" (click)="menuActive=false">• Tornei</a>
+            <a routerLink="/adminplayer" (click)="menuActive=false">• Giocatori</a>
+            <a routerLink="/adminteam" (click)="menuActive=false">• Squadre</a>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ================= RESULTS ================= -->
+    <div class="layout-menu">
+      <a (click)="toggleMenu('results')"
+        [class.active-menuitem]="activeMenuId === 'results'"
+        class="text-color-secondary no-underline hover:text-primary transition-colors">
+        <i class="pi pi-chart-bar mr-2"></i>
+        <span class="font-medium text-color">Risultati/Classifica</span>
+      </a>
+      @if (activeMenuId === 'results') {
+        <div>
+          <a routerLink="/showtourney" (click)="menuActive=false">• Tornei</a>
         </div>
+      }
+    </div>
+
+    <div class="layout-menu">
+      @if (!loginService.isUserLogged) {
+        <a (click)="toggleMenu('auth')"
+          [class.active-menuitem]="activeMenuId === 'auth'"
+          class="text-color-secondary no-underline hover:text-primary transition-colors">
+          <i class="pi pi-sign-in"></i>
+          <span class="font-medium text-color">Login</span>
+        </a>
+        @if (activeMenuId === 'auth') {          
+          <div>
+            <a routerLink="/login" (click)="menuActive=false">
+              <i class="pi pi-sign-in"></i>
+              Login
+            </a>
+          </div>
+        }
+      }
+
+      @if (loginService.isUserLogged) {
+        <a (click)="toggleMenu('auth')"
+          [class.active-menuitem]="activeMenuId === 'auth'"
+          class="text-color-secondary no-underline hover:text-primary transition-colors">
+          <i class="pi pi-sign-out"></i>
+          <span class="font-medium text-color">Logout</span>
+        </a>
+
+        @if (activeMenuId === 'auth') {          
+          <div>
+            <a (click)="logout($event)">
+              <i class="pi pi-sign-out"></i>
+              Logout
+            </a>
+              @if (!loginService.isFollower()) {
+                <a
+                  routerLink="/users/changePassword"
+                  (click)="menuActive=false">
+                  <i class="pi pi-key"></i>
+                  Password
+                </a>
+              }
+          </div>
+        }
       }
     </div>
   </div>
+
+<!-- ================= CONTENT ================= -->
+<div id="layout-content">
+
+    <router-outlet></router-outlet>
+
+    @if (!loginService.isUserLogged) {
+      <div class="layout-footer text-center p-3">
+        <p>Tournaments 2.0</p>
+        <p>Copyright © {{ loginService.currentYear }}</p>
+        <p>Powered by Luciano Martino</p>
+        <a routerLink="/lease" class="p-button p-button-text">
+          Noleggio
+        </a>
+        <div class="mt-3">
+          <a href="https://www.facebook.com/CalcioBalillaPregnana/">
+            <i class="pi pi-facebook"></i>
+          </a>
+        </div>
+      </div>
+    }
+</div>

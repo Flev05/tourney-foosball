@@ -10,7 +10,7 @@ C:\views\EREBUS\Tourney\TourneyNG
 cat and past delle righe sotto:
 
 ###################### Begin Versione di Sviluppo ##################################
--------------------------------- ENVY HP ---------------------
+-------------------------------- ENVY HP Tourney ---------------------
 set TOURNEY_DIR=C:\views\EREBUS\Tourney
 set FE_DIR=%TOURNEY_DIR%\TourneyNG
 set BE_DIR=%TOURNEY_DIR%\TourneyBE
@@ -19,6 +19,15 @@ set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
 cd %FE_DIR%
 ng serve
 #ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
+
+-------------------------------- ENVY HP Tourney 2.0 ---------------------
+set TOURNEY_DIR=C:\views\EREBUS\Tourney
+set FE_DIR=%TOURNEY_DIR%\TourneyNG-2.0
+set BE_DIR=%TOURNEY_DIR%\TourneyBE
+set WEB_CONTENT_DIR=%BE_DIR%\WebContent
+set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
+cd %FE_DIR%
+ng serve
 
 ######################  GMKTEC -------------------------------------- 
 set TOURNEY_DIR=C:\views\EREBUS\Tourney-2.0
@@ -39,9 +48,9 @@ come descritto sopra
 
 2) Per produrre il .war di produzione, spostarsi sotto TourneyBE e lanciare lo script:
 
-mvn17.cmd
+mvn21.cmd
 
-che imposta la JVM 17, lancia mnv clean install e produrrà il file TourneyBE.war sotto target
+che imposta la JVM 21, lancia mnv clean install e produrrà il file TourneyBE.war sotto target
 
 3) Connettersi in SSH con PUTTY al server www.erebus-soft.com
 con l'utente: wildfly/<la solita short>

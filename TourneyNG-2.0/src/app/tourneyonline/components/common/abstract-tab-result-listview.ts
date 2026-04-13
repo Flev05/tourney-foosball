@@ -81,11 +81,11 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             for( let r of this.roundRows ) {
                 r.classification = this.tourneyService.sortTeamsDesc(r.classification);
                 r.classificatedTeamNames = [];
-                for(let i=0;i<r.teamNames.length; i++) {
-                    let tn = r.teamNames[i];
+                for(let i=0;i<r.classification.length; i++) {
+                    let tn = r.classification[i].teamName;
                     tn = tn.replace(/\(\d+\)/g, '');
                     if( r.classification.length > 0 && i < r.classification.length) {
-                        tn = tn + "(" + r.classification[i].points+ ")";
+                        tn = tn + "(" + r.classification[i].points + ")";
                     }
                     r.classificatedTeamNames.push(tn);
                 }

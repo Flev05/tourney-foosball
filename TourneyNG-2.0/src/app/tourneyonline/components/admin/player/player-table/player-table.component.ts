@@ -69,6 +69,7 @@ export class PlayerTableComponent extends AbstractListView {
         this.playerService.selectedPlayers = [];
         this.players = this.playerService.playerPool;    
         if( this.selectedTeam && this.selectedTeam.players ) {
+            this.selectedTeam.players = [...this.selectedTeam.players.filter(p => p.id !== null)];
             this.playerService.selectedPlayers = this.selectedTeam.players;
             // 1. Create a Set of IDs for much faster lookup
             const selectedIds = new Set(this.playerService.selectedPlayers.map(p => p.id));

@@ -67,7 +67,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let topLevelTeamNo : number = 0;
         let highestPow2Le : number  = 0;
         let playoffNo : number   = 0;
-        let isPlayoff : boolean     = false;
+        let isEliminatoryPlayoff : boolean     = false;
         for( let l=0; l < this.eliminatoryLevels.length; l++ ) {
             let el = eliminatoryLevels[l];
             if( l==0 ) {
@@ -76,19 +76,19 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 }
                 highestPow2Le =  this.levelService.highestPowerOf2LE(topLevelTeamNo); // if 18, highestPow2Le = 16
                 playoffNo = topLevelTeamNo - highestPow2Le; // 18 - 16 = 2
-                isPlayoff = playoffNo > 0;
+                isEliminatoryPlayoff = playoffNo > 0;
             }
             if( this.isStandAlone(this.selectedTourney) ) {
                 if( el.isTopLevel ) {
                     this.resolveStandaloneTopLevel(el);
                 } else {
-                    this.compileNextLevel(this.eliminatoryLevels, l, el, isPlayoff);
+                    this.compileNextLevel(this.eliminatoryLevels, l, el );
                 }
             } else {
                 if( el.isTopLevel ) {
-                    this.compileTopLevel( el, topLevelTeamNo, isPlayoff, playoffNo, highestPow2Le );
+                    this.compileTopLevel( el, topLevelTeamNo, isEliminatoryPlayoff, playoffNo, highestPow2Le );
                 } else {
-                    this.compileNextLevel(this.eliminatoryLevels, l, el, isPlayoff);
+                    this.compileNextLevel(this.eliminatoryLevels, l, el );
                 }
             }
         }
@@ -102,7 +102,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * 1) the number of eligible teams, candidate to eliminations, are not a power of 2
      * 2) the number of eligible teams, candidate to eliminations, are a perfect power of 2: like 2, 4, 8, 16, 32, ...
      * 
-     * In 1° case, we create the playoffs to eliminate the spare teams so we can have the perfect power of 2 teams. 
+     * In the 1° case, we create the playoffs to eliminate the spare teams so we can have the perfect power of 2 teams. 
      * 
      * We need of a list of the best position teams in their rounds: the list of the 1°, the list of the 2°, the 3°, and so on
      * It is necessary when we have to create the new couple between the 1-st and the winner of the playoffs. 
@@ -123,7 +123,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * to pass in the eleimination phase, we have to play 2 match: the 15-th vs the 18-th and the 16-th vs the 17-th.
      * The winners will play against the best 1-st and the 2-nd in the rounds 
      */
-     private compileTopLevel(topEl : EliminatoryLevel, topLevelTeamNo : number, isPlayoff : boolean, playoffNo : number, highestPow2Le : number ): void {
+     private compileTopLevel(topEl : EliminatoryLevel, topLevelTeamNo : number, isEliminatoryPlayoff : boolean, playoffNo : number, highestPow2Le : number ): void {
         console.log("Entering compileTopLevel(" + topEl.level +")");
         if(!this.selectedTourney.isEliminatoryAutoGen) {
             for(let e of topEl.eliminatories ) {
@@ -147,14 +147,14 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         let currentIndex : number = 0;
         let nextIndex    : number = R == 1 ? 0 : 1; // If we have only 1 round, the indexes are the same
-        if( isPlayoff )  { // we have 2 playoffs
+        if( isEliminatoryPlayoff )  { // we have 2 playoffs
             const playoffTeams : number = playoffNo * 2;
             elimNo = playoffTeams; // = 2
         } else { // the perfect power of 2, we apply the round robin schema: 
             elimNo = topLevelTeamNo;
         }
 
-        let firstLastMatrix : number[][] = this.buildFirstLastMatrix( rounds, elimNo, isPlayoff );
+        let firstLastMatrix : number[][] = this.buildFirstLastMatrix( rounds, elimNo, isEliminatoryPlayoff );
         for( let po=0; po< topEl.eliminatories.length; po++ ) {
             let currentRound : Round = rounds[currentIndex];
             let nextRound : Round = rounds[nextIndex];
@@ -261,8 +261,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * @param l  the current eliminatory level index
      * @param el the current eliminatory object to compile
      */
-    private compileNextLevel(eliminatoryLevels: Array<EliminatoryLevel>, l: number,  el: EliminatoryLevel, isPlayoff : boolean) {
-        console.log("Entering compileNextLevel(" + l + "," + isPlayoff +")");
+    private compileNextLevel(eliminatoryLevels: Array<EliminatoryLevel>, l: number,  el: EliminatoryLevel ) {
+        console.log("Entering compileNextLevel(" + l +")");
         if(this.isLevelB) {
             this.meetingService.qualifyingRounds = [];
         }
@@ -280,11 +280,11 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
         }
 
-        if( l == 1 && isPlayoff ) { // l is at least 1
-            let topEl : EliminatoryLevel = eliminatoryLevels[0];
-            const pow2LE : number =  this.levelService.highestPowerOf2LE(topEl.topLevelTeamNo); // if 18, pow2 = 16
-            const playoffNo = topEl.topLevelTeamNo - pow2LE; // 18 - 16 = 2
-            isPlayoff = playoffNo > 0;
+        let topEl : EliminatoryLevel = eliminatoryLevels[0];
+        const pow2LE : number =  this.levelService.highestPowerOf2LE(topEl.topLevelTeamNo); // if 18, pow2 = 16
+        const playoffNo = topEl.topLevelTeamNo - pow2LE; // 18 - 16 = 2
+        const isTopLevelPlayoff = playoffNo > 0;
+        if( l == 1 && isTopLevelPlayoff ) { // l is at least 1
             let rounds: Array<Round>;
             if( this.isPlayoff ) { // this is the playoff at round level, if any, not the one at elimination level
                 rounds =  this.selectedTourney.playoffVO.playoffs.map((p: { round: any; }) => {return p.round;});
@@ -292,13 +292,16 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 rounds = this.selectedTourney.roundVO.rounds;
             }
             let sortedClassificationList: Array<Classification> = this.tourneyService.getPackedBandPositions(rounds, topEl.topLevelTeamNo);
+            let firstIndex   : number = 0;
             let lastIndex    : number = topEl.topLevelTeamNo - 1; // 18 - 1 = 17
-            let firstIndex   : number =0;
 
             let playoffIndex : number = 0;
             for( let p=0; p<el.eliminatories.length; p++ ) {
                 let e: Eliminatory = el.eliminatories[p];
                 let firstClassificationTeam = sortedClassificationList[firstIndex++];
+                if( p == playoffNo ) {
+                    lastIndex = pow2LE - playoffNo - 1;
+                }
                 let lastClassificationTeam  = sortedClassificationList[lastIndex--];
                 let t1 = firstClassificationTeam.teamName;
                 let t2 : string = "";
@@ -338,28 +341,29 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let previousEliminatoryIndex: number = 0;
         for (let p = 0; p < el.eliminatories.length; p++) {
             let e = el.eliminatories[p];
+            let round = e.round;
             let prevEliminatory1: Eliminatory = previousEliminatoryLevel[previousEliminatoryIndex];
             let team1: string = this.fromClassification(prevEliminatory1, 0);
             let prevEliminatory2: Eliminatory = previousEliminatoryLevel[previousEliminatoryIndex + 1];
             let team2: string = this.fromClassification(prevEliminatory2, 0);
-            e.round.teamNames = [team1, team2];
-            e.round.classification[0].teamName = team1;
-            e.round.classification[1].teamName = team2;
+            round.teamNames = [team1, team2];
+            round.classification[0].teamName = team1;
+            round.classification[1].teamName = team2;
 
-            e.round.onewayMeetings[0].teamName1 = team1;
-            e.round.onewayMeetings[0].teamName2 = team2;
-            e.round.onewayMeetings[0].name = team1 + " - " + team2;
+            round.onewayMeetings[0].teamName1 = team1;
+            round.onewayMeetings[0].teamName2 = team2;
+            round.onewayMeetings[0].name = team1 + " - " + team2;
 
-            e.round.roundtripMeetings[0].teamName1 = team2;
-            e.round.roundtripMeetings[0].teamName2 = team1;
-            e.round.roundtripMeetings[0].name = team2 + " - " + team1;
+            round.roundtripMeetings[0].teamName1 = team2;
+            round.roundtripMeetings[0].teamName2 = team1;
+            round.roundtripMeetings[0].name = team2 + " - " + team1;
 
-            let m = e.round.onewayMeetings[0];
+            let m = round.onewayMeetings[0];
             this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
-            m = e.round.roundtripMeetings[0];
+            m = round.roundtripMeetings[0];
             this.updateVPoints(m, el.abstractRoundVO.pointsNeededToWin);
             previousEliminatoryIndex += 2;
-            this.tourneyService.createClassification(e.round, false);
+            this.tourneyService.createClassification(round, false);
         }
     }
 

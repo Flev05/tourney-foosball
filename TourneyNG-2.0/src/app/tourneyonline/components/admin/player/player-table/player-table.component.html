@@ -55,31 +55,31 @@
 
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData" [ngClass]="{'already-selected-row': isInitialMember(rowData)}">
-            <td style="width: 10mm">
+            <td style="width: 10mm" class="text-color-inherit">
                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>            
             <td style="width: 15mm; text-align: left;">{{rowIndex+1}}</td>
-            <td>
+            <td class="text-color-inherit">
                 {{rowData['playerName']}}
             </td>
-            <td>
+            <td class="text-color-inherit">
                 {{rowData['phoneNumber']}}
             </td>
-            <td>
+            <td class="text-color-inherit">
                 {{rowData['email']}}
             </td>
-            <td>
+            <td class="text-color-inherit">
                 {{rowData['code']}}
             </td>
             @if (addPlayerEnabled) { 
-                <td style="width: 15mm;" >
+                <td style="width: 15mm;" class="text-color-inherit">
                     <button class="p-button-success p-button-sm" 
                         pButton icon="pi pi-pencil"
                         (click)="doUpdate(rowData)"
                         pTooltip="Apre la vista di dettaglio del giocatore sulla riga per la modifica dei campi.">
                     </button>
                 </td>  
-                <td style="width: 15mm;">
+                <td style="width: 15mm;" class="text-color-inherit">
                     <button class="p-button-danger p-button-sm" 
                         pButton icon="pi pi-trash" 
                         (click)="doDelete(rowData)"

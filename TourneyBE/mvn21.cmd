@@ -1,4 +1,4 @@
-set JAVA_HOME=C:\bin\jdk-21.0.6
+set JAVA_HOME=C:\bin\jdk-21.0.2
 
 set MAVEN_OPTS=--add-opens jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED ^
 --add-opens jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED ^

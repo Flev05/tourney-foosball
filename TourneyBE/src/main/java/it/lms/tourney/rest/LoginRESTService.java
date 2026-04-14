@@ -65,7 +65,7 @@ public class LoginRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response doLogin(Login login) {
 
-		log.debug(logId() + "PUT: doLogin(" + login + ")");
+		log.info(logId() + "PUT: doLogin(" + login + ")");
 		Response.ResponseBuilder builder;
 
 		Map<String, String> responseObj = new HashMap<>();
@@ -73,7 +73,7 @@ public class LoginRESTService extends AbstractRESTService {
 		String username = login.getUsername();
 		String md5Pssword = login.getPassword().toUpperCase();
 
-		log.debug(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
+		log.info(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
 
 		printAuthentication();
 

@@ -1235,7 +1235,7 @@ export class TourneyService extends AbstractService {
 
             let c1: Classification | undefined = classificationMap.get(t1);
             let c2: Classification | undefined = classificationMap.get(t2);
-            if( c1 == undefined || c2 == undefined ) {
+            if( !c1 || !c2 ) {
                 console.log("c1=classificationMap.get("+ t1 +")");
                 console.log("c2=classificationMap.get("+ t2 +")");
                 continue;
@@ -1269,7 +1269,6 @@ export class TourneyService extends AbstractService {
             for (let ma of m.matches) {
                 c1.goalsDone += ma.score1;
                 c1.goalsConceded += ma.score2;
-
                 c2.goalsDone += ma.score2;
                 c2.goalsConceded += ma.score1;
             }

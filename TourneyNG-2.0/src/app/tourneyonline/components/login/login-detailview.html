@@ -16,7 +16,7 @@
         <p>
           Pagina di login per chi è già in possesso di credenziali per accedere al sistema
           di gestione dei tornei.
-        Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sotto.</p>
+          Per effetuare il login, bisogna inserire le proprie credenziali: username e password, nella form sotto.</p>
         <p>
           Se non disponete di credenziali, potete continuare ad utilizzare il sistema come utente anonimo.
           Imparate l'uso del sistema e solo in un secondo momento potete noleggiarlo per il periodo desiderato.
@@ -31,62 +31,6 @@
     </p-accordion-panel>
   </p-accordion>
 </div>
-
-<!--div class="content-section implementation">
-  <form [formGroup]="loginformGroup" (ngSubmit)="onSubmit(loginformGroup.value)">
-    <p-panel header="Form Login">
-      <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
-        <div class="grid">
-          <div class="col-2">
-            Username *:
-          </div>
-          <div class="col-6">
-            <input pInputText type="text" formControlName="username" placeholder="Obbligatoria"/>
-          </div>
-          <div class="col-4">
-            @if (!loginformGroup.controls['username'].valid && loginformGroup.controls['username'].dirty) {
-              <div class="ui-message ui-messages-error ui-corner-all"
-                >
-                <i class="pi pi-close"></i>
-                La Username è obbligatoria
-              </div>
-            }
-          </div>
-        </div>
-        <div class="grid">
-          <div class="col-2">
-            Password *:
-          </div>
-          <div class="col-6">
-            <input pInputText type="password" formControlName="password" placeholder="Obbligatoria"/>
-          </div>
-          <div class="col-4">
-            @if (!loginformGroup.controls['password'].valid && loginformGroup.controls['password'].dirty) {
-              <div class="ui-message ui-messages-error ui-corner-all"
-                >
-                <i class="pi pi-close"></i>
-                La Password è obbligatoria
-              </div>
-            }
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="col-2"></div>
-          <div class="col-6">
-            <button pButton type="submit" icon="pi pi-sign-in" label="Login" [disabled]="loginService.isUserLogged"></button>
-          </div>
-          <div class="col-4"></div>
-        </div>
-        @if (loginFailed) {
-          <div style="margin-top:30px">
-            <p-message severity="error" text="Login fallito"></p-message>
-          </div>
-        }
-      </div>
-    </p-panel>
-  </form>
-</div-->
 
 <div class="card flex justify-content-center">
     <form [formGroup]="loginformGroup" (ngSubmit)="onSubmit()" class="flex flex-column gap-4 w-full md:w-30rem">

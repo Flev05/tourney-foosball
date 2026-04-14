@@ -43,8 +43,7 @@ export class FollowerDetailView extends LoginDetailView {
     }
 
     override ngOnInit() {
-        console.log("RouteParams:");
-        console.log( this.routeParams );
+        console.log( "RouteParams: " + this.routeParams );
         const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
         subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
 

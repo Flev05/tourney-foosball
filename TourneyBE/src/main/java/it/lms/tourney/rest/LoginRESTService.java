@@ -37,16 +37,13 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 @Slf4j
 public class LoginRESTService extends AbstractRESTService {
-
 	@Inject
 	private SessionDao sessionDao;
-
 	@Inject
 	private UserDao userDao;
-
 	@Inject
 	private RoleDao roleDao;
-
+	
 	@Inject
 	@ConverterObject
 	private Converter converter;
@@ -64,7 +61,6 @@ public class LoginRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response doLogin(Login login) {
-
 		log.info(logId() + "PUT: doLogin(" + login + ")");
 		Response.ResponseBuilder builder;
 
@@ -79,17 +75,14 @@ public class LoginRESTService extends AbstractRESTService {
 
 		if (username == null || username.equals("")) {
 			String errmsg = logId() + "Username is empty, re-logging";
-			log.debug(errmsg);
-
+			log.error(errmsg);
 			responseObj = new HashMap<>();
 			responseObj.put("error", errmsg);
 			builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
 		}
 
 		try {
-
 			User u = userDao.findUserBy(username, md5Pssword);
-
 			if (u == null) {
 				String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
 				log.error(message);
@@ -119,7 +112,6 @@ public class LoginRESTService extends AbstractRESTService {
 
 			builder = Response.status(Response.Status.OK).entity(uvo);
 		} catch (Exception e) {
-
 			log.error(logId() + "Login failed", e);
 			responseObj = new HashMap<>();
 			responseObj.put("error", e.getMessage());

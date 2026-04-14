@@ -83,7 +83,7 @@ export class LoginService {
         const url = loginUrl;
         console.log("URL: " + loginUrl); 
         const json = JSON.stringify(login);
-        console.log('Payload: ', json);
+        console.log('JSON: ', json);
         console.log('Headers: ', httpOptions.headers.keys());
 
         const payload = {
@@ -91,6 +91,7 @@ export class LoginService {
             username: login.username,
             password: login.password
         };
+        console.log('Payload: ', payload);
         return this.http.put<Login>(url, payload, httpOptions).pipe(
             tap(_ => this.log(`sendLogin url=${url}  successful`)),
             catchError(selector)

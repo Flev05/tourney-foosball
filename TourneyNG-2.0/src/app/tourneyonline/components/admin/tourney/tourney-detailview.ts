@@ -51,8 +51,6 @@ const REDIRECT_OPERATORS_PL = 'adminoperator/pl';
 const ROUND_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei gironi, si perdono tutte le impostazioni preesistenti. Confermi?';
 const ROUND_CHANGE_TEAMS_POPUP = 'ATTENZIONE! Se si cambia il numero complessivo di squadre del torneo, si perdono tutte le impostazioni preesistenti. Confermi?';
 const MAX_TEAM_NUM = 50;
-const MINIMUM_TAB_INDEX = 2;
-const GENERIC_TAB_INDEX = 0;
 const MODE_TAB_INDEX = 1;
 const TEAM_TAB_INDEX = 2;
 const ROUND_TAB_INDEX = 3;
@@ -66,7 +64,6 @@ const STANDALONE_ELIMINATORY_TAB_INDEX: number = 2;
 const PLAYOFF_NUM_CHANGE_POPUP = 'ATTENZIONE! Se si cambia il numero di Playoff, si perdono tutte le impostazioni preesistenti. Confermi?';
 const PLYOFF_CHANGE_TEAMS_NUM_POPUP = 'ATTENZIONE! Se si cambia il numero di squadre per girone di Play Off, si perdono tutte le impostazioni preesistenti. Confermi?';
 const PLYOFF_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei Play Off, si perdono tutte le impostazioni preesistenti. Confermi?';
-const PLYOUT_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei Play Out, si perdono tutte le impostazioni preesistenti. Confermi?';
 const ELIM_DIR_CHANGE_TOP_LEVEL_MODE_POPUP = 'ATTENZIONE! Se si cambia il numero di squadre di partenza delle eliminazioni dirette, si perdono tutte le impostazioni preesistenti. Confermi?';
 
 

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import {  Params, ActivatedRoute, Router } from '@angular/router';
-import { LoginService } from '../../service/login-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 import { LoginDetailView } from './login-detailview';
 import { FormBuilder } from '@angular/forms';
-import { ClientService } from '../../service/client-service';
-import { Login } from '../../domain/login';
-import { TourneyService } from '../../service/tourney-service';
-import { TeamService } from '../../service/team-service';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { Login } from 'app/tourneyonline/domain/login';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
 
 const REDIRECT_RESULT_LV : string = "/result/lv";
 const DEFAULT_PASSWORD = "4A97D80A588D25719C729A43B51AA9FC"; // torneionline
@@ -30,8 +30,7 @@ export class FollowerDetailView extends LoginDetailView {
         , protected teamService : TeamService
     ) {
         super(fb,router,loginService,tourneyService,clientService,location);
-        
-        this.getRouteParams();
+        console.log( "constructor of FollowerDetailView()");
     }
 
     // Store parameter values on URL changes
@@ -43,11 +42,17 @@ export class FollowerDetailView extends LoginDetailView {
     }
 
     override ngOnInit() {
+        console.log( "Entering FollowerDetailView.ngOnInit()");
+        this.getRouteParams();
         console.log( "RouteParams: " + this.routeParams );
-        const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
-        subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
-
-        // this.loginService.blockedDocument = false;
+        let firstName = this.activatedRoute.snapshot.paramMap.get('first');
+        console.log("firstName=" + firstName);
+        if( firstName ) {
+            this.formLogin.username = firstName;
+            this.formLogin.password = DEFAULT_PASSWORD;
+            const subscr = this.loginService.sendLogin(this.formLogin, this.handleLoginError<Login>('sendLogin'));
+            subscr.subscribe(uvo=> this.onNext(uvo), e => this.onError(e) );  
+        }   
     }
 
     protected override onComplete() {

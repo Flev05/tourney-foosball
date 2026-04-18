@@ -64,19 +64,12 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         this.eliminatoryLevels = eliminatoryLevels;
         this.isLevelB = isLevelB;
 
-        let topLevelTeamNo : number = 0;
-        let highestPow2Le : number  = 0;
-        let playoffNo : number   = 0;
-        let isEliminatoryPlayoff : boolean     = false;
         for( let l=0; l < this.eliminatoryLevels.length; l++ ) {
             let el = eliminatoryLevels[l];
-            if( l==0 ) {
-                topLevelTeamNo = el.topLevelTeamNo; // the original selected number of eliminatories, like 18
+            if( el.isTopLevel ) {
                 if( isLevelB ) {
                 }
-                highestPow2Le =  this.levelService.highestPowerOf2LE(topLevelTeamNo); // if 18, highestPow2Le = 16
-                playoffNo = topLevelTeamNo - highestPow2Le; // 18 - 16 = 2
-                isEliminatoryPlayoff = playoffNo > 0;
+                // if topLevelTeamNo=16, highestPow2Le = 16, if topLevelTeamNo=[17,31], highestPow2Le = 16
             }
             if( this.isStandAlone(this.selectedTourney) ) {
                 if( el.isTopLevel ) {
@@ -86,7 +79,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 }
             } else {
                 if( el.isTopLevel ) {
-                    this.compileTopLevel( el, topLevelTeamNo, isEliminatoryPlayoff, playoffNo, highestPow2Le );
+                    const selectedTeamsNo : number = el.topLevelTeamNo; // the original selected number of eliminatories, like 18, or all
+                    this.compileTopLevel( el, selectedTeamsNo );
                 } else {
                     this.compileNextLevel(this.eliminatoryLevels, l, el );
                 }
@@ -120,10 +114,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      * on the spare teams to eliminate them and have the correct power of 2 teams.
      * 
      * Example if we have 18 teams that we want 
-     * to pass in the eleimination phase, we have to play 2 match: the 15-th vs the 18-th and the 16-th vs the 17-th.
+     * to pass in the elimination phase, we have to play 2 match: the 15-th vs the 18-th and the 16-th vs the 17-th.
      * The winners will play against the best 1-st and the 2-nd in the rounds 
      */
-     private compileTopLevel(topEl : EliminatoryLevel, topLevelTeamNo : number, isEliminatoryPlayoff : boolean, playoffNo : number, highestPow2Le : number ): void {
+     private compileTopLevel(topEl : EliminatoryLevel, selectedTeamsNo : number ): void {
         console.log("Entering compileTopLevel(" + topEl.level +")");
         if(!this.selectedTourney.isEliminatoryAutoGen) {
             for(let e of topEl.eliminatories ) {
@@ -142,19 +136,12 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
 
         this.meetingService.qualifyingRounds =  rounds;
  
-        let elimNo : number = 0;
         const R : number = rounds.length;
 
         let currentIndex : number = 0;
         let nextIndex    : number = R == 1 ? 0 : 1; // If we have only 1 round, the indexes are the same
-        if( isEliminatoryPlayoff )  { // we have 2 playoffs
-            const playoffTeams : number = playoffNo * 2;
-            elimNo = playoffTeams; // = 2
-        } else { // the perfect power of 2, we apply the round robin schema: 
-            elimNo = topLevelTeamNo;
-        }
-
-        let firstLastMatrix : number[][] = this.buildFirstLastMatrix( rounds, elimNo, isEliminatoryPlayoff );
+        
+        let firstLastMatrix : number[][] = this.buildFirstLastMatrix( rounds, selectedTeamsNo );
         for( let po=0; po< topEl.eliminatories.length; po++ ) {
             let currentRound : Round = rounds[currentIndex];
             let nextRound : Round = rounds[nextIndex];
@@ -190,65 +177,110 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     
     /**
      * Prepares a matrix Rx2 where R is the number of the round in the tournament and 2 is the number of columns
-     * containing the first and the last index in the round r to get the first and the second team to form the new
+     * containing the first and the last index in the round R to get the first and the second team to form the new
      * playoff round 
      * 
      * @param rounds  the rounds in the tournament
-     * @param teamsNo  the number of teams to manage
+     * @param selectedTeamsNo the selected number of teams to organize as playoff or a power of 2: 2, 4, 8, 16,...
      * @returns the Rx2 mantrix
      */
-    private buildFirstLastMatrix( rounds: Round[], teamsNo: number, isPlayoff : boolean ): number[][] {
-        const R : number = rounds.length;
+    private buildFirstLastMatrix( rounds: Round[], selectedTeamsNo: number): number[][] {
+        const R : number = rounds.length; // R: the number of rounds, ex = 5
         let flm : number[][] = [];
-        // from rule: n = p * q + r, where: n=playoffNo * 2, p=n / rounds.length and r is the module n % p
-        const n : number = teamsNo; // like 24 = (28 - 16 = 12) * 2 on 5 rounds and 28 teams
+        // from rule: N = n * q + r, where: n=playoffNo * 2, p=n / rounds.length and r is the module n % p
+        const n : number = selectedTeamsNo; // Ex: S = 21 for playoff, or S = 16 for perfect eliminatories
         const q : number = Math.floor(n / R); // like q=4 in 24 = pq + r = 5*4 + 4
-        const r : number = n % R;
+        const lastRemaing : number = n % R;
         let fi = 0;
-        let li : number = q;
+        let li : number = q; // ... 21 / 5 = 4
+
+        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);            
+        const playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
+        const isEliminatoryPlayoff : boolean = playoffNo > 0;
+        const playoffTeamsNo : number = playoffNo * 2; // 5 * 2 = 10
         
-        for( let i=0; i<R; i++ ) {
-            if( isPlayoff ) {
-                li = rounds[i].classification.length;
-                fi = li - q;
+        const maxTeamsPerRound : number = rounds[0].classification.length;
+        const minTeamsPerRound : number = rounds[R-1].classification.length;
+        if( rounds[0].classification.length > minTeamsPerRound ) {
+            for( let r of rounds ) {
+                if( r.classification.length > minTeamsPerRound ) {
+                    this.tourneyService.normalizeClassificationList(r);
+                }
             }
+        }
+
+        if( isEliminatoryPlayoff ) {
+            const qualifiedTeamsNo = (selectedTeamsNo - playoffTeamsNo); // Ex: 21 - 10 = 11;  
+            const firstRemaing = qualifiedTeamsNo % R;
+            fi = Math.floor(qualifiedTeamsNo / R); // ... 11 / 5 = 2
+            if( firstRemaing == 0 && fi > 0) {
+                fi--; // 2 - 1 = 1
+            }
+            if( lastRemaing == 0 && li > 0 ) {
+                li--; // ... 5 - 1 = 4
+            }
+            flm  = [];
+            for( let i=0; i<R; i++ ) {
+                let row : number[] = [];
+                row.push( fi );     // first index in the round (=2)
+                row.push( li );     // last index in the round (=5)
+                flm.push( row );    // round 0,1,2...
+            }
+
+            if( firstRemaing > 0 ) {
+                let fiBetterTeamClassification : Classification[] = [];
+                for( let i=0; i<R; i++ ) {
+                    let c : Classification = rounds[i].classification[fi];
+                    c.roundIndex = i;
+                    fiBetterTeamClassification.push(c);
+                }
+                fiBetterTeamClassification = this.tourneyService.sortTeamsDesc(fiBetterTeamClassification);                
+                const fiBestTeams = qualifiedTeamsNo % R;
+                for( let i=0; i < fiBestTeams; i++ ) { // 11 % 5 = 1;
+                    const ri = fiBetterTeamClassification[i].roundIndex;
+                    flm[ri][0]++; // increments by 1 to esclude the better teams
+                }
+            }
+            if( lastRemaing > 0 ) {
+                let liBetterTeamClassification : Classification[] = [];
+                for( let i=0; i<R; i++ ) {
+                    let c : Classification = rounds[i].classification[li];
+                    c.roundIndex = i;
+                    liBetterTeamClassification.push(c);
+                }
+                liBetterTeamClassification = this.tourneyService.sortTeamsDesc(liBetterTeamClassification);
+                const liBestTeams =  selectedTeamsNo % R; // 21 % 5 = 1
+                for( let i=0; i < R - liBestTeams; i++ ) { // 11 % 5 = 1; 5 - 1 = 4
+                    const ri = liBetterTeamClassification[i].roundIndex;
+                    flm[ri][1]--; 
+                }
+            }
+            return flm;
+        }
+
+        // No playoff, perfect power of 2
+        if( lastRemaing == 0 && li > 0 ) {
+            li--; // ... 16 / 4 = 4; 4 - 1 = 3
+        }
+
+        for( let i=0; i<R; i++ ) {
             let row : number[] = [];
-            row.push( fi );     // first index in the round
-            row.push( li - 1 ); // last index in the round
+            row.push( fi );     // first index in the round (=0)
+            row.push( li );     // last index in the round (=3)
             flm.push( row );    // round 0,1,2...
         }
-        if( r > 0 ) {
-            let minTeamsPerRound : number = rounds[R-1].classification.length;
-            if( rounds[0].classification.length > minTeamsPerRound ) {
-                for( let r of rounds ) {
-                    if( r.classification.length > minTeamsPerRound ) {
-                        this.tourneyService.normalizeClassificationList(r);
-                    }
-                }
-            }
-            let betterTeamClassification : Classification[] = [];
+        if( lastRemaing > 0 ) {
+            let liBetterTeamClassification : Classification[] = [];
             for( let i=0; i<R; i++ ) {
-                const li : number = rounds[i].classification.length;
-                let fi = li - 1;
-                if( isPlayoff ) {
-                    fi = li - q - 1;
-                }
-                const c : Classification = rounds[i].classification[fi];
+                let c : Classification = rounds[i].classification[li];
                 c.roundIndex = i;
-                betterTeamClassification.push(c);
+                liBetterTeamClassification.push(c);
             }
-            betterTeamClassification = this.tourneyService.sortTeamsDesc(betterTeamClassification);
-            if( isPlayoff ) {
-                betterTeamClassification = betterTeamClassification.reverse();
-                for( let i=0; i<r; i++ ) { // r is the remaing in N = p*q + r like 4 in: 24 = 5 * 4 + 4
-                    const ri = betterTeamClassification[i].roundIndex;
-                    flm[ri][0]--; // decrements by 1 the first index in first/last index matrix
-                }
-            } else {
-                for( let i=r; i<R; i++ ) { // r is the remaing in N = p*q + r like 4 in: 24 = 5 * 4 + 4
-                    const ri = betterTeamClassification[i].roundIndex;
-                    flm[ri][1]--; // decrements by 1 the last index in first/last index matrix
-                }
+            liBetterTeamClassification = this.tourneyService.sortTeamsDesc(liBetterTeamClassification);
+            const liBestTeams =  selectedTeamsNo % R; // 21 % 5 = 1
+            for( let i=0; i < liBestTeams; i++ ) { // 11 % 5 = 1; 5 - 1 = 4
+                const ri = liBetterTeamClassification[i].roundIndex;
+                flm[ri][1]--; // decrements by 1 to esclude the better teams
             }
         }
         return flm;

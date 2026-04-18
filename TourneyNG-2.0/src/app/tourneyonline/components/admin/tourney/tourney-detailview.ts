@@ -325,32 +325,11 @@ export class TourneyDetailView extends AbstractDetailView {
         };
     }
 
-    // private checkTeamsChanged() {
-    //     if( this.tourneyService.selectedTourney.teamsChanged ) {
-    //         let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
-    //         this.doOnRoundNumChange(cb);
-    //         this.tourneyService.selectedTourney.teamsChanged = false;
-    //         this.turnOnWizardMode(2)
-    //     }        
-        // if (this.teamService.isTeamsChanged) {
-        //     this.teamService.isTeamsChanged = false;
-        //     this.turnOnWizardMode(2);
-        //     this.resetComboBoxes();
-        //     this.makeButtonLabel();
-        // }
-    // }
-
     handleTeamChange(changedTeam: Team) {
         console.log('Received updated team from child:', changedTeam);    
         let cb: Combobox = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
         this.doOnRoundNumChange(cb);
         this.turnOnWizardMode(TEAM_TAB_INDEX);
-
-        // Logic to update your main list or save to the database
-        // const index = this.teams.findIndex(t => t.id === changedTeam.id);
-        // if (index !== -1) {
-        //     this.teams[index] = changedTeam;
-        // }
     }
 
     private turnOnWizardMode(tabIndex : number) {
@@ -1944,7 +1923,6 @@ export class TourneyDetailView extends AbstractDetailView {
             return;
         }
 
-        let rewind  = true;
         if( this.tourneyService.selectedTabIndex >= this.maxBoundaryTabIndex ) {
             this.tourneyService.selectedTabIndex = 0;
             this.turnOnWizardMode(-1);
@@ -1964,7 +1942,9 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-        let tvo: TourneyVO = this.cloneTourneyVO(rewind);
+
+        let rewind  = true;
+        let tvo: TourneyVO = this.cloneTourneyVO(false);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(false));
     }
@@ -1990,9 +1970,11 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.tourneyService.selectedTabIndex = this.getNextTabIndex();
-        const ti = this.tourneyService.selectedTabIndex > this.selectedTourney.wizardModeIndex 
-            ? ++this.selectedTourney.wizardModeIndex
-            : this.selectedTourney.wizardModeIndex;
+        
+        let ti = this.selectedTourney.wizardModeIndex;
+        if( this.tourneyService.selectedTabIndex > this.selectedTourney.wizardModeIndex  ) {
+             ti++;
+        }
 
         this.turnOnWizardMode(ti);
 
@@ -2024,8 +2006,8 @@ export class TourneyDetailView extends AbstractDetailView {
         if( rewind ) {
             this.turnOnWizardMode(-1);
         } else {
-            // tmp.selectedTabIndex++;
-            // tmp.wizardModeIndex = tmp.selectedTabIndex;
+            this.tabChangedIndex++;
+            tmp.wizardModeIndex = this.tabChangedIndex;
         }
         
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(tmp, this.clientService.selectedClient);

@@ -6,7 +6,7 @@
       </td>
       <td>
         <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
-        <p style="text-align: center;font-weight: bold;">{{tourneyService.selectedEliminatoryLevel.name}}</p>
+        <p style="text-align: center;font-weight: bold;">{{tourneyService.selectedEliminatoryLevel.name}}({{tourneyService.selectedEliminatoryLevel.eliminatories.length}})</p>
       </td>
       <td style="text-align: right;">
         <button type="button" icon="pi pi-refresh" pButton (click)="refresh()"></button>
@@ -49,10 +49,10 @@
               <div>
                 <span style="text-align: center; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>
               </div>
-                          <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                                  ,'inProgress': rowData.status === 'In Corso'
-                                  ,'terminated': rowData.status === 'Terminata'
-                                  ,'confirmed': rowData.status === 'Convalidata'}">
+                <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                        ,'inProgress': rowData.status === 'In Corso'
+                        ,'terminated': rowData.status === 'Terminata'
+                        ,'confirmed': rowData.status === 'Convalidata'}">
                 {{rowData.status}}
               </div>
             </td>
@@ -83,10 +83,10 @@
                 <div>
                   <span style="text-align: center; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>
                 </div>
-                          <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                                  ,'inProgress': rowData.status === 'In Corso'
-                                  ,'terminated': rowData.status === 'Terminata'
-                                  ,'confirmed': rowData.status === 'Convalidata'}">
+                  <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                          ,'inProgress': rowData.status === 'In Corso'
+                          ,'terminated': rowData.status === 'Terminata'
+                          ,'confirmed': rowData.status === 'Convalidata'}">
                   {{rowData.status}}
                 </div>
               </td>

@@ -250,6 +250,8 @@ export class TeamTableComponent extends AbstractListView {
             lastTeam.players.push(leftovers[leftovers.length-1]);
         }    
 
+        this.tourneyService.createChaosDisabled = true;
+        
         return teamList;
     }
 }

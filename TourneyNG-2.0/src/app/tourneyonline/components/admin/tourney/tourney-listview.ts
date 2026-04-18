@@ -211,8 +211,18 @@ export class TourneyListView extends AbstractTourneyListView {
         const clonedFromTourneyName : string = this.selectedTourney.tourneyName;
         // this.selectedTourney.id = null;
         this.selectedTourney.tourneyName = this.newTourneyName;
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let t = {...this.selectedTourney};
+        t.teams = [];
+        t.roundVO.rounds = [];
+        t.defenderPlayers = [];
+        t.offenderPlayers = [];
+        t.jollyPlayers = [];
+        t.eliminatoryLevels = [];
+        t.wizardModeIndex = 0;
+        
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(t, this.clientService.selectedClient);
         tvo.clonedFromTourneyName = clonedFromTourneyName;
+        tvo.id = null;
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => {});
     }

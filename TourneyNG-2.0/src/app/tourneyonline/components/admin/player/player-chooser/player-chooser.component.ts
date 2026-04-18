@@ -181,6 +181,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
             a.playerName.localeCompare(b.playerName)
         );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     addJolly() {
@@ -221,6 +222,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
             a.playerName.localeCompare(b.playerName)
         );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     addOffender() {
@@ -261,6 +263,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
             a.playerName.localeCompare(b.playerName)
         );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     private doSavePlayer(newPlayer : Player) {
@@ -302,16 +305,19 @@ export class PlayerChooserComponent extends AbstractDetailView {
     removeDefender(player: Player) {
         this.defenderPlayers = this.defenderPlayers.filter(p => p.id !== player.id);
         this.updateTourney();
+        this.tourneyService.createChaosDisabled = false;
     }
     
     removeJolly(player: Player) {
         this.jollyPlayers = this.jollyPlayers.filter(p => p.id !== player.id);
         this.updateTourney();
+        this.tourneyService.createChaosDisabled = false;
     }
 
     removeOffender(player: Player) {
         this.offenderPlayers = this.offenderPlayers.filter(p => p.id !== player.id);
         this.updateTourney();
+        this.tourneyService.createChaosDisabled = false;
     }
 
     // -----------------------------
@@ -322,12 +328,20 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.removeDefender(player);
         this.offenderPlayers.push(player);
         this.updateTourney();
+        this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     moveToDefender(player: Player) {
         this.removeOffender(player);
         this.defenderPlayers.push(player);
         this.updateTourney();
+        this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     // -----------------------------
@@ -338,12 +352,14 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.defenderPlayers = this.defenderPlayers.filter(p => p.id !== player.id);
         this.jollyPlayers.push(player);
         this.updateTourney();
+        this.tourneyService.createChaosDisabled = false;
     }
 
     moveOffenderToJolly(player: Player) {
         this.offenderPlayers = this.offenderPlayers.filter(p => p.id !== player.id);
         this.jollyPlayers.push(player);
         this.updateTourney();
+        this.tourneyService.createChaosDisabled = false;
     }
 
     // -----------------------------
@@ -354,12 +370,20 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.jollyPlayers = this.jollyPlayers.filter(p => p.id !== player.id);
         this.defenderPlayers.push(player);
         this.updateTourney();
+        this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     moveJollyToOffender(player: Player) {
         this.jollyPlayers = this.jollyPlayers.filter(p => p.id !== player.id);
         this.offenderPlayers.push(player);
         this.updateTourney();
+        this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
+            a.playerName.localeCompare(b.playerName)
+        );
+        this.tourneyService.createChaosDisabled = false;
     }
 
     // -----------------------------
@@ -375,7 +399,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
             this.previousPlayer = null;
         }   
         this.editingPlayer = null;
+        this.tourneyService.createChaosDisabled = false;
     }
+
     isEditing(player: Player): boolean {
         return this.editingPlayer === player;
     }

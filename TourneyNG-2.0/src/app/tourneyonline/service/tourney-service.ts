@@ -103,6 +103,8 @@ export class TourneyService extends AbstractService {
     selectedEliminatoryBIndex: number = 0;
     selectedClassificationRow: Classification = new Classification();
 
+    createChaosDisabled: boolean = true;
+
     static roundCols: TableCols[] = [
         { field: 'name',        header: 'Gironi' },
         { field: 'teamNo',      header: 'N° Squadre' },

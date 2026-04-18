@@ -529,9 +529,7 @@ export class MeetingRoundService extends MeetingService {
     private doPrintPdfMeeting( selectedTourney: Tourney, rounds : Round[], both : boolean, roundName : string) {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
-
         let isAbsoluteFirstPage = true; 
-
         let i = 0;
         for (let r of  rounds ) {
             // 2. Prepare the data just for THIS specific round
@@ -665,7 +663,6 @@ export class MeetingRoundService extends MeetingService {
 
     public formatRoundData(meetings: MeetingDto[]): any[] {
         const tableRows: any[] = [];
-
         meetings.forEach((dto) => {
             // 1. Handle Separator Row
             if (dto.separator) {
@@ -681,7 +678,6 @@ export class MeetingRoundService extends MeetingService {
                 }]);
                 return; // Move to next dto
             }
-
             // 2. Handle Signature/Spacer Row
             if (dto.signLine) {
                 tableRows.push([{
@@ -695,7 +691,6 @@ export class MeetingRoundService extends MeetingService {
                 }]);
                 return;
             }
-
             // 3. Handle Meeting Rows
             // We loop through matches and push a NEW row for each match
             dto.meeting.matches.forEach(m => {
@@ -709,7 +704,6 @@ export class MeetingRoundService extends MeetingService {
                 tableRows.push(row);
             });
         });
-
         return tableRows;
     } 
 }

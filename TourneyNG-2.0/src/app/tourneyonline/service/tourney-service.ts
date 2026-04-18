@@ -1036,91 +1036,8 @@ export class TourneyService extends AbstractService {
         round.classification = classificationList;
     }
 
-    public cloneRound(r: Round) : Round {
-        let newRound : Round = { direction: r.direction
-        , id: r.id
-        , name: r.name
-        , label: r.label
-        , type: r.type
-        , pageSize: r.pageSize
-        , daysNo: r.daysNo
-        , onewayCurrentDay: r.onewayCurrentDay
-        , roundtripCurrentDay: r.roundtripCurrentDay
-        , teamNames: [...r.teamNames]
-        , teamNo: r.teamNo
-        , onewayMeetings: this.cloneMeetings(r.onewayMeetings)
-        , roundtripMeetings: this.cloneMeetings(r.roundtripMeetings)
-        , classification: this.cloneClassifications(r.classification)
-        };
-        return newRound;
-    }
-  
-    private cloneMeetings(mts: Meeting[]): Meeting[] {
-        let nms : Meeting[] = [];
-        for(let m of mts) {
-            let nm = this.cloneMeeting(m);
-            nms.push(nm);
-        }
-        return nms;
-    }
-
-    private cloneMeeting(m: Meeting): Meeting {
-        let mr : Meeting = new Meeting();
-        mr.address=m.address;
-        mr.containerId = m.containerId;
-        mr.country = m.country;
-        mr.datetime = m.datetime;
-        mr.day = m.day;
-        mr.direction = m.direction;
-        mr.id = m.id;
-        mr.isDummy = m.isDummy;
-        mr.isSkiping = m.isSkiping;
-        mr.matches = this.cloneMatches(m.matches);
-        mr.name = m.name;
-        mr.points1 = m.points1;
-        mr.points2 = m.points2
-        mr.rule1 = m.rule1;
-        mr.rule2 = m.rule2;
-        mr.ruleName1 = m.ruleName1;
-        mr.ruleName2 = m.ruleName1;
-        mr.ruleName = m.ruleName;
-        mr.status = m.status;
-        mr.teamName1 = m.teamName1;
-        mr.teamName2 = m.teamName2;
-        mr.vpoints1 = m.vpoints1;
-        mr.vpoints2 = m.vpoints2;
-        return mr;
-    }
-        
-    private cloneMatches(matches:  Match[]):  Match[] {
-        let nms : Match[] = [];
-        for( let m of matches ) {
-            let nm = this.cloneMatch(m);
-            nms.push(nm);
-        }
-        return nms;
-    }
-    private cloneMatch(m: Match) : Match {
-        let nm = new Match();
-        nm.id = m.id;
-        nm.players1 = m.players1;
-        nm.players2 = m.players2;
-        nm.score1 = m.score1;
-        nm.score2 = m.score2;
-        nm.status = m.status;
-        return nm;
-    }
-    private cloneClassifications(classifications: Classification[]): Classification[] {
-        let cloneClassifications: Array<Classification> = new Array<Classification>();
-        for(let c of classifications) {
-            let nc = {...c};
-            cloneClassifications.push(nc);
-        }
-        return cloneClassifications; 
-    }
- 
     /**
-     * Prepares the classification relatid to the selected eliminaory 
+     * Prepares the classification related to the selected eliminaory 
      */
     public updateClassification(el: EliminatoryLevel): void {
         console.log("Entering updateClassification(" + el.level +")");
@@ -1137,7 +1054,7 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Correctes the classification list when there are 2 or more teams having the same number of points.
+     * It correctes the classification list when there are 2 or more teams having the same number of points.
      * In that case, it computes the separate(avulsa) classification only on the teams having the same points. 
      * After that, updates the original classification.
      * 
@@ -1146,11 +1063,8 @@ export class TourneyService extends AbstractService {
      * @returns the new corrected classification
      */
     private correctClassification(classificationList:  Classification[], meetings: Meeting[]): Array<Classification>  {
-         
         const classificationGroupByMap : Map<number, Classification[]> = this.groupBy(classificationList);
-
         let pointsMap : Map<number,  Meeting[]> = new Map();
-        
         for(let c of classificationList) {
             const points = c.points;
             let cmList : Classification[] | undefined = classificationGroupByMap.get(points);
@@ -1168,32 +1082,26 @@ export class TourneyService extends AbstractService {
                 }
             }
         }
-
         let sortedClassification: Classification[] = [];
         let step : number = 1;
         for(let i=0; i < classificationList.length; i+=step) {
             let c : Classification = classificationList[i];
             let key = c.points;
-   
             if(!pointsMap.has(key)) {
                 sortedClassification.push(c);
                 step=1;
                 continue;
             }
-
             let meetingSubList:  Meeting[] | undefined = pointsMap.get(key);
             if( meetingSubList == undefined ) continue;
-             
             const teamNamesSet: Set<string> = new Set();
             for(let m of meetingSubList) {
                 if( m.teamName1 == null || m.teamName2 == null ) continue;
                 teamNamesSet.add(m.teamName1);
                 teamNamesSet.add(m.teamName2);
             }
-
             let teamNames: string[] = Array.from(teamNamesSet);
             let sortedSubList: Classification[] = this.prepareClassificationList(teamNames, meetingSubList, classificationList);
-
             for( let j=0; j<sortedSubList.length; j++ ) {
                 let sc = sortedSubList[j];
                 let fi = classificationList.findIndex(e => e.teamName === sc.teamName);
@@ -1202,7 +1110,6 @@ export class TourneyService extends AbstractService {
             }
             step = sortedSubList.length;
         }
-
         return sortedClassification;
     }
 

@@ -6,14 +6,14 @@ export class Round {
     id: number = 0;
     direction:  Direction = Direction.OneWay;
     name:       string = "";
-    label:     string = "";
+    label:      string = "";
     type:       RoundType = RoundType.R;
     pageSize:   number = 0;
     daysNo:     number = 0;
     onewayCurrentDay: number = 0;
     roundtripCurrentDay: number = 0;
     teamNames:              string[] = [];
-    classificatedTeamNames?: string[];
+    classificatedTeamNames: string[] = [];
     teamNo:            string = "";
     onewayMeetings:    Meeting[] = [];
     roundtripMeetings: Meeting[] = [];

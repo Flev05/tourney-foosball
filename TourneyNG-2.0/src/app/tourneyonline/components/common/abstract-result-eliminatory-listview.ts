@@ -350,17 +350,18 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 } else {
                     t2 = lastClassificationTeam.teamName;
                 }
-                e.round.teamNames = [t1, t2];
-                let m1 = e.round.onewayMeetings[0];
+                let round = e.round;
+                round.teamNames = [t1, t2];
+                let m1 = round.onewayMeetings[0];
                 m1.teamName1 = t1;
                 m1.teamName2 = t2;
                 this.updateVPoints(m1, topEl.abstractRoundVO.pointsNeededToWin);
-                let m2 = e.round.roundtripMeetings[0];
+                let m2 = round.roundtripMeetings[0];
                 m2.teamName1 = t2;
                 m2.teamName2 = t1;
                 this.updateVPoints(m2, topEl.abstractRoundVO.pointsNeededToWin);
-                this.tourneyService.createClassification(e.round, false);
-                for( let c of e.round.classification ) {
+                this.tourneyService.createClassification(round, false);
+                for( let c of round.classification ) {
                     console.log(c);
                 }
             }

@@ -280,13 +280,13 @@ export class TabResultListView extends AbstractTabResultListView {
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
             doc.text(`Classifica ${this.selectedTourney.tourneyName}: ${r.name}`, 14, currentY);
-            const head = [["Pos", "Squadra", "PG", "PT", "V", "P", "GF", "GS", "DR"]];
+            const head = [["Pos", "Squadra", "PT", "PG", "V", "P", "GF", "GS", "DR"]];
             const body = r.classification
                 .map((c, index) => [
                     index + 1,
                     c.teamName || '',
-                    c.played || 0,
                     c.points || 0,
+                    c.played || 0,
                     c.won || 0,
                     c.lost || 0,
                     c.goalsDone || 0,

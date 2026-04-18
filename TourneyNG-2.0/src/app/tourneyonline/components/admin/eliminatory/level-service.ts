@@ -82,10 +82,6 @@ export class LevelService extends AbstractEliminatoryListView {
             let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, topLevel, topLevelTeamNo);   
             eliminatoryLevels.push(el);
         }
-        // if( this.isStandAlone(this.selectedTourney) ) {
-        //     let topEL: EliminatoryLevel = eliminatoryLevels[0];
-        //     this.prepareStandaloneTopLevel(topEL);
-        // }
         if ( topLevelTeamNo >= 4 ) { // if we have at least 4 teams we can create a match for 3° and 4° position
             this.addOptionalLevel(eliminatoryLevels);            
         }

@@ -497,8 +497,7 @@ export class TourneyDetailView extends AbstractDetailView {
         if (this.tourneyService.selectedTabIndex >= this.maxBoundaryTabIndex) {
             this.nextButtonLabel = "Fine";
             this.nextButtonIcon = "pi pi-save";
-        }
-        else {
+        } else {
             this.nextButtonLabel = "Avanti";
             this.nextButtonIcon = "pi pi-arrow-right";
         }
@@ -1942,9 +1941,8 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
 
-
         let rewind  = true;
-        let tvo: TourneyVO = this.cloneTourneyVO(false);
+        let tvo: TourneyVO = this.cloneTourneyVO(rewind);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(false));
     }

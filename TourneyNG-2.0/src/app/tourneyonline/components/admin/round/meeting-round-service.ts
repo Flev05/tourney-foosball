@@ -526,101 +526,104 @@ export class MeetingRoundService extends MeetingService {
         this.doPrintPdfMeeting(selectedTourney, selectedTourney.roundVO.rounds, both, roundName);
     }
 
-    private doPrintPdfMeeting( selectedTourney: Tourney, rounds : Round[], both : boolean, roundName : string) {
+    private doPrintPdfMeeting(selectedTourney: Tourney, rounds: Round[], both: boolean, roundName: string) {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
-        let isAbsoluteFirstPage = true; 
+        
+        // --- 1. COLLECT ANDATA (Home) MEETINGS ---
+        let homeMeetings: MeetingDto[] = [];
         let i = 0;
-        for (let r of  rounds ) {
-            // 2. Prepare the data just for THIS specific round
+        for (let r of rounds) {
             this.prepareMeetingsMap(r);
-            // (Populate roundMeetings instead of a global meetings array)  
             let rn = roundName + " " + String.fromCharCode(65 + i);
             i++;
-            for( let md = 1; md <= r.daysNo; md ++ ) {
-                let ms = this.getOnewayMeetingsOfDay(md);
-                if (!isAbsoluteFirstPage) {
-                    doc.addPage();
+            for (let md = 1; md <= r.daysNo; md++) {
+                let ms: Meeting[] = this.getOnewayMeetingsOfDay(md);
+                if (ms.length > 0) {
+                    this.collectMeetingData(homeMeetings, ms, rn, "Andata,", md, r.daysNo);
                 }
-                isAbsoluteFirstPage = false; 
-                let meetings: MeetingDto[] = []; // Reset list for each day
-
-                let newDate = new Date(ms[0].datetime);
-                let range = this.dateFormatPipe.transform(newDate);
-                let dto = new MeetingDto();
-                dto.round = roundName;
-                dto.direction = "Andata,";
-                dto.separator = true;
-                dto.md = md;
-                dto.days = r.daysNo;
-                dto.weekRange = range;
-                meetings.push(dto);
-                for( let m of ms ) {
-                    if( m.points1 >= 0 ) {
-                        let dto: MeetingDto = {round: rn, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                        meetings.push(dto);
-                        dto = {round: rn, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
-                        meetings.push(dto);
-                    }
-                }
-                this.printMeetingsByDirection(doc, rn, meetings);
-            } 
+            }
         }
+        // Print the Andata block
+        this.printMeetingsByDirection(doc, roundName, homeMeetings);
 
-        if ( both ) {
-            i = 0;
+        // --- 2. COLLECT RITORNO (Away) MEETINGS ---
+        if (both) {
+            // Start Away meetings on a fresh page
+            doc.addPage();
+            let awayMeetings: MeetingDto[] = [];
+            i = 0; // Reset index for round names
             for (let r of rounds) {
-                // 1. If it's not the first round, add a new page
-                if (!this.isFirstRound) {
-                    doc.addPage();
-                }
-                this.isFirstRound = false;
-                // 2. Prepare the data just for THIS specific round
                 this.prepareMeetingsMap(r);
                 let rn = roundName + " " + String.fromCharCode(65 + i);
                 i++;
-                for( let md = 1; md <= r.daysNo; md ++ ) {
+                for (let md = 1; md <= r.daysNo; md++) {
                     let ms = this.getRoundtripMeetingsOfDay(md);
-                    if (!isAbsoluteFirstPage) {
-                        doc.addPage();
+                    if (ms.length > 0) {
+                        this.collectMeetingData(awayMeetings, ms, rn, "Ritorno,", md, r.daysNo);
                     }
-                    isAbsoluteFirstPage = false; 
-                    let meetings: MeetingDto[] = []; // Reset list for each day
-                    let newDate = new Date(ms[0].datetime);
-                    let range = this.dateFormatPipe.transform(newDate);
-                    let dto = new MeetingDto();
-                    dto.round = roundName;
-                    dto.direction = "Ritorno,";
-                    dto.separator = true;
-                    dto.md = md;
-                    dto.days = r.daysNo;
-                    dto.weekRange = range;
-                    meetings.push(dto);
-                    for( let m of ms ) {
-                        if( m.points1 >= 0 ) {
-                            dto = {round: rn, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                            meetings.push(dto);
-                            dto = {round: rn, direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m, signLine: true};
-                            meetings.push(dto);
-                        }
-                    }
-                    this.printMeetingsByDirection(doc, rn, meetings);
-                } 
+                }
             }
+            // Print the Ritorno block (autoTable will handle its own page breaks if it exceeds 1 page)
+            this.printMeetingsByDirection(doc, roundName, awayMeetings);
         }
+
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
     }
+
+    /**
+     * Helper to avoid repeating logic for pushing DTOs into the list
+     */
+    private collectMeetingData(list: MeetingDto[], ms: any[], rn: string, dir: string, md: number, totalDays: number) {
+        let newDate = new Date(ms[0].datetime);
+        let range = this.dateFormatPipe.transform(newDate);
+        // Add Header Row
+        let header = new MeetingDto();
+        header.round = rn;
+        header.direction = dir;
+        header.separator = true;
+        header.md = md;
+        header.days = totalDays;
+        header.weekRange = range;
+        list.push(header);
+        for (let m of ms) {
+            if (m.points1 >= 0) {
+                // Data Row
+                list.push({ 
+                    round: rn, 
+                    direction: dir, 
+                    separator: false, 
+                    md: m.day, 
+                    days: totalDays, 
+                    weekRange: range, 
+                    meeting: m 
+                });
+                // Signature Row
+                list.push({ 
+                    round: rn, 
+                    direction: dir, 
+                    separator: false, 
+                    md: m.day, 
+                    days: totalDays, 
+                    weekRange: range, 
+                    meeting: m, 
+                    signLine: true 
+                });
+            }
+        }
+    }
     
-    // 3. Add a Title for this specific Round page
     private printMeetingsByDirection(doc: jsPDF, roundName: string, meetings: any[]) {
         doc.setFontSize(16);
         doc.text(`${this.selectedTourney.tourneyName} - ${roundName}`, 14, 15);
-        // 4. Draw the table starting slightly below the text
         autoTable(doc, {
-            head: [["Data","In Casa", "P1", "P2", "Fuori Casa"]],
+            head: [["Data", "In Casa", "P1", "P2", "Fuori Casa"]],
             body: this.formatRoundData(meetings),
             startY: 20,
+            margin: { top: 20, bottom: 20 }, // Ensure space for headers/footers
             theme: 'striped',
+            pageBreak: 'auto', // CRITICAL: This fills the page before moving to the next
+            rowPageBreak: 'avoid', // Prevents a single match from being split across two pages
             columnStyles: {
                 0: { halign: 'left', cellWidth: 'auto' },
                 1: { halign: 'right', cellWidth: 'auto' },
@@ -629,31 +632,23 @@ export class MeetingRoundService extends MeetingService {
                 4: { halign: 'left', cellWidth: 'auto' }
             },
             didParseCell: (data) => {
-                // Only apply this logic to the header row
                 if (data.section === 'head') {
-                    // 1. Shrink the height/area
-                    data.cell.styles.fontSize = 10;      // Smaller font (default is usually 10)
-                    data.cell.styles.cellPadding = 1;    // Minimum padding to tighten the area
-                    data.cell.styles.minCellHeight = 8;  // Explicitly force a smaller height                    
-                    if (data.column.index === 0) data.cell.styles.halign = 'left';
-                    if (data.column.index === 1) data.cell.styles.halign = 'right';
-                    if (data.column.index === 2) data.cell.styles.halign = 'center';
-                    if (data.column.index === 3) data.cell.styles.halign = 'center';
-                    if (data.column.index === 4) data.cell.styles.halign = 'left';
+                    data.cell.styles.fontSize = 10;
+                    data.cell.styles.cellPadding = 1;
+                    data.cell.styles.minCellHeight = 8;
                 }
             },
-            styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
+            styles: { 
+                minCellHeight: 10, // Slightly reduced to fit more rows
+                fontSize: 9        // Slightly smaller font to maximize space
+            },
             didDrawCell: (data) => {
-                // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
                 if (data.section === 'body' && (data.column.index === 2 || data.column.index === 3)) {
-                    // Only draw if the content is empty (which means points were 0)
-                    const boxSize = 10; // 10mm
                     if (data.cell.text[0] === '') {
-                        // Calculate center of the cell to place the box
+                        const boxSize = 8; // Reduced slightly from 10 to fit better
                         const posX = data.cell.x + (data.cell.width - boxSize) / 2;
                         const posY = data.cell.y + (data.cell.height - boxSize) / 2;
-                        // Draw the rectangle (x, y, width, height, style)
-                        doc.setDrawColor(0); // Black border
+                        doc.setDrawColor(0);
                         doc.rect(posX, posY, boxSize, boxSize, 'S');
                     }
                 }
@@ -667,7 +662,7 @@ export class MeetingRoundService extends MeetingService {
             // 1. Handle Separator Row
             if (dto.separator) {
                 tableRows.push([{
-                    content: `${dto.direction} Giornata ${dto.md}/${dto.days}`,
+                    content: `${dto.round}: ${dto.direction} Giornata ${dto.md}/${dto.days}`,
                     colSpan: 5,
                     styles: { 
                         minCellHeight: 5,
@@ -691,15 +686,25 @@ export class MeetingRoundService extends MeetingService {
                 }]);
                 return;
             }
+
+            // 3. Handle Meeting Rows (Swapping logic here)
+            const isRitorno = dto.direction.includes("Ritorno");
+
             // 3. Handle Meeting Rows
             // We loop through matches and push a NEW row for each match
             dto.meeting.matches.forEach(m => {
+                // If it's Ritorno, Team 2 is now the Home team
+                const teamHome = isRitorno ? dto.meeting.teamName2 : dto.meeting.teamName1;
+                const teamAway = isRitorno ? dto.meeting.teamName1 : dto.meeting.teamName2;
+                const scoreHome = isRitorno ? m.score2 : m.score1;
+                const scoreAway = isRitorno ? m.score1 : m.score2;
+
                 const row = [
                     this.dateFormatPipe.transformWeek(dto.meeting.datetime),
-                    dto.meeting.teamName1,
-                    (m.score1 === 0 && m.score2 === 0) ? '' : m.score1,
-                    (m.score1 === 0 && m.score2 === 0) ? '' : m.score2,
-                    dto.meeting.teamName2
+                    teamHome,
+                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreHome,
+                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreAway,
+                    teamAway
                 ];
                 tableRows.push(row);
             });

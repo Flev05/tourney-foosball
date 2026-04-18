@@ -287,7 +287,7 @@ export class MeetingService extends AbstractService {
                 this.onewayMeetingDaysMap.set(key, emptyList);
             }
             let meetingList: Meeting[] | undefined = this.onewayMeetingDaysMap.get(key) ;
-            if( meetingList == undefined ) {
+            if( !meetingList ) {
                 continue;
             }
             meetingList.push(m);

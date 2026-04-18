@@ -79,7 +79,12 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 }
             } else {
                 if( el.isTopLevel ) {
-                    const selectedTeamsNo : number = el.topLevelTeamNo; // the original selected number of eliminatories, like 18, or all
+                    let selectedTeamsNo : number; 
+                    if( el.topLevelTeamNo ) {
+                        selectedTeamsNo = el.topLevelTeamNo; // the original selected number of eliminatories, like 18, or all
+                    } else {
+                        selectedTeamsNo = el.eliminatories.length * 2; 
+                    }   
                     this.compileTopLevel( el, selectedTeamsNo );
                 } else {
                     this.compileNextLevel(this.eliminatoryLevels, l, el );
@@ -146,7 +151,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             let currentRound : Round = rounds[currentIndex];
             let nextRound : Round = rounds[nextIndex];
             
-            if(firstLastMatrix[currentIndex][0] >  firstLastMatrix[currentIndex][1] )  {
+            if(firstLastMatrix[currentIndex][0] > firstLastMatrix[currentIndex][1] )  {
                 currentIndex = (currentIndex + 1) % R;
                 nextIndex = (nextIndex + 1) % R;
             }

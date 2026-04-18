@@ -189,17 +189,17 @@ export class MeetingDetailView extends AbstractDetailView {
         let disOp = this.disabledOperator() ;
         let dependsOn = false;
         if( this.selectedMeetingDb.playoffId != null ) {
-            if( this.selectedTourney.terminatedRounds.length == 0 ) {
+            if( this.selectedTourney.terminatedRounds && this.selectedTourney.terminatedRounds.length == 0 ) {
                 dependsOn = true;
             }
         }
         if( this.selectedMeetingDb.playoutId != null ) {
-            if( this.selectedTourney.terminatedRounds.length == 0 ) {
+            if( this.selectedTourney.terminatedRounds && this.selectedTourney.terminatedRounds.length == 0 ) {
                 dependsOn = true;
             }
         }
         if( this.selectedMeetingDb.eliminatoryId != null ) {
-            if( this.selectedTourney.terminatedRounds.length == 0 ) {
+            if( this.selectedTourney.terminatedRounds && this.selectedTourney.terminatedRounds.length == 0 ) {
                 dependsOn = true;
             }
         }

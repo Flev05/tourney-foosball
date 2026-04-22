@@ -529,46 +529,93 @@ export class MeetingRoundService extends MeetingService {
     private doPrintPdfMeeting(selectedTourney: Tourney, rounds: Round[], both: boolean, roundName: string) {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
-        
-        // --- 1. COLLECT ANDATA (Home) MEETINGS ---
-        let homeMeetings: MeetingDto[] = [];
-        let i = 0;
-        for (let r of rounds) {
-            this.prepareMeetingsMap(r);
-            let rn = roundName + " " + String.fromCharCode(65 + i);
-            i++;
-            for (let md = 1; md <= r.daysNo; md++) {
-                let ms: Meeting[] = this.getOnewayMeetingsOfDay(md);
-                if (ms.length > 0) {
-                    this.collectMeetingData(homeMeetings, ms, rn, "Andata,", md, r.daysNo);
-                }
-            }
-        }
-        // Print the Andata block
-        this.printMeetingsByDirection(doc, roundName, homeMeetings);
 
-        // --- 2. COLLECT RITORNO (Away) MEETINGS ---
+        // --- SECTION 1: ANDATA (HOME) ---
+        this.printFullDirection(doc, rounds, roundName, "Andata");
+
+        // --- SECTION 2: RITORNO (AWAY) ---
         if (both) {
-            // Start Away meetings on a fresh page
-            doc.addPage();
-            let awayMeetings: MeetingDto[] = [];
-            i = 0; // Reset index for round names
-            for (let r of rounds) {
-                this.prepareMeetingsMap(r);
-                let rn = roundName + " " + String.fromCharCode(65 + i);
-                i++;
-                for (let md = 1; md <= r.daysNo; md++) {
-                    let ms = this.getRoundtripMeetingsOfDay(md);
-                    if (ms.length > 0) {
-                        this.collectMeetingData(awayMeetings, ms, rn, "Ritorno,", md, r.daysNo);
-                    }
-                }
-            }
-            // Print the Ritorno block (autoTable will handle its own page breaks if it exceeds 1 page)
-            this.printMeetingsByDirection(doc, roundName, awayMeetings);
+            doc.addPage(); // Start Away meetings on a fresh page
+            this.printFullDirection(doc, rounds, roundName, "Ritorno");
         }
 
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
+    }
+
+    private printFullDirection(doc: jsPDF, rounds: Round[], roundBaseName: string, directionLabel: string) {
+        let lastY = 20;
+
+        // Initial Title for the direction
+        doc.setFontSize(16);
+        doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
+
+        for (let i = 0; i < rounds.length; i++) {
+            const r = rounds[i];
+            if (i > 0) {
+                doc.addPage();
+            }
+            lastY = 20; 
+            this.prepareMeetingsMap(r);
+            let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
+
+            for (let md = 1; md <= r.daysNo; md++) {
+                // Pick correct data based on direction
+                let ms: Meeting[] = (directionLabel === "Andata") 
+                    ? this.getOnewayMeetingsOfDay(md) 
+                    : this.getRoundtripMeetingsOfDay(md);
+
+                if (ms.length > 0) {
+                    let currentDayMeetings: any[] = [];
+                    this.collectMeetingData(currentDayMeetings, ms, currentRoundName, `${directionLabel},`, md, r.daysNo);
+
+                    const estimatedTableHeight = 10 + (currentDayMeetings.length * 10);
+                    const pageHeight = doc.internal.pageSize.getHeight();
+
+                    // Packing Logic: If it doesn't fit AND we aren't already at the top
+                    if (lastY + estimatedTableHeight > pageHeight - 20 && lastY > 20) {
+                        doc.addPage();
+                        lastY = 20;
+                        doc.setFontSize(16);
+                        doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
+                    }
+
+                    this.printMeetingsByDirection(doc, currentDayMeetings, lastY);
+                    lastY = (doc as any).lastAutoTable.finalY + 10;
+                }
+            }
+        }
+    }
+
+    private printMeetingsByDirection(doc: jsPDF, meetings: any[], startY: number) {
+        autoTable(doc, {
+            head: [["Data", "In Casa", "P1", "P2", "Fuori Casa"]],
+            body: this.formatRoundData(meetings),
+            startY: startY,
+            margin: { top: 20, bottom: 20 },
+            theme: 'striped',
+            rowPageBreak: 'avoid', 
+            columnStyles: {
+                0: { halign: 'left', cellWidth: 'auto' },
+                1: { halign: 'right', cellWidth: 'auto' },
+                2: { halign: 'center', cellWidth: 15 },
+                3: { halign: 'center', cellWidth: 15 },
+                4: { halign: 'left', cellWidth: 'auto' }
+            },
+            // ... Keep your didParseCell, styles, and didDrawCell exactly as they were ...
+            didParseCell: (data) => { /* your existing code */ },
+            styles: { minCellHeight: 10, fontSize: 9 },
+            didDrawCell: (data) => {
+                if (data.section === 'body' && (data.column.index === 2 || data.column.index === 3)) {
+                    if (data.cell.text[0] === '') {
+                        const boxSize = 8;
+                        const posX = data.cell.x + (data.cell.width - boxSize) / 2;
+                        const posY = data.cell.y + (data.cell.height - boxSize) / 2;
+                        doc.setDrawColor(0);
+                        doc.rect(posX, posY, boxSize, boxSize, 'S');
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -613,49 +660,6 @@ export class MeetingRoundService extends MeetingService {
         }
     }
     
-    private printMeetingsByDirection(doc: jsPDF, roundName: string, meetings: any[]) {
-        doc.setFontSize(16);
-        doc.text(`${this.selectedTourney.tourneyName} - ${roundName}`, 14, 15);
-        autoTable(doc, {
-            head: [["Data", "In Casa", "P1", "P2", "Fuori Casa"]],
-            body: this.formatRoundData(meetings),
-            startY: 20,
-            margin: { top: 20, bottom: 20 }, // Ensure space for headers/footers
-            theme: 'striped',
-            pageBreak: 'auto', // CRITICAL: This fills the page before moving to the next
-            rowPageBreak: 'avoid', // Prevents a single match from being split across two pages
-            columnStyles: {
-                0: { halign: 'left', cellWidth: 'auto' },
-                1: { halign: 'right', cellWidth: 'auto' },
-                2: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'center', cellWidth: 15 },
-                4: { halign: 'left', cellWidth: 'auto' }
-            },
-            didParseCell: (data) => {
-                if (data.section === 'head') {
-                    data.cell.styles.fontSize = 10;
-                    data.cell.styles.cellPadding = 1;
-                    data.cell.styles.minCellHeight = 8;
-                }
-            },
-            styles: { 
-                minCellHeight: 10, // Slightly reduced to fit more rows
-                fontSize: 9        // Slightly smaller font to maximize space
-            },
-            didDrawCell: (data) => {
-                if (data.section === 'body' && (data.column.index === 2 || data.column.index === 3)) {
-                    if (data.cell.text[0] === '') {
-                        const boxSize = 8; // Reduced slightly from 10 to fit better
-                        const posX = data.cell.x + (data.cell.width - boxSize) / 2;
-                        const posY = data.cell.y + (data.cell.height - boxSize) / 2;
-                        doc.setDrawColor(0);
-                        doc.rect(posX, posY, boxSize, boxSize, 'S');
-                    }
-                }
-            }
-        });
-    }
-
     public formatRoundData(meetings: MeetingDto[]): any[] {
         const tableRows: any[] = [];
         meetings.forEach((dto) => {

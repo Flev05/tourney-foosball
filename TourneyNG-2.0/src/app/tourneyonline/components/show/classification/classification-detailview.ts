@@ -6,6 +6,7 @@ import { Classification } from 'app/tourneyonline/domain/classification';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 import { DateFormatPipe } from '../../common/date-format-pipe';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Component({
     templateUrl: './classification-detailview.html',
@@ -18,6 +19,7 @@ export class ClassificationDetailView extends AbstractDetailView {
 
     addPlayerEnabled : boolean = false;
     teamName: string = "";
+    selectedTeam: Team = new Team();
 
     constructor(
         protected override location: Location,
@@ -40,6 +42,7 @@ export class ClassificationDetailView extends AbstractDetailView {
         this.selectedClassificationName = this.tourneyService.getClassificationName();
 
         this.teamName = this.selectedClassificationRow.teamName;
+        this.selectedTeam = this.teamService.selectedTeam;
 
         super.ngOnInit();
     }

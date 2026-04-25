@@ -54,12 +54,11 @@
 </div>
 
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
-  <button type="button" pButton icon="pi pi-arrow-left"  (click)="goBack()" label="Indietro"></button>
+  <button type="button" pButton icon="pi pi-arrow-left" (click)="goBack()" label="Indietro"></button>
 </div>
 
 <p-table [columns]="cols"
   [value]="rows"
-  responsiveLayout="scroll"
   selectionMode="single"
   [(selection)]="selectedRow"
   (onRowSelect)="onRowSelect($event)"

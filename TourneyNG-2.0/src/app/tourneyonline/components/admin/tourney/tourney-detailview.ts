@@ -1942,6 +1942,9 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         let rewind  = true;
+        if( this.tourneyService.selectedTabIndex === TEAM_TAB_INDEX ) {
+            rewind  = false;
+        }
         let tvo: TourneyVO = this.cloneTourneyVO(rewind);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.saveTourneyNext(tvo), e => this.subscribeErrorHandler(e), () => this.nextSaveComplete(false));

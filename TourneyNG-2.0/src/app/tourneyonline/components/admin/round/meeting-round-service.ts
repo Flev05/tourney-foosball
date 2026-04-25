@@ -531,81 +531,128 @@ export class MeetingRoundService extends MeetingService {
         this.selectedTourney = selectedTourney;
 
         // --- SECTION 1: ANDATA (HOME) ---
-        this.printFullDirection(doc, rounds, roundName, "Andata");
+        if( both ) {
+            this.printFullDirection(doc, rounds, roundName, "Andata", false);
+        } else {
+            this.printFullDirection(doc, rounds, roundName, null, false);
+        }
 
         // --- SECTION 2: RITORNO (AWAY) ---
         if (both) {
             doc.addPage(); // Start Away meetings on a fresh page
-            this.printFullDirection(doc, rounds, roundName, "Ritorno");
+            this.printFullDirection(doc, rounds, roundName, "Ritorno", false);
         }
 
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
     }
 
-    private printFullDirection(doc: jsPDF, rounds: Round[], roundBaseName: string, directionLabel: string) {
+    public printFullDirection(doc: jsPDF, rounds: Round[], roundBaseName: string, directionLabel: string | null, fillpage: boolean) {
         let lastY = 20;
-
-        // Initial Title for the direction
-        doc.setFontSize(16);
-        doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
+        
+        // Initial Title
+        doc.setFontSize(20);
+        if( directionLabel ) {
+            doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
+        } else {
+            doc.text(`${this.selectedTourney.tourneyName}`, 14, 15);           
+        }
 
         for (let i = 0; i < rounds.length; i++) {
             const r = rounds[i];
-            if (i > 0) {
-                doc.addPage();
+            
+            if (!fillpage) {
+                if (i > 0) doc.addPage();
+                lastY = 20;
             }
-            lastY = 20; 
+
             this.prepareMeetingsMap(r);
             let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
 
             for (let md = 1; md <= r.daysNo; md++) {
-                // Pick correct data based on direction
                 let ms: Meeting[] = (directionLabel === "Andata") 
                     ? this.getOnewayMeetingsOfDay(md) 
                     : this.getRoundtripMeetingsOfDay(md);
 
                 if (ms.length > 0) {
-                    let currentDayMeetings: any[] = [];
-                    this.collectMeetingData(currentDayMeetings, ms, currentRoundName, `${directionLabel},`, md, r.daysNo);
+                    let currentDayMeetings: MeetingDto[] = [];
+                    if( directionLabel ) {
+                        this.collectMeetingData(currentDayMeetings, ms, currentRoundName, `${directionLabel},`, md, r.daysNo);
+                    } else {
+                        this.collectMeetingData(currentDayMeetings, ms, currentRoundName, null, md, r.daysNo);
+                    }
 
                     const estimatedTableHeight = 10 + (currentDayMeetings.length * 10);
                     const pageHeight = doc.internal.pageSize.getHeight();
 
-                    // Packing Logic: If it doesn't fit AND we aren't already at the top
+                    // Logic to check if we need a new page
                     if (lastY + estimatedTableHeight > pageHeight - 20 && lastY > 20) {
-                        doc.addPage();
+                        doc.addPage(); // Uncommented this to actually create the page
                         lastY = 20;
-                        doc.setFontSize(16);
-                        doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
+                        doc.setFontSize(20);
+                        if( directionLabel ) {
+                            doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
+                        } else {
+                            doc.text(`${this.selectedTourney.tourneyName}`, 14, 15);
+                        }
                     }
 
-                    this.printMeetingsByDirection(doc, currentDayMeetings, lastY);
+                    // --- HEADER LOGIC ---
+                    // Show header ONLY if we are at the top of a page (lastY is 20)
+                    const shouldShowHeader = (lastY === 20);
+                    
+                    this.printMeetingsByDirection(doc, currentDayMeetings, lastY, shouldShowHeader);
+                    
+                    // Update lastY for the next table
                     lastY = (doc as any).lastAutoTable.finalY + 10;
                 }
             }
         }
     }
 
-    private printMeetingsByDirection(doc: jsPDF, meetings: any[], startY: number) {
+    private printMeetingsByDirection(doc: jsPDF, meetings: MeetingDto[], startY: number, showTableHeader: boolean) {
         autoTable(doc, {
-            head: [["Data", "In Casa", "P1", "P2", "Fuori Casa"]],
+            head: [["Data", "N°", "In Casa", "P1", "P2", "Fuori Casa"]],
             body: this.formatRoundData(meetings),
             startY: startY,
             margin: { top: 20, bottom: 20 },
             theme: 'striped',
+            showHead: showTableHeader ? 'everyPage' : false, 
             rowPageBreak: 'avoid', 
-            columnStyles: {
-                0: { halign: 'left', cellWidth: 'auto' },
-                1: { halign: 'right', cellWidth: 'auto' },
-                2: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'center', cellWidth: 15 },
-                4: { halign: 'left', cellWidth: 'auto' }
+            
+            // This styles the general look of the header
+            headStyles: {
+                fillColor: [41, 128, 185], // Optional: standard blue
+                textColor: 255,
+                fontStyle: 'bold',
             },
-            // ... Keep your didParseCell, styles, and didDrawCell exactly as they were ...
-            didParseCell: (data) => { /* your existing code */ },
-            styles: { minCellHeight: 10, fontSize: 9 },
+
+            // This styles the columns for both Head and Body
+            columnStyles: {
+                0: { halign: 'center' },
+                1: { halign: 'center' },
+                2: { halign: 'right' },  // "In Casa"
+                3: { halign: 'center', cellWidth: 15 },
+                4: { halign: 'center', cellWidth: 15 },
+                5: { halign: 'left' }
+            },
+
+            styles: { minCellHeight: 10, fontSize: 14 },
+            
+            // --- THE FIX FOR THE TYPESCRIPT ERROR ---
+            didParseCell: (data) => {
+                // Force horizontal alignment by index for the header specifically
+                if (data.section === 'head') {
+                    if (data.column.index === 2) {
+                        data.cell.styles.halign = 'right';
+                    }
+                    if (data.column.index === 0 || data.column.index === 1 || data.column.index === 3 || data.column.index === 4) {
+                        data.cell.styles.halign = 'center';
+                    }
+                }
+            },
+
             didDrawCell: (data) => {
-                if (data.section === 'body' && (data.column.index === 2 || data.column.index === 3)) {
+                if (data.section === 'body' && (data.column.index === 3 || data.column.index === 4)) {
                     if (data.cell.text[0] === '') {
                         const boxSize = 8;
                         const posX = data.cell.x + (data.cell.width - boxSize) / 2;
@@ -621,13 +668,15 @@ export class MeetingRoundService extends MeetingService {
     /**
      * Helper to avoid repeating logic for pushing DTOs into the list
      */
-    private collectMeetingData(list: MeetingDto[], ms: any[], rn: string, dir: string, md: number, totalDays: number) {
+    private collectMeetingData(list: MeetingDto[], ms: any[], rn: string, dir: string | null, md: number, totalDays: number) {
         let newDate = new Date(ms[0].datetime);
         let range = this.dateFormatPipe.transform(newDate);
         // Add Header Row
         let header = new MeetingDto();
         header.round = rn;
-        header.direction = dir;
+        if( dir ) {
+            header.direction = dir;
+        }
         header.separator = true;
         header.md = md;
         header.days = totalDays;
@@ -638,7 +687,7 @@ export class MeetingRoundService extends MeetingService {
                 // Data Row
                 list.push({ 
                     round: rn, 
-                    direction: dir, 
+                    direction: dir == null ? " " : dir, 
                     separator: false, 
                     md: m.day, 
                     days: totalDays, 
@@ -648,7 +697,7 @@ export class MeetingRoundService extends MeetingService {
                 // Signature Row
                 list.push({ 
                     round: rn, 
-                    direction: dir, 
+                    direction: dir == null ? " " : dir, 
                     separator: false, 
                     md: m.day, 
                     days: totalDays, 
@@ -667,7 +716,7 @@ export class MeetingRoundService extends MeetingService {
             if (dto.separator) {
                 tableRows.push([{
                     content: `${dto.round}: ${dto.direction} Giornata ${dto.md}/${dto.days}`,
-                    colSpan: 5,
+                    colSpan: 6,
                     styles: { 
                         minCellHeight: 5,
                         halign: 'center', 
@@ -681,7 +730,7 @@ export class MeetingRoundService extends MeetingService {
             if (dto.signLine) {
                 tableRows.push([{
                     content: '',
-                    colSpan: 5,
+                    colSpan: 6,
                     styles: { 
                         minCellHeight: 10,
                         lineColor: [0, 0, 0],
@@ -698,6 +747,7 @@ export class MeetingRoundService extends MeetingService {
             // We loop through matches and push a NEW row for each match
             dto.meeting.matches.forEach(m => {
                 // If it's Ritorno, Team 2 is now the Home team
+                const matchNo = m.id + 1;
                 const teamHome = isRitorno ? dto.meeting.teamName2 : dto.meeting.teamName1;
                 const teamAway = isRitorno ? dto.meeting.teamName1 : dto.meeting.teamName2;
                 const scoreHome = isRitorno ? m.score2 : m.score1;
@@ -705,6 +755,7 @@ export class MeetingRoundService extends MeetingService {
 
                 const row = [
                     this.dateFormatPipe.transformWeek(dto.meeting.datetime),
+                    matchNo,
                     teamHome,
                     (scoreHome === 0 && scoreAway === 0) ? '' : scoreHome,
                     (scoreHome === 0 && scoreAway === 0) ? '' : scoreAway,

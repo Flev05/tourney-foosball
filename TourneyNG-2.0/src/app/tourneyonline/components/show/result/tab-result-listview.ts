@@ -317,12 +317,12 @@ export class TabResultListView extends AbstractTabResultListView {
         doc.save(`Classifica-${this.selectedTourney.tourneyName}.pdf`);
     }
 
-    public printTennisBracket(rowIndex: number) {
+    public printTennisBracket(levelNo: number) {
         const doc = new jsPDF('l', 'mm', 'a4');
         const pageWidth = 297;
         const pageHeight = 210;
         
-        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[rowIndex];
+        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[levelNo];
         
         // 1. Gather all "Matches" from the classification lists
         // Each pair in the classification array is one match
@@ -343,38 +343,60 @@ export class TabResultListView extends AbstractTabResultListView {
         const rightMatches = initialMatches.slice(matchesPerSide);
 
         // 2. Configuration
-        const boxW = 40; 
-        const boxH = 20;
-        const padding = 3;
+        const boxW = 50;  // Increased from 40
+        const boxH = 21;  // Increased from 20 (Height is critical for vertical space)
+        const padding = 5;
+        const sSize = 10; // Slightly larger score box to match
         
         // Determine how many rounds/columns we need (e.g., 8 matches -> 3 rounds to reach semi)
-        const roundsPerSide = Math.log2(matchesPerSide) + 1; 
-        const colSpacing = (pageWidth / 2 - 20) / roundsPerSide;
+        const totalMatches = initialMatches.length;
+        
+        // --- ROUND LABELS GENERATION ---
+        const roundLabels: string[] = [];
+        let labelSize = totalMatches;
+        while (labelSize >= 4) {
+            roundLabels.push(`${labelSize}° di Finale`);
+            labelSize /= 2;
+        }
+        roundLabels.push("Semifinale", "Finale");
 
-        // --- ROUND LABELS ---
-        // We create an array of labels. We'll use the index to pick the right one.
-        const roundLabels = ["8° di Finale", "4° di Finale", "Semifinale", "Finale"];
+        // Calculate rounds per side based on the actual labels generated
+        const roundsPerSide = roundLabels.length - 1; 
+        
+        // The rest of your code ...
+        const colSpacing = (pageWidth / 2 - 20) / roundsPerSide;
         
         // 3. Draw Sides
         this.drawSide(doc, leftMatches, roundsPerSide, colSpacing, padding, boxW, boxH, 'left', pageHeight, roundLabels);
         this.drawSide(doc, rightMatches, roundsPerSide, colSpacing, pageWidth - padding - boxW, boxW, boxH, 'right', pageHeight, roundLabels);
 
-        // 4. Central Final Box
-        const finalY = pageHeight / 2 - 30;
-        const finalX = pageWidth / 2 - 25;
-        doc.setDrawColor(0);
-        doc.setLineWidth(0.5);
-        doc.rect(finalX, finalY, 50, 20);
-        doc.setFontSize(12);
-        doc.text("FINALE", pageWidth / 2, finalY + - 1, { align: 'center' });
+        // --- 4. Central Final Box ---
+        // Changed from pageHeight / 2 - 35 to - 25 to move it down
+        const finalY = (pageHeight / 2) - 25; 
+        const finalX = (pageWidth / 2) - (boxW / 2);
 
-        // 5. 3° and 4° Central Final Box
-        const final2Y = pageHeight / 2 + 30;
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.5); // Keep it slightly thicker as it's the final
+        doc.rect(finalX, finalY, boxW, boxH);
+        doc.line(finalX, finalY + boxH / 2, finalX + boxW, finalY + boxH / 2);
+        // Inner Score Boxes (Matches your drawSide logic)
+        doc.rect(finalX + boxW - sSize - 1, finalY + (boxH / 4) - (sSize / 2), sSize, sSize); 
+        doc.rect(finalX + boxW - sSize - 1, finalY + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("FINALE", pageWidth / 2, finalY - 2, { align: 'center' });
+
+        // --- 5. 3° and 4° Central Final Box ---
+        const final2Y = (pageHeight / 2) + 25;// Positioned below the center
         doc.setDrawColor(0);
         doc.setLineWidth(0.5);
-        doc.rect(finalX, final2Y, 50, 20);
+        doc.rect(finalX, final2Y, boxW, boxH);
+        doc.line(finalX, final2Y + boxH / 2, finalX + boxW, final2Y + boxH / 2);
+        // Inner Score Boxes
+        doc.rect(finalX + boxW - sSize - 1, final2Y + (boxH / 4) - (sSize / 2), sSize, sSize); 
+        doc.rect(finalX + boxW - sSize - 1, final2Y + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
         doc.setFontSize(12);
-        doc.text("3° e 4° Posto", pageWidth / 2, final2Y - 1, { align: 'center' });
+        doc.text("3° e 4° Posto", pageWidth / 2, final2Y + 25, { align: 'center' });
 
         doc.save(`Tabellone-${this.selectedTourney.tourneyName}.pdf`);
     }
@@ -390,7 +412,7 @@ export class TabResultListView extends AbstractTabResultListView {
             doc.setFontSize(12);
             doc.setFont("helvetica", "bold");
             // Place the label about 25mm from the top
-            doc.text(labels[r] || `Round ${r+1}`, x + (w / 2), 40, { align: 'center' });
+            doc.text(labels[r] || `Round ${r+1}`, x + (w / 2), 20, { align: 'center' });
                         
             const verticalGap = (pageH - 40) / currentMatchesCount;
             const firstY = 30 + (verticalGap / 2);
@@ -404,31 +426,59 @@ export class TabResultListView extends AbstractTabResultListView {
                 doc.line(x, y + h/2, x + w, y + h/2);
 
                 // Only draw names for the first round (the classification data)
+                const sSize = 9;
                 if (r === 0) {
-                    doc.setFontSize(7);
-                    doc.text(matches[i].team1.substring(0, 18), x + 1, y + 8);
-                    doc.text(matches[i].team2.substring(0, 18), x + 1, y + 14);
+                    // 1. Define the maximum width for the text (Box width - score box space - padding)
+                    doc.setFontSize(10); // We can use a slightly larger font now!
+                    const maxWidth = w - sSize - 3;
+                    // 2. Split text into lines if it exceeds maxWidth
+                    const team1Lines: string[] = doc.splitTextToSize(matches[i].team1, maxWidth);
+                    const team2Lines: string[] = doc.splitTextToSize(matches[i].team2, maxWidth);
+                    // We place it at 30% of the box height
+                    const t1Offset = h * 0.2; 
+                    doc.text(team1Lines.slice(0, 2), x + 2, y + t1Offset); 
+                    // --- TEAM 2 (Bottom Half) ---
+                    // We place it at 80% of the box height (this prevents the overlap)
+                    const t2Offset = h * 0.7; 
+                    doc.text(team2Lines.slice(0, 2), x + 2, y + t2Offset);
                 }
 
                 // Draw Score Boxes
-                const sSize = 9;
                 doc.rect(x + w - sSize - 1, y + (h/4) - (sSize/2), sSize, sSize); 
                 doc.rect(x + w - sSize - 1, y + (3*h/4) - (sSize/2), sSize, sSize);
 
-                // Draw Connector Lines to next round
-                const nextX = (side === 'left') ? x + w : x;
-                const direction = (side === 'left') ? 1 : -1;
-                const lineLen = spacing - w;
+                // --- Draw Connector Lines (Top/Bottom Entry) ---
+                const nextColumnX = (side === 'left') ? x + spacing : x - spacing;
+                const nextBoxMidX = nextColumnX + (w / 2); 
 
-                // Horizontal line out
-                doc.line(nextX, y + h/2, nextX + (lineLen / 2) * direction, y + h/2 );
-                
-                // Vertical connection line (every pair)
-                if (i % 2 === 0 && currentMatchesCount > 1) {
-                    const bottomY = y + h/2 + verticalGap;
-                    doc.line(nextX + (lineLen / 2) * direction, y + h/2, nextX + (lineLen / 2) * direction, bottomY);
-                    // Horizontal line into next round box
-                    doc.line(nextX + (lineLen / 2) * direction, (y + h/2 + bottomY) / 2, nextX + lineLen * direction, (y + h/2 + bottomY) / 2);
+                // 1. Horizontal line out
+                const isLastRound = (r === totalRounds - 1);
+                if (!isLastRound) {
+                    const startXSide = (side === 'left') ? x + w : x;
+                    doc.line(startXSide, y + h / 2, nextBoxMidX, y + h / 2);
+                }
+
+                // 2. Vertical line to connect to the TOP or BOTTOM of the next box
+                // We only draw this if it's NOT the last round of the side
+                if (r < totalRounds - 1) {
+                    // Current Round Math (used to find this box's vertical center)
+                    // Next Round Math (Must use the exact same logic but with half the matches)
+                    const nextMatchesCount = currentMatchesCount / 2;
+                    const nextVerticalGap = (pageH - 40) / nextMatchesCount;
+                    const nextFirstY = 30 + (nextVerticalGap / 2);
+                    
+                    // Find the center of the target box in the next round
+                    const nextBoxCenterY = nextFirstY + (Math.floor(i / 2) * nextVerticalGap);
+
+                    if (i % 2 === 0) {
+                        // TOP TEAM: Move from current middle DOWN to next box's TOP
+                        const targetTop = nextBoxCenterY - (h / 2);
+                        doc.line(nextBoxMidX, y + h / 2, nextBoxMidX, targetTop);
+                    } else {
+                        // BOTTOM TEAM: Move from current middle UP to next box's BOTTOM
+                        const targetBottom = nextBoxCenterY + (h / 2);
+                        doc.line(nextBoxMidX, y + h / 2, nextBoxMidX, targetBottom);
+                    }
                 }
             }
 
@@ -443,143 +493,27 @@ export class TabResultListView extends AbstractTabResultListView {
         const doc = new jsPDF();
         let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[rowIndex];
         // We use currentY to track our vertical position on the page
-        let currentY = 15; 
+        this.meetingRoundService.selectedTourney = this.selectedTourney;
+
+        let rounds : Round[] = [];
         for (let i = 0; i < el.eliminatories.length; i++) {
             const e : Eliminatory = el.eliminatories[i];
             const r : Round = e.round;
-            
-            // 1. Prepare the data for this specific round
-            this.meetingRoundService.prepareMeetingsMap(r);
-            let meetings: any[] = [];
-            for (let md = 1; md <= r.daysNo; md++) {
-                let ms = this.meetingRoundService.getOnewayMeetingsOfDay(md);
-                if (ms && ms.length > 0) {
-                    let newDate = new Date(ms[0].datetime);
-                    let range = this.dfp.transform(newDate);
-                    let dto: MeetingDto = new MeetingDto();
-                    dto.round = r.name;
-                    dto.direction = "Andata,";
-                    dto.separator = true;
-                    dto.md = md;
-                    dto.days = r.daysNo;
-                    dto.weekRange = range;
-                    dto.signLine = false;
-                    meetings.push(dto);
-                    for (let m of ms) {
-                        let matchDto: MeetingDto = { round: r.name, direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m };
-                        meetings.push(matchDto);
-                        let signLineDto: MeetingDto = new MeetingDto();
-                        signLineDto.round = r.name;
-                        signLineDto.direction = "Andata,";
-                        signLineDto.separator = true;
-                        signLineDto.md = md;
-                        signLineDto.days = r.daysNo;
-                        signLineDto.weekRange = range;
-                        signLineDto.signLine = true;
-                        meetings.push(signLineDto);
-                    }
-                }
-            }
-            // 2. CHECK SPACE: If we are near the bottom (e.g., past 240mm), 
-            // start a new page for the next round title and table.
-            if (currentY > 240) {
-                doc.addPage();
-                currentY = 15;
-            }
-            // 3. Draw the Round Title
-            doc.setFontSize(14);
-            doc.text(`${this.selectedTourney.tourneyName} - ${r.name}`, 14, currentY);
-            // 4. Draw the table starting slightly below the text
-            autoTable(doc, {
-                head: [["In Casa", "P1", "P2", "Fuori Casa"]],
-                body: this.meetingRoundService.formatRoundData(meetings),
-                startY: currentY + 5,
-                theme: 'striped',
-                columnStyles: {
-                    0: { halign: 'right', cellWidth: 'auto' },
-                    1: { halign: 'center', cellWidth: 15 },
-                    2: { halign: 'center', cellWidth: 15 },
-                    3: { halign: 'left', cellWidth: 'auto' }
-                },
-                didParseCell: (data) => {
-                    // Only apply this logic to the header row
-                    if (data.section === 'head') {
-                        if (data.column.index === 0) data.cell.styles.halign = 'right';
-                        if (data.column.index === 1) data.cell.styles.halign = 'center';
-                        if (data.column.index === 2) data.cell.styles.halign = 'center';
-                        if (data.column.index === 3) data.cell.styles.halign = 'left';
-                    }
-                },
-                styles: { minCellHeight: 12 }, // Ensure cell is tall enough for a 10mm box
-                didDrawCell: (data) => {
-                    // Check if we are in the body and in the P1 or P2 columns (index 1 and 2)
-                    if (data.section === 'body' && (data.column.index === 1 || data.column.index === 2)) {
-                        // Only draw if the content is empty (which means points were 0)
-                        if (data.cell.text[0] === '') {
-                            const boxSize = 10; // 10mm                            
-                            // Calculate center of the cell to place the box
-                            const posX = data.cell.x + (data.cell.width - boxSize) / 2;
-                            const posY = data.cell.y + (data.cell.height - boxSize) / 2;
-                            // Draw the rectangle (x, y, width, height, style)
-                            doc.setDrawColor(0); // Black border
-                            doc.rect(posX, posY, boxSize, boxSize, 'S'); // 'S' means Stroke (outline)
-                        }
-                    }
-                }
-            });
-            // 5. Update currentY for the NEXT round in the loop
-            // We find where the table ended and add a 10mm gap
-            currentY = (doc as any).lastAutoTable.finalY + 15;
+            rounds.push(r);
+        }
+
+        const both : boolean = this.selectedTourney.isOnewayRound != "true";
+        if (both) {
+            this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Andata", true);
+        } else {
+            this.meetingRoundService.printFullDirection(doc, rounds, el.name, null, true);
+        }
+                
+        if (both) {
+            doc.addPage(); // Start Away meetings on a fresh page
+            this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Ritorno", true);
         }
         doc.save(`Eliminations-${this.selectedTourney.tourneyName}.pdf`);
-    }
-
-    /**
-     * Creates the 2 big tables in the topEliminatoryLevel from the received sortedEliminatories list.
-     * The 4 first position are built from the 4 first position of the sortedEliminatories.
-     * The remaining positions are built starting from the last postions of the sortedEliminatories
-     * down to the 5° position.
-     * 
-     * @param topEl the top ElementaryLevel to organize as a two big tables
-     * @param sortedEliminatories the sorted Eliminatory list from which take the team couples 
-     */
-    private placeOnTwoBigTables(topEl: EliminatoryLevel, sortedEliminatories : Eliminatory[] ) {
-        console.log("Entering placeOnTwoBigTables()");
-
-        let p1: number = 0;
-        let p2: number = topEl.eliminatories.length / 2;
-        let p3: number = topEl.eliminatories.length - 1;
-        let p4: number = p2 - 1;
-        
-        let p : number=0;
-        let li = sortedEliminatories.length - 1;
-        for( let i=0; i<topEl.eliminatories.length; i++ ) {
-            if( i % 4 == 0 ) {
-                p = p1++;
-            }
-            if( i % 4 == 1 ) {
-                p = p2++;
-            }
-            if( i % 4 == 2 ) {
-                p = p3--;
-            }
-            if( i % 4 == 3 ) {
-                p = p4--;
-            }
-            if( i < 4 ) {
-                topEl.eliminatories[p] = sortedEliminatories[i];
-            } else {
-                topEl.eliminatories[p] = sortedEliminatories[li--];
-            }
-            const e = topEl.eliminatories[p];
-            for(let m of e.round.onewayMeetings ) {
-                // this.saveMeeting(e, m);
-            }
-            for(let m of e.round.roundtripMeetings ) {
-                // this.saveMeeting(e, m);
-            }
-        }       
-        // this.updateTourney();
     }
 }
 

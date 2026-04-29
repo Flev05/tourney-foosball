@@ -295,7 +295,7 @@ export class TeamDetailView extends AbstractDetailView {
 
     onTeamSelect(event: any) {
         if( this.tourneyTeams ) {
-            this.teamService.newTeam = false;
+            // this.teamService.newTeam = false;
         }    
         this.errorMessage = null;
         const teamId = event.value.id;

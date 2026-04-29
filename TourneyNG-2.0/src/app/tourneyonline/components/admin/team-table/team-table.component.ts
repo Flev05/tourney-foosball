@@ -27,15 +27,13 @@ export class TeamTableComponent extends AbstractListView {
     @Input() tourneyTeams: boolean | undefined;
     @Input() chaosEnabled: boolean | undefined;
     @ViewChild('table') table!: Table; // This gives us access to the #table from HTML
+
     // Define the Output emitter
     @Output() teamChanged = new EventEmitter<Team>();
     
-    // cols: TableCols[] = TeamService.cols;
     cols = [
         { field: 'player0', header: 'DIFENSORE' },
         { field: 'player1', header: 'ATTACCANTE' },
-        // You can easily add more here later:
-        // { field: 'teamName', header: 'Squadra' }
     ];
 
     selectedTeam: Team = new Team();
@@ -82,7 +80,10 @@ export class TeamTableComponent extends AbstractListView {
         this.teamCount = this.teams.length;
 
         if( this.teamService.newTeam == true ) {
-            this.onTeamUpdate(this.selectedTeam);
+            if(this.teamService.selectedTeam.teamName) {
+                this.onTeamUpdate(this.teamService.selectedTeam);
+            }
+            this.teamService.newTeam = false;
         }
 
         setTimeout(() => {
@@ -183,16 +184,7 @@ export class TeamTableComponent extends AbstractListView {
 
     createChaos() {
         console.log("Entering createChaos()");
-    
         this.teams = this.generateChaosTeams();
-
-        // for( let t of this.teams ) {
-        //     this.teamService.saveTeam(t
-        //             , t.teamName
-        //             , TeamDetailView.CHECK_ALREADY_EXIST_TEAM
-        //             , () =>  {} ); 
-        // }
-
         this.selectedTourney.teams = this.teams;
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));

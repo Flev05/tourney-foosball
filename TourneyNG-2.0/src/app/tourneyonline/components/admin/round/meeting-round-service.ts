@@ -559,9 +559,10 @@ export class MeetingRoundService extends MeetingService {
 
         for (let i = 0; i < rounds.length; i++) {
             const r = rounds[i];
-            
             if (!fillpage) {
-                if (i > 0) doc.addPage();
+                if (i > 0) {
+                    doc.addPage();
+                }
                 lastY = 20;
             }
 
@@ -569,12 +570,12 @@ export class MeetingRoundService extends MeetingService {
             let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
 
             for (let md = 1; md <= r.daysNo; md++) {
-                let ms: Meeting[] = (directionLabel === "Andata") 
+                let ms: Meeting[] = (directionLabel == null || directionLabel === "Andata") 
                     ? this.getOnewayMeetingsOfDay(md) 
                     : this.getRoundtripMeetingsOfDay(md);
 
                 if (ms.length > 0) {
-                    let currentDayMeetings: MeetingDto[] = [];
+                    let currentDayMeetings: any[] = [];
                     if( directionLabel ) {
                         this.collectMeetingData(currentDayMeetings, ms, currentRoundName, `${directionLabel},`, md, r.daysNo);
                     } else {
@@ -609,66 +610,10 @@ export class MeetingRoundService extends MeetingService {
         }
     }
 
-    private printMeetingsByDirection(doc: jsPDF, meetings: MeetingDto[], startY: number, showTableHeader: boolean) {
-        autoTable(doc, {
-            head: [["Data", "N°", "In Casa", "P1", "P2", "Fuori Casa"]],
-            body: this.formatRoundData(meetings),
-            startY: startY,
-            margin: { top: 20, bottom: 20 },
-            theme: 'striped',
-            showHead: showTableHeader ? 'everyPage' : false, 
-            rowPageBreak: 'avoid', 
-            
-            // This styles the general look of the header
-            headStyles: {
-                fillColor: [41, 128, 185], // Optional: standard blue
-                textColor: 255,
-                fontStyle: 'bold',
-            },
-
-            // This styles the columns for both Head and Body
-            columnStyles: {
-                0: { halign: 'center' },
-                1: { halign: 'center' },
-                2: { halign: 'right' },  // "In Casa"
-                3: { halign: 'center', cellWidth: 15 },
-                4: { halign: 'center', cellWidth: 15 },
-                5: { halign: 'left' }
-            },
-
-            styles: { minCellHeight: 10, fontSize: 14 },
-            
-            // --- THE FIX FOR THE TYPESCRIPT ERROR ---
-            didParseCell: (data) => {
-                // Force horizontal alignment by index for the header specifically
-                if (data.section === 'head') {
-                    if (data.column.index === 2) {
-                        data.cell.styles.halign = 'right';
-                    }
-                    if (data.column.index === 0 || data.column.index === 1 || data.column.index === 3 || data.column.index === 4) {
-                        data.cell.styles.halign = 'center';
-                    }
-                }
-            },
-
-            didDrawCell: (data) => {
-                if (data.section === 'body' && (data.column.index === 3 || data.column.index === 4)) {
-                    if (data.cell.text[0] === '') {
-                        const boxSize = 8;
-                        const posX = data.cell.x + (data.cell.width - boxSize) / 2;
-                        const posY = data.cell.y + (data.cell.height - boxSize) / 2;
-                        doc.setDrawColor(0);
-                        doc.rect(posX, posY, boxSize, boxSize, 'S');
-                    }
-                }
-            }
-        });
-    }
-
     /**
      * Helper to avoid repeating logic for pushing DTOs into the list
      */
-    private collectMeetingData(list: MeetingDto[], ms: any[], rn: string, dir: string | null, md: number, totalDays: number) {
+    private collectMeetingData(list: MeetingDto[], ms: Meeting[], rn: string, dir: string | null, md: number, totalDays: number) {
         let newDate = new Date(ms[0].datetime);
         let range = this.dateFormatPipe.transform(newDate);
         // Add Header Row
@@ -709,6 +654,67 @@ export class MeetingRoundService extends MeetingService {
         }
     }
     
+    private printMeetingsByDirection(doc: jsPDF, meetings: MeetingDto[], startY: number, showTableHeader: boolean) {
+        autoTable(doc, {
+            head: [["Data", "N°", "In Casa", "P1", "P2", "Fuori Casa"]],
+            body: this.formatRoundData(meetings),
+            startY: startY,
+            margin: { top: 20, bottom: 20 },
+            theme: 'striped',
+            showHead: showTableHeader ? 'everyPage' : false, 
+            rowPageBreak: 'avoid', 
+            
+            // This styles the general look of the header
+            headStyles: {
+                fillColor: [41, 128, 185], // Optional: standard blue
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+
+            // This styles the columns for both Head and Body
+            columnStyles: {
+                0: { halign: 'center' }, // Data
+                1: { halign: 'center' }, // N°
+                2: { halign: 'right' },  // "In Casa"
+                3: { halign: 'center', cellWidth: 15 }, // P1
+                4: { halign: 'center', cellWidth: 15 }, // P2
+                5: { halign: 'left' } // Fuori Casa
+            },
+
+            styles: { minCellHeight: 10, fontSize: 14 },
+            
+            // --- THE FIX FOR THE TYPESCRIPT ERROR ---
+            didParseCell: (data) => {
+                // Force horizontal alignment by index for the header specifically
+                if (data.section === 'head') {
+                    if (data.column.index === 2) {
+                        data.cell.styles.halign = 'right';
+                    }
+                    if (data.column.index === 0 || data.column.index === 1 || data.column.index === 3 || data.column.index === 4) {
+                        data.cell.styles.halign = 'center';
+                    }
+                }
+            },
+            didDrawCell: (data) => {
+                // Check if we are in the body and in the score columns (P1=3, P2=4)
+                if (data.section === 'body' && (data.column.index === 3 || data.column.index === 4)) {
+                    // Get the actual text content
+                    const cellText = data.cell.text.join('').trim();
+                    // If the text is empty, draw the square
+                    if (cellText === '') {
+                        const boxSize = 8;
+                        // Calculate center
+                        const posX = data.cell.x + (data.cell.width - boxSize) / 2;
+                        const posY = data.cell.y + (data.cell.height - boxSize) / 2;
+                        doc.setDrawColor(0);
+                        doc.setLineWidth(0.1); // Ensure line width is set for the rectangle
+                        doc.rect(posX, posY, boxSize, boxSize, 'S');
+                    }
+                }
+            }
+        });
+    }
+
     public formatRoundData(meetings: MeetingDto[]): any[] {
         const tableRows: any[] = [];
         meetings.forEach((dto) => {
@@ -757,8 +763,8 @@ export class MeetingRoundService extends MeetingService {
                     this.dateFormatPipe.transformWeek(dto.meeting.datetime),
                     matchNo,
                     teamHome,
-                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreHome,
-                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreAway,
+                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreHome.toString(),
+                    (scoreHome === 0 && scoreAway === 0) ? '' : scoreAway.toString(),
                     teamAway
                 ];
                 tableRows.push(row);

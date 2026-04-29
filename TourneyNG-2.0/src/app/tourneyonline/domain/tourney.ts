@@ -17,32 +17,32 @@ import { Player } from './player';
 export class Tourney {
     id: number | null =  null;
     
-    tourneyName    : string = "";
-    calendar       : string = "";
-    roundTabName   : string = "Gironi";
-    playoffTabName  : string = "";
-    playoutTabName  : string = "";
+    tourneyName         : string = "";
+    calendar            : string = "";
+    roundTabName        : string = "Gironi";
+    playoffTabName      : string = "";
+    playoutTabName      : string = "";
     eliminatoryTabName  : string = "";
     eliminatoryBTabName : string = "";
-    chaosEnabled       : boolean = false;
-    teamsChanged       : boolean = false;
+    chaosEnabled        : boolean = false;
+    teamsChanged        : boolean = false;
 
-    followerName?   : string;
-    isDaily?        : string;
-    datetime       : Date = new Date();
+    followerName?       : string;
+    isDaily?            : string;
+    datetime            : Date = new Date();
 
-    wizardModeIndex            : number = 0;
-    terminatedRounds           : string[] = [];
-    terminatedPlayoffs         : string[] = [];
+    wizardModeIndex     : number = 0;
+    terminatedRounds    : string[] = [];
+    terminatedPlayoffs  : string[] = [];
 
     selectedTeams4RoundCB?      : Combobox;
-    selectedTeams4PlayoffsCB   : Combobox = new Combobox();
-    selectedPlayoffsCB         : Combobox = new Combobox();
-    selectedPlayoutsCB         : Combobox = new Combobox();
-    selectedRoundsNumCB       : Combobox = new Combobox();
+    selectedTeams4PlayoffsCB    : Combobox = new Combobox();
+    selectedPlayoffsCB          : Combobox = new Combobox();
+    selectedPlayoutsCB          : Combobox = new Combobox();
+    selectedRoundsNumCB         : Combobox = new Combobox();
 
     address                     : string = "";
-    clientVO                   : ClientVO  = new ClientVO();
+    clientVO                    : ClientVO  = new ClientVO();
     country                     : Country = new Country();
 
     isOnewayRound?              : string;
@@ -59,26 +59,26 @@ export class Tourney {
     playersPerTeam?             : number;
 
     eliminatoryMode?            : EliminatoryMode;
-    selectedEliminatoryTeamsCB : Combobox = new Combobox();
+    selectedEliminatoryTeamsCB  : Combobox = new Combobox();
     teamSortType?               : TeamSortType;
 
     teamsWeightEnabled?         : string;
 
-    objectives                 : Final[] = [];
+    objectives                  : Final[] = [];
     teams                       : Team[] = [];
 
     resultTool?                 : EResultTool;
 
-    roundVO                    : RoundVO = new RoundVO();
-    playoffVO                  : PlayoffVO = new PlayoffVO();
-    playoutVO                  : PlayoffVO = new PlayoffVO();
+    roundVO                     : RoundVO = new RoundVO();
+    playoffVO                   : PlayoffVO = new PlayoffVO();
+    playoutVO                   : PlayoffVO = new PlayoffVO();
 
-    isEliminatoryAutoGen       : string = "";
-    eliminatoryLevels          : Array<EliminatoryLevel> = [];
-    eliminatoryBLevels         : Array<EliminatoryLevel>  = [];
+    isEliminatoryAutoGen        : string = "";
+    eliminatoryLevels           : Array<EliminatoryLevel> = [];
+    eliminatoryBLevels          : Array<EliminatoryLevel>  = [];
 
-    defenderPlayers            : Player[] = [];
-    offenderPlayers            : Player[] = [];
-    jollyPlayers               : Player[] = [];
+    defenderPlayers             : Player[] = [];
+    offenderPlayers             : Player[] = [];
+    jollyPlayers                : Player[] = [];
 }
  

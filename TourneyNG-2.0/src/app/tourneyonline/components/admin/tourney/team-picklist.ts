@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { Team } from '../../../domain/team';
-import { TourneyService } from '../../../service/tourney-service';
-import { TeamService } from '../../../service/team-service';
-import { AbstractListView } from '../../../components/common/abstract-listview';
+import { Team } from 'app/tourneyonline/domain/team';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
 import { Router } from '@angular/router';
-import { TableCols } from '../../../domain/table-cols';
-import { TeamDetailView } from '../../../components/admin/team/team-detailview';
-import { TourneyVO } from '../../../domain/tourney.vo';
-import { ClientService } from '../../../service/client-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Observable, of } from 'rxjs';
 
 @Component({

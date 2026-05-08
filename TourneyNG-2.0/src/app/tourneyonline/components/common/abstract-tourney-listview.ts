@@ -2,16 +2,16 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { AbstractListView } from './abstract-listview';
-import { PhaseType } from '../../domain/enumerations';
-import { TourneyVO } from '../../domain/tourney.vo';
-import { Tourney } from '../../domain/tourney';
-import { TourneyService } from '../../service/tourney-service';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { DateFormatPipe } from './date-format-pipe';
-import { TableCols } from '../../domain/table-cols';
-import { PlayerService } from '../../service/player-service';
-import { TeamService } from '../../service/team-service';
-import { DisciplineService } from '../../service/discipline-service';
-import { CountryService } from '../../service/country-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { DisciplineService } from 'app/tourneyonline/service/discipline-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Injectable } from '@angular/core';
  
 @Injectable()

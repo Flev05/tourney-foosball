@@ -295,19 +295,19 @@
     <p-tab [value]="1">Modalità</p-tab>
     <p-tab [value]="2">Squadre({{selectedTourney.teams.length}})</p-tab>
     @if (containsRound()) {
-      <p-tab [value]="3">{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}</p-tab>
+      <p-tab [value]="3">{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})</p-tab>
     }
     @if (containsPlayoff()) {
-      <p-tab [value]="4">{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}</p-tab>
+      <p-tab [value]="4">{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}({{playoffCount}})</p-tab>
     }
     @if (containsPlayout()) {
-      <p-tab [value]="5">{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}</p-tab>
+      <p-tab [value]="5">{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}({{playoutCount}})</p-tab>
     }
     @if (containsEliminatory()) {
-      <p-tab [value]="6">{{selectedTourney.eliminatoryTabName}}</p-tab>
+      <p-tab [value]="6">{{selectedTourney.eliminatoryTabName}}({{eliminatoryCount}})</p-tab>
     }
     @if (containsEliminatoryB()) {
-      <p-tab [value]="7">{{selectedTourney.eliminatoryBTabName}}</p-tab>
+      <p-tab [value]="7">{{selectedTourney.eliminatoryBTabName}}({{eliminatoryBCount}})</p-tab>
     }
     <p-tab [value]="8">Operatori</p-tab>
   </p-tablist>
@@ -702,28 +702,28 @@
                             placeholder="Nome scheda..."/>
                   </div>
             @if (containsRound()) {
-                  <div class="col-12 md:col-4 flex align-items-center" 
-                      tooltipPosition="left"
-                      pTooltip="Selezionare Play Off se sono previsti altri gironi di qualificazione a valle dei gironi all'italiana">
-                      <p-checkbox name="phasesGroupname"
-                                  inputId="phasesGroupnameId2"
-                                  value="playoff"
-                                  [(ngModel)]="selectedTourney.phases"
-                                  (onChange)="onPlayoffPhaseChange($event)"
-                                  class="mr-2"> 
-                      </p-checkbox>
-                      <label for="phasesGroupnameId2" class="mb-0">
-                          Play Off
-                      </label>
-                  </div>
-                  <div class="col-12 md:col-8">
-                      <input pInputText 
-                            type="text" 
-                            class="w-full" 
-                            [(ngModel)]="selectedTourney.playoffTabName" 
-                            pTooltip="Cambiare, se si vuole, il nome della scheda Play Off"
-                            placeholder="Nome scheda..."/>
-                  </div>
+              <div class="col-12 md:col-4 flex align-items-center" 
+                  tooltipPosition="left"
+                  pTooltip="Selezionare Play Off se sono previsti altri gironi di qualificazione a valle dei gironi all'italiana">
+                  <p-checkbox name="phasesGroupname"
+                              inputId="phasesGroupnameId2"
+                              value="playoff"
+                              [(ngModel)]="selectedTourney.phases"
+                              (onChange)="onPlayoffPhaseChange($event)"
+                              class="mr-2"> 
+                  </p-checkbox>
+                  <label for="phasesGroupnameId2" class="mb-0">
+                      Play Off
+                  </label>
+              </div>
+              <div class="col-12 md:col-8">
+                  <input pInputText 
+                        type="text" 
+                        class="w-full" 
+                        [(ngModel)]="selectedTourney.playoffTabName" 
+                        pTooltip="Cambiare, se si vuole, il nome della scheda Play Off"
+                        placeholder="Nome scheda..."/>
+              </div>
             }
             @if (containsPlayoff()) {
                 <div class="col-12 md:col-4 flex align-items-center" 
@@ -772,29 +772,29 @@
                       placeholder="Nome scheda..."/>
             </div>
             @if (containsEliminatory()) {
-                  <div class="col-12 md:col-4 flex align-items-center" 
-                      tooltipPosition="left"
-                      pTooltip="Selezionare Eliminazioni Dirette B se sono previste le eliminazioni dirette per le squadre che non si sono qualificate nei gironi precedenti">
-                      <p-checkbox name="phasesGroupname"
-                                  inputId="phasesGroupnameId5"
-                                  value="eliminatoryB"
-                                  [(ngModel)]="selectedTourney.phases"
-                                  (onChange)="onEliminatoryBPhaseChange($event)"
-                                  class="mr-2"> 
-                      </p-checkbox>
-                      <label for="phasesGroupnameId5" class="mb-0">
-                          Eliminazioni Dirette B
-                      </label>
-                  </div>
-                  <div class="col-12 md:col-8">
-                      <input pInputText 
-                            type="text" 
-                            class="w-full" 
-                            [(ngModel)]="selectedTourney.eliminatoryBTabName" 
-                            pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette B"
-                            placeholder="Nome scheda..."/>
-                  </div>
-                }
+                <div class="col-12 md:col-4 flex align-items-center" 
+                    tooltipPosition="left"
+                    pTooltip="Selezionare Eliminazioni Dirette B se sono previste le eliminazioni dirette per le squadre che non si sono qualificate nei gironi precedenti">
+                    <p-checkbox name="phasesGroupnameB"
+                                inputId="phasesGroupnameId5"
+                                value="eliminatoryB"
+                                [(ngModel)]="selectedTourney.phases"
+                                (onChange)="onEliminatoryBPhaseChange($event)"
+                                class="mr-2"> 
+                    </p-checkbox>
+                    <label for="phasesGroupnameId5" class="mb-0">
+                        Eliminazioni Dirette B
+                    </label>
+                </div>
+                <div class="col-12 md:col-8">
+                    <input pInputText 
+                          type="text" 
+                          class="w-full" 
+                          [(ngModel)]="selectedTourney.eliminatoryBTabName" 
+                          pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette B"
+                          placeholder="Nome scheda..."/>
+                </div>
+            }
             </div>                
             @if (notAllowedPhases()) {
               <div class="col-1">
@@ -1044,7 +1044,7 @@
     </p-tabpanel>
 
     @if (containsRound()) {
-      <p-tabpanel [value]="3" title="{{selectedTourney.roundTabName==''?'Gironi':selectedTourney.roundTabName}}">
+      <p-tabpanel [value]="3" title="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})">
         <!--p-accordion value="-1">
           <p-accordion-panel value="0">
             <p-accordion-header>
@@ -1481,14 +1481,13 @@
           </div>
         }
         @if (playoffTabEnabled) {
-          <div class="ui-grid responsive pad ui-fluid"
-            style="margin: 10px 0px">
+          <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
             <p-fieldset legend="Struttura Play Off">
               <div class="grid">
                 <div class="col-2">
                   Turni:
                 </div>
-                <div class="col-1" tooltipPosition="right"
+                <div class="col-8" tooltipPosition="right"
                   pTooltip="Indicare se gli incontri di Play Off sono di solo andata o andata e ritorno">
                   <p-radioButton name="isOnewayGroupname"
                     inputId="isOnewayGroupnameId1"
@@ -1514,7 +1513,7 @@
                 <div class="col-2">
                   Generazione:
                 </div>
-                <div class="col-1" tooltipPosition="right"
+                <div class="col-8" tooltipPosition="right"
                   pTooltip="Indicare se i playoff devono essere generati in automatico o in manuale">
                   <p-radioButton name="isGenPlayoffGroupname"
                     inputId="isGenPlayoffGroupnameId1"
@@ -1569,10 +1568,10 @@
             </p-fieldset>
             <p-fieldset legend="Punteggi Playoff">
               <div class="grid">
-                <div class="col-1">
+                <div class="col-2">
                   Partite:
                 </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.maxMatchesPerMeeting" 
                           [showButtons]="true" 
@@ -1592,10 +1591,10 @@
               </div>
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.allMatchesEnabled) {
                 <div class="grid">
-                  <div class="col-1">
-                    Fine Incontro:
+                  <div class="col-2">
+                    Tipo Incontro:
                   </div>
-                  <div class="col-1" tooltipPosition="right"
+                  <div class="col-8" tooltipPosition="right"
                     pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoffVO.bestOfWinner}} partite">
                     <div class="ui-g radiobuttons">
                       <p-radioButton name="allPlayoffMatchesGroupname"
@@ -1622,10 +1621,10 @@
               }
               @if (selectedTourney.tourneyType=='score') {
                 <div class="grid">
-                  <div class="col-1">
+                  <div class="col-2">
                     Goal:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.pointsNeededToWin" 
                           [showButtons]="true" 
@@ -1645,10 +1644,10 @@
               }
               @if (selectedTourney.tourneyType=='time' || selectedTourney.playoffVO.isAllMatches=='true') {
                 <div class="grid">
-                  <div class="col-1">
+                  <div class="col-2">
                     Vittoria:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.matchWinnerScores" 
                           [showButtons]="true" 
@@ -1698,10 +1697,10 @@
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true') {
                 <div
                   class="grid" >
-                  <div class="col-1">
-                    Vittoria (Golden goal o Tie break):
+                  <div class="col-2">
+                    Punti Vittoria Golden Goal:
                   </div>
-                   <div class="col-12 md:col-1">
+                   <div class="col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakWin" 
                           [showButtons]="true" 
@@ -1725,10 +1724,10 @@
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true') {
                 <div
                   class="grid" >
-                  <div class="col-1">
-                    Sconfitta (Golden goal o Tie break):
+                  <div class="col-2">
+                    Punti Sconfitta Golden Goal:
                   </div>
-                   <div class="col-12 md:col-1">
+                   <div class="col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakDefeat" 
                           [showButtons]="true" 
@@ -1850,14 +1849,13 @@
           </div>
         }
         @if (selectedTourney.playoutVO!=undefined && playoutTabEnabled) {
-          <div class="ui-grid responsive pad ui-fluid"
-            style="margin: 10px 0px">
+          <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
             <p-fieldset legend="Struttura Play Out">
               <div class="grid">
                 <div class="col-2">
                   Turni:
                 </div>
-                <div class="col-1" tooltipPosition="right"
+                <div class="col-8" tooltipPosition="right"
                   pTooltip="Indicare se gli incontri di Play Out sono di solo andata o andata e ritorno">
                   <p-radioButton name="isOnewayPlayoutGroupname"
                     inputId="isOnewayPlayoutGroupnameId1"
@@ -1882,10 +1880,10 @@
             </p-fieldset>
             <p-fieldset legend="Punteggi Playout">
               <div class="grid">
-                <div class="col-1">
+                <div class="col-2">
                   Partite:
                 </div>
-                <div class="col-12 md:col-1">
+                <div class="col-1">
                   <p-inputNumber 
                       [(ngModel)]="selectedTourney.playoffVO.maxMatchesPerMeeting" 
                       [showButtons]="true" 
@@ -1905,10 +1903,10 @@
               </div>
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.allMatchesEnabled) {
                 <div class="grid">
-                  <div class="col-1">
-                    Fine Incontro:
+                  <div class="col-2">
+                    Tipo Incontro:
                   </div>
-                  <div class="col-1" tooltipPosition="right"
+                  <div class="col-8" tooltipPosition="right"
                     pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
                     <div class="ui-g radiobuttons">
                       <p-radioButton name="allPlayoutMatchesGroupname"
@@ -1935,10 +1933,10 @@
               }
               @if (selectedTourney.tourneyType=='score') {
                 <div class="grid">
-                  <div class="col-1">
+                  <div class="col-2">
                     Goal:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoffVO.pointsNeededToWin" 
                         [showButtons]="true" 
@@ -1958,10 +1956,10 @@
               }
               @if (selectedTourney.tourneyType=='time' || selectedTourney.playoutVO.isAllMatches=='true') {
                 <div class="grid">
-                  <div class="col-1">
+                  <div class="col-2">
                     Vittoria:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.matchWinnerScores" 
                         [showButtons]="true" 
@@ -2011,10 +2009,10 @@
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true') {
                 <div
                   class="grid" >
-                  <div class="col-1">
-                    Vittoria (Golden goal o Tie break):
+                  <div class="col-2">
+                    Punti Vittoria Golden Goal:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakWin" 
                         [showButtons]="true" 
@@ -2038,10 +2036,10 @@
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true') {
                 <div
                   class="grid" >
-                  <div class="col-1">
-                    Sconfitta (Golden goal o Tie break):
+                  <div class="col-2">
+                    Punti Sconfitta Golden Goal:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakDefeat" 
                         [showButtons]="true" 
@@ -2266,7 +2264,7 @@
                 <div class="col-2">
                   Generazione:
                 </div>
-                <div class="col-1" tooltipPosition="right"
+                <div class="col-8" tooltipPosition="right"
                   pTooltip="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
                   <p-radioButton name="isGenEliGroupname"
                     inputId="isGenEliGroupnameId1"

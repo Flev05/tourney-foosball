@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
@@ -60,7 +59,6 @@ export class LevelService extends AbstractEliminatoryListView {
         }
         this.eliminatoryLevels = this.prepareEliminationTree(teamCount);
         this.selectedTourney.eliminatoryLevels = this.eliminatoryLevels;
-
         this.eliminatoryLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryLevels, teamCount);
     }
 
@@ -178,55 +176,13 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     private cleanExTopLevel(el: EliminatoryLevel) {
         console.log("Entering cleanExTopLevel()");
-        // this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
-
         for (let e of el.eliminatories) {
             e.round.teamNames = [];
             e.round.onewayMeetings = [];
             e.round.roundtripMeetings = [];
         }
     }
- 
-    /**
-     * Processes the standalone use case, when the tourney is configured as the only Eliminatory type,
-     * no rounds and no playoffs.
-     * 
-     * @param teamCount the number of teams to allocate on the top eliminatory level
-     */
-    // private prepareStandaloneTopLevel(topLevel : EliminatoryLevel): void {
-    //     console.log("Entering prepareStandaloneTopLevel()");
-    //     if( !this.isSomeTeamsChanged(topLevel) ) {
-    //         console.log("There are the same teams, nothing todo!");
-    //         return;            
-    //     }      
-    //     this.cleanExTopLevel(topLevel);
-    //     let tmpTeams: Array<Team> = this.sortAndPad(this.selectedTourney.teams);
-    //     let ascTeam: Array<Team> = new Array<Team>();
-    //     for(let i=0; i<tmpTeams.length/2; i++) {
-    //         let c: Team = tmpTeams[i];
-    //         ascTeam.push(c);
-    //     }
-    //     let descTeam: Array<Team> = new Array<Team>();
-    //     for(let i=tmpTeams.length-1; i>=tmpTeams.length/2; i--) {
-    //         let c: Team = tmpTeams[i];
-    //         descTeam.push(c);
-    //     }
-    //     let topLevelEliminatories = topLevel.eliminatories;
-    //     for(let i=0; i<ascTeam.length; i++) {
-    //         let t1: Team = ascTeam[i];
-    //         let t2: Team = descTeam[i];
-    //         let e: Eliminatory = topLevelEliminatories[i];
-    //         e.round.teamNames = [t1.teamName, t2.teamName];
-    //         let isSkiping = t1.isDummy || t2.isDummy;
-    //         let m1: Meeting = this.meetingService.createMeeting(t1.teamName, t2.teamName, null, null, 1, Direction.OneWay, isSkiping);
-    //         e.round.onewayMeetings = [m1];
-    //         e.isSkiping = e.isSkiping || m1.isSkiping;
-    //         let m2: Meeting = this.meetingService.createMeeting(t2.teamName, t1.teamName, null, null, 2, Direction.RoundTrip, isSkiping);
-    //         e.round.roundtripMeetings = [m2];
-    //         e.isSkiping = e.isSkiping || m2.isSkiping;
-    //     }
-    // } 
-
+  
     /**
      * Computes the differences from the team list in the selected torney against the team 
      * list inside the receives eliminatories
@@ -242,7 +198,6 @@ export class LevelService extends AbstractEliminatoryListView {
                 }
             }
         }
-        
         for( let el of topLevel.eliminatories ) {
             for( let team of el.round.teamNames ) {
                 if(this.selectedTourney.teams.find(t => t.teamName == team) == undefined)  {
@@ -250,49 +205,9 @@ export class LevelService extends AbstractEliminatoryListView {
                 }
             }
         }
-
         return false;
     }
-
-    /**
-     * If teams weight not enabled, before sorts the received array of teams in a random way, 
-     * then padds, with dummy teams, the array to the nearest power of 2 teams containg all the teams
-     * 
-     * @param teams the array of teams to sort and padd
-     * @returns the padded (and sorted if enabled) teams
-     */
-    private sortAndPad(teams : Array<Team>): Array<Team> {
-
-        let maxDeep: number = 0;
-        for(let i=0; i<teams.length; i++) {
-            if(teams.length > maxDeep ) {
-                maxDeep = teams.length;
-            }
-        }
-        let power2 = this.tourneyService.power2Padding(maxDeep);
-
-        let tmpTeams: Array<Team> = new Array<Team>();
-
-        tmpTeams = [...teams];
-
-        if( !this.selectedTourney.teamsWeightEnabled ) {
-            tmpTeams.sort((t1, t2) =>{
-                let rand = Math.random();
-                if(rand < 0.5) {
-                    return 1;
-                }
-                return -1;
-            });
-        }
-
-        for(let i=tmpTeams.length; i < power2; i++ ) {
-            let t: Team = this.newDummyTeam();
-            tmpTeams.push(t);
-        }
-
-        return tmpTeams;
-    }
-   
+ 
     private addOptionalLevel(els: Array<EliminatoryLevel>) {
         let lcb: Combobox = { label: "Finalina 3° e 4° posto", value: 1 };
         let el: EliminatoryLevel = this.newEliminatoryLevel(lcb, false, 4);
@@ -341,7 +256,6 @@ export class LevelService extends AbstractEliminatoryListView {
         // This merges defaults with any specific values you pass in
         return { ...d, ...overrides };
     }
-
     
     public highestPowerOf2LE(n: number): number {
         if (n < 1) {
@@ -480,8 +394,8 @@ export class LevelService extends AbstractEliminatoryListView {
         return ms[0];
     }
 
-    onEliminatoryBTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
-        this.cleanEliminatoryBMeetings( );        
+    public onEliminatoryBTeamNumChange(teamNo : number) : EliminatoryLevelVO[] {
+        this.cleanEliminatoryBMeetings();        
         this.processEliminatoryBTeams(teamNo);
         return this.eliminatoryBLevelRows;
     }
@@ -501,7 +415,7 @@ export class LevelService extends AbstractEliminatoryListView {
     }
 
     private cleanEliminatoryBMeetings() {
-        if( this.eliminatoryBLevels == undefined ) {
+        if( !this.eliminatoryBLevels ) {
             return;
         }
         for (let el of this.eliminatoryBLevels) {
@@ -522,15 +436,15 @@ export class LevelService extends AbstractEliminatoryListView {
         if( teamCount < 2 ) {
             return;
         }
-        let teamNo: number = this.selectedTourney.teams.length - teamCount;
-        if( teamNo < 2 ) {
+        // let teamNo: number = this.selectedTourney.teams.length - teamCount;
+        if( teamCount < 2 ) {
             return;
         }
-        this.eliminatoryBLevels = this.prepareEliminationTree( teamNo);
+        this.eliminatoryBLevels = this.prepareEliminationTree(teamCount);
         this.selectedTourney.eliminatoryBLevels = this.eliminatoryBLevels;
         // We would to skip it unless configured to have the unique big classification on all rounds... like the new champions league
         // this.prepareAutomaticEliminatoryRules(this.eliminatoryBLevels, teamNo, startPosition);
-        this.eliminatoryBLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryBLevels, teamNo);
+        this.eliminatoryBLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryBLevels, teamCount);
     }
 
     /**
@@ -547,7 +461,6 @@ export class LevelService extends AbstractEliminatoryListView {
         }
 
         this.isAutomatic = true;
-
         let power2: number = this.tourneyService.power2Padding(selectedTeamsNo);
 
         let rounds : Array<Round>;
@@ -590,79 +503,18 @@ export class LevelService extends AbstractEliminatoryListView {
         
         for(let i=0; i<topLevelEliminatories.length; i++) {
             let e: Eliminatory = topLevelEliminatories[i];
-
             let up = padTeamList[i];
-
             let label = up.round.value == 0 ? "" : up.round.value  + "°";
-            
-            // e.rule1.fromRound.position   = {label: label, value: up.position.value};
-            // e.rule1.fromPlayoff.position = {label: label, value: up.position.value};
-
-            let round1 = rounds.find(r => r.name == up.round.label);
-
             let down = padTeamList[--lastIndex];
             e.isSkiping = up.isDummy || down.isDummy;
-
             label = down.position.value == 0 ? "" : down.position.value  + "°";
-            
-            // e.rule2.fromRound.position   = {label: label, value: down.position.value};            
-            // e.rule2.fromPlayoff.position = {label: label, value: down.position.value};            
-            // e.rule1.fromRound.bandPosition = 0;
-            // e.rule2.fromRound.bandPosition = 0;
-
-            let round2      = rounds.find(r => r.name == down.round.label);
-            let round2Id    = round2==undefined ? 0 : round2.id;
-            let round2Label = round2==undefined ? "" : down.round.label;
-
-            // if(this.containsPlayoff()) {
-            //     e.rule1.fromPlayoff.round = {label: up.round.label, value: round1.id};
-            //     e.rule1.fromRound.round   = {label: "", value: 0};
-            //     e.rule2.fromPlayoff.round = {label: round2Label, value: round2Id};
-            //     e.rule2.fromRound.round   = {label: "", value: 0};
-            //     if(this.isAutomatic) {
-            //         e.rule1.fromPlayoff.bandPosition = i % roundsNo + 1;
-            //         if( e.rule2.fromPlayoff.position.value > 0 )  {
-            //             e.rule2.fromPlayoff.bandPosition = lastIndex % roundsNo + 1;
-            //         }    
-            //     }
-            //     for( let m of e.round.onewayMeetings ) {
-            //         m.rule1.fromRound = e.rule1.fromPlayoff;
-            //         m.rule2.fromRound = e.rule2.fromPlayoff;
-            //     }
-            //     for( let m of e.round.roundtripMeetings ) {
-            //         m.rule1.fromRound = e.rule1.fromPlayoff;
-            //         m.rule2.fromRound = e.rule2.fromPlayoff;
-            //     }
-            // } else {
-            //     e.rule1.fromRound.round   = {label: up.round.label, value: round1.id};
-            //     e.rule1.fromPlayoff.round = {label: "", value: 0};
-            //     e.rule2.fromRound.round   = {label: round2Label, value: round2Id};
-            //     e.rule2.fromPlayoff.round = {label: "", value: 0};
-            //     if(this.isAutomatic) {
-            //         e.rule1.fromRound.bandPosition = (i + startPosition) % roundsNo + 1;
-            //         if( e.rule2.fromRound.position.value > 0 )  {
-            //             e.rule2.fromRound.bandPosition = (lastIndex + startPosition)  % roundsNo + 1;
-            //         }   
-            //     }
-            //     for( let m of e.round.onewayMeetings ) {
-            //         m.rule1.fromRound = e.rule1.fromRound;
-            //         m.rule2.fromRound = e.rule2.fromRound;
-            //         let rule1 = e.rule1.fromRound.bandPosition + "° delle migliori " + e.rule1.fromRound.position.value + "°";
-            //         let rule2 = e.rule2.fromRound.bandPosition + "° delle migliori " + e.rule2.fromRound.position.value + "°";
-            //         console.log("rule1=("+ rule1 + ") Vs rule2=(" + rule2 + ")");
-            //     }
-            //     for( let m of e.round.roundtripMeetings ) {
-            //         m.rule1.fromRound = e.rule1.fromRound;
-            //         m.rule2.fromRound = e.rule2.fromRound;
-            //     }
-            // }
         }
     }
 
     public prepareEliminatoryLevelsGui(eliminatoryLevels: Array<EliminatoryLevel>, topLevelTeamNo : number ): EliminatoryLevelVO[]  {
         this.eliminatoryLevelCols = super.prepareELCols();
         const pow2LE : number =  this.highestPowerOf2LE(topLevelTeamNo); // if 18, pow2 = 16
-        const playoffNo = topLevelTeamNo - pow2LE; // 18 - 16 = 2
+        const playoffNo = topLevelTeamNo - pow2LE; // 18 - 16 = 2; 35 - 32 = 3
         const isPlayoff = playoffNo > 0;
 
         let eliminatoryLevelRows :EliminatoryLevelVO [] = [];

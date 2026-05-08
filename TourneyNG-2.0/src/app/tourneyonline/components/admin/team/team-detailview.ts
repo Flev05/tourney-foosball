@@ -205,7 +205,7 @@ export class TeamDetailView extends AbstractDetailView {
         } else {
             this.tourneyService.selectedTourney.teams[index] = this.selectedTeam;
         }
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => super.goBack());
     }

@@ -26,7 +26,6 @@ import { MeetingDb } from '../domain/meeting-db';
 import { UserVO } from '../domain/user-vo';
 import { OperatorsVO } from '../domain/operators-vo';
 import { PlayoffVO } from '../domain/playoff-vo';
-import { Match } from '../domain/match';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -108,7 +107,7 @@ export class TourneyService extends AbstractService {
     static roundCols: TableCols[] = [
         { field: 'name',        header: 'Gironi' },
         { field: 'teamNo',      header: 'N° Squadre' },
-        { field: 'classificatedTeamNames',  header: 'Squadre' },
+        { field: 'teamNames',  header: 'Squadre' },
     ];
 
     static playoffCols: TableCols[] = [
@@ -174,17 +173,12 @@ export class TourneyService extends AbstractService {
         if(this.selectedEliminatoryLevel==undefined) {
             this.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
         }
-
         let min: number = 2;
-    
         let eliminatoryTeamsCombobox: Combobox[] = [];
-
         eliminatoryTeamsCombobox.push(this.FIRST_COMBO_ITEM);
-        
         for(let i=min; i<=teamsNo; i++) {
             eliminatoryTeamsCombobox.push({label: "" + i, value: i});
         }
-
         return eliminatoryTeamsCombobox;
     }
 
@@ -192,13 +186,10 @@ export class TourneyService extends AbstractService {
         if(this.selectedTourney.roundVO.rounds.length==0 && this.selectedTourney.teams.length==0) {
             return 0;
         }
-
         if(this.selectedEliminatoryLevel==undefined) {
             this.selectedEliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
         }
-
         let min: number = 2;
-
         let teamsNo = this.selectedTourney.roundVO.rounds.length;
         if( this.selectedTourney.roundVO.rounds.length == 0 ) {
             teamsNo = this.selectedTourney.teams.length;
@@ -208,25 +199,18 @@ export class TourneyService extends AbstractService {
                 teamsNo += r.teamNames.length;
             }
         }
-
         let max: number = this.selectedTourney.teams.length;
-    
         let eliminatoryTeamsCombobox: Combobox[] = [];
-
         eliminatoryTeamsCombobox.push(this.FIRST_COMBO_ITEM);
-        
         for(let i=min; i<=max; i++) {
             eliminatoryTeamsCombobox.push({label: "" + i, value: i});
         }
-        
         this.roundsCombobox = [];
         this.roundsCombobox.push({label: "", value: 0});
-            
         for(let i=0; i<this.selectedTourney.roundVO.rounds.length; i++) {
             let r=this.selectedTourney.roundVO.rounds[i];
             this.roundsCombobox.push({label: r.name, value: r.id});
         }
-
         if(this.selectedTourney.playoffVO.playoffs.length > 0) {
             this.playoffsCombobox = [];
             this.playoffsCombobox.push({label: "", value: 0});
@@ -235,7 +219,6 @@ export class TourneyService extends AbstractService {
                 this.playoffsCombobox.push({label: r.round.name, value: r.round.id});
             }
         }
-
         this.positionsCombobox = [{label: "", value: 0}];
         if(this.selectedTourney.roundVO.rounds.length > 0) {
             let maxPosition = this.selectedTourney.teams.length / this.selectedTourney.roundVO.rounds.length;
@@ -247,11 +230,9 @@ export class TourneyService extends AbstractService {
                 this.positionsCombobox.push({label: vv, value: p});
             }                    
         }
-
         if(this.selectedTourney.selectedEliminatoryTeamsCB == undefined) {
             this.selectedTourney.selectedEliminatoryTeamsCB = eliminatoryTeamsCombobox[0];
         }
-
         return teamsNo;
     }
 
@@ -327,16 +308,13 @@ export class TourneyService extends AbstractService {
 
     private onLoadTourneyByIdNext(tvo: TourneyVO, complete: () => void) {
         console.log("TourneyService.onLoadTourneyByIdNext() ");
-
         this.tvo = tvo;
         this.selectedTourney = JSON.parse(this.tvo.json);
-
         this.selectedTourney.id = this.tvo.id;
         this.selectedTourney.tourneyName = this.tvo.tourneyName;
         this.selectedTourney.followerName = this.tvo.followerName;
         this.selectedTourney.country = this.tvo.country;
         this.selectedTourney.clientVO = this.tvo.clientVO;
-
         complete();
     }
 
@@ -414,7 +392,7 @@ export class TourneyService extends AbstractService {
     public updateTourneyWithCleanAll(t : Tourney, complete: () => void ) : void  {
         this.onSaveTourneyError = false;
         // this.clearTourneyMeetings(t, 0);
-        let tvo : TourneyVO = this.prepareTourneyVO(t, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.prepareTourneyVO(t, this.clientService.selectedClient, true);
         let url = updateTourneyUrl;
         console.log("Invoking put method on URL: [" + url + "]");
         let subscriber: Observable<TourneyVO> = this.http.put<TourneyVO>(url, tvo, httpOptions).pipe(
@@ -555,9 +533,7 @@ export class TourneyService extends AbstractService {
             console.log("Entering saveTourneyErrorHandler()");
             console.log(`${operation} failed!`);
             console.error(res); // log to console instead
-      
             this.onSaveTourneyError = true;
- 
             return of(result as T);
         };
     }
@@ -565,13 +541,9 @@ export class TourneyService extends AbstractService {
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
-
             this.onSaveTourneyError = true;
-
             console.error(error); // log to console instead
-      
             console.log(`${operation} failed: ${error.message}`);
-      
             return of(result as T);
         };
     }
@@ -1278,8 +1250,11 @@ export class TourneyService extends AbstractService {
         return rows;
     }
 
-    public prepareTourneyVO( t: Tourney, c: ClientVO): TourneyVO {
+    public prepareTourneyVO( t: Tourney, c: ClientVO, cleanMeetings : boolean): TourneyVO {
         if( t.tourneyName )  {
+            if( cleanMeetings ) {
+                this.cleanMeetings(t);
+            }
             let followerName : string = t.tourneyName.replace(/[\s\/\\%]/g,"");
             let tvo = new TourneyVO();
             tvo.id = t.id;
@@ -1291,6 +1266,14 @@ export class TourneyService extends AbstractService {
             return tvo;
         }
         return new TourneyVO();
+    }
+
+    private cleanMeetings( t: Tourney) : void {
+        this.cleanRoundMeeting(t);
+        this.cleanPlayoffMeeting(t);
+        this.cleanPlayoutMeeting(t);
+        this.cleanEliminatoryMeeting(t);
+        this.cleanEliminatoryBMeeting(t);
     }
 
     public cleanRoundMeeting(t: Tourney): Tourney  {
@@ -1318,7 +1301,6 @@ export class TourneyService extends AbstractService {
     }
     
     public cleanEliminatoryMeeting(t: Tourney): Tourney{
-        // let copy = this.cloneObject(t);
         for(let el of t.eliminatoryLevels) {
             for( let e of el.eliminatories) {
                 e.round.onewayMeetings = [];
@@ -1329,7 +1311,6 @@ export class TourneyService extends AbstractService {
     }
 
     public cleanEliminatoryBMeeting(t: Tourney): Tourney{
-        // let copy = this.cloneObject(t);
         for(let el of t.eliminatoryBLevels) {
             for( let e of el.eliminatories) {
                 e.round.onewayMeetings = [];

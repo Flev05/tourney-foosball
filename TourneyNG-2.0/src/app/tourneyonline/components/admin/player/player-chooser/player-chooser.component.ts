@@ -85,7 +85,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.selectedTourney.jollyPlayers = this.jollyPlayers;
         this.selectedTourney.offenderPlayers  = this.offenderPlayers;
 
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Save Tourney operation'));
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }

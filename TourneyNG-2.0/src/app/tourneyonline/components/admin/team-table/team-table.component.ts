@@ -142,7 +142,7 @@ export class TeamTableComponent extends AbstractListView {
                     }
                     // this.teamService.onTeamOperationChange(ETeamOperation.DELETE); // fire the DELETE event for Subscribed listeners
                     
-                    let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient);
+                    let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient, true);
                     const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
                     subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
                 }
@@ -186,7 +186,7 @@ export class TeamTableComponent extends AbstractListView {
         console.log("Entering createChaos()");
         this.teams = this.generateChaosTeams();
         this.selectedTourney.teams = this.teams;
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.onTeamUpdate(this.teams[0]));
     }

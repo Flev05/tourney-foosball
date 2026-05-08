@@ -55,12 +55,12 @@ export class MeetingRoundService extends MeetingService {
         return subsbr;
     }
 
-    public saveRoundMeetings( st : TourneyVO
+    public saveRoundMeetings( selectedTourney : Tourney
         , saveEH : (operation: string, result?: TourneyVO) => any
         , subscribeEH : (operation: string, result?: TourneyVO) => void
         , unBlockDocument: () => void)
     {
-        this.selectedTourney = JSON.parse(st.json);
+        this.selectedTourney = selectedTourney;
         let roundsMeetings: MeetingDb[] = [];
         for (let r of this.selectedTourney.roundVO.rounds) {
             for(let m of r.onewayMeetings ) {
@@ -87,7 +87,7 @@ export class MeetingRoundService extends MeetingService {
 
     public prepareTourneyVOForRound(cleanRounds: boolean) {
         this.cleanRoundMeetings(cleanRounds);
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         return tvo;
     }
 

@@ -102,6 +102,11 @@ export class TourneyDetailView extends AbstractDetailView {
     atLeastTwoTeams: boolean = true;
     team4roundsCombobox: Combobox[] = [];
     roundsCombobox: Combobox[] = [];
+    roundCount: number = 0;
+    playoffCount: number = 0;
+    playoutCount: number = 0;
+    eliminatoryCount: number = 0;
+    eliminatoryBCount: number = 0;
 
     atLeastOneRound: boolean = true;
     playoffsCombobox: Combobox[] = [];
@@ -184,6 +189,13 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.initiDisciplineCombobox();
 
+        this.roundRows = this.selectedTourney.roundVO.rounds;
+        this.roundCount = this.roundRows.length;
+        this.playoffRows = this.selectedTourney.playoffVO.playoffs;
+        this.playoffCount = this.playoffRows.length;
+        this.playoutRows = this.selectedTourney.playoutVO.playoffs;
+        this.playoutCount = this.playoutRows.length;
+
         this.selectedTourney.datetime = new Date(this.selectedTourney.datetime);
         this.atLeastTwoTeams = this.selectedTourney.teams.length >= 2 ? true : false;
         this.teamCols = TeamService.cols;
@@ -194,7 +206,7 @@ export class TourneyDetailView extends AbstractDetailView {
         let spin = this.selectedTourney.roundVO.maxMatchesPerMeeting;
         this.selectedTourney.roundVO.bestOfWinner = spin;
 
-        this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi squadre" : "Gestisci Squadre (" +this.selectedTourney.teams.length + ")";
+        this.teamLabel = this.selectedTourney.teams.length == 0 ? "Aggiungi Squadre" : "Gestisci Squadre (" + this.selectedTourney.teams.length + ")";
         console.log(this.teamLabel);
 
         this.followerUrl += this.selectedTourney.followerName;
@@ -378,18 +390,15 @@ export class TourneyDetailView extends AbstractDetailView {
     private prepareTabsGui( ): void {
         console.log("Entering prepareTabsGui()");
         this.tabChangedIndex = 0;
-
         if( this.isRoundTabEnabled() ) {
             this.prepareRoundsCombobox();
         }
-
         if( this.isPlayoffTabEnabled() ) {
             this.preparePlayoffsCombobox();
             if( this.isPlayoutTabEnabled() ) {
                 this.preparePlayoutRows();
             }
         }
-  
         if( this.isEliminatoryTabEnabled() ) {
             this.levelService.selectedTourney = this.selectedTourney;
             this.isEliminatoryAutoGen  = this.selectedTourney.isEliminatoryAutoGen == undefined ? "true" : "" + this.selectedTourney.isEliminatoryAutoGen;
@@ -401,9 +410,11 @@ export class TourneyDetailView extends AbstractDetailView {
 
             if( this.isEliminatoryBTabEnabled() ) {
                 this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
-                const tNo = this.selectedTourney.eliminatoryBLevels.length == 0 ? 2 : this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo;
+                const highestPow2Le : number =  this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo); 
+                const tNo = this.selectedTourney.teams.length - highestPow2Le;
                 this.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.selectedTourney.eliminatoryBLevels, tNo);
                 this.levelService.eliminatoryBLevelRows = this.eliminatoryBLevelRows;
+                this.eliminatoryBCount = this.eliminatoryBLevelRows.length;
             }
             if(this.selectedTourney.eliminatoryTabName=="" || this.selectedTourney.eliminatoryTabName==null) {
                 this.selectedTourney.eliminatoryTabName="Eliminazioni Dirette";                
@@ -549,6 +560,9 @@ export class TourneyDetailView extends AbstractDetailView {
             }
             return TEAM_TAB_INDEX;
         }
+        if( this.tourneyService.selectedTabIndex == ELIMINATORY_B_TAB_INDEX ) {
+            return ELIMINATORY_TAB_INDEX;
+        }
         console.error("It never should appen: prevTabIndex=" + prevTabIndex);
         return prevTabIndex;
     }
@@ -641,13 +655,14 @@ export class TourneyDetailView extends AbstractDetailView {
 
         let teamNo = this.selectedTourney.teams.length;
         this.eliminatoryTeamsCombobox = this.tourneyService.prepareEliminatoriesComboBoxes(teamNo);
-        
+
         this.eliminatoryLevelCols = this.levelService.eliminatoryLevelCols;
         if(this.selectedTourney.selectedEliminatoryTeamsCB.value == null ) {
             this.selectedTourney.selectedEliminatoryTeamsCB.value = 0;
         }
         if(this.selectedTourney.selectedEliminatoryTeamsCB.value >= 0 ) {
             this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
+            this.eliminatoryCount = this.eliminatoryLevelRows.length;
         }
     }
 
@@ -655,6 +670,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("Entering prepareEliminatoryB()");
         this.levelService.eliminatoryBLevels = [];
         this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
+        this.eliminatoryBCount = this.eliminatoryBLevelRows.length;
         if(this.selectedTourney.eliminatoryBLevels==undefined) {
             this.selectedTourney.eliminatoryBLevels = [];
         }
@@ -809,17 +825,29 @@ export class TourneyDetailView extends AbstractDetailView {
     }
     
     public onEliminatoryTeamNumChange(event : any) {
-        console.log(event);
+        const selectedTeamsNo : number = event.value;
+        console.log("Selected teams=" + selectedTeamsNo);
+
+        if( this.containsEliminatoryB() ) {
+            this.selectedTourney.eliminatoryBLevels = [];
+            const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo); 
+            if( selectedTeamsNo === highestPow2Le+1 ) {
+                confirm("Attenzione! Non si può creare una Eliminatoria di serie B con una sola squadra. Saranno inserite tutte nelle Eliminatorie di seria A e gestite con i playoff")
+                this.doEliminatoryTeamNumChange(selectedTeamsNo);
+                return;
+            }
+            if(!confirm(ELIM_DIR_CHANGE_TOP_LEVEL_MODE_POPUP)) {
+                return;
+            }
+            this.doEliminatoryTeamNumChange(highestPow2Le);
+            this.doEliminatoryBTeamNumChange(selectedTeamsNo - highestPow2Le);
+            return;
+        }
         if(!confirm(ELIM_DIR_CHANGE_TOP_LEVEL_MODE_POPUP)) {
             return;
         }
-        const teamsNo = this.selectedTourney.selectedEliminatoryTeamsCB.value;
-        if( teamsNo ) { 
-            this.doEliminatoryTeamNumChange(teamsNo);
-            if( this.containsEliminatoryB() ) {
-                this.doEliminatoryBTeamNumChange(teamsNo);
-            }
-        }
+
+        this.doEliminatoryTeamNumChange(selectedTeamsNo);
     }
 
     private doEliminatoryTeamNumChange(teamsNo: number) {
@@ -829,9 +857,13 @@ export class TourneyDetailView extends AbstractDetailView {
         this.meetingService.selectedTourney = this.selectedTourney;
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
 
+        this.selectedTourney.eliminatoryLevels = [];
+
         this.turnOnWizardMode();
         this.eliminatoryTabEnabled = true;
         this.eliminatoryLevelRows = this.levelService.onEliminatoryTeamNumChange(teamsNo);
+        this.eliminatoryCount = this.eliminatoryLevelRows.length;
+        this.eliminatoryBCount = 0;
         let mdbs: MeetingDb[] = [];
         for (let el of this.levelService.eliminatoryLevels) {
             for (let e of el.eliminatories) {
@@ -854,10 +886,14 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private doEliminatoryBTeamNumChange(teamsNo: number) {
         this.turnOnWizardMode();
+        this.selectedTourney.eliminatoryBLevels = [];
+        let allTeamsNo: number = this.selectedTourney.teams.length;
         this.eliminatoryBLevelRows = this.levelService.onEliminatoryBTeamNumChange(teamsNo);
+        this.eliminatoryBCount = this.eliminatoryBLevelRows.length;
         let mdbs: MeetingDb[] = [];
         for (let el of this.levelService.eliminatoryBLevels) {
             el.abstractRoundVO = new AbstractRoundVO();
+            el.topLevelTeamNo = allTeamsNo;
             el.abstractRoundVO.direction = Direction.OneWay;
             el.abstractRoundVO.matchBalanceScores = 1;
             el.abstractRoundVO.matchWinnerScores = 3;
@@ -979,8 +1015,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.selectedTourney.selectedEliminatoryTeamsCB = cb;
         
-        let tvo = this.prepareTourneyVO();
-        this.meetingRoundService.saveRoundMeetings(tvo
+        // let tvo = this.prepareTourneyVO();
+        this.meetingRoundService.saveRoundMeetings(this.selectedTourney
             ,(m,t) => this.saveTourneyErrorHandler(m,t)
             ,(m,t) => this.subscribeErrorHandler(m,t)
             ,() => {}
@@ -1236,7 +1272,7 @@ export class TourneyDetailView extends AbstractDetailView {
     private updateTourney(): void {
         console.log("Entering updateTourney()");
 
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => this.subscribeErrorHandler(e), () => {});
     }
@@ -1833,12 +1869,9 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onEliminatoryPhaseChange(event : any) {
         const isChecked = event.checked; // Boolean
-        const val = event.value; // "round"
-        console.log(`Checkbox ${val} is now: ${isChecked}`);
-        // If you need to do logic based on the array:
-        console.log("Current phases:", this.selectedTourney.phases);
-        // this.updatePhases(event, PhaseType.E);
-        if(event) {
+        console.log("Current phases:", isChecked);
+        let con: boolean = this.containsPhase(PhaseType.E, isChecked);
+        if( con ) {
             this.prepareEliminatoryCombobox();
         } else {        
             this.selectedTourney.eliminatoryLevels = [];
@@ -1850,12 +1883,10 @@ export class TourneyDetailView extends AbstractDetailView {
 
     onEliminatoryBPhaseChange(event : any) {
         const isChecked = event.checked; // Boolean
-        const val = event.value; // "round"
-        console.log(`Checkbox ${val} is now: ${isChecked}`);
         // If you need to do logic based on the array:
-        console.log("Current phases:", this.selectedTourney.phases);
-        // this.updatePhases(event, PhaseType.EB);
-        if(event) {
+        console.log("Current phases:", isChecked);
+        let con: boolean = this.containsPhase(PhaseType.EB, isChecked);
+        if( con ) {
             this.prepareEliminatoryB();
         } else {
             this.selectedTourney.eliminatoryBLevels = [];
@@ -2010,7 +2041,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.turnOnWizardMode();
         }
         
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         return tvo;
     }
 
@@ -2020,7 +2051,7 @@ export class TourneyDetailView extends AbstractDetailView {
         if( !this.isInWizardMode() ) {
             this.clearTourneyMeetings(this.selectedTourney, this.tabChangedIndex);
         }
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         return tvo;
     }
 

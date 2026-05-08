@@ -1,23 +1,22 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../service/tourney-service';
-import { Round } from '../../domain/round';
-import { Classification } from '../../domain/classification';
-import { Playoff } from '../../domain/playoff';
-import { Direction } from '../../domain/enumerations';
-import { TableCols } from '../../domain/table-cols';
-import { MeetingService } from '../../service/meeting-service';
-import { MeetingDb } from '../../domain/meeting-db';
-import { EliminatoryLevelVO } from '../../domain/eliminatory-level.vo';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { EliminatoryLevelVO } from 'app/tourneyonline/domain/eliminatory-level.vo';
 import { AbstractListView } from './abstract-listview';
 import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { MeetingPlayoffService } from '../admin/playoff/meeting-playoff-service';
 import { DateFormatPipe } from './date-format-pipe';
 import { LevelService } from '../admin/eliminatory/level-service';
-import { ClientService } from '../../service/client-service';
+import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Injectable } from '@angular/core';
-import { Meeting } from '../../domain/meeting';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 @Injectable()
 export abstract class AbstractTabResultListView extends AbstractListView {
@@ -78,18 +77,6 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 round.teamNo = "" + round.teamNames.length;
             }
             this.roundRows = this.selectedTourney.roundVO.rounds;
-            for( let r of this.roundRows ) {
-                r.classification = this.tourneyService.sortTeamsDesc(r.classification);
-                r.classificatedTeamNames = [];
-                for(let i=0;i<r.classification.length; i++) {
-                    let tn = r.classification[i].teamName;
-                    tn = tn.replace(/\(\d+\)/g, '');
-                    if( r.classification.length > 0 && i < r.classification.length) {
-                        tn = tn + "(" + r.classification[i].points + ")";
-                    }
-                    r.classificatedTeamNames.push(tn);
-                }
-            }
             this.roundCount = this.roundRows.length;
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
             subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );            
@@ -104,6 +91,18 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
+        }
+        for( let r of this.roundRows ) {
+            r.classification = this.tourneyService.sortTeamsDesc(r.classification);
+            r.classificatedTeamNames = [];
+            for(let i=0;i<r.classification.length; i++) {
+                let tn = r.classification[i].teamName;
+                tn = tn.replace(/\(\d+\)/g, '');
+                if( r.classification.length > 0 && i < r.classification.length) {
+                    tn = tn + "(" + r.classification[i].points + ")";
+                }
+                r.classificatedTeamNames.push(tn);
+            }
         }
  
         this.playoffCount = 0;
@@ -171,11 +170,14 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             return;
         }
             
-        this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
-        const tNo = this.levelService.eliminatoryBLevels[0].topLevelTeamNo;
-        this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels, tNo);
-        this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
-        this.eliminatoryBCount = this.levelService.eliminatoryBLevelRows.length;
+        if( this.selectedTourney.eliminatoryBLevels && this.selectedTourney.eliminatoryBLevels.length > 0 ) {
+            this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
+            const highestPow2Le : number =  this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo); 
+            const tNo = this.selectedTourney.teams.length - highestPow2Le;
+            this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels, tNo);
+            this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;
+            this.eliminatoryBCount = this.levelService.eliminatoryBLevelRows.length;
+        }
     }
 
     private onPlayoffCompleteLoad(mdbList: MeetingDb[]) {
@@ -236,29 +238,22 @@ export abstract class AbstractTabResultListView extends AbstractListView {
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {
-
         let row : number = 0;
         let rows: any[] = [];
-
         let classificationMap: Map<string, Meeting> = new Map<string, Meeting>();
-
         for (let round of rounds) {
             row = this.prepareRoundPlayoffMeetingGui(null, round, rows, row, classificationMap);
         }
-
         return rows;
     }
 
     protected preparePlayoffGui(playoffs: Playoff[]): any[] {
         let row : number = 0;
         let rows: any[] = [];
-
         let meetingMap: Map<string, Meeting> = new Map<string, Meeting>();
-
         for (let p of playoffs) {
             row = this.prepareRoundPlayoffMeetingGui(p, p.round, rows, row, meetingMap);
         }
-
         return rows;
     }
 
@@ -277,11 +272,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
      * @param rounds 
      */
     private prepareRoundPlayoffMeetingGui(p: Playoff | null, round: Round, rows: any[], row: number, meetingMap: Map<string, Meeting>) {
-        
         this.cols = this.levelService.prepareResultRoundPlayoffColums();
-
         let rowNumber : number=0;
-
         for (let m of round.onewayMeetings) {
             rows.push(m);
 

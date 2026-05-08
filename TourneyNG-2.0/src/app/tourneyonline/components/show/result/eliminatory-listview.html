@@ -31,46 +31,13 @@
   </p-tablist>
   <p-tabpanels>
     <p-tabpanel [value]="0" title="Andata">
-      <p-table [columns]="cols"
-        [value]="onewayMeetings"
-        selectionMode="single"
-        [(selection)]="selectedRow"
-        (onRowSelect)="onEliminatoryRowSelect($event)">
-  
-        <ng-template pTemplate="body" let-rowData>
-          <tr [pSelectableRow]="rowData">
-            <td class="leftTeamName">
-              {{rowData['teamName1']}}
-            </td>
-            <td class="centralPoints">
-              <div>
-                <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
-              </div>
-              <div>
-                <span style="text-align: center; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>
-              </div>
-                <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                        ,'inProgress': rowData.status === 'In Corso'
-                        ,'terminated': rowData.status === 'Terminata'
-                        ,'confirmed': rowData.status === 'Convalidata'}">
-                {{rowData.status}}
-              </div>
-            </td>
-            <td class="rightTeamName">
-              {{rowData['teamName2']}}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-tabpanel>
-  
-    @if (isRoundTrip) {
-      <p-tabpanel [value]="1" title="Ritorno">
+      <div class="flex justify-content-center w-full mt-4">
         <p-table [columns]="cols"
-          [value]="roundtripMeetings"
+          [value]="onewayMeetings"
           selectionMode="single"
           [(selection)]="selectedRow"
           (onRowSelect)="onEliminatoryRowSelect($event)">
+    
           <ng-template pTemplate="body" let-rowData>
             <tr [pSelectableRow]="rowData">
               <td class="leftTeamName">
@@ -96,6 +63,43 @@
             </tr>
           </ng-template>
         </p-table>
+      </div>
+    </p-tabpanel>
+  
+    @if (isRoundTrip) {
+      <p-tabpanel [value]="1" title="Ritorno">
+        <div class="flex justify-content-center w-full mt-4">
+          <p-table [columns]="cols"
+            [value]="roundtripMeetings"
+            selectionMode="single"
+            [(selection)]="selectedRow"
+            (onRowSelect)="onEliminatoryRowSelect($event)">
+            <ng-template pTemplate="body" let-rowData>
+              <tr [pSelectableRow]="rowData">
+                <td class="leftTeamName">
+                  {{rowData['teamName1']}}
+                </td>
+                <td class="centralPoints">
+                  <div>
+                    <span>{{rowData['datetime'] | date: 'EEE dd/MM/y HH:mm'}}</span>
+                  </div>
+                  <div>
+                    <span style="text-align: center; font-weight: bold;">{{rowData['vpoints1']}} - {{rowData['vpoints2']}}</span>
+                  </div>
+                    <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                            ,'inProgress': rowData.status === 'In Corso'
+                            ,'terminated': rowData.status === 'Terminata'
+                            ,'confirmed': rowData.status === 'Convalidata'}">
+                    {{rowData.status}}
+                  </div>
+                </td>
+                <td class="rightTeamName">
+                  {{rowData['teamName2']}}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
       </p-tabpanel>
     }
   

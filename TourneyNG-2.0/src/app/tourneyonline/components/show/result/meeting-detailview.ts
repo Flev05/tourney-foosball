@@ -464,7 +464,8 @@ export class MeetingDetailView extends AbstractDetailView {
     private updateTourney(goback: boolean): void {
         console.log("Entering updateTourney()");
 
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        const t = {...this.selectedTourney};
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(t, this.clientService.selectedClient, false);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => this.toGoBack(goback), e => this.subscribeErrorHandler(e), () => {});
     }

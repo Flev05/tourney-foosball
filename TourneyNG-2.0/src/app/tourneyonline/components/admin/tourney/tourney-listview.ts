@@ -220,7 +220,7 @@ export class TourneyListView extends AbstractTourneyListView {
         t.eliminatoryLevels = [];
         t.wizardModeIndex = 0;
         
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(t, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(t, this.clientService.selectedClient, true);
         tvo.clonedFromTourneyName = clonedFromTourneyName;
         tvo.id = null;
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));

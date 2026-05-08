@@ -1,8 +1,8 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AbstractView } from './abstract-view';
-import { TourneyService } from '../../service/tourney-service';
-import { Eliminatory } from '../../domain/eliminatory';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { Injectable } from '@angular/core';
  
 @Injectable()

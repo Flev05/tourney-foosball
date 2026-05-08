@@ -1,18 +1,18 @@
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../service/tourney-service';
-import { Meeting } from '../../domain/meeting';
-import { TeamService } from '../../service/team-service';
-import { MeetingService } from '../../service/meeting-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { AbstractListView } from './abstract-listview';
-import { TableCols } from '../../domain/table-cols';
-import { Round } from '../../domain/round';
-import { MeetingDb } from '../../domain/meeting-db';
-import { Team } from '../../domain/team';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { Round } from 'app/tourneyonline/domain/round';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { Team } from 'app/tourneyonline/domain/team';
 import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { DateFormatPipe } from './date-format-pipe';
-import { Direction } from '../../domain/enumerations';
+import { Direction } from 'app/tourneyonline/domain/enumerations';
 
 const REDIRECT_TEAM_DV      = 'admintourney/dv/team';
 

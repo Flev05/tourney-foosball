@@ -1,10 +1,10 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { PhaseType } from '../../domain/enumerations';
+import { PhaseType } from 'app/tourneyonline/domain/enumerations';
 
-import { Tourney } from '../../domain/tourney';
-import { Country } from '../../domain/country';
-import { TourneyService } from '../../service/tourney-service';
+import { Tourney } from 'app/tourneyonline/domain/tourney';
+import { Country } from 'app/tourneyonline/domain/country';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Observable, of } from 'rxjs';
 
 import { registerLocaleData } from '@angular/common';

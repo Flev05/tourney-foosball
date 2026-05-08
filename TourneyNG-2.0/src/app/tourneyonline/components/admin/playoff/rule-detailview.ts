@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
-import { TourneyService } from '../../../service/tourney-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { MessageService } from 'primeng/api';
-import { Playoff } from '../../../domain/playoff';
-import { Combobox } from '../../../domain/tourney-combobox';
+import { Playoff } from 'app/tourneyonline/domain/playoff';
+import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { AbstractDetailView } from '../../../components/common/abstract-detailview';
-import { PlayoffRule } from '../../../domain/playoff-rule';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 
 @Component({
     templateUrl: './rule-detailview.html',

@@ -66,7 +66,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
     private updateTourney(): void {
         console.log("Entering updateTourney()");
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }

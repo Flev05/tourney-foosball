@@ -88,9 +88,8 @@ export class RoundListView extends AbstractListView {
             for( let r of this.selectedTourney.roundVO.rounds ) {
                 this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
             }
-            let tvo = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
-
-            this.meetingRoundService.saveRoundMeetings(tvo
+            // let tvo = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+            this.meetingRoundService.saveRoundMeetings(this.selectedTourney
                 ,(m,t) => this.saveTourneyErrorHandler(m,t)
                 ,(m,t) => this.subscribeErrorHandler(m,t)
                 ,()    => {this.goMeeting();}
@@ -192,7 +191,7 @@ export class RoundListView extends AbstractListView {
     }
 
     saveRound(): void {
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack());
     }

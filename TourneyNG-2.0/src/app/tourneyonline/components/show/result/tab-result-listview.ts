@@ -219,7 +219,7 @@ export class TabResultListView extends AbstractTabResultListView {
 
     private updateTourney(): void {
         console.log("Entering updateTourney()");
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }
@@ -318,11 +318,19 @@ export class TabResultListView extends AbstractTabResultListView {
     }
 
     public printTennisBracket(levelNo: number) {
+        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[levelNo];
+        this.doPrintTennisBracket(el);
+    }
+    
+    public printTennisBracketB(levelNo: number) {
+        let el: EliminatoryLevel = this.selectedTourney.eliminatoryBLevels[levelNo];
+        this.doPrintTennisBracket(el);
+    }
+    
+    private doPrintTennisBracket(el: EliminatoryLevel) {
         const doc = new jsPDF('l', 'mm', 'a4');
         const pageWidth = 297;
         const pageHeight = 210;
-        
-        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[levelNo];
         
         // 1. Gather all "Matches" from the classification lists
         // Each pair in the classification array is one match
@@ -351,6 +359,11 @@ export class TabResultListView extends AbstractTabResultListView {
         // Determine how many rounds/columns we need (e.g., 8 matches -> 3 rounds to reach semi)
         const totalMatches = initialMatches.length;
         
+        // Print the header tourney name
+        let tourneyName = `${this.selectedTourney.tourneyName}`;
+        tourneyName = tourneyName.toUpperCase();
+        doc.text(tourneyName, pageWidth / 2, (pageHeight / 2) - 95, { align: 'center' });
+
         // --- ROUND LABELS GENERATION ---
         const roundLabels: string[] = [];
         let labelSize = totalMatches;
@@ -370,8 +383,8 @@ export class TabResultListView extends AbstractTabResultListView {
         this.drawSide(doc, leftMatches, roundsPerSide, colSpacing, padding, boxW, boxH, 'left', pageHeight, roundLabels);
         this.drawSide(doc, rightMatches, roundsPerSide, colSpacing, pageWidth - padding - boxW, boxW, boxH, 'right', pageHeight, roundLabels);
 
+        
         // --- 4. Central Final Box ---
-        // Changed from pageHeight / 2 - 35 to - 25 to move it down
         const finalY = (pageHeight / 2) - 25; 
         const finalX = (pageWidth / 2) - (boxW / 2);
 
@@ -397,6 +410,7 @@ export class TabResultListView extends AbstractTabResultListView {
         doc.rect(finalX + boxW - sSize - 1, final2Y + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
         doc.setFontSize(12);
         doc.text("3° e 4° Posto", pageWidth / 2, final2Y + 25, { align: 'center' });
+
 
         doc.save(`Tabellone-${this.selectedTourney.tourneyName}.pdf`);
     }
@@ -487,11 +501,21 @@ export class TabResultListView extends AbstractTabResultListView {
             currentMatchesCount /= 2;
         }
     }
-
+    
     public printPdfTopLevelMeeting(rowIndex: number) {
         console.log("rowIndex=" + rowIndex);
-        const doc = new jsPDF();
         let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[rowIndex];
+        this.doPrintPdfTopLevelMeeting(el);
+    }
+
+    public printPdfTopLevelBMeeting(rowIndex: number) {
+        console.log("rowIndex=" + rowIndex);
+        let el: EliminatoryLevel = this.selectedTourney.eliminatoryBLevels[rowIndex];
+        this.doPrintPdfTopLevelMeeting(el);
+    }
+
+    private doPrintPdfTopLevelMeeting(el: EliminatoryLevel) {
+        const doc = new jsPDF();
         // We use currentY to track our vertical position on the page
         this.meetingRoundService.selectedTourney = this.selectedTourney;
 

@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 
 import { AbstractView } from './abstract-view';
-import { Round } from '../../domain/round';
-import { Classification } from '../../domain/classification';
-import { TourneyService } from '../../service/tourney-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { Classification } from 'app/tourneyonline/domain/classification';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Injectable } from '@angular/core';
 
 @Injectable()

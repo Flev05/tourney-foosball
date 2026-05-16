@@ -48,7 +48,6 @@
       <div class="col-1">
         Squadra*:
       </div>
-
       <div class="col-8">
           <p-autoComplete pTooltip="Permette di cercare una squadra, selezionarla o inserire una nuova."
               [(ngModel)]="autoCompleteTeam"
@@ -170,7 +169,6 @@
 <p-dialog header="Rinomina Squadra" [(visible)]="isRenaming" [modal]="true" appendTo="body" [style]="{width: '400px'}">
     <div class="flex flex-column gap-3">
         <label for="teamName">Nuovo nome della squadra</label>
-        
         <input 
             id="teamName"
             type="text" 
@@ -181,14 +179,12 @@
             [class.ng-invalid]="errorMessage" 
             [class.ng-dirty]="errorMessage"
             (input)="validateName()" /> 
-
           @if (errorMessage) {
               <small class="p-error flex align-items-center gap-1">
                   <i class="pi pi-exclamation-circle"></i>
                   {{ errorMessage }}
               </small>
           }
-
         <div class="flex justify-content-end gap-2 mt-2">
             <button pButton label="Annulla" class="p-button-text p-button-secondary" (click)="isRenaming = false"></button>
             <button pButton label="Salva" [disabled]="!!errorMessage || !newName.trim()" (click)="saveRename()"></button>

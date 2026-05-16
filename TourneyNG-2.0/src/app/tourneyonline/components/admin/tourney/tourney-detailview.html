@@ -927,25 +927,45 @@
         <div style="margin-top:30px">
           <p-message
             severity="error"
-            text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
+            Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!>
           </p-message>
         </div>
       }
 
       @if (teamTabEnabled) {
         <div class="col-1" tooltipPosition="right">
-            <div class="flex align-items-center">
-              <p-checkbox 
-                  name="chaosGroupname"
-                  inputId="chaosGroupnameId"
-                  [binary]="true"
-                  [(ngModel)]="selectedTourney.chaosEnabled"
-                  pTooltip="Apporre il segno di spunta se i giocatori sono scelti a BARAONDA"
-                  tooltipPosition="right" />
-              <label for="chaosGroupnameId" class="ml-2 cursor-pointer white-space-nowrap">
-                  Baraonda
-              </label>
-          </div>
+            <p-fieldset legend="Baraonda">
+              <div class="flex flex-column gap-3">
+                  <!-- First Line -->
+                  <div class="flex align-items-center">
+                      <p-checkbox 
+                          name="chaosGroupname"
+                          inputId="chaosGroupnameId"
+                          [binary]="true"
+                          [(ngModel)]="selectedTourney.chaosEnabled"
+                          title="Apporre il segno di spunta se i giocatori sono scelti a BARAONDA"
+                          tooltipPosition="right" />
+                      <label for="chaosGroupnameId" class="ml-2 cursor-pointer white-space-nowrap">
+                          Baraonda
+                      </label>
+                  </div>
+                  <!-- Second Line (Conditionally Rendered) -->
+                  @if (selectedTourney.chaosEnabled) {
+                      <div class="flex align-items-center">
+                          <p-checkbox 
+                              name="addTeamGroupname"
+                              inputId="addTeamGroupnameId"
+                              [binary]="true"
+                              [(ngModel)]="selectedTourney.addTeamToChaosEnabled"
+                              title="Aggiunge almeno un giocatore in corso d'opera..."
+                              tooltipPosition="right" />
+                          <label for="addTeamGroupnameId" class="ml-2 cursor-pointer white-space-nowrap">
+                              Aggiungi Giocatore/Squadra In Corso
+                          </label>
+                      </div>
+                  }
+              </div>
+          </p-fieldset>
 
           @if (!selectedTourney.chaosEnabled) {
             <p-fieldset legend="Ranking">
@@ -1016,7 +1036,7 @@
           @if (isInWizardMode()) {
             <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
               <div class="grid">
-                <div  class="col-2">
+                <div class="col-2">
                   @if (isInWizardMode()) {
                     <button pButton type="button"
                       class="ui-button-success"

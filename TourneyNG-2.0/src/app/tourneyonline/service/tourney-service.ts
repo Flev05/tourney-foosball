@@ -103,6 +103,7 @@ export class TourneyService extends AbstractService {
     selectedClassificationRow: Classification = new Classification();
 
     createChaosDisabled: boolean = true;
+    // addTeamToChaos: boolean = false;
 
     static roundCols: TableCols[] = [
         { field: 'name',        header: 'Gironi' },

@@ -148,7 +148,6 @@ export class TourneyDetailView extends AbstractDetailView {
     isTeamsOrderedGroupname : boolean = false;
     
     private tabChangedIndex : number = 0;
-    // selectedTabIndex: number = 0;
 
     constructor(
         protected override location: Location,

@@ -63,9 +63,17 @@
   <div class="ui-dialog-buttonpane ui-helper-clearfix">
     <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
     <button type="button"
-      icon="pi pi-user-plus"
+      icon="pi pi-calendar"
       pButton (click)="goMeeting()"
-      label="Incontri"
+      label="Giornate"
+      title="Visualizza gli incontri delle squadre su base giornate, girone di andata e ritorno se c'è"
+      class="ui-button-success">
+    </button>
+    <button type="button"
+      icon="pi pi-user-plus"
+      pButton (click)="addTeam()"
+      label="Add Team"
+      title="Aggiunge una squadra in corso d'opera senza rifare gli incontri esistenti ma crea i nuovi incontri con le altre squadre"
       class="ui-button-success">
     </button>
     @if (isRoundAutoGen=='false') {
@@ -76,12 +84,6 @@
         class="ui-button-danger">
       </button>
     }
-    <!--button type="button"
-      icon="pi pi-file-excel-o"
-      pButton (click)="printExcelMeeting()"
-      label="Stampa"
-      class="ui-button-success">
-    </button-->
   </div>
 
   <p-table [columns]="cols"

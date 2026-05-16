@@ -8,12 +8,10 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { CountryService } from 'app/tourneyonline/service/country-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Combobox } from 'app/tourneyonline/domain/tourney-combobox';
-import { MeetingRoundService } from '../round/meeting-round-service';
 import { ActivatedRoute } from '@angular/router';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
-import { PlayerService } from 'app/tourneyonline/service/player-service';
-import { LoginService } from 'app/tourneyonline/service/login-service';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -48,12 +46,10 @@ export class TeamDetailView extends AbstractDetailView {
     constructor(
         protected override location: Location,
         protected override tourneyService: TourneyService,
-        protected clientService: ClientService,
         protected loginService: LoginService,
+        protected clientService: ClientService,
         protected countryService: CountryService,
         public teamService: TeamService,
-        public meetingRoundService: MeetingRoundService,
-        public playerService: PlayerService,
         private route: ActivatedRoute
     ) { 
         super(tourneyService, location);
@@ -72,7 +68,6 @@ export class TeamDetailView extends AbstractDetailView {
             this.chaosEnabled = params['chaosEnabled'] === 'true';
         });
 
-        // this.selectedRound = null;
         if(this.teamService.newTeam) {
             this.prepareNewTeam("");
         }

@@ -1,22 +1,19 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { Round } from '../../../domain/round';
-import { TourneyService } from '../../../service/tourney-service';
-import { Team } from '../../../domain/team';
-import { TableCols } from '../../../domain/table-cols';
-import { TeamService } from '../../../service/team-service';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { TeamDetailView } from '../../../components/admin/team/team-detailview';
+import { Round } from 'app/tourneyonline/domain/round';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Team } from 'app/tourneyonline/domain/team';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { TeamService } from 'app/tourneyonline/service/team-service';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TeamDetailView } from 'app/tourneyonline/components/admin/team/team-detailview';
 import { MeetingRoundService } from './meeting-round-service';
-import { MeetingDb } from '../../../domain/meeting-db';
-import { TourneyVO } from '../../../domain/tourney.vo';
-import { ClientService } from '../../../service/client-service';
-import * as XLSX from 'xlsx';
-import { Meeting } from '../../../domain/meeting';
-import { MeetingService } from '../../../service/meeting-service';
-import { MeetingDto } from './meeting-dto';
-import { DateFormatPipe } from '../../common/date-format-pipe';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { MeetingService } from 'app/tourneyonline/service/meeting-service';
+import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 
 const ROUND_CHANGE_TEAMS_POPUP = "ATTENZIONE! L'operazione ricrea tutti gli incontri fra le squadre del girone facendo perdere tutte le impostazioni preesistenti. Confermi?";
 
@@ -68,7 +65,13 @@ export class RoundListView extends AbstractListView {
             this.teams.push(t);
         } 
     }
- 
+
+    addTeam() {
+        this.router.navigate([TeamDetailView.redirect], { 
+            queryParams: { tourneyTeams: true, chaosEnabled:false, addTeamInProgress:true }
+        });
+    }
+
     goMeeting() {
         const subsbr = this.meetingRoundService.loadRoundMeeting(this.selectedTourney, this.selectedRound);
         subsbr.subscribe(mdbList => this.onCompleteLoad(mdbList), e => this.onError(e) );
@@ -95,83 +98,6 @@ export class RoundListView extends AbstractListView {
                 ,()    => {this.goMeeting();}
             );
         }
-    }
-
-    private getOnewayMeetingsOfDay(md: number) : Meeting[] {
-        let onewayMeetingDaysMap = this.meetingRoundService.onewayMeetingDaysMap;
-        let onewayMeetings = onewayMeetingDaysMap.get(md);
-        if( onewayMeetings ) {
-            onewayMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
-            return onewayMeetings;
-        }
-        return [];
-    }
-
-    private getRoundtripMeetingsOfDay(md: number) : Meeting[]{
-        let roundtripMeetingDaysMap = this.meetingRoundService.roundtripMeetingDaysMap;
-        let roundtripMeetings = roundtripMeetingDaysMap.get(md);
-        if( roundtripMeetings ) {
-            roundtripMeetings.sort((m1, m2) => this.meetingService.sortMeeting(m1, m2));
-            return roundtripMeetings;
-        }
-        return [];
-    }
-
-    public printExcelMeeting() {    
-        const workbook = XLSX.utils.book_new();
-        let meetings : MeetingDto[] = [];
-        for( let r of this.selectedTourney.roundVO.rounds ) {
-            this.meetingRoundService.prepareMeetingsMap(r); 
-            for( let md = 1; md <= r.daysNo; md ++ ) {
-                let ms = this.getOnewayMeetingsOfDay(md);
-                let newDate = new Date(ms[0].datetime);
-                let range = this.meetingService.getWeekDaysRange(newDate);
-                let dto = new MeetingDto();
-                dto.round = r.name;
-                dto.direction = "Andata,";
-                dto.separator = true;
-                dto.md = md;
-                dto.days = r.daysNo;
-                dto.weekRange = range;
-                meetings.push(dto);
-                for( let m of ms ) {
-                    let dto = {round: r.name,direction: "Andata,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                    meetings.push(dto);
-                }
-            } 
-            for( let md = 1; md <= r.daysNo; md ++ ) {
-                let ms = this.getRoundtripMeetingsOfDay(md);
-                let newDate = new Date(ms[0].datetime);
-                let range = this.meetingService.getWeekDaysRange(newDate);
-                let dto = new MeetingDto();
-                dto.round = r.name;
-                dto.direction = "Ritorno,";
-                dto.separator = true;
-                dto.md = md;
-                dto.days = r.daysNo;
-                dto.weekRange = range;
-                meetings.push(dto);
-                for( let m of ms ) {
-                    let dto = {round: r.name,direction: "Ritorno,", separator: false, md: m.day, days: r.daysNo, weekRange: range, meeting: m};
-                    meetings.push(dto);
-                }
-            } 
-        }
-        const workSheetData = meetings.map((dto) => {
-            if( dto.separator ) {
-                return {
-                    Giornata: dto.round + ": " + dto.direction + " Settimana " + dto.weekRange + ", Giornata " + dto.md + "/" + dto.days
-                };    
-            }
-            return {
-                "In Casa": dto.meeting.teamName1,
-                Data:  this.dateFormatPipe.transformWeek(dto.meeting.datetime),
-                "In Trasferta": dto.meeting.teamName2,
-            };
-        })
-        const worksheet = XLSX.utils.json_to_sheet(workSheetData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Meetings" );
-        XLSX.writeFile(workbook, this.selectedTourney.tourneyName + "-Meetings.xlsx");
     }
 
     override goBack(): void {

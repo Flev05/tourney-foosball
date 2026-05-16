@@ -1,10 +1,8 @@
 
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-
 import { Team } from '../domain/team';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
@@ -26,19 +24,10 @@ const insertTeamUrl = teamUrl +'/insert';
 const updateTeamUrl = teamUrl +'/update';
 const deleteTeamUrl = teamUrl +'/delete';
 
-// import { BehaviorSubject } from 'rxjs';
-// import { ETeamOperation } from '../domain/enumerations';
-
 @Injectable({
     providedIn: 'root'
 })
 export class TeamService {
-    // 1. The private 'Source' (The Publisher)
-    // private teamSource = new BehaviorSubject<ETeamOperation>(null);
-
-    // 2. The public 'Observable' (The Subscription)
-    // team$ = this.teamSource.asObservable();
-
     selectedTeam : Team = new Team();
     newTeam : boolean = false;
     readOnly: boolean = false;
@@ -51,7 +40,6 @@ export class TeamService {
         { field: 'asd',         header: 'ASD' }
     ];
     teamPool: Team[] = [];
-    // isTeamsChanged: any;
     onSaveTeamError: boolean = false;
     badRequest: boolean = false;
     teamAlreadyExists: boolean = false;
@@ -65,11 +53,6 @@ export class TeamService {
         console.log("Constructor of TeamService");
     }
     
-    // 3. The Method to change the value
-    // public onTeamOperationChange(teamData: ETeamOperation) {
-    //     this.teamSource.next(teamData);
-    // }
-
     loadAllTeams (complete?: () => void): void {
         let url = loadTeamBySessionIdUrl;
         if(this.loginService.isUserLogged) {
@@ -146,13 +129,10 @@ export class TeamService {
 
     private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-      
           // TODO: send the error to remote logging infrastructure
           console.error(error); // log to console instead
-      
           // TODO: better job of transforming error for user consumption
           this.log(`${operation} failed: ${error.message}`);
-      
           // Let the app keep running by returning an empty result.
           return of(result as T);
         };
@@ -221,26 +201,6 @@ export class TeamService {
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => this.onSaveComplete(complete));
     }
 
-    // saveTeam( selectedTeam : Team
-    //         , newTeamName: string
-    //         , message : string
-    //         , complete: () => void) 
-    // {        
-    //     if( newTeamName ) {
-    //         let foundTeam = this.teamPool.find( t => t.teamName.toUpperCase() == newTeamName.toUpperCase() );
-    //         if( foundTeam != undefined) {
-    //             if( foundTeam.id !== selectedTeam.id ) {
-    //                 if(!confirm(message)) {
-    //                     return;
-    //                 }
-    //             }
-    //         }  
-    //         selectedTeam.id = null;
-    //     }
-    //     selectedTeam.teamName = newTeamName;
-    //     this.updateExistingTeam(selectedTeam, complete);
-    // } 
-
     public addMissingTeam(st: Team ): void {
         this.selectedTeam = st;
         this.teamPool.push(st);
@@ -251,25 +211,9 @@ export class TeamService {
           , clientId: this.selectedTeam.clientId
           , json: JSON.stringify(this.selectedTeam)
         };
-
         const subscriber = this.addUpdateTeam(tvo, this.saveTeamErrorHandler('Create team operation'));
         subscriber.subscribe(cs => this.newTeamNext(cs), e => this.subscribeErrorHandler(e), () => {});
     }  
-
-    private isTeamAlreadyExists(tourney: Tourney): boolean {
-        this.teamAlreadyExists = false;
-        if( this.isTeamNameAlreadyExists(this.selectedTeam) ) {
-            this.teamAlreadyExists = true;
-            return true;
-        }
-        if(tourney != undefined ) {
-            if( this.isTourneyTeamAlreadyExists(tourney, this.selectedTeam) ) {
-                this.teamAlreadyExists = true;
-                return true;
-            }
-        }
-        return false;
-    }
 
     public updateInternalTeams(tourney: Tourney, teamName : string) : void {
         console.log('Entering updateInternalTeams()');
@@ -305,13 +249,9 @@ export class TeamService {
     private subscribeErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log("Entering subscribeErrorHandler()");
-
             this.onSaveTeamError = true;
-
             console.error(error); // log to console instead
-      
             console.log(`${operation} failed: ${error.message}`);
-      
             return of(result as T);
         };
     }
@@ -321,9 +261,7 @@ export class TeamService {
             console.log("Entering saveTeamErrorHandler()");
             console.log(`${operation} failed!`);
             console.error(res); // log to console instead
-      
             this.onSaveTeamError = true;
-
             if( res.error == undefined || res.error.errorCode == undefined || res.error.errorCode == "InternalServerError") {
                 this.badRequest = true;
                 return of(result as T);

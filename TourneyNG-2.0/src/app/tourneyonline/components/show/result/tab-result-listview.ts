@@ -16,7 +16,6 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
-import { MeetingDto } from '../../admin/round/meeting-dto';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 

@@ -60,22 +60,6 @@ Usename: wildfly
 Password: <la solita short>
 ###################### End    Versione di PRODUZIONE su erebus-soft.com ##################################
 
-
-
-###################### Begin Versione PRIME NG 15 di prova ##################################
-set TOURNEY_DIR=C:\views\EREBUS\Tourney
-set BE_DIR=%TOURNEY_DIR%\TourneyBE
-set WEB_CONTENT_DIR=%BE_DIR%\WebContent
-set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
-set FE_DIR=C:\views\EREBUS\primeng
-cd %FE_DIR%
-ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
-###################### End    Versione PRIME NG 15 di prova ##################################
-
-
 Copiare a manina la cartella WEB-INF da %WEB_INF_SRC_DIR% a %WEB_CONTENT_DIR%\WEB-INF 
-
-
-
 
 Luciano Martino

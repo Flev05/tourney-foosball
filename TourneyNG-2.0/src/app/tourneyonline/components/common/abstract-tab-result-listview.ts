@@ -92,8 +92,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
         }
+        this.roundRows = this.selectedTourney.roundVO.rounds;
         for( let r of this.roundRows ) {
-            r.classification = this.tourneyService.sortTeamsDesc(r.classification);
             r.classificatedTeamNames = [];
             for(let i=0;i<r.classification.length; i++) {
                 let tn = r.classification[i].teamName;

@@ -30,7 +30,7 @@ cd %FE_DIR%
 ng serve
 
 ######################  GMKTEC -------------------------------------- 
-set NODE_OPTIONS=--openssl-legacy-provider
+rem set NODE_OPTIONS=--openssl-legacy-provider
 set TOURNEY_DIR=C:\views\EREBUS\Tourney-2.0
 set FE_DIR=%TOURNEY_DIR%\TourneyNG-2.0
 set BE_DIR=%TOURNEY_DIR%\TourneyBE

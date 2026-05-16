@@ -169,7 +169,6 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if( !this.containsEliminatoryB() ) {
             return;
         }
-            
         if( this.selectedTourney.eliminatoryBLevels && this.selectedTourney.eliminatoryBLevels.length > 0 ) {
             this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
             const highestPow2Le : number =  this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo); 

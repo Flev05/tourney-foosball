@@ -319,7 +319,6 @@ export class LevelService extends AbstractEliminatoryListView {
      */
     public loadAllEliminatoryMeetingByIdList(elList: EliminatoryLevel[], onComplete: () => void, error: (error: any) => void) {
         let idList: number [] = [];
-
         for( let el of elList) {
             for (let e of el.eliminatories) {
                 if( e.id != null ) {

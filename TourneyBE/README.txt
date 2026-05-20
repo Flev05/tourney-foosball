@@ -4,7 +4,7 @@ Allo scopo fare un cat and past dagli script *.cmd alla finstra DOS.
 
 Di seguito sono riportate le linee guida per il porgetto Tourney.
 
-1) Per lo sviluppo e il test dell'applicazione seguire i segusnti passi:
+1) Per lo sviluppo e il test dell'applicazione seguire i seguenti passi:
 portarsi sotto la directory di sviluppo:
 C:\views\EREBUS\Tourney\TourneyNG
 cat and past delle righe sotto:
@@ -30,7 +30,6 @@ cd %FE_DIR%
 ng serve
 
 ######################  GMKTEC -------------------------------------- 
-rem set NODE_OPTIONS=--openssl-legacy-provider
 set TOURNEY_DIR=C:\views\EREBUS\Tourney-2.0
 set FE_DIR=%TOURNEY_DIR%\TourneyNG-2.0
 set BE_DIR=%TOURNEY_DIR%\TourneyBE
@@ -75,8 +74,5 @@ ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
 
 
 Copiare a manina la cartella WEB-INF da %WEB_INF_SRC_DIR% a %WEB_CONTENT_DIR%\WEB-INF 
-
-
-
 
 Luciano Martino

@@ -218,11 +218,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let fi = 0;
         let li : number = q; // ... 21 / 5 = 4
 
-        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);            
-        const playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
-        const isEliminatoryPlayoff : boolean = playoffNo > 0;
-        const playoffTeamsNo : number = playoffNo * 2; // 5 * 2 = 10
-        
         let maxTeamsPerRound : number = rounds[0].classification.length;
         let minTeamsPerRound : number = rounds[R-1].classification.length;
         if( maxTeamsPerRound > minTeamsPerRound ) {
@@ -233,17 +228,23 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
         }
 
-        const qualifiedTeamsNo = (selectedTeamsNo - playoffTeamsNo); // Ex: 21 - 10(21-16=5, 5*2=10) = 11;  
-        const firstRemaing = qualifiedTeamsNo % R;
-
-        let allTeamsNo : number = 0;
-        for( let i=0; i<R; i++ ) {
-            allTeamsNo += rounds[i].classification.length;
+        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);            
+        let playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
+        let playoffTeamsNo : number = playoffNo * 2; // 5 * 2 = 10
+        let qualifiedTeamsNo = selectedTeamsNo - playoffTeamsNo; // Ex: 21 - 10(21-16=5, 5*2=10) = 11;  
+        if( this.isLevelB ) {
+            const selectedTeamsNoB = selectedTeamsNo - highestPow2Le; // 37 -32 = 5
+            const highestPow2LeB = this.levelService.highestPowerOf2LE(selectedTeamsNoB); // = 4
+            playoffNo = selectedTeamsNoB - highestPow2LeB;
+            playoffTeamsNo = playoffNo * 2;
+            qualifiedTeamsNo = selectedTeamsNo - playoffTeamsNo;
         }
+        const isEliminatoryPlayoff : boolean = playoffNo > 0;
+        const firstRemaing = qualifiedTeamsNo % R;
 
         if( isEliminatoryPlayoff ) {
             fi = Math.floor(qualifiedTeamsNo / R); // ... 11 / 5 = 2
-            if( firstRemaing == 0 && fi > 0) {
+            if( firstRemaing == 0 && R > 1) {
                 fi--; // 2 - 1 = 1, if we have qualifiedTeamsNo=10 (a mulply of 5), fi=1
             }
             if( lastRemaing == 0 && li > 0 ) {
@@ -253,7 +254,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             for( let i=0; i<R; i++ ) {
                 let row : number[] = [];
                 row.push( fi );     // first index in the round (=2)
-                row.push( li );     // last index in the round (=5)
+                row.push( li >= rounds[i].classification.length ? rounds[i].classification.length - 1 : li );     // last index in the round (=5)
                 flm.push( row );    // round 0,1,2...
             }
 
@@ -266,7 +267,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                         c.teamName = "000";
                         c.points = -1000;
                     } else {
-                        c = rounds[i].classification[i];
+                        c = rounds[i].classification[fi];
                     }
                     c.roundIndex = i;
                     fiBetterTeamClassification.push(c);
@@ -288,16 +289,16 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                         c.teamName = "Z";
                         c.points = 1000;
                     } else {
-                        c = rounds[i].classification[i];
+                        c = rounds[i].classification[li];
                     }
                     c.roundIndex = i;
                     liBetterTeamClassification.push(c);
                 }
                 liBetterTeamClassification = this.tourneyService.sortTeamsDesc(liBetterTeamClassification);
-                const liWorstTeams = R - (selectedTeamsNo % R); // 21 % 5 = 1
-                for( let i=0; i < liWorstTeams; i++ ) { // 11 % 5 = 1; 5 - 1 = 4
+                const liWorstTeams = (selectedTeamsNo % R); // 21 % 5 = 1
+                for( let i=R-1; i >= liWorstTeams; i-- ) { // 11 % 5 = 1; 5 - 1 = 4
                     const ri = liBetterTeamClassification[i].roundIndex;
-                    flm[ri][1]--; // decrement by 1 to exclude the better teams
+                    flm[ri][1]--; // decrement by 1 to exclude the worst teams
                 }
             }
             return flm;
@@ -321,25 +322,30 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             row.push( li );     // last index in the round (=3)
             flm.push( row );    // round 0,1,2...
         }
+        
+        let allTeamsNo : number = 0;
+        for( let i=0; i<R; i++ ) {
+            allTeamsNo += rounds[i].classification.length;
+        }
         if( lastRemaing > 0 && allTeamsNo != selectedTeamsNo ) {
             let liBetterTeamClassification : Classification[] = [];
-            for( let i=0; i<R; i++ ) {
+            for( let r=0; r<R; r++ ) {
                 let c : Classification;
-                if( li >= rounds[i].classification.length ) {
+                if( li >= rounds[r].classification.length ) {
                     c = new Classification();
                     c.teamName = "Z";
                     c.points = 1000;
                 } else {
-                    c = rounds[i].classification[i];
+                    c = rounds[r].classification[li];
                 }
-                c.roundIndex = i;
+                c.roundIndex = r;
                 liBetterTeamClassification.push(c);
             }
             liBetterTeamClassification = this.tourneyService.sortTeamsDesc(liBetterTeamClassification);
-            const liBestTeams = R - (selectedTeamsNo % R); // 21 % 5 = 1
-            for( let i=0; i < liBestTeams; i++ ) { // 11 % 5 = 1; 5 - 1 = 4
+            const liWorstTeams = (selectedTeamsNo % R); // 21 % 5 = 1
+            for( let i=R-1; i >= liWorstTeams; i-- ) { // 11 % 5 = 1; 5 - 1 = 4
                 const ri = liBetterTeamClassification[i].roundIndex;
-                flm[ri][1]--; // decrements by 1 to esclude the better teams
+                flm[ri][1]--; // decrements by 1 to esclude the worst teams
             }
         }
         return flm;

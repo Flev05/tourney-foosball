@@ -17,6 +17,7 @@ import { LevelService } from '../admin/eliminatory/level-service';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Injectable } from '@angular/core';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Injectable()
 export abstract class AbstractTabResultListView extends AbstractListView {
@@ -156,7 +157,11 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if( !this.containsEliminatory() ) {
             return;
         }
-            
+        let elList: EliminatoryLevel[] = this.selectedTourney.eliminatoryLevels;
+        this.levelService.loadAllEliminatoryMeetingByIdList(elList, () => this.onEliminatoryCompleteLoad(), (e) => this.onError(e));
+    }
+
+    private onEliminatoryCompleteLoad() {
         this.levelService.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
         const tNo = this.selectedTourney.eliminatoryLevels[0].topLevelTeamNo;
         this.levelService.eliminatoryLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryLevels, tNo);
@@ -169,9 +174,14 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if( !this.containsEliminatoryB() ) {
             return;
         }
-        if( this.selectedTourney.eliminatoryBLevels && this.selectedTourney.eliminatoryBLevels.length > 0 ) {
+        let elList: EliminatoryLevel[] = this.selectedTourney.eliminatoryBLevels;
+        this.levelService.loadAllEliminatoryBMeetingByIdList(elList, () => this.onEliminatoryBCompleteLoad(), (e) => this.onError(e));
+    }
+
+    private onEliminatoryBCompleteLoad() {
+        if (this.selectedTourney.eliminatoryBLevels && this.selectedTourney.eliminatoryBLevels.length > 0) {
             this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
-            const highestPow2Le : number =  this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo); 
+            const highestPow2Le: number = this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo);
             const tNo = this.selectedTourney.teams.length - highestPow2Le;
             this.levelService.eliminatoryBLevelRows = this.levelService.prepareEliminatoryLevelsGui(this.levelService.eliminatoryBLevels, tNo);
             this.eliminatoryBLevelRows = this.levelService.eliminatoryBLevelRows;

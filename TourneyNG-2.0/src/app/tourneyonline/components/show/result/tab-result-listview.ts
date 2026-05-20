@@ -332,7 +332,6 @@ export class TabResultListView extends AbstractTabResultListView {
         const pageHeight = 210;
         
         // 1. Gather all "Matches" from the classification lists
-        // Each pair in the classification array is one match
         let initialMatches: {team1: string, team2: string}[] = [];
         
         for (let e of el.eliminatories) {
@@ -345,17 +344,44 @@ export class TabResultListView extends AbstractTabResultListView {
             });
         }
 
-        const matchesPerSide = initialMatches.length / 2;
-        const leftMatches = initialMatches.slice(0, matchesPerSide);
-        const rightMatches = initialMatches.slice(matchesPerSide);
+        // --- NEW FOUR-WAY DISTRIBUTOR LOGIC ---
+        const leftMatches: {team1: string, team2: string}[] = [];
+        const rightMatches: {team1: string, team2: string}[] = [];
+
+        // Temporary arrays to handle bottom placements separately so we can keep ordering clean
+        const leftBottom: {team1: string, team2: string}[] = [];
+        const rightBottom: {team1: string, team2: string}[] = [];
+
+        for (let i = 0; i < initialMatches.length; i++) {
+            const match = initialMatches[i];
+            const positionInGroup = i % 4;
+
+            if (positionInGroup === 0) {
+                // 1st: Top Left
+                leftMatches.push(match);
+            } else if (positionInGroup === 1) {
+                // 2nd: Top Right
+                rightMatches.push(match);
+            } else if (positionInGroup === 2) {
+                // 3rd: Bottom Right (Insert at the beginning of the bottom section)
+                rightBottom.unshift(match);
+            } else if (positionInGroup === 3) {
+                // 4th: Bottom Left (Insert at the beginning of the bottom section)
+                leftBottom.unshift(match);
+            }
+        }
+
+        // Combine top and bottom arrays to preserve the visual top-to-bottom layout sequence
+        const finalLeftMatches = [...leftMatches, ...leftBottom];
+        const finalRightMatches = [...rightMatches, ...rightBottom];
+        // --- END OF NEW LOGIC ---
 
         // 2. Configuration
-        const boxW = 50;  // Increased from 40
-        const boxH = 21;  // Increased from 20 (Height is critical for vertical space)
+        const boxW = 50;
+        const boxH = 21;
         const padding = 5;
-        const sSize = 10; // Slightly larger score box to match
+        const sSize = 10; 
         
-        // Determine how many rounds/columns we need (e.g., 8 matches -> 3 rounds to reach semi)
         const totalMatches = initialMatches.length;
         
         // Print the header tourney name
@@ -372,26 +398,21 @@ export class TabResultListView extends AbstractTabResultListView {
         }
         roundLabels.push("Semifinale", "Finale");
 
-        // Calculate rounds per side based on the actual labels generated
         const roundsPerSide = roundLabels.length - 1; 
-        
-        // The rest of your code ...
         const colSpacing = (pageWidth / 2 - 20) / roundsPerSide;
         
-        // 3. Draw Sides
-        this.drawSide(doc, leftMatches, roundsPerSide, colSpacing, padding, boxW, boxH, 'left', pageHeight, roundLabels);
-        this.drawSide(doc, rightMatches, roundsPerSide, colSpacing, pageWidth - padding - boxW, boxW, boxH, 'right', pageHeight, roundLabels);
-
+        // 3. Draw Sides (Using our newly constructed arrays)
+        this.drawSide(doc, finalLeftMatches, roundsPerSide, colSpacing, padding, boxW, boxH, 'left', pageHeight, roundLabels);
+        this.drawSide(doc, finalRightMatches, roundsPerSide, colSpacing, pageWidth - padding - boxW, boxW, boxH, 'right', pageHeight, roundLabels);
         
         // --- 4. Central Final Box ---
         const finalY = (pageHeight / 2) - 25; 
         const finalX = (pageWidth / 2) - (boxW / 2);
 
         doc.setDrawColor(0);
-        doc.setLineWidth(0.5); // Keep it slightly thicker as it's the final
+        doc.setLineWidth(0.5); 
         doc.rect(finalX, finalY, boxW, boxH);
         doc.line(finalX, finalY + boxH / 2, finalX + boxW, finalY + boxH / 2);
-        // Inner Score Boxes (Matches your drawSide logic)
         doc.rect(finalX + boxW - sSize - 1, finalY + (boxH / 4) - (sSize / 2), sSize, sSize); 
         doc.rect(finalX + boxW - sSize - 1, finalY + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
         doc.setFontSize(12);
@@ -399,17 +420,15 @@ export class TabResultListView extends AbstractTabResultListView {
         doc.text("FINALE", pageWidth / 2, finalY - 2, { align: 'center' });
 
         // --- 5. 3° and 4° Central Final Box ---
-        const final2Y = (pageHeight / 2) + 25;// Positioned below the center
+        const final2Y = (pageHeight / 2) + 25;
         doc.setDrawColor(0);
         doc.setLineWidth(0.5);
         doc.rect(finalX, final2Y, boxW, boxH);
         doc.line(finalX, final2Y + boxH / 2, finalX + boxW, final2Y + boxH / 2);
-        // Inner Score Boxes
         doc.rect(finalX + boxW - sSize - 1, final2Y + (boxH / 4) - (sSize / 2), sSize, sSize); 
         doc.rect(finalX + boxW - sSize - 1, final2Y + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
         doc.setFontSize(12);
         doc.text("3° e 4° Posto", pageWidth / 2, final2Y + 25, { align: 'center' });
-
 
         doc.save(`Tabellone-${this.selectedTourney.tourneyName}.pdf`);
     }
@@ -525,14 +544,14 @@ export class TabResultListView extends AbstractTabResultListView {
             rounds.push(r);
         }
 
-        const both : boolean = this.selectedTourney.isOnewayRound != "true";
-        if (both) {
-            this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Andata", true);
-        } else {
-            this.meetingRoundService.printFullDirection(doc, rounds, el.name, null, true);
-        }
-                
-        if (both) {
+        this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Andata", true);
+        // if (both) {
+        // } else {
+        //     this.meetingRoundService.printFullDirection(doc, rounds, el.name, null, true);
+        // }
+        
+        const oneway : boolean = this.selectedTourney.isOnewayRound === "true";
+        if (!oneway) {
             doc.addPage(); // Start Away meetings on a fresh page
             this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Ritorno", true);
         }

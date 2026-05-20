@@ -210,14 +210,11 @@ export class MeetingService extends AbstractService {
      */
     loadEliminatoryMeeting(tourneyId: number| null, eliminatoryId: number, error: (error: any) => any) : Observable<MeetingDb[]> {
         let url = loadMeetingByEliminatoryIdUrl + "/" + tourneyId + "/" + eliminatoryId;
-        
         console.log("Url=" + url);
-
         const obs : Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         obs.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(error('loadEliminatoryMeetingDb url=' + url))
         );
-
         return obs;
     }
 
@@ -244,12 +241,20 @@ export class MeetingService extends AbstractService {
      */
     loadEliminatoryMeetingByIdList(tourneyId: number | null, eliminiatoryIdList: number[], error: (e: any) => any) : Observable<MeetingDb[]> {
         let url = loadEliminatoryMeetingByIdListUrl + "/" + tourneyId;
-        
         console.log("Url=" + url);
-
+        // let obs = this.http.post<MeetingDb[]>(url, eliminiatoryIdList, httpOptions).pipe(
+        //     tap((m: MeetingDb[]) => this.log('added MeetingDb, url=' + url)),
+        //     catchError(error('addMeetingDb, url=' + url))
+        // );
         let obs = this.http.post<MeetingDb[]>(url, eliminiatoryIdList, httpOptions).pipe(
             tap((m: MeetingDb[]) => this.log('added MeetingDb, url=' + url)),
-            catchError(error('addMeetingDb, url=' + url))
+            //  FIX: Wrap it in an arrow function so it receives the actual RxJS error
+            catchError((err) => {
+                // Call your custom error handler
+                error(err); 
+                // Return a safe fallback observable so the stream doesn't completely break
+                return of([]); 
+            })
         );
         return obs;
     }

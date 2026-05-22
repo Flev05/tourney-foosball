@@ -262,8 +262,8 @@ export class MeetingRoundService extends MeetingService {
     public onCompleteLoad(round: Round, mdbList: MeetingDb[], complete: () => void ) {
         this.mdbList = mdbList;
         this.extractRoundMeetings(round, mdbList);
-        this.makeTeamName(round.onewayMeetings);
-        this.makeTeamName(round.roundtripMeetings);
+        // this.makeTeamName(round.onewayMeetings);
+        // this.makeTeamName(round.roundtripMeetings);
         let allDaysNo = round.daysNo;
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
@@ -271,12 +271,12 @@ export class MeetingRoundService extends MeetingService {
         complete();
     }
 
-    private makeTeamName(meetings: Meeting[]) {
-        for(let m of meetings) {
-            m.teamName1 = m.teamName1;
-            m.teamName2 = m.teamName2;
-        }
-    }
+    // private makeTeamName(meetings: Meeting[]) {
+    //     for(let m of meetings) {
+    //         m.teamName1 = m.teamName1;
+    //         m.teamName2 = m.teamName2;
+    //     }
+    // }
 
     /**
      * Prepares the meetings only if there was the changes in the teams or in the round configurations

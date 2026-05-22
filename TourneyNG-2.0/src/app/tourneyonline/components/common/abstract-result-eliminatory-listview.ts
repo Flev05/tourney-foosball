@@ -144,15 +144,70 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             return 0;
         });
         rounds = sortedRounds;
- 
-        const R : number = rounds.length;
-
+        let R : number = rounds.length;
         let currentIndex : number = 0;
         let nextIndex    : number = R == 1 ? 0 : 1; // If we have only 1 round, the indexes are the same
-        
+        if( this.isLevelB ) {
+            const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);
+            let flm : number[][] = this.buildFirstLastMatrix( rounds, highestPow2Le );
+            const teamsBNo = selectedTeamsNo - highestPow2Le; 
+            let roundsB : Round[] = [];
+            let Rb = R;
+            if( teamsBNo < 2*R ) {
+                Rb = Math.floor(teamsBNo / 2);
+            }
+            for( let t=0; t<Rb; t++ ) {
+                let round = new Round();
+                roundsB.push(round);
+            }
+            let r : number = 0;
+            let rb : number = 0;
+            let t=0;
+            while( t<teamsBNo ) {
+                flm[r][1]++;
+                let li = flm[r][1];
+                let round = rounds[r];
+                if( li >= round.classification.length ) {
+                    r = (r + 1) % R;
+                    continue;
+                }
+                let roundB = roundsB[rb];
+                roundB.id = round.id;
+                roundB.label = round.label;
+                roundB.name = round.name;
+                roundB.direction = round.direction;
+                roundB.pageSize = round.pageSize;
+                roundB.type = round.type;
+                roundB.teamNo = round.teamNo;
+
+                roundB.teamNames.push(round.classificatedTeamNames[li]);
+                roundB.classificatedTeamNames.push(round.classificatedTeamNames[li]);
+                roundB.classification.push(round.classification[li]);
+
+                r = (r + 1) % R;
+                rb = (rb + 1) % Rb;
+                t++;
+            }
+            selectedTeamsNo = teamsBNo;
+            rounds = roundsB;
+            this.levelService.roundsB = roundsB;
+            R = roundsB.length;
+            for( let r of rounds ) {
+                r.classification = this.tourneyService.sortTeamsDesc(r.classification);
+            }
+            for( let i=0; i<rounds.length; i++ ) {
+                const r = rounds[i];
+                r.teamNames = [];
+                r.classificatedTeamNames = [];
+                for( let c=0; c<r.classification.length; c++ ) {
+                    r.teamNames.push(r.classification[c].teamName);
+                    r.classificatedTeamNames.push(r.classification[c].teamName);
+                }
+            }
+        }
+
         let firstLastMatrix : number[][] = this.buildFirstLastMatrix( rounds, selectedTeamsNo );
         for( let po=0; po< topEl.eliminatories.length; po++ ) {
-
             let counter = rounds.length;
             while(firstLastMatrix[currentIndex][0] > firstLastMatrix[currentIndex][1] || 
                 firstLastMatrix[nextIndex][0] > firstLastMatrix[nextIndex][1] )  
@@ -228,17 +283,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
         }
 
-        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);            
+        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);
         let playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
         let playoffTeamsNo : number = playoffNo * 2; // 5 * 2 = 10
         let qualifiedTeamsNo = selectedTeamsNo - playoffTeamsNo; // Ex: 21 - 10(21-16=5, 5*2=10) = 11;  
-        if( this.isLevelB ) {
-            const selectedTeamsNoB = selectedTeamsNo - highestPow2Le; // 37 -32 = 5
-            const highestPow2LeB = this.levelService.highestPowerOf2LE(selectedTeamsNoB); // = 4
-            playoffNo = selectedTeamsNoB - highestPow2LeB;
-            playoffTeamsNo = playoffNo * 2;
-            qualifiedTeamsNo = selectedTeamsNo - playoffTeamsNo;
-        }
         const isEliminatoryPlayoff : boolean = playoffNo > 0;
         const firstRemaing = qualifiedTeamsNo % R;
 
@@ -254,7 +302,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             for( let i=0; i<R; i++ ) {
                 let row : number[] = [];
                 row.push( fi );     // first index in the round (=2)
-                row.push( li >= rounds[i].classification.length ? rounds[i].classification.length - 1 : li );     // last index in the round (=5)
+                row.push( li );     // last index in the round (=5)
                 flm.push( row );    // round 0,1,2...
             }
 
@@ -286,8 +334,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     let c : Classification;
                     if( li >= rounds[i].classification.length ) {
                         c = new Classification();
-                        c.teamName = "Z";
-                        c.points = 1000;
+                        c.teamName = "000";
+                        c.points = -1000;
                     } else {
                         c = rounds[i].classification[li];
                     }
@@ -303,13 +351,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
             return flm;
         }
-
-        if( this.isLevelB ) { // when we have a level B and the selectedTeamsNo = k*R, a multply of R
-            fi = Math.floor(qualifiedTeamsNo / R); // ... 32 / 8 = 4
-             if( firstRemaing == 0 ) {
-                fi--; // 5 - 1 = 5, if we have qualifiedTeamsNo=32, fi=[5]
-            }
-        }   
 
         // No playoff, perfect power of 2
         if( lastRemaing == 0 && li > 0 ) {
@@ -333,8 +374,8 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 let c : Classification;
                 if( li >= rounds[r].classification.length ) {
                     c = new Classification();
-                    c.teamName = "Z";
-                    c.points = 1000;
+                    c.teamName = "000";
+                    c.points = -1000;
                 } else {
                     c = rounds[r].classification[li];
                 }
@@ -360,9 +401,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
      */
     private compileNextLevel(eliminatoryLevels: Array<EliminatoryLevel>, l: number,  el: EliminatoryLevel ) {
         console.log("Entering compileNextLevel(" + l +")");
-        if(this.isLevelB) {
-            this.meetingService.qualifyingRounds = [];
-        }
         if(el.isOptional) { // for 3° and 4° classification position
             this.compile3And4Position(el, l, eliminatoryLevels);
             return;
@@ -372,15 +410,19 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let previousEliminatoryLevel: Array<Eliminatory> = new Array<Eliminatory>();
         for( let e of eliminatoryLevels[prevLevel].eliminatories ) {
             previousEliminatoryLevel.push(e);
-            if(this.isLevelB) {
-                this.meetingService.qualifyingRounds.push(e.round);
-            }
         }
 
         let topEl : EliminatoryLevel = eliminatoryLevels[0];
-        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(topEl.topLevelTeamNo); // if 15, pow2 = 8
+        let selectedTeamsNo = topEl.topLevelTeamNo;
+
+        if(this.isLevelB) {
+            this.meetingService.qualifyingRounds = [];
+            const highestPow2Le : number =  this.levelService.highestPowerOf2LE(topEl.topLevelTeamNo);
+            selectedTeamsNo = topEl.topLevelTeamNo - highestPow2Le;
+        }
+        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo); // if 15, pow2 = 8
         
-        const playoffNo : number = topEl.topLevelTeamNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
+        const playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
         const playoffTeamsNo : number = playoffNo * 2; // 5 * 2 = 10
         const isTopLevelPlayoff = playoffTeamsNo > 0;
 
@@ -394,17 +436,20 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             let rounds: Array<Round> = [...fullRounds];
             let remaingRounds: Array<Round> = [...fullRounds];
 
-            const R = rounds.length;
-            
             let currentIndex : number = 0;
             let nextIndex : number = 1;
             let row : number = 0;
             let col : number = 0;
-            let selectedTeamsNo = topEl.topLevelTeamNo;
+            if(this.isLevelB) {
+                rounds = [...this.levelService.roundsB];
+                remaingRounds = [...this.levelService.roundsB];
+            }
             const alreadyQualifiedTeamsNo = (selectedTeamsNo - playoffTeamsNo); 
             let qualifiedCounter : number = alreadyQualifiedTeamsNo;
             let playoffCounter : number = playoffNo;
             let playoffIndex : number = previousEliminatoryLevel.length - 1;
+            const R = rounds.length;
+            
             let flm : number[][] = [];
             for( let p=0; p<el.eliminatories.length; p++ ) {
                 let e: Eliminatory = el.eliminatories[p];
@@ -414,17 +459,18 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 let t2 : string = "";
                 if( alreadyQualifiedTeamsNo <= playoffNo ) {
                     // Ex: when we select 15 teams, highestPow2Le=8, we have alreadyQualifiedTeamsNo=1(15-(15-8)*2) and playoffNo=7(15-8)
-                    console.log("Case: alreadyQualifiedTeamsNo <= playoffNo");
+                    console.log("Case: alreadyQualifiedTeamsNo("+ alreadyQualifiedTeamsNo + ") <= playoffNo("+playoffNo +")");
                     if( qualifiedCounter > 0 ) {
                         // couple the already qualified teams with the playoff's winner
                         c1 = rounds[row++].classification[col];
                         t1 = c1.teamName;
-                        let round = previousEliminatoryLevel[playoffIndex].round;
-                        c2 = round.classification[1];
+                        let poRound = previousEliminatoryLevel[playoffIndex].round;
+                        c1 = poRound.classification[0];
+                        c2 = poRound.classification[1];
                         if( c1.points >= c2.points ) {
-                            t2 = round.classification[0].teamName;
+                            t2 = poRound.classification[0].teamName;
                         } else {
-                            t2 = round.classification[1].teamName;                        
+                            t2 = poRound.classification[1].teamName;                        
                         }
                         if( row == R ) {
                             col++;
@@ -433,23 +479,23 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                         qualifiedCounter--;
                     } else {
                         // Complete the next level with the remaining teams in the playoff top level
-                        console.log("Case: alreadyQualifiedTeamsNo > playoffNo");
-                        let round = previousEliminatoryLevel[playoffIndex].round;
-                        c1 = round.classification[0];
-                        c2 = round.classification[1];
+                        console.log("Case: alreadyQualifiedTeamsNo("+ alreadyQualifiedTeamsNo + ") <= playoffNo("+playoffNo +") and qualifiedCounter <= 0");
+                        let poRound = previousEliminatoryLevel[playoffIndex].round;
+                        c1 = poRound.classification[0];
+                        c2 = poRound.classification[1];
                         if( c1.points >= c2.points ) {
-                            t1 = round.classification[0].teamName;
+                            t1 = poRound.classification[0].teamName;
                         } else {
-                            t1 = round.classification[1].teamName;                        
+                            t1 = poRound.classification[1].teamName;                        
                         }
                         playoffIndex--;
-                        round = previousEliminatoryLevel[playoffIndex].round;
-                        c1 = round.classification[0];
-                        c2 = round.classification[1];
+                        poRound = previousEliminatoryLevel[playoffIndex].round;
+                        c1 = poRound.classification[0];
+                        c2 = poRound.classification[1];
                         if( c1.points >= c2.points ) {
-                            t2 = round.classification[0].teamName;
+                            t2 = poRound.classification[0].teamName;
                         } else {
-                            t2 = round.classification[1].teamName;                        
+                            t2 = poRound.classification[1].teamName;                        
                         }
                     }
                 } else {
@@ -459,15 +505,15 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                         c1 = rounds[row++].classification[col];
                         t1 = c1.teamName;
                         remaingRounds = this.removeTeamFromRounds(remaingRounds, t1);
-                        let round = previousEliminatoryLevel[playoffIndex].round;
-                        c2 = round.classification[1];
-                        if( c1.points >= c2.points ) {
-                            t2 = round.classification[0].teamName;
+                        let poRound = previousEliminatoryLevel[playoffIndex].round;
+                        c2 = poRound.classification[1];
+                        if( poRound.classification[0].points >= poRound.classification[1].points ) {
+                            t2 = poRound.classification[0].teamName;
                             // remove the playoff loser
                             remaingRounds = this.removeTeamFromRounds(remaingRounds, c2.teamName);
                             remaingRounds = this.removeTeamFromRounds(remaingRounds, t2);
                         } else {
-                            t2 = round.classification[1].teamName;                        
+                            t2 = poRound.classification[1].teamName;                        
                             // remove the playoff loser
                             remaingRounds = this.removeTeamFromRounds(remaingRounds, c1.teamName);
                             remaingRounds = this.removeTeamFromRounds(remaingRounds, t2);
@@ -556,11 +602,11 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
     private removeTeamFromRounds(rounds: Round[], teamName: string): Round[] {
         let ra = rounds.map(round => ({
             ...round,
-            teamNames: round.teamNames.filter(name => name !== teamName)
+            teamNames: round.teamNames.filter(tn => tn !== teamName)
         }));
         ra = ra.map(round => ({
             ...round,
-            classificatedTeamNames: round.teamNames.filter(name => name !== teamName)
+            classificatedTeamNames: round.classificatedTeamNames.filter(tn => tn !== teamName)
         }));
         ra = ra.map(round => ({
             ...round,

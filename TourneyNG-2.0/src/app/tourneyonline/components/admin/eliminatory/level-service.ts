@@ -30,6 +30,7 @@ export class LevelService extends AbstractEliminatoryListView {
     static autoRedirect:   string = '/admineliminatory/levelLv/eliminatoryLv/autodv';
     static autoRedirectLV: string = '/admineliminatory/levelLv/eliminatoryAutoLv';
     private selectedTeams:  Team[] = [];
+    public roundsB: Round[] = [];
 
     constructor(
         protected override tourneyService: TourneyService,
@@ -445,71 +446,7 @@ export class LevelService extends AbstractEliminatoryListView {
         // this.prepareAutomaticEliminatoryRules(this.eliminatoryBLevels, teamNo, startPosition);
         this.eliminatoryBLevelRows = this.prepareEliminatoryLevelsGui(this.eliminatoryBLevels, teamCount);
     }
-
-    /**
-     * Allocate a local list of teams padding the received number of teams, by adding dummy teams with points=-1,
-     * to the next nearest power of 2 nedeed to contains all of them.
-     * 
-     * Next, iterates on the eliminatories list and updates the meetings with the first against the last 
-     * team in the pad list
-     */
-    private prepareAutomaticEliminatoryRules(eliminatoryLevels: Array<EliminatoryLevel>, selectedTeamsNo: number, startPosition: number ): void {
-        console.log("Entering prepareAutomaticEliminatoryRules()");
-        if( this.selectedTourney.roundVO.rounds.length == 0) {
-            return;
-        }
-
-        this.isAutomatic = true;
-        let power2: number = this.tourneyService.power2Padding(selectedTeamsNo);
-
-        let rounds : Array<Round>;
-        if(this.containsPlayoff()) {
-            rounds = this.selectedTourney.playoffVO.playoffs.map((p) => {return p.round;});
-        } else {
-            rounds = [...this.selectedTourney.roundVO.rounds];
-        }
-
-        let roundsNo: number = rounds.length;
-        let position: number = Math.floor(startPosition / roundsNo);
-        if( startPosition > 0 && startPosition % roundsNo > 0)  {
-            position++;
-        }
-
-        let padTeamList: Array<FromRound> = new Array<FromRound>();
-        for(let i=0; i<power2; i++) {
-            let roundIndex: number = (i + startPosition) % roundsNo;
-            if(roundIndex == 0) {
-                position++;
-            }
-
-            let r: Combobox = {label: "", value: 0}; 
-            let p: Combobox = {label: "", value: 0}; 
-            let fr : FromRound = {id: 0, isDummy: true, round: r, position: p, bandPosition: 0};
-            if( i < selectedTeamsNo ) {
-                let round: Round = rounds[roundIndex];
-                r = {label: round.name, value: position};
-                p = {label: "", value: position};
-                fr.round = r;
-                fr.position = p;
-                fr.isDummy = false;
-            }
-            padTeamList.push(fr);
-        }
-
-        const topLevel = eliminatoryLevels[0];
-        let topLevelEliminatories: Array<Eliminatory> = topLevel.eliminatories;
-        let lastIndex = power2; 
-        
-        for(let i=0; i<topLevelEliminatories.length; i++) {
-            let e: Eliminatory = topLevelEliminatories[i];
-            let up = padTeamList[i];
-            let label = up.round.value == 0 ? "" : up.round.value  + "°";
-            let down = padTeamList[--lastIndex];
-            e.isSkiping = up.isDummy || down.isDummy;
-            label = down.position.value == 0 ? "" : down.position.value  + "°";
-        }
-    }
-
+    
     public prepareEliminatoryLevelsGui(eliminatoryLevels: Array<EliminatoryLevel>, topLevelTeamNo : number ): EliminatoryLevelVO[]  {
         this.eliminatoryLevelCols = super.prepareELCols();
         const pow2LE : number =  this.highestPowerOf2LE(topLevelTeamNo); // if 18, pow2 = 16

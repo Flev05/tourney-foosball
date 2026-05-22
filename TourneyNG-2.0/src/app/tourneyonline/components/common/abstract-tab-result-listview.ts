@@ -174,12 +174,21 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if( !this.containsEliminatoryB() ) {
             return;
         }
+
         let elList: EliminatoryLevel[] = this.selectedTourney.eliminatoryBLevels;
         this.levelService.loadAllEliminatoryBMeetingByIdList(elList, () => this.onEliminatoryBCompleteLoad(), (e) => this.onError(e));
     }
 
     private onEliminatoryBCompleteLoad() {
         if (this.selectedTourney.eliminatoryBLevels && this.selectedTourney.eliminatoryBLevels.length > 0) {
+            // for (let el of this.selectedTourney.eliminatoryBLevels) {
+            //     for (let e of el.eliminatories) {
+            //         let round = e.round;
+            //         this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
+            //         this.tourneyService.createClassification(round, true);
+            //     }
+            // }
+
             this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
             const highestPow2Le: number = this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo);
             const tNo = this.selectedTourney.teams.length - highestPow2Le;

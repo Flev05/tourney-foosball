@@ -284,7 +284,6 @@ export class MeetingService extends AbstractService {
         this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();
 
         for( let m of round.onewayMeetings ) {
-            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
             m.containerId = round.id;
             let key = m.day;
             if(!this.onewayMeetingDaysMap.has(key)) {
@@ -299,7 +298,6 @@ export class MeetingService extends AbstractService {
         }
 
         for( let m of round.roundtripMeetings ) {
-            // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, isAdmin);
             m.containerId = round.id;
             let key = m.day;
             if(!this.roundtripMeetingDaysMap.has(key)) {

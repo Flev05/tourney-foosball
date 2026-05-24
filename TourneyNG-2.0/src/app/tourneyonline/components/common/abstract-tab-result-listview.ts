@@ -182,14 +182,6 @@ export abstract class AbstractTabResultListView extends AbstractListView {
 
     private onEliminatoryBCompleteLoad() {
         if (this.selectedTourney.eliminatoryBLevels && this.selectedTourney.eliminatoryBLevels.length > 0) {
-            // for (let el of this.selectedTourney.eliminatoryBLevels) {
-            //     for (let e of el.eliminatories) {
-            //         let round = e.round;
-            //         this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
-            //         this.tourneyService.createClassification(round, true);
-            //     }
-            // }
-
             this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
             const highestPow2Le: number = this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo);
             const tNo = this.selectedTourney.teams.length - highestPow2Le;
@@ -251,9 +243,6 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if( index === elIndex ) {
             console.log("index === elIndex");
         }
-        // let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient);
-        // const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Update Tourney operation'));
-        // subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => {});
     }
 
     protected prepareRoundsGui(rounds: Round[]): any[] {

@@ -1170,15 +1170,12 @@ export class TourneyService extends AbstractService {
      prepareRoundsGui(maxMatchesPerMeeting : number, rounds: Round[]): any[] {
         let row : number = 0;
         let rows: any[] = [];
-
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
-
         for (let round of rounds) {
             let r = 0;
             for (let oc of round.classification) {
                 let c = {...oc};
                 rows.push(c);
-
                 let played = c.played / maxMatchesPerMeeting;
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
@@ -1193,9 +1190,7 @@ export class TourneyService extends AbstractService {
                 rows[row].balanced = c.balanced;    
                 rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
                 rows[row].goalsConceded = c.goalsConceded;    
-
                 let len = round.onewayMeetings.length;
-
                 let currentKey = round.name;  
                 if(!classificationMap.has(currentKey)) {
                     classificationMap.set(currentKey, c);
@@ -1206,7 +1201,6 @@ export class TourneyService extends AbstractService {
                 row++;                
             }
         }
-
         return rows;
     }
     

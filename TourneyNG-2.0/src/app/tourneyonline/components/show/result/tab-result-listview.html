@@ -254,20 +254,6 @@
                 <td>
                   {{rowData['teams']}}
                 </td>
-                <td>
-                  <button class="ui-button-success"
-                    pButton icon="pi pi-file-pdf"
-                    pTooltip="Stampa la lista degli incontri di eliminazione diretta"
-                    (click)="printPdfTopLevelMeeting(rowIndex)">
-                  </button>
-                </td>
-                <td>
-                  <button class="ui-button-success"
-                    pButton icon="pi pi-file-pdf"
-                    pTooltip="Stampa il tabellone degli incontri di eliminazione diretta"
-                    (click)="printTennisBracket(rowIndex)">
-                  </button>
-                </td>
               </tr>
             </ng-template>
           </p-table>
@@ -304,20 +290,6 @@
                 <td>
                   {{rowData['teams']}}
                 </td>
-                <td>
-                  <button class="ui-button-success"
-                    pButton icon="pi pi-file-pdf"
-                    pTooltip="Stampa la lista degli incontri di eliminazione diretta di fascia B"
-                    (click)="printPdfTopLevelBMeeting(rowIndex)">
-                  </button>
-                </td>
-                <td>
-                  <button class="ui-button-success"
-                    pButton icon="pi pi-file-pdf"
-                    pTooltip="Stampa il tabellone degli incontri di eliminazione diretta di fascia B"
-                    (click)="printTennisBracketB(rowIndex)">
-                  </button>
-                </td>                
               </tr>
             </ng-template>
           </p-table>

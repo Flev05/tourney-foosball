@@ -145,8 +145,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         });
         rounds = sortedRounds;
         let R : number = rounds.length;
-        let currentIndex : number = 0;
-        let nextIndex    : number = R == 1 ? 0 : 1; // If we have only 1 round, the indexes are the same
         if( this.isLevelB ) {
             const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);
             let flm : number[][] = this.buildFirstLastMatrix( rounds, highestPow2Le );
@@ -207,6 +205,31 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         }
 
         let firstLastMatrix : number[][] = this.buildFirstLastMatrix( rounds, selectedTeamsNo );
+
+        let currentIndex : number = 0;
+        let nextIndex    : number = R == 1 ? 0 : 1; // If we have only 1 round, the indexes are the same
+
+        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);
+        let playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
+        const isEliminatoryPlayoff : boolean = playoffNo > 0;
+
+        if( isEliminatoryPlayoff ) {
+            let min : number = 1000;
+            let max : number = -1000;
+            for( let r=0; r<firstLastMatrix.length; r++) {
+                if( firstLastMatrix[r][1] - firstLastMatrix[r][0] < min ) {
+                    min = firstLastMatrix[r][1] - firstLastMatrix[r][0];
+                }
+                if( firstLastMatrix[r][1] - firstLastMatrix[r][0] > max ) {
+                    max = firstLastMatrix[r][1] - firstLastMatrix[r][0];
+                }
+                if( max - min > 2 ){
+                    currentIndex = r;
+                    nextIndex = (currentIndex + 1) % R;
+                }
+            }
+        }
+
         for( let po=0; po< topEl.eliminatories.length; po++ ) {
             let counter = rounds.length;
             while(firstLastMatrix[currentIndex][0] > firstLastMatrix[currentIndex][1] || 
@@ -216,6 +239,28 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 nextIndex = (nextIndex + 1) % R;
                 if( --counter < 0 ) {
                     console.log("Try to find a next non consecutive round with valid teams to couple in the current round");
+                    break;
+                }
+            }
+
+            if( counter < 0 ) {
+                currentIndex = 0;
+                for( let r=0; r<R; r++ ){
+                    if (firstLastMatrix[currentIndex][0] <= firstLastMatrix[currentIndex][1] ) {
+                        break;
+                    }
+                    currentIndex = (currentIndex + 1) % R;
+                }
+                nextIndex = 0;
+                let found : boolean = false;
+                for( let r=0; r<R; r++ ){
+                    if ( nextIndex !== currentIndex && firstLastMatrix[nextIndex][0] <= firstLastMatrix[nextIndex][1] ) {
+                        found = true;
+                        break;
+                    }
+                    nextIndex = (nextIndex + 1) % R;
+                }
+                if( !found ) {
                     counter = rounds.length;
                     while(firstLastMatrix[nextIndex][0] > firstLastMatrix[nextIndex][1] ) {
                         nextIndex = (nextIndex + 1) % R;
@@ -224,6 +269,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                             return;
                         }
                     }
+                    currentIndex = nextIndex;
                 }
             }
 
@@ -306,7 +352,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 flm.push( row );    // round 0,1,2...
             }
 
-            if( firstRemaing > 0 ) {
+            if( firstRemaing > 0 || qualifiedTeamsNo === R ) {
                 let fiBetterTeamClassification : Classification[] = [];
                 for( let i=0; i<R; i++ ) {
                     let c : Classification;
@@ -320,8 +366,11 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     c.roundIndex = i;
                     fiBetterTeamClassification.push(c);
                 }
-                const fiWorstTeams = (qualifiedTeamsNo % R);
+                let fiWorstTeams = (qualifiedTeamsNo % R);
                 fiBetterTeamClassification = this.tourneyService.sortTeamsDesc(fiBetterTeamClassification);                
+                if( qualifiedTeamsNo === R ) {
+                    fiWorstTeams = qualifiedTeamsNo;
+                }
                 for( let i=0; i < fiWorstTeams; i++ ) { // 11 % 5 = 1;
                     const ri = fiBetterTeamClassification[i].roundIndex;
                     flm[ri][0]++; // increment by 1 to exclude the better teams
@@ -368,7 +417,7 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         for( let i=0; i<R; i++ ) {
             allTeamsNo += rounds[i].classification.length;
         }
-        if( lastRemaing > 0 && allTeamsNo != selectedTeamsNo ) {
+        if( lastRemaing > 0 ) {
             let liBetterTeamClassification : Classification[] = [];
             for( let r=0; r<R; r++ ) {
                 let c : Classification;
@@ -434,185 +483,106 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                 fullRounds = this.selectedTourney.roundVO.rounds;
             }
             let rounds: Array<Round> = [...fullRounds];
-            let remaingRounds: Array<Round> = [...fullRounds];
-
-            let currentIndex : number = 0;
-            let nextIndex : number = 1;
-            let row : number = 0;
-            let col : number = 0;
             if(this.isLevelB) {
                 rounds = [...this.levelService.roundsB];
-                remaingRounds = [...this.levelService.roundsB];
             }
-            const alreadyQualifiedTeamsNo = (selectedTeamsNo - playoffTeamsNo); 
-            let qualifiedCounter : number = alreadyQualifiedTeamsNo;
-            let playoffCounter : number = playoffNo;
-            let playoffIndex : number = previousEliminatoryLevel.length - 1;
             const R = rounds.length;
             
-            let flm : number[][] = [];
+            const aqTeamsNo = selectedTeamsNo - playoffTeamsNo; // already qualified teams in the round
+            const poflm : number[][] = this.buildFirstLastMatrix(rounds, selectedTeamsNo); // already qualified FLM in the rounds
+            const aqflm : number[][] = [...poflm];
+            for( let r=0; r<poflm.length; r++ ) { 
+                aqflm[r][1] = poflm[r][0]; 
+                aqflm[r][0] = 0; 
+            }
+            let flmRow : number = 0;
+            let playoffIndex : number = 0;
+
             for( let p=0; p<el.eliminatories.length; p++ ) {
                 let e: Eliminatory = el.eliminatories[p];
-                let c1 : Classification;
-                let c2 : Classification;
-                let t1 : string = "";
-                let t2 : string = "";
-                if( alreadyQualifiedTeamsNo <= playoffNo ) {
-                    // Ex: when we select 15 teams, highestPow2Le=8, we have alreadyQualifiedTeamsNo=1(15-(15-8)*2) and playoffNo=7(15-8)
-                    console.log("Case: alreadyQualifiedTeamsNo("+ alreadyQualifiedTeamsNo + ") <= playoffNo("+playoffNo +")");
-                    if( qualifiedCounter > 0 ) {
-                        // couple the already qualified teams with the playoff's winner
-                        c1 = rounds[row++].classification[col];
-                        t1 = c1.teamName;
-                        let poRound = previousEliminatoryLevel[playoffIndex].round;
-                        c1 = poRound.classification[0];
-                        c2 = poRound.classification[1];
+                let eRound = e.round;
+                let t1 : string = "";   // t1 always is from qualification rounds to the level 1
+                let t2 : string = "";   // t2 may come from playoff or from qualified round
+
+                if( playoffIndex < previousEliminatoryLevel.length ) {
+                    let poRound = previousEliminatoryLevel[playoffIndex].round;
+                    let c1 : Classification = poRound.classification[0];
+                    let c2 : Classification = poRound.classification[1];
+                    if( playoffIndex < aqTeamsNo ) {
+                        for( let i=0; i<R; i++ ) {
+                            if( aqflm[flmRow][0] <= aqflm[flmRow][1] ) {
+                                break;
+                            }
+                            flmRow = (flmRow + 1) % R;
+                        }
+                        let aqRound = rounds[flmRow];
+                        let tni = aqflm[flmRow][0]++;   // already qualified team in the round
+                        t1 = aqRound.classification[tni].teamName; // t1 always is from qualification rounds to the level 1
                         if( c1.points >= c2.points ) {
-                            t2 = poRound.classification[0].teamName;
+                            t2 = c1.teamName;
                         } else {
-                            t2 = poRound.classification[1].teamName;                        
+                            t2 = c2.teamName;                        
                         }
-                        if( row == R ) {
-                            col++;
-                        }
-                        row = row % R;
-                        qualifiedCounter--;
+                        this.addT1T2(eRound, t1, t2, topEl);
                     } else {
-                        // Complete the next level with the remaining teams in the playoff top level
-                        console.log("Case: alreadyQualifiedTeamsNo("+ alreadyQualifiedTeamsNo + ") <= playoffNo("+playoffNo +") and qualifiedCounter <= 0");
-                        let poRound = previousEliminatoryLevel[playoffIndex].round;
-                        c1 = poRound.classification[0];
-                        c2 = poRound.classification[1];
                         if( c1.points >= c2.points ) {
-                            t1 = poRound.classification[0].teamName;
+                            t1 = c1.teamName;
+                            t2 = c2.teamName;
                         } else {
-                            t1 = poRound.classification[1].teamName;                        
+                            t1 = c2.teamName;
+                            t2 = c1.teamName;
                         }
-                        playoffIndex--;
+                        playoffIndex++;
                         poRound = previousEliminatoryLevel[playoffIndex].round;
                         c1 = poRound.classification[0];
                         c2 = poRound.classification[1];
                         if( c1.points >= c2.points ) {
-                            t2 = poRound.classification[0].teamName;
+                            t2 = c1.teamName;
                         } else {
-                            t2 = poRound.classification[1].teamName;                        
+                            t2 = c2.teamName;
                         }
+                        this.addT1T2(eRound, t1, t2, topEl);
                     }
+                    playoffIndex++;
                 } else {
-                    // Ex: when we select 17 teams, highestPow2Le=16, we have alreadyQualifiedTeamsNo=15(17-(17-16)*2) and playoffNo=1(17-16)
-                    if( playoffCounter > 0 ) {
-                        console.log("Case: couple the already qualified teams with the playoff's winner");
-                        c1 = rounds[row++].classification[col];
-                        t1 = c1.teamName;
-                        remaingRounds = this.removeTeamFromRounds(remaingRounds, t1);
-                        let poRound = previousEliminatoryLevel[playoffIndex].round;
-                        c2 = poRound.classification[1];
-                        if( poRound.classification[0].points >= poRound.classification[1].points ) {
-                            t2 = poRound.classification[0].teamName;
-                            // remove the playoff loser
-                            remaingRounds = this.removeTeamFromRounds(remaingRounds, c2.teamName);
-                            remaingRounds = this.removeTeamFromRounds(remaingRounds, t2);
-                        } else {
-                            t2 = poRound.classification[1].teamName;                        
-                            // remove the playoff loser
-                            remaingRounds = this.removeTeamFromRounds(remaingRounds, c1.teamName);
-                            remaingRounds = this.removeTeamFromRounds(remaingRounds, t2);
-                        }
-                        if( row == R ) {
-                            col++;
-                        }
-                        row = row % R;
-                        playoffCounter--;
-                    } else {
-                        console.log("Case: couple the already qualified teams with the remaining already qualified teams from the remaingRounds");
-                        for( let i=0; i<R; i++ ) {
-                            let row : number[] = [];
-                            row.push( 0 );     // the first index in the remaingRounds
-                            row.push( remaingRounds[i].classification.length - 1 );     // the last index in the remaingRounds
-                            flm.push( row );    // round 0,1,2...
-                        }
-                        let counter = remaingRounds.length;
-                        if( R == 1 ) {
-                            nextIndex = 0;
-                        } else {
-                            while(flm[currentIndex][0] > flm[currentIndex][1] || 
-                                flm[nextIndex][0] > flm[nextIndex][1] )  
-                            {
-                                currentIndex = (currentIndex + 1) % R;
-                                nextIndex = (nextIndex + 1) % R;
-                                if( --counter < 0 ) {
-                                    break;
-                                }
-                            }
-                        }
-                        if( counter < 0 ) {
-                            console.log("Try to find a round with valid teams to couple in the same round");
-                            counter = remaingRounds.length;
-                            while(flm[currentIndex][0] > flm[currentIndex][1] ) {
-                                currentIndex = (currentIndex + 1) % R;
-                                if( --counter < 0 ) {
-                                    break;
-                                }
-                            }
-                            if( counter < 0 ) {
-                                console.error("We cannot find any valid round neither a single round");
-                                return;
-                            }
-                            let currentRound : Round = remaingRounds[currentIndex];
-                            let nextRound : Round = remaingRounds[currentIndex];
-                            let c1 : Classification = currentRound.classification[ flm[currentIndex][0]++ ];
-                            let c2 : Classification = nextRound.classification[ flm[currentIndex][1]-- ];
-                            t1 = c1.teamName;
-                            t2 = c2.teamName;
-                            currentIndex = (currentIndex + 1) % R;
-                        } else {
-                            let currentRound : Round = remaingRounds[currentIndex];
-                            let nextRound : Round = remaingRounds[nextIndex];
-                            let c1 : Classification = currentRound.classification[ flm[currentIndex][0]++ ];
-                            let c2 : Classification = nextRound.classification[ flm[nextIndex][1]-- ];
-                            t1 = c1.teamName;
-                            t2 = c2.teamName;
-                            currentIndex = (currentIndex + 1) % R;
-                            nextIndex = (nextIndex + 1) % R;
+                    let counter = aqflm.length;
+                     while(aqflm[flmRow][0] > aqflm[flmRow][1] ) {
+                        flmRow = (flmRow + 1) % R;
+                        if( --counter < 0 ) {
+                            console.error("Unable to find a next ROUND to couple with the round " + flmRow + " in FLM");
+                            return;
                         }
                     }
+                    let tni = aqflm[flmRow][0]++;   // the next already qualified team in the rounds
+                    let aqRound = rounds[flmRow];
+                    t1 = aqRound.classification[tni].teamName; // t1 always is from qualification rounds to the level 1
+                    flmRow = (flmRow+1) % R;
+                    tni = aqflm[flmRow][0]++;
+                    aqRound = rounds[flmRow];
+                    t2= aqRound.classification[tni].teamName; // t2 is the II from qualification rounds to the level 1
+                    this.addT1T2(eRound, t1, t2, topEl);
                 }
-                playoffIndex--;
-
-                let round = e.round;
-                round.teamNames = [t1, t2];
-                let m1 = round.onewayMeetings[0];
-                m1.teamName1 = t1;
-                m1.teamName2 = t2;
-                this.updateVPoints(m1, topEl.abstractRoundVO.pointsNeededToWin);
-                let m2 = round.roundtripMeetings[0];
-                m2.teamName1 = t2;
-                m2.teamName2 = t1;
-                this.updateVPoints(m2, topEl.abstractRoundVO.pointsNeededToWin);
-                this.tourneyService.createClassification(round, false);
-                for( let c of round.classification ) {
-                    console.log(c);
-                }
+                flmRow = (flmRow+1) % R;
             }
         } else {
             this.onPerfectPowerOf2(el, previousEliminatoryLevel);
         }
     }
 
-    private removeTeamFromRounds(rounds: Round[], teamName: string): Round[] {
-        let ra = rounds.map(round => ({
-            ...round,
-            teamNames: round.teamNames.filter(tn => tn !== teamName)
-        }));
-        ra = ra.map(round => ({
-            ...round,
-            classificatedTeamNames: round.classificatedTeamNames.filter(tn => tn !== teamName)
-        }));
-        ra = ra.map(round => ({
-            ...round,
-            classification: round.classification.filter(c => c.teamName !== teamName)
-        }));
-        return ra;
+    private addT1T2(eRound: Round, t1: string, t2: string, topEl: EliminatoryLevel) {
+        eRound.teamNames = [t1, t2];
+        let m1 = eRound.onewayMeetings[0];
+        m1.teamName1 = t1;
+        m1.teamName2 = t2;
+        this.updateVPoints(m1, topEl.abstractRoundVO.pointsNeededToWin);
+        let m2 = eRound.roundtripMeetings[0];
+        m2.teamName1 = t2;
+        m2.teamName2 = t1;
+        this.updateVPoints(m2, topEl.abstractRoundVO.pointsNeededToWin);
+        this.tourneyService.createClassification(eRound, false);
+        for (let c of eRound.classification) {
+            console.log(c);
+        }
     }
 
     private onPerfectPowerOf2(el: EliminatoryLevel, previousEliminatoryLevel: Eliminatory[]) {

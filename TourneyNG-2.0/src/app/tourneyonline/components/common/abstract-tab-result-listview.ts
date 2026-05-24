@@ -158,6 +158,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             return;
         }
         let elList: EliminatoryLevel[] = this.selectedTourney.eliminatoryLevels;
+        this.levelService.selectedTourney = this.selectedTourney;
         this.levelService.loadAllEliminatoryMeetingByIdList(elList, () => this.onEliminatoryCompleteLoad(), (e) => this.onError(e));
     }
 
@@ -174,8 +175,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         if( !this.containsEliminatoryB() ) {
             return;
         }
-
         let elList: EliminatoryLevel[] = this.selectedTourney.eliminatoryBLevels;
+        this.levelService.selectedTourney = this.selectedTourney;
         this.levelService.loadAllEliminatoryBMeetingByIdList(elList, () => this.onEliminatoryBCompleteLoad(), (e) => this.onError(e));
     }
 

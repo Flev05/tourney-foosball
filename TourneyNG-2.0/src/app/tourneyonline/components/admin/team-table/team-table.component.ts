@@ -57,7 +57,7 @@ export class TeamTableComponent extends AbstractListView {
 
     override ngOnInit() {
         super.ngOnInit();
-        this.addTeamEnabled = !this.teamService.readOnly;
+        this.addTeamEnabled = this.loginService.isUserAllowed();
         this.teamService.loadAllTeams( () => this.onLoadTeamsComplete());
     }
   
@@ -190,15 +190,7 @@ export class TeamTableComponent extends AbstractListView {
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.onTeamUpdate(this.teams[0]));
     }
-        
-    addTeamToChaos() {
-        console.log("Entering addTeamToChaos()");
-        this.teams = this.generateChaosTeams();
-        this.selectedTourney.teams = this.teams;
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
-        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
-        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.onTeamUpdate(this.teams[0]));
-    }
+
     
     private generateChaosTeams(): Team[] {
         const teamList: Team[] = [];

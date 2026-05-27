@@ -10,6 +10,7 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
 import { Player } from 'app/tourneyonline/domain/player';
 import { Team } from 'app/tourneyonline/domain/team';
 import { Table } from 'primeng/table';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 const redirect: string = "adminplayer/dv";
 
@@ -41,7 +42,8 @@ export class PlayerTableComponent extends AbstractListView {
         protected override router: Router,
         protected override location: Location,
         public    playerService: PlayerService,
-        private   teamService: TeamService
+        private   teamService: TeamService,
+        protected loginService: LoginService
     ) {
         super(redirect, tourneyService, router, location);
     }
@@ -50,7 +52,7 @@ export class PlayerTableComponent extends AbstractListView {
         super.ngOnInit();
         this.cols = PlayerService.cols;
         this.onDeletePlayerError = false;
-        this.addPlayerEnabled = !this.teamService.readOnly;
+        this.addPlayerEnabled = this.loginService.isUserAllowed();
         this.playerService.loadAllPlayers( () => this.onComplete() );
     }
 

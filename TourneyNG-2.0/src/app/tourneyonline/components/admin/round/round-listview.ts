@@ -14,6 +14,7 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
 
 const ROUND_CHANGE_TEAMS_POPUP = "ATTENZIONE! L'operazione ricrea tutti gli incontri fra le squadre del girone facendo perdere tutte le impostazioni preesistenti. Confermi?";
 
@@ -47,13 +48,22 @@ export class RoundListView extends AbstractListView {
 
     override ngOnInit() {
         console.log("RoundPickList.ngOnInit() ");
-
         super.ngOnInit();
-        
         this.selectedRound = this.tourneyService.selectedRound;
-        this.teamService.readOnly = false;
+        // this.teamService.readOnly = false;
         this.isRoundAutoGen = this.meetingRoundService.isRoundAutoGen;
 
+        if( this.teamService.addedTeamInProgress != null ) {
+            for( let t of this.selectedRound.teamNames ) {
+                if( t !== this.teamService.addedTeamInProgress) {
+                    const m = new Meeting();
+                    m.teamName1 = this.teamService.addedTeamInProgress;
+                    m.teamName2 = t;
+                    m.name = m.teamName1 + " - " + m.teamName2;
+                    this.selectedRound.roundtripMeetings.push(m);
+                }
+            }
+        }
         this.teams = [];
         for (let tn of this.selectedRound.teamNames ) {
             let t = TeamService.getTeamByName(this.selectedTourney, tn);
@@ -68,7 +78,7 @@ export class RoundListView extends AbstractListView {
 
     addTeam() {
         this.router.navigate([TeamDetailView.redirect], { 
-            queryParams: { tourneyTeams: true, chaosEnabled:false, addTeamInProgress:true }
+            queryParams: { tourneyTeams: true, chaosEnabled:false}
         });
     }
 
@@ -120,5 +130,12 @@ export class RoundListView extends AbstractListView {
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack());
+    }
+
+    addTeamToRound() {
+        console.log("Entering addTeamToRound()");
+        this.router.navigate([TeamDetailView.redirect], { 
+            queryParams: { tourneyTeams: true, chaosEnabled: this.selectedTourney.chaosEnabled, addTeamInProgress:true}
+        });
     }
 }

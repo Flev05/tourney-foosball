@@ -29,7 +29,7 @@ export class NewTourneyDetailView implements OnInit {
         
         this.tourneyService.newTourney = true;
         this.playerService.loadAllPlayers();
-        this.teamService.readOnly = false;
+        // this.teamService.readOnly = false;
         this.teamService.loadAllTeams();
         this.disciplineService.loadAllDisciplines( () => this.loadAllDisciplinesComplete() );            
     }

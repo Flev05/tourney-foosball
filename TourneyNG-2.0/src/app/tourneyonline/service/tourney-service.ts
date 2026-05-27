@@ -160,7 +160,7 @@ export class TourneyService extends AbstractService {
     classificationName: string = "";
 
     constructor(private http: HttpClient
-        , private loginService: LoginService
+        , protected loginService: LoginService
         , private clientService: ClientService
         , private meetingService: MeetingService) 
     { 

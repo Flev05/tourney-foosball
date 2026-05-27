@@ -39,7 +39,7 @@ export class TeamDetailView extends AbstractDetailView {
     filteredTeamsSingle: Team[] = [];
     isRenaming = false;
     chaosEnabled: boolean = false; 
-
+    addTeamInProgress: boolean = false;
     errorMessage: string | null = null;
     newName: string = "";
 
@@ -63,9 +63,11 @@ export class TeamDetailView extends AbstractDetailView {
         this.isRoundAutoGen = this.teamService.isRoundAutoGen;
 
         // Note: Query params are strings, so we convert back to boolean
+        this.teamService.addedTeamInProgress = null;
         this.route.queryParams.subscribe(params => {
             this.tourneyTeams = params['tourneyTeams'] === 'true';
             this.chaosEnabled = params['chaosEnabled'] === 'true';
+            this.addTeamInProgress = params['addTeamInProgress'] === 'true';
         });
 
         if(this.teamService.newTeam) {
@@ -115,7 +117,7 @@ export class TeamDetailView extends AbstractDetailView {
     private onLoadTeamsComplete(): any {
         this.allTeams = [...this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) )];        
         console.log("Loaded [" + this.allTeams.length + "] pool teams");
-        this.addPlayerEnabled = !this.teamService.readOnly;
+        this.addPlayerEnabled = this.loginService.isUserAllowed();
     }
 
     prepareRename() {
@@ -188,6 +190,7 @@ export class TeamDetailView extends AbstractDetailView {
             return;
         }
 
+
         this.selectedTeam.id = null;
         this.teamService.updateExistingTeam(this.selectedTeam, () => this.onTeamSaveComplete());
     }
@@ -200,6 +203,11 @@ export class TeamDetailView extends AbstractDetailView {
         } else {
             this.tourneyService.selectedTourney.teams[index] = this.selectedTeam;
         }
+
+        if( this.addTeamInProgress ) {
+            this.teamService.addedTeamInProgress = this.selectedTeam.teamName;
+        }
+
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => super.goBack());
@@ -265,7 +273,6 @@ export class TeamDetailView extends AbstractDetailView {
 
     loadTeamsCompleteMethod(event: AutoCompleteCompleteEvent) {
         const query = event.query.toLowerCase();
-
         if (!event.query) {
             if( this.tourneyTeams ) {
                 this.filteredTeamsSingle = this.getAvailableTeams();
@@ -276,7 +283,6 @@ export class TeamDetailView extends AbstractDetailView {
             this.filteredTeamsSingle = this.getAvailableTeams().filter(t =>
                 t.teamName.toLowerCase().includes(query)
             );
-    
             const exactMatch = this.filteredTeamsSingle.some(t => t.teamName.toLowerCase() === query.toLowerCase());
             if (!exactMatch && query.length > 2) {
                 const t : Team = new Team();

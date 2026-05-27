@@ -82,7 +82,7 @@ export class TourneyListView extends AbstractTourneyListView {
         console.log("Entering onRowSelect()");
         console.log(event.data);
         this.tourneyService.newTourney = false;
-        this.teamService.readOnly = false;
+        // this.teamService.readOnly = false;
         this.tourneyService.loadTourneyById(event.data.id, () => this.onLoadTourneyComplete(), e => this.serverUnreachableHandler(e));
     }
 

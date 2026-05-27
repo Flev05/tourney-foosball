@@ -296,7 +296,7 @@
         </p-tabpanel>
       }
       <p-tabpanel [value]="5" title="Teams({{selectedTourney.teams.length}})">
-        <app-team-table [addTeamEnabled]="true" [tourneyTeams]="true" [chaosEnabled]="selectedTourney.chaosEnabled"></app-team-table>
+        <app-team-table [addTeamEnabled]="addTeamEnabled" [tourneyTeams]="true" [chaosEnabled]="selectedTourney.chaosEnabled"></app-team-table>
       </p-tabpanel>
     </p-tabpanels>
 </p-tabs>

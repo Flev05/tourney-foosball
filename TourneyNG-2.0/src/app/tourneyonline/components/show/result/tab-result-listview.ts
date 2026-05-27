@@ -64,6 +64,7 @@ export class TabResultListView extends AbstractTabResultListView {
 
     override ngOnInit() {
         super.ngOnInit();
+        this.addTeamEnabled = this.loginService.isUserAllowed();
     }
      
     onRoundRowSelect(event : any) {
@@ -237,8 +238,6 @@ export class TabResultListView extends AbstractTabResultListView {
     regenerateB(event : any) {
         console.log("Entering regenerateB()");
     }
-
-    
 
     public printPdfMeeting() {
         this.meetingRoundService.printPdfMeeting(this.selectedTourney)

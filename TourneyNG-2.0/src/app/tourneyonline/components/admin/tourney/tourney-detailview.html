@@ -949,21 +949,6 @@
                           Baraonda
                       </label>
                   </div>
-                  <!-- Second Line (Conditionally Rendered) -->
-                  @if (selectedTourney.chaosEnabled) {
-                      <div class="flex align-items-center">
-                          <p-checkbox 
-                              name="addTeamGroupname"
-                              inputId="addTeamGroupnameId"
-                              [binary]="true"
-                              [(ngModel)]="selectedTourney.addTeamToChaosEnabled"
-                              title="Aggiunge almeno un giocatore in corso d'opera..."
-                              tooltipPosition="right" />
-                          <label for="addTeamGroupnameId" class="ml-2 cursor-pointer white-space-nowrap">
-                              Aggiungi Giocatore/Squadra In Corso
-                          </label>
-                      </div>
-                  }
               </div>
           </p-fieldset>
 

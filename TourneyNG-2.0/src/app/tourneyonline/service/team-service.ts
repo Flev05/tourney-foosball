@@ -30,7 +30,7 @@ const deleteTeamUrl = teamUrl +'/delete';
 export class TeamService {
     selectedTeam : Team = new Team();
     newTeam : boolean = false;
-    readOnly: boolean = false;
+    // readOnly: boolean = false;
     selectedTabIndex: number = 0; 
     storedTeamFilter: string = '';    
 
@@ -45,10 +45,10 @@ export class TeamService {
     teamAlreadyExists: boolean = false;
     isRoundAutoGen: string = "";
     tourneyTeams: boolean = false;
+    addedTeamInProgress: string | null = null;
     
     constructor(private http: HttpClient
         , private clientService: ClientService
-        , private playerService: PlayerService
         , private loginService: LoginService) {     
         console.log("Constructor of TeamService");
     }

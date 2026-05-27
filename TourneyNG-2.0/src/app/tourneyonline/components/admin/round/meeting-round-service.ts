@@ -570,16 +570,16 @@ export class MeetingRoundService extends MeetingService {
             let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
 
             for (let md = 1; md <= r.daysNo; md++) {
-                let ms: Meeting[] = (directionLabel == null || directionLabel === "Andata") 
+                let meetingList: Meeting[] = (directionLabel == null || directionLabel === "Andata") 
                     ? this.getOnewayMeetingsOfDay(md) 
                     : this.getRoundtripMeetingsOfDay(md);
 
-                if (ms.length > 0) {
+                if (meetingList.length > 0) {
                     let currentDayMeetings: any[] = [];
                     if( directionLabel ) {
-                        this.collectMeetingData(currentDayMeetings, ms, currentRoundName, `${directionLabel},`, md, r.daysNo);
+                        this.collectMeetingData(currentDayMeetings, meetingList, currentRoundName, `${directionLabel},`, md, r.daysNo);
                     } else {
-                        this.collectMeetingData(currentDayMeetings, ms, currentRoundName, null, md, r.daysNo);
+                        this.collectMeetingData(currentDayMeetings, meetingList, currentRoundName, null, md, r.daysNo);
                     }
 
                     const estimatedTableHeight = 10 + (currentDayMeetings.length * 10);
@@ -613,8 +613,8 @@ export class MeetingRoundService extends MeetingService {
     /**
      * Helper to avoid repeating logic for pushing DTOs into the list
      */
-    private collectMeetingData(list: MeetingDto[], ms: Meeting[], rn: string, dir: string | null, md: number, totalDays: number) {
-        let newDate = new Date(ms[0].datetime);
+    private collectMeetingData(mDtoList: MeetingDto[], meetingList: Meeting[], rn: string, dir: string | null, md: number, totalDays: number) {
+        let newDate = new Date(meetingList[0].datetime);
         let range = this.dateFormatPipe.transform(newDate);
         // Add Header Row
         let header = new MeetingDto();
@@ -626,11 +626,11 @@ export class MeetingRoundService extends MeetingService {
         header.md = md;
         header.days = totalDays;
         header.weekRange = range;
-        list.push(header);
-        for (let m of ms) {
+        mDtoList.push(header);
+        for (let m of meetingList) {
             if (m.points1 >= 0) {
                 // Data Row
-                list.push({ 
+                mDtoList.push({ 
                     round: rn, 
                     direction: dir == null ? " " : dir, 
                     separator: false, 
@@ -640,7 +640,7 @@ export class MeetingRoundService extends MeetingService {
                     meeting: m 
                 });
                 // Signature Row
-                list.push({ 
+                mDtoList.push({ 
                     round: rn, 
                     direction: dir == null ? " " : dir, 
                     separator: false, 

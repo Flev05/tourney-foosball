@@ -9,22 +9,13 @@
   
     <ng-template pTemplate="caption">
       <div style="text-align:center">
-        @if (!tourneyService.selectedTourney.addTeamToChaosEnabled) {
-          <button pButton icon="pi pi-plus" 
-            type="button" 
-            (click)="createChaos()" 
-            label="BARAONDA" 
-            title="Crea le squadre accoppiando causalmente i portieri e gli attaccanti"
-            [disabled]="tourneyService.createChaosDisabled">
-          </button>
-        } @else {
-          <button pButton icon="pi pi-user-plus" 
-            type="button" 
-            (click)="addTeamToChaos()" 
-            label="Aggiungi In Corso" 
-            title="Aggiunge una squadra in corso d'opera senza rifare gli incontri esistenti ma crea i nuovi incontri con le altre squadre">
-          </button>
-        }         
+        <button pButton icon="pi pi-plus" 
+          type="button" 
+          (click)="createChaos()" 
+          label="BARAONDA" 
+          title="Crea le squadre accoppiando causalmente i portieri e gli attaccanti"
+          [disabled]="tourneyService.createChaosDisabled">
+        </button>
       </div>
     </ng-template>
  

@@ -132,26 +132,16 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
 
         let rounds : Round[] = [];
-        for (let i = 0; i < el.eliminatories.length; i++) {
-            const e : Eliminatory = el.eliminatories[i];
-            const r : Round = e.round;
-            rounds.push(r);
-
-            // const m1 : Meeting = new Meeting();
-            // r.onewayMeetings.push(m1);
-            // m1.teamName1 = r.classification[0].teamName;
-            // m1.teamName2 = r.classification[1].teamName;
-            // const m2 : Meeting = new Meeting();
-            // r.roundtripMeetings.push(m2);
-            // m2.teamName1 = r.classification[1].teamName;
-            // m2.teamName2 = r.classification[0].teamName;
-        }
+        const r : Round = el.eliminatories[0].round;
+        rounds.push(r);
+        r.onewayMeetings = this.onewayMeetings;
 
         this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Andata", true);
         
-        const oneway : boolean = this.selectedTourney.isOnewayRound === "true";
-        if (!oneway) {
+        const dir : Direction = el.direction;
+        if ( dir === Direction.RoundTrip ) {
             doc.addPage(); // Start Away meetings on a fresh page
+            r.roundtripMeetings = this.roundtripMeetings;
             this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Ritorno", true);
         }
         doc.save(`Eliminations-${this.selectedTourney.tourneyName}.pdf`);

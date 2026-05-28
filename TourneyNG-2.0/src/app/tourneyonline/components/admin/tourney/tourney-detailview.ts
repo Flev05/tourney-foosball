@@ -972,9 +972,7 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.meetingRoundService.cleanRoundMeetings(true);
         this.roundRows = [];
-        // this.meetingRoundService.cleanPlayoffMeetings(true);
         this.playoffRows = [];
-        // this.meetingRoundService.cleanEliminatoryMeetings(true);
         this.eliminatoryLevelRows = [];
         this.eliminatoryBLevelRows = [];
         let tvo: TourneyVO = this.meetingRoundService.prepareTourneyVOForRound(true);
@@ -1166,7 +1164,7 @@ export class TourneyDetailView extends AbstractDetailView {
         r.id =  this.tourneyService.getSequenceNumber();
         r.onewayCurrentDay =  1;
         r.roundtripCurrentDay =  1;
-        r.name =  "Girone." + String.fromCharCode(65 + i);
+        r.name =  "Girone: " + String.fromCharCode(65 + i);
         r.type =  RoundType.R;
         r.direction =  Direction.OneWay;
         r.pageSize =  1;

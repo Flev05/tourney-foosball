@@ -1,0 +1,68 @@
+@if (currentTournament) {
+  <div class="projector-container">
+    <header class="projector-header">
+      <h1>{{ tourneyService.selectedTourney.tourneyName }} - {{ currentTournament.name }}</h1>
+      <div class="live-indicator">LIVE PROJECTOR MODE</div>
+    </header>
+
+    <div class="projector-grid">
+    <section class="projector-section">
+      <h2><i class="pi pi-calendar"></i>Matches</h2>
+      <div class="matches-list">
+        @for (dayGroup of currentTournament.meetingMap | keyvalue; track dayGroup.key; let isLast = $last) {
+          <div class="day-group-header">
+            <span>{{ dayGroup.key }}° Giornata</span>
+          </div>
+          @for (meeting of dayGroup.value; track meeting; let meetingIdx = $index) {
+            @for (matchItem of meeting.matches; track matchItem; let matchIdx = $index) {
+              <div class="match-card">
+                <span class="match-number">
+                  {{ meetingIdx + 1 }}{{ meeting.matches.length > 1 ? '.' + (matchIdx + 1) : '' }}
+                </span>
+                <span class="team-name home">{{ meeting.teamName1 }}</span>
+                <span class="match-score">{{ matchItem.score1 }} - {{ matchItem.score2 }}</span>
+                <span class="team-name away">{{ meeting.teamName2 }}</span>
+              </div>
+            }
+          }
+          @if (!isLast) {
+            <div class="day-divider"></div>
+          }
+        }
+      </div>
+    </section>
+
+      <section class="projector-section">
+        <h2><i class="pi pi-list"></i>Classifica</h2>
+        <p-table [value]="currentTournament.classification" class="projector-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3%">P°</th>
+              <th style="width: 62%">Squadra</th>
+              <th style="width: 5%">PT</th>
+              <th style="width: 5%">PG</th>
+              <th style="width: 5%">V</th>
+              <th style="width: 5%">P</th>
+              <th style="width: 5%">GF</th>
+              <th style="width: 5%">GR</th>
+              <th style="width: 5%">DR</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+            <tr [ngClass]="{'top-team': rowIndex < 2}">
+              <td><strong>{{ rowIndex + 1 }}</strong></td>
+              <td class="team-cell">{{ row.teamName }}</td>
+              <td class="points-cell">{{ row.points }}</td>
+              <td>{{ row.played }}</td>
+              <td>{{ row.won }}</td>
+              <td>{{ row.lost }}</td>
+              <td>{{ row.goalsDone }}</td>
+              <td>{{ row.goalsConceded }}</td>
+              <td>{{ row.goalsDiff }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </section>
+    </div>
+  </div>
+}

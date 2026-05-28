@@ -159,4 +159,24 @@ public class LoginRESTService extends AbstractRESTService {
 		Response.ResponseBuilder builder = Response.ok();
 		return builder.build();
 	}
+	
+//	public Map<Integer, List<Meeting>> loadTournamentsData() {
+//		List<Round> rounds = loadRounds();
+//		Map<Integer, List<Meeting>> meetingMap = new HashMap<>();
+//		
+//		for( int r=0; r<rounds.size(); r++ ) {
+//			Round round = rounds.get(r);
+//			for( int d=0; d<round.days; d++ ) {
+//				if( !meetingMap.containsKey(d)) {
+//					List<Meeting> meetingList = new ArrayList<>();
+//					meetingMap.put(d, meetingList);
+//				}
+//				List<Meeting> meetingList = meetingMap.get(d);
+//				for( Meeting m : round.getOnewayMeetings() ) {
+//					meetingList.add(m);
+//				}
+//			}
+//		}
+//		return meetingMap;
+//	}
 }

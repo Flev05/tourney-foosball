@@ -16,8 +16,6 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 
-import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
-
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { TeamService } from 'app/tourneyonline/service/team-service';
@@ -26,6 +24,7 @@ import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 const REDIRECT_ROUND_RESULT_LV   = 'result/lv/round';
 const REDIRECT_PLAYOFF_RESULT_LV = 'result/lv/playoff';
 const REDIRECT_ELIMINATORY       = 'result/lv/eliminatoryLv/dv';
+const REDIRECT_TO_PROJECTOR      = 'result/projector';
 
 @Component({
     templateUrl: './tab-result-listview.html',
@@ -225,6 +224,11 @@ export class TabResultListView extends AbstractTabResultListView {
 
     override goBack(): void {        
         this.router.navigate([TourneyResultListView.REDIRECT_TOURNEY_LV]);
+    }
+
+    public openProjectorMode(): void {
+        // Navigate inside the same window. Angular handles the /TourneyBE and # automatically!
+        this.router.navigate([REDIRECT_TO_PROJECTOR]);     
     }
 
     refresh(): void {        

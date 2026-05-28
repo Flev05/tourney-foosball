@@ -10,6 +10,13 @@
         <td>
           <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
         </td>
+        <td>
+          <p-button label="Start Projector Mode" 
+            icon="pi pi-images" 
+            severity="success"
+            (onClick)="openProjectorMode()">
+          </p-button>
+        </td>
         <td style="text-align: right;">
           <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
         </td>

@@ -32,6 +32,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TabsModule } from 'primeng/tabs';
 import { ToastModule } from 'primeng/toast';
+import { ProjectorViewComponent } from '../../projector/projector-view-component';
 
 @NgModule({
 	imports: [
@@ -68,6 +69,7 @@ import { ToastModule } from 'primeng/toast';
         ,MeetingDetailView
         ,TabResultListView
         ,PlayoffResultListView
+        ,ProjectorViewComponent
     ]
     ,providers: [DateFormatPipe, LevelService]
 })

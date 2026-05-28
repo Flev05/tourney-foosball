@@ -6,6 +6,7 @@ import { EliminatoryListView } from './eliminatory-listview';
 import { MeetingDetailView } from './meeting-detailview';
 import { TabResultListView } from './tab-result-listview';
 import { PlayoffResultListView } from './playoff-result-listview';
+import { ProjectorViewComponent } from '../../projector/projector-view-component';
 
 @NgModule({
 	imports: [
@@ -15,7 +16,8 @@ import { PlayoffResultListView } from './playoff-result-listview';
 			{ path: 'lv/round', 			component: RoundResultListView },
 			{ path: 'lv/playoff', 			component: PlayoffResultListView },
 			{ path: 'lv/eliminatoryLv/dv', 	component: EliminatoryListView },
-			{ path: 'lv/meetingLv/dv',  	component: MeetingDetailView },			
+			{ path: 'lv/meetingLv/dv',  	component: MeetingDetailView },		
+			{ path: 'projector', 			component: ProjectorViewComponent }	
 		])
 	],
 	exports: [

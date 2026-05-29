@@ -6,6 +6,10 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Subscription, interval } from 'rxjs';
 import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { Round } from 'app/tourneyonline/domain/round';
+import { AbstractView } from '../common/abstract-view';
+import { Location } from '@angular/common';
+import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { AbstractListView } from '../common/abstract-listview';
 
 // Simplified structural interfaces based on your TourneyNG architecture
 export interface Tournament {
@@ -21,7 +25,7 @@ export interface Tournament {
   templateUrl: './projector-view-component.html',
   styleUrls: ['./projector-view-component.css']
 })
-export class ProjectorViewComponent implements OnInit  {
+export class ProjectorViewComponent extends AbstractListView  {
   // Your 8 tournaments with 6 teams each
   public tournaments: Tournament[] = []; 
   
@@ -32,16 +36,19 @@ export class ProjectorViewComponent implements OnInit  {
   private rotationSubscription!: Subscription;
   private readonly ROTATION_TIME = 10000; // 30 seconds in milliseconds
 
-  constructor(private router: Router,
-    public tourneyService: TourneyService
+  constructor(protected override router: Router
+    , protected override tourneyService: TourneyService
     , private meetingRoundService: MeetingRoundService
+    , protected override location: Location
   ) 
   {
+    super("", tourneyService, router, location);
     console.log("constructor");
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     this.loadTournamentsData();
+    
     if (this.tournaments.length > 0) {
       this.currentTournament = this.tournaments[this.currentIndex];
       this.startAutomaticRotation();
@@ -53,7 +60,6 @@ export class ProjectorViewComponent implements OnInit  {
     this.tournaments = [];
 
     for( let r of st.roundVO.rounds ) {
- 
       const classifications : Classification [] = [];
       for( let c of r.classification ) {
         classifications.push(c);
@@ -92,7 +98,35 @@ export class ProjectorViewComponent implements OnInit  {
   }
 
   private nextTournament(): void {
-    // Loop through the 8 tournaments (0 to 7)
+    console.log("nextTournament(" + this.currentIndex + ")");
+    let roundIds: number[] = [];
+    const st = this.tourneyService.selectedTourney;
+    for(let round of st.roundVO.rounds) {
+      roundIds.push(round.id);
+      round.teamNo = "" + round.teamNames.length;
+    }
+    const subsbr = this.meetingRoundService.loadRoundMeetings(st.id, roundIds, e => this.serverUnreachableHandler(e));
+    subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => super.onError(e) );    
+  }
+
+  private onRoundCompleteLoad(t: MeetingDb[]): void {
+    for(let round of this.selectedTourney.roundVO.rounds) { 
+        this.meetingRoundService.extractRoundMeetings(round, t);
+        this.tourneyService.createClassification(round, true);
+    }
+    const st = this.tourneyService.selectedTourney;
+    for( let r of st.roundVO.rounds ) {
+        r.classificatedTeamNames = [];
+        for(let i=0;i<r.classification.length; i++) {
+            let tn = r.classification[i].teamName;
+            tn = tn.replace(/\(\d+\)/g, '');
+            if( r.classification.length > 0 && i < r.classification.length) {
+                tn = tn + "(" + r.classification[i].points + ")";
+            }
+            r.classificatedTeamNames.push(tn);
+        }
+    }
+    this.loadTournamentsData();
     this.currentIndex = (this.currentIndex + 1) % this.tournaments.length;
     this.currentTournament = this.tournaments[this.currentIndex];
   }

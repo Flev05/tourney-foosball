@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Classification } from 'app/tourneyonline/domain/classification';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
@@ -6,7 +6,6 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Subscription, interval } from 'rxjs';
 import { MeetingRoundService } from '../admin/round/meeting-round-service';
 import { Round } from 'app/tourneyonline/domain/round';
-import { AbstractView } from '../common/abstract-view';
 import { Location } from '@angular/common';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
 import { AbstractListView } from '../common/abstract-listview';
@@ -110,11 +109,11 @@ export class ProjectorViewComponent extends AbstractListView  {
   }
 
   private onRoundCompleteLoad(t: MeetingDb[]): void {
-    for(let round of this.selectedTourney.roundVO.rounds) { 
+    const st = this.tourneyService.selectedTourney;
+    for(let round of st.roundVO.rounds) { 
         this.meetingRoundService.extractRoundMeetings(round, t);
         this.tourneyService.createClassification(round, true);
     }
-    const st = this.tourneyService.selectedTourney;
     for( let r of st.roundVO.rounds ) {
         r.classificatedTeamNames = [];
         for(let i=0;i<r.classification.length; i++) {

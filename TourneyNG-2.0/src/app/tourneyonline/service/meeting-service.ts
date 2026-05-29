@@ -147,7 +147,7 @@ export class MeetingService extends AbstractService {
 
         let url = loadMeetingByRoundIdsUrl + "/" + tourneyId ;
 
-        console.log("Url=" + url);
+        console.log("Url=" + url + "?roundsIds=" + roundsIds);
 
         let obs = this.http.post<MeetingDb[]>(url, roundsIds, httpOptions).pipe(
             tap((m: MeetingDb[]) => this.log('loadRoundMeetings, url=' + url)),

@@ -14,7 +14,7 @@
                     type="button" 
                     (click)="create()" 
                     label="Nuovo Giocatore" 
-                    pTooltip="Crea un nuovo giocatore non esistente in lista.">
+                    title="Crea un nuovo giocatore non esistente in lista.">
                 </button>
             </div>
         </ng-template>
@@ -76,14 +76,14 @@
                     <button class="p-button-success p-button-sm" 
                         pButton icon="pi pi-pencil"
                         (click)="doUpdate(rowData)"
-                        pTooltip="Apre la vista di dettaglio del giocatore sulla riga per la modifica dei campi.">
+                        title="Apre la vista di dettaglio del giocatore sulla riga per la modifica dei campi.">
                     </button>
                 </td>  
                 <td style="width: 15mm; color: green;">
                     <button class="p-button-danger p-button-sm" 
                         pButton icon="pi pi-trash" 
                         (click)="doDelete(rowData)"
-                        pTooltip="Rimuove il giocatore sulla riga.">
+                        title="Rimuove il giocatore sulla riga.">
                     </button>
                 </td>  
              }      
@@ -99,7 +99,9 @@
 
 @if (onDeletePlayerError) { 
     <div style="margin-top:30px">
-        <p-message severity="error" text="Impossibile rimuore il giocatore {{selectedPlayer.playerName}} perchè ancora in uso!"></p-message>
+        <p-message severity="error">
+            Impossibile rimuore il giocatore {{selectedPlayer.playerName}} perchè ancora in uso!
+        </p-message>
     </div>    
 }
  

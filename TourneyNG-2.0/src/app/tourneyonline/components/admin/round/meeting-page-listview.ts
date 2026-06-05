@@ -2,13 +2,12 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Meeting } from '../../../domain/meeting';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { TourneyService } from '../../../service/tourney-service';
-import { Round } from '../../../domain/round';
-import { TableCols } from '../../../domain/table-cols';
+import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { Round } from 'app/tourneyonline/domain/round';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingRoundService } from './meeting-round-service';
-import { Meta } from '@angular/platform-browser';
 
 @Component({
     templateUrl: './meeting-page-listview.html',
@@ -74,37 +73,8 @@ export class MeetingListView extends AbstractListView {
         this.meetingRoundService.selectedTourney = this.selectedTourney;
         this.pageSize = this.selectedRound.pageSize;
         this.allDaysNo = this.selectedRound.daysNo;
-
-        // let  tempList : Meeting[] = [];
-        // let  i : number = 0;
-        // for( let m of this.selectedRound.onewayMeetings) {
-        //     let curPage = i % this.pageSize;
-        //     if( curPage == 0) {
-        //         let separator: Meeting = { datetime: m.datetime, teamName1: "Giornata " + (i / this.pageSize + 1) + "/" + this.allDaysNo, teamName2: " ----------- " };
-        //         tempList.push(separator);
-        //     }
-        //     tempList.push(m);
-        //     i++;
-        // }
-        // this.onewayMeetings = tempList;
         this.onewayMeetings = this.selectedRound.onewayMeetings;
-        // this.onewayMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
-
-        // tempList = [];
-        // i = 0;
-        // for( let m of this.selectedRound.roundtripMeetings) {
-        //     let curPage = i % this.pageSize;
-        //     if( curPage == 0) {
-        //         let separator: Meeting = {  teamName1: "Giornata " + (i / this.pageSize + 1) + "/" + this.allDaysNo, teamName2: " ----------- " };
-        //         tempList.push(separator);
-        //     }
-        //     tempList.push(m);
-        //     i++;
-        // }
-        // this.roundtripMeetings = tempList;
         this.roundtripMeetings = this.selectedRound.roundtripMeetings;
-        // this.roundtripMeetings.sort((m1, m2) => this.meetingRoundService.sortMeeting(m1, m2));
-
         console.log("[Meetings " + this.onewayMeetings.length + "]");
         console.log("[Days     " + this.allDaysNo + "]");
         console.log("[PageSize " + this.pageSize + "]");
@@ -112,9 +82,7 @@ export class MeetingListView extends AbstractListView {
   
     onRowSelect(event : any) {
         console.log(event.data);
-
         this.meetingRoundService.selectedMeeting = this.selectedRow;
-
         this.gotoDetailView();
     }
 }

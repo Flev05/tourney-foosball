@@ -64,6 +64,7 @@ export class TabResultListView extends AbstractTabResultListView {
     override ngOnInit() {
         super.ngOnInit();
         this.addTeamEnabled = this.loginService.isUserAllowed();
+        this.badRequest = false;
     }
      
     onRoundRowSelect(event : any) {

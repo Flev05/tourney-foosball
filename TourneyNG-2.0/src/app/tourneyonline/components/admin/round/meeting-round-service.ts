@@ -13,7 +13,7 @@ import { PlayoffRule } from 'app/tourneyonline/domain/playoff-rule';
 import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { catchError, tap } from 'rxjs/operators';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { jsPDF } from 'jspdf';
@@ -24,10 +24,9 @@ import { MeetingDto } from './meeting-dto';
   providedIn: 'root'
 })
 export class MeetingRoundService extends MeetingService {
-
     isRoundAutoGen: string = "";
     isFirstRound: boolean = false;
-
+    addedTeamInProgressList : Meeting [] = [];
     constructor(protected override http: HttpClient
         , protected override router: Router
         , protected tourneyService: TourneyService
@@ -44,9 +43,7 @@ export class MeetingRoundService extends MeetingService {
      */
     loadRoundMeeting(tourney: Tourney, round : Round ) :  Observable<MeetingDb[]> {
         let url = this.loadMeetingByRoundIdUrl + "/" + tourney.id + "/" + round.id;
-
         console.log("Url=" + url);
-
         const subsbr :Observable<MeetingDb[]> = this.http.get<MeetingDb[]>(url);
         subsbr.pipe(tap(_ => this.log('fetched MeetingDb url=' + url)),
             catchError(this.handleError<MeetingDb[]>('loadRoundMeetingDb url=' + url))
@@ -77,6 +74,22 @@ export class MeetingRoundService extends MeetingService {
         tvo.mdbs = roundsMeetings;
         const subscriber = this.tourneyService.updateTourneyAndRounds(tvo, saveEH('Create Tourney operation', tvo));
         subscriber.subscribe(cs => this.saveTourneyNext(cs), e => subscribeEH(e, tvo), () => unBlockDocument() );
+    }
+
+    public addInProgressRoundMeetings(selectedTourney : Tourney
+        , roundId : number
+        , onewayMeetings : Meeting[]
+        , roundtripMeetings: Meeting[])
+    {
+        this.selectedTourney = selectedTourney;
+        for(let m of onewayMeetings ) {
+            let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, roundId, this.saveMeetingErrorHandler()  );
+            observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+        }
+        for(let m of roundtripMeetings ) {
+            let observer = this.saveRoundMeetingDb(m, this.selectedTourney.id, roundId, this.saveMeetingErrorHandler()  );
+            observer.subscribe( n => this.saveMeetingNext(n, this.selectedMeeting));
+        }
     }
  
     private saveTourneyNext(tvo: TourneyVO): void {
@@ -262,21 +275,12 @@ export class MeetingRoundService extends MeetingService {
     public onCompleteLoad(round: Round, mdbList: MeetingDb[], complete: () => void ) {
         this.mdbList = mdbList;
         this.extractRoundMeetings(round, mdbList);
-        // this.makeTeamName(round.onewayMeetings);
-        // this.makeTeamName(round.roundtripMeetings);
         let allDaysNo = round.daysNo;
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
         this.prepareCaption(meetingsNo, allDaysNo, round);
         complete();
     }
-
-    // private makeTeamName(meetings: Meeting[]) {
-    //     for(let m of meetings) {
-    //         m.teamName1 = m.teamName1;
-    //         m.teamName2 = m.teamName2;
-    //     }
-    // }
 
     /**
      * Prepares the meetings only if there was the changes in the teams or in the round configurations
@@ -524,6 +528,30 @@ export class MeetingRoundService extends MeetingService {
         const both : boolean = selectedTourney.isOnewayRound != "true";
         const roundName : string = selectedTourney.roundTabName==null?'Girone':selectedTourney.roundTabName;
         this.doPrintPdfMeeting(selectedTourney, selectedTourney.roundVO.rounds, both, roundName);
+    }
+
+    public printPdfSingleRound(selectedTourney: Tourney, selectedRound: Round, addedTeamInProgressList : Meeting []) {
+        this.isFirstRound = true;
+        const both : boolean = selectedTourney.isOnewayRound != "true";
+        const roundName : string = selectedTourney.roundTabName==null?'Girone':selectedTourney.roundTabName;
+        const round : Round = new Round();
+        const rounds : Round[] = [];
+        rounds.push(round);
+        round.name = selectedRound.name;
+        round.daysNo = selectedRound.daysNo;
+        round.onewayCurrentDay = selectedRound.onewayCurrentDay;
+        round.roundtripCurrentDay = selectedRound.roundtripCurrentDay;
+        round.pageSize = selectedRound.pageSize;
+        round.label = selectedRound.label;
+        for( let m of addedTeamInProgressList ) {
+            if( m.direction === Direction.OneWay ) {
+                round.onewayMeetings.push(m);
+            } else {
+                round.roundtripMeetings.push(m);
+            }
+        }
+
+        this.doPrintPdfMeeting(selectedTourney, rounds, both, roundName);
     }
 
     private doPrintPdfMeeting(selectedTourney: Tourney, rounds: Round[], both: boolean, roundName: string) {

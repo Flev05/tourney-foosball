@@ -7,7 +7,7 @@ import { AbstractListView } from 'app/tourneyonline/components/common/abstract-l
 import { Team } from 'app/tourneyonline/domain/team';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { TeamDetailView } from '../team/team-detailview';
-import { Observable, of } from 'rxjs';
+import { last, Observable, of } from 'rxjs';
 import { Table } from 'primeng/table';
 import { ClientService } from 'app/tourneyonline/service/client-service';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
@@ -240,11 +240,17 @@ export class TeamTableComponent extends AbstractListView {
 
         if( leftovers.length % 2 == 1 ) {
             const lastTeam = teamList[teamList.length - 1];
-            lastTeam.players.push(leftovers[leftovers.length-1]);
+            const oddPlayer = leftovers[leftovers.length-1];
+            lastTeam.players.push(oddPlayer);
+            lastTeam.teamName = lastTeam.teamName + " + " + oddPlayer.playerName;
         }    
 
         this.tourneyService.createChaosDisabled = true;
         
         return teamList;
+    }
+
+    public printTeams() {
+        this.teamService.printTeams(this.selectedTourney)
     }
 }

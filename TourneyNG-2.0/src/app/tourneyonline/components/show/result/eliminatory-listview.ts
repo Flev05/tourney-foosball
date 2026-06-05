@@ -17,11 +17,7 @@ import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { jsPDF } from 'jspdf';
 import { Round } from 'app/tourneyonline/domain/round';
-import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
-import { Meeting } from 'app/tourneyonline/domain/meeting';
-import { Match } from 'app/tourneyonline/domain/match';
-import { Player } from 'app/tourneyonline/domain/player';
 
 @Component({
     templateUrl: './eliminatory-listview.html',
@@ -88,26 +84,18 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
     public isPdfEliminatoryPlayoff() : boolean {
         if( !this.containsEliminatory() ) {
-            return false;
+            return true;
         }
         const levelNo: number = this.tourneyService.selectedEliminatoryLevelIndex;
-        if( levelNo > 0 ) {
-            return false;
+        let el: EliminatoryLevel;
+        let tNo : number = -1;
+        if(levelNo==-1) {
+            el = this.selectedTourney.eliminatoryBLevels[this.tourneyService.selectedEliminatoryBLevelIndex];
+            return el.name.startsWith("Playoff");
+        } else {
+            el = this.selectedTourney.eliminatoryLevels[0];
+            tNo = el.topLevelTeamNo
         }
-        const tNo = this.selectedTourney.eliminatoryLevels[levelNo].topLevelTeamNo;
-        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(tNo);
-        return tNo !== highestPow2Le;
-    }
-
-    public isPdfEliminatoryBPlayoff() : boolean {
-        if( !this.containsEliminatoryB() ) {
-            return false;
-        }
-        const levelNo: number = this.tourneyService.selectedEliminatoryBLevelIndex;
-        if( levelNo > 0 ) {
-            return false;
-        }
-        const tNo = this.selectedTourney.eliminatoryBLevels[levelNo].topLevelTeamNo;
         const highestPow2Le : number =  this.levelService.highestPowerOf2LE(tNo);
         return tNo !== highestPow2Le;
     }
@@ -115,14 +103,15 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     public printPdfTopLevelMeeting() {
         const rowIndex: number = this.tourneyService.selectedEliminatoryLevelIndex;
         console.log("rowIndex=" + rowIndex);
-        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[rowIndex];
-        this.doPrintPdfTopLevelMeeting(el);
-    }
-
-    public printPdfTopLevelBMeeting() {
-        const rowIndex: number = this.tourneyService.selectedEliminatoryBLevelIndex;
-        console.log("rowIndex=" + rowIndex);
-        let el: EliminatoryLevel = this.selectedTourney.eliminatoryBLevels[rowIndex];
+        let level : string;
+        let el: EliminatoryLevel;
+        if(rowIndex==-1) {
+            el = this.selectedTourney.eliminatoryBLevels[0];
+            level = "(Elim. B)";
+        } else {
+            el = this.selectedTourney.eliminatoryLevels[0];   
+            level = "(Elim. A)";         
+        }
         this.doPrintPdfTopLevelMeeting(el);
     }
 
@@ -135,9 +124,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         const r : Round = el.eliminatories[0].round;
         rounds.push(r);
         r.onewayMeetings = this.onewayMeetings;
-
         this.meetingRoundService.printFullDirection(doc, rounds, el.name, "Andata", true);
-        
         const dir : Direction = el.direction;
         if ( dir === Direction.RoundTrip ) {
             doc.addPage(); // Start Away meetings on a fresh page
@@ -148,18 +135,20 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     }    
 
     public printTennisBracket() {
-        const levelNo: number = this.tourneyService.selectedEliminatoryLevelIndex;
-        let el: EliminatoryLevel = this.selectedTourney.eliminatoryLevels[levelNo];
-        this.doPrintTennisBracket(el);
+        const rowIndex: number = this.tourneyService.selectedEliminatoryLevelIndex;
+        let level : string;
+        let el: EliminatoryLevel;
+        if(rowIndex==-1) {
+            level = "(Elim. B)";
+            el = this.selectedTourney.eliminatoryBLevels[0];
+        } else {
+            el = this.selectedTourney.eliminatoryLevels[0];            
+            level = "(Elim. A)";
+        }
+        this.doPrintTennisBracket(el, level);
     }
     
-    public printTennisBracketB() {
-        const levelNo: number = this.tourneyService.selectedEliminatoryBLevelIndex;
-        let el: EliminatoryLevel = this.selectedTourney.eliminatoryBLevels[levelNo];
-        this.doPrintTennisBracket(el);
-    }
-    
-    private doPrintTennisBracket(el: EliminatoryLevel) {
+    private doPrintTennisBracket(el: EliminatoryLevel, level : string) {
         const doc = new jsPDF('l', 'mm', 'a4');
         const pageWidth = 297;
         const pageHeight = 210;
@@ -218,7 +207,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         const totalMatches = initialMatches.length;
         
         // Print the header tourney name
-        let tourneyName = `${this.selectedTourney.tourneyName}`;
+        let tourneyName = `${this.selectedTourney.tourneyName} ` + level;
         tourneyName = tourneyName.toUpperCase();
         doc.text(tourneyName, pageWidth / 2, (pageHeight / 2) - 95, { align: 'center' });
 

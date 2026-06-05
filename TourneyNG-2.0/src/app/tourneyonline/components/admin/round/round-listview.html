@@ -119,5 +119,13 @@
       (click)="addTeamToRound()" 
       label="Aggiungi TEAM" 
       title="Aggiunge una squadra in corso d'opera senza rifare gli incontri esistenti ma crea i nuovi incontri con le altre squadre">
-    </button>    
+    </button>
+    @if (meetingRoundService.addedTeamInProgressList.length > 0) {
+        <button class="ui-button-success"
+          label="Stampa TEAMS aggiunti"
+          pButton icon="pi pi-file-pdf"
+          pTooltip="Stampa solo la lista dei nuovi incontri aggiunti in corso d'opera"
+          (click)="printPdfInProgressMeeting()">
+        </button>
+    }
   </div>

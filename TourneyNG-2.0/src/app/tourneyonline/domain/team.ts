@@ -9,6 +9,7 @@ export class Team {
     isNew       : boolean = false;
     chaosEnabled : boolean = false;
     address     : string = "";
+    phoneNumber : string = "";
     ruleName    : string = "";
     asd         : string = "";
     country     : Country = new Country();

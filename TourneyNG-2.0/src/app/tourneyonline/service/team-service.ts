@@ -11,7 +11,9 @@ import { LoginService } from './login-service';
 import { Tourney } from '../domain/tourney';
 import { Meeting } from '../domain/meeting';
 import { Nullable } from 'primeng/ts-helpers';
-import { PlayerService } from './player-service';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { DateFormatPipe } from '../components/common/date-format-pipe';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -28,6 +30,7 @@ const deleteTeamUrl = teamUrl +'/delete';
     providedIn: 'root'
 })
 export class TeamService {
+
     selectedTeam : Team = new Team();
     newTeam : boolean = false;
     // readOnly: boolean = false;
@@ -49,7 +52,8 @@ export class TeamService {
     
     constructor(private http: HttpClient
         , private clientService: ClientService
-        , private loginService: LoginService) {     
+        , private loginService: LoginService
+        , protected dateFormatPipe: DateFormatPipe) {     
         console.log("Constructor of TeamService");
     }
     
@@ -311,5 +315,90 @@ export class TeamService {
             }
             m.address = t.address + " - " + t.country.zipCode + " " + t.country.city + " (" + t.country.provinceCode + ")";
         }
+    }
+
+    public printTeams(selectedTourney: Tourney) {
+        const teams = selectedTourney.teams;
+        const fileName = selectedTourney.tourneyName + '.pdf';
+
+        let newDate = new Date(selectedTourney.datetime);
+        let datetime = this.dateFormatPipe.transform(newDate);
+
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        let currentY = 20; 
+
+        // --- Document Title ---
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(22);
+        doc.setTextColor(26, 54, 93);
+        doc.text(selectedTourney.tourneyName + ' - ' + datetime, 14, currentY);
+        
+        currentY += 15;
+
+        // --- Loop through Teams ---
+        teams.forEach((team, index) => {
+            if (currentY > 260) {
+            doc.addPage();
+            currentY = 20; 
+            }
+
+            // Team Header
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(43, 108, 176);
+            doc.text(`${team.teamName || 'Unnamed Team'}`, 14, currentY);
+            currentY += 6;
+
+            // Team Phone
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(10);
+            doc.setTextColor(74, 85, 104);
+            doc.text('PAGATO: ', 14, currentY);
+            currentY += 6;
+
+            // Players Table
+            if (team.players && team.players.length > 0) {
+                const tableRows = team.players.map(player => [
+                    player.playerName || 'N/A',
+                    player.phoneNumber || 'N/A',
+                ]);
+                autoTable(doc, {
+                    startY: currentY,
+                    head: [['Giocatore', 'Telefono']],
+                    body: tableRows,
+                    theme: 'striped',
+                    headStyles: { 
+                        fillColor: [255, 255, 255], // Changes background to white
+                        textColor: [0, 0, 0],        // Changes text to black so it's visible
+                        fontStyle: 'bold' 
+                    },
+                    styles: { font: 'helvetica', fontSize: 10 },
+                    margin: { left: 14, right: 14 },
+                    didDrawPage: (data) => {
+                        currentY = data.cursor ? data.cursor.y : currentY;
+                    }
+                });
+                currentY = (doc as any).lastAutoTable.finalY + 15;
+            } else {
+                doc.setFont('helvetica', 'italic');
+                doc.setFontSize(10);
+                doc.setTextColor(160, 174, 192);
+                doc.text('No players registered for this team.', 18, currentY);
+                currentY += 15;
+            }
+
+            if (index < teams.length - 1 && currentY < 270) {
+                doc.setDrawColor(226, 232, 240);
+                doc.line(14, currentY - 5, 196, currentY - 5);
+            }
+        });
+
+        // --- Save / Download the PDF using the dynamic parameter ---
+        doc.save(fileName);
     }
 }

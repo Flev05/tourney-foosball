@@ -173,6 +173,7 @@ export class TourneyDetailView extends AbstractDetailView {
         console.log("TourneyDetailView.ngOnInit()");
 
         super.ngOnInit();
+        this.badRequest = false;
         this.teamService.tourneyTeams = true;
         this.countries = this.countryService.countries;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
@@ -210,6 +211,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
         this.followerUrl += this.selectedTourney.followerName;
         this.prepareTabsGui();
+        this.teamService.addedTeamInProgress = null;
+        this.meetingRoundService.addedTeamInProgressList = [];
     }
 
     private initNewTourney() {
@@ -945,11 +948,12 @@ export class TourneyDetailView extends AbstractDetailView {
         if(!confirm(ROUND_CHANGE_GEN_MODE_POPUP)) {
             return;
         } 
-
         this.doOnRoundNumChange(cb);
     }
 
     private doOnRoundNumChange(cb: Combobox) {
+        this.teamService.addedTeamInProgress = null;
+        this.meetingRoundService.addedTeamInProgressList = [];
         this.selectedTourney.selectedRoundsNumCB = cb;
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
@@ -1001,6 +1005,7 @@ export class TourneyDetailView extends AbstractDetailView {
         }
 
         this.roundRows = this.selectedTourney.roundVO.rounds;
+        this.tourneyService.selectedRound = this.selectedRound;
 
         cb = { label: "" + this.tourneyService.FIRST_COMBO_ITEM.label, value: this.tourneyService.FIRST_COMBO_ITEM.value };
         this.selectedTourney.selectedPlayoffsCB       = cb;

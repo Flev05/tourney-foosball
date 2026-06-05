@@ -87,8 +87,8 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         }
     }
     
-    private onRoundCompleteLoad(t: MeetingDb[]): void {
-        this.mdbList = t;
+    private onRoundCompleteLoad(mdbl: MeetingDb[]): void {
+        this.mdbList = mdbl;
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);

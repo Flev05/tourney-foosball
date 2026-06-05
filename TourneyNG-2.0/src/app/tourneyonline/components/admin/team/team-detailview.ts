@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TourneyVO } from 'app/tourneyonline/domain/tourney.vo';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { LoginService } from 'app/tourneyonline/service/login-service';
+import { PlayerService } from 'app/tourneyonline/service/player-service';
 
 @Component({
     templateUrl: './team-detailview.html',
@@ -49,7 +50,8 @@ export class TeamDetailView extends AbstractDetailView {
         protected loginService: LoginService,
         protected clientService: ClientService,
         protected countryService: CountryService,
-        public teamService: TeamService,
+        public    teamService: TeamService,
+        public    playerService: PlayerService,
         private route: ActivatedRoute
     ) { 
         super(tourneyService, location);
@@ -183,13 +185,13 @@ export class TeamDetailView extends AbstractDetailView {
         this.selectedTeam.teamName = this.selectedTeam.teamName.toUpperCase();
         let index = this.tourneyService.selectedTourney.teams.findIndex( t => t.teamName.toUpperCase() === this.selectedTeam.teamName);
         if( index !== -1 || this.previousSelectedTeamName !== this.selectedTeam.teamName) {
-            this.teamService.updateExistingTeam(this.selectedTeam, () => this.onTeamSaveComplete());
             if( this.previousSelectedTeamName !== this.selectedTeam.teamName ) {
                 this.tourneyService.updateEveryThinkOnTeamChange(this.tourneyService.selectedTourney, this.previousSelectedTeamName,this.selectedTeam.teamName);
             }
+            this.selectedTeam.players = [...this.playerService.selectedPlayers.filter(p => p.id !== null)];
+            this.teamService.updateExistingTeam(this.selectedTeam, () => this.onTeamSaveComplete());
             return;
         }
-
 
         this.selectedTeam.id = null;
         this.teamService.updateExistingTeam(this.selectedTeam, () => this.onTeamSaveComplete());

@@ -76,13 +76,14 @@
     (onRowSelect)="onRowSelect($event)"
     [scrollable]="true"
     scrollHeight="400px">
-    @if (!loginService.isFollower() && addTeamEnabled) {
-        <ng-template pTemplate="caption">
-          <div style="text-align:center">
-            <button pButton icon="pi pi-plus" type="button" (click)="newTeam()" label="Aggiungi Squadra" ></button>
-          </div>
-        </ng-template>
-    }
+    <ng-template pTemplate="caption">
+      <div style="text-align:center">
+        <button pButton icon="pi pi-file-pdf" type="button" (click)="printTeams()" label="STAMPA" ></button>
+        @if (loginService.isUserAllowed()) {
+          <button pButton icon="pi pi-plus" type="button" (click)="newTeam()" label="Aggiungi Squadra" ></button> 
+        }
+      </div>
+    </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th style="width: 15mm;">N°</th>

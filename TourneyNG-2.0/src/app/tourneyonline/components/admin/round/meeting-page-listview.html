@@ -29,7 +29,9 @@
 
 <div style="margin-top:30px">
   @if (!atLeast2teams) {
-    <p-message severity="error" text="Attenzione! C'è almeno un girone vuoto, inserire almeno 2 squadre per ciascuno girone"></p-message>
+    <p-message severity="error" >
+      Attenzione! C'è almeno un girone vuoto, inserire almeno 2 squadre per ciascuno girone
+    </p-message>
   }
 </div>
 <div class="ui-dialog-buttonpane ui-helper-clearfix">
@@ -76,7 +78,7 @@
           <p-table
             [columns]="cols"
             [value]="roundtripMeetings"
-            responsiveLayout="scroll"
+            [scrollable]="true"
             selectionMode="single"
             [(selection)]="selectedRow"
             (onRowSelect)="onRowSelect($event)"

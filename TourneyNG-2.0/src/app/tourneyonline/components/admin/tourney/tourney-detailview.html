@@ -402,7 +402,7 @@
                     type="text" 
                     class="w-full" 
                     [(ngModel)]="selectedTourney.tourneyName" 
-                    pTooltip="Il nome del torneo è obbligatorio."
+                    title="Il nome del torneo è obbligatorio."
                     placeholder="Nome torneo..."/>
           </div>            
         </div>
@@ -411,7 +411,7 @@
           <div class="col-1">
             Follower URL:
           </div>
-          <div class="col-5" pTooltip="Il nome del torneo è obbligatorio.">
+          <div class="col-5" title="Il nome del torneo è obbligatorio.">
             {{followerUrl}}
           </div>
         </div>
@@ -421,7 +421,7 @@
             Giornaliero:
           </div>
           <div class="col-1" tooltipPosition="right"
-            pTooltip="Indicare se il torneo si svolge in un singolo giorno o su più giorni.">
+            title="Indicare se il torneo si svolge in un singolo giorno o su più giorni.">
             <div class="ui-g radiobuttons">
               <div class="ui-g-12">
                 <p-radioButton name="isDailyGroupname"
@@ -453,7 +453,7 @@
           <div class="col-1" >
             Via*:
           </div>
-          <div class="col-8" pTooltip="Inserire l'indirizzo della sede che organizza il torneo.">
+          <div class="col-8" title="Inserire l'indirizzo della sede che organizza il torneo.">
             <input class="w-full" pInputText type="text" [(ngModel)]="selectedTourney.address"/>
           </div>
         </div>
@@ -499,7 +499,7 @@
             Data e ora:
           </div>
           <div class="col-8" tooltipPosition="right"
-            pTooltip="Indicare la data di inizio del torneo.">
+            title="Indicare la data di inizio del torneo.">
             <p-datepicker [(ngModel)]="selectedTourney.datetime"
               [showIcon]="true"
               class="w-full"
@@ -617,7 +617,7 @@
           <p-fieldset legend="Gara">
             <div class="grid">
               <div class="col-4" tooltipPosition="right"
-                pTooltip="Indicare se le gare terminano a tempo o a punteggio">
+                title="Indicare se le gare terminano a tempo o a punteggio">
                 <div class="ui-g radiobuttons">
                   <div class="ui-g-12">
                     <p-radioButton name="tourneyTypeGroupname"
@@ -648,7 +648,7 @@
           <p-fieldset legend="Inserimento Risultati">
             <div class="grid">
               <div class="col-4" tooltipPosition="right"
-                pTooltip="Scegliere la modalità di inserimento dei risultati: Risultato Finale (un goal per volta) di ciascun incontro, con l'uso della MATRICE in cui si inseriscono solo i Punti Conquistati(3, 2, 1 o 0)">
+                title="Scegliere la modalità di inserimento dei risultati: Risultato Finale (un goal per volta) di ciascun incontro, con l'uso della MATRICE in cui si inseriscono solo i Punti Conquistati(3, 2, 1 o 0)">
                 <div class="ui-g radiobuttons">
                   <div class="ui-g-12">
                     <p-radioButton name="resultToolGroupname"
@@ -680,7 +680,7 @@
               <div class="grid align-items-center">
                   <div class="col-12 md:col-4 flex align-items-center" 
                       tooltipPosition="left"
-                      pTooltip="Selezionare Gironi se sono previsti gironi di qualificazione all'italiana">
+                      title="Selezionare Gironi se sono previsti gironi di qualificazione all'italiana">
                       <p-checkbox name="phasesGroupname"
                                   inputId="phasesGroupnameId1"
                                   value="round"
@@ -698,13 +698,13 @@
                             type="text" 
                             class="w-full" 
                             [(ngModel)]="selectedTourney.roundTabName" 
-                            pTooltip="Cambiare, se si vuole, il nome della scheda Gironi"
+                            title="Cambiare, se si vuole, il nome della scheda Gironi"
                             placeholder="Nome scheda..."/>
                   </div>
             @if (containsRound()) {
               <div class="col-12 md:col-4 flex align-items-center" 
                   tooltipPosition="left"
-                  pTooltip="Selezionare Play Off se sono previsti altri gironi di qualificazione a valle dei gironi all'italiana">
+                  title="Selezionare Play Off se sono previsti altri gironi di qualificazione a valle dei gironi all'italiana">
                   <p-checkbox name="phasesGroupname"
                               inputId="phasesGroupnameId2"
                               value="playoff"
@@ -721,14 +721,14 @@
                         type="text" 
                         class="w-full" 
                         [(ngModel)]="selectedTourney.playoffTabName" 
-                        pTooltip="Cambiare, se si vuole, il nome della scheda Play Off"
+                        title="Cambiare, se si vuole, il nome della scheda Play Off"
                         placeholder="Nome scheda..."/>
               </div>
             }
             @if (containsPlayoff()) {
                 <div class="col-12 md:col-4 flex align-items-center" 
                     tooltipPosition="left"
-                    pTooltip="Selezionare Play Out solo se previsto un ulteriore girone all'italiana creato con le squadre non qualificate ai Play Off">
+                    title="Selezionare Play Out solo se previsto un ulteriore girone all'italiana creato con le squadre non qualificate ai Play Off">
                     <p-checkbox name="phasesGroupname"
                                 inputId="phasesGroupnameId3"
                                 value="playout"
@@ -745,13 +745,13 @@
                           type="text" 
                           class="w-full" 
                           [(ngModel)]="selectedTourney.playoutTabName" 
-                          pTooltip="Cambiare, se si vuole, il nome della scheda Play Out"
+                          title="Cambiare, se si vuole, il nome della scheda Play Out"
                           placeholder="Nome scheda..."/>
                 </div>
             }
             <div class="col-12 md:col-4 flex align-items-center" 
                 tooltipPosition="left"
-                pTooltip="Selezionare Eliminazioni Dirette se sono previste le eliminazioni dirette sia derivanti dai precedenti gironi che come torneo con solo eliminatorie">
+                title="Selezionare Eliminazioni Dirette se sono previste le eliminazioni dirette sia derivanti dai precedenti gironi che come torneo con solo eliminatorie">
                 <p-checkbox name="phasesGroupname"
                             inputId="phasesGroupnameId4"
                             value="eliminatory"
@@ -768,13 +768,13 @@
                       type="text" 
                       class="w-full" 
                       [(ngModel)]="selectedTourney.eliminatoryTabName" 
-                      pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette"
+                      title="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette"
                       placeholder="Nome scheda..."/>
             </div>
             @if (containsEliminatory()) {
                 <div class="col-12 md:col-4 flex align-items-center" 
                     tooltipPosition="left"
-                    pTooltip="Selezionare Eliminazioni Dirette B se sono previste le eliminazioni dirette per le squadre che non si sono qualificate nei gironi precedenti">
+                    title="Selezionare Eliminazioni Dirette B se sono previste le eliminazioni dirette per le squadre che non si sono qualificate nei gironi precedenti">
                     <p-checkbox name="phasesGroupnameB"
                                 inputId="phasesGroupnameId5"
                                 value="eliminatoryB"
@@ -791,7 +791,7 @@
                           type="text" 
                           class="w-full" 
                           [(ngModel)]="selectedTourney.eliminatoryBTabName" 
-                          pTooltip="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette B"
+                          title="Cambiare, se si vuole, il nome della scheda Eliminazioni Dirette B"
                           placeholder="Nome scheda..."/>
                 </div>
             }
@@ -832,7 +832,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Indicare la durata in minuti della singola gara per i tornei a tempo">
+                        title="Indicare la durata in minuti della singola gara per i tornei a tempo">
                     </p-inputNumber>
                 </div>                   
               </div>
@@ -961,7 +961,7 @@
                           value="random" 
                           [(ngModel)]="selectedTourney.teamsWeightEnabled" 
                           inputId="isTeamsOrderedGroupname1"
-                          pTooltip="Indicare se le squadre sono scelte in ordine casuale" 
+                          title="Indicare se le squadre sono scelte in ordine casuale" 
                           tooltipPosition="right" />
                       <label for="isTeamsOrderedGroupname1" class="ml-3 cursor-pointer font-medium">
                           Random
@@ -973,7 +973,7 @@
                           value="topseed" 
                           [(ngModel)]="selectedTourney.teamsWeightEnabled" 
                           inputId="isTeamsOrderedGroupname2"
-                          pTooltip="Indicare se le squadre sono ordinate come teste di serie" 
+                          title="Indicare se le squadre sono ordinate come teste di serie" 
                           tooltipPosition="right" />
                       <label for="isTeamsOrderedGroupname2" class="ml-3 cursor-pointer white-space-nowrap">
                           Teste di serie
@@ -985,7 +985,7 @@
                           value="group" 
                           [(ngModel)]="selectedTourney.teamsWeightEnabled" 
                           inputId="isTeamsOrderedGroupnameId3"
-                          pTooltip="Indicare se le squadre sono Random ma raggruppate per appartenenza tipo per ASD o società" 
+                          title="Indicare se le squadre sono Random ma raggruppate per appartenenza tipo per ASD o società" 
                           tooltipPosition="right" />
                       <label for="isTeamsOrderedGroupnameId3" class="ml-3 cursor-pointer font-medium">
                           Gruppi
@@ -1116,7 +1116,7 @@
                   Turni:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
+                  title="Indicare se gli incontri del girone sono di solo andata o andata e ritorno">
                   <p-radioButton name="isOnewayRoundGroupname"
                     inputId="isOnewayRoundGroupnameId1"
                     value="true"
@@ -1142,7 +1142,7 @@
                   Generazione:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Indicare se i gironi devono essere generati in automatico o in manuale">
+                  title="Indicare se i gironi devono essere generati in automatico o in manuale">
                   <p-radioButton name="isGenRoundGroupname"
                     inputId="isGenRoundGroupnameId1"
                     value="true"
@@ -1168,7 +1168,7 @@
                   Numero Gironi:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Scegliere il numero di gironi che compongono il torneo">
+                  title="Scegliere il numero di gironi che compongono il torneo">
                   <p-select id="roundId"
                     [options]="roundsCombobox"
                     [(ngModel)]="selectedTourney.selectedRoundsNumCB"
@@ -1183,7 +1183,7 @@
                     Squadre:
                   </div>
                   <div class="col-1" tooltipPosition="right"
-                    pTooltip="Scegliere il numero di squadre complessivo per tutto il torneo, anche se non multiplo intero del numero di gironi">
+                    title="Scegliere il numero di squadre complessivo per tutto il torneo, anche se non multiplo intero del numero di gironi">
                     <p-select id="teamsRoundId"
                       [options]="teams4RoundCombobox"
                       [(ngModel)]="selectedTourney.selectedTeams4RoundCB"
@@ -1213,7 +1213,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Numero di partite in ciascun incontro"
+                        title="Numero di partite in ciascun incontro"
                         (onInput)="onRoundSpinnerChange($event)">
                     </p-inputNumber>
                 </div>                  
@@ -1224,7 +1224,7 @@
                     Tipo Incontro:
                   </div>
                   <div class="col-8" tooltipPosition="right"
-                    pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.roundVO.bestOfWinner}} partite">
+                    title="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.roundVO.bestOfWinner}} partite">
                     <div class="ui-g radiobuttons">
                       <p-radioButton name="allRoundMatchesGroupname"
                         inputId="allRoundMatchesGroupnameId1"
@@ -1266,7 +1266,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                          title="Goal necessari per aggiudicarsi la vittoria della partita">
                       </p-inputNumber>
                   </div>                  
                 </div>
@@ -1289,7 +1289,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di vittoria">
+                          title="Punti assegnati in caso di vittoria">
                       </p-inputNumber>
                   </div>                   
                 </div>
@@ -1312,7 +1312,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di pareggio">
+                          title="Punti assegnati in caso di pareggio">
                       </p-inputNumber>
                   </div>
                 </div>
@@ -1336,7 +1336,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                          title="Punti assegnati in caso di vittoria al golden goal o tie break">
                       </p-inputNumber>
                   </div>                  
                 </div>
@@ -1360,7 +1360,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                          title="Punti assegnati in caso di sconfitta al golden goal o tie break">
                       </p-inputNumber>
                   </div>                  
                   <div class="col-1">
@@ -1493,7 +1493,7 @@
                   Turni:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Indicare se gli incontri di Play Off sono di solo andata o andata e ritorno">
+                  title="Indicare se gli incontri di Play Off sono di solo andata o andata e ritorno">
                   <p-radioButton name="isOnewayGroupname"
                     inputId="isOnewayGroupnameId1"
                     value="true"
@@ -1519,7 +1519,7 @@
                   Generazione:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Indicare se i playoff devono essere generati in automatico o in manuale">
+                  title="Indicare se i playoff devono essere generati in automatico o in manuale">
                   <p-radioButton name="isGenPlayoffGroupname"
                     inputId="isGenPlayoffGroupnameId1"
                     value="true"
@@ -1545,7 +1545,7 @@
                   Numero Playoff:
                 </div>
                 <div class="col-1" tooltipPosition="right"
-                  pTooltip="Scegliere quanti gironi di playoff ci saranno a valle del/i girone/i normale/i">
+                  title="Scegliere quanti gironi di playoff ci saranno a valle del/i girone/i normale/i">
                   <p-select id="playoffId"
                     [options]="playoffsCombobox"
                     [(ngModel)]="selectedTourney.selectedPlayoffsCB"
@@ -1560,7 +1560,7 @@
                   Squadre:
                 </div>
                 <div class="col-1" tooltipPosition="right"
-                  pTooltip="Scegliere il numero di squadre per ciascun girone di playoff">
+                  title="Scegliere il numero di squadre per ciascun girone di playoff">
                   <p-select id="teamsPlayoffId"
                     [options]="teams4PlayoffsCombobox"
                     [(ngModel)]="selectedTourney.selectedTeams4PlayoffsCB"
@@ -1589,7 +1589,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Numero di partite in ciascun incontro"
+                          title="Numero di partite in ciascun incontro"
                           (onInput)="onPlayoffSpinnerChange($event)">
                       </p-inputNumber>
                   </div> 
@@ -1600,7 +1600,7 @@
                     Tipo Incontro:
                   </div>
                   <div class="col-8" tooltipPosition="right"
-                    pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoffVO.bestOfWinner}} partite">
+                    title="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoffVO.bestOfWinner}} partite">
                     <div class="ui-g radiobuttons">
                       <p-radioButton name="allPlayoffMatchesGroupname"
                         inputId="allPlayoffMatchesGroupnameId1"
@@ -1642,7 +1642,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                          title="Goal necessari per aggiudicarsi la vittoria della partita">
                       </p-inputNumber>
                   </div>                  
                 </div>
@@ -1665,7 +1665,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di vittoria">
+                          title="Punti assegnati in caso di vittoria">
                       </p-inputNumber>
                   </div>                  
                   <div class="col-1">
@@ -1691,7 +1691,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di pareggio">
+                          title="Punti assegnati in caso di pareggio">
                       </p-inputNumber>
                   </div>        
                   <div class="col-1">
@@ -1718,7 +1718,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                          title="Punti assegnati in caso di vittoria al golden goal o tie break">
                       </p-inputNumber>
                   </div>                   
                   <div class="col-1">
@@ -1745,7 +1745,7 @@
                           [min]="1" 
                           [fluid]="true"
                           tooltipPosition="right"
-                          pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                          title="Punti assegnati in caso di sconfitta al golden goal o tie break">
                       </p-inputNumber>
                   </div>
                   <div class="col-1">
@@ -1861,7 +1861,7 @@
                   Turni:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Indicare se gli incontri di Play Out sono di solo andata o andata e ritorno">
+                  title="Indicare se gli incontri di Play Out sono di solo andata o andata e ritorno">
                   <p-radioButton name="isOnewayPlayoutGroupname"
                     inputId="isOnewayPlayoutGroupnameId1"
                     value="true"
@@ -1901,7 +1901,7 @@
                       [min]="1" 
                       [fluid]="true"
                       tooltipPosition="right"
-                      pTooltip="Numero di partite in ciascun incontro"
+                      title="Numero di partite in ciascun incontro"
                       (onInput)="onPlayoutSpinnerChange($event)">
                   </p-inputNumber>
                 </div>
@@ -1912,7 +1912,7 @@
                     Tipo Incontro:
                   </div>
                   <div class="col-8" tooltipPosition="right"
-                    pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
+                    title="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
                     <div class="ui-g radiobuttons">
                       <p-radioButton name="allPlayoutMatchesGroupname"
                         inputId="allPlayoutMatchesGroupnameId1"
@@ -1954,7 +1954,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+                        title="Goal necessari per aggiudicarsi la vittoria della partita">
                     </p-inputNumber>
                   </div>
                 </div>
@@ -1977,7 +1977,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Punti assegnati in caso di vittoria">
+                        title="Punti assegnati in caso di vittoria">
                     </p-inputNumber>
                   </div>
                   <div class="col-1">
@@ -2003,7 +2003,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Punti assegnati in caso di pareggio">
+                        title="Punti assegnati in caso di pareggio">
                     </p-inputNumber>
                   </div>
                   <div class="col-1">
@@ -2030,7 +2030,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+                        title="Punti assegnati in caso di vittoria al golden goal o tie break">
                     </p-inputNumber>
                   </div>
                   <div class="col-1">
@@ -2057,7 +2057,7 @@
                         [min]="1" 
                         [fluid]="true"
                         tooltipPosition="right"
-                        pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+                        title="Punti assegnati in caso di sconfitta al golden goal o tie break">
                     </p-inputNumber>
                   </div>
                   <div class="col-1">
@@ -2270,7 +2270,7 @@
                   Generazione:
                 </div>
                 <div class="col-8" tooltipPosition="right"
-                  pTooltip="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
+                  title="Indicare se le eliminazioni dirette devono essere generate in automatico o in manuale">
                   <p-radioButton name="isGenEliGroupname"
                     inputId="isGenEliGroupnameId1"
                     value="true"
@@ -2296,7 +2296,7 @@
                   Squadre:
                 </div>
                 <div class="col-2" tooltipPosition="right"
-                  pTooltip="Scegliere il numero di squadre con cui incominciare le eliminazioni dirette, anche tutte">
+                  title="Scegliere il numero di squadre con cui incominciare le eliminazioni dirette, anche tutte">
                   <p-select id="eliminatoryId"
                     [options]="eliminatoryTeamsCombobox"
                     [(ngModel)]="selectedTourney.selectedEliminatoryTeamsCB"
@@ -2590,13 +2590,17 @@
 
 @if (badRequest) {
   <div style="margin-top:30px">
-    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+    <p-message severity="error">
+      Servizio momentaneamente non disponibie. Riprovare più tardi.
+    </p-message>
   </div>
 }
 
 @if (tourneyAlreadyExists) {
   <div style="margin-top:30px">
-    <p-message severity="error" text="Esiste già un torneo con nome {{selectedTourney.tourneyName}}. Cambiare nome e riprovare!"></p-message>
+    <p-message severity="error">
+      Esiste già un torneo con nome {{selectedTourney.tourneyName}}. Cambiare nome e riprovare!
+    </p-message>
   </div>
 }
 

@@ -40,14 +40,14 @@
           <ng-template pTemplate="header" let-columns>
             <tr>
               <td>
-                <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" pTooltip="Giornata precedente"></button>
+                <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" title="Giornata precedente"></button>
               </td>
               <td style="text-align: center; font-weight: bold;">
                 <div>{{getHeaderOneway()}}</div>
                 <div>{{getWeekOneway()}}</div>
               </td>
               <td style="text-align: right;">
-                <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" pTooltip="Giornata successiva"></button>
+                <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" title="Giornata successiva"></button>
               </td>
             </tr>
           </ng-template>

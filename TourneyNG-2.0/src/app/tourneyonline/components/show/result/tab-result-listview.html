@@ -85,7 +85,7 @@
                 @if (loginService.isUserAllowed()) {
                   <p-checkbox name="terminatedRoundsGroupname"
                     inputId="terminatedRoundsGroupnameId"
-                    pTooltip="Selezionare solo quando tutti i gironi sono terminati"
+                    title="Selezionare solo quando tutti i gironi sono terminati"
                     value="terminatedRounds"
                     [(ngModel)]="selectedTourney.terminatedRounds"
                     (onChange)="onTerminateRoundChange($event)" >
@@ -145,7 +145,7 @@
               <ng-template pTemplate="summary">
                 <p-checkbox name="terminatedPlayoffsGroupname"
                   inputId="terminatedPlayoffsGroupnameId"
-                  pTooltip="Selezionare solo quando tutti i gironi di PLAYOFF sono terminati"
+                  title="Selezionare solo quando tutti i gironi di PLAYOFF sono terminati"
                   value="terminatedRounds"
                   [(ngModel)]="selectedTourney.terminatedPlayoffs"
                   (onChange)="onTerminatePlayoffChange($event)">
@@ -158,7 +158,7 @@
             <ng-template pTemplate="summary">
               <button type="button"
                 icon="pi pi-file-excel-o"
-                pTooltip="Stampa la lista degli incontri del girone di PLAYOFF"
+                title="Stampa la lista degli incontri del girone di PLAYOFF"
                 pButton (click)="printPdfPlayoffMeeting()"
                 label="Incontri"
                 class="ui-button-success">
@@ -166,7 +166,7 @@
               <button type="button"
                 icon="pi pi-file-excel-o"
                 pButton (click)="printPdfPlayoffClassification()"
-                pTooltip="Stampa la classifica delle squadre del girone di PLAYOFF"
+                title="Stampa la classifica delle squadre del girone di PLAYOFF"
                 label="Classifica"
                 class="ui-button-success"
                 style="margin-left: 5mm;">
@@ -207,7 +207,7 @@
             <ng-template pTemplate="summary">
               <button type="button"
                 icon="pi pi-file-excel-o"
-                pTooltip="Stampa la lista degli incontri del girone di PLAYOUT"
+                title="Stampa la lista degli incontri del girone di PLAYOUT"
                 pButton (click)="printPdfPlayoutMeeting()"
                 label="Incontri"
                 class="ui-button-success">
@@ -215,7 +215,7 @@
               <button type="button"
                 icon="pi pi-file-excel-o"
                 pButton (click)="printPdfPlayoutClassification()"
-                pTooltip="Stampa la classifica delle squadre del girone di PLAYOUT"
+                title="Stampa la classifica delle squadre del girone di PLAYOUT"
                 label="Classifica"
                 class="ui-button-success"
                 style="margin-left: 5mm;">

@@ -1,12 +1,10 @@
 @if (chaosEnabled) {
   <p-table #table 
     dataKey="id"
-    size="small"
     [columns]="cols"
     [value]="teams"
     [scrollable]="true"
     scrollHeight="250px">
-  
     <ng-template pTemplate="caption">
       <div style="text-align:center">
         <button pButton icon="pi pi-plus" 
@@ -18,17 +16,17 @@
         </button>
       </div>
     </ng-template>
- 
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <td>
+        <td class="text-xl font-bold">
           {{ table.filteredValue ? table.filteredValue.length : teams.length }}
         </td>
       </tr>
-
       <tr>
         @for (col of columns; track col.field) {
-          <th [style.width]="col.field === 'index' ? '15mm' : 'auto'" style="text-align: center;">
+          <th [style.width]="col.field === 'index' ? '15mm' : 'auto'" 
+              style="text-align: center;" 
+              class="text-xl">
             {{ col.header }}
           </th>
         }
@@ -37,7 +35,7 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="rowData">
         @for (col of columns; track col.field) {
-          <td style="text-align: center;">
+          <td style="text-align: center;" class="text-xl">
             @if (col.field === 'index') {
               {{ rowIndex + 1 }}
             } 
@@ -58,7 +56,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div style="text-align:center" >
+      <div style="text-align:center" class="text-xl font-bold">
         {{ table.filteredValue ? table.filteredValue.length : teams.length }}
       </div>
     </ng-template>

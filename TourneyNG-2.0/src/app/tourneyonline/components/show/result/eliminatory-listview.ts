@@ -140,9 +140,9 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         let el: EliminatoryLevel;
         if(rowIndex==-1) {
             level = "(Elim. B)";
-            el = this.selectedTourney.eliminatoryBLevels[0];
+            el = this.selectedTourney.eliminatoryBLevels[this.tourneyService.selectedEliminatoryBLevelIndex];
         } else {
-            el = this.selectedTourney.eliminatoryLevels[0];            
+            el = this.selectedTourney.eliminatoryLevels[rowIndex];            
             level = "(Elim. A)";
         }
         this.doPrintTennisBracket(el, level);
@@ -252,7 +252,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         doc.setFontSize(12);
         doc.text("3° e 4° Posto", pageWidth / 2, final2Y + 25, { align: 'center' });
 
-        doc.save(`Tabellone-${this.selectedTourney.tourneyName}.pdf`);
+        doc.save(`Tabellone-${this.selectedTourney.tourneyName}-${level}.pdf`);
     }
 
     private drawSide(doc: any, matches: any[], totalRounds: number, spacing: number, startX: number, w: number, h: number

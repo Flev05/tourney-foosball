@@ -26,7 +26,6 @@
       [value]="defenderPlayers"
       [scrollable]="true"
       scrollHeight="250px">
-
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : defenderPlayers.length }}</th>
@@ -34,7 +33,6 @@
           <th>Azioni</th>
         </tr>
       </ng-template>
-
       <ng-template pTemplate="body" let-player let-rowIndex="rowIndex">
         <tr>
           <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
@@ -96,12 +94,10 @@
         title="Aggiunge un jolly alla lista">
       </button>
     </div>
-
     <p-table #table 
       [value]="jollyPlayers"
       [scrollable]="true"
       scrollHeight="250px">
-
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : jollyPlayers.length }}</th>
@@ -163,7 +159,6 @@
       [value]="offenderPlayers"
       [scrollable]="true"
       scrollHeight="250px">
-
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 15mm;">{{ table.filteredValue ? table.filteredValue.length : offenderPlayers.length }}</th>
@@ -171,7 +166,6 @@
           <th>Azioni</th>
         </tr>
       </ng-template>
-
       <ng-template pTemplate="body" let-player let-rowIndex="rowIndex">
         <tr>
           <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>

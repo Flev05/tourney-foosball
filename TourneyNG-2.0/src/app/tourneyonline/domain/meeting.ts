@@ -6,7 +6,6 @@ import { MeetingStatus, Direction } from './enumerations';
 export class Meeting {
     id              : number | null = null;
     containerId     : number | null = null;
-    isDummy         : boolean = false;
     isSkiping       : boolean = false;
     name            : string = "";
     direction       : Direction = Direction.OneWay

@@ -28,63 +28,76 @@
       }
       <p-tab [value]="2">Classifica</p-tab>
   </p-tablist>
+
   <p-tabpanels>
-    <p-tabpanel [value]="0" title="Andata">
-      <div class="flex justify-content-center w-full mt-4">
-        <p-table [columns]="cols"
-          [value]="onewayMeetings"
-          selectionMode="single"
-          [(selection)]="selectedRow"
-          (onRowSelect)="onRowSelect($event)"
-          class="w-full">
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <td>
-                <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" title="Giornata precedente"></button>
-              </td>
-              <td style="text-align: center; font-weight: bold;">
-                <div>{{getHeaderOneway()}}</div>
-                <div>{{getWeekOneway()}}</div>
-              </td>
-              <td style="text-align: right;">
-                <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" title="Giornata successiva"></button>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-rowData>
-            <tr [pSelectableRow]="rowData">
-              <td class="leftTeamName" style="width: 35%; text-align: right;">
-                {{rowData.teamName1}}
-              </td>
-              <td class="centralPoints" style="width: 30%; text-align: center;">
-                <div>
-                  <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
-                </div>
-                <div style="text-align: center; font-weight: bold;">
-                  {{rowData.vpoints1}} - {{rowData.vpoints2}}
-                </div>
-                  <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                          ,'inProgress': rowData.status === 'In Corso'
-                          ,'terminated': rowData.status === 'Terminata'
-                          ,'confirmed': rowData.status === 'Convalidata'}">
-                  {{rowData.status}}
-                </div>
-              </td>
-              <td class="rightTeamName" style="width: 35%; text-align: left;">
-                {{rowData.teamName2}}
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </p-tabpanel>
-  
-    @if (isRoundTrip) {
-      <p-tabpanel [value]="1" title="Ritorno">
+    @if ( isDaily() ) {
+      <p-tabpanel [value]="0" title="Andata">
+        <div class="flex flex-column align-items-center w-full mt-2">
+          @for (entry of roundtripMeetingDaysMap | keyvalue; track entry.key; let isLast = $last; let idx = $index) {
+            <div class="flex align-items-center w-full">
+              <div class="flex-grow-1 border-top-1 border-300"></div>
+              <span class="px-3 font-bold uppercase bg-black">
+                {{ tourneyService.selectedRound.name }}: Giornata {{ idx + 1 }}/{{ tourneyService.selectedRound.daysNo }}
+              </span>
+              <div class="flex-grow-1 border-top-1 border-300"></div>
+            </div>
+
+            <p-table 
+              [columns]="cols"
+              [value]="entry.value"
+              class="w-full">
+              <ng-template pTemplate="body" let-rowData>
+                <tr class="align-items-center">
+                  <td style="width: 40%; padding: 0.5rem 1rem;">
+                    <div class="flex flex-column align-items-end w-full">
+                      <span class="font-bold text-right text-900 text-xl mb-2">{{rowData.teamName1}}</span>
+                      <div class="flex flex-row flex-nowrap justify-content-end gap-1 w-full">
+                        @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
+                          <button pButton type="button" 
+                                  [label]="i.toString()" 
+                                  [ngClass]="{'p-button-primary': rowData.matches[0].score1 === i, 'p-button-outlined p-button-secondary': rowData.matches[0].score1 !== i}"
+                                  style="width: 24px; height: 28px; padding: 0; font-size: 1.1rem; font-weight: 600;"
+                                  class="flex align-items-center justify-content-center flex-shrink-0"
+                                  (click)="updateScore(rowData, 'score1', i)">
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </td>
+                  
+                  <td class="text-center vertical-align-middle bg-gray-50 border-x-1 border-200" style="width: 20%; min-width: 150px; padding: 0.5rem;">
+                    <div class="font-bold text-6xl text-primary my-2 tracking-wider">
+                      {{rowData.matches[0].score1 ?? '-'}} : {{rowData.matches[0].score2 ?? '-'}}
+                    </div>
+                  </td>
+                  
+                  <td style="width: 40%; padding: 0.5rem 1rem;">
+                    <div class="flex flex-column align-items-start w-full">
+                      <span class="font-bold text-left text-900 text-xl mb-2">{{rowData.teamName2}}</span>
+                      <div class="flex flex-row flex-nowrap justify-content-start gap-1 w-full">
+                        @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
+                          <button pButton type="button" 
+                                  [label]="i.toString()" 
+                                  [ngClass]="{'p-button-primary': rowData.matches[0].score2 === i, 'p-button-outlined p-button-secondary': rowData.matches[0].score2 !== i}"
+                                  style="width: 24px; height: 28px; padding: 0; font-size: 1.1rem; font-weight: 600;"
+                                  class="flex align-items-center justify-content-center flex-shrink-0"
+                                  (click)="updateScore(rowData, 'score2', i)">
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          }
+        </div>
+      </p-tabpanel> 
+    } @else {
+      <p-tabpanel [value]="0" title="Andata">
         <div class="flex justify-content-center w-full mt-4">
-          <p-table
-            [columns]="cols"
-            [value]="roundtripMeetings"
+          <p-table [columns]="cols"
+            [value]="onewayMeetings"
             selectionMode="single"
             [(selection)]="selectedRow"
             (onRowSelect)="onRowSelect($event)"
@@ -92,14 +105,14 @@
             <ng-template pTemplate="header" let-columns>
               <tr>
                 <td>
-                  <button type="button" icon="pi pi-backward" pButton (click)="prevRoundtripDay()"></button>
+                  <button type="button" icon="pi pi-backward" pButton (click)="prevOnewayDay()" title="Giornata precedente"></button>
                 </td>
                 <td style="text-align: center; font-weight: bold;">
-                  <div>{{getHeaderRoundtrip()}}</div>
-                  <div>{{getWeekRoundtrip()}}</div>
+                  <div>{{getHeaderOneway()}}</div>
+                  <div>{{getWeekOneway()}}</div>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" icon="pi pi-forward" pButton (click)="nextRoundtripDay()"></button>
+                  <button type="button" icon="pi pi-forward" pButton (click)="nextOnewayDay()" title="Giornata successiva"></button>
                 </td>
               </tr>
             </ng-template>
@@ -112,13 +125,13 @@
                   <div>
                     <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
                   </div>
-                  <div>
-                    <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>
+                  <div style="text-align: center; font-weight: bold;">
+                    {{rowData.vpoints1}} - {{rowData.vpoints2}}
                   </div>
-                            <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
-                                    ,'inProgress': rowData.status === 'In Corso'
-                                    ,'terminated': rowData.status === 'Terminata'
-                                    ,'confirmed': rowData.status === 'Convalidata'}">
+                    <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                            ,'inProgress': rowData.status === 'In Corso'
+                            ,'terminated': rowData.status === 'Terminata'
+                            ,'confirmed': rowData.status === 'Convalidata'}">
                     {{rowData.status}}
                   </div>
                 </td>
@@ -130,44 +143,99 @@
           </p-table>
         </div>
       </p-tabpanel>
+    
+      @if (isRoundTrip) {
+        <p-tabpanel [value]="1" title="Ritorno">
+          <div class="flex justify-content-center w-full mt-4">
+            <p-table
+              [columns]="cols"
+              [value]="roundtripMeetings"
+              selectionMode="single"
+              [(selection)]="selectedRow"
+              (onRowSelect)="onRowSelect($event)"
+              class="w-full">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <td>
+                    <button type="button" icon="pi pi-backward" pButton (click)="prevRoundtripDay()"></button>
+                  </td>
+                  <td style="text-align: center; font-weight: bold;">
+                    <div>{{getHeaderRoundtrip()}}</div>
+                    <div>{{getWeekRoundtrip()}}</div>
+                  </td>
+                  <td style="text-align: right;">
+                    <button type="button" icon="pi pi-forward" pButton (click)="nextRoundtripDay()"></button>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData>
+                <tr [pSelectableRow]="rowData">
+                  <td class="leftTeamName" style="width: 35%; text-align: right;">
+                    {{rowData.teamName1}}
+                  </td>
+                  <td class="centralPoints" style="width: 30%; text-align: center;">
+                    <div>
+                      <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
+                    </div>
+                    <div>
+                      <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>
+                    </div>
+                              <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                                      ,'inProgress': rowData.status === 'In Corso'
+                                      ,'terminated': rowData.status === 'Terminata'
+                                      ,'confirmed': rowData.status === 'Convalidata'}">
+                      {{rowData.status}}
+                    </div>
+                  </td>
+                  <td class="rightTeamName" style="width: 35%; text-align: left;">
+                    {{rowData.teamName2}}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-tabpanel>
+      }
     }
-  
-    <p-tabpanel [value]="2" title="Classifica">
-      <p-table [columns]="classificationCols"
-        [value]="classificationRows"
-        selectionMode="single"
-        [(selection)]="selectedClassificationRow"
-        (onRowSelect)="onClassifcationRowSelect($event)" >
-  
-        <ng-template pTemplate="caption">
-          {{selectedRound.name}}
-        </ng-template>
-  
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <th class="position">P°</th>
-            @for (col of columns; track col) {
-              <th [ngClass]="col.style">
-                {{col.header}}
-              </th>
-            }
-          </tr>
-        </ng-template>
-  
-        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-          <tr [pSelectableRow]="rowData">
-            <td style="text-align: center;">{{rowIndex+1}}</td>
-            @for (col of columns; track col) {
-              <td>
-                {{rowData[col.field]}}
-              </td>
-            }
-          </tr>
-        </ng-template>
-      </p-table>
-      <p>
-        Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto.
-      </p>
-    </p-tabpanel>
-  </p-tabpanels>
+    
+      <p-tabpanel [value]="2" title="Classifica">
+        <p-table [columns]="classificationCols"
+          [value]="classificationRows"
+          selectionMode="single"
+          [(selection)]="selectedClassificationRow"
+          (onRowSelect)="onClassifcationRowSelect($event)" >
+    
+          <ng-template pTemplate="caption">
+            <div class="text-center w-full block font-bold text-xl">
+              {{selectedRound.name}}
+            </div>
+          </ng-template>
+    
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class="position">P°</th>
+              @for (col of columns; track col) {
+                <th [ngClass]="col.style">
+                  {{col.header}}
+                </th>
+              }
+            </tr>
+          </ng-template>
+    
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+              <td style="text-align: center;">{{rowIndex+1}}</td>
+              @for (col of columns; track col) {
+                <td>
+                  {{rowData[col.field]}}
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+        <p>
+          Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto.
+        </p>
+      </p-tabpanel>
+    </p-tabpanels>
 </p-tabs>

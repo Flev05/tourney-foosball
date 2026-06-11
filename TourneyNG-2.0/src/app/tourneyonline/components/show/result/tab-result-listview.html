@@ -74,9 +74,14 @@
             <ng-template pTemplate="body" let-rowData let-columns="columns">
               <tr [pSelectableRow]="rowData">
                 @for (col of columns; track col) {
-                  <td>
-                    {{rowData[col.field]}}
-                  </td>
+                  <td [style.text-align]="col.field !== 'teamNames' ? 'center' : 'left'"
+                      [ngClass]="{
+                        'text-white': rowData.status === 'Da Giocare',
+                        'text-orange-500 font-semibold': rowData.status === 'In Corso',
+                        'text-green-500 font-semibold': rowData.status === 'Terminata'
+                      }">
+                    {{ rowData[col.field] }}
+                  </td>                
                 }
               </tr>
             </ng-template>

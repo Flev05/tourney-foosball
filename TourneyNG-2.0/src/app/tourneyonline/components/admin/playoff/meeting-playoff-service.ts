@@ -499,22 +499,12 @@ export class MeetingPlayoffService extends MeetingService {
      * @param rounds the list of the rounds from which take the round names
      */
     private resolveManualRules( m: Meeting, rounds: Round[]): void {
-        // m.dateAndTime = this.dateFormatPipe.transform(m.datetime, false);
-
         let teamName: string | null;
-        if( m.isDummy ) {
-            teamName =  m.rule1.fromRound.round.label;
-        } else {
-            teamName = this.findTeam(m.rule1, rounds);
-        }
+        teamName = this.findTeam(m.rule1, rounds);
         m.teamName1 = teamName;
         m.ruleName1 = m.rule1.ruleName;
 
-        if( m.isDummy ) {
-            teamName =  m.rule2.fromRound.round.label;
-        } else {
-            teamName = this.findTeam(m.rule2, rounds);
-        }
+        teamName = this.findTeam(m.rule2, rounds);
         m.teamName2 = teamName;
         m.ruleName2 = m.rule2.ruleName;
     }

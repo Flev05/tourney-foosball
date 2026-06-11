@@ -28,7 +28,7 @@ export class Tourney {
     teamsChanged        : boolean = false;
 
     followerName?       : string;
-    isDaily?            : string;
+    isDaily             : string = "true";
     datetime            : Date = new Date();
 
     wizardModeIndex     : number = 0;

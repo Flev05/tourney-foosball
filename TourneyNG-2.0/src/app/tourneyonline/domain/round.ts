@@ -1,6 +1,6 @@
 import { Classification } from './classification';
 import { Meeting } from './meeting';
-import { RoundType, Direction } from './enumerations';
+import { RoundType, Direction, MeetingStatus } from './enumerations';
 
 export class Round {
     id: number = 0;
@@ -8,6 +8,7 @@ export class Round {
     name:       string = "";
     label:      string = "";
     type:       RoundType = RoundType.R;
+    status:     MeetingStatus = MeetingStatus.ToPlay;
     pageSize:   number = 0;
     daysNo:     number = 0;
     onewayCurrentDay: number = 0;

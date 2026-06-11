@@ -85,7 +85,6 @@ export class TourneyService extends AbstractService {
     playoffsConfig: boolean = false;
 
     originalTeams: Team[] = [];
-    // operators: UserVO[];
     selectedOperator: UserVO = new UserVO();
     operatorVo : OperatorsVO = new OperatorsVO();
     isOneway: boolean = true;
@@ -103,7 +102,6 @@ export class TourneyService extends AbstractService {
     selectedClassificationRow: Classification = new Classification();
 
     createChaosDisabled: boolean = true;
-    // addTeamToChaos: boolean = false;
 
     static roundCols: TableCols[] = [
         { field: 'name',        header: 'Gironi' },

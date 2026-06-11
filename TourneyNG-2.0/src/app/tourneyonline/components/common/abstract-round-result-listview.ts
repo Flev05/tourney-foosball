@@ -146,16 +146,8 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
 
     private mapCallback (m: Meeting, index: number, array: Meeting[]): Meeting {
         if(m.isSkiping) {
-            if( m.teamName1 == "" ) {
-                m.points1 = 0;
-            } else {
-                m.points1 = 0;
-            }
-            if( m.teamName2 == "" ) {
-                m.points2 = 0;
-            } else {
-                m.points2 = 0;
-            }
+            m.points1 = 0;
+            m.points2 = 0;
         }
         m.vpoints1 = m.matches.length==1 ? m.matches[0].score1 : m.points1;
         m.vpoints2 = m.matches.length==1 ? m.matches[0].score2 : m.points2;

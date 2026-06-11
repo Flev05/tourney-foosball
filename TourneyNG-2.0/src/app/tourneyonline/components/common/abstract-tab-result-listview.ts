@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 import { Round } from 'app/tourneyonline/domain/round';
 import { Playoff } from 'app/tourneyonline/domain/playoff';
-import { Direction } from 'app/tourneyonline/domain/enumerations';
+import { Direction, MeetingStatus } from 'app/tourneyonline/domain/enumerations';
 import { TableCols } from 'app/tourneyonline/domain/table-cols';
 import { MeetingService } from 'app/tourneyonline/service/meeting-service';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
@@ -80,18 +80,19 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             this.roundRows = this.selectedTourney.roundVO.rounds;
             this.roundCount = this.roundRows.length;
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
-            subsbr.subscribe(t => this.onRoundCompleteLoad(t), e => this.onError(e) );            
+            subsbr.subscribe(mdbList => this.onRoundCompleteLoad(mdbList), e => this.onError(e) );            
         } else {
             this.prepareEliminatoryLevels();
             this.prepareEliminatoryBLevels();
         }
     }
     
-    private onRoundCompleteLoad(mdbl: MeetingDb[]): void {
-        this.mdbList = mdbl;
+    private onRoundCompleteLoad(mdbList: MeetingDb[]): void {
+        this.mdbList = mdbList;
         for(let round of this.selectedTourney.roundVO.rounds) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
+            round.status = this.setRoundStatus(round);
         }
         this.roundRows = this.selectedTourney.roundVO.rounds;
         for( let r of this.roundRows ) {
@@ -151,6 +152,26 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             this.prepareEliminatoryLevels();
             this.prepareEliminatoryBLevels();
         }
+    }
+
+    private setRoundStatus(sr: Round): MeetingStatus {
+        let zeroCounter : number = 0;
+        let winCounter : number = 0;
+        for( let m of sr.onewayMeetings ) {
+            if( m.status == MeetingStatus.ToPlay ) {
+                zeroCounter++;
+            }
+            if( m.status == MeetingStatus.Terminated ) {
+                winCounter++;
+            }
+        }
+        if( winCounter >= sr.onewayMeetings.length ) {
+            return MeetingStatus.Terminated;
+        }
+        if( zeroCounter >= sr.onewayMeetings.length ) {
+            return MeetingStatus.ToPlay;
+        }
+        return MeetingStatus.InProgress;
     }
 
     private prepareEliminatoryLevels() {

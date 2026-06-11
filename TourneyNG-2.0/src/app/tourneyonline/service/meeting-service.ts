@@ -122,7 +122,7 @@ export class MeetingService extends AbstractService {
                 continue;
             }
             let m: Meeting = JSON.parse(mdb.json);
-            if( m.isDummy || m.isSkiping) {
+            if( m.isSkiping) {
                 continue;
             }
             m.id = mdb.id;
@@ -614,7 +614,6 @@ export class MeetingService extends AbstractService {
         let m = new Meeting();
         m.id = null;
         m.name = name;
-        m.isDummy = pr1 == null ? true : pr1.isDummy || pr2 == null ? true :  pr2.isDummy;
         m.isSkiping = skiping;
         m.direction = d;
         m.datetime = this.selectedTourney.datetime;

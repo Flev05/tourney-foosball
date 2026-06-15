@@ -64,7 +64,7 @@
 }
 
 .projector-section .match-card span {
-  font-size: 0.85rem; /* Adjust this value as needed (e.g., 12px, 14px) */
+  font-size: 1.5rem; /* Adjust this value as needed (e.g., 12px, 14px) */
 }
 
 .projector-table {
@@ -244,4 +244,19 @@
 .classification-data {
   font-weight: bold;
   font-size: 2.0rem;
+}
+
+.projector-single-view {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Subtle fade animation when views swap */
+.full-screen-fade {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

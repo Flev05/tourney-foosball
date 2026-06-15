@@ -25,6 +25,7 @@ export interface Tournament {
   styleUrls: ['./projector-view-component.css']
 })
 export class ProjectorViewComponent extends AbstractListView  {
+  showMatches: boolean = true;
   // Your 8 tournaments with 6 teams each
   public tournaments: Tournament[] = []; 
   
@@ -33,7 +34,7 @@ export class ProjectorViewComponent extends AbstractListView  {
   public currentTournament!: Tournament;
 
   private rotationSubscription!: Subscription;
-  private readonly ROTATION_TIME = 10000; // 30 seconds in milliseconds
+  private readonly ROTATION_TIME = 7000; // 7 seconds in milliseconds
 
   constructor(protected override router: Router
     , protected override tourneyService: TourneyService
@@ -47,10 +48,15 @@ export class ProjectorViewComponent extends AbstractListView  {
 
   override ngOnInit(): void {
     this.loadTournamentsData();
-    
     if (this.tournaments.length > 0) {
       this.currentTournament = this.tournaments[this.currentIndex];
       this.startAutomaticRotation();
+    }
+  }
+  
+  ngOnDestroy(): void {
+    if (this.rotationSubscription) {
+      this.rotationSubscription.unsubscribe();
     }
   }
 
@@ -98,6 +104,9 @@ export class ProjectorViewComponent extends AbstractListView  {
 
   private nextTournament(): void {
     console.log("nextTournament(" + this.currentIndex + ")");
+
+    this.showMatches = !this.showMatches;
+
     let roundIds: number[] = [];
     const st = this.tourneyService.selectedTourney;
     for(let round of st.roundVO.rounds) {
@@ -135,9 +144,4 @@ export class ProjectorViewComponent extends AbstractListView  {
     this.router.navigate(['/dashboard']); // Adjust to your actual dashboard route path
   }
 
-  ngOnDestroy(): void {
-    if (this.rotationSubscription) {
-      this.rotationSubscription.unsubscribe();
-    }
-  }
 }

@@ -32,7 +32,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TabsModule } from 'primeng/tabs';
 import { ToastModule } from 'primeng/toast';
-import { ProjectorViewComponent } from '../../projector/projector-view-component';
+import { ProjectorViewComponent } from 'app/tourneyonline/components/projector/projector-view-component';
+import { BracketModule } from 'app/tourneyonline/components/show/bracket/bracket.module';
 
 @NgModule({
 	imports: [
@@ -61,6 +62,7 @@ import { ProjectorViewComponent } from '../../projector/projector-view-component
         ,ToastModule 
         ,MessageModule
         ,TeamTableModule
+        ,BracketModule
     ],
 	declarations: [
 		 ResultTourneyListView

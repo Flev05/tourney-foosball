@@ -123,8 +123,8 @@ export class TourneyService extends AbstractService {
         { field: 'won',           header: 'V'},
         { field: 'lost',          header: 'P'},
         // { field: 'balanced',      header: 'N'},
-        // { field: 'goalsDone',     header: 'Gf'},
-        // { field: 'goalsConceded', header: 'Gs'},
+        { field: 'goalsDone',     header: 'Gf'},
+        { field: 'goalsConceded', header: 'Gs'},
         { field: 'goalsDiff',     header: 'D'},
     ];
 

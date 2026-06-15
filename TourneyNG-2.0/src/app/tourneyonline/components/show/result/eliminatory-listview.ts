@@ -25,6 +25,8 @@ import { MeetingRoundService } from '../../admin/round/meeting-round-service';
     standalone: false
 })
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
+    private FONT_SIZE : number = 10;
+    displayBracketView: boolean = false;
     constructor(
         public override tourneyService: TourneyService
         ,protected override meetingService: MeetingService
@@ -100,6 +102,10 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         return tNo !== highestPow2Le;
     }
 
+    // Toggles the view state
+    public toggleBracketView() {
+        this.displayBracketView = !this.displayBracketView;
+    }
     public printPdfTopLevelMeeting() {
         const rowIndex: number = this.tourneyService.selectedEliminatoryLevelIndex;
         console.log("rowIndex=" + rowIndex);
@@ -209,7 +215,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         // Print the header tourney name
         let tourneyName = `${this.selectedTourney.tourneyName} ` + level;
         tourneyName = tourneyName.toUpperCase();
-        doc.text(tourneyName, pageWidth / 2, (pageHeight / 2) - 95, { align: 'center' });
+        doc.text(tourneyName, pageWidth / 2, (pageHeight / 2) - 85, { align: 'center' });
 
         // --- ROUND LABELS GENERATION ---
         const roundLabels: string[] = [];
@@ -237,7 +243,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         doc.line(finalX, finalY + boxH / 2, finalX + boxW, finalY + boxH / 2);
         doc.rect(finalX + boxW - sSize - 1, finalY + (boxH / 4) - (sSize / 2), sSize, sSize); 
         doc.rect(finalX + boxW - sSize - 1, finalY + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
-        doc.setFontSize(12);
+        doc.setFontSize(this.FONT_SIZE);
         doc.setFont("helvetica", "bold");
         doc.text("FINALE", pageWidth / 2, finalY - 2, { align: 'center' });
 
@@ -249,7 +255,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         doc.line(finalX, final2Y + boxH / 2, finalX + boxW, final2Y + boxH / 2);
         doc.rect(finalX + boxW - sSize - 1, final2Y + (boxH / 4) - (sSize / 2), sSize, sSize); 
         doc.rect(finalX + boxW - sSize - 1, final2Y + (3 * boxH / 4) - (sSize / 2), sSize, sSize);
-        doc.setFontSize(12);
+        doc.setFontSize(this.FONT_SIZE);
         doc.text("3° e 4° Posto", pageWidth / 2, final2Y + 25, { align: 'center' });
 
         doc.save(`Tabellone-${this.selectedTourney.tourneyName}-${level}.pdf`);
@@ -263,10 +269,10 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
         for (let r = 0; r < totalRounds; r++) {
             // --- DRAW COLUMN LABEL ---
-            doc.setFontSize(12);
+            doc.setFontSize(this.FONT_SIZE);
             doc.setFont("helvetica", "bold");
             // Place the label about 25mm from the top
-            doc.text(labels[r] || `Round ${r+1}`, x + (w / 2), 20, { align: 'center' });
+            doc.text(labels[r] || `Round ${r+1}`, x + (w / 2), 25, { align: 'center' });
                         
             const verticalGap = (pageH - 40) / currentMatchesCount;
             const firstY = 30 + (verticalGap / 2);
@@ -283,7 +289,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
                 const sSize = 9;
                 if (r === 0) {
                     // 1. Define the maximum width for the text (Box width - score box space - padding)
-                    doc.setFontSize(10); // We can use a slightly larger font now!
+                    doc.setFontSize(this.FONT_SIZE-2); // We can use a slightly larger font now!
                     const maxWidth = w - sSize - 3;
                     // 2. Split text into lines if it exceeds maxWidth
                     const team1Lines: string[] = doc.splitTextToSize(matches[i].team1, maxWidth);

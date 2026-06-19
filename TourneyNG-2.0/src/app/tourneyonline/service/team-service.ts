@@ -319,6 +319,10 @@ export class TeamService {
 
     public printTeams(selectedTourney: Tourney) {
         const teams = selectedTourney.teams;
+        if( teams.length == 0 ) {
+            return;
+        }
+
         const fileName = selectedTourney.tourneyName + '.pdf';
 
         let newDate = new Date(selectedTourney.datetime);

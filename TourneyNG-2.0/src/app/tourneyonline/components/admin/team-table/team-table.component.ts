@@ -26,6 +26,7 @@ export class TeamTableComponent extends AbstractListView {
     @Input() addTeamEnabled: boolean | undefined;
     @Input() tourneyTeams: boolean | undefined;
     @Input() chaosEnabled: boolean | undefined;
+    @Input() teamAddMode: string | undefined;
     @ViewChild('table') table!: Table; // This gives us access to the #table from HTML
 
     // Define the Output emitter
@@ -38,11 +39,18 @@ export class TeamTableComponent extends AbstractListView {
 
     selectedTeam: Team = new Team();
     teams: Team[] = [];
+    allTeams: Team[] = [];
     deleteTeam: Team = new Team();
     onDeleteTeamError: boolean = false;
 
     teamNameFilter: string = "";
     teamCount : number = 0;
+
+    selectedTeamToAdd: Team | null = null;
+    teamToAdd: Team  | null = null;
+    filteredTeams: Team[] = [];
+    // Track which row ID is currently in edit mode
+    editingTeamId: number | string | null = null;
 
     constructor(
         protected override tourneyService: TourneyService,
@@ -67,7 +75,7 @@ export class TeamTableComponent extends AbstractListView {
     }
 
     private onLoadTeamsComplete(): any {
-        this.teams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
+        this.allTeams = this.teamService.teamPool.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
         console.log("Loaded [" + this.teams.length + "] pool teams");
         if( this.tourneyTeams ) {
             this.teams = this.tourneyService.selectedTourney.teams.sort( (t1,t2) => t1.teamName.localeCompare(t2.teamName) );
@@ -76,7 +84,9 @@ export class TeamTableComponent extends AbstractListView {
                 this.onTeamUpdate(this.selectedTeam);
                 this.tourneyService.selectedTourney.teamsChanged = false;
             }
-        }
+        } else  {
+            this.teams = this.allTeams;
+        } 
         this.teamCount = this.teams.length;
 
         if( this.teamService.newTeam == true ) {
@@ -190,7 +200,6 @@ export class TeamTableComponent extends AbstractListView {
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.onTeamUpdate(this.teams[0]));
     }
-
     
     private generateChaosTeams(): Team[] {
         const teamList: Team[] = [];
@@ -252,5 +261,113 @@ export class TeamTableComponent extends AbstractListView {
 
     public printTeams() {
         this.teamService.printTeams(this.selectedTourney)
+    }
+
+     
+    filterTeams(event: any) {
+        const query = event.query.toLowerCase();
+        this.filteredTeams = this.getAvailableTeams().filter(t =>
+            t.teamName.toLowerCase().includes(query)
+        );
+    }
+        
+    private getAvailableTeams(): Team[] {
+        const used = this.getUsedIds();
+        return this.allTeams.filter(p => !used.has(p.id));
+    }
+
+    private getUsedIds(): Set<number | null> {
+        return new Set([
+            ...this.teams.map(p => p.id)
+        ]);
+    }
+
+    addTeam() {
+        if (!this.selectedTeamToAdd) {
+            return;
+        }
+        this.teamToAdd = null;
+        // CASE 1: User selected an existing Player object
+        if (typeof this.selectedTeamToAdd === 'object') {
+            this.teamToAdd = this.selectedTeamToAdd;
+        } else { // CASE 2: User typed a new name (string)
+            const typedName = (this.selectedTeamToAdd as string).trim();
+            if (!typedName) {
+                return;
+            }
+
+            // Check if already exists (case insensitive)
+            const existing = this.teams.find(p =>
+                p.teamName?.toLowerCase() === typedName.toLowerCase()
+            );
+
+            if (existing) {
+                this.teamToAdd = existing;
+            } else {  // Create new Team
+                this.teamToAdd = new Team();
+                this.teamToAdd.teamName = typedName;
+                // this.saveTourneyTeam();
+            }
+        }
+        
+        // Avoid duplicates across lists
+        if (this.isTeamUsed(this.teamToAdd)) {
+            return;
+        }
+        this.selectedTeam = this.teamToAdd;
+        this.teams.push(this.teamToAdd);
+
+        this.saveTourneyTeam();
+        this.selectedTeamToAdd = null;
+        this.filteredTeams = [];
+        this.teams = [...this.teams].sort((a, b) => 
+            a.teamName.localeCompare(b.teamName)
+        );
+        this.tourneyService.createChaosDisabled = false;
+    }
+
+    private saveTourneyTeam() {
+        this.selectedTeam.teamName = this.selectedTeam.teamName.toUpperCase();
+        this.teamService.updateExistingTeam(this.selectedTeam, () => this.onTeamSaveComplete());
+    }
+
+     private onTeamSaveComplete(): void {
+        this.selectedTeam = this.teamService.selectedTeam;
+        let index = this.tourneyService.selectedTourney.teams.findIndex( t => t.teamName.toUpperCase() === this.selectedTeam.teamName);
+        if( index === -1 ) {
+            this.tourneyService.selectedTourney.teams.push(this.selectedTeam);
+        } else {
+            this.tourneyService.selectedTourney.teams[index] = this.selectedTeam;
+        }
+
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.tourneyService.selectedTourney, this.clientService.selectedClient, true);
+        const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
+        subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () =>{} );
+    }
+    
+    isTeamUsed(team: Team): boolean {
+        return (
+            this.teams.some(t => team.id != null && t.id === team.id )
+        );
+    }
+
+    isEditing(team: Team): boolean {
+        return this.editingTeamId === team.id;
+    }
+
+    enableEdit(team: Team) {
+        // If your items don't have IDs yet, you could fall back to tracking by object reference
+        this.editingTeamId = team.id ?? null; 
+    }
+
+    saveAndDisableEdit(team: Team) {
+        // 1. Call your backend service to persist the change here
+        // e.g., this.teamService.updateTeam(team).subscribe();
+
+        this.selectedTeam = team;
+        this.saveTourneyTeam();
+        
+        // 2. Turn off editing mode
+        this.editingTeamId = null; 
     }
 }

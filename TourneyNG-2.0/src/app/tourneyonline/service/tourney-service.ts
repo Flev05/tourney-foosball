@@ -104,8 +104,8 @@ export class TourneyService extends AbstractService {
     createChaosDisabled: boolean = true;
 
     static roundCols: TableCols[] = [
-        { field: 'name',        header: 'Gironi' },
-        { field: 'teamNo',      header: 'N° Squadre' },
+        { field: 'name',       header: 'Gironi' },
+        { field: 'teamNo',     header: 'Squadre/Girone' },
         { field: 'teamNames',  header: 'Squadre' },
     ];
 

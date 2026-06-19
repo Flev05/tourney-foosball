@@ -2,7 +2,6 @@
   width: 100%;
   background-color: #0f111a;
   color: #ffffff;
-  padding: 30px 10px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -24,8 +23,6 @@
   flex-direction: column;
   justify-content: space-around;
   flex: 1;
-  height: 750px; /* Gives plenty of room for vertical balancing */
-  padding: 0 12px;
 }
 
 .bracket-match {
@@ -54,7 +51,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
+  padding: 4px 5px;
   font-size: 1rem;
 }
 

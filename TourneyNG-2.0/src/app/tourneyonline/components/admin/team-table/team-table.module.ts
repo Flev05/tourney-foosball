@@ -8,6 +8,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
+import { ListboxModule } from 'primeng/listbox';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [TeamTableComponent],
@@ -20,6 +23,9 @@ import { SelectModule } from 'primeng/select';
     ,InputTextModule
     ,ButtonModule
     ,TableModule
+    ,ListboxModule
+    ,AutoCompleteModule
+    ,TooltipModule
   ], 
   exports: [TeamTableComponent]
 })

@@ -472,4 +472,61 @@ export class LevelService extends AbstractEliminatoryListView {
         }
         return eliminatoryLevelRows;
     }
+
+    /**
+     * Distributes a pre-sorted array into Left and Right arrays using the tournament tree pattern:
+     * 1st -> Left Top, 2nd -> Right Top, 3rd -> Left Middle/Bottom, 4th -> Right Middle/Bottom...
+     */
+    public distributeSeeding(sortedMatches: Eliminatory[]): { left: Eliminatory[], right: Eliminatory[] } {
+        // Temporary arrays to manage top-to-bottom filling sequences
+        const totalCount = sortedMatches.length;
+        const halfCount = totalCount / 2;
+        
+        const orderedLeft = new Array<Eliminatory>(halfCount);
+        const orderedRight = new Array<Eliminatory>(halfCount);
+
+        // This sequence generates the exact slot tracking index (0, 4, 2, 6, 1, 5, 3, 7...) 
+        // ensuring items insert into the structural "middle" iteratively
+        let leftIndexTracker = this.getBracketPositions(halfCount);
+        let rightIndexTracker = this.getBracketPositions(halfCount);
+
+        let leftIdx = 0;
+        let rightIdx = 0;
+
+        for (let i = 0; i < totalCount; i++) {
+            if (i % 2 === 0) {
+                // Even indexes (0, 2, 4...) go to the Left Wing
+                const targetPos = leftIndexTracker[leftIdx++];
+                orderedLeft[targetPos] = sortedMatches[i];
+            } else {
+                // Odd indexes (1, 3, 5...) go to the Right Wing
+                const targetPos = rightIndexTracker[rightIdx++];
+                orderedRight[targetPos] = sortedMatches[i];
+            }
+        }
+
+        return {
+            left: orderedLeft.filter(el => el !== undefined),
+            right: orderedRight.filter(el => el !== undefined)
+        };
+    }
+
+    // Helper generator to map standard index loops into balanced spatial tree positions
+    private getBracketPositions(n: number): number[] {
+        if (n === 1) return [0];
+        
+        let order = [0];
+        while (order.length < n) {
+            const nextOrder: number[] = [];
+            for (let i = 0; i < order.length; i++) {
+                nextOrder.push(order[i]);
+                nextOrder.push(order[i] + order.length * 2); // Split calculation
+            }
+            order = nextOrder;
+        }
+        
+        // Normalize order values to valid index arrays up to N items
+        const sorted = [...order].sort((a,b) => a-b);
+        return order.map(x => sorted.indexOf(x));
+    }
 }

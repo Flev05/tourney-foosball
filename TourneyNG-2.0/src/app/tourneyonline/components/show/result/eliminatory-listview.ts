@@ -90,22 +90,19 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         }
         const levelNo: number = this.tourneyService.selectedEliminatoryLevelIndex;
         let el: EliminatoryLevel;
-        let tNo : number = -1;
         if(levelNo==-1) {
             el = this.selectedTourney.eliminatoryBLevels[this.tourneyService.selectedEliminatoryBLevelIndex];
-            return el.name.startsWith("Playoff");
         } else {
-            el = this.selectedTourney.eliminatoryLevels[0];
-            tNo = el.topLevelTeamNo
+            el = this.selectedTourney.eliminatoryLevels[levelNo];
         }
-        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(tNo);
-        return tNo !== highestPow2Le;
+        return el.name.startsWith("Playoff");
     }
 
     // Toggles the view state
     public toggleBracketView() {
         this.displayBracketView = !this.displayBracketView;
     }
+
     public printPdfTopLevelMeeting() {
         const rowIndex: number = this.tourneyService.selectedEliminatoryLevelIndex;
         console.log("rowIndex=" + rowIndex);

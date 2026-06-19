@@ -51,6 +51,7 @@
                   <td style="width: 40%; padding: 0.5rem 1rem;">
                     <div class="flex flex-column align-items-end w-full">
                       <span class="font-bold text-right text-900 text-xl mb-2">{{rowData.teamName1}}</span>
+                      @if (!isInWizardMode()) {
                       <div class="flex flex-row flex-nowrap justify-content-end gap-1 w-full">
                         @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
                           <button pButton type="button" 
@@ -62,6 +63,7 @@
                           </button>
                         }
                       </div>
+                      }
                     </div>
                   </td>
                   
@@ -74,17 +76,19 @@
                   <td style="width: 40%; padding: 0.5rem 1rem;">
                     <div class="flex flex-column align-items-start w-full">
                       <span class="font-bold text-left text-900 text-xl mb-2">{{rowData.teamName2}}</span>
-                      <div class="flex flex-row flex-nowrap justify-content-start gap-1 w-full">
-                        @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
-                          <button pButton type="button" 
-                                  [label]="i.toString()" 
-                                  [ngClass]="{'p-button-primary': rowData.matches[0].score2 === i, 'p-button-outlined p-button-secondary': rowData.matches[0].score2 !== i}"
-                                  style="width: 24px; height: 28px; padding: 0; font-size: 1.1rem; font-weight: 600;"
-                                  class="flex align-items-center justify-content-center flex-shrink-0"
-                                  (click)="updateScore(rowData, 'score2', i)">
-                          </button>
-                        }
-                      </div>
+                      @if (!isInWizardMode()) {
+                        <div class="flex flex-row flex-nowrap justify-content-start gap-1 w-full">
+                          @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
+                            <button pButton type="button" 
+                                    [label]="i.toString()" 
+                                    [ngClass]="{'p-button-primary': rowData.matches[0].score2 === i, 'p-button-outlined p-button-secondary': rowData.matches[0].score2 !== i}"
+                                    style="width: 24px; height: 28px; padding: 0; font-size: 1.1rem; font-weight: 600;"
+                                    class="flex align-items-center justify-content-center flex-shrink-0"
+                                    (click)="updateScore(rowData, 'score2', i)">
+                            </button>
+                          }
+                        </div>
+                      }
                     </div>
                   </td>
                 </tr>

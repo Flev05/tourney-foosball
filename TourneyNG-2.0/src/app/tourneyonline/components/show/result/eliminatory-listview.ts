@@ -440,7 +440,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
 
         // 5. PRINT THE DYNAMIC MIRRORED SUB-HEADERS ROW
         doc.setFont("Helvetica", "bold");
-        doc.setFontSize(8.5);
+        doc.setFontSize(10);
         doc.setTextColor(74, 85, 104);
 
         const addHeaderLabel = (text: string, columnX: number, currentW: number) => {
@@ -477,6 +477,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         const leftLevelsData: MatchNode[][] = [rawLeft.map(parseTeamsFromEliminatory)];
         const rightLevelsData: MatchNode[][] = [rawRight.map(parseTeamsFromEliminatory)];
 
+        const TEAMS_FONT_SIZE = 10;
         // 7. ALGORITHMICALLY DERIVE EMPTY INTERMEDIATE CHANNELS
         for (let lvl = 1; lvl < totalLevels; lvl++) {
             const prevLeftLvl = leftLevelsData[lvl - 1];
@@ -509,10 +510,10 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
                 doc.rect(x, y, currentBoxW, boxH, 'FD');
 
                 doc.setFont("Helvetica", "normal");
-                doc.setFontSize(7.5); 
+                doc.setFontSize(TEAMS_FONT_SIZE); 
                 doc.setTextColor(45, 55, 72);
 
-                const padding = 3;
+                const padding = 2;
                 const maxTextWidth = currentBoxW - (padding * 2); 
                 
                 const linesT1: string[] = nodes[i].team1 ? doc.splitTextToSize(nodes[i].team1, maxTextWidth) : [];
@@ -556,7 +557,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         const finalY = midY - boxH - 10; 
 
         doc.setFont("Helvetica", "bold");
-        doc.setFontSize(7.5);
+        doc.setFontSize(TEAMS_FONT_SIZE);
         doc.setTextColor(221, 107, 32);
         const final = "FINALE";
         const finalLabelW = doc.getTextWidth(final);
@@ -574,15 +575,15 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         doc.setDrawColor(250, 235, 220);
         doc.line(centerX + 3, finalY + (boxH / 2), centerX + finalBoxW - 3, finalY + (boxH / 2));
 
-        // --- 3RD & 4TH PLAYOFF ---
-        const playoffY = midY + 10;
+        // --- 3° e 4° Posto ---
+        const playoffY = midY + 14;
 
         doc.setFont("Helvetica", "bold");
-        doc.setFontSize(7.5);
+        doc.setFontSize(TEAMS_FONT_SIZE);
         doc.setTextColor(74, 85, 104);
         const thirdAnd4thPos = "3° e 4° Posto";
         const playoffLabelW = doc.getTextWidth(thirdAnd4thPos);
-        doc.text(thirdAnd4thPos, centerX + (finalBoxW / 2) - (playoffLabelW / 2), playoffY - 2.5);
+        doc.text(thirdAnd4thPos, centerX + (finalBoxW / 2) - (playoffLabelW / 2), playoffY - 2);
 
         // Draw Playoff Clean Container
         doc.setDrawColor(74, 85, 104); 

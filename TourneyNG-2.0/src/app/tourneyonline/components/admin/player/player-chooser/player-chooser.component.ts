@@ -155,7 +155,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
 
             // Check if already exists (case insensitive)
             const existing = this.allPlayers.find(p =>
-                p.playerName?.toLowerCase() === typedName.toLowerCase()
+                p.playerName?.toUpperCase() === typedName.toUpperCase()
             );
 
             if (existing) {
@@ -168,6 +168,8 @@ export class PlayerChooserComponent extends AbstractDetailView {
                 this.doSavePlayer(this.playerToAdd);
             }
         }
+
+        this.playerToAdd.playerName = this.playerToAdd.playerName.toUpperCase();
 
         // Avoid duplicates across lists
         if (this.isPlayerUsed(this.playerToAdd)) {
@@ -199,7 +201,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
             }
             // Check if already exists (case insensitive)
             const existing = this.allPlayers.find(p =>
-                p.playerName?.toLowerCase() === typedName.toLowerCase()
+                p.playerName?.toUpperCase() === typedName.toUpperCase()
             );
             if (existing) {
                 this.playerToAdd = existing;
@@ -211,6 +213,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
                 this.doSavePlayer(this.playerToAdd);
             }
         }
+        this.playerToAdd.playerName = this.playerToAdd.playerName.toUpperCase();
         // Avoid duplicates across lists
         if (this.isPlayerUsed(this.playerToAdd)) {
             return;
@@ -240,7 +243,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
             }
             // Check if already exists (case insensitive)
             const existing = this.allPlayers.find(p =>
-                p.playerName?.toLowerCase() === typedName.toLowerCase()
+                p.playerName?.toUpperCase() === typedName.toUpperCase()
             );
             if (existing) {
                this.playerToAdd = existing;
@@ -252,6 +255,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
                 this.doSavePlayer(this.playerToAdd);
             }
         }
+        this.playerToAdd.playerName = this.playerToAdd.playerName.toUpperCase();
         // Avoid duplicates across lists
         if (this.isPlayerUsed(this.playerToAdd)) {
             return;

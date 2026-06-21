@@ -452,7 +452,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         for (let i = 0; i < totalLevels; i++) {
             addHeaderLabel(leftLabelsSequence[i], leftXCoords[i], getBoxWidthForLevel(i));
         }
-        addHeaderLabel("Final", centerX, finalBoxW);
+        addHeaderLabel("Finale", centerX, finalBoxW);
         for (let i = 0; i < totalLevels; i++) {
             addHeaderLabel(leftLabelsSequence[i], rightXCoords[i], getBoxWidthForLevel(i));
         }

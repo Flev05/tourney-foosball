@@ -1,0 +1,4064 @@
+{
+    "id": 143,
+    "tourneyName": "FIFA 2026",
+    "calendar": "",
+    "roundTabName": "GRUPPO",
+    "playoffTabName": "",
+    "playoutTabName": "",
+    "eliminatoryTabName": "Eliminazioni Dirette",
+    "eliminatoryBTabName": "Eliminazioni Dirette B",
+    "chaosEnabled": false,
+    "teamsChanged": false,
+    "isDaily": "false",
+    "datetime": "2026-06-16T07:43:35.922Z",
+    "wizardModeIndex": -1,
+    "terminatedRounds": [
+    ],
+    "terminatedPlayoffs": [
+    ],
+    "selectedTeams4PlayoffsCB": {
+        "label": "Seleziona",
+        "value": 0
+    },
+    "selectedPlayoffsCB": {
+        "label": "Seleziona",
+        "value": 0
+    },
+    "selectedPlayoutsCB": {
+        "label": "1°",
+        "value": 0
+    },
+    "selectedRoundsNumCB": {
+        "label": "12",
+        "value": 12
+    },
+    "address": "Stati Uniti, Messico, Canada",
+    "clientVO": {
+        "id": 5,
+        "businessName": "FIFA",
+        "address": "Largo Vittorio Emanuele II, 82",
+        "phoneNumber": "333666555",
+        "email": "info@fifa.com",
+        "siteUrl": "www.fifa.com",
+        "country": {
+            "id": 7292,
+            "city": "TORINO",
+            "cityCode": "L219",
+            "provinceCode": "TO",
+            "zipCode": "10100",
+            "countryCode": "IT"
+        }
+    },
+    "country": {
+        "id": 5908,
+        "city": "ROMA",
+        "cityCode": "H501",
+        "provinceCode": "RM",
+        "zipCode": "00100",
+        "countryCode": "IT"
+    },
+    "discipline": {
+        "id": 2,
+        "name": "Calcio",
+        "description": ""
+    },
+    "phases": [
+        "round",
+        "eliminatory"
+    ],
+    "selectedEliminatoryTeamsCB": {
+        "label": "32",
+        "value": 32
+    },
+    "objectives": [
+    ],
+    "teams": [
+        {
+            "id": 626,
+            "clientId": 5,
+            "teamName": "ALGERIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 620,
+            "clientId": 5,
+            "teamName": "ARABIA SAUDITA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 625,
+            "clientId": 5,
+            "teamName": "ARGENTINA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 600,
+            "clientId": 5,
+            "teamName": "AUSTRALIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 627,
+            "clientId": 5,
+            "teamName": "AUSTRIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 170,
+            "teamName": "Belgio",
+            "players": [
+            ],
+            "clientId": 5
+        },
+        {
+            "id": 593,
+            "clientId": 5,
+            "teamName": "BOSNIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 594,
+            "clientId": 5,
+            "teamName": "BRASILE",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 590,
+            "clientId": 5,
+            "teamName": "CANADA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 619,
+            "clientId": 5,
+            "teamName": "CAPO VERDE",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 632,
+            "clientId": 5,
+            "teamName": "COLOMBIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 588,
+            "clientId": 5,
+            "teamName": "COREA DEL SUD",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 606,
+            "clientId": 5,
+            "teamName": "COSTA D'AVORIO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 175,
+            "teamName": "CROAZIA",
+            "players": [
+            ],
+            "clientId": 5
+        },
+        {
+            "id": 605,
+            "clientId": 5,
+            "teamName": "CURACAO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 608,
+            "clientId": 5,
+            "teamName": "ECUADOR",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 616,
+            "clientId": 5,
+            "teamName": "EGITTO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 176,
+            "teamName": "FRANCIA",
+            "players": [
+            ],
+            "clientId": 5
+        },
+        {
+            "id": 163,
+            "teamName": "GERMANIA",
+            "players": [
+            ],
+            "clientId": 5
+        },
+        {
+            "id": 634,
+            "clientId": 5,
+            "teamName": "GHANA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 612,
+            "clientId": 5,
+            "teamName": "GIAPPONE",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 628,
+            "clientId": 5,
+            "teamName": "GIORDANIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 596,
+            "clientId": 5,
+            "teamName": "HAITI",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 633,
+            "clientId": 5,
+            "teamName": "INGHILTERRA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 617,
+            "clientId": 5,
+            "teamName": "IRAN",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 623,
+            "clientId": 5,
+            "teamName": "IRAQ",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 595,
+            "clientId": 5,
+            "teamName": "MAROCCO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 586,
+            "clientId": 5,
+            "teamName": "MESSICO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 624,
+            "clientId": 5,
+            "teamName": "NORVEGIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 618,
+            "clientId": 5,
+            "teamName": "NUOVA ZELANDA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 610,
+            "clientId": 5,
+            "teamName": "OLANDA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 635,
+            "clientId": 5,
+            "teamName": "PANAMA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 599,
+            "clientId": 5,
+            "teamName": "PARAGUAY",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 629,
+            "clientId": 5,
+            "teamName": "PORTOGALLO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 591,
+            "clientId": 5,
+            "teamName": "QATAR",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 630,
+            "clientId": 5,
+            "teamName": "RD CONGO",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 589,
+            "teamName": "REPUBBLICA CECA",
+            "players": [
+            ],
+            "clientId": 5
+        },
+        {
+            "id": 597,
+            "clientId": 5,
+            "teamName": "SCOZIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 622,
+            "clientId": 5,
+            "teamName": "SENEGAL",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 159,
+            "teamName": "SPAGNA",
+            "players": [
+            ],
+            "address": "Via Spagna",
+            "country": {
+                "id": 5908,
+                "city": "ROMA",
+                "cityCode": "H501",
+                "provinceCode": "RM",
+                "zipCode": "00100",
+                "countryCode": "IT"
+            },
+            "clientId": 5
+        },
+        {
+            "id": 587,
+            "clientId": 5,
+            "teamName": "SUDAFRICA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 179,
+            "teamName": "Svezia",
+            "players": [
+            ],
+            "clientId": 5
+        },
+        {
+            "id": 592,
+            "clientId": 5,
+            "teamName": "SVIZZERA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 614,
+            "clientId": 5,
+            "teamName": "TUNISIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 601,
+            "clientId": 5,
+            "teamName": "TURCHIA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 621,
+            "clientId": 5,
+            "teamName": "URUGUAY",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 598,
+            "clientId": 5,
+            "teamName": "USA",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        },
+        {
+            "id": 631,
+            "clientId": 5,
+            "teamName": "UZBEKISTAN",
+            "isDummy": false,
+            "isNew": false,
+            "chaosEnabled": false,
+            "address": "",
+            "phoneNumber": "",
+            "ruleName": "",
+            "asd": "",
+            "country": {
+            },
+            "players": [
+            ],
+            "operators": [
+            ]
+        }
+    ],
+    "roundVO": {
+        "direction": "A",
+        "matchWinnerScores": 3,
+        "matchBalanceScores": 1,
+        "pointsNeededToWin": 9,
+        "pointsGoldenGoalTieBreakWin": 2,
+        "pointsGoldenGoalTieBreakDefeat": 1,
+        "maxMatchesPerMeeting": 1,
+        "isAllMatches": "true",
+        "allMatchesEnabled": false,
+        "bestOfWinner": 1,
+        "isRoundAutoGen": "true",
+        "rounds": [
+            {
+                "id": 1060,
+                "direction": "A",
+                "name": "Girone: A",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "BRASILE",
+                    "ARGENTINA",
+                    "FRANCIA",
+                    "URUGUAY"
+                ],
+                "classificatedTeamNames": [
+                    "ARGENTINA(0)",
+                    "BRASILE(0)",
+                    "FRANCIA(0)",
+                    "URUGUAY(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "ARGENTINA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "BRASILE",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "FRANCIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "URUGUAY",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1061,
+                "direction": "A",
+                "name": "Girone: B",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "ECUADOR",
+                    "CANADA",
+                    "OLANDA",
+                    "COLOMBIA"
+                ],
+                "classificatedTeamNames": [
+                    "CANADA(0)",
+                    "COLOMBIA(0)",
+                    "ECUADOR(0)",
+                    "OLANDA(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "CANADA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "COLOMBIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "ECUADOR",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 1
+                    },
+                    {
+                        "id": null,
+                        "teamName": "OLANDA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1062,
+                "direction": "A",
+                "name": "Girone: C",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "ALGERIA",
+                    "CURACAO",
+                    "IRAN",
+                    "MAROCCO"
+                ],
+                "classificatedTeamNames": [
+                    "ALGERIA(0)",
+                    "CURACAO(0)",
+                    "IRAN(0)",
+                    "MAROCCO(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "ALGERIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "CURACAO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "IRAN",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 2
+                    },
+                    {
+                        "id": null,
+                        "teamName": "MAROCCO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1063,
+                "direction": "A",
+                "name": "Girone: D",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "Belgio",
+                    "NORVEGIA",
+                    "SVIZZERA",
+                    "Svezia"
+                ],
+                "classificatedTeamNames": [
+                    "Belgio(0)",
+                    "NORVEGIA(0)",
+                    "SVIZZERA(0)",
+                    "Svezia(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "Belgio",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "NORVEGIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "SVIZZERA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 3
+                    },
+                    {
+                        "id": null,
+                        "teamName": "Svezia",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1064,
+                "direction": "A",
+                "name": "Girone: E",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "CROAZIA",
+                    "RD CONGO",
+                    "INGHILTERRA",
+                    "TUNISIA"
+                ],
+                "classificatedTeamNames": [
+                    "CROAZIA(0)",
+                    "INGHILTERRA(0)",
+                    "RD CONGO(0)",
+                    "TUNISIA(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "CROAZIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "INGHILTERRA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "RD CONGO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 4
+                    },
+                    {
+                        "id": null,
+                        "teamName": "TUNISIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1065,
+                "direction": "A",
+                "name": "Girone: F",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "CAPO VERDE",
+                    "SPAGNA",
+                    "QATAR",
+                    "UZBEKISTAN"
+                ],
+                "classificatedTeamNames": [
+                    "CAPO VERDE(0)",
+                    "QATAR(0)",
+                    "SPAGNA(0)",
+                    "UZBEKISTAN(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "CAPO VERDE",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "QATAR",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "SPAGNA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 5
+                    },
+                    {
+                        "id": null,
+                        "teamName": "UZBEKISTAN",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1066,
+                "direction": "A",
+                "name": "Girone: G",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "AUSTRIA",
+                    "PORTOGALLO",
+                    "SCOZIA",
+                    "REPUBBLICA CECA"
+                ],
+                "classificatedTeamNames": [
+                    "AUSTRIA(0)",
+                    "PORTOGALLO(0)",
+                    "REPUBBLICA CECA(0)",
+                    "SCOZIA(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "AUSTRIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "PORTOGALLO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "REPUBBLICA CECA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 6
+                    },
+                    {
+                        "id": null,
+                        "teamName": "SCOZIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1067,
+                "direction": "A",
+                "name": "Girone: H",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "GIORDANIA",
+                    "HAITI",
+                    "COREA DEL SUD",
+                    "GHANA"
+                ],
+                "classificatedTeamNames": [
+                    "COREA DEL SUD(0)",
+                    "GHANA(0)",
+                    "GIORDANIA(0)",
+                    "HAITI(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "COREA DEL SUD",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "GHANA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "GIORDANIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 7
+                    },
+                    {
+                        "id": null,
+                        "teamName": "HAITI",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1068,
+                "direction": "A",
+                "name": "Girone: I",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "SENEGAL",
+                    "USA",
+                    "GIAPPONE",
+                    "PARAGUAY"
+                ],
+                "classificatedTeamNames": [
+                    "GIAPPONE(0)",
+                    "PARAGUAY(0)",
+                    "SENEGAL(0)",
+                    "USA(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "GIAPPONE",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "PARAGUAY",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "SENEGAL",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 8
+                    },
+                    {
+                        "id": null,
+                        "teamName": "USA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1069,
+                "direction": "A",
+                "name": "Girone: J",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "SUDAFRICA",
+                    "IRAQ",
+                    "AUSTRALIA",
+                    "NUOVA ZELANDA"
+                ],
+                "classificatedTeamNames": [
+                    "AUSTRALIA(0)",
+                    "IRAQ(0)",
+                    "NUOVA ZELANDA(0)",
+                    "SUDAFRICA(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "AUSTRALIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "IRAQ",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "NUOVA ZELANDA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 9
+                    },
+                    {
+                        "id": null,
+                        "teamName": "SUDAFRICA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1070,
+                "direction": "A",
+                "name": "Girone: K",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "PANAMA",
+                    "TURCHIA",
+                    "COSTA D'AVORIO",
+                    "GERMANIA"
+                ],
+                "classificatedTeamNames": [
+                    "COSTA D'AVORIO(0)",
+                    "GERMANIA(0)",
+                    "PANAMA(0)",
+                    "TURCHIA(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "COSTA D'AVORIO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "GERMANIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "PANAMA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 10
+                    },
+                    {
+                        "id": null,
+                        "teamName": "TURCHIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            },
+            {
+                "id": 1071,
+                "direction": "A",
+                "name": "Girone: L",
+                "label": "",
+                "type": "round",
+                "status": "Da Giocare",
+                "pageSize": 2,
+                "daysNo": 3,
+                "onewayCurrentDay": 1,
+                "roundtripCurrentDay": 1,
+                "teamNames": [
+                    "ARABIA SAUDITA",
+                    "EGITTO",
+                    "MESSICO",
+                    "BOSNIA"
+                ],
+                "classificatedTeamNames": [
+                    "ARABIA SAUDITA(0)",
+                    "BOSNIA(0)",
+                    "EGITTO(0)",
+                    "MESSICO(0)"
+                ],
+                "teamNo": "4",
+                "onewayMeetings": [
+                ],
+                "roundtripMeetings": [
+                ],
+                "classification": [
+                    {
+                        "id": null,
+                        "teamName": "ARABIA SAUDITA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "BOSNIA",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    },
+                    {
+                        "id": null,
+                        "teamName": "EGITTO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 11
+                    },
+                    {
+                        "id": null,
+                        "teamName": "MESSICO",
+                        "points": 0,
+                        "played": 0,
+                        "won": 0,
+                        "lost": 0,
+                        "balanced": 0,
+                        "penalty": 0,
+                        "goalsDone": 0,
+                        "goalsDiff": 0,
+                        "goalsConceded": 0,
+                        "notResolveble": true,
+                        "roundIndex": 0
+                    }
+                ]
+            }
+        ]
+    },
+    "playoffVO": {
+        "direction": "A",
+        "matchWinnerScores": 3,
+        "matchBalanceScores": 1,
+        "pointsNeededToWin": 9,
+        "pointsGoldenGoalTieBreakWin": 2,
+        "pointsGoldenGoalTieBreakDefeat": 1,
+        "maxMatchesPerMeeting": 1,
+        "isAllMatches": "true",
+        "allMatchesEnabled": true,
+        "bestOfWinner": 0,
+        "isPlayoffAutoGen": "true",
+        "playoffs": [
+        ]
+    },
+    "playoutVO": {
+        "direction": "A",
+        "matchWinnerScores": 3,
+        "matchBalanceScores": 1,
+        "pointsNeededToWin": 9,
+        "pointsGoldenGoalTieBreakWin": 2,
+        "pointsGoldenGoalTieBreakDefeat": 1,
+        "maxMatchesPerMeeting": 1,
+        "isAllMatches": "true",
+        "allMatchesEnabled": true,
+        "bestOfWinner": 0,
+        "isPlayoffAutoGen": "true",
+        "playoffs": [
+        ]
+    },
+    "isEliminatoryAutoGen": "true",
+    "eliminatoryLevels": [
+        {
+            "id": 5,
+            "name": "16-esimi di finale",
+            "level": 5,
+            "isTopLevel": true,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 32,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": 1003,
+                    "round": {
+                        "id": 1003,
+                        "direction": "A",
+                        "name": "E.1",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ARGENTINA",
+                            "ECUADOR"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ARGENTINA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "ECUADOR",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1006,
+                    "round": {
+                        "id": 1006,
+                        "direction": "A",
+                        "name": "E.2",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CANADA",
+                            "IRAN"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "CANADA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "IRAN",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1009,
+                    "round": {
+                        "id": 1009,
+                        "direction": "A",
+                        "name": "E.3",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ALGERIA",
+                            "NORVEGIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ALGERIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "NORVEGIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1012,
+                    "round": {
+                        "id": 1012,
+                        "direction": "A",
+                        "name": "E.4",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "Belgio",
+                            "RD CONGO"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "Belgio",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "RD CONGO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1015,
+                    "round": {
+                        "id": 1015,
+                        "direction": "A",
+                        "name": "E.5",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CROAZIA",
+                            "QATAR"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "CROAZIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "QATAR",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1018,
+                    "round": {
+                        "id": 1018,
+                        "direction": "A",
+                        "name": "E.6",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CAPO VERDE",
+                            "PORTOGALLO"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "CAPO VERDE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "PORTOGALLO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1021,
+                    "round": {
+                        "id": 1021,
+                        "direction": "A",
+                        "name": "E.7",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "AUSTRIA",
+                            "GIORDANIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "AUSTRIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "GIORDANIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1024,
+                    "round": {
+                        "id": 1024,
+                        "direction": "A",
+                        "name": "E.8",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "COREA DEL SUD",
+                            "PARAGUAY"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "COREA DEL SUD",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "PARAGUAY",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1027,
+                    "round": {
+                        "id": 1027,
+                        "direction": "A",
+                        "name": "E.9",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "GIAPPONE",
+                            "NUOVA ZELANDA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "GIAPPONE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "NUOVA ZELANDA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1030,
+                    "round": {
+                        "id": 1030,
+                        "direction": "A",
+                        "name": "E.10",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "AUSTRALIA",
+                            "PANAMA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "AUSTRALIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "PANAMA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1033,
+                    "round": {
+                        "id": 1033,
+                        "direction": "A",
+                        "name": "E.11",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "COSTA D'AVORIO",
+                            "EGITTO"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "COSTA D'AVORIO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "EGITTO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1036,
+                    "round": {
+                        "id": 1036,
+                        "direction": "A",
+                        "name": "E.12",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ARABIA SAUDITA",
+                            "FRANCIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ARABIA SAUDITA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "FRANCIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1039,
+                    "round": {
+                        "id": 1039,
+                        "direction": "A",
+                        "name": "E.13",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "BRASILE",
+                            "COLOMBIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "BRASILE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "COLOMBIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1042,
+                    "round": {
+                        "id": 1042,
+                        "direction": "A",
+                        "name": "E.14",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "IRAQ",
+                            "GERMANIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "GERMANIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "IRAQ",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1045,
+                    "round": {
+                        "id": 1045,
+                        "direction": "A",
+                        "name": "E.15",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CURACAO",
+                            "INGHILTERRA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "CURACAO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "INGHILTERRA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1048,
+                    "round": {
+                        "id": 1048,
+                        "direction": "A",
+                        "name": "E.16",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "GHANA",
+                            "BOSNIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "BOSNIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "GHANA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Ottavi di finale",
+            "level": 4,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 32,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": 1051,
+                    "round": {
+                        "id": 1051,
+                        "direction": "A",
+                        "name": "E.1",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ARGENTINA",
+                            "CANADA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ARGENTINA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "CANADA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1054,
+                    "round": {
+                        "id": 1054,
+                        "direction": "A",
+                        "name": "E.2",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ALGERIA",
+                            "Belgio"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ALGERIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "Belgio",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1057,
+                    "round": {
+                        "id": 1057,
+                        "direction": "A",
+                        "name": "E.3",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CROAZIA",
+                            "CAPO VERDE"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "CAPO VERDE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "CROAZIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1060,
+                    "round": {
+                        "id": 1060,
+                        "direction": "A",
+                        "name": "E.4",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "AUSTRIA",
+                            "COREA DEL SUD"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "AUSTRIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "COREA DEL SUD",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1063,
+                    "round": {
+                        "id": 1063,
+                        "direction": "A",
+                        "name": "E.5",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "GIAPPONE",
+                            "AUSTRALIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "AUSTRALIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "GIAPPONE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1066,
+                    "round": {
+                        "id": 1066,
+                        "direction": "A",
+                        "name": "E.6",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "COSTA D'AVORIO",
+                            "ARABIA SAUDITA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ARABIA SAUDITA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "COSTA D'AVORIO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1069,
+                    "round": {
+                        "id": 1069,
+                        "direction": "A",
+                        "name": "E.7",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "BRASILE",
+                            "GERMANIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "BRASILE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "GERMANIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1072,
+                    "round": {
+                        "id": 1072,
+                        "direction": "A",
+                        "name": "E.8",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CURACAO",
+                            "BOSNIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "BOSNIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "CURACAO",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Quarti di finale",
+            "level": 3,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 32,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": 1075,
+                    "round": {
+                        "id": 1075,
+                        "direction": "A",
+                        "name": "E.1",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ARGENTINA",
+                            "ALGERIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ALGERIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "ARGENTINA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1078,
+                    "round": {
+                        "id": 1078,
+                        "direction": "A",
+                        "name": "E.2",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "CAPO VERDE",
+                            "AUSTRIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "AUSTRIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "CAPO VERDE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1081,
+                    "round": {
+                        "id": 1081,
+                        "direction": "A",
+                        "name": "E.3",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "AUSTRALIA",
+                            "ARABIA SAUDITA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ARABIA SAUDITA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "AUSTRALIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1084,
+                    "round": {
+                        "id": 1084,
+                        "direction": "A",
+                        "name": "E.4",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "BRASILE",
+                            "BOSNIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "BOSNIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "BRASILE",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Semi finale",
+            "level": 2,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 32,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": 1087,
+                    "round": {
+                        "id": 1087,
+                        "direction": "A",
+                        "name": "E.1",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ALGERIA",
+                            "AUSTRIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ALGERIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "AUSTRIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                },
+                {
+                    "id": 1090,
+                    "round": {
+                        "id": 1090,
+                        "direction": "A",
+                        "name": "E.2",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ARABIA SAUDITA",
+                            "BOSNIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ARABIA SAUDITA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "BOSNIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "name": "Finalissima 1° e 2° posto",
+            "level": 1,
+            "isTopLevel": false,
+            "isOptional": false,
+            "direction": "A",
+            "topLevelTeamNo": 32,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": 1093,
+                    "round": {
+                        "id": 1093,
+                        "direction": "A",
+                        "name": "E.1",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "ALGERIA",
+                            "ARABIA SAUDITA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "ALGERIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "ARABIA SAUDITA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "name": "Finalina 3° e 4° posto",
+            "level": 1,
+            "isTopLevel": false,
+            "isOptional": true,
+            "direction": "A",
+            "topLevelTeamNo": 4,
+            "abstractRoundVO": {
+                "direction": "A",
+                "matchWinnerScores": 3,
+                "matchBalanceScores": 1,
+                "pointsNeededToWin": 9,
+                "pointsGoldenGoalTieBreakWin": 2,
+                "pointsGoldenGoalTieBreakDefeat": 1,
+                "maxMatchesPerMeeting": 1,
+                "isAllMatches": "true",
+                "allMatchesEnabled": true,
+                "bestOfWinner": 0
+            },
+            "eliminatories": [
+                {
+                    "id": 1096,
+                    "round": {
+                        "id": 1096,
+                        "direction": "A",
+                        "name": "E.1",
+                        "label": "",
+                        "type": "eliminatory",
+                        "status": "Da Giocare",
+                        "pageSize": 1,
+                        "daysNo": 1,
+                        "onewayCurrentDay": 1,
+                        "roundtripCurrentDay": 1,
+                        "teamNames": [
+                            "AUSTRIA",
+                            "BOSNIA"
+                        ],
+                        "classificatedTeamNames": [
+                        ],
+                        "teamNo": "",
+                        "onewayMeetings": [
+                        ],
+                        "roundtripMeetings": [
+                        ],
+                        "classification": [
+                            {
+                                "id": null,
+                                "teamName": "AUSTRIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            },
+                            {
+                                "id": null,
+                                "teamName": "BOSNIA",
+                                "points": 0,
+                                "played": 0,
+                                "won": 0,
+                                "lost": 0,
+                                "balanced": 0,
+                                "penalty": 0,
+                                "goalsDone": 0,
+                                "goalsDiff": 0,
+                                "goalsConceded": 0,
+                                "notResolveble": true,
+                                "roundIndex": 0
+                            }
+                        ]
+                    },
+                    "isSkiping": false
+                }
+            ]
+        }
+    ],
+    "eliminatoryBLevels": [
+    ],
+    "defenderPlayers": [
+    ],
+    "offenderPlayers": [
+    ],
+    "jollyPlayers": [
+    ],
+    "tourneyType": "time",
+    "access": "public",
+    "resultTool": "Complete",
+    "isOnewayPlayoff": "true",
+    "isOnewayPlayout": "true",
+    "playersPerTeam": 1,
+    "eliminatoryMode": "auto",
+    "teamSortType": "original",
+    "isOnewayRound": "true",
+    "teamsWeightEnabled": "random",
+    "followerName": "143",
+    "selectedTeams4RoundCB": {
+        "label": "Seleziona",
+        "value": 0
+    },
+    "raceDuration": 90,
+    "teamAddMode": "onlyname"
+}

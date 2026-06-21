@@ -9,11 +9,11 @@ import { LevelService } from '../../admin/eliminatory/level-service';
   standalone: false
 })
 export class TennisBracketComponent implements OnInit {
-  @Input() eliminatories: Array<Eliminatory> = [];
+  @Input() eliminatories: Eliminatory[] = [];
 
   // This will store our columns: Left wing columns go left-to-right, Right wing columns go right-to-left
-  leftColumns: Array<Eliminatory[]> = [];
-  rightColumns: Array<Eliminatory[]> = [];
+  leftColumns: Eliminatory[] = [];
+  rightColumns: Eliminatory[] = [];
 
   constructor(protected levelService: LevelService) 
   {
@@ -24,20 +24,14 @@ export class TennisBracketComponent implements OnInit {
   }
 
   processTennisLayout() {
-    if (!this.eliminatories || this.eliminatories.length === 0) return;
-    const sortedRoundIds : number[] = [];
-    for( let i=0; i<this.eliminatories.length; i++ ) {
-      sortedRoundIds.push(i+1);
-    }
-    this.leftColumns = [];
-    this.rightColumns = [];
+      if (!this.eliminatories || this.eliminatories.length === 0) return;
+      this.leftColumns = [];
+      this.rightColumns = [];
 
-    const { left, right } = this.levelService.distributeSeeding(this.eliminatories);
-    this.leftColumns.push(left);
-    this.rightColumns.push(right);
+      const sortedList = this.eliminatories;
 
-    // For a tennis table, the right wing must have its columns reversed layout-wise 
-    // so Semifinals sit close to the Grand Final, pushing larger rounds to the far right edge.
-    this.rightColumns.reverse();
+      // Split them down the middle for your HTML template loops!
+      this.leftColumns = sortedList.slice(0, sortedList.length / 2);
+      this.rightColumns = sortedList.slice(sortedList.length / 2);
   }
 }

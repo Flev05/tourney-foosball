@@ -393,6 +393,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.previousPlayer =  {...player};
         this.editingPlayer =  player;
     }
+    
     saveAndDisableEdit(player: Player) {
         if(this.previousPlayer !== player)  {
             this.doSavePlayer(player);

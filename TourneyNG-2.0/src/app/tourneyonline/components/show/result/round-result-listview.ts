@@ -268,4 +268,8 @@ export class RoundResultListView extends AbstractRoundResultListView {
     private saveMeetingNextCallback(m: MeetingDb) {   
         console.log("Entering saveMeetingNextCallback("+m+")");  
     }
+
+    public isInWizardMode() {
+        return this.selectedTourney.wizardModeIndex >= 0;
+    }
 }

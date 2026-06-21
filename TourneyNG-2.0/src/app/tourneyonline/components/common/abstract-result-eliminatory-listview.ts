@@ -57,12 +57,61 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         console.log("Entering onTabChange("+index+")");
     }
 
+    
+    /**
+     * 
+        BEFORE: 1° : E.1
+        BEFORE: 2° : E.2
+        BEFORE: 3° : E.3
+        BEFORE: 4° : E.4
+        BEFORE: 5° : E.5
+        BEFORE: 6° : E.6
+        BEFORE: 7° : E.7
+        BEFORE: 8° : E.8
+        BEFORE: 9° : E.9
+        BEFORE: 10° : E.10
+        BEFORE: 11° : E.11
+        BEFORE: 12° : E.12
+        BEFORE: 13° : E.13
+        BEFORE: 14° : E.14
+        BEFORE: 15° : E.15
+        BEFORE: 16° : E.16
+
+        AFTER: 1° : E.1
+        AFTER: 2° : E.9
+        AFTER: 3° : E.8
+        AFTER: 4° : E.16
+        AFTER: 5° : E.4
+        AFTER: 6° : E.12
+        AFTER: 7° : E.6
+        AFTER: 8° : E.14
+        AFTER: 9° : E.2
+        AFTER: 10° : E.10
+        AFTER: 11° : E.7
+        AFTER: 12° : E.15
+        AFTER: 13° : E.3
+        AFTER: 14° : E.11
+        AFTER: 15° : E.5
+        AFTER: 16° : E.13     
+     *   @param eliminatoryLevels 
+     * 
+     * @param isLevelB 
+     */
     protected onLoadComplete(eliminatoryLevels : Array<EliminatoryLevel>, isLevelB : boolean): void {
         this.cols = this.tourneyService.resultCols;
 
         this.eliminatoryLevels = eliminatoryLevels;
         this.isLevelB = isLevelB;
 
+        for( let el of this.eliminatoryLevels) {
+            let i=1;
+            for( let e of el.eliminatories ) {
+                e.round.name = 'E.' + i;
+                console.log("BEFORE: " + i + " : " + e.round.name);
+                i++;
+            }
+            break;
+        }
         for( let l=0; l < this.eliminatoryLevels.length; l++ ) {
             let el = eliminatoryLevels[l];
             if( this.isStandAlone(this.selectedTourney) ) {
@@ -84,6 +133,15 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     this.compileNextLevel(this.eliminatoryLevels, l, el );
                 }
             }
+        }
+
+        for( let el of this.eliminatoryLevels) {
+            let i=1;
+            for( let e of el.eliminatories ) {
+                console.log("AFTER: " + i + " : " + e.round.name);
+                i++;
+            }
+            break;
         }
 
         this.tourneyService.updateEliminatoryLevelsAndGui(this.eliminatoryLevels);
@@ -298,8 +356,67 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             currentIndex = (currentIndex + 1) % R;
             nextIndex = (nextIndex + 1) % R;
         }
+
+        // Assume 'eliminatories initial List' contains your 16 eliminatories (E.1 to E.16)
+        topEl.eliminatories = this.reorderBracket(topEl.eliminatories);
     }
     
+    /**
+        The quadrants are always filled in this order:
+        Top Left
+        Top Right
+        Bottom Right
+        Bottom Left
+
+        For every "ring":
+        first place one element from the beginning of the list (E1, E2, E3, E4, ...)
+        then one element from the end of the list (En, En-1, En-2, En-3, ...)
+
+        For 16 matches this becomes
+
+        Quadrant	First pass	Second pass	Third pass	Fourth pass
+        Top Left	    E1	    E16	        E12	        E8
+        Top Right	    E2	    E15	        E11	        E7
+        Bottom Right	E3	    E14	        E10	        E6
+        Bottom Left	    E4	    E13	        E9	        E5
+     * @param eliminatories The original sorted array (e.g., E.1 to E.16)
+     * @returns A new reordered array matching the above tournament bracket
+     */
+    public reorderBracket(eliminatories: Eliminatory[]): Eliminatory[] {
+        let n = eliminatories.length;
+        if (n <= 2) {
+            return eliminatories;
+        }
+        if (n % 4 !== 0) {
+            throw new Error("Number of eliminatories must be divisible by 4.");
+        }
+
+        const topLeft: Eliminatory[] = [];
+        const topRight: Eliminatory[] = [];
+        const bottomRight: Eliminatory[] = [];
+        const bottomLeft: Eliminatory[] = [];
+
+        topLeft.push(eliminatories[0]);
+        topRight.push(eliminatories[1]);
+        bottomRight.push(eliminatories[2]);
+        bottomLeft.push(eliminatories[3]);
+
+        while (n > 4) {
+            topLeft.push(eliminatories[n-1]);
+            topRight.push(eliminatories[n-2]);
+            bottomRight.push(eliminatories[n-3]);
+            bottomLeft.push(eliminatories[n-4]);
+            n = n - 4;
+        }
+
+        return [
+            ...topLeft,
+            ...bottomLeft,
+            ...topRight,
+            ...bottomRight
+        ];
+    }
+
     /**
      * Prepares a matrix Rx2 where R is the number of the round in the tournament and 2 is the number of columns
      * containing the first and the last index in the round R to get the first and the second team to form the new

@@ -368,6 +368,9 @@ export class TourneyDetailView extends AbstractDetailView {
             }
         }
         this.makeButtonLabel();
+        if( this.selectedTourney.teamAddMode == undefined ) {
+            this.selectedTourney.teamAddMode = "onlyname";
+        }
     }
 
     private initiDisciplineCombobox() {
@@ -410,7 +413,7 @@ export class TourneyDetailView extends AbstractDetailView {
             this.prepareEliminatoryCombobox();
             this.eliminatoryLevelRows = this.levelService.eliminatoryLevelRows;
 
-            if( this.isEliminatoryBTabEnabled() ) {
+            if( this.isEliminatoryBTabEnabled() && this.selectedTourney.eliminatoryBLevels.length > 0) {
                 this.levelService.eliminatoryBLevels = this.selectedTourney.eliminatoryBLevels;
                 const highestPow2Le : number =  this.levelService.highestPowerOf2LE(this.selectedTourney.eliminatoryBLevels[0].topLevelTeamNo); 
                 const tNo = this.selectedTourney.teams.length - highestPow2Le;

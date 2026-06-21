@@ -953,42 +953,30 @@
           </p-fieldset>
 
           @if (!selectedTourney.chaosEnabled) {
-            <p-fieldset legend="Ranking">
+            <p-fieldset legend="Caricamento squadre">
               <div class="flex flex-column gap-3 radiobuttons">
                   <div class="flex align-items-center">
                       <p-radioButton 
-                          name="isTeamsOrderedGroupname" 
-                          value="random" 
-                          [(ngModel)]="selectedTourney.teamsWeightEnabled" 
-                          inputId="isTeamsOrderedGroupname1"
-                          title="Indicare se le squadre sono scelte in ordine casuale" 
+                          name="teamAddModeGroupname" 
+                          value="onlyname" 
+                          [(ngModel)]="selectedTourney.teamAddMode" 
+                          inputId="teamAddModeGroupnameId1"
+                          title="Caricare le squadre solo con i nomi, tipo: aquila-tavoletta, BRASILE, ITALIA, mike & logan,  ecc" 
                           tooltipPosition="right" />
-                      <label for="isTeamsOrderedGroupname1" class="ml-3 cursor-pointer font-medium">
-                          Random
+                      <label for="teamAddModeGroupnameId1" class="ml-3 cursor-pointer font-medium">
+                          Solo i nomi
                       </label>
                   </div>
                   <div class="flex align-items-center">
                       <p-radioButton 
-                          name="isTeamsOrderedGroupname" 
-                          value="topseed" 
-                          [(ngModel)]="selectedTourney.teamsWeightEnabled" 
-                          inputId="isTeamsOrderedGroupname2"
-                          title="Indicare se le squadre sono ordinate come teste di serie" 
+                          name="teamAddModeGroupname" 
+                          value="detailed" 
+                          [(ngModel)]="selectedTourney.teamAddMode" 
+                          inputId="teamAddModeGroupnameId2"
+                          title="Caricare le squadre con tutti i dettagli: indirizzo, numero telefono, email, ecc." 
                           tooltipPosition="right" />
-                      <label for="isTeamsOrderedGroupname2" class="ml-3 cursor-pointer white-space-nowrap">
-                          Teste di serie
-                      </label>
-                  </div>
-                  <div class="flex align-items-center">
-                      <p-radioButton 
-                          name="isTeamsOrderedGroupname" 
-                          value="group" 
-                          [(ngModel)]="selectedTourney.teamsWeightEnabled" 
-                          inputId="isTeamsOrderedGroupnameId3"
-                          title="Indicare se le squadre sono Random ma raggruppate per appartenenza tipo per ASD o società" 
-                          tooltipPosition="right" />
-                      <label for="isTeamsOrderedGroupnameId3" class="ml-3 cursor-pointer font-medium">
-                          Gruppi
+                      <label for="teamAddModeGroupnameId2" class="ml-3 cursor-pointer white-space-nowrap">
+                          Dettagliate
                       </label>
                   </div>
               </div>            
@@ -1005,6 +993,7 @@
             [addTeamEnabled]="true" 
             [tourneyTeams]="true" 
             [chaosEnabled]="selectedTourney.chaosEnabled"
+            [teamAddMode]="selectedTourney.teamAddMode"
             (teamChanged)="handleTeamChange($event)"> 
           </app-team-table>
 
@@ -1102,14 +1091,54 @@
         </p-accordion-->
         @if (!roundTabEnabled) {
           <div style="margin-top:30px">
-            <p-message
-              severity="error"
-              text="Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!">
+            <p-message severity="error">
+              Attenzione! Compilare prima la scheda precedente, quindi avanzare con il bottone Avanti!
             </p-message>
           </div>
         }
         @if (roundTabEnabled) {
-          <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+            <p-fieldset legend="Ranking">
+              <div class="flex flex-column gap-3 radiobuttons">
+                  <div class="flex align-items-center">
+                      <p-radioButton 
+                        name="isTeamsOrderedGroupname" 
+                        value="random" 
+                        [(ngModel)]="selectedTourney.teamsWeightEnabled" 
+                        inputId="isTeamsOrderedGroupname1"
+                        title="Indicare se le squadre sono scelte in ordine casuale" 
+                        tooltipPosition="right" />
+                      <label for="isTeamsOrderedGroupname1" class="ml-3 cursor-pointer font-medium">
+                          Random
+                      </label>
+                  </div>
+              </div>
+              <div class="flex align-items-center">
+                  <p-radioButton 
+                      name="isTeamsOrderedGroupname" 
+                      value="topseed" 
+                      [(ngModel)]="selectedTourney.teamsWeightEnabled" 
+                      inputId="isTeamsOrderedGroupname2"
+                      title="Indicare se le squadre sono ordinate come teste di serie" 
+                      name="teamAddModeGroupname" 
+                      tooltipPosition="right" />
+                  <label for="isTeamsOrderedGroupname2" class="ml-3 cursor-pointer white-space-nowrap">
+                      Teste di serie
+                  </label>
+              </div>              
+              <div class="flex align-items-center">
+                  <p-radioButton 
+                      name="isTeamsOrderedGroupname" 
+                      value="group" 
+                      [(ngModel)]="selectedTourney.teamsWeightEnabled" 
+                      inputId="isTeamsOrderedGroupnameId3"
+                      title="Indicare se le squadre sono Random ma raggruppate per appartenenza tipo per ASD o società" 
+                      tooltipPosition="right" />
+                  <label for="isTeamsOrderedGroupnameId3" class="ml-3 cursor-pointer font-medium">
+                      ASD
+                  </label>
+              </div>
+            </p-fieldset>
+            
             <p-fieldset legend="Struttura Gironi">
               <div class="grid">
                 <div class="col-2">
@@ -1433,7 +1462,6 @@
                 }
               </ng-template>
             </p-table>
-          </div>
         }
       </p-tabpanel>
     }

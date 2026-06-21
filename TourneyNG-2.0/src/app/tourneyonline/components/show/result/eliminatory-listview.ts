@@ -18,6 +18,22 @@ import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 import { jsPDF } from 'jspdf';
 import { Round } from 'app/tourneyonline/domain/round';
 import { MeetingRoundService } from '../../admin/round/meeting-round-service';
+import { Eliminatory } from 'app/tourneyonline/domain/eliminatory';
+
+type PdfMatch = {
+    team1: string;
+    team2: string;
+    roundIndex: number;
+    matchIndex: number;
+};
+
+// Interface to hold coordinate configuration metadata during programmatic drawing
+interface MatchNode {
+  team1: string;
+  team2: string;
+  title: string;
+  yCenter?: number; // Calculated dynamically to draw tree connecting paths
+}
 
 @Component({
     templateUrl: './eliminatory-listview.html',
@@ -27,6 +43,9 @@ import { MeetingRoundService } from '../../admin/round/meeting-round-service';
 export class EliminatoryListView extends AbstractResultEliminatoryListView {
     private FONT_SIZE : number = 10;
     displayBracketView: boolean = false;
+    // Your input list containing the 16 base eliminatories sorted (1st half left, 2nd half right)
+    myEliminatories: Eliminatory[] = [];
+
     constructor(
         public override tourneyService: TourneyService
         ,protected override meetingService: MeetingService
@@ -41,6 +60,7 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
     ) {
         super(MeetingDetailView.meetingDvRedirect, tourneyService, meetingService, levelService, clientService, router, location, dfp)
     }
+    
     
     override ngOnInit() {
         super.ngOnInit();
@@ -90,22 +110,19 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
         }
         const levelNo: number = this.tourneyService.selectedEliminatoryLevelIndex;
         let el: EliminatoryLevel;
-        let tNo : number = -1;
         if(levelNo==-1) {
             el = this.selectedTourney.eliminatoryBLevels[this.tourneyService.selectedEliminatoryBLevelIndex];
-            return el.name.startsWith("Playoff");
         } else {
-            el = this.selectedTourney.eliminatoryLevels[0];
-            tNo = el.topLevelTeamNo
+            el = this.selectedTourney.eliminatoryLevels[levelNo];
         }
-        const highestPow2Le : number =  this.levelService.highestPowerOf2LE(tNo);
-        return tNo !== highestPow2Le;
+        return el.name.startsWith("Playoff");
     }
 
     // Toggles the view state
     public toggleBracketView() {
         this.displayBracketView = !this.displayBracketView;
     }
+
     public printPdfTopLevelMeeting() {
         const rowIndex: number = this.tourneyService.selectedEliminatoryLevelIndex;
         console.log("rowIndex=" + rowIndex);
@@ -151,9 +168,10 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
             el = this.selectedTourney.eliminatoryLevels[rowIndex];            
             level = "(Elim. A)";
         }
-        this.doPrintTennisBracket(el, level);
+        // this.doPrintTennisBracket(el, level);
+        this.printBracketTree(el.eliminatories, `Tabellone-${this.selectedTourney.tourneyName}`, level);
     }
-    
+
     private doPrintTennisBracket(el: EliminatoryLevel, level : string) {
         const doc = new jsPDF('l', 'mm', 'a4');
         const pageWidth = 297;
@@ -347,5 +365,265 @@ export class EliminatoryListView extends AbstractResultEliminatoryListView {
             currentMatchesCount /= 2;
         }
     }
-}
 
+    /**
+     * Generates a structural vector PDF layout representing the complete tournament hierarchy tree.
+     */
+    printBracketTree(eliminatories: Eliminatory[], tourneyName: string, label: string): void {
+        const n = eliminatories.length;
+        if (n === 0 || (n & (n - 1)) !== 0) {
+            console.error("The eliminatories list must be a power of 2 (e.g., 4, 8, 16, 32).");
+            return;
+        }
+
+        // 1. Initialize Landscape A4 Document
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const pageWidth = doc.internal.pageSize.getWidth();   // ~297mm
+        const pageHeight = doc.internal.pageSize.getHeight(); // ~210mm
+
+        // 2. Main Document Title Headers (DYNAMICALLY CENTERED)
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(18);
+        doc.setTextColor(26, 34, 60);
+        
+        const titleWidth = doc.getTextWidth(tourneyName);
+        const centerTitleX = (pageWidth / 2) - (titleWidth / 2);
+        doc.text(tourneyName, centerTitleX, 10); 
+
+        // 3. DYNAMIC HEADER GENERATION ENGINE
+        const totalLevels = Math.log2(n); 
+        const baseLabels = ["Finale", "Semi Finali", "4°", "8°", "16°", "32°", "64°"];
+        
+        const leftLabelsSequence: string[] = [];
+        for (let i = totalLevels; i >= 1; i--) {
+            leftLabelsSequence.push(baseLabels[i]);
+        }
+
+        // 4. ADAPTIVE LEVEL GRID ENGINE (Level 1 = 50mm, Internal Levels = 40mm)
+        const marginX = 2;                                // 2mm safety border
+        const gapBetweenColumns = 4;                      // Space buffer between adjacent rounds
+        const boxH = 16;                                  // 16mm depth safely fits 2 rows of wrapped text
+        const startY = 34;
+        const usableHeight = pageHeight - startY - 15;
+
+        // Helper to get the exact width of a box based on its structural level
+        const getBoxWidthForLevel = (lvl: number): number => {
+            return lvl === 0 ? 50 : 40; 
+        };
+
+        // Calculate left wing non-overlapping horizontal positions dynamically
+        const leftXCoords: number[] = [];
+        let currentLeftX = marginX;
+        for (let i = 0; i < totalLevels; i++) {
+            leftXCoords.push(currentLeftX);
+            currentLeftX += getBoxWidthForLevel(i) + gapBetweenColumns;
+        }
+
+        // Final matches (Grand Final / Playoff) maintain the narrow internal layout size (40mm)
+        const finalBoxW = 40; 
+        const centerX = (pageWidth / 2) - (finalBoxW / 2);
+
+        // Calculate right wing non-overlapping horizontal positions dynamically
+        const rightXCoords: number[] = [];
+        let currentRightX = pageWidth - marginX; 
+        for (let i = 0; i < totalLevels; i++) {
+            const w = getBoxWidthForLevel(i);
+            currentRightX -= w; 
+            rightXCoords.push(currentRightX);
+            currentRightX -= gapBetweenColumns; 
+        }
+
+        // 5. PRINT THE DYNAMIC MIRRORED SUB-HEADERS ROW
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(8.5);
+        doc.setTextColor(74, 85, 104);
+
+        const addHeaderLabel = (text: string, columnX: number, currentW: number) => {
+            const textWidth = doc.getTextWidth(text);
+            const targetCenter = columnX + (currentW / 2) - (textWidth / 2);
+            doc.text(text, targetCenter, 20);
+        };
+
+        for (let i = 0; i < totalLevels; i++) {
+            addHeaderLabel(leftLabelsSequence[i], leftXCoords[i], getBoxWidthForLevel(i));
+        }
+        addHeaderLabel("Final", centerX, finalBoxW);
+        for (let i = 0; i < totalLevels; i++) {
+            addHeaderLabel(leftLabelsSequence[i], rightXCoords[i], getBoxWidthForLevel(i));
+        }
+
+        doc.setDrawColor(241, 245, 249);
+        doc.line(4, 25, pageWidth - 4, 25); 
+
+        // 6. MAP BASE LEVEL 1 STRUCTURES
+        const midPoint = n / 2;
+        const rawLeft = eliminatories.slice(0, midPoint);
+        const rawRight = eliminatories.slice(midPoint);
+
+        const parseTeamsFromEliminatory = (elim: Eliminatory): MatchNode => {
+            const meeting = elim.round.onewayMeetings[0] || elim.round.roundtripMeetings[0];
+            return {
+                title: elim.round.name || 'Match',
+                team1: meeting?.teamName1 || elim.round.teamNames[0] || '',
+                team2: meeting?.teamName2 || elim.round.teamNames[1] || ''
+            };
+        };
+
+        const leftLevelsData: MatchNode[][] = [rawLeft.map(parseTeamsFromEliminatory)];
+        const rightLevelsData: MatchNode[][] = [rawRight.map(parseTeamsFromEliminatory)];
+
+        // 7. ALGORITHMICALLY DERIVE EMPTY INTERMEDIATE CHANNELS
+        for (let lvl = 1; lvl < totalLevels; lvl++) {
+            const prevLeftLvl = leftLevelsData[lvl - 1];
+            const nextLeftLvl: MatchNode[] = [];
+            for (let i = 0; i < prevLeftLvl.length; i += 2) {
+                nextLeftLvl.push({ title: "", team1: "", team2: "" });
+            }
+            leftLevelsData.push(nextLeftLvl);
+
+            const prevRightLvl = rightLevelsData[lvl - 1];
+            const nextRightLvl: MatchNode[] = [];
+            for (let i = 0; i < prevRightLvl.length; i += 2) {
+                nextRightLvl.push({ title: "", team1: "", team2: "" });
+            }
+            rightLevelsData.push(nextRightLvl);
+        }
+
+        // 8. MATRIX DRAWING ENGINE ROUTINE
+        const drawColumnNodes = (nodes: MatchNode[], x: number, lvl: number, isRightWing: boolean = false) => {
+            const count = nodes.length;
+            const currentBoxW = getBoxWidthForLevel(lvl); 
+
+            for (let i = 0; i < count; i++) {
+                const y = startY + (i * (usableHeight / count)) + (usableHeight / (count * 2)) - (boxH / 2);
+                nodes[i].yCenter = y + (boxH / 2);
+
+                // Draw clean box background bounds
+                doc.setDrawColor(200, 210, 225);
+                doc.setFillColor(248, 250, 252);
+                doc.rect(x, y, currentBoxW, boxH, 'FD');
+
+                doc.setFont("Helvetica", "normal");
+                doc.setFontSize(7.5); 
+                doc.setTextColor(45, 55, 72);
+
+                const padding = 3;
+                const maxTextWidth = currentBoxW - (padding * 2); 
+                
+                const linesT1: string[] = nodes[i].team1 ? doc.splitTextToSize(nodes[i].team1, maxTextWidth) : [];
+                const linesT2: string[] = nodes[i].team2 ? doc.splitTextToSize(nodes[i].team2, maxTextWidth) : [];
+
+                // Draw wrapped lines for Team 1
+                if (linesT1.length > 0) {
+                    if (linesT1.length === 1) {
+                        doc.text(linesT1[0], x + padding, y + 5);
+                    } else {
+                        doc.text(linesT1[0], x + padding, y + 3.5);
+                        doc.text(linesT1[1], x + padding, y + 6.5);
+                    }
+                }
+
+                // Central box line split
+                doc.setDrawColor(235, 240, 245);
+                doc.line(x + 2, y + (boxH / 2), x + currentBoxW - 2, y + (boxH / 2)); 
+
+                // Draw wrapped lines for Team 2
+                if (linesT2.length > 0) {
+                    if (linesT2.length === 1) {
+                        doc.text(linesT2[0], x + padding, y + 12.5);
+                    } else {
+                        doc.text(linesT2[0], x + padding, y + 11.5);
+                        doc.text(linesT2[1], x + padding, y + 14.5);
+                    }
+                }
+            }
+        };
+
+        for (let lvl = 0; lvl < totalLevels; lvl++) {
+            drawColumnNodes(leftLevelsData[lvl], leftXCoords[lvl], lvl, false);
+            drawColumnNodes(rightLevelsData[lvl], rightXCoords[lvl], lvl, true);
+        }
+
+        // 9. DRAW CENTRAL FINALS PLACEHOLDERS WITH EXTERNAL LABELS
+        const midY = startY + (usableHeight / 2);
+        
+        // --- GRAND FINAL ---
+        const finalY = midY - boxH - 10; 
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(221, 107, 32);
+        const final = "FINALE";
+        const finalLabelW = doc.getTextWidth(final);
+        doc.text(final, centerX + (finalBoxW / 2) - (finalLabelW / 2), finalY - 2.5);
+
+        // Draw Grand Final Clean Container
+        doc.setDrawColor(221, 107, 32); 
+        doc.setFillColor(255, 252, 245);
+        doc.rect(centerX, finalY, finalBoxW, boxH, 'FD');
+        
+        doc.setLineWidth(1.2);
+        doc.line(centerX, finalY + 0.6, centerX + finalBoxW, finalY + 0.6);
+        doc.setLineWidth(0.3); 
+
+        doc.setDrawColor(250, 235, 220);
+        doc.line(centerX + 3, finalY + (boxH / 2), centerX + finalBoxW - 3, finalY + (boxH / 2));
+
+        // --- 3RD & 4TH PLAYOFF ---
+        const playoffY = midY + 10;
+
+        doc.setFont("Helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(74, 85, 104);
+        const thirdAnd4thPos = "3° e 4° Posto";
+        const playoffLabelW = doc.getTextWidth(thirdAnd4thPos);
+        doc.text(thirdAnd4thPos, centerX + (finalBoxW / 2) - (playoffLabelW / 2), playoffY - 2.5);
+
+        // Draw Playoff Clean Container
+        doc.setDrawColor(74, 85, 104); 
+        doc.setFillColor(247, 250, 252);
+        doc.rect(centerX, playoffY, finalBoxW, boxH, 'FD');
+        
+        doc.setLineWidth(1.2);
+        doc.line(centerX, playoffY + 0.6, centerX + finalBoxW, playoffY + 0.6);
+        doc.setLineWidth(0.3); 
+
+        doc.setDrawColor(235, 240, 245);
+        doc.line(centerX + 3, playoffY + (boxH / 2), centerX + finalBoxW - 3, playoffY + (boxH / 2));
+
+        // 10. VECTOR LINE CONNECTION BRIDGE OVERLAY ENGINE 
+        doc.setDrawColor(170, 185, 200);
+        doc.setLineWidth(0.3);
+
+        const drawConnectingBridges = (fromNodes: MatchNode[], toNodes: MatchNode[], fromX: number, toX: number) => {
+            for (let i = 0; i < fromNodes.length; i++) {
+                const targetParentIdx = Math.floor(i / 2);
+                const startYCoord = fromNodes[i].yCenter || 0;
+                const endYCoord = toNodes[targetParentIdx].yCenter || 0;
+                const pivotX = fromX + (toX - fromX) / 2;
+
+                doc.line(fromX, startYCoord, pivotX, startYCoord);
+                doc.line(pivotX, startYCoord, pivotX, endYCoord);
+                doc.line(pivotX, endYCoord, toX, endYCoord);
+            }
+        };
+
+        // Loops only up to totalLevels - 1, safely connecting sub-rounds without rendering lines to the Final box
+        for (let lvl = 0; lvl < totalLevels - 1; lvl++) {
+            const fromWidth = getBoxWidthForLevel(lvl);
+            drawConnectingBridges(leftLevelsData[lvl], leftLevelsData[lvl + 1], leftXCoords[lvl] + fromWidth, leftXCoords[lvl + 1]);
+            drawConnectingBridges(rightLevelsData[lvl], rightLevelsData[lvl + 1], rightXCoords[lvl], rightXCoords[lvl + 1] + getBoxWidthForLevel(lvl + 1));
+        }
+
+        // FIXED: Terminal lines connecting lastLvlIdx directly to the final box have been safely deleted from here.
+
+        // 11. Trigger PDF File Save Downloader
+        const pdfName = tourneyName + "-" + label + ".pdf";
+        doc.save(pdfName);
+    }
+}

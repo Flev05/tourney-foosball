@@ -1,71 +1,40 @@
+<div class="bracket-scroll">
 <div class="bracket-wrapper">
-  <div class="bracket-container">
-    
-    <div class="bracket-side left-side">
-      @for (columnMatches of leftColumns; track $index) {
+    <div class="bracket-side">
+      @for (elim of leftColumns; track $index) {
         <div class="bracket-column">
-          @for (elim of columnMatches; track elim.id) {
-            @if (!elim.isSkiping) {
-              @let meeting = elim.round.direction === 'A' ? elim.round.onewayMeetings[0] : elim.round.roundtripMeetings[0];
-              
-              <div class="bracket-match">
-                <div class="round-header-name">{{ elim.round.name }}</div>
-                <div class="team-slot top">
-                  <span class="team-text">{{ meeting?.teamName1 || 'TBD' }}</span>
-                  <span class="score-badge">{{ meeting?.points1 }}</span>
-                </div>
-                <div class="team-slot bottom">
-                  <span class="team-text">{{ meeting?.teamName2 || 'TBD' }}</span>
-                  <span class="score-badge">{{ meeting?.points2 }}</span>
-                </div>
+            @let meeting = elim.round.direction === 'A' ? elim.round.onewayMeetings[0] : elim.round.roundtripMeetings[0];
+            <div class="bracket-match">
+              <div class="round-header-name">{{ elim.round.name }}</div>
+              <div class="team-slot top">
+                <span class="team-text">{{ elim.round.teamNames[0] }}</span>
+                <span class="score-badge">{{ meeting?.points1 }}</span>
               </div>
-            }
-          }
-        </div>
-      }
-    </div>
-
-    <div class="bracket-center">
-      @if (grandFinal) {
-        @let finalMeeting = grandFinal.round.direction === 'A' ? grandFinal.round.onewayMeetings[0] : grandFinal.round.roundtripMeetings[0];
-        
-        <div class="final-title">{{ grandFinal.round.name || 'GRAND FINAL' }}</div>
-        <div class="bracket-match final-match">
-          <div class="team-slot top">
-            <span class="team-text champion-text">{{ finalMeeting?.teamName1 || 'TBD' }}</span>
-            <span class="score-badge gold-badge">{{ finalMeeting?.points1 }}</span>
-          </div>
-          <div class="team-slot bottom">
-            <span class="team-text champion-text">{{ finalMeeting?.teamName2 || 'TBD' }}</span>
-            <span class="score-badge gold-badge">{{ finalMeeting?.points2 }}</span>
+              <div class="team-slot bottom">
+                <span class="team-text">{{ elim.round.teamNames[1] }}</span>
+                <span class="score-badge">{{ meeting?.points2 }}</span>
+              </div>
           </div>
         </div>
       }
     </div>
-
-    <div class="bracket-side right-side">
-      @for (columnMatches of rightColumns; track $index) {
+    <div class="bracket-side">
+      @for (elim of rightColumns; track $index) {
         <div class="bracket-column">
-          @for (elim of columnMatches; track elim.id) {
-            @if (!elim.isSkiping) {
-              @let meeting = elim.round.direction === 'A' ? elim.round.onewayMeetings[0] : elim.round.roundtripMeetings[0];
-              
-              <div class="bracket-match">
-                <div class="round-header-name">{{ elim.round.name }}</div>
-                <div class="team-slot top">
-                  <span class="team-text">{{ meeting?.teamName1 || 'TBD' }}</span>
-                  <span class="score-badge">{{ meeting?.points1 }}</span>
-                </div>
-                <div class="team-slot bottom">
-                  <span class="team-text">{{ meeting?.teamName2 || 'TBD' }}</span>
-                  <span class="score-badge">{{ meeting?.points2 }}</span>
-                </div>
-              </div>
-            }
-          }
+          @let meeting = elim.round.direction === 'A' ? elim.round.onewayMeetings[0] : elim.round.roundtripMeetings[0];
+          <div class="bracket-match">
+            <div class="round-header-name">{{ elim.round.name }}</div>
+            <div class="team-slot top">
+              <span class="team-text">{{ elim.round.teamNames[0]  }}</span>
+              <span class="score-badge">{{ meeting?.points1 }}</span>
+            </div>
+            <div class="team-slot bottom">
+              <span class="team-text">{{elim.round.teamNames[1]  }}</span>
+              <span class="score-badge">{{ meeting?.points2 }}</span>
+            </div>
+          </div>
         </div>
       }
     </div>
-
-  </div>
+</div>
 </div>

@@ -24,6 +24,7 @@ export class Tourney {
     playoutTabName      : string = "";
     eliminatoryTabName  : string = "";
     eliminatoryBTabName : string = "";
+    teamAddMode         : string | undefined = "onlyname";
     chaosEnabled        : boolean = false;
     teamsChanged        : boolean = false;
 

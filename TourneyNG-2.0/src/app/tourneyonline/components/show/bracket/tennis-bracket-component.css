@@ -1,109 +1,67 @@
-.bracket-wrapper {
-  width: 100%;
-  background-color: #0f111a;
-  color: #ffffff;
-  padding: 30px 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.bracket-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
 }
 
-.bracket-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin: 0 auto;
+.bracket-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    /* Never become smaller than this */
+    min-width: 900px;
+
+    gap: 40px;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .bracket-side {
-  display: flex;
-  flex: 2;
-}
-
-.bracket-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  flex: 1;
-  height: 750px; /* Gives plenty of room for vertical balancing */
-  padding: 0 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
 .bracket-match {
-  display: flex;
-  flex-direction: column;
-  background-color: #161925;
-  border: 1px solid #2a2f45;
-  border-radius: 6px;
-  width: 100%;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    width: clamp(180px, 90%, 360px);
 }
 
 .round-header-name {
-  background-color: #1f2438;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  color: #8fa0dd;
-  padding: 4px 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #2a2f45;
+    background: #2c3e50;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 6px;
+    font-size: 14px;
 }
 
 .team-slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    min-height: 36px;
 }
 
 .team-slot.top {
-  border-bottom: 1px solid #2a2f45;
+    border-bottom: 1px solid #e6e6e6;
 }
 
 .team-text {
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 75%;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .score-badge {
-  background-color: #24293e;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 700;
-  min-width: 24px;
-  text-align: center;
-  color: #00ffcc;
-}
-
-/* Central Final Styles */
-.bracket-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  padding: 0 15px;
-}
-
-.final-title {
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: #ffb703;
-  margin-bottom: 12px;
-  text-shadow: 0 0 10px rgba(255, 183, 3, 0.3);
-}
-
-.final-match {
-  border: 2px solid #ffb703;
-  background-color: #1e1b12;
-}
-
-.gold-badge {
-  background-color: #ffb703;
-  color: #121212;
+    margin-left: 10px;
+    width: 28px;
+    text-align: center;
+    background: #f3f3f3;
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 2px 0;
 }

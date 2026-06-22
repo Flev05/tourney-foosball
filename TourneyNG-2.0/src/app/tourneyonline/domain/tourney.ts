@@ -26,6 +26,7 @@ export class Tourney {
     eliminatoryBTabName : string = "";
     teamAddMode         : string | undefined = "onlyname";
     chaosEnabled        : boolean = false;
+
     teamsChanged        : boolean = false;
 
     followerName?       : string;

@@ -14,6 +14,26 @@
           title="Crea le squadre accoppiando causalmente i portieri e gli attaccanti"
           [disabled]="tourneyService.createChaosDisabled">
         </button>
+        @if (tourneyService.createChaosDisabled) {
+          <p-checkbox 
+              name="addFixedCoupleGroupname"
+              inputId="addFixedCoupleGroupnameId"
+              [binary]="true"
+              [(ngModel)]="tourneyService.addFixedCoupleEnabled"
+              pTooltip="Aggiunge coppia fissa alle coppie già generate col bottone BARONDA"
+              tooltipPosition="right" />
+          <label for="addFixedCoupleGroupnameId" class="ml-2 cursor-pointer white-space-nowrap">
+              Aggiungi Coppia Fissa
+          </label>        
+          @if (tourneyService.addFixedCoupleEnabled) {
+            <button pButton icon="pi pi-save" 
+              type="button" 
+              (click)="saveFixedCouple()" 
+              label="Salva Coppie Fisse" 
+              title="Salva le coppie fisse inserite dopo quelle generate col bottone BARONDA" >
+            </button>
+          }
+        }
       </div>
     </ng-template>
     <ng-template pTemplate="header" let-columns>

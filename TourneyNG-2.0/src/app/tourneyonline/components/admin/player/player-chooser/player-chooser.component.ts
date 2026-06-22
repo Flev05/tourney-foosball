@@ -91,23 +91,23 @@ export class PlayerChooserComponent extends AbstractDetailView {
     }
 
     filterDefenderPlayers(event: any) {
-        const query = event.query.toLowerCase();
+        const query = event.query.toUpperCase();
         this.filteredDefenderPlayers = this.getAvailablePlayers().filter(player =>
-            player.playerName.toLowerCase().includes(query)
+            player.playerName.toUpperCase().includes(query)
         );
     }
 
     filterJollyPlayers(event: any) {
-        const query = event.query.toLowerCase();
+        const query = event.query.toUpperCase();
         this.filteredJollyPlayers = this.getAvailablePlayers().filter(player =>
-            player.playerName.toLowerCase().includes(query)
+            player.playerName.toUpperCase().includes(query)
         );
     }
 
     filterOffenderPlayers(event: any) {
-        const query = event.query.toLowerCase();
+        const query = event.query.toUpperCase();
         this.filteredOffenderPlayers = this.getAvailablePlayers().filter(player =>
-            player.playerName.toLowerCase().includes(query)
+            player.playerName.toUpperCase().includes(query)
         );
     }
 
@@ -183,7 +183,10 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
             a.playerName.localeCompare(b.playerName)
         );
-        this.tourneyService.createChaosDisabled = false;
+
+        if( !this.tourneyService.addFixedCoupleEnabled ) {
+            this.tourneyService.createChaosDisabled = false;
+        }
     }
 
     addJolly() {
@@ -225,7 +228,9 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
             a.playerName.localeCompare(b.playerName)
         );
-        this.tourneyService.createChaosDisabled = false;
+        if( !this.tourneyService.addFixedCoupleEnabled ) {
+            this.tourneyService.createChaosDisabled = false;
+        }
     }
 
     addOffender() {
@@ -267,13 +272,15 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
             a.playerName.localeCompare(b.playerName)
         );
-        this.tourneyService.createChaosDisabled = false;
+        if( !this.tourneyService.addFixedCoupleEnabled ) {
+            this.tourneyService.createChaosDisabled = false;
+        }
     }
 
     private doSavePlayer(newPlayer : Player) {
         const newPlayerVO : PlayerVO = {
             id: newPlayer.id
-            , playerName: newPlayer.playerName
+            , playerName: newPlayer.playerName?.toUpperCase()
             , country: newPlayer.country
             , clientId: this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id
             , json: JSON.stringify(newPlayer)

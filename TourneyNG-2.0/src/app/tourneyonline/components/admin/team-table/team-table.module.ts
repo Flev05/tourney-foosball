@@ -11,6 +11,7 @@ import { SelectModule } from 'primeng/select';
 import { ListboxModule } from 'primeng/listbox';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TooltipModule } from 'primeng/tooltip';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [TeamTableComponent],
@@ -26,6 +27,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ,ListboxModule
     ,AutoCompleteModule
     ,TooltipModule
+    ,CheckboxModule
   ], 
   exports: [TeamTableComponent]
 })

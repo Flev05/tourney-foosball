@@ -102,6 +102,7 @@ export class TourneyService extends AbstractService {
     selectedClassificationRow: Classification = new Classification();
 
     createChaosDisabled: boolean = true;
+    addFixedCoupleEnabled : boolean = false;
 
     static roundCols: TableCols[] = [
         { field: 'name',       header: 'Gironi' },

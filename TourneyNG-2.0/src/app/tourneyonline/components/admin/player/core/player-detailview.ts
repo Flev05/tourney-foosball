@@ -119,6 +119,7 @@ export class PlayerDetailView extends AbstractDetailView {
     }
 
     private doSavePlayer(newPlayerName : string) {
+        newPlayerName = newPlayerName.toUpperCase();
         this.selectedPlayer.playerName = newPlayerName;
         this.selectedPlayer.clientId = this.clientService.selectedClient == undefined ? null : this.clientService.selectedClient.id;
         this.newPlayerVO = {

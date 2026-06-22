@@ -358,9 +358,71 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         }
 
         // Assume 'eliminatories initial List' contains your 16 eliminatories (E.1 to E.16)
-        topEl.eliminatories = this.reorderBracket(topEl.eliminatories);
+//        topEl.eliminatories = this.reorderBracket(topEl.eliminatories);
+        topEl.eliminatories = this.reorderToTennisBracket(topEl.eliminatories);
     }
     
+    /**
+     * Reorders eliminatories into tennis bracket layout.
+     * First half = left side, second half = right side.
+     * Uses recursive splitting to interleave bracket positions.
+     * 
+     * This is a recursive interleaving pattern for a tennis bracket. 
+     * The bracket is built by recursively splitting the array and interleaving elements from the outer edges toward the center.
+     *  | Position | Value | Pattern                      |
+        | -------- | ----- | ---------------------------- |
+        | 1        | E.1   | First of left half           |
+        | 2        | E.16  | Last of right half           |
+        | 3        | E.12  | Second-to-last of right half |
+        | 4        | E.8   | Middle of right half         |
+        | 5        | E.4   | Middle of left half          |
+        | 6        | E.13  | Third of right half          |
+        | 7        | E.9   | First of right half          |
+        | 8        | E.5   | Second of left half          |
+        | 9        | E.2   | Second of left half          |
+        | 10       | E.15  | Second-to-last of right half |
+        | 11       | E.11  | Third from end of right half |
+        | 12       | E.7   | Third of left half           |
+        | 13       | E.3   | Third of left half           |
+        | 14       | E.14  | Third of right half          |
+        | 15       | E.10  | Fourth of right half         |
+        | 16       | E.6   | Fourth of left half          |
+     */
+    private reorderToTennisBracket(eliminatories: Eliminatory[]): Eliminatory[] {
+        if (eliminatories.length <= 1) {
+            return [...eliminatories];
+        }
+
+        const n = eliminatories.length;
+        
+        // Must be a power of 2 for a proper bracket
+        if ((n & (n - 1)) !== 0) {
+            throw new Error(`Eliminatories count must be power of 2, got ${n}`);
+        }
+
+        const half = n / 2;
+        
+        // Split into left and right halves
+        const left = eliminatories.slice(0, half);
+        const right = eliminatories.slice(half);
+        
+        // Recursively reorder each half
+        const reorderedLeft = this.reorderToTennisBracket(left);
+        const reorderedRight = this.reorderToTennisBracket(right);
+        
+        // Interleave: take from left, then from right (reversed order for right side)
+        // Right side needs to be reversed to create the bracket flow
+        const reversedRight = [...reorderedRight].reverse();
+        
+        const result: Eliminatory[] = [];
+        for (let i = 0; i < half; i++) {
+            result.push(reorderedLeft[i]);
+            result.push(reversedRight[i]);
+        }
+        
+        return result;
+    }
+
     /**
         The quadrants are always filled in this order:
         Top Left

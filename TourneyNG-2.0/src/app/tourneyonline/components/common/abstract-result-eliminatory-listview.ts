@@ -357,18 +357,23 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             nextIndex = (nextIndex + 1) % R;
         }
 
-        // Assume 'eliminatories initial List' contains your 16 eliminatories (E.1 to E.16)
-//        topEl.eliminatories = this.reorderBracket(topEl.eliminatories);
-        topEl.eliminatories = this.reorderToTennisBracket(topEl.eliminatories);
+        // Assume 'eliminatories initial List' contains the 16 eliminatories (E.1 to E.16)
+        topEl.eliminatories = this.reorderBracket(topEl.eliminatories);
     }
-    
+     
     /**
-     * Reorders eliminatories into tennis bracket layout.
-     * First half = left side, second half = right side.
-     * Uses recursive splitting to interleave bracket positions.
-     * 
-     * This is a recursive interleaving pattern for a tennis bracket. 
-     * The bracket is built by recursively splitting the array and interleaving elements from the outer edges toward the center.
+        The quadrants are always filled in this order:
+        Top Left
+        Top Right
+        Bottom Right
+        Bottom Left
+
+        For every "ring":
+        first place one element from the beginning of the list (E1, E2, E3, E4, ...)
+        then one element from the end of the list (En, En-1, En-2, En-3, ...)
+
+        For 16 matches this becomes
+
      *  | Position | Value | Pattern                      |
         | -------- | ----- | ---------------------------- |
         | 1        | E.1   | First of left half           |
@@ -387,60 +392,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         | 14       | E.14  | Third of right half          |
         | 15       | E.10  | Fourth of right half         |
         | 16       | E.6   | Fourth of left half          |
-     */
-    private reorderToTennisBracket(eliminatories: Eliminatory[]): Eliminatory[] {
-        if (eliminatories.length <= 1) {
-            return [...eliminatories];
-        }
-
-        const n = eliminatories.length;
-        
-        // Must be a power of 2 for a proper bracket
-        if ((n & (n - 1)) !== 0) {
-            throw new Error(`Eliminatories count must be power of 2, got ${n}`);
-        }
-
-        const half = n / 2;
-        
-        // Split into left and right halves
-        const left = eliminatories.slice(0, half);
-        const right = eliminatories.slice(half);
-        
-        // Recursively reorder each half
-        const reorderedLeft = this.reorderToTennisBracket(left);
-        const reorderedRight = this.reorderToTennisBracket(right);
-        
-        // Interleave: take from left, then from right (reversed order for right side)
-        // Right side needs to be reversed to create the bracket flow
-        const reversedRight = [...reorderedRight].reverse();
-        
-        const result: Eliminatory[] = [];
-        for (let i = 0; i < half; i++) {
-            result.push(reorderedLeft[i]);
-            result.push(reversedRight[i]);
-        }
-        
-        return result;
-    }
-
-    /**
-        The quadrants are always filled in this order:
-        Top Left
-        Top Right
-        Bottom Right
-        Bottom Left
-
-        For every "ring":
-        first place one element from the beginning of the list (E1, E2, E3, E4, ...)
-        then one element from the end of the list (En, En-1, En-2, En-3, ...)
-
-        For 16 matches this becomes
-
-        Quadrant	First pass	Second pass	Third pass	Fourth pass
-        Top Left	    E1	    E16	        E12	        E8
-        Top Right	    E2	    E15	        E11	        E7
-        Bottom Right	E3	    E14	        E10	        E6
-        Bottom Left	    E4	    E13	        E9	        E5
      * @param eliminatories The original sorted array (e.g., E.1 to E.16)
      * @returns A new reordered array matching the above tournament bracket
      */
@@ -452,17 +403,14 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         if (n % 4 !== 0) {
             throw new Error("Number of eliminatories must be divisible by 4.");
         }
-
         const topLeft: Eliminatory[] = [];
         const topRight: Eliminatory[] = [];
         const bottomRight: Eliminatory[] = [];
         const bottomLeft: Eliminatory[] = [];
-
         topLeft.push(eliminatories[0]);
         topRight.push(eliminatories[1]);
         bottomRight.push(eliminatories[2]);
         bottomLeft.push(eliminatories[3]);
-
         while (n > 4) {
             topLeft.push(eliminatories[n-1]);
             topRight.push(eliminatories[n-2]);
@@ -470,7 +418,6 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             bottomLeft.push(eliminatories[n-4]);
             n = n - 4;
         }
-
         return [
             ...topLeft,
             ...bottomLeft,

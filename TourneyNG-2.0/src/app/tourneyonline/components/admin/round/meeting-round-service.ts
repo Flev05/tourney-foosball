@@ -26,7 +26,6 @@ import { MeetingDto } from './meeting-dto';
 export class MeetingRoundService extends MeetingService {
     isRoundAutoGen: string = "";
     isFirstRound: boolean = false;
-    addedTeamInProgressList : Meeting [] = [];
     constructor(protected override http: HttpClient
         , protected override router: Router
         , protected tourneyService: TourneyService

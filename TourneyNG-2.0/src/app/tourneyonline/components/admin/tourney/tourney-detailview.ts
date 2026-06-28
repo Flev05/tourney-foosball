@@ -212,7 +212,6 @@ export class TourneyDetailView extends AbstractDetailView {
         this.followerUrl += this.selectedTourney.followerName;
         this.prepareTabsGui();
         this.teamService.addedTeamInProgress = null;
-        this.meetingRoundService.addedTeamInProgressList = [];
     }
 
     private initNewTourney() {
@@ -956,7 +955,6 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private doOnRoundNumChange(cb: Combobox) {
         this.teamService.addedTeamInProgress = null;
-        this.meetingRoundService.addedTeamInProgressList = [];
         this.selectedTourney.selectedRoundsNumCB = cb;
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;

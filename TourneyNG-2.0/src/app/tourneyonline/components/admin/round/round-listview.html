@@ -120,7 +120,7 @@
       label="Aggiungi TEAM" 
       title="Aggiunge una squadra in corso d'opera senza rifare gli incontri esistenti ma crea i nuovi incontri con le altre squadre">
     </button>
-    @if (meetingRoundService.addedTeamInProgressList.length > 0) {
+    @if (selectedRound.addedTeamInProgressList.length > 0) {
         <button class="ui-button-success"
           label="Stampa TEAMS aggiunti"
           pButton icon="pi pi-file-pdf"

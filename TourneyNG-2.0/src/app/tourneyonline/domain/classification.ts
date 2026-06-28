@@ -3,6 +3,7 @@ export class Classification
     id            : number | null = null;
     teamName      : string = "";
     points        : number = 0;
+    apoints       : number = 0; // Avulsa Classification points if any
     played        : number = 0;
     won           : number = 0;
     lost          : number = 0;

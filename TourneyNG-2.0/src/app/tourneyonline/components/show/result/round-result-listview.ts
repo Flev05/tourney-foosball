@@ -33,7 +33,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
     private matches: Match[] = [];
     fullOnewayMeetings : Meeting[] = [];
     abstractRoundVO: AbstractRoundVO = new AbstractRoundVO();
-
+    avulsaClassificationRows: any[] = [];
     
     constructor( public override tourneyService: TourneyService
         , protected override meetingRoundService: MeetingRoundService
@@ -69,6 +69,8 @@ export class RoundResultListView extends AbstractRoundResultListView {
 
     private onReloadRoundMeetingsComplete(): void {
         this.tourneyService.createClassification(this.selectedRound, true);
+        this.avulsaClassificationRows = this.tourneyService.prepareAvulsaRoundsGui(this.selectedRound, this.selectedTourney.roundVO.maxMatchesPerMeeting);
+
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound);
         const daysNo = this.selectedRound.daysNo;
         this.roundtripMeetingDaysMap = new Map<number, Meeting[]>();

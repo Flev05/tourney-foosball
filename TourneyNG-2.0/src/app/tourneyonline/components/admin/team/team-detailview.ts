@@ -47,12 +47,12 @@ export class TeamDetailView extends AbstractDetailView {
     constructor(
         protected override location: Location,
         protected override tourneyService: TourneyService,
-        protected loginService: LoginService,
-        protected clientService: ClientService,
-        protected countryService: CountryService,
-        public    teamService: TeamService,
-        public    playerService: PlayerService,
-        private route: ActivatedRoute
+        protected   loginService: LoginService,
+        protected   clientService: ClientService,
+        protected   countryService: CountryService,
+        public      teamService: TeamService,
+        public      playerService: PlayerService,
+        private     route: ActivatedRoute
     ) { 
         super(tourneyService, location);
     }
@@ -65,7 +65,6 @@ export class TeamDetailView extends AbstractDetailView {
         this.isRoundAutoGen = this.teamService.isRoundAutoGen;
 
         // Note: Query params are strings, so we convert back to boolean
-        this.teamService.addedTeamInProgress = null;
         this.route.queryParams.subscribe(params => {
             this.tourneyTeams = params['tourneyTeams'] === 'true';
             this.chaosEnabled = params['chaosEnabled'] === 'true';
@@ -207,6 +206,7 @@ export class TeamDetailView extends AbstractDetailView {
         }
 
         if( this.addTeamInProgress ) {
+            this.selectedRound = this.tourneyService.selectedRound;
             this.teamService.addedTeamInProgress = this.selectedTeam.teamName;
         }
 

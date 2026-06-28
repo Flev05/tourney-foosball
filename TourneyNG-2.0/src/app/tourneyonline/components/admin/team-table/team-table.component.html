@@ -38,11 +38,6 @@
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <td class="text-xl font-bold">
-          {{ table.filteredValue ? table.filteredValue.length : teams.length }}
-        </td>
-      </tr>
-      <tr>
         @for (col of columns; track col.field) {
           <th [style.width]="col.field === 'index' ? '15mm' : 'auto'" 
               style="text-align: center;" 

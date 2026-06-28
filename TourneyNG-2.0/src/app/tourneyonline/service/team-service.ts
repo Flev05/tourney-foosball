@@ -33,7 +33,6 @@ export class TeamService {
 
     selectedTeam : Team = new Team();
     newTeam : boolean = false;
-    // readOnly: boolean = false;
     selectedTabIndex: number = 0; 
     storedTeamFilter: string = '';    
 

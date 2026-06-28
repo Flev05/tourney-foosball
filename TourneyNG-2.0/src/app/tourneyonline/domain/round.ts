@@ -18,5 +18,6 @@ export class Round {
     teamNo:            string = "";
     onewayMeetings:    Meeting[] = [];
     roundtripMeetings: Meeting[] = [];
+    addedTeamInProgressList : Meeting [] = [];
     classification:    Classification[] = [];
 }

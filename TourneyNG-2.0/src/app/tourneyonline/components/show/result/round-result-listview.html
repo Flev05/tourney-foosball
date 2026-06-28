@@ -57,7 +57,7 @@
                           <button pButton type="button" 
                                   [label]="i.toString()" 
                                   [ngClass]="{'p-button-primary': rowData.matches[0].score1 === i, 'p-button-outlined p-button-secondary': rowData.matches[0].score1 !== i}"
-                                  style="width: 24px; height: 28px; padding: 0; font-size: 1.1rem; font-weight: 600;"
+                                  style="width: 34px; height: 38px; padding: 0; font-size: 1.1rem; font-weight: 600;"
                                   class="flex align-items-center justify-content-center flex-shrink-0"
                                   (click)="updateScore(rowData, 'score1', i)">
                           </button>
@@ -82,7 +82,7 @@
                             <button pButton type="button" 
                                     [label]="i.toString()" 
                                     [ngClass]="{'p-button-primary': rowData.matches[0].score2 === i, 'p-button-outlined p-button-secondary': rowData.matches[0].score2 !== i}"
-                                    style="width: 24px; height: 28px; padding: 0; font-size: 1.1rem; font-weight: 600;"
+                                    style="width: 34px; height: 38px; padding: 0; font-size: 1.1rem; font-weight: 600;"
                                     class="flex align-items-center justify-content-center flex-shrink-0"
                                     (click)="updateScore(rowData, 'score2', i)">
                             </button>
@@ -208,16 +208,14 @@
         selectionMode="single"
         [(selection)]="selectedClassificationRow"
         (onRowSelect)="onClassifcationRowSelect($event)" >
-  
         <ng-template pTemplate="caption">
           <div class="text-center w-full block font-bold text-xl">
             {{selectedRound.name}}
           </div>
         </ng-template>
-  
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th class="position">P°</th>
+            <th class="position">N°</th>
             @for (col of columns; track col) {
               <th [ngClass]="col.style">
                 {{col.header}}
@@ -225,7 +223,6 @@
             }
           </tr>
         </ng-template>
-  
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData">
             <td style="text-align: center;">{{rowIndex+1}}</td>
@@ -237,6 +234,37 @@
           </tr>
         </ng-template>
       </p-table>
+
+       @if (avulsaClassificationRows.length > 0 ) {
+        <p-table [columns]="avulsaClassificationCols"
+          [value]="avulsaClassificationRows">
+          <ng-template pTemplate="caption">
+            <div class="text-center w-full block font-bold text-xl">
+              {{selectedRound.name}}. Classifica Avulsa
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class="position">N°</th>
+              @for (col of columns; track col) {
+                <th [ngClass]="col.style">
+                  {{col.header}}
+                </th>
+              }
+            </tr>
+          </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData">
+            <td style="text-align: center;">{{rowIndex+1}}</td>
+            @for (col of columns; track col) {
+              <td>
+                {{rowData[col.field]}}
+              </td>
+            }
+          </tr>
+        </ng-template>
+      </p-table>
+      }
       <p>
         Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto.
       </p>

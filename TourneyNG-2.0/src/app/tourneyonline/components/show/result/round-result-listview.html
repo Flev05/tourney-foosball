@@ -51,7 +51,7 @@
                   <td style="width: 40%; padding: 0.5rem 1rem;">
                     <div class="flex flex-column align-items-end w-full">
                       <span class="font-bold text-right text-900 text-xl mb-2">{{rowData.teamName1}}</span>
-                      @if (!isInWizardMode()) {
+                      @if (!loginService.isFollower()) {
                       <div class="flex flex-row flex-nowrap justify-content-end gap-1 w-full">
                         @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
                           <button pButton type="button" 
@@ -76,7 +76,7 @@
                   <td style="width: 40%; padding: 0.5rem 1rem;">
                     <div class="flex flex-column align-items-start w-full">
                       <span class="font-bold text-left text-900 text-xl mb-2">{{rowData.teamName2}}</span>
-                      @if (!isInWizardMode()) {
+                      @if (!loginService.isFollower()) {
                         <div class="flex flex-row flex-nowrap justify-content-start gap-1 w-full">
                           @for (num of [].constructor(abstractRoundVO.pointsNeededToWin + 1); track $index; let i = $index) {
                             <button pButton type="button" 
@@ -202,44 +202,44 @@
       }
     }
     
-      <p-tabpanel [value]="2" title="Classifica">
-        <p-table [columns]="classificationCols"
-          [value]="classificationRows"
-          selectionMode="single"
-          [(selection)]="selectedClassificationRow"
-          (onRowSelect)="onClassifcationRowSelect($event)" >
-    
-          <ng-template pTemplate="caption">
-            <div class="text-center w-full block font-bold text-xl">
-              {{selectedRound.name}}
-            </div>
-          </ng-template>
-    
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th class="position">P°</th>
-              @for (col of columns; track col) {
-                <th [ngClass]="col.style">
-                  {{col.header}}
-                </th>
-              }
-            </tr>
-          </ng-template>
-    
-          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-            <tr [pSelectableRow]="rowData">
-              <td style="text-align: center;">{{rowIndex+1}}</td>
-              @for (col of columns; track col) {
-                <td>
-                  {{rowData[col.field]}}
-                </td>
-              }
-            </tr>
-          </ng-template>
-        </p-table>
-        <p>
-          Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto.
-        </p>
-      </p-tabpanel>
-    </p-tabpanels>
+    <p-tabpanel [value]="2" title="Classifica">
+      <p-table [columns]="classificationCols"
+        [value]="classificationRows"
+        selectionMode="single"
+        [(selection)]="selectedClassificationRow"
+        (onRowSelect)="onClassifcationRowSelect($event)" >
+  
+        <ng-template pTemplate="caption">
+          <div class="text-center w-full block font-bold text-xl">
+            {{selectedRound.name}}
+          </div>
+        </ng-template>
+  
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th class="position">P°</th>
+            @for (col of columns; track col) {
+              <th [ngClass]="col.style">
+                {{col.header}}
+              </th>
+            }
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData">
+            <td style="text-align: center;">{{rowIndex+1}}</td>
+            @for (col of columns; track col) {
+              <td>
+                {{rowData[col.field]}}
+              </td>
+            }
+          </tr>
+        </ng-template>
+      </p-table>
+      <p>
+        Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto.
+      </p>
+    </p-tabpanel>
+  </p-tabpanels>
 </p-tabs>

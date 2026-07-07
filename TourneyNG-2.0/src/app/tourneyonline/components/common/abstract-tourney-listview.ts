@@ -76,7 +76,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
 
         this.tourneys = this.tourneyService.sort(this.tourneys);
 
-        this.tourneys = this.filter(this.tourneys);
+        // this.tourneys = this.filter(this.tourneys);
 
         let emptyCountry = {
             id : 0,
@@ -98,7 +98,7 @@ export abstract class AbstractTourneyListView extends AbstractListView {
         }
     }
 
-    protected abstract filter(tourneys: Tourney[]): Tourney[];
+    // protected abstract filter(tourneys: Tourney[]): Tourney[];
 
     protected selectPhaseType(tourneys: Array<Tourney>, pt : PhaseType): Array<Tourney> {
         let tempTourneys = new Array<Tourney>();

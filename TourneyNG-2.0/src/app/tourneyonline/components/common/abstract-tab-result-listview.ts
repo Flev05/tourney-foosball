@@ -93,6 +93,7 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
             round.status = this.setRoundStatus(round);
+            round.detachedClassification = this.tourneyService.extractDetachedClassification(round);
         }
         this.roundRows = this.selectedTourney.roundVO.rounds;
         for( let r of this.roundRows ) {
@@ -157,6 +158,10 @@ export abstract class AbstractTabResultListView extends AbstractListView {
     private setRoundStatus(sr: Round): MeetingStatus {
         let zeroCounter : number = 0;
         let winCounter : number = 0;
+        let len : number = sr.onewayMeetings.length;
+        if( sr.teamNames.length % 2 != 0 ) {
+            len -= sr.teamNames.length;
+        }
         for( let m of sr.onewayMeetings ) {
             if( m.status == MeetingStatus.ToPlay ) {
                 zeroCounter++;
@@ -165,10 +170,10 @@ export abstract class AbstractTabResultListView extends AbstractListView {
                 winCounter++;
             }
         }
-        if( winCounter >= sr.onewayMeetings.length ) {
+        if( winCounter >= len ) {
             return MeetingStatus.Terminated;
         }
-        if( zeroCounter >= sr.onewayMeetings.length ) {
+        if( zeroCounter >= len ) {
             return MeetingStatus.ToPlay;
         }
         return MeetingStatus.InProgress;

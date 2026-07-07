@@ -17,7 +17,6 @@ import { Match } from 'app/tourneyonline/domain/match';
 import { AbstractRoundVO } from 'app/tourneyonline/domain/abstract-round-vo';
 import { MeetingStatus, TourneyType } from 'app/tourneyonline/domain/enumerations';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
-import { Round } from 'app/tourneyonline/domain/round';
 
 @Component({
     templateUrl: './round-result-listview.html',
@@ -33,7 +32,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
     private matches: Match[] = [];
     fullOnewayMeetings : Meeting[] = [];
     abstractRoundVO: AbstractRoundVO = new AbstractRoundVO();
-    avulsaClassificationRows: any[] = [];
+    detachedClassificationRows: any[] = [];
     
     constructor( public override tourneyService: TourneyService
         , protected override meetingRoundService: MeetingRoundService
@@ -69,7 +68,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
 
     private onReloadRoundMeetingsComplete(): void {
         this.tourneyService.createClassification(this.selectedRound, true);
-        this.avulsaClassificationRows = this.tourneyService.prepareAvulsaRoundsGui(this.selectedRound, this.selectedTourney.roundVO.maxMatchesPerMeeting);
+        this.detachedClassificationRows = this.tourneyService.prepareDetachedRoundsGui(this.selectedRound, this.selectedTourney.roundVO.maxMatchesPerMeeting);
 
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound);
         const daysNo = this.selectedRound.daysNo;
@@ -184,7 +183,19 @@ export class RoundResultListView extends AbstractRoundResultListView {
     onClassifcationRowSelect(event : any) {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedRound.name);
-        this.router.navigate([ClassificationDetailView.redirect]);
+        this.router.navigate([ClassificationDetailView.redirect], { 
+            queryParams: { detachedClassificationPoint: -1 }
+        });
+    }  
+
+    onDetachedClassifcationRowSelect(event : any) {
+        console.log(event.data);
+        this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedRound.name);
+        this.tourneyService.detachedClassificationRows = this.detachedClassificationRows;
+
+        this.router.navigate([ClassificationDetailView.redirect], { 
+            queryParams: { detachedClassificationPoint: this.selectedClassificationRow.dpoints }
+        });
     }  
     
     public isDaily() : boolean {
@@ -196,9 +207,11 @@ export class RoundResultListView extends AbstractRoundResultListView {
         this.matches = meeting.matches;
         if( field === 'score1') {
             this.matches[0].score1 = value;
+            this.selectedMeeting.vpoints1 = value;
         }
         if( field === 'score2') {
             this.matches[0].score2 = value;     
+            this.selectedMeeting.vpoints2 = value;
         }
         this.selectedMeeting.status = MeetingStatus.InProgress;
         if( this.matches[0].score1 >= this.abstractRoundVO.matchWinnerScores || this.matches[0].score2 >= this.abstractRoundVO.matchWinnerScores) {

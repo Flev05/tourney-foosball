@@ -188,9 +188,9 @@ export class TourneyListView extends AbstractTourneyListView {
         };
     }
 
-    protected filter(tourneys: Tourney[]): Tourney[] {
-        return tourneys;
-    }
+    // protected filter(tourneys: Tourney[]): Tourney[] {
+    //     return tourneys;
+    // }
     
     doClone( tourney: Tourney ) {
         console.log("doClone(): " + tourney.tourneyName);

@@ -3,6 +3,7 @@ import { MeetingDto } from 'app/tourneyonline/components/admin/round/meeting-dto
 import { MeetingRoundService } from 'app/tourneyonline/components/admin/round/meeting-round-service';
 import { DateFormatPipe } from 'app/tourneyonline/components/common/date-format-pipe';
 import { Meeting } from 'app/tourneyonline/domain/meeting';
+import { Round } from 'app/tourneyonline/domain/round';
 import { TeamService } from 'app/tourneyonline/service/team-service';
 import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 
@@ -14,6 +15,7 @@ import { TourneyService } from 'app/tourneyonline/service/tourney-service';
 })
 export class TeamMatchesComponent implements OnInit {
     @Input() teamName: string = "";
+    @Input() detachedClassificationPoint: number = -1;
 
     homeMeetings: MeetingDto[] = [];
     awayMeetings: MeetingDto[] = [];
@@ -28,7 +30,19 @@ export class TeamMatchesComponent implements OnInit {
  
     ngOnInit() {
         this.homeMeetings = [];
-        for (let r of this.tourneyService.selectedTourney.roundVO.rounds) {
+        let rounds : Round [] | undefined = this.tourneyService.selectedTourney.roundVO.rounds;
+        if( this.detachedClassificationPoint >= 0 ) {
+            console.log("Point type:", typeof this.detachedClassificationPoint, "value:", this.detachedClassificationPoint);
+            console.log("Map keys:", Array.from(this.tourneyService.detachedRoundMap.keys()));
+            console.log("Map has key?", this.tourneyService.detachedRoundMap.has(this.detachedClassificationPoint));
+            rounds = [];
+            let key = Number(this.detachedClassificationPoint);
+            let r : Round | undefined = this.tourneyService.detachedRoundMap.get(key);
+            if( r != undefined ) {
+                rounds.push(r);
+            }
+        }
+        for (let r of rounds) {
             this.meetingRoundService.prepareMeetingsMap(r);
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let mArray : Meeting[] = this.meetingRoundService.getOnewayMeetingsOfDay(md);
@@ -41,7 +55,7 @@ export class TeamMatchesComponent implements OnInit {
             } 
         }
         this.awayMeetings = [];
-        for (let r of this.tourneyService.selectedTourney.roundVO.rounds) {
+        for (let r of rounds) {
             this.meetingRoundService.prepareMeetingsMap(r);
             for( let md = 1; md <= r.daysNo; md ++ ) {
                 let mArray : Meeting[] = this.meetingRoundService.getRoundtripMeetingsOfDay(md);

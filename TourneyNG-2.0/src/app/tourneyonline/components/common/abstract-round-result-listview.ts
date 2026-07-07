@@ -43,7 +43,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     mdbList: MeetingDb[] = [];
     incompleteRoundConfiguration: boolean = true;
     
-    avulsaClassificationCols: any[] = [];
+    detachedClassificationCols: any[] = [];
     classificationCols: any[] = [];
     classificationRows: any[] = [];
     
@@ -71,7 +71,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         this.cols = this.tourneyService.resultCols;
 
         this.classificationCols = this.tourneyService.classificationCols;
-        this.avulsaClassificationCols = this.tourneyService.avulsaClassificationCols;
+        this.detachedClassificationCols = this.tourneyService.detachedClassificationCols;
 
         this.meetingService.abstractRoundVO =this.selectedTourney.roundVO;
 

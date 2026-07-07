@@ -18,7 +18,7 @@ import { TourneyVO } from '../domain/tourney.vo';
 import { ClientService } from './client-service';
 import { TableCols } from '../domain/table-cols';
 import { Classification } from '../domain/classification';
-import { MeetingStatus } from '../domain/enumerations';
+import { Direction, MeetingStatus } from '../domain/enumerations';
 import { MeetingService } from './meeting-service';
 import { AbstractService } from '../components/common/abstract-service';
 import { ClientVO } from '../domain/client-vo';
@@ -103,6 +103,7 @@ export class TourneyService extends AbstractService {
 
     createChaosDisabled: boolean = true;
     addFixedCoupleEnabled : boolean = false;
+    detachedClassificationRows: any[] = [];
 
     static roundCols: TableCols[] = [
         { field: 'name',       header: 'Gironi' },
@@ -129,9 +130,9 @@ export class TourneyService extends AbstractService {
         { field: 'goalsDiff',     header: 'D'},
     ];
 
-    avulsaClassificationCols: TableCols[] = [
+    detachedClassificationCols: TableCols[] = [
         { field: 'teamName',      header: 'Team'},
-        { field: 'apoints',       header: 'AP.'},
+        { field: 'dpoints',       header: 'C.A.'},
         { field: 'points',        header: 'Pt.'},
         { field: 'played',        header: 'G'},
         { field: 'won',           header: 'V'},
@@ -169,7 +170,8 @@ export class TourneyService extends AbstractService {
     private onSaveTourneyError: boolean = false;
     private onewayPlayoffMap: Map<string, Meeting[]> = new Map<string, Meeting[]>();
     private roundtripPlayoffMap: Map<string, Meeting[]> = new Map<string, Meeting[]>();
-    classificationName: string = "";
+    private classificationName: string = "";
+    public detachedRoundMap: Map<number, Round> = new Map<number, Round>();
 
     constructor(private http: HttpClient
         , protected loginService: LoginService
@@ -273,6 +275,7 @@ export class TourneyService extends AbstractService {
          
         return sortedTourneys;
     }
+
     /**
      * Loads all tourneys published from the database belonging to the same client
      */
@@ -1016,7 +1019,7 @@ export class TourneyService extends AbstractService {
         let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
         let classificationList: Classification[] = this.prepareClassificationList(teamNames, meetings, null);
         if( correct ) {
-            classificationList = this.createAvulsaClassification(classificationList, meetings, true);
+            classificationList = this.createDetachedClassification(classificationList, meetings, true);
         }
         round.classification = classificationList;
         return classificationList;
@@ -1040,15 +1043,15 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * It corrects the classification list when there are 2 or more teams having the same number of points.
-     * In that case, it computes the separate(avulsa) classification only on the teams having the same points. 
+     * It creates the detached classification list when there are 2 or more teams having the same number of points.
+     * In that case, it computes the separate detached classification only on the teams having the same points. 
      * After that, updates the original classification.
      * 
      * @param classificationList the origina classification list
      * @param meetings the list of meetings of all teams in the same round
      * @returns the new corrected classification
      */
-    private createAvulsaClassification(classificationList:  Classification[], meetings: Meeting[], merge : boolean): Array<Classification>  {
+    private createDetachedClassification(classificationList:  Classification[], meetings: Meeting[], merge : boolean): Array<Classification>  {
         let pointsMap: Map<number, Meeting[]> = this.preparePointMap(classificationList, meetings);
         let sortedClassification: Classification[] = [];
         let step : number = 1;
@@ -1092,6 +1095,7 @@ export class TourneyService extends AbstractService {
     // Group classifications by points
     // Both teams must be in the same points group
     private preparePointMap(classificationList: Classification[], meetings: Meeting[]): Map<number, Meeting[]> {
+        this.detachedRoundMap = new Map<number, Round>();
         const byPoints = classificationList.reduce((map, c) => {
             const list = map.get(c.points) ?? [];
             list.push(c);
@@ -1108,6 +1112,26 @@ export class TourneyService extends AbstractService {
                 return team1InGroup && team2InGroup;
             });
             result.set(points, teamMeetings);
+            let r : Round = new Round();
+            r.daysNo = 1;
+            r.name = "Avulsa." + points;
+            r.teamNames = classifications.map(c => c.teamName);
+            r.classification = classifications;
+            let mm : Meeting[] | undefined = result.get(points);
+            if( mm != undefined ) {
+                // r.onewayMeetings = [...mm.filter(e => e.direction === Direction.OneWay)];
+                // r.onewayMeetings.forEach( e => e.day = 1);
+    
+                r.onewayMeetings = mm.filter(e => e.direction === Direction.OneWay)
+                    .map(e => ({ ...e, day: 1 }));  // spread creates a new object + sets day
+
+                // r.roundtripMeetings = [...mm.filter(e => e.direction === Direction.RoundTrip)];
+                // r.roundtripMeetings.forEach( e => e.day = 1);
+
+                r.roundtripMeetings = mm.filter(e => e.direction === Direction.RoundTrip)
+                    .map(e => ({ ...e, day: 1 }));
+            }
+            this.detachedRoundMap.set(points, r);
         }
         return result;
     }
@@ -1119,7 +1143,7 @@ export class TourneyService extends AbstractService {
             if( ocList != null ) {
                 let index = ocList.findIndex( e => e.teamName === t );
                 if( index != -1 ) {
-                    c.apoints = ocList[index].points;
+                    c.dpoints = ocList[index].points;
                 }
             }
             classificationMap.set(t, c);
@@ -1188,19 +1212,21 @@ export class TourneyService extends AbstractService {
         return rows;
     }
 
-    public prepareAvulsaRoundsGui(round: Round, maxMatchesPerMeeting : number): any[] {
-        const avulsaClassList : Classification[] = this.extractAvulsaClassification(round);
+    public prepareDetachedRoundsGui(round: Round, maxMatchesPerMeeting : number): any[] {
+        const detachedClassList : Classification[] = this.extractDetachedClassification(round);
+        round.detachedClassification = detachedClassList;
         let rows: any[] = [];
         let row : number = 0;
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
-        row = this.prepareClassificationRows(avulsaClassList, rows, maxMatchesPerMeeting, row, round, classificationMap);
+        row = this.prepareClassificationRows(detachedClassList, rows, maxMatchesPerMeeting, row, round, classificationMap);
         return rows;
     }
     
-    private extractAvulsaClassification( round: Round): Classification[] {
+    public extractDetachedClassification( round: Round): Classification[] {
         let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
-        const avulsaClassificationList : Classification[] = this.createAvulsaClassification(round.classification, meetings, false);
-        return avulsaClassificationList;
+        const detachedClassification : Classification[] = this.createDetachedClassification(round.classification, meetings, false);
+        round.detachedClassification = detachedClassification;
+        return detachedClassification;
     }
     
     private prepareClassificationRows(clist: Classification[]
@@ -1216,7 +1242,7 @@ export class TourneyService extends AbstractService {
             rows.push(c);
             let played = c.played / maxMatchesPerMeeting;
             rows[row].rowNumber = ++r;
-            rows[row].apoints = c.apoints;
+            rows[row].dpoints = c.dpoints;
             rows[row].roundName = round.name;
             rows[row].teamName = c.teamName;
             if (c.notResolveble) {

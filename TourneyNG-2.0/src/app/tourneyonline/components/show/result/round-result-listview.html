@@ -235,9 +235,12 @@
         </ng-template>
       </p-table>
 
-       @if (avulsaClassificationRows.length > 0 ) {
-        <p-table [columns]="avulsaClassificationCols"
-          [value]="avulsaClassificationRows">
+       @if (detachedClassificationRows.length > 0 ) {
+        <p-table [columns]="detachedClassificationCols"
+          [value]="detachedClassificationRows"
+           selectionMode="single"
+          [(selection)]="selectedClassificationRow"
+          (onRowSelect)="onDetachedClassifcationRowSelect($event)">
           <ng-template pTemplate="caption">
             <div class="text-center w-full block font-bold text-xl">
               {{selectedRound.name}}. Classifica Avulsa

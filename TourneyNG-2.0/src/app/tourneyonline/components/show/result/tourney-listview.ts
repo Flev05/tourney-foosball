@@ -29,9 +29,9 @@ export class ResultTourneyListView extends AbstractTourneyListView {
         super(ResultTourneyListView.redirect, tourneyService, countryService, playerService, teamService, disciplineService, router, location, dfp);
     }
 
-    protected filter(tourneys: Tourney[]): Tourney[] {
-        return tourneys;
-    }
+    // protected filter(tourneys: Tourney[]): Tourney[] {
+    //     return tourneys;
+    // }
 
     onRowSelect(event : any) {
         console.log("Entering onRowSelect()");

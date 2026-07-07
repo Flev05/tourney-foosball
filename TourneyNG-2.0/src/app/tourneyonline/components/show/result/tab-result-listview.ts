@@ -270,7 +270,104 @@ export class TabResultListView extends AbstractTabResultListView {
         this.doPrintPdfClassification(this.selectedTourney.roundVO.rounds);
     }
     
-    private doPrintPdfClassification(rounds : Round[]) {
+    private doPrintPdfClassification(rounds: Round[]) {
+        const doc = new jsPDF('p', 'mm', 'a4');
+        let currentY = 15;
+
+        for (let r of rounds) {
+            // ===== PRINT REGULAR CLASSIFICATION =====
+            // Check page space
+            if (currentY > 250) {
+                doc.addPage();
+                currentY = 15;
+            }
+            // Title
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text(`Classifica ${this.selectedTourney.tourneyName}: ${r.name}`, 14, currentY);
+            const head = [["Pos", "Squadra", "PT", "PG", "V", "P", "GF", "GS", "DR"]];
+            const body = r.classification
+                .map((c, index) => [
+                    index + 1,
+                    c.teamName || '',
+                    c.points || 0,
+                    c.played || 0,
+                    c.won || 0,
+                    c.lost || 0,
+                    c.goalsDone || 0,
+                    c.goalsConceded || 0,
+                    c.goalsDiff || 0
+                ]);
+            autoTable(doc, {
+                head: head,
+                body: body,
+                startY: currentY + 5,
+                theme: 'striped',
+                headStyles: { fillColor: [44, 62, 80] },
+                styles: { fontSize: 8 },
+                margin: { bottom: 20 },
+                didDrawPage: (data) => {
+                    if (data.cursor) {
+                        currentY = data.cursor.y + 15;
+                    }
+                }
+            });
+
+            currentY = (doc as any).lastAutoTable.finalY + 15;
+            // ===== PRINT DETACHED CLASSIFICATION (if exists) =====
+            if (r.detachedClassification && r.detachedClassification.length > 0) {
+                // Check page space
+                if (currentY > 250) {
+                    doc.addPage();
+                    currentY = 15;
+                }
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+                const titleText = `Classifica Avulsa`;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const textWidth = doc.getTextWidth(titleText);
+                const centerX = (pageWidth - textWidth) / 2;
+                doc.text(titleText, centerX, currentY - 10);
+                const detachedHead = [["Pos", "Squadra", "P. Avulsa", "PT", "PG", "V", "P", "GF", "GS", "DR"]];
+                const detachedBody = r.detachedClassification
+                    .map((c, index) => [
+                        index + 1,
+                        c.teamName || '',
+                        c.dpoints || 0,
+                        c.points || 0,
+                        c.played || 0,
+                        c.won || 0,
+                        c.lost || 0,
+                        c.goalsDone || 0,
+                        c.goalsConceded || 0,
+                        c.goalsDiff || 0
+                    ]);
+                autoTable(doc, { 
+                    head: detachedHead,
+                    body: detachedBody,
+                    startY: currentY - 5,
+                    theme: 'striped',
+                    // Light mode: no background fill, just text styling
+                    headStyles: { 
+                        fillColor: false,        // removes background color
+                        textColor: 0,            // black text (0 = black)
+                        fontStyle: 'bold'        // keep headers bold
+                    },
+                    styles: { fontSize: 8 },
+                    margin: { bottom: 20 },
+                    didDrawPage: (data) => {
+                        if (data.cursor) {
+                            currentY = data.cursor.y + 15;
+                        }
+                    }
+                });
+                currentY = (doc as any).lastAutoTable.finalY + 15;
+            }
+        }
+        doc.save(`Classifica-${this.selectedTourney.tourneyName}.pdf`);
+    }
+
+    private doPrintPdfClassification1(rounds : Round[]) {
         const doc = new jsPDF('p', 'mm', 'a4');
         let currentY = 15; // Track the vertical position manually
         for (let r of rounds) {

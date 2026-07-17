@@ -180,12 +180,14 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.updateTourney();
         this.selectedDefenderToAdd = undefined;
         this.filteredDefenderPlayers = [];
-        this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
-            a.playerName.localeCompare(b.playerName)
-        );
-
-        if( !this.tourneyService.addFixedCoupleEnabled ) {
+        
+        if( this.tourneyService.addFixedCoupleCounter === -1) {
+            this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
+                a.playerName.localeCompare(b.playerName)
+            );
             this.tourneyService.createChaosDisabled = false;
+        } else {
+            this.tourneyService.addFixedCoupleCounter++;
         }
     }
 
@@ -225,11 +227,14 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.updateTourney();
         this.selectedJollyToAdd = undefined;
         this.filteredJollyPlayers = [];
-        this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
-            a.playerName.localeCompare(b.playerName)
-        );
-        if( !this.tourneyService.addFixedCoupleEnabled ) {
+
+        if( this.tourneyService.addFixedCoupleCounter === -1 ) {
+            this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
+                a.playerName.localeCompare(b.playerName)
+            );
             this.tourneyService.createChaosDisabled = false;
+        } else {
+            this.tourneyService.addFixedCoupleCounter++;
         }
     }
 
@@ -269,11 +274,14 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.updateTourney();
         this.selectedOffenderToAdd = undefined;
         this.filteredOffenderPlayers = [];
-        this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
-            a.playerName.localeCompare(b.playerName)
-        );
-        if( !this.tourneyService.addFixedCoupleEnabled ) {
+
+        if( this.tourneyService.addFixedCoupleCounter === -1 ) {
+            this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
+                a.playerName.localeCompare(b.playerName)
+            );
             this.tourneyService.createChaosDisabled = false;
+        } else {
+            this.tourneyService.addFixedCoupleCounter++;
         }
     }
 

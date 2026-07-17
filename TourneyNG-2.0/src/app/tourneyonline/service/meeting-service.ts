@@ -105,7 +105,6 @@ export class MeetingService extends AbstractService {
                 round.roundtripMeetings.push(m);
             }
         }
-
         round.onewayMeetings    = MeetingService.sortMeetings(round.onewayMeetings);
         round.roundtripMeetings = MeetingService.sortMeetings(round.roundtripMeetings);
     }

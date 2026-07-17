@@ -21,4 +21,5 @@ export class Round {
     addedTeamInProgressList :   Meeting [] = [];
     classification:             Classification[] = [];
     detachedClassification:     Classification[] = [];
+    normalizedClassification:   Classification[] = [];
 }

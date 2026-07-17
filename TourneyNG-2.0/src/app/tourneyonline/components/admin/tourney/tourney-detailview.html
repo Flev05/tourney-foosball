@@ -1225,11 +1225,11 @@
               }
             </p-fieldset>
             <p-fieldset legend="Punteggi Gironi">
-              <div class="grid">
-                <div class="col-2">
+              <div class="grid align-items-center">
+                <div class="col-12 md:col-2">
                   Partite:
                 </div>
-                <div class="col-1">
+                <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.roundVO.maxMatchesPerMeeting" 
                         [showButtons]="true" 
@@ -1278,11 +1278,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='score') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Goals Vittoria:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.roundVO.pointsNeededToWin" 
                           [showButtons]="true" 
@@ -1301,11 +1301,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='time' || selectedTourney.roundVO.isAllMatches=='true') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Punti Vittoria:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.roundVO.matchWinnerScores" 
                           [showButtons]="true" 
@@ -1324,11 +1324,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='time') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Pareggio:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.roundVO.matchBalanceScores" 
                           [showButtons]="true" 
@@ -1348,11 +1348,11 @@
               }
               @if (selectedTourney.tourneyType=='score' && selectedTourney.roundVO.isAllMatches=='true') {
                 <div
-                  class="grid" >
-                  <div class="col-2">
+                  class="grid align-items-center" >
+                  <div class="col-12 md:col-2">
                     Punti Vittoria Golden Goal:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.roundVO.pointsGoldenGoalTieBreakWin" 
                           [showButtons]="true" 
@@ -1372,11 +1372,11 @@
               }
               @if (selectedTourney.tourneyType=='score' && selectedTourney.roundVO.isAllMatches=='true') {
                 <div
-                  class="grid" >
-                  <div class="col-2">
+                  class="grid align-items-center" >
+                  <div class="col-12 md:col-2">
                     Punti Sconfitta Golden Goal:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.roundVO.pointsGoldenGoalTieBreakDefeat" 
                           [showButtons]="true" 
@@ -1600,11 +1600,11 @@
               </div>
             </p-fieldset>
             <p-fieldset legend="Punteggi Playoff">
-              <div class="grid">
-                <div class="col-2">
+              <div class="grid align-items-center">
+                <div class="col-12 md:col-2">
                   Partite:
                 </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.maxMatchesPerMeeting" 
                           [showButtons]="true" 
@@ -1653,11 +1653,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='score') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Goal:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.pointsNeededToWin" 
                           [showButtons]="true" 
@@ -1676,11 +1676,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='time' || selectedTourney.playoffVO.isAllMatches=='true') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Vittoria:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.matchWinnerScores" 
                           [showButtons]="true" 
@@ -1702,11 +1702,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='time') {
-                <div class="grid">
-                  <div class="col-1">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Pareggio:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.matchBalanceScores" 
                           [showButtons]="true" 
@@ -1729,11 +1729,11 @@
               }
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true') {
                 <div
-                  class="grid" >
-                  <div class="col-2">
+                  class="grid align-items-center" >
+                  <div class="col-12 md:col-2">
                     Punti Vittoria Golden Goal:
                   </div>
-                   <div class="col-1">
+                   <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakWin" 
                           [showButtons]="true" 
@@ -1756,11 +1756,11 @@
               }
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoffVO.isAllMatches=='true') {
                 <div
-                  class="grid" >
-                  <div class="col-2">
+                  class="grid align-items-center" >
+                  <div class="col-12 md:col-2">
                     Punti Sconfitta Golden Goal:
                   </div>
-                   <div class="col-1">
+                   <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                       <p-inputNumber 
                           [(ngModel)]="selectedTourney.playoffVO.pointsGoldenGoalTieBreakDefeat" 
                           [showButtons]="true" 
@@ -1912,11 +1912,11 @@
               </div>
             </p-fieldset>
             <p-fieldset legend="Punteggi Playout">
-              <div class="grid">
-                <div class="col-2">
+              <div class="grid align-items-center">
+                <div class="col-12 md:col-2">
                   Partite:
                 </div>
-                <div class="col-1">
+                <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                   <p-inputNumber 
                       [(ngModel)]="selectedTourney.playoffVO.maxMatchesPerMeeting" 
                       [showButtons]="true" 
@@ -1935,11 +1935,11 @@
                 </div>
               </div>
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.allMatchesEnabled) {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Tipo Incontro:
                   </div>
-                  <div class="col-8" tooltipPosition="right"
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1" tooltipPosition="right"
                     title="Scegliere se giocare tutte le partite o al meglio delle {{selectedTourney.playoutVO.bestOfWinner}} partite">
                     <div class="ui-g radiobuttons">
                       <p-radioButton name="allPlayoutMatchesGroupname"
@@ -1965,11 +1965,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='score') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Goal:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoffVO.pointsNeededToWin" 
                         [showButtons]="true" 
@@ -1988,11 +1988,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='time' || selectedTourney.playoutVO.isAllMatches=='true') {
-                <div class="grid">
-                  <div class="col-2">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Vittoria:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.matchWinnerScores" 
                         [showButtons]="true" 
@@ -2014,11 +2014,11 @@
                 </div>
               }
               @if (selectedTourney.tourneyType=='time') {
-                <div class="grid">
-                  <div class="col-1">
+                <div class="grid align-items-center">
+                  <div class="col-12 md:col-2">
                     Pareggio:
                   </div>
-                  <div class="col-12 md:col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.matchBalanceScores" 
                         [showButtons]="true" 
@@ -2041,11 +2041,11 @@
               }
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true') {
                 <div
-                  class="grid" >
-                  <div class="col-2">
+                  class="grid align-items-center" >
+                  <div class="col-12 md:col-2">
                     Punti Vittoria Golden Goal:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakWin" 
                         [showButtons]="true" 
@@ -2068,11 +2068,11 @@
               }
               @if (selectedTourney.tourneyType=='score' && selectedTourney.playoutVO.isAllMatches=='true') {
                 <div
-                  class="grid" >
-                  <div class="col-2">
+                  class="grid align-items-center" >
+                  <div class="col-12 md:col-2">
                     Punti Sconfitta Golden Goal:
                   </div>
-                  <div class="col-1">
+                  <div class="col-6 sm:col-4 md:col-3 lg:col-2 xl:col-1">
                     <p-inputNumber 
                         [(ngModel)]="selectedTourney.playoutVO.pointsGoldenGoalTieBreakDefeat" 
                         [showButtons]="true" 

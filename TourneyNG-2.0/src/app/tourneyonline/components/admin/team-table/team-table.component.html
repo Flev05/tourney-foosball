@@ -20,7 +20,8 @@
               inputId="addFixedCoupleGroupnameId"
               [binary]="true"
               [(ngModel)]="tourneyService.addFixedCoupleEnabled"
-              pTooltip="Aggiunge coppia fissa alle coppie già generate col bottone BARONDA"
+              (ngModelChange)="onFixedCoupleChange($event)"
+              pTooltip="Aggiunge una o più coppie fisse alle coppie già generate col bottone BARONDA"
               tooltipPosition="right" />
           <label for="addFixedCoupleGroupnameId" class="ml-2 cursor-pointer white-space-nowrap">
               Aggiungi Coppia Fissa

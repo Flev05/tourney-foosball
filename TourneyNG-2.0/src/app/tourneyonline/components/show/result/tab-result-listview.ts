@@ -345,7 +345,56 @@ export class TabResultListView extends AbstractTabResultListView {
                 autoTable(doc, { 
                     head: detachedHead,
                     body: detachedBody,
-                    startY: currentY - 5,
+                    startY: currentY - 10,
+                    theme: 'striped',
+                    // Light mode: no background fill, just text styling
+                    headStyles: { 
+                        fillColor: false,        // removes background color
+                        textColor: 0,            // black text (0 = black)
+                        fontStyle: 'bold'        // keep headers bold
+                    },
+                    styles: { fontSize: 8 },
+                    margin: { bottom: 20 },
+                    didDrawPage: (data) => {
+                        if (data.cursor) {
+                            currentY = data.cursor.y + 15;
+                        }
+                    }
+                });
+                currentY = (doc as any).lastAutoTable.finalY + 15;
+            }
+            currentY = (doc as any).lastAutoTable.finalY + 15;
+            // ===== PRINT NORMALIZED CLASSIFICATION (if exists) =====
+            if (r.normalizedClassification  && r.normalizedClassification.length > 0) {
+                // Check page space
+                if (currentY > 250) {
+                    doc.addPage();
+                    currentY = 15;
+                }
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+                const titleText = `Classifica Normalizzata`;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const textWidth = doc.getTextWidth(titleText);
+                const centerX = (pageWidth - textWidth) / 2;
+                doc.text(titleText, centerX, currentY - 10);
+                const normalizedHead = [["Pos", "Squadra", "PT", "PG", "V", "P", "GF", "GS", "DR"]];
+                const normalizedBody = r.normalizedClassification
+                    .map((c, index) => [
+                        index + 1,
+                        c.teamName || '',
+                        c.points || 0,
+                        c.played || 0,
+                        c.won || 0,
+                        c.lost || 0,
+                        c.goalsDone || 0,
+                        c.goalsConceded || 0,
+                        c.goalsDiff || 0
+                    ]);
+                autoTable(doc, { 
+                    head: normalizedHead,
+                    body: normalizedBody,
+                    startY: currentY - 10,
                     theme: 'striped',
                     // Light mode: no background fill, just text styling
                     headStyles: { 
@@ -364,58 +413,8 @@ export class TabResultListView extends AbstractTabResultListView {
                 currentY = (doc as any).lastAutoTable.finalY + 15;
             }
         }
-        doc.save(`Classifica-${this.selectedTourney.tourneyName}.pdf`);
-    }
-
-    private doPrintPdfClassification1(rounds : Round[]) {
-        const doc = new jsPDF('p', 'mm', 'a4');
-        let currentY = 15; // Track the vertical position manually
-        for (let r of rounds) {
-            // 1. Check if we have enough space for at least the Title + 3 rows (approx 40mm)
-            // If not, start a new page before printing the next Round
-            if (currentY > 250) { 
-                doc.addPage();
-                currentY = 15;
-            }
-            // 2. Print Round Title
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text(`Classifica ${this.selectedTourney.tourneyName}: ${r.name}`, 14, currentY);
-            const head = [["Pos", "Squadra", "PT", "PG", "V", "P", "GF", "GS", "DR"]];
-            const body = r.classification
-                .map((c, index) => [
-                    index + 1,
-                    c.teamName || '',
-                    c.points || 0,
-                    c.played || 0,
-                    c.won || 0,
-                    c.lost || 0,
-                    c.goalsDone || 0,
-                    c.goalsConceded || 0,
-                    c.goalsDiff || 0
-                ]);
-
-            // 3. Render the Table
-            autoTable(doc, {
-                head: head,
-                body: body,
-                startY: currentY + 5, // Start slightly below the title
-                theme: 'striped',
-                headStyles: { fillColor: [44, 62, 80] },
-                styles: { fontSize: 8 },
-                margin: { bottom: 20 }, // Ensure a little buffer at page end
-                didDrawPage: (data) => {
-                    // Update currentY to the end of the table on the current page
-                    if (data.cursor) {
-                        currentY = data.cursor.y + 15;
-                    }
-                }
-            });
-            // 4. Update currentY for the next Round in the loop
-            // We use doc.lastAutoTable.finalY to find where the table actually ended
-            currentY = (doc as any).lastAutoTable.finalY + 15;
-        }
-        doc.save(`Classifica-${this.selectedTourney.tourneyName}.pdf`);
+        
+        doc.save(`Classifiche-${this.selectedTourney.tourneyName}.pdf`);
     }
 }
 

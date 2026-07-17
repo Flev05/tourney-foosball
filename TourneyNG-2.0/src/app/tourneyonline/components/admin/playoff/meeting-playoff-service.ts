@@ -414,7 +414,7 @@ export class MeetingPlayoffService extends MeetingService {
      * qualified teams from the tourney rounds
      */
     public resolveAutomaticTeams(playoff: Playoff) {
-        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createPositionRoundMatrix(this.selectedTourney.roundVO.rounds, false);
+        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createPositionRoundMatrix(this.selectedTourney.roundVO.rounds, false, 0);
         playoff.round.teamNames = [];
 
         for(let pr of playoff.playoffRules ) {
@@ -437,7 +437,7 @@ export class MeetingPlayoffService extends MeetingService {
      * the corresponding rule present in the meeting
      */
     public resolveAutomaticMeetings(playoff: Playoff, rounds: Round[]) {
-        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createPositionRoundMatrix(rounds, false);
+        let roundMatrix: Array<Array<Classification>> = this.tourneyService.createPositionRoundMatrix(rounds, false, 0);
         let terminated: boolean = this.areAllTerminated(rounds);
 
         console.log("ANDATA: " + playoff.playoffName);

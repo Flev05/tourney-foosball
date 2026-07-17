@@ -80,31 +80,55 @@ export abstract class AbstractTabResultListView extends AbstractListView {
             this.roundRows = this.selectedTourney.roundVO.rounds;
             this.roundCount = this.roundRows.length;
             const subsbr = this.meetingRoundService.loadRoundMeetings(this.selectedTourney.id, roundIds, e => this.serverUnreachableHandler(e));
-            subsbr.subscribe(mdbList => this.onRoundCompleteLoad(mdbList), e => this.onError(e) );            
+            subsbr.subscribe(mdbList => this.onRoundMeetingsCompleteLoad(mdbList), e => this.onError(e) );            
         } else {
             this.prepareEliminatoryLevels();
             this.prepareEliminatoryBLevels();
         }
     }
     
-    private onRoundCompleteLoad(mdbList: MeetingDb[]): void {
+    private onRoundMeetingsCompleteLoad(mdbList: MeetingDb[]): void {
         this.mdbList = mdbList;
-        for(let round of this.selectedTourney.roundVO.rounds) { 
+                
+        this.roundRows = this.selectedTourney.roundVO.rounds;
+
+        let minTeamsPerRound : number = this.roundRows[0].classification.length;
+        let normalizedPosition : number = 0;
+        if( this.containsEliminatory() ) {
+            let topEl : EliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
+            let selectedTeamsNo = topEl.topLevelTeamNo;
+            const R : number = this.roundRows.length; // R: the number of rounds, ex = 5
+            const q : number = Math.floor(selectedTeamsNo / R);
+            normalizedPosition  = q; // powerof2 / roundNo 
+            minTeamsPerRound = this.roundRows[R-1].classification.length;
+        }
+
+        for( let round of this.roundRows ) { 
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
-            round.status = this.setRoundStatus(round);
+            round.status = this.tourneyService.setRoundStatus(round);
             round.detachedClassification = this.tourneyService.extractDetachedClassification(round);
-        }
-        this.roundRows = this.selectedTourney.roundVO.rounds;
-        for( let r of this.roundRows ) {
-            r.classificatedTeamNames = [];
-            for(let i=0;i<r.classification.length; i++) {
-                let tn = r.classification[i].teamName;
-                tn = tn.replace(/\(\d+\)/g, '');
-                if( r.classification.length > 0 && i < r.classification.length) {
-                    tn = tn + "(" + r.classification[i].points + ")";
+            round.normalizedClassification = [];
+            if( round.classification.length > minTeamsPerRound ) {
+                this.tourneyService.normalizeClassificationList(round, normalizedPosition);
+            }
+            round.classificatedTeamNames = [];
+            for(let i=0;i<round.classification.length; i++) {
+                let tn = round.classification[i].teamName;
+                if( round.classification.length > minTeamsPerRound ) {
+                    tn = round.normalizedClassification[i].teamName;
                 }
-                r.classificatedTeamNames.push(tn);
+                tn = tn.replace(/\(\d+\)/g, '');
+                if( round.classification.length > minTeamsPerRound ) {
+                    if( round.normalizedClassification.length > 0 && i < round.normalizedClassification.length) {
+                        tn = tn + "(" + round.normalizedClassification[i].points + ")";
+                    }
+                } else {
+                    if( round.classification.length > 0 && i < round.classification.length) {
+                        tn = tn + "(" + round.classification[i].points + ")";
+                    }
+                }
+                round.classificatedTeamNames.push(tn);
             }
         }
  
@@ -155,29 +179,6 @@ export abstract class AbstractTabResultListView extends AbstractListView {
         }
     }
 
-    private setRoundStatus(sr: Round): MeetingStatus {
-        let zeroCounter : number = 0;
-        let winCounter : number = 0;
-        let len : number = sr.onewayMeetings.length;
-        if( sr.teamNames.length % 2 != 0 ) {
-            len -= sr.teamNames.length;
-        }
-        for( let m of sr.onewayMeetings ) {
-            if( m.status == MeetingStatus.ToPlay ) {
-                zeroCounter++;
-            }
-            if( m.status == MeetingStatus.Terminated ) {
-                winCounter++;
-            }
-        }
-        if( winCounter >= len ) {
-            return MeetingStatus.Terminated;
-        }
-        if( zeroCounter >= len ) {
-            return MeetingStatus.ToPlay;
-        }
-        return MeetingStatus.InProgress;
-    }
 
     private prepareEliminatoryLevels() {
         if( !this.containsEliminatory() ) {

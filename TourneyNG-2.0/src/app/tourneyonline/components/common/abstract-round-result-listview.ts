@@ -95,7 +95,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
         }
     }
 
-    private onCompleteLoad(maxMatchesPerMeeting:number): void {
+    private onCompleteLoad( maxMatchesPerMeeting: number ): void {
         this.mdbList = this.meetingRoundService.mdbList;
         this.meetingRoundService.selectedTourney = this.selectedTourney;
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound);
@@ -158,7 +158,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
     } 
 
     /**
-     * Prepares the classification relatid to the selected round
+     * Prepares the classification relative to the selected round
      */
     private prepareRoundGuiClassification(maxMatchesPerMeeting: number): void {
         this.tourneyService.createClassification(this.selectedRound, true);
@@ -212,7 +212,7 @@ export abstract class  AbstractRoundResultListView extends AbstractListView {
             this.meetingRoundService.extractRoundMeetings(round, this.mdbList);
             this.tourneyService.createClassification(round, true);
         }
-        this.ngOnInit();
+        // this.ngOnInit();
     }
 }
 

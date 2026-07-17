@@ -17,6 +17,7 @@ import { Match } from 'app/tourneyonline/domain/match';
 import { AbstractRoundVO } from 'app/tourneyonline/domain/abstract-round-vo';
 import { MeetingStatus, TourneyType } from 'app/tourneyonline/domain/enumerations';
 import { MeetingDb } from 'app/tourneyonline/domain/meeting-db';
+import { EliminatoryLevel } from 'app/tourneyonline/domain/eliminatory-level';
 
 @Component({
     templateUrl: './round-result-listview.html',
@@ -33,6 +34,9 @@ export class RoundResultListView extends AbstractRoundResultListView {
     fullOnewayMeetings : Meeting[] = [];
     abstractRoundVO: AbstractRoundVO = new AbstractRoundVO();
     detachedClassificationRows: any[] = [];
+    normalizedClassificationRows: any[] = [];
+    qualifiedTeamNum : number = 0;
+    normalizesRound: boolean = false;
     
     constructor( public override tourneyService: TourneyService
         , protected override meetingRoundService: MeetingRoundService
@@ -69,6 +73,19 @@ export class RoundResultListView extends AbstractRoundResultListView {
     private onReloadRoundMeetingsComplete(): void {
         this.tourneyService.createClassification(this.selectedRound, true);
         this.detachedClassificationRows = this.tourneyService.prepareDetachedRoundsGui(this.selectedRound, this.selectedTourney.roundVO.maxMatchesPerMeeting);
+        const R : number = this.selectedTourney.roundVO.rounds.length; // R: the number of rounds, ex = 5
+        let minTeamsPerRound : number = this.selectedTourney.roundVO.rounds[R-1].classification.length;
+        this.normalizedClassificationRows = [];
+        let topEl : EliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
+        let selectedTeamsNo = topEl.topLevelTeamNo;
+        const q : number = Math.floor(selectedTeamsNo / R);
+        this.qualifiedTeamNum = q; // powerof2 / roundNo 
+        this.normalizesRound = this.selectedRound.classification.length > minTeamsPerRound;
+        if( this.normalizesRound ) {
+            this.tourneyService.normalizeClassificationList(this.selectedRound, this.qualifiedTeamNum);
+            this.normalizedClassificationRows = this.tourneyService.prepareNormalizedRoundsGui(this.selectedTourney.roundVO.maxMatchesPerMeeting, [this.selectedRound]);
+        }
+        this.selectedRound.status = this.tourneyService.setRoundStatus(this.selectedRound);
 
         this.meetingRoundService.prepareMeetingsMap(this.selectedRound);
         const daysNo = this.selectedRound.daysNo;
@@ -192,7 +209,6 @@ export class RoundResultListView extends AbstractRoundResultListView {
         console.log(event.data);
         this.tourneyService.makeClassificationName( this.selectedClassificationRow, this.selectedRound.name);
         this.tourneyService.detachedClassificationRows = this.detachedClassificationRows;
-
         this.router.navigate([ClassificationDetailView.redirect], { 
             queryParams: { detachedClassificationPoint: this.selectedClassificationRow.dpoints }
         });

@@ -201,18 +201,30 @@ export class TeamTableComponent extends AbstractListView {
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.onTeamUpdate(this.teams[0]));
     }
 
+    onFixedCoupleChange(checked: boolean): void {
+        this.tourneyService.addFixedCoupleCounter = checked ? 0 : -1;
+    }
+
     saveFixedCouple() {
         console.log("Entering saveFixedCouple()");
-        this.tourneyService.addFixedCoupleEnabled = false;
+        if( this.tourneyService.addFixedCoupleCounter <= 1 ) {
+            return;
+        }
         const defendersLen = this.selectedTourney.defenderPlayers.length;
         const offendesLen = this.selectedTourney.offenderPlayers.length;
-        let p1 = this.selectedTourney.defenderPlayers[defendersLen - 1];
-        let p2 = this.selectedTourney.offenderPlayers[offendesLen - 1];
-        let t = new Team();
-        t.players.push(p1);
-        t.players.push(p2);
-        t.teamName = `${p1.playerName} - ${p2.playerName}`;
-        this.teams.push(t);
+        if( this.tourneyService.addFixedCoupleCounter % 2 == 0 ) {
+            for( let i=this.tourneyService.addFixedCoupleCounter / 2; i>0; i-- ) {
+                let p1 = this.selectedTourney.defenderPlayers[defendersLen - i];
+                let p2 = this.selectedTourney.offenderPlayers[offendesLen - i];
+                let t = new Team();
+                t.players.push(p1);
+                t.players.push(p2);
+                t.teamName = `${p1.playerName} - ${p2.playerName}`;
+                this.teams.push(t);
+            }
+        }
+        this.tourneyService.addFixedCoupleEnabled = false;
+        this.tourneyService.addFixedCoupleCounter = -1;
         this.selectedTourney.teams = this.teams;
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));

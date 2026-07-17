@@ -101,8 +101,10 @@ export class TourneyService extends AbstractService {
     selectedEliminatoryBIndex: number = 0;
     selectedClassificationRow: Classification = new Classification();
 
-    createChaosDisabled: boolean = true;
+    createChaosDisabled: boolean = false;
     addFixedCoupleEnabled : boolean = false;
+    addFixedCoupleCounter : number = 0;
+
     detachedClassificationRows: any[] = [];
 
     static roundCols: TableCols[] = [
@@ -249,6 +251,33 @@ export class TourneyService extends AbstractService {
             this.selectedTourney.selectedEliminatoryTeamsCB = eliminatoryTeamsCombobox[0];
         }
         return teamsNo;
+    }
+
+    public setRoundStatus(sr: Round): MeetingStatus {
+        let zeroCounter : number = 0;
+        let winCounter : number = 0;
+        let len : number = sr.onewayMeetings.length;
+        if( sr.teamNames.length % 2 != 0 ) {
+            len -= sr.teamNames.length;
+        }
+        for( let m of sr.onewayMeetings ) {
+            if( m.status == MeetingStatus.ToPlay ) {
+                zeroCounter++;
+            }
+            if( m.status == MeetingStatus.Terminated ) {
+                winCounter++;
+            }
+        }
+        if( zeroCounter >= len ) {
+            return MeetingStatus.ToPlay;
+        }
+        if( winCounter >= sr.onewayMeetings.length ) {
+            return MeetingStatus.Terminated;
+        }
+        if( zeroCounter > 0 ) {
+            return MeetingStatus.InProgress;
+        }
+        return MeetingStatus.ToPlay;
     }
 
     power2Padding(length: number): number {
@@ -729,10 +758,11 @@ export class TourneyService extends AbstractService {
      * - tne column index to select the team with its points
      * 
      * @param rounds the rounds containing the teams to make the matrix
-     * @param sortTheBand true if sort the teams in the band, false otherwise
+     * @param sortTheBand true to sort the teams in the band, false otherwise
+     * @param fromPosition the position index from which normalize the team classification
      * @returns the global classification matrix of the teams
      */
-    public createPositionRoundMatrix(rounds: Array<Round>, sortTheBand : boolean ): Array<Array<Classification>>  {
+    public createPositionRoundMatrix(rounds: Array<Round>, sortTheBand : boolean, fromPosition : number): Array<Array<Classification>>  {
         let maxTeamsPerRound : number = rounds[0].teamNames.length;
         let thereAreSpare : boolean = false;
         let i : number = -1;
@@ -742,13 +772,13 @@ export class TourneyService extends AbstractService {
             }
         }
  
-        if( thereAreSpare ) {
-            for(let r of rounds) {
-                if(r.teamNames.length == maxTeamsPerRound) {
-                    this.normalizeClassificationList(r);
-                }
-            }
-        }
+        // if( thereAreSpare ) {
+        //     for(let r of rounds) {
+        //         if(r.teamNames.length == maxTeamsPerRound) {
+        //             this.normalizeClassificationList(r);
+        //         }
+        //     }
+        // }
 
         let roundMatrix: Array<Array<Classification>> = new Array<Array<Classification>>();
         // t=0, the first team in its round. t=1 the second team in its round and so on... 
@@ -756,6 +786,9 @@ export class TourneyService extends AbstractService {
             let bandClassificationList: Classification[] = [] ;
             for(let r of rounds) {
                 let c = r.classification[t];
+                if( thereAreSpare && r.classification.length == maxTeamsPerRound &&  t > fromPosition ) {
+                    c = r.normalizedClassification[t];
+                }
                 bandClassificationList.push(c);    
             }
             if( sortTheBand )  {
@@ -797,7 +830,7 @@ export class TourneyService extends AbstractService {
         return this.sortDesc(unsortedClassification, null);
     }
 
-    public sortDesc(unsortedClassification: Array<Classification>, originalClassification: Array<Classification> | null ): Array<Classification>  {
+    public sortDesc(unsortedClassification: Array<Classification>, originalClassificationList: Array<Classification> | null ): Array<Classification>  {
         let sortedClassification: Array<Classification>  = unsortedClassification.sort((c1, c2) => {
             if( c1.teamName == "" && c2.teamName != "") {
                 return 1;
@@ -839,17 +872,17 @@ export class TourneyService extends AbstractService {
                 return 1;
             }
 
-            if( originalClassification == null ) {
+            if( originalClassificationList == null ) {
                 c1.notResolveble=true;
                 c2.notResolveble=true;
                 return c1.teamName > c2.teamName ? 1 : -1;
             }
 
-            let fi1 = originalClassification.findIndex(e => e.teamName === c1.teamName);
-            let originalC1 = originalClassification[fi1];
+            let fi1 = originalClassificationList.findIndex(e => e.teamName === c1.teamName);
+            let originalC1 = originalClassificationList[fi1];
 
-            let fi2 = originalClassification.findIndex(e => e.teamName === c2.teamName);
-            let originalC2 = originalClassification[fi2];
+            let fi2 = originalClassificationList.findIndex(e => e.teamName === c2.teamName);
+            let originalC2 = originalClassificationList[fi2];
 
             if( originalC1.played > originalC2.played ) {
                 return 1;
@@ -941,8 +974,8 @@ export class TourneyService extends AbstractService {
      * @param rounds the round list to sort its classification teams
      * @param selectedTeamNo the number of teams to pack in the return list
      */
-    public getPackedBandPositions( rounds: Array<Round>, topLevelTeamNo: number ): Array<Classification> {
-        let positionRoundMatrix : Array<Array<Classification>> = this.createPositionRoundMatrix(rounds, false);
+    public getPackedBandPositions( rounds: Array<Round>, topLevelTeamNo: number, fromPosition : number  ): Array<Classification> {
+        let positionRoundMatrix : Array<Array<Classification>> = this.createPositionRoundMatrix(rounds, false, fromPosition);
         let sortedGlobalClassification :  Array<Classification> = [];       
         const roundNo : number = rounds.length; 
         for(let r=0; r<positionRoundMatrix.length; r++) {
@@ -964,40 +997,105 @@ export class TourneyService extends AbstractService {
      * 
      * @param round the round to verify if it has one more team
      */
-    public normalizeClassificationList( round: Round ) {
+    public normalizeClassificationList( round: Round, normalizedPosition : number) {
         let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
         if( meetings.length == 0 ) {
             return;
         }
-        let lastTeam: string = round.classification[round.classification.length-1].teamName;
+        const roundLen = round.classification.length;
+        let lastTeam: string = round.classification[roundLen-1].teamName;
         let lastTeamClassification: Classification | undefined = round.classification.find( c => c.teamName === lastTeam );
         if( lastTeamClassification == undefined ) {
             return;
         } 
 
-        for( let c of round.classification ) {
+        round.normalizedClassification = this.cloneClassification(round.classification);
+
+        this.reset(round.normalizedClassification[roundLen-1]);
+
+        for( let i=normalizedPosition; i<round.normalizedClassification.length; i++ ) {
+            let c = round.normalizedClassification[i];
             let t = c.teamName;
             // let rc: Classification = round.classification.find( c => c.teamName === t );
             if( t === lastTeam ) {
-                c.points = 0;
                 continue;
             }
-            let pointsAgainstTheLast: number = 0;
             let m1: Meeting | undefined = meetings.find( m => m.teamName1 === t && m.teamName2 === lastTeam );
             if( m1 == undefined ) {
                 continue;
             }
-
-            pointsAgainstTheLast += m1.points1;
-            let m2: Meeting | undefined = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
-            if( m2 == undefined ) {
-                continue;
+ 
+            // at home
+            if( m1.points1 > 0 ) {
+                if( m1.points1 >= 2 ) { // if win with diff > 1
+                    c.won -= 1;
+                }
+                if( m1.points1 === 1 ) { // if lost with diff=1
+                    c.lost -= 1;
+                }
+                c.points -= m1.points1;
+                c.played -= 1;
+                for( let i=0; i<m1.matches.length; i++ ) {
+                    c.goalsDone -= m1.matches[i].score1;
+                    c.goalsConceded -= m1.matches[i].score2;
+                }
+                c.goalsDiff = c.goalsDone - c.goalsConceded;
             }
-            pointsAgainstTheLast += m2.points2;
-            if( c.points - pointsAgainstTheLast > lastTeamClassification.points ) {
-                c.points -= pointsAgainstTheLast;
+
+            // away
+            let m2: Meeting | undefined = meetings.find( m => m.teamName1 === lastTeam && m.teamName2 === t );
+            if( m2 != undefined ) {
+                if( m2.points2 > 0 ) {
+                    if( m2.points2 >= 2 ) { // if win with diff > 1
+                        c.won -= 1;
+                    }
+                    if( m2.points2 === 1 ) { // if lost with diff=1
+                        c.lost -= 1;
+                    }
+                    c.points -= m2.points2;
+                    c.played -= 1;
+                    for( let i=0; i<m2.matches.length; i++ ) {
+                        c.goalsDone -= m2.matches[i].score2;
+                        c.goalsConceded -= m2.matches[i].score1;
+                    }
+                    c.goalsDiff = c.goalsDone - c.goalsConceded;
+                }
             }
         }
+        round.normalizedClassification = this.sortTeamsDesc(round.normalizedClassification);
+    }
+
+    private reset(c: Classification) {
+        c.points = -1;
+        c.dpoints = 0;
+        c.balanced = 0;
+        c.goalsDiff = 0;
+        c.goalsDone = 0;
+        c.goalsConceded = 0;
+        c.played = 0;
+        c.won = 0;
+        c.lost = 0;
+    }
+
+    private cloneClassification(classification: Classification[]): Classification[] {
+        return classification.map(item => {
+            const clone = new Classification();
+            clone.id = item.id;
+            clone.teamName = item.teamName;
+            clone.points = item.points;
+            clone.dpoints = item.dpoints;
+            clone.played = item.played;
+            clone.won = item.won;
+            clone.lost = item.lost;
+            clone.balanced = item.balanced;
+            clone.penalty = item.penalty;
+            clone.goalsDone = item.goalsDone;
+            clone.goalsDiff = item.goalsDiff;
+            clone.goalsConceded = item.goalsConceded;
+            clone.notResolveble = item.notResolveble;
+            clone.roundIndex = item.roundIndex;
+            return clone;
+        });
     }
 
     /**
@@ -1011,17 +1109,18 @@ export class TourneyService extends AbstractService {
     }
 
     /**
-     * Prepares the teams classification in function of the list of all of the meetings for each team 
+     * Creates the teams classification, of the received round, in function of the list of all of the meetings for each team 
      * @param meetings the list of the meetings
+     * @param toDetach true to create the detached (avulsa) classification
      */
-    public createClassification(round: Round, correct : boolean) : Classification[] {
+    public createClassification(round: Round, toDetach : boolean) : Classification[] {
         const teamNames : string[] = round.teamNames;
         let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
         let classificationList: Classification[] = this.prepareClassificationList(teamNames, meetings, null);
-        if( correct ) {
-            classificationList = this.createDetachedClassification(classificationList, meetings, true);
-        }
         round.classification = classificationList;
+        if( toDetach ) {
+            round.detachedClassification = this.createDetachedClassification(classificationList, meetings, true);
+        }
         return classificationList;
     }
 
@@ -1047,7 +1146,7 @@ export class TourneyService extends AbstractService {
      * In that case, it computes the separate detached classification only on the teams having the same points. 
      * After that, updates the original classification.
      * 
-     * @param classificationList the origina classification list
+     * @param classificationList the original classification list
      * @param meetings the list of meetings of all teams in the same round
      * @returns the new corrected classification
      */
@@ -1065,8 +1164,8 @@ export class TourneyService extends AbstractService {
                     continue;
                 }
             } 
-            let meetingSubList:  Meeting[] | undefined = pointsMap.get(key);
-            if( !meetingSubList ) {
+            let meetingSubList: Meeting[] | undefined = pointsMap.get(key);
+            if( !meetingSubList || meetingSubList.length === 0 ) {
                 continue
             };
             const teamNamesSet: Set<string> = new Set();
@@ -1119,15 +1218,8 @@ export class TourneyService extends AbstractService {
             r.classification = classifications;
             let mm : Meeting[] | undefined = result.get(points);
             if( mm != undefined ) {
-                // r.onewayMeetings = [...mm.filter(e => e.direction === Direction.OneWay)];
-                // r.onewayMeetings.forEach( e => e.day = 1);
-    
                 r.onewayMeetings = mm.filter(e => e.direction === Direction.OneWay)
                     .map(e => ({ ...e, day: 1 }));  // spread creates a new object + sets day
-
-                // r.roundtripMeetings = [...mm.filter(e => e.direction === Direction.RoundTrip)];
-                // r.roundtripMeetings.forEach( e => e.day = 1);
-
                 r.roundtripMeetings = mm.filter(e => e.direction === Direction.RoundTrip)
                     .map(e => ({ ...e, day: 1 }));
             }
@@ -1136,14 +1228,24 @@ export class TourneyService extends AbstractService {
         return result;
     }
 
-    private prepareClassificationList(teamNames: string[], meetings: Meeting[], ocList:  Classification[] | null): Classification[] {
+    /**
+     * Creates the classification list of each team in teamNames in function of the corresponding meetings in the
+     * meetings list. The ocList, if any, is used in the detached (avulsa) classification when all the sort criteria are
+     * the same we need to get the original classification list for global results
+     * 
+     * @param teamNames the teams to create the classification to
+     * @param meetings the meetings containing the results of each meeting
+     * @param originalClassificationList if != null, the original classification list used in the detached classification 
+     * @returns the list of team classidication, one for each team
+     */
+    private prepareClassificationList(teamNames: string[], meetings: Meeting[], originalClassificationList:  Classification[] | null): Classification[] {
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
         for (let t of teamNames) {
             let c = this.newClassification(t, 0);
-            if( ocList != null ) {
-                let index = ocList.findIndex( e => e.teamName === t );
+            if( originalClassificationList != null ) {
+                let index = originalClassificationList.findIndex( e => e.teamName === t );
                 if( index != -1 ) {
-                    c.dpoints = ocList[index].points;
+                    c.dpoints = originalClassificationList[index].points;
                 }
             }
             classificationMap.set(t, c);
@@ -1194,7 +1296,7 @@ export class TourneyService extends AbstractService {
             c2.goalsDiff = c2.goalsDone - c2.goalsConceded;
         }
         let cl: Classification[] = [...classificationMap.values()];
-        cl = this.sortDesc(cl, ocList);
+        cl = this.sortDesc(cl, originalClassificationList);
         return cl;
     }
 
@@ -1207,6 +1309,20 @@ export class TourneyService extends AbstractService {
          let rows: any[] = [];
          for (let round of rounds) {
             const clist : Classification[] = round.classification;
+            row = this.prepareClassificationRows(clist, rows, maxMatchesPerMeeting, row, round, classificationMap);
+        }
+        return rows;
+    }
+
+    /**
+     * Prepares the normalized if any classification rows for Round, Playoff and Eliminatory format  
+     */
+     public prepareNormalizedRoundsGui(maxMatchesPerMeeting : number, rounds: Round[]): any[] {
+         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
+         let row : number = 0;
+         let rows: any[] = [];
+         for (let round of rounds) {
+            const clist : Classification[] = round.normalizedClassification;
             row = this.prepareClassificationRows(clist, rows, maxMatchesPerMeeting, row, round, classificationMap);
         }
         return rows;
@@ -1276,13 +1392,10 @@ export class TourneyService extends AbstractService {
         let rows: any[] = [];
 
         let classificationMap: Map<string, Classification> = new Map<string, Classification>();
-
         for (let round of rounds) {
             let r = 0;
             for (let c of round.classification) {
-
                 rows.push(c);
-
                 rows[row].rowNumber = ++r;    
                 rows[row].roundName = round.name;    
                 rows[row].teamName = c.teamName;    
@@ -1293,9 +1406,7 @@ export class TourneyService extends AbstractService {
                 rows[row].balanced = c.balanced;    
                 rows[row].goalsDiff = c.goalsDone - c.goalsConceded;    
                 rows[row].goalsConceded = c.goalsConceded;    
-
                 let len = round.onewayMeetings.length;
-
                 let currentKey = round.name;  
                 if(!classificationMap.has(currentKey)) {
                     classificationMap.set(currentKey, c);

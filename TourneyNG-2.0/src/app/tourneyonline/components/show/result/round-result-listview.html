@@ -184,11 +184,11 @@
                     <div>
                       <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>
                     </div>
-                              <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                    <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
                                       ,'inProgress': rowData.status === 'In Corso'
                                       ,'terminated': rowData.status === 'Terminata'
                                       ,'confirmed': rowData.status === 'Convalidata'}">
-                      {{rowData.status}}
+                        {{rowData.status}}
                     </div>
                   </td>
                   <td class="rightTeamName" style="width: 35%; text-align: left;">
@@ -227,7 +227,11 @@
           <tr [pSelectableRow]="rowData">
             <td style="text-align: center;">{{rowIndex+1}}</td>
             @for (col of columns; track col) {
-              <td>
+              <td [ngClass]="{
+                  'text-green-500': rowIndex < qualifiedTeamNum,
+                  'text-orange-500': rowIndex === qualifiedTeamNum && !normalizesRound,
+                  'text-color': rowIndex > qualifiedTeamNum && !normalizesRound
+                }">
                 {{rowData[col.field]}}
               </td>
             }
@@ -238,7 +242,7 @@
        @if (detachedClassificationRows.length > 0 ) {
         <p-table [columns]="detachedClassificationCols"
           [value]="detachedClassificationRows"
-           selectionMode="single"
+          selectionMode="single"
           [(selection)]="selectedClassificationRow"
           (onRowSelect)="onDetachedClassifcationRowSelect($event)">
           <ng-template pTemplate="caption">
@@ -268,6 +272,43 @@
         </ng-template>
       </p-table>
       }
+       @if (normalizedClassificationRows.length > 0 ) {
+        <p-table [columns]="classificationCols"
+          [value]="normalizedClassificationRows"
+          selectionMode="single"
+          [(selection)]="selectedClassificationRow"
+          (onRowSelect)="onClassifcationRowSelect($event)">
+          <ng-template pTemplate="caption">
+            <div class="text-center w-full block font-bold text-xl">
+              {{selectedRound.name}}. Classifica Normalizzata
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class="position">N°</th>
+              @for (col of columns; track col) {
+                <th [ngClass]="col.style">
+                  {{col.header}}
+                </th>
+              }
+            </tr>
+          </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData">
+            <td style="text-align: center;">{{rowIndex+1}}</td>
+            @for (col of columns; track col) {
+            <td [ngClass]="{
+                  'text-green-500': rowIndex < qualifiedTeamNum,
+                  'text-orange-500': rowIndex === qualifiedTeamNum,
+                  'text-color': rowIndex > qualifiedTeamNum
+                }">
+              {{rowData[col.field]}}
+            </td>
+            }
+          </tr>
+        </ng-template>
+      </p-table>
+      }      
       <p>
         Attenzione, un asterisco (*) dopo il nome della squadra significa squadre a pari punti in tutto.
       </p>

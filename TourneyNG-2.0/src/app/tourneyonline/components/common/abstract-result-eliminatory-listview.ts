@@ -288,6 +288,10 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             }
         }
 
+        const q : number = Math.floor(selectedTeamsNo / R);
+        const normalizedPosition : number = q; // powerof2 / roundNo 
+        const minTeamsPerRound : number = rounds[R-1].classification.length;
+
         for( let po=0; po< topEl.eliminatories.length; po++ ) {
             let counter = rounds.length;
             while(firstLastMatrix[currentIndex][0] > firstLastMatrix[currentIndex][1] || 
@@ -334,8 +338,21 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
             let currentRound : Round = rounds[currentIndex];
             let nextRound : Round = rounds[nextIndex];
 
-            let c1 : Classification = currentRound.classification[ firstLastMatrix[currentIndex][0]++ ];
-            let c2 : Classification = nextRound.classification[ firstLastMatrix[nextIndex][1]-- ];
+            const currentPosition = firstLastMatrix[currentIndex][0];
+            const nextPosition = firstLastMatrix[nextIndex][1];
+
+            let c1 : Classification;
+            let c2 : Classification;
+            if( currentRound.classification.length > minTeamsPerRound && currentPosition >= normalizedPosition ) {
+                c1 = currentRound.normalizedClassification[ firstLastMatrix[currentIndex][0]++ ];
+            } else {
+                c1 = currentRound.classification[ firstLastMatrix[currentIndex][0]++ ];
+            }
+            if( nextRound.classification.length > minTeamsPerRound && nextPosition >= normalizedPosition ) {
+                c2 = nextRound.normalizedClassification[ firstLastMatrix[nextIndex][1]-- ];
+            } else {
+                c2 = nextRound.classification[ firstLastMatrix[nextIndex][1]-- ];
+            }
 
             const t1 = c1.teamName;
             const t2 = c2.teamName;
@@ -445,15 +462,15 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
         let fi = 0;
         let li : number = q; // ... 21 / 5 = 4
 
-        let maxTeamsPerRound : number = rounds[0].classification.length;
         let minTeamsPerRound : number = rounds[R-1].classification.length;
-        if( maxTeamsPerRound > minTeamsPerRound ) {
-            for( let r of rounds ) {
-                if( r.classification.length > minTeamsPerRound ) {
-                    this.tourneyService.normalizeClassificationList(r);
-                }
-            }
-        }
+
+        // if( thereAreSpare ) {
+        //     for( let r of rounds ) {
+        //         if( r.classification.length > minTeamsPerRound ) {
+        //             this.tourneyService.normalizeClassificationList(r);
+        //         }
+        //     }
+        // }
 
         const highestPow2Le : number =  this.levelService.highestPowerOf2LE(selectedTeamsNo);
         let playoffNo : number = selectedTeamsNo - highestPow2Le; // 21 - 16 = 5. If 0, we do not have playoff
@@ -513,6 +530,9 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                         c.points = -1000;
                     } else {
                         c = rounds[i].classification[li];
+                        if( rounds[i].classification.length > minTeamsPerRound && li >= q ) {
+                            c = rounds[i].normalizedClassification[li];
+                        }
                     }
                     c.roundIndex = i;
                     liBetterTeamClassification.push(c);
@@ -553,6 +573,9 @@ export abstract class AbstractResultEliminatoryListView extends AbstractEliminat
                     c.points = -1000;
                 } else {
                     c = rounds[r].classification[li];
+                    if( rounds[r].classification.length > minTeamsPerRound && li >= q ) {
+                        c = rounds[r].normalizedClassification[li];
+                    }
                 }
                 c.roundIndex = r;
                 liBetterTeamClassification.push(c);

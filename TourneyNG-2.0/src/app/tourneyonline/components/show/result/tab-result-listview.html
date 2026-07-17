@@ -77,8 +77,8 @@
                   <td [style.text-align]="col.field !== 'teamNames' ? 'center' : 'left'"
                       [ngClass]="{
                         'text-color': rowData.status === 'Da Giocare',
-                        'text-orange-500 font-semibold': rowData.status === 'In Corso',
-                        'text-green-500 font-semibold': rowData.status === 'Terminata'
+                        'text-orange-500': rowData.status === 'In Corso',
+                        'text-green-500': rowData.status === 'Terminata'
                       }">
                     {{ rowData[col.field] }}
                   </td>                

@@ -181,7 +181,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.selectedDefenderToAdd = undefined;
         this.filteredDefenderPlayers = [];
         
-        if( this.tourneyService.addFixedCoupleCounter === -1) {
+        if (!this.tourneyService.addFixedCoupleEnabled) {
             this.defenderPlayers = [...this.defenderPlayers].sort((a, b) => 
                 a.playerName.localeCompare(b.playerName)
             );
@@ -228,7 +228,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.selectedJollyToAdd = undefined;
         this.filteredJollyPlayers = [];
 
-        if( this.tourneyService.addFixedCoupleCounter === -1 ) {
+        if (!this.tourneyService.addFixedCoupleEnabled) {
             this.jollyPlayers = [...this.jollyPlayers].sort((a, b) => 
                 a.playerName.localeCompare(b.playerName)
             );
@@ -275,7 +275,7 @@ export class PlayerChooserComponent extends AbstractDetailView {
         this.selectedOffenderToAdd = undefined;
         this.filteredOffenderPlayers = [];
 
-        if( this.tourneyService.addFixedCoupleCounter === -1 ) {
+        if (!this.tourneyService.addFixedCoupleEnabled) {
             this.offenderPlayers = [...this.offenderPlayers].sort((a, b) => 
                 a.playerName.localeCompare(b.playerName)
             );

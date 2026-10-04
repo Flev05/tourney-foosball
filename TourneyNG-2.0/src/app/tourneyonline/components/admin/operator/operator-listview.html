@@ -106,6 +106,8 @@
 
 @if (onDeleteOperatorError) {
   <div style="margin-top:30px">
-    <p-message severity="error" text="Impossibile rimuore l'operatore {{selectedOperator.clientId}} perchè ancora in uso!"></p-message>
+    <p-message severity="error">
+      Impossibile rimuore l'operatore {{selectedOperator.clientId}} perchè ancora in uso!
+    </p-message>
   </div>
 }

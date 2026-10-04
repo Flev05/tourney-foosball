@@ -60,7 +60,9 @@
     @if (userAlreadyExists) {
       <div>
         <div class="ui-message ui-messages-error ui-corner-all">
-          <p-message severity="error" text="Esiste già un utente con lo stesso nome, cognome e username. Se non è l'utente atteso, modificare la username!"></p-message>
+          <p-message severity="error">
+            Esiste già un utente con lo stesso nome, cognome e username. Se non è l'utente atteso, modificare la username!
+          </p-message>
         </div>
       </div>
     }

@@ -73,14 +73,14 @@ export class RoundResultListView extends AbstractRoundResultListView {
     private onReloadRoundMeetingsComplete(): void {
         this.tourneyService.createClassification(this.selectedRound, true);
         this.detachedClassificationRows = this.tourneyService.prepareDetachedRoundsGui(this.selectedRound, this.selectedTourney.roundVO.maxMatchesPerMeeting);
-        const R : number = this.selectedTourney.roundVO.rounds.length; // R: the number of rounds, ex = 5
-        let minTeamsPerRound : number = this.selectedTourney.roundVO.rounds[R-1].classification.length;
-        this.normalizedClassificationRows = [];
         let topEl : EliminatoryLevel = this.selectedTourney.eliminatoryLevels[0];
         let selectedTeamsNo = topEl.topLevelTeamNo;
+        const R : number = this.selectedTourney.roundVO.rounds.length; // R: the number of rounds, ex = 5
         const q : number = Math.floor(selectedTeamsNo / R);
-        this.qualifiedTeamNum = q; // powerof2 / roundNo 
+        this.qualifiedTeamNum = q; // powerOf2 / roundNo 
+        let minTeamsPerRound : number = this.selectedTourney.roundVO.rounds[R-1].classification.length;
         this.normalizesRound = this.selectedRound.classification.length > minTeamsPerRound;
+        this.normalizedClassificationRows = [];
         if( this.normalizesRound ) {
             this.tourneyService.normalizeClassificationList(this.selectedRound, this.qualifiedTeamNum);
             this.normalizedClassificationRows = this.tourneyService.prepareNormalizedRoundsGui(this.selectedTourney.roundVO.maxMatchesPerMeeting, [this.selectedRound]);
@@ -224,10 +224,14 @@ export class RoundResultListView extends AbstractRoundResultListView {
         if( field === 'score1') {
             this.matches[0].score1 = value;
             this.selectedMeeting.vpoints1 = value;
+            this.matches[0].score2 = this.abstractRoundVO.pointsNeededToWin;     
+            this.selectedMeeting.vpoints2 = this.abstractRoundVO.pointsNeededToWin;
         }
         if( field === 'score2') {
             this.matches[0].score2 = value;     
             this.selectedMeeting.vpoints2 = value;
+            this.matches[0].score1 = this.abstractRoundVO.pointsNeededToWin;
+            this.selectedMeeting.vpoints1 = this.abstractRoundVO.pointsNeededToWin;
         }
         this.selectedMeeting.status = MeetingStatus.InProgress;
         if( this.matches[0].score1 >= this.abstractRoundVO.matchWinnerScores || this.matches[0].score2 >= this.abstractRoundVO.matchWinnerScores) {

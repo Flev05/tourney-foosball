@@ -1170,7 +1170,7 @@ export class TourneyDetailView extends AbstractDetailView {
         r.id =  this.tourneyService.getSequenceNumber();
         r.onewayCurrentDay =  1;
         r.roundtripCurrentDay =  1;
-        r.name =  "Girone: " + String.fromCharCode(65 + i);
+        r.name =  "Girone " + String.fromCharCode(65 + i);
         r.type =  RoundType.R;
         r.direction =  Direction.OneWay;
         r.pageSize =  1;
@@ -1677,7 +1677,7 @@ export class TourneyDetailView extends AbstractDetailView {
         po.playoffRules = [];
         po.round = new Round();
         po.round.id = this.tourneyService.getSequenceNumber();
-        po.round.name =  "Girone: " + (1 + i);
+        po.round.name =  "Girone " + (1 + i);
         po.round.onewayCurrentDay =  1;
         po.round.roundtripCurrentDay =  1;
         po.round.type =  RoundType.P;

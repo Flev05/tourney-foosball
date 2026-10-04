@@ -43,7 +43,9 @@
 
 @if (onLoadClientError) {
   <div style="margin-top:30px">
-    <p-message severity="error" text="Sistema momentaneamente non disponibile, riprovare più tardi"></p-message>
+    <p-message severity="error">
+      Sistema momentaneamente non disponibile, riprovare più tardi
+    </p-message>
   </div>
 }
 @if (onDeleteError) {

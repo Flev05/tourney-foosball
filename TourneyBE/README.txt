@@ -29,6 +29,16 @@ cd %FE_DIR%
 ng serve
 #ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
 
+######################  Desktop Flavio -------------------------------------- 
+set TOURNEY_DIR=C:\Users\xeemt\ProgettoCalcioBalilla\calciobalilla
+set FE_DIR=%TOURNEY_DIR%\TourneyNG-2.0
+set BE_DIR=%TOURNEY_DIR%\TourneyBE
+set WEB_CONTENT_DIR=%BE_DIR%\WebContent
+set WEB_INF_SRC_DIR=%BE_DIR%\src\main\webapp\WEB-INF
+cd %FE_DIR%
+ng serve
+#ng build --watch --base-href=/TourneyBE/ --output-path=%WEB_CONTENT_DIR%
+
 ###################### End    Versione di Sviluppo ##################################
 
 ###################### Ambiente di PRODUZIONE su erebus-soft.com ##################################

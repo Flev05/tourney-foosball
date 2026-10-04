@@ -2,8 +2,8 @@
 
 \set DB_USERNAME tourney
 
-\set TS_DATA "TourneyData"
-\set TS_INDEX "TourneyIndex"
+\set TS_DATA "TourneyTestData"
+\set TS_INDEX "TourneyTestIndex"
 
 -- UFFICIO
 -- \set TS_DATA_LOCATION  '\'D:/luciano/EREBUS/DB/tourney/prod/data\''
@@ -22,8 +22,12 @@
 -- \set TS_INDEX_LOCATION '\'/data/tourney/tourneydb/index\''
 
 -- DESKTOP GMKTec
-\set TS_DATA_LOCATION  '\'C:/DATA/PostgreSQL/tourney/data\''
-\set TS_INDEX_LOCATION '\'C:/DATA/PostgreSQL/tourney/index\''
+-- \set TS_DATA_LOCATION  '\'C:/DATA/PostgreSQL/tourney/data\''
+-- \set TS_INDEX_LOCATION '\'C:/DATA/PostgreSQL/tourney/index\''
+
+-- DESKTOP FISSO Flavio
+\set TS_DATA_LOCATION  '\'C:/tablespaces/data\''
+\set TS_INDEX_LOCATION '\'C:/tablespaces/index\''
 
 \i ../../DatabaseCommons/DatabaseCreation/create_tablespaces.sql
 

@@ -513,6 +513,7 @@ export class TourneyDetailView extends AbstractDetailView {
                 if (this.containsEliminatory()) {
                     return ELIMINATORY_TAB_INDEX;
                 }
+                return OPERATOR_TAB_INDEX;
             }
         }
         if( this.tourneyService.selectedTabIndex == PLAYOFF_TAB_INDEX ) {
@@ -527,6 +528,7 @@ export class TourneyDetailView extends AbstractDetailView {
             if (this.containsEliminatory()) {
                 return ELIMINATORY_TAB_INDEX;
             }
+            return OPERATOR_TAB_INDEX;
         }
         if( this.tourneyService.selectedTabIndex == ELIMINATORY_TAB_INDEX ) {
             if (this.containsEliminatoryB()) {
@@ -991,14 +993,14 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     onRoundTeamsChangeNoConfirm(cb: Combobox) {
-        let R: number = this.selectedTourney.selectedRoundsNumCB.value == null ? 0 : this.selectedTourney.selectedRoundsNumCB.value;
-        let T: number = this.selectedTourney.teams.length;
+        let roundCount: number = this.selectedTourney.selectedRoundsNumCB.value == null ? 0 : this.selectedTourney.selectedRoundsNumCB.value;
+        let teamCount: number = this.selectedTourney.teams.length;
               
         this.meetingService.abstractRoundVO = this.selectedTourney.roundVO;
         this.meetingRoundService.abstractRoundVO = this.selectedTourney.roundVO;
         
-        let randomTeams = this.prepareTourneyTeams(T, R);
-        this.prepareTourneyRounds(R, randomTeams);
+        let randomTeams: Team[] = this.prepareTourneyTeams(teamCount);
+        this.prepareTourneyRounds(roundCount, randomTeams);
 
         for( let r of this.selectedTourney.roundVO.rounds ) {
             this.meetingRoundService.createRoundMeeting(this.selectedTourney, r);
@@ -1026,6 +1028,134 @@ export class TourneyDetailView extends AbstractDetailView {
         );
         this.turnOnWizardMode();
         this.tabChangedIndex = ROUND_TAB_INDEX;
+    }
+
+    /**
+     * Tries to move a derby towards day 1.
+     *
+     * If another meeting already uses one of the derby's teams
+     * on that day, the conflicting meeting is moved to a later day.
+     *
+     * The complete operation is transactional: if a valid chain
+     * cannot be found, the original schedule is restored.
+     */
+    private moveDerbyToEarliestPossibleDay(derby: Meeting, meetings: Meeting[]): void {
+        const originalDay = derby.day;
+        for (let targetDay = 1; targetDay < originalDay; targetDay++) {
+            /*
+            * Save the current state before attempting the move.
+            */
+            const backup = new Map<Meeting, number>();
+            for (const meeting of meetings) {
+                backup.set(meeting, meeting.day);
+            }
+            /*
+            * Try to insert the derby at targetDay.
+            */
+            const success = this.insertMeetingAtDay(derby, targetDay, meetings, new Set<Meeting>());
+            if (success) {
+                /*
+                * We found the earliest valid position.
+                */
+                return;
+            }
+            /*
+            * The attempt failed.
+            * Restore the schedule.
+            */
+            for (const [meeting, day] of backup) {
+                meeting.day = day;
+            }
+        }
+    }
+
+    /**
+     * Inserts a meeting into targetDay.
+     *
+     * Any meeting that conflicts with one of its teams is pushed
+     * to a later day. This can create another conflict, producing
+     * a chain of moves.
+     */
+    private insertMeetingAtDay(meeting: Meeting, targetDay: number, meetings: Meeting[], visited: Set<Meeting>): boolean {
+        if (visited.has(meeting)) {
+            return false;
+        }
+        visited.add(meeting);
+        /*
+        * Find every meeting on targetDay that uses one of the
+        * teams involved in the meeting we want to insert.
+        */
+        const conflicts = meetings.filter(other =>
+            other !== meeting &&
+            other.day === targetDay &&
+            this.meetingsHaveCommonTeam(meeting, other)
+        );
+        /*
+        * Move the conflicting meetings forward.
+        */
+        for (const conflict of conflicts) {
+            const nextDay = this.findFirstAvailableDay(
+                conflict,
+                targetDay + 1,
+                meetings,
+                visited
+            );
+            if (nextDay === null) {
+                return false;
+            }
+            if (!this.insertMeetingAtDay(
+                conflict,
+                nextDay,
+                meetings,
+                visited
+            )) {
+                return false;
+            }
+        }
+
+        /*
+        * The target day is now available.
+        */
+        meeting.day = targetDay;
+        return true;
+    }
+
+    private findFirstAvailableDay(meeting: Meeting, startDay: number, meetings: Meeting[], visited: Set<Meeting>): number | null {
+        const maxDay = Math.max(
+            ...meetings.map(m => m.day)
+        );
+        for (let day = startDay; day <= maxDay; day++) {
+            if (visited.has(meeting)) {
+                continue;
+            }
+            const conflict = meetings.some(other =>
+                other !== meeting &&
+                other.day === day &&
+                this.meetingsHaveCommonTeam(meeting, other)
+            );
+            if (!conflict) {
+                return day;
+            }
+        }
+        return null;
+    }
+
+    private meetingsHaveCommonTeam(m1: Meeting, m2: Meeting): boolean {
+        const t11 : Team | undefined = this.selectedTourney.teams.find( e => e.teamName === m1.teamName1);
+        const t12 : Team | undefined = this.selectedTourney.teams.find( e => e.teamName === m1.teamName2);
+        const t21 : Team | undefined = this.selectedTourney.teams.find( e => e.teamName === m2.teamName1);
+        const t22 : Team | undefined = this.selectedTourney.teams.find( e => e.teamName === m2.teamName2);
+        return (this.sameTeam(t11, t21) || this.sameTeam(t11, t22) || this.sameTeam(t12, t21) || this.sameTeam(t12, t22));
+    }
+
+    private sameTeam(t1: Team | null | undefined, t2: Team | null | undefined): boolean {
+        if (!t1 || !t2) {
+            return false;
+        }
+        if (t1.id !== null && t2.id !== null) {
+            return t1.id === t2.id;
+        }
+        return t1.teamName === t2.teamName;
     }
 
     /**
@@ -1061,12 +1191,70 @@ export class TourneyDetailView extends AbstractDetailView {
     }
 
     /**
-     * Prepares the rounds of the selected tourney in function of the received parameters.
-     * 
-     * The received team list is spawn on the number of received rounds so each round contains
-     * at most the same number of teams.
+     * Prepares the rounds of the selected tourney according to the received parameters.
+     *
+     * When teamsWeightEnabled is "group", teams are distributed evenly between the
+     * rounds for each ASD independently.
+     *
+     * Example:
+     *   5 teams, ASD-1, 2 rounds -> 3 / 2
+     *   5 teams, ASD-1, 3 rounds -> 2 / 2 / 1
+     *
+     * If there are several ASDs, each ASD is distributed independently across
+     * the rounds.
      */
-    private prepareTourneyRounds(roundCount: number, randomTeams: string[]) {
+    private prepareTourneyRounds(roundCount: number, teams: Team[]) {
+        if (roundCount <= 0) {
+            return;
+        }
+        this.selectedTourney.roundVO.rounds = [];
+        // Create the rounds first.
+        for (let i = 0; i < roundCount; i++) {
+            this.selectedTourney.roundVO.rounds.push(this.prepareEmptyRound(i));
+        }
+
+        let grouppedTeams : Team[] = []; 
+        if (this.selectedTourney.teamsWeightEnabled === "group") {
+            const teamsByAsd = new Map<string, Team[]>();
+            for (const team of teams) { // Group teams by ASD.
+                const asd = team.asd ?? "";
+                if (!teamsByAsd.has(asd)) {
+                    teamsByAsd.set(asd, []);
+                }
+                teamsByAsd.get(asd)!.push(team);
+            }
+            // Sort ASD groups by number of teams, descending.
+            const sortedGroups = [...teamsByAsd.entries()].sort((a, b) => b[1].length - a[1].length);
+            // Concatenate teams, keeping each ASD group together.
+            for (const [asd, asdTeams] of sortedGroups) {
+                grouppedTeams.push(...asdTeams);
+            }
+        } else {    // Normal distribution: round-robin assignment.
+            grouppedTeams = teams;
+        }
+        for (let t = 0; t < grouppedTeams.length; t++) {
+            let roundIndex = t % roundCount;
+            let tn = grouppedTeams[t].teamName;
+            this.selectedTourney.roundVO.rounds[roundIndex].teamNames.push(tn);
+        }    
+
+        // Initialize classifications after all teams have been assigned.
+        for (const round of this.selectedTourney.roundVO.rounds) {
+            this.initClassification(round);
+        }
+    }
+
+    /**
+     * Prepares the rounds of the selected tourney in function of the received parameters.
+     * The received team list is spawn on the number of received rounds so each round contains
+     * at most the same number of teams and in function of the field 
+     * asd         : string = "";
+     * the method must distribuite evenly the teams on all the rounds.
+     * For example, if we have 5 teams on the same ASD='ASD-1' and 2 rounds A and B, the method must
+     * put 3 teams in the round A and 2 in the round B. If we had 5 teams of ASD-1 and 3 rounds: A, B and C; 
+     * it must put 2 teams in the round A, 2 in the round B and 1 in the round C
+     */
+    private prepareTourneyRounds1(roundCount: number, teams: Team[]) {
         if( roundCount <= 0)  {
             return;
         }
@@ -1088,14 +1276,13 @@ export class TourneyDetailView extends AbstractDetailView {
                 }
             }
         } else {
-            for( let i=0; i<randomTeams.length; i++ ) {            
-                let rt = randomTeams[i];
+            for( let i=0; i<teams.length; i++ ) {            
+                let rt = teams[i].teamName;
                 let rno = i % roundCount;
                 let round = this.selectedTourney.roundVO.rounds[rno];
                 round.teamNames.push(rt);
             }
         }
-
         for (let r of this.selectedTourney.roundVO.rounds) {
             this.initClassification(r);
         }
@@ -1109,18 +1296,17 @@ export class TourneyDetailView extends AbstractDetailView {
      * a new random list of the original list of teams.
      * 
      * @param T the number of teams to prepare
-     * @param R the number of rounds to prepare
      * @returns the list of team list
      */
-    private prepareTourneyTeams(T : number, R : number) : string[]  {
-        let randomTeams: string[] = [];
-        if( this.selectedTourney.teamsWeightEnabled == "topseed" ) {
-            return this.selectedTourney.teams.map(x=>x.teamName);         
+    private prepareTourneyTeams( teamCount : number ) : Team[]  {
+        let randomTeams: Team[] = [];
+        if( this.selectedTourney.teamsWeightEnabled == "topseed" || this.selectedTourney.teamsWeightEnabled === "group") {
+            return this.selectedTourney.teams;         
         } 
         if( this.selectedTourney.teamsWeightEnabled == "random" ) {
-            for(let t=0; t<T; t++) {
+            for(let t=0; t<teamCount; t++) {
                 let team: Team = this.selectedTourney.teams[t];
-                randomTeams.push(team.teamName);
+                randomTeams.push(team);
             }
             randomTeams.sort((t1, t2) =>{
                 let rand = Math.random();
@@ -1132,7 +1318,7 @@ export class TourneyDetailView extends AbstractDetailView {
             return randomTeams;
         } 
 
-        return this.selectedTourney.teams.map(x=>x.teamName);         
+        return randomTeams;         
     }
  
     private distributeTeams(teams: Team[], n: number): Team[][] {

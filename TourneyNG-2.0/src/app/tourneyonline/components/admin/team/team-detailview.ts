@@ -19,6 +19,7 @@ import { PlayerService } from 'app/tourneyonline/service/player-service';
     standalone: false
 })
 export class TeamDetailView extends AbstractDetailView {
+
     public static redirect: string = "adminteam/dv";
     // public static CHANGE_TEAM_NAME_POPUP: string = 'ATTENZIONE! Se si cambia il nome della squadra, si perdono tutte le impostazioni preesistenti. Confermi?';
     public static CHECK_ALREADY_EXIST_TEAM: string = 'ATTENZIONE! Esiste già una squadra con tale nome.' 
@@ -43,6 +44,7 @@ export class TeamDetailView extends AbstractDetailView {
     addTeamInProgress: boolean = false;
     errorMessage: string | null = null;
     newName: string = "";
+    asdList: string[] = [];
 
     constructor(
         protected override location: Location,
@@ -70,6 +72,8 @@ export class TeamDetailView extends AbstractDetailView {
             this.chaosEnabled = params['chaosEnabled'] === 'true';
             this.addTeamInProgress = params['addTeamInProgress'] === 'true';
         });
+
+        this.asdList = this.clientService.clients.map(client => client.businessName);
 
         if(this.teamService.newTeam) {
             this.prepareNewTeam("");
@@ -328,5 +332,8 @@ export class TeamDetailView extends AbstractDetailView {
         return new Set([
             ...this.tourneyService.selectedTourney.teams.map(p => p.id)
         ]);
+    }
+
+    onAsdChange(arg0: any) {
     }
 }

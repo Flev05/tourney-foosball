@@ -124,15 +124,17 @@
     <!-- ASD -->
     <div class="grid align-items-center mb-3">
         <div class="col-12 md:col-2">
-            <label>ASD:</label>
+            <label for="asd">ASD:</label>
         </div>
+
         <div class="col-12 md:col-10">
-            <input
-                pInputText
-                type="text"
-                [(ngModel)]="selectedTeam.asd"
-                class="w-full"
-                pTooltip="Inserire l'ASD della squadra se esiste." />
+            <p-select [options]="asdList"
+              [(ngModel)]="selectedTeam.asd"
+              class="w-full"
+              placeholder="Seleziona ASD"
+              (onChange)="onAsdChange($event.value)" 
+              pTooltip="Selezionare l'ASD della squadra se esiste.">
+            </p-select>            
         </div>
     </div>
 </div>  

@@ -56,7 +56,6 @@ export class ClientListView extends AbstractListView {
     private onComplete(): void {
         console.log("onComplete()");
         this.isUserDeveloper = this.loginService.isDeveloper();
-
         if( this.clients.length == 1 ) {
             this.selectedClient = this.clients[0];
             this.onRowSelect(null);
@@ -66,11 +65,8 @@ export class ClientListView extends AbstractListView {
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             this.onLoadClientError = true;
-
             console.log(`${operation} failed!`);
-
             console.error(error); // log to console instead     
-      
             return of(result as T);
         };
     }

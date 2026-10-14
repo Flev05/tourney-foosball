@@ -108,9 +108,9 @@ export class TourneyService extends AbstractService {
     detachedClassificationRows: any[] = [];
 
     static roundCols: TableCols[] = [
-        { field: 'name',       header: 'Gironi' },
-        { field: 'teamNo',     header: 'Squadre/Girone' },
-        { field: 'teamNames',  header: 'Squadre' },
+        { field: 'name',       header: 'GIRONI' },
+        { field: 'teamNo',     header: 'S/G' },
+        { field: 'teamNames',  header: 'Squadre/Girone' },
     ];
 
     static playoffCols: TableCols[] = [

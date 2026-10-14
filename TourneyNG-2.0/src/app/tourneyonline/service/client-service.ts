@@ -23,17 +23,14 @@ const deleteClientUrl = clientUrl + '/delete';
   providedIn: 'root'
 })
 export class ClientService {
-
     selectedClientOption : Combobox = {label:"", value: 0};
     clientOptions : Combobox[] = [];
     selectedClients : ClientVO[] = [];
-
+    clients: ClientVO[] = [];
     selectedClient : ClientVO = new ClientVO();
-
     selectedClientName: string = "";
-
     newClient : boolean = false;
-
+    
     static clientCols = [
         { field: 'businessName', header: 'Nominativo' },
         { field: 'phoneNumber',  header: 'Telefono' }

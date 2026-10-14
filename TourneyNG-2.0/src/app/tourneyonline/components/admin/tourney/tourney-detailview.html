@@ -1407,7 +1407,7 @@
               scrollHeight="500px">
               <ng-template pTemplate="header" let-columns>
                 <tr>
-                  <th style="width: 15mm;">N°</th>
+                  <th style="width: 5mm;">N°</th>
                   @for (col of columns; track col) {
                     <th>
                       {{col.header}}
@@ -1417,7 +1417,7 @@
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData">
-                  <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+                  <td style="width: 5mm; text-align: center;">{{rowIndex+1}}</td>
                   @for (col of columns; track col) {
                     <td>
                       {{rowData[col.field]}}

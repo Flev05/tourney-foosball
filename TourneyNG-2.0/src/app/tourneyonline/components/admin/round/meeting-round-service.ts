@@ -288,21 +288,20 @@ export class MeetingRoundService extends MeetingService {
                 teams.push(t);
             }                    
         }
-        let grouppedTeams : Team[] = []; 
-        if (this.selectedTourney.teamsWeightEnabled === "group") {
-            const teamsByAsd = new Map<string, Team[]>();
-            for (const team of teams) { // Group teams by ASD.
-                const asd = team.asd ?? "";
-                if (!teamsByAsd.has(asd)) {
-                    teamsByAsd.set(asd, []);
-                }
-                teamsByAsd.get(asd)!.push(team);
-            }
+        // if (this.selectedTourney.teamsWeightEnabled === "group") {
+        //     const teamsByAsd = new Map<string, Team[]>();
+        //     for (const team of teams) { // Group teams by ASD.
+        //         const asd = team.asd ?? "";
+        //         if (!teamsByAsd.has(asd)) {
+        //             teamsByAsd.set(asd, []);
+        //         }
+        //         teamsByAsd.get(asd)!.push(team);
+        //     }
             // Sort ASD groups by number of teams, descending.
-            const sortedGroups = [...teamsByAsd.entries()].sort((a, b) => b[1].length - a[1].length);
-            for (const [asd, asdTeams] of sortedGroups) {
-                grouppedTeams.push(...asdTeams);
-            }
+            // const sortedGroups = [...teamsByAsd.entries()].sort((a, b) => b[1].length - a[1].length);
+            // for (const [asd, asdTeams] of sortedGroups) {
+            //     grouppedTeams.push(...asdTeams);
+            // }
 
             // const teamsByAsd = new Map<string, Team[]>();
             // for (const team of teams) {
@@ -325,9 +324,12 @@ export class MeetingRoundService extends MeetingService {
             //         grouppedTeams[right--] = asdTeams[asdTeams.length - i - 1];
             //     }
             // }
-        } else {
-            grouppedTeams = teams;
-        }
+        // } else {
+        //     grouppedTeams = teams;
+        // }
+
+
+        let grouppedTeams : Team[] = teams;
 
         if( grouppedTeams.length % 2 != 0 ) {
             const dummyTeam : Team = new Team();

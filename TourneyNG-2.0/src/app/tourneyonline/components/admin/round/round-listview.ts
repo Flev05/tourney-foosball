@@ -167,7 +167,7 @@ export class RoundListView extends AbstractListView {
     }
 
     redoMeetings() {
-        if(this.isRoundAutoGen == 'false') {
+        // if(this.isRoundAutoGen == 'false') {
             if(!confirm(ROUND_CHANGE_TEAMS_POPUP)) {
                 return;
             } 
@@ -181,7 +181,7 @@ export class RoundListView extends AbstractListView {
                 ,(m,t) => this.subscribeErrorHandler(m,t)
                 ,()    => {this.goMeeting();}
             );
-        }
+        // }
     }
 
     override goBack(): void {
@@ -201,6 +201,20 @@ export class RoundListView extends AbstractListView {
     }
 
     saveRound(): void {
+        this.selectedRound.teamNames = [];
+        for (let t of this.teams) {
+            this.selectedRound.teamNames.push(t.teamName);
+        }
+        let index = this.selectedTourney.roundVO.rounds.indexOf(this.selectedRound);
+        if( index != -1 ) {
+            this.selectedTourney.roundVO.rounds[index] = this.selectedRound;
+            this.meetingRoundService.createRoundMeeting(this.selectedTourney, this.selectedRound);
+            this.meetingRoundService.saveRoundMeetings(this.selectedTourney
+                ,(m,t) => this.saveTourneyErrorHandler(m,t)
+                ,(m,t) => this.subscribeErrorHandler(m,t)
+                ,()    => {}
+            );
+        }
         let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(tvo => this.next(tvo), e => this.subscribeErrorHandler(e), () => this.goBack());
@@ -219,5 +233,39 @@ export class RoundListView extends AbstractListView {
 
     printPdfInProgressMeeting() {
         this.meetingRoundService.printPdfSingleRound(this.selectedTourney, this.selectedRound,  this.selectedRound.addedTeamInProgressList);
+    }
+
+    // Move row up by one position
+    moveUp(index: number) {
+        if (index > 0) {
+            const temp = this.teams[index];
+            this.teams[index] = this.teams[index - 1];
+            this.teams[index - 1] = temp;
+        }
+    }
+
+    // Move row down by one position
+    moveDown(index: number) {
+        if (index < this.teams.length - 1) {
+            const temp = this.teams[index];
+            this.teams[index] = this.teams[index + 1];
+            this.teams[index + 1] = temp;
+        }
+    }
+
+    // Move row all the way to the top
+    moveToTop(index: number) {
+        if (index > 0) {
+            const item = this.teams.splice(index, 1)[0];
+            this.teams.unshift(item);
+        }
+    }
+
+    // Move row all the way to the bottom
+    moveToBottom(index: number) {
+        if (index < this.teams.length - 1) {
+            const item = this.teams.splice(index, 1)[0];
+            this.teams.push(item);
+        }
     }
 }

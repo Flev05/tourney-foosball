@@ -49,12 +49,9 @@ export class ClientLoginListView extends AbstractListView {
 
     private onNext(clients: ClientVO[]): void {
         console.log("onNext()");
-
         this.clients = clients;
-        
+        this.clientService.clients = this.clients;
         this.clientService.setSelectClients(this.clients);
-
-        // this.loginService.blockedDocument = false;
     }
 
     private loadClientsErrorHandler<T> (operation = 'operation', result?: T) {

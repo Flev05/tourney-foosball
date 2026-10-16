@@ -266,10 +266,12 @@ export class RoundResultListView extends AbstractRoundResultListView {
                     }
                 } else {
                     this.selectedMeeting.points1 += this.abstractRoundVO.matchWinnerScores;
-                }
+                } 
+                this.selectedMeeting.matches1++;
             } 
                         
             if (goals2 > goals1) {
+                this.selectedMeeting.matches2++;
                 if (this.selectedTourney.tourneyType == TourneyType.Score) {
                     if (goals2==this.abstractRoundVO.pointsNeededToWin && (goals2 == goals1 + 1)) {
                         this.selectedMeeting.points2 += this.abstractRoundVO.pointsGoldenGoalTieBreakWin;

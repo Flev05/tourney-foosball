@@ -1,0 +1,112 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Utenti, ruoli e clienti</span>
+    <span>Creazione e configurazione utenti, ruoli e clienti di sistema</span>
+    <p>Utente [{{loggedUsername}}]</p>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Introduzione
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>Ci sono tre tipi di utenti:</p>
+        <ul>
+          <li>Anonimi</li>
+          <li>Amministratori</li>
+          <li>Utilizzatori</li>
+        </ul>
+        <p>L'utente anonimo, utilizza il sistema senza essere registrato, agisce per imparare le funzionalità
+          ma non ha alcuna possibilità di memorizzare quello che fa, a fine sessione tutti i suoi dati saranno persi.
+        </p>
+        <p>L'utente amministratore, è registrato, appartiene ad un cliente ben preciso che può essere lui stesso, un'altra
+          persona fisisca o una società ed ha tutti i permessi per modificare le funzionalita di sistema:
+          può creare altri utenti di qualsiasi ruolo, può creare nuovi tornei e può modificare o rimuovere quelli esistenti.
+          Il lavoro che fa è salvato sul database di TourneyNG e può essere ritrovato al prossimo collegamento.
+        </p>
+        <p>L'utente utilizzatore, non ha alcun permesso di modifica sul sistema, può solo leggere e consultare i risultati
+          pubblicati, si tratta di un utente che si collega al sistema con un token fornito dal responsabile del torneo
+          con il quale ha accesso al sistema e consulta lo svolgimento del torneo, può vedere il calendario, i risultati
+          e la classifica aggiornata in tempo reale.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+@if (onLoadUrcError) {
+  <div style="margin-top:30px">
+    <p-message severity="error">
+      Sistema momentaneamente non disponibile, riprovare più tardi
+    </p-message>
+  </div>
+}
+@if (onDeleteError) {
+  <div style="margin-top:30px">
+    <p-message severity="error" text="Cancellazione fallita, oggetto ancora in uso"></p-message>
+  </div>
+}
+
+@if (therIsOnlyOneDeveloper) {
+  <div style="margin-top:30px">
+    <p-message severity="error" text="Non si può cancellare l'ultimo Developer"></p-message>
+  </div>
+}
+
+<div style="text-align:left">
+  <button type="button" pButton icon="pi pi-plus" (click)="newAssociation()" label="Nuova associazione"></button>
+</div>
+
+<p-table [value]="urcRowList" >
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 15mm;">N°</th>
+      <th>Utente</th>
+      <th>Ruolo</th>
+      <th>Cliente</th>
+      <th class="deleteColSize">X</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+    <tr>
+      <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+      <td>
+        <p-select [options]="userOptions"
+          [(ngModel)]="rowData.userSelect"
+          optionLabel="label"
+          placeholder="Utente">
+        </p-select>
+      </td>
+      <td>
+        <p-select [options]="roleOptions"
+          [(ngModel)]="rowData.roleSelect"
+          optionLabel="label"
+          placeholder="Ruolo">
+        </p-select>
+      </td>
+      <td>
+        <p-select [options]="clientOptions"
+          [(ngModel)]="rowData.clientSelect"
+          optionLabel="label"
+          placeholder="Cliente">
+        </p-select>
+      </td>
+      <td class="deleteColSize">
+        <button class="ui-button-danger" pButton icon="pi pi-trash" (click)="doDelete(rowData)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+  <button class="ui-button-success"
+    pButton (click)="onSubmit()"
+    icon="pi pi-save"
+    label="Salva" >
+  </button>
+</div>
+

@@ -19,11 +19,12 @@ public class TourneyVO extends AbstractVO {
 	private String clonedFromTourneyName;
 	private String calendar;
 	private String followerName;
+	private Integer disciplineId;
 	private ClientVO clientVO;
 	private Country country;
 	private String json;
 	private List<MeetingVO> mdbs;
-
+	
 	public TourneyVO() {
 		clonedFromTourneyName = null;
 	}

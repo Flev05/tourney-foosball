@@ -1,0 +1,65 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Vista elenco clienti</span>
+    <span>Vista per la sezione del cliente di lavoro</span>
+    <p>Utente [{{loggedUsername}}]</p>
+  </div>
+</div>
+
+<!-- <p-blockUI [blocked]="loginService.blockedDocument"></p-blockUI> -->
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          La vista contiene i clienti di proprietà dell'utente che ha fatto il login.
+          Selezionare il cliente su cui si vuole operarare per la sessione di lavoro.
+          Se si vuole cambiare cliente, occorre uscire, rientrare e selezionare un cliente diverso.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+@if (onLoadClientError) {
+  <div style="margin-top:30px">
+    <p-message severity="error">
+      Sistema momentaneamente non disponibile, riprovare più tardi!
+    </p-message>
+  </div>
+}
+
+<p-table [columns]="cols"
+  responsiveLayout="scroll"
+  [value]="clients"
+  selectionMode="single"
+  [(selection)]="selectedClient"
+  (onRowSelect)="onRowSelect($event)" >
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 15mm;">N°</th>
+      @for (col of columns; track col) {
+        <th>
+          {{col.header}}
+        </th>
+      }
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="rowData">
+      <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+      @for (col of columns; track col) {
+        <td>
+          {{rowData[col.field]}}
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>
+

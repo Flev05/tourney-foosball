@@ -1,0 +1,60 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista elenco giocatori</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion >
+    <p-accordion-panel value="0">  
+        <p-accordion-header>
+            Istruzioni
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Vista elenco di tutti giocatori registreati a sistema, possono far parte di qualsiasi torneo e disciplica.
+            </p>
+            <p>
+                Potete eseguire le seguenti 3 operazioni:
+            </p>
+            <ul>
+                <li>Creare un nuovo giocatore</li>
+                <li>Modificare un giocatore esistente</li>
+                <li>Rimuovere un giocatore esistente</li>
+            </ul>
+        
+            <h4>Creare un nuovo giocatore</h4>
+            <p>
+                Con il bottone Aggiungi Giocatore si apre la vista di dettaglio dalla quale compilare l'anagrafica di un nuovo giocatore.
+                Il giocatore creato sarà disponibile per essere inserito in qualsiasi torneo.
+            </p>            
+        
+            <h4>Modificare un giocatore esistente</h4>
+            <p>
+                Selezionare la riga di interesse - click su un punto qualsiasi della riga - per accedere alla corrispondente vista di dettaglio.
+            </p>
+            <p>        
+                Attenzione: una modifica a livello di giocatore, non viene riflessa automaticamente a livello dello stesso giocatore
+                già incluso in un torneo. Per avere le modifiche apportate sul giocatore, bisogna rimuoverlo dal torneo e ricaricarlo.
+            </p>
+        
+            <h4>Rimuovere un giocatore esistente</h4>
+            <p>
+                Si può rimuovere l'anagrafica di un giocatore esistente con il bottore X a fine riga.
+                Il sistema chiederà conferma con una popup dialog box e, solo se si da la conferma, l'anagrafica
+                sarà rimossa dal sistema.
+            </p>    
+            <p>
+                Attenzione! La rimozione del giocatore è a livello globale, nel senso che non può essere più inserito in nuovi tornei, 
+                ma non viene rimosso dai tornei preesistenti.
+            </p>
+        </p-accordion-content>        
+    </p-accordion-panel>
+</p-accordion>    
+</div>           
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" type="button" icon="pi pi-arrow-left" pButton (click)="gotoListView()" label="Elenco Tornei"></button>
+</div>
+
+<app-player-table [addPlayerEnabled]="addPlayerEnabled" [tourneyTeams]="tourneyTeams" [selectedTeam]="undefined"></app-player-table>

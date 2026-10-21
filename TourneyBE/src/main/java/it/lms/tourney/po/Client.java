@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -55,8 +56,16 @@ public class Client extends AbstractPO {
 	private Country country;
 
 	// bi-directional one-to-many association to UserRoleClient
-	@OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "client", cascade = { CascadeType.REMOVE }, fetch = FetchType.LAZY)
 	private Set<UserRoleClient> urcSet;
+
+	// bi-directional one-to-many association to Team
+	@OneToMany(mappedBy = "client", cascade = { CascadeType.REMOVE })
+	private Set<Team> teamSet;
+
+	// bi-directional one-to-many association to Tourney
+	@OneToMany(mappedBy = "client", cascade = { CascadeType.REMOVE })
+	private Set<Tourney> tourneySet;
 
 	public Client() {
 

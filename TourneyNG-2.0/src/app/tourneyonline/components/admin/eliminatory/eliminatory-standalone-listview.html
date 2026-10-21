@@ -1,0 +1,117 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Eliminazioni Dirette</span>
+    <h2><span>Torneo: {{selectedTourney.tourneyName}}</span></h2>
+    <h3><span>{{tourneyService.selectedEliminatoryLevel.name}}</span></h3>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
+        <h3>Premessa</h3>
+        <p>
+          La vista conteniene la vista elenco delle coppie:
+        </p>
+
+        <p>
+          Se il torneo è composto di solo eliminazioni dirette, a prescindere dalla  modalità scelta,
+          la vista contiene le coppie che incominciano la prima fase di eliminazioni dirette,
+          quella di livello più alto.
+        </p>
+        <p>
+          Se la squadra di destra non è presente, significa che la squadra di
+          sinistra è già qualificata e passa automaticamente al turno successivo.
+        </p>
+
+        <h3>Istruzioni</h3>
+        <p>
+          In questa vista dovete effettuare 2 operazioni:
+        </p>
+        <ul>
+          <li>1) Specificare turni</li>
+          <li>2) Completare le eliminazioni</li>
+        </ul>
+
+        <h4>1) Specificare turni</h4>
+        <p>
+          Dovete specificare per ciascun livello di eliminazione diretta - finale, semifinale, quarti, ecc. -
+          se gli incontri sono di solo andata o andata e ritorno. Il sistema lo userà
+          poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
+        </p>
+
+        <h4>2) Completare le eliminazioni</h4>
+        <p>
+          Dovete accedere alle righe della vista elenco, una per una, accedere alla corrispondente vista di dettaglio
+          ed inserire i dati relativi alle date e locazione di scolgimento degli incontri.
+        </p>
+        <p>
+          Se il torneo è di tipo giornaliero, potete ignore questa parte di configurazione.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+<button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro/Salva"></button>
+@if (serverUnreachable) {
+  <div style="margin-top:30px">
+    <p-message severity="error">
+      Servizio momentaneamente non disponibie. Riprovare più tardi.
+    </p-message>
+  </div>
+}
+
+<div class="grid">
+  <div class="col-2">
+    Turni:
+  </div>
+  <div class="col-5" tooltipPosition="right"
+    pTooltip="Indicare se le eliminazioni dirette prevedono turni di solo andata o andata e ritorno">
+    <p-radioButton name="isOnewayGroupname"
+      label="Solo andata"
+      value="true"
+      [(ngModel)]="levelService.isOneway"
+      (onClick)="onOnewayClick()">
+    </p-radioButton>
+    <p-radioButton name="isOnewayGroupname"
+      label="Andata e ritorno"
+      value="false"
+      [(ngModel)]="levelService.isOneway"
+      (onClick)="onRoundtripClick()">
+    </p-radioButton>
+  </div>
+</div>
+
+<p-table [columns]="eliminatoryCols"
+  [value]="eliminatoryRows"
+  responsiveLayout="scroll"
+  selectionMode="single"
+  (onRowSelect)="onEliminatoryRowSelect($event)">
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 15mm;">N°</th>
+      @for (col of columns; track col) {
+        <th>
+          {{col.header}}
+        </th>
+      }
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="rowData">
+      <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+      @for (col of columns; track col) {
+        <td>
+          {{rowData[col.field]}}
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

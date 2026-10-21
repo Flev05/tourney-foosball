@@ -1,0 +1,52 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Partite</span>
+        <span>Partite del torneo {{selectedTourney.tourneyName}}</span>
+    </div>
+</div>
+
+<div class="content-section documentation">
+    <p>Vista elenco di tutte le partite appartenenti all'incontro selezionato</p>
+</div>
+
+<p-table [value]="rows">
+    <ng-template pTemplate="caption">
+        <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
+        {{selectedTourney.tourneyName}} - {{selectedTourney.datetime}}
+    </ng-template>
+
+    <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+            <col style="width: auto;">
+            <col style="width: auto;">
+            <col style="width: 15mm;">
+            <col style="width: 15mm;">
+        </colgroup>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Squadra/Giocatori 1</th>
+            <th>Squadra/Giocatori 2</th>
+            <th>Reti1</th>
+            <th>Reti2</th>
+        </tr>
+        <tr>
+            <th>{{selectedMeeting.teamName1}}</th>
+            <th>{{selectedMeeting.teamName2}}</th>
+            <th>{{selectedMeeting.points1}}</th>
+            <th>{{selectedMeeting.points2}}</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData>
+        <tr>
+            <td>{{rowData.players1}}</td>
+            <td>{{rowData.players2}}</td>
+            <td style="text-align: center;">{{rowData.points1}}</td>
+            <td style="text-align: center;">{{rowData.points2}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+    

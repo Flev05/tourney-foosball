@@ -37,16 +37,13 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 @Slf4j
 public class LoginRESTService extends AbstractRESTService {
-
 	@Inject
 	private SessionDao sessionDao;
-
 	@Inject
 	private UserDao userDao;
-
 	@Inject
 	private RoleDao roleDao;
-
+	
 	@Inject
 	@ConverterObject
 	private Converter converter;
@@ -64,8 +61,7 @@ public class LoginRESTService extends AbstractRESTService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response doLogin(Login login) {
-
-		log.debug(logId() + "PUT: doLogin(" + login + ")");
+		log.info(logId() + "PUT: doLogin(" + login + ")");
 		Response.ResponseBuilder builder;
 
 		Map<String, String> responseObj = new HashMap<>();
@@ -73,23 +69,20 @@ public class LoginRESTService extends AbstractRESTService {
 		String username = login.getUsername();
 		String md5Pssword = login.getPassword().toUpperCase();
 
-		log.debug(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
+		log.info(logId() + "Entering login() [username=" + username + ", password=" + md5Pssword + "]");
 
 		printAuthentication();
 
 		if (username == null || username.equals("")) {
 			String errmsg = logId() + "Username is empty, re-logging";
-			log.debug(errmsg);
-
+			log.error(errmsg);
 			responseObj = new HashMap<>();
 			responseObj.put("error", errmsg);
 			builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
 		}
 
 		try {
-
 			User u = userDao.findUserBy(username, md5Pssword);
-
 			if (u == null) {
 				String message = logId() + "UserDao.findUserBy(" + username + ", " + md5Pssword + ") failed";
 				log.error(message);
@@ -119,7 +112,6 @@ public class LoginRESTService extends AbstractRESTService {
 
 			builder = Response.status(Response.Status.OK).entity(uvo);
 		} catch (Exception e) {
-
 			log.error(logId() + "Login failed", e);
 			responseObj = new HashMap<>();
 			responseObj.put("error", e.getMessage());
@@ -167,4 +159,24 @@ public class LoginRESTService extends AbstractRESTService {
 		Response.ResponseBuilder builder = Response.ok();
 		return builder.build();
 	}
+	
+//	public Map<Integer, List<Meeting>> loadTournamentsData() {
+//		List<Round> rounds = loadRounds();
+//		Map<Integer, List<Meeting>> meetingMap = new HashMap<>();
+//		
+//		for( int r=0; r<rounds.size(); r++ ) {
+//			Round round = rounds.get(r);
+//			for( int d=0; d<round.days; d++ ) {
+//				if( !meetingMap.containsKey(d)) {
+//					List<Meeting> meetingList = new ArrayList<>();
+//					meetingMap.put(d, meetingList);
+//				}
+//				List<Meeting> meetingList = meetingMap.get(d);
+//				for( Meeting m : round.getOnewayMeetings() ) {
+//					meetingList.add(m);
+//				}
+//			}
+//		}
+//		return meetingMap;
+//	}
 }

@@ -1,0 +1,59 @@
+.team {
+    width: 100%;
+}
+.position {
+    width: 10mm;
+}
+.points {
+    width: 40%;
+    text-align: center;
+}
+
+.leftTeamName {
+    text-align: right; 
+    font-size: 90%;
+}
+.rightTeamName {
+    text-align: left; 
+    font-size: 90%;
+}
+.centralPoints {
+    width: 25mm;
+    text-align: center; 
+    font-size: 90%;
+}
+.toplay {
+    text-align: center; 
+    font-weight: bold;
+    color: blue;
+}
+.inProgress {
+    text-align: center; 
+    font-weight: bold;
+    color: orange;
+}
+.terminated {
+    text-align: center; 
+    font-weight: bold;
+    color: red;
+}
+.confirmed {
+    text-align: center; 
+    font-weight: bold;
+    color: green;
+}
+
+.day-divider {
+  gap: 0;
+}
+
+.double-line {
+  height: 8px;
+  border-top: 2px solid #6c757d;
+  border-bottom: 2px solid #6c757d;
+}
+
+.day-label {
+  white-space: nowrap;
+  padding: 4px 12px;
+}

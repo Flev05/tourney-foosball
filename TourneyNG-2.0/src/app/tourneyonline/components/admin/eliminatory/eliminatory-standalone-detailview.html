@@ -1,0 +1,203 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Eliminazioni Dirette</span>
+    <h2><span>Torneo: {{selectedTourney.tourneyName}}</span></h2>
+    <h3><span>Livello: {{tourneyService.selectedEliminatoryLevel.name}}</span></h3>
+    <h4><span>Incontro N°: {{selectedEliminatory.round.name}}</span></h4>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          Vista di dettaglio Eliminazione diretta.
+        </p>
+        <p>
+          In questa vista possono essere effettuate al più 2 operazioni:
+        </p>
+        <ul>
+          <li>1) Data e locazione turno di andata</li>
+          <li>2) Se esiste, data e locazione turno di ritorno</li>
+        </ul>
+
+        <h4>1) Data e locazione turno di andata</h4>
+        <p>
+          Se il torneo non è di tipo giornaliero, inserire la data e il luogo dell'incontro per il turno di andata
+        </p>
+
+        <h4>2) Se esiste, data e locazione turno di ritorno</h4>
+        <p>
+          Inserire la data e il luogo dell'incontro per il turno di ritorno
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+@if (serverUnreachable) {
+  <div style="margin-top:30px">
+    <p-message severity="error">
+      Servizio momentaneamente non disponibie. Riprovare più tardi.
+    </p-message>
+  </div>
+}
+
+<form [formGroup]="eliminatoryFormGroup" >
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="done()" label="Indietro/Salva"></button>
+  </div>
+
+  <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+
+    @if (isTopLevel && isStandalone) {
+      <div>
+        <div class="grid">
+          <div class="col-4">
+            {{m1.teamName1}} Vs {{m1.teamName2}}
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (isTopLevel && !isStandalone) {
+      <div>
+        <div class="grid">
+          <div class="col-4">
+            -- Vs --
+          </div>
+        </div>
+      </div>
+    }
+
+    <h4>Andata</h4>
+
+    <div class="grid">
+      <div class="col-2">
+        Data e ora:
+      </div>
+      <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di andata">
+        <p-datepicker formControlName="meetingDate1" dateFormat="dd/mm/yy" [showTime]="true">
+        </p-datepicker>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-2">
+        Via:
+      </div>
+      <div class="col-5">
+        <input pInputText type="text" formControlName="address1"/>
+      </div>
+      <div class="col-4">
+        @if (!eliminatoryFormGroup.controls['address1'].valid
+          && eliminatoryFormGroup.controls['address1'].dirty) {
+          <div class="ui-message ui-messages-error ui-corner-all">
+            <i class="pi pi-close"></i>
+            @if (eliminatoryFormGroup.controls['address1']?.errors?.['required']) {
+              <span>
+                La via dell'incontro del luogo di andata è obbligatoria
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-2">
+        <label for="country-id">Comune:</label>
+      </div>
+      <div class="col-5">
+        <p-autoComplete id="country-id" formControlName="country1"
+          [suggestions]="filteredCountriesSingle"
+          (completeMethod)="searchCountry($event)" 
+          field="city"
+          optionLabel="city"
+          placeholder="Comune" [minLength]="1">
+        </p-autoComplete>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-2">
+        Indirizzo:
+      </div>
+      <div class="col-8">
+        {{m1.address}} {{m1.country != undefined ? " - " + m1.country.zipCode + " " + m1.country.city
+        + " (" + m1.country.provinceCode +")" : "" }}
+      </div>
+    </div>
+
+    @if (!isOneway) {
+      <h4 >Ritorno</h4>
+    }
+
+    @if (!isOneway) {
+      <div class="grid">
+        <div class="col-2">
+          Data e ora:
+        </div>
+        <div class="col-3" pTooltip="Data e ora di inizio dell'incontro di ritorno">
+          <p-datepicker formControlName="meetingDate1" dateFormat="dd/mm/yy" [showTime]="true">
+          </p-datepicker>
+        </div>
+      </div>
+    }
+
+    @if (!isOneway) {
+      <div class="grid">
+        <div class="col-2">
+          Via:
+        </div>
+        <div class="col-5">
+          <input pInputText type="text" formControlName="address2"/>
+        </div>
+        <div class="col-4">
+          @if (!eliminatoryFormGroup.controls['address2'].valid
+            && eliminatoryFormGroup.controls['address2'].dirty) {
+            <div class="ui-message ui-messages-error ui-corner-all">
+              <i class="pi pi-close"></i>
+              @if (eliminatoryFormGroup.controls['address2']?.errors?.['required']) {
+                <span>
+                  La via dell'incontro del luogo di ritorno è obbligatoria
+                </span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (!isOneway) {
+      <div class="grid">
+        <div class="col-2">
+          <label for="country-id">Comune:</label>
+        </div>
+        <div class="col-5">
+          <p-autoComplete id="country-id" formControlName="country2"
+            [suggestions]="filteredCountriesSingle"
+            (completeMethod)="searchCountry($event)" field="city"
+            placeholder="Comune" [minLength]="1">
+          </p-autoComplete>
+        </div>
+      </div>
+    }
+
+    @if (!isOneway) {
+      <div class="grid">
+        <div class="col-2">
+          Indirizzo:
+        </div>
+        <div class="col-8">
+          {{m2.address}} {{m2.country != undefined ? " - " + m2.country.zipCode + " " + m2.country.city
+          + " (" + m2.country.provinceCode +")" : "" }}
+        </div>
+      </div>
+    }
+  </div>
+</form>

@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*)"
+          },
+          "endsPattern": {
+            // Updated for Angular 21 / Vite / Esbuild output
+            "regexp": "Local:|Ready in|Compiled successfully|Watch mode enabled"
+          }
+        }
+      },
+      "label": "npm: start"
+    }
+  ]
+}

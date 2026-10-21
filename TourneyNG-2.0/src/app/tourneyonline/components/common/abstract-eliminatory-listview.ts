@@ -1,0 +1,338 @@
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { AbstractListView } from '../common/abstract-listview';
+import { TourneyService } from '../../service/tourney-service';
+import { Eliminatory } from '../../domain/eliminatory';
+import { EliminatoryLevel } from '../../domain/eliminatory-level';
+import { PhaseType, Direction } from '../../domain/enumerations';
+import { Round } from '../../domain/round';
+import { Combobox } from '../../domain/tourney-combobox';
+import { Team } from '../../domain/team';
+import { DateFormatPipe } from './date-format-pipe';
+import { Playoff } from '../../domain/playoff';
+import { TableCols } from '../../domain/table-cols';
+import { MeetingDb } from '../../domain/meeting-db';
+import { MeetingService } from '../../service/meeting-service';
+import { Tourney } from '../../domain/tourney';
+import { EliminatoryLevelVO } from '../../domain/eliminatory-level.vo';
+import { EliminatoryVO } from '../../domain/eliminatory.vo';
+import { Injectable } from '@angular/core';
+import { ToastMessageOptions } from 'primeng/api';
+ 
+@Injectable()
+export abstract class AbstractEliminatoryListView extends AbstractListView {
+    eliminatoryLevelCols: TableCols[] = [];
+    eliminatoryLevelSelectedRow: EliminatoryLevelVO = new EliminatoryLevelVO();
+    eliminatoryLevelBSelectedRow: EliminatoryLevelVO = new EliminatoryLevelVO();
+    
+    eliminatoryCols: TableCols[] = [];
+    eliminatoryLevelRows: EliminatoryLevelVO[] = [];
+    eliminatoryBLevelRows: EliminatoryLevelVO[] = [];
+ 
+    eliminatoryRows: EliminatoryVO[] = [];
+    eliminatorySelectedRow: EliminatoryVO = new EliminatoryVO();
+
+    msgs: ToastMessageOptions[] = [];
+   
+    eliminatoryLevels: Array<EliminatoryLevel> = [];
+    eliminatoryBLevels: Array<EliminatoryLevel> = [];
+    
+    eliminatories: Eliminatory[] = [];
+
+    isPlayoff: boolean = false;
+    isAutomatic: boolean = true;
+    isOneway: string = "true";
+    public isStandalone: boolean = false;
+    selectedLevelCombobox: Combobox = new Combobox();
+  
+    elHttpCounter: number = 0;
+    eliminatoryRoundMap: Map<number, Round> = new Map<number, Round>();
+    meetingMap: Map<number, MeetingDb[]> = new Map<number, MeetingDb[]>();
+
+    roundHttpCounter: number = 0;
+    roundMap: Map<number, Round> = new Map<number, Round>();
+    roundMeetingMap: Map<number, MeetingDb[]> = new Map<number, MeetingDb[]>();
+
+    playoffHttpCounter: number = 0;
+    playoffRoundMap: Map<number, Playoff> = new Map<number, Playoff>();
+    playoffMeetingMap: Map<number, MeetingDb[]> = new  Map<number, MeetingDb[]>();
+
+    roundRows:   any[] = [];
+    playoffRows: any[] = [];
+    mdbs: MeetingDb[] = [];
+    
+    constructor(
+        protected override redirect: string,
+        protected override tourneyService: TourneyService,
+        protected meetingService: MeetingService,
+        protected override router: Router,
+        protected override location: Location,
+        protected dateFormatPipe: DateFormatPipe
+    ) {
+        super(redirect, tourneyService, router, location);
+    }
+
+    override ngOnInit() {
+        super.ngOnInit();
+        this.meetingService.selectedTourney = this.tourneyService.selectedTourney;
+
+        this.isAutomatic   = this.tourneyService.selectedTourney.isEliminatoryAutoGen=="true" ? true : false;
+
+        this.isPlayoff = this.containsPlayoff();
+          
+        this.eliminatoryLevels = this.selectedTourney.eliminatoryLevels;
+
+        if (this.isStandAlone(this.selectedTourney)) {
+            this.isStandalone = true;
+        } else {
+            this.isStandalone = false;
+        }
+    }
+
+    public isStandAlone(tourney : Tourney ): boolean {
+        return tourney.phases.length == 1 && this.containsPhase(PhaseType.E, tourney.phases);
+    }
+
+    public prepareGui(): void {
+        this.ngOnInit();
+
+        this.prepareEliminatoryGui();
+    }
+    
+    protected prepareEliminatoryGui() {
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+        this.isOneway =  this.tourneyService.selectedEliminatoryLevel.abstractRoundVO.direction == Direction.OneWay ? "true" : "false"
+        if (this.isStandalone) {
+            this.prepareStandaloneGui();
+        } else {
+            this.prepareNotStandaloneGui();
+        }
+    }
+
+    protected prepareELCols(): TableCols[] {
+        let cols = [
+            { field: 'name',        header: 'Livello' },
+            { field: 'level',       header: 'Squadre' },
+         ];
+         return cols;
+     }
+ 
+    onOnewayClick() {
+        console.log("Entering onOnewayClick()");
+        this.tourneyService.selectedEliminatoryLevel.abstractRoundVO.direction=Direction.OneWay;
+        this.isOneway = "true";
+        this.prepareGui();
+    }
+
+    onRoundtripClick() {
+        console.log("Entering onRoundtripClick()");
+        this.tourneyService.selectedEliminatoryLevel.abstractRoundVO.direction=Direction.RoundTrip;
+        this.isOneway = "false";
+        this.prepareGui();
+    }
+ 
+    protected newDummyTeam() : Team {
+        let dummy: Team = new Team();
+        dummy.id = this.tourneyService.getSequenceNumber();
+        dummy.isDummy = true;
+        return dummy;
+    }
+
+    protected prepareResultColums(): any[] {
+        return this.prepareColums(true);
+    }
+
+    prepareResultRoundPlayoffColums(): any[] {
+        return this.prepareColums(false);
+    }
+
+    private prepareColums(isElimininatory: boolean): any[] {
+        let cols: TableCols[] = [];
+        if(isElimininatory) {
+            cols.push({ field: 'rowNumber', header: 'A/R' });
+        } else {
+            cols.push({ field: 'rowNumber', header: 'N°' });
+            cols.push({ field: 'roundtrip', header: 'A/R' });
+        }
+
+        cols.push({ field: 'dateAndTime', header: 'Data' });
+        cols.push({ field: 'teamName1', header: 'Team 1' });
+        cols.push({ field: 'teamName2', header: 'Team 2' });
+        if (this.selectedTourney.roundVO.maxMatchesPerMeeting == 1 || this.selectedTourney.playoffVO.maxMatchesPerMeeting == 1) {
+            cols.push({ field: 'goals1', header: 'Goal 1' });
+            cols.push({ field: 'goals2', header: 'Goal 2' });
+        }
+        else {
+            cols.push({ field: 'points1', header: 'Punti 1' });
+            cols.push({ field: 'points2', header: 'Punti 2' });
+        }
+
+        return cols;
+    }
+
+     /**
+      * Prepares the columns and the rows for the eliminatories belonging to the selected eliminatory level 
+      * in the Stand Alone use case
+     */
+    prepareStandaloneGui(): void {
+        this.eliminatoryCols = [
+        ];
+
+        let isTopLevel = this.tourneyService.selectedEliminatoryLevel.isTopLevel;
+        if(isTopLevel) {
+            this.eliminatoryCols.push({ field: 'teamName1', header: 'Team 1'});
+            this.eliminatoryCols.push({ field: 'teamName2', header: 'Team 2'});
+        }
+
+        this.eliminatoryCols.push({ field: 'onewayDatetime', header: 'Andata' });
+        if(this.tourneyService.selectedEliminatoryLevel.abstractRoundVO.direction != Direction.OneWay) {
+            this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+        }
+        
+        this.eliminatoryRows = [];
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+
+        for(let i=0; i<this.eliminatories.length; i++) {
+            let e = this.eliminatories[i];
+
+            const od = e.round.onewayMeetings.length > 0 ? e.round.onewayMeetings[0].datetime : new Date();
+            let onewayDatetime    = this.dateFormatPipe.transform(od);
+            const or = e.round.onewayMeetings.length > 0 ? e.round.roundtripMeetings[0].datetime : new Date();
+            let roundtripDatetime = this.dateFormatPipe.transform(or);
+
+            let evo: EliminatoryVO = {eliminatory:e
+                , rowNumber: i+1
+                , teamName1: e.round.teamNames[0]
+                , teamName2: e.round.teamNames[1]
+                , onewayDatetime: onewayDatetime
+                , roundtripDatetime: roundtripDatetime
+                , position1: "0"
+                , fromRound1: ""
+                , fromPlayoff1: ""
+                , versus: ""
+                , position2: "0"
+                , fromRound2: ""
+                , fromPlayoff2: ""
+            };            
+            this.eliminatoryRows.push(evo);
+        }
+    }
+
+    /**
+     * Prepares the columns and the rows for the eliminatories belonging to the selected eliminatory level
+     * Insert manually the rules to pass the from rounds and/or playoffs to direct eliminatories
+    */
+   protected prepareNotStandaloneGui(): void {
+        this.eliminatoryCols = [
+            { field: 'onewayDatetime', header: 'Andata'}
+        ];
+
+        let isTopLevel = this.tourneyService.selectedEliminatoryLevel.isTopLevel;
+        if(isTopLevel) {
+            if( this.isAutomatic ) {
+                this.eliminatoryCols.push({ field: 'position1', header: 'I° Squadra'});
+                this.eliminatoryCols.push({ field: 'position2', header: 'II° Squadra'});
+            } else {
+                this.eliminatoryCols.push({ field: 'position1', header: 'Classif.'});
+                this.eliminatoryCols.push({ field: 'fromRound1', header: 'Girone' });
+                if(this.isPlayoff) {
+                    this.eliminatoryCols.push({ field: 'fromPlayoff1', header: 'Playoff'});
+                }
+    
+                this.eliminatoryCols.push({ field: 'versus', header: 'Vs'});
+    
+                this.eliminatoryCols.push({ field: 'position2', header: 'Classif.'});
+                this.eliminatoryCols.push({ field: 'fromRound2', header: 'Girone' });
+                if(this.isPlayoff) {
+                    this.eliminatoryCols.push({ field: 'fromPlayoff2', header: 'Playoff'});
+                }
+            }
+        }
+
+        if(this.tourneyService.selectedEliminatoryLevel.abstractRoundVO.direction != Direction.OneWay) {
+            this.eliminatoryCols.push({ field: 'roundtripDatetime', header: 'Ritorno' });
+        }
+
+        this.eliminatoryRows = [];
+        this.eliminatories = this.tourneyService.selectedEliminatoryLevel.eliminatories;
+        for(let i=0; i<this.eliminatories.length; i++) {
+            let e = this.eliminatories[i];
+
+            let onewayDatetime  = this.dateFormatPipe.transform(e.round.onewayMeetings.length == 0 ? new Date() : e.round.onewayMeetings[0].datetime);
+            let position1       = this.getPosition1(e);
+            let position2       = this.getPosition2(e);
+            let roundtripDatetime = this.dateFormatPipe.transform(e.round.roundtripMeetings.length == 0 ? new Date() : e.round.roundtripMeetings[0].datetime);
+
+            let evo: EliminatoryVO = {eliminatory:e
+                , rowNumber: i+1
+                , teamName1: ""
+                , teamName2: ""
+                , onewayDatetime: onewayDatetime
+                , position1: position1
+                , fromRound1: "" // fromRound1
+                , fromPlayoff1: "" // fromPlayoff1
+                , versus: "<==>"
+                , position2: position2
+                , fromRound2: "" // fromRound2
+                , fromPlayoff2: "" // fromPlayoff2
+                , roundtripDatetime: roundtripDatetime
+            };
+            this.eliminatoryRows.push(evo);
+        }
+    }
+
+    getPosition1(e: Eliminatory): string {
+        let pos1 = "";
+        return pos1;
+    }
+    
+    getPosition2(e: Eliminatory): string {
+        let pos2 = "";
+        return pos2;
+    }
+
+     /**
+     * Prepare the meeting list GUI found in the received list of rounds
+     * 
+     * @param rounds the list of round containg the meetings
+     */
+    protected prepareCalendarGui(rounds: Round[] ): any[] {
+        this.eliminatoryLevelCols = [
+            { field: 'rowNumber', header: 'N°'},
+            { field: 'teamName1', header: 'Team 1'},
+            { field: 'teamName2', header: 'Team 2'},
+            { field: 'dateAndTime',   header: 'Data Ora'},
+            { field: 'address',   header: 'Indirizzo'},
+        ];
+
+        let row : number = 0;
+        let rows: any[] = [];
+        let raoundMap: Map<string, Round> = new Map<string, Round>();
+
+        for (let round of rounds) {
+            let r = 0;
+            for (let m of round.onewayMeetings) {
+
+                rows.push(m);
+
+                rows[row].rowNumber = ++r;    
+                rows[row].roundName = round.name;    
+                rows[row].teamName1 = m.teamName1;    
+                rows[row].teamName2 = m.teamName2;    
+
+                rows[row].dateAndTime = this.dateFormatPipe.transform(m.datetime);    
+
+                let currentKey = round.name;  
+                if(!raoundMap.has(currentKey)) {
+                    raoundMap.set(currentKey, round);
+                    let len = this.eliminatoryLevelCols.length;
+                    rows[row].rowspanSize = len;
+                } else {
+                    rows[row].rowspanSize = undefined;
+                }
+                row++;                
+            }
+        }
+        return rows;
+    }
+}

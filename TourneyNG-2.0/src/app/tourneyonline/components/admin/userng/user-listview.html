@@ -1,0 +1,123 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Utenti</span>
+    <span>Vista elenco utenti di sistema</span>
+    <p>Utente [{{loggedUsername}}]</p>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Introduzione
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          La vista contiene l'elenco degli utenti appartenenti alle stesse società dell'utente che ha effettuato il login.
+        </p>
+        <p>
+          Daquesta vista potete eseguire le seguenti tre operazioni:
+        </p>
+        <ul>
+          <li>Creare un nuovo utente</li>
+          <li>Selezionare un utente esistente</li>
+          <li>Rimuovere un utente esistente</li>
+        </ul>
+
+        <h3>Creare un nuovo utente</h3>
+        <p>
+          Potete creare un nuovo utente con il bottone Nuovo Utente. L'azione apre la vista di dettaglio di un utente in cui inserire i dati.
+        </p>
+
+        <h3>Selezionare un utente esistente</h3>
+        <p>
+          Con un click sulla riga dell'utente della tabella, potete accedere in modifica alla corrispondente vista di dettaglio.
+        </p>
+
+        <h3>Rimuovere un utente esistente</h3>
+        <p>Un utente può essere rimosso solo se non è associato a nessun cliente.</p>
+        <p>
+          Per rimuoverlo, fate click sul bottone con la croce rossa e confermata la rimozione nella popup successiva.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+@if (onLoadUserError) {
+  <div style="margin-top:30px">
+    <p-message severity="error" text="Sistema momentaneamente non disponibile, riprovare più tardi"></p-message>
+  </div>
+}
+@if (onDeleteError) {
+  <div style="margin-top:30px">
+    <p-message severity="error" text="Cancellazione fallita, oggetto ancora in uso"></p-message>
+  </div>
+}
+
+<div style="text-align:left">
+  <button type="button" pButton icon="pi pi-plus" (click)="create()" label="Nuovo Utente"></button>
+</div>
+
+<p-table #table [columns]="cols"
+  [value]="users"
+  responsiveLayout="scroll"
+  selectionMode="single"
+  [(selection)]="selectedUser"
+  (onRowSelect)="onRowSelect($event)">
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 15mm;">N°</th>
+      <th>Username</th>
+      <th>Nome</th>
+      <th>Cognome</th>
+      <th>Email</th>
+      <th style="width: 15mm;">X</th>
+    </tr>
+
+    <tr>
+      <th style="width: 15mm;"></th>
+      <th>
+        <input style="width: 100%;"
+          type="text" pInputText placeholder="Cerca per Username"
+          #usernameInput
+          (input)="table.filter(usernameInput.value, 'username', 'contains')">
+        </th>
+        <th>
+          <input style="width: 100%;"
+            type="text" pInputText placeholder="Cerca per Nome"
+            #firstnameInput
+            (input)="table.filter(firstnameInput.value, 'firstname', 'contains')">
+          </th>
+          <th>
+            <input style="width: 100%;"
+              type="text" pInputText placeholder="Cerca per Cognome"
+              #lastnameInput
+              (input)="table.filter(lastnameInput.value, 'lastname', 'contains')">
+            </th>
+            <th>
+              <input style="width: 100%;"
+                type="text" pInputText placeholder="Cerca per Email"
+                #emailInput
+                (input)="table.filter(emailInput.value, 'email', 'contains')">
+              </th>
+              <th style="width: 15mm;"></th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+              @for (col of columns; track col) {
+                <td>
+                  {{rowData[col.field]}}
+                </td>
+              }
+              <td style="width: 15mm;">
+                <button class="ui-button-danger" pButton icon="pi pi-trash" (click)="doDelete(rowData)"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>

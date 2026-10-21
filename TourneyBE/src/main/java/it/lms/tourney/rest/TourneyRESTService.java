@@ -508,6 +508,9 @@ public class TourneyRESTService extends AbstractRESTService {
 		}
 		for (MeetingVO mvo : mdbs) {
 			Meeting mpo = converter.convertMeetingVoPo(mvo);
+			if (mpo.getId() != null) {
+				mpo.setId(null);
+			}
 			meetingDao.insert(mpo);
 			mvo.setId(mpo.getId());
 		}
@@ -523,7 +526,7 @@ public class TourneyRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteTourney(@PathParam("id") Integer id) {
 
-		log.debug(logId() + "DELETE: deleteTourney(" + id + ")");
+		log.info(logId() + "DELETE: deleteTourney(" + id + ")");
 
 		List<User> userList = urcDao.findFollowerByTourneyId(id);
 		urcDao.deleteUrcByTourney(id);

@@ -1,0 +1,15 @@
+/* 1. Remove the blue background from selected rows */
+::ng-deep .ui-table .ui-table-tbody > tr.ui-state-highlight {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+/* 2. Optional: Remove the blue background when hovering over a selected row */
+::ng-deep .ui-table .ui-table-tbody > tr.ui-state-highlight:hover {
+    background-color: #f4f4f4 !important; /* A very light grey instead of blue */
+}
+
+/* 3. Keep your custom "already-selected" color if you want it */
+::ng-deep .already-selected-row {
+    background-color: #e3f2fd !important; /* Light blue just for initial members */
+}

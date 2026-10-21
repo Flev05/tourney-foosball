@@ -13,8 +13,8 @@
     <properties>
         <!-- maven-compiler-plugin -->
         <java.version>21</java.version>		   
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
 
         <!-- A base list of dependency and plug-in version used in the various quick starts. -->
         <version.wildfly.maven.plugin>1.2.0.Final</version.wildfly.maven.plugin>
@@ -354,18 +354,18 @@
 			<version>2.6</version>
 		</dependency>
 
-        <!-- Import the JAX-RS API, we use provided scope as the API is included in JBoss EAP 6 -->
+        <!-- Import the JAX-RS API, we use provided scope as the API is included in JBoss EAP 6 
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
             <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
             <scope>provided</scope>
-        </dependency>
+        </dependency>  
 
         <dependency>
             <groupId>org.jboss.spec.javax.xml.bind</groupId>
             <artifactId>jboss-jaxb-api_2.2_spec</artifactId>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
 
 		<dependency>
 			<groupId>commons-codec</groupId>

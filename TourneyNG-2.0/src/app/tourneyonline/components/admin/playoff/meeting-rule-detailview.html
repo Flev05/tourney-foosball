@@ -1,0 +1,97 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Vista di dettaglio Incontri playoff</span>
+        <h4><span>Torneo: {{selectedTourney.tourneyName}}</span></h4>
+        <h4><span>Girone: {{selectedPlayoff.round.name}}</span></h4>
+        <h4><span>Regola: "{{selectedMeeting.ruleName}}"</span></h4>        
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion value="-1">
+    <p-accordion-panel value="0">   
+        <p-accordion-header>
+            Istruzioni
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Da questa vista potete modificare i dati dell'incontro di playoff selezionato.
+            </p>
+            <p>
+                I soli dati che potete modificare sono la data, l'ora e il luogo dove si svolge l'incontro.
+                La rimozione di un incontro non è contemplata in questa vista perchè gli incontri sono
+                gestiti a livello di girone di playoff al momento dell'inserimento o rimozione di una regola
+                di qualificazione ai playoff.
+            </p>
+        </p-accordion-content>                             
+    </p-accordion-panel>
+</p-accordion>
+</div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" 
+        icon="pi pi-arrow-left" 
+        pButton (click)="goBack()" 
+        label="Indietro">
+    </button>
+</div>   
+
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-3">
+            Via:
+        </div>
+        <div class="col-5" pTooltip="Inserire la via della squadra.">
+            <input pInputText type="text" [(ngModel)]="selectedMeeting.address"/>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-3">
+            <label for="country-id">Comune:</label>
+        </div>
+        <div class="col-5">
+            <p-autoComplete id="country-id" 
+                [(ngModel)]="selectedMeeting.country" 
+                [suggestions]="filteredCountriesSingle" 
+                (completeMethod)="searchCountry($event)" 
+                field="city"
+                optionLabel="city"
+                placeholder="Comune" 
+                [minLength]="1">
+            </p-autoComplete>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-3">
+            Indirizzo:
+        </div>
+        <div class="col-8">
+            {{selectedMeeting.address}} {{selectedMeeting.country != undefined ? " - " + selectedMeeting.country.zipCode + " " + selectedMeeting.country.city
+            + " (" + selectedMeeting.country.provinceCode +")" : "" }}
+        </div>
+    </div> 
+</div>
+
+<div class="grid">
+    <div class="col-3">
+        Data e ora:
+    </div>
+    <div class="col-3" tooltipPosition="right"
+            pTooltip="Indicare la data e ora di inizio dell'incontro.">
+        <p-datepicker [(ngModel)]="selectedMeeting.datetime" 
+            dateFormat="dd/mm/yy" 
+            [showIcon]="true"
+            [showTime]="false">
+        </p-datepicker>
+    </div>   
+</div>
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button class="ui-button-success" 
+        type="button" 
+        icon="pi pi-save" 
+        pButton (click)="done()" 
+        label="Salva">
+    </button>
+</div>

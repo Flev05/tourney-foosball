@@ -63,15 +63,15 @@ public class MeetingRESTService extends AbstractRESTService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MeetingVO> loadByRoundIds(@PathParam("tourneyId") Integer tourneyId, List<Integer> roundIds) {
 
-		log.info(logId() + "[GET: loadByRoundIds(" + tourneyId + ")]");
+		log.info(logId() + "[GET: loadByRoundIds(" + tourneyId + "/roundIds=" + roundIds	+ ")]");
 
 		List<Meeting> meetingList = meetingDao.findMeetingsByRoundIds(tourneyId, roundIds);
 
 		List<MeetingVO> meetingVoList = meetingList.stream().map(mpo -> converter.convertMeetingPoVo(mpo))
 				.collect(Collectors.toList());
 
-		log.info(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds "
-				+ "]");
+		log.info(logId() + "[Found " + meetingVoList.size() + " meetings for tourneyId " + tourneyId + ", roundIds="
+				+ roundIds + "]");
 
 		return meetingVoList;
 	}

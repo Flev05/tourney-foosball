@@ -6,6 +6,7 @@ export interface Team {
     clientId?   : number;
     teamName?   : string;
     isDummy?    : boolean;
+    isNew?      : boolean;
     address?    : string;
     ruleName?   : string;
     asd?        : string;

@@ -1,0 +1,340 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">{{tourneyService.eliminatoryTabName}}</span>
+    <h3><span>{{tourneyService.selectedEliminatoryLevel.name}} {{selectedTourney.tourneyName}}</span></h3>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          Vista di dettaglio Eliminazione diretta.
+        </p>
+        <p>
+          In questa vista dovete specificare le regole per il passaggio del turno alle eliminazioni dirette pescando
+          le squadre dai gironi all'italiana o, se esistono, dai playoff.
+        </p>
+        <p>
+          La vista permette la generazione delle regole in modo automatico o manuale.
+        </p>
+        <p>
+          Il modo automatico viene applicato di default ai playoff, se esistono, altrimenti ai gironi all'italiana.
+        </p>
+        <p>
+          Il modo manuale invece permette una configurazione mista con possibilità di pescare squadre dai
+          sia dai gironi all'italiana che, se esitono, dai playoff.
+        </p>
+        <p>
+          In definitiva dovete eseguire le seguenti operazioni:
+        </p>
+        <ul>
+          <li>1) Selezionare i turni previsti</li>
+          <li>2) Selezionare la generazione delle regole in manuale o in automatico</li>
+          <li>3) Completare i livelli</li>
+        </ul>
+
+        <h4>1) Selezionare i turni previsti</h4>
+        <p>
+          Dovete specificare per ciascun livello di eliminazione diretta - finale, semifinale, quarti, ecc. -
+          se gli incontri sono di solo andata o andata e ritorno. Il sistema lo userà
+          poi per calcolare e richiedere la configurazione delle date e luoghi degli incontri.
+        </p>
+
+        <h4>2) Selezionare la generazione dele regole in manuale o in automatico</h4>
+        <p>
+          Dovete specificare scegliere se far generare le regole di accoppiamento in automatico al programma
+          oppure volete copilarle da soli. L'opzione vale solo se il torneo non prevede gironi di playoff nel
+          qual caso la modalità è di default in manuale.
+        </p>
+
+        <h4>3) Completare i livelli</h4>
+        <p>
+          Dovete selezionare tutti i livelli, uno per uno, accedere alla corrispondente vista di dettaglio
+          di tipo manuale ed inserire i dati richiesti.
+          Bisogna differenziare fra il primo livello, quello più alto, e tutti gli altri:
+        </p>
+        <ul>
+          <li>Livello più alto</li>
+          <li>Tutti gli altri</li>
+        </ul>
+
+        <h5>Livello più alto</h5>
+        <p>
+          Il livello più alto contiene la configurazione dell'accoppiamento delle squadre, le date e il luogo
+          degli incontri.
+          Quando selezionate tale livello, si aprirà la vista elenco contenente le regole
+          per il passaggio del turno dai gironi all'italiana e playoff, se esistono, alle eliminazioni dirette
+          del livello più alto.
+        </p>
+        <p>
+          Gli altri livelli contengono solo la configurazione della data e del luogo di svolgimento dell'incontro.
+          Quando selezionate tale livello, si aprirà la vista elenco di tutte le date in cui si disputano gli incontri
+          corrispondenti.
+        </p>
+
+        <p>
+          Se il torneo è di tipo giornaliero, potete omettere questa configurazione.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+<button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+@if (serverUnreachable) {
+  <div style="margin-top:30px">
+    <p-message severity="error">
+      Servizio momentaneamente non disponibie. Riprovare più tardi.
+    </p-message>
+  </div>
+}
+
+<div class="ui-grid responsive pad ui-flui">
+  <p-fieldset legend="Struttura {{tourneyService.selectedEliminatoryLevel.name}}">
+    <div class="grid">
+      <div class="col-3">
+        Turni:
+      </div>
+      <div class="col-3" tooltipPosition="right"
+        pTooltip="Indicare se le eliminazioni dirette sono di solo andata o andata e ritorno">
+        <p-radioButton name="isOnewayGroupname"
+          inputId="eliminazioniId1"
+          value="true"
+          [(ngModel)]="levelService.isOneway"
+          (onClick)="onOnewayClick()">
+        </p-radioButton>
+        <label for="eliminazioniId1">
+          Solo andata
+        </label>
+
+        <p-radioButton name="isOnewayGroupname"
+          inputId="eliminazioniId2"
+          value="false"
+          [(ngModel)]="levelService.isOneway"
+          (onClick)="onRoundtripClick()">
+        </p-radioButton>
+        <label for="eliminazioniId2">
+          Andata e ritorno
+        </label>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-3">
+        Partite:
+      </div>
+      <div class="col-12 md:col-3">
+        <p-inputNumber 
+            [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.maxMatchesPerMeeting" 
+            [showButtons]="true" 
+            buttonLayout="stacked" 
+            spinnerMode="vertical"
+            decrementButtonClass="p-button-secondary"
+            incrementButtonClass="p-button-secondary"
+            incrementButtonIcon="pi pi-plus" 
+            decrementButtonIcon="pi pi-minus"
+            [min]="1" 
+            [fluid]="true"
+            tooltipPosition="right"
+            pTooltip="Numero di partite in ciascun incontro"
+            (onInput)="onEliminatorySpinnerChange($event)">
+        </p-inputNumber>
+      </div>
+    </div>
+    @if (selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.allMatchesEnabled) {
+      <div class="grid">
+        <div class="col-3">
+          Fine Incontro:
+        </div>
+        <div class="col-3" tooltipPosition="right"
+          pTooltip="Scegliere se giocare tutte le partite o al meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite">
+          <div class="ui-g radiobuttons">
+            <p-radioButton name="allEliminatoryMatchesGroupname"
+              inputId="allEliminatoryMatchesGroupnameId1"
+              value="true"
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.isAllMatches"
+              (onClick)="onAllEliminatoryMatchesClick()">
+            </p-radioButton>
+            <label for="allEliminatoryMatchesGroupnameId1">
+              Tutte le partite
+            </label>
+            <p-radioButton name="allEliminatoryMatchesGroupname"
+              inputId="allEliminatoryMatchesGroupnameId2"
+              value="false"
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.isAllMatches">
+            </p-radioButton>
+            <label for="allEliminatoryMatchesGroupnameId2">
+              Al Meglio delle {{selectedEliminatoryLevel.abstractRoundVO.bestOfWinner}} partite
+            </label>
+          </div>
+        </div>
+      </div>
+    }
+    @if (selectedTourney.tourneyType=='score') {
+      <div class="grid">
+        <div class="col-3">
+          Goal:
+        </div>
+        <div class="col-12 md:col-3">
+          <p-inputNumber 
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsNeededToWin" 
+              [showButtons]="true" 
+              buttonLayout="stacked" 
+              spinnerMode="vertical"
+              decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary"
+              incrementButtonIcon="pi pi-plus" 
+              decrementButtonIcon="pi pi-minus"
+              [min]="1" 
+              [fluid]="true"
+              tooltipPosition="right"
+              pTooltip="Goal necessari per aggiudicarsi la vittoria della partita">
+          </p-inputNumber>
+        </div>
+      </div>
+    }
+    @if (selectedTourney.tourneyType=='time' || selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true') {
+      <div class="grid">
+        <div class="col-3">
+          Vittoria:
+        </div>
+        <div class="col-12 md:col-3">
+          <p-inputNumber 
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchWinnerScores" 
+              [showButtons]="true" 
+              buttonLayout="stacked" 
+              spinnerMode="vertical"
+              decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary"
+              incrementButtonIcon="pi pi-plus" 
+              decrementButtonIcon="pi pi-minus"
+              [min]="1" 
+              [fluid]="true"
+              tooltipPosition="right"
+              pTooltip="Punti assegnati in caso di vittoria">
+          </p-inputNumber>
+        </div>
+        <div class="col-3">
+          punti
+        </div>
+      </div>
+    }
+    @if (selectedTourney.tourneyType=='time') {
+      <div class="grid">
+        <div class="col-3">
+          Pareggio:
+        </div>
+        <div class="col-12 md:col-3">
+          <p-inputNumber 
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.matchBalanceScores" 
+              [showButtons]="true" 
+              buttonLayout="stacked" 
+              spinnerMode="vertical"
+              decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary"
+              incrementButtonIcon="pi pi-plus" 
+              decrementButtonIcon="pi pi-minus"
+              [min]="1" 
+              [fluid]="true"
+              tooltipPosition="right"
+              pTooltip="Punti assegnati in caso di pareggio">
+          </p-inputNumber>
+        </div>        
+        <div class="col-3">
+          punti
+        </div>
+      </div>
+    }
+    @if (selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true') {
+      <div
+        class="grid" >
+        <div class="col-3">
+          Vittoria (Golden goal o Tie break):
+        </div>
+        <div class="col-12 md:col-3">
+          <p-inputNumber 
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakWin" 
+              [showButtons]="true" 
+              buttonLayout="stacked" 
+              spinnerMode="vertical"
+              decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary"
+              incrementButtonIcon="pi pi-plus" 
+              decrementButtonIcon="pi pi-minus"
+              [min]="1" 
+              [fluid]="true"
+              tooltipPosition="right"
+              pTooltip="Punti assegnati in caso di vittoria al golden goal o tie break">
+          </p-inputNumber>
+        </div>        
+        <div class="col-3">
+          punti
+        </div>
+      </div>
+    }
+    @if (selectedTourney.tourneyType=='score' && selectedEliminatoryLevel.abstractRoundVO.isAllMatches=='true') {
+      <div
+        class="grid" >
+        <div class="col-3">
+          Sconfitta (Golden goal o Tie break):
+        </div>
+        <div class="col-12 md:col-3">
+          <p-inputNumber 
+              [(ngModel)]="selectedEliminatoryLevel.abstractRoundVO.pointsGoldenGoalTieBreakDefeat" 
+              [showButtons]="true" 
+              buttonLayout="stacked" 
+              spinnerMode="vertical"
+              decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary"
+              incrementButtonIcon="pi pi-plus" 
+              decrementButtonIcon="pi pi-minus"
+              [min]="1" 
+              [fluid]="true"
+              tooltipPosition="right"
+              pTooltip="Punti assegnati in caso di sconfitta al golden goal o tie break">
+          </p-inputNumber>
+        </div>
+        <div class="col-3">
+          punti
+        </div>
+      </div>
+    }
+
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" class="ui-button-success" icon="pi pi-save" pButton (click)="save()" label="Salva"></button>
+    </div>
+  </p-fieldset>
+</div>
+
+<p-table [columns]="eliminatoryCols"
+  [value]="eliminatoryRows"
+  responsiveLayout="scroll"
+  selectionMode="single"
+  (onRowSelect)="onEliminatoryRowSelect($event)">
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 15mm;">N°</th>
+      @for (col of columns; track col) {
+        <th>
+          {{col.header}}
+        </th>
+      }
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="rowData">
+      <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+      @for (col of columns; track col) {
+        <td>
+          {{rowData[col.field]}}
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

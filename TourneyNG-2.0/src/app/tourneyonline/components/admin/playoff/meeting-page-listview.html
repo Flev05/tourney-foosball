@@ -1,0 +1,106 @@
+<div class="content-section introduction">
+  <div>
+    <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+    <h4><span>Girone Playoff: {{selectedPlayoff.round.name}}</span></h4>
+    <h4><span>Incontri: {{meetingPlayoffService.meetingsNoMsg}}</span></h4>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          Vista elenco degli incontri di playoff in termini di regole di passaggio del turno
+          dai gironi all'italiana ai gironi di playoff.
+        </p>
+        <p>
+          Selezionare l'incontro di interesse per accedere alla vista di dettaglio dell'incontro corrispondente.
+        </p>
+        <p>
+          Attenzione!
+          Se la vista è vuota, significa che il girone contiene meno di 2 squadre.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+<button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+
+<p-tabs [value]="meetingPlayoffService.selectedTabIndex" (valueChange)="onTabChange($event)">
+  <p-tablist>
+      <p-tab [value]="0">ANDATA ({{allDaysNo}} giornate)</p-tab>
+      <p-tab [value]="1">RITORNO ({{allDaysNo}} giornate)</p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel [value]="0" title="ANDATA ({{allDaysNo}} giornate)">
+  
+      <p-table [columns]="meetingsCols"
+        [value]="onewayMeetings"
+        responsiveLayout="scroll"
+        selectionMode="single"
+        [(selection)]="selectedRow"
+        (onRowSelect)="onRowSelect($event)"
+        [paginator]="true"
+        [rows]="pageSize">
+  
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th style="width: 15mm;">N°</th>
+            @for (col of columns; track col) {
+              <th>
+                {{col.header}}
+              </th>
+            }
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData">
+            <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+            <td>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</td>
+            <td>{{rowData.ruleName1}}</td>
+            <td>{{rowData.ruleName2}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabpanel>
+  
+    @if (meetingPlayoffService.isRoundTrip) {
+      <p-tabpanel [value]="1" title="RITORNO ({{allDaysNo}} giornate)">
+        <p-table
+          [columns]="meetingsCols"
+          [value]="roundtripMeetings"
+          responsiveLayout="scroll"
+          selectionMode="single"
+          [(selection)]="selectedRow"
+          (onRowSelect)="onRowSelect($event)"
+          [paginator]="true"
+          [rows]="pageSize">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 15mm;">N°</th>
+              @for (col of columns; track col) {
+                <th>
+                  {{col.header}}
+                </th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+              <td>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</td>
+              <td>{{rowData.ruleName1}}</td>
+              <td>{{rowData.ruleName2}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabpanel>
+    }
+  </p-tabpanels>
+</p-tabs>

@@ -1,0 +1,189 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Dettaglio Cliente</span>
+    <span>Vista di dettaglio gestione cliente</span>
+    <p>Utente [{{loggedUsername}}]</p>
+  </div>
+</div>
+
+<p-accordion value="-1">
+  <p-accordion-panel value="0">
+    <p-accordion-header>
+      Istruzioni
+    </p-accordion-header>
+    <p-accordion-content>
+      <h4>Creare un nuovo Cliente</h4>
+      <p>Compilare tutti i campi obbligatori contrassegnati con l'asterisco (*) e salvare con
+        il bottone Salva
+        I campi senza asterisco sono opzionali e quindi se non avete dati da inserire resteranno vuoti
+      </p>
+
+      <h4>Modificare un cliente esistente</h4>
+      <p>Si possono modificare tutti i campi esistenti ma quelli obbligatori, contrassegnati con l'asterisco (*),
+        non possono essere svuotati ne compilati con spazi bianchi, quelli non obligatori possono
+        essere svuotati.
+        Alla fine dell'operazione salvare con il bottone Salva
+      </p>
+    </p-accordion-content>
+  </p-accordion-panel>
+</p-accordion>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+  <button type="button" pButton icon="pi pi-arrow-left"  (click)="goBack()" label="Indietro"></button>
+</div>
+
+<p>
+  <span style="font-weight: bold">
+    Attenzione! I campi contrassegnati con * sono obbligatori!
+  </span>
+</p>
+
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+  <div class="grid">
+    <div class="col-1">
+      Nominativo*:
+    </div>
+    @if (!userEnabled) {
+      <div class="col-8">
+        {{selectedClient.businessName}}
+      </div>
+    }
+    @if (userEnabled) {
+      <div class="col-8">
+        <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.businessName"
+          placeholder="Nome e cognome o ragione sociale del cliente"/>
+        </div>
+      }
+    </div>
+
+    <div class="grid">
+      <div class="col-1">
+        Via*:
+      </div>
+      @if (!userEnabled) {
+        <div class="col-8">
+          {{selectedClient.address}}
+        </div>
+      }
+      <div class="col-8">
+        @if (userEnabled) {
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.address"/>
+        }
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-1">
+        Indirizzo:
+      </div>
+      <div class="col-8">
+        {{selectedClient != undefined && selectedClient.country != undefined ?
+        selectedClient.address  + " - " +
+        selectedClient.country.zipCode + " " + selectedClient.country.city
+        + " (" + selectedClient.country.provinceCode + ")" : ""}}
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-1">
+        <label for="country-id">Comune*:</label>
+      </div>
+      @if (!userEnabled) {
+        <div class="col-8">
+          {{selectedClient.country?.city}}
+        </div>
+      }
+
+      @if (userEnabled) {
+        <div class="col-8">
+          <p-autoComplete id="country-id"
+            [(ngModel)]="selectedClient.country"
+            [suggestions]="filteredCountriesSingle"
+            (completeMethod)="searchCountry($event)"
+            field="city"
+            class="w-full" 
+            optionLabel="city"
+            placeholder="Comune"
+            [fluid]="true"
+            [minLength]="1">
+          </p-autoComplete>
+        </div>
+      }
+    </div>
+
+    <div class="grid">
+      <div class="col-1">
+        Telefono*:
+      </div>
+      @if (!userEnabled) {
+        <div class="col-8">
+          {{selectedClient.phoneNumber}}
+        </div>
+      }
+      <div class="col-8">
+        @if (userEnabled) {
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.phoneNumber" placeholder="Obbligatorio"/>
+        }
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-1">
+        E-mail*:
+      </div>
+      @if (!userEnabled) {
+        <div class="col-8">
+          {{selectedClient.email}}
+        </div>
+      }
+      @if (userEnabled) {
+        <div class="col-8">
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.email" placeholder="Obbligatoria"/>
+        </div>
+      }
+    </div>
+
+    <div class="grid">
+      <div class="col-1">
+        Sito Internet:
+      </div>
+      @if (!userEnabled) {
+        <div class="col-8">
+          {{selectedClient.siteUrl}}
+        </div>
+      }
+      @if (userEnabled) {
+        <div class="col-8">
+          <input class="w-full" pInputText type="text" [(ngModel)]="selectedClient.siteUrl" placeholder="Sito del cliente se c'è"/>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+      <div class="col-1">
+        <button class="ui-button-success"
+          pButton (click)="onSubmit()"
+          icon="pi pi-save"
+          label="Salva"
+          [disabled]="enableSaveButton()">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (badRequest) {
+    <div style="margin-top:30px">
+      <p-message severity="error">
+        Servizio momentaneamente non disponibie. Riprovare più tardi.
+      </p-message>
+    </div>
+  }
+
+  @if (clientAlreadyExists) {
+    <div style="margin-top:30px">
+      <p-message severity="error" text="Esiste già un cliente con nome {{selectedClient.businessName}}. Cambiare nome e riprovare!"></p-message>
+    </div>
+  }
+

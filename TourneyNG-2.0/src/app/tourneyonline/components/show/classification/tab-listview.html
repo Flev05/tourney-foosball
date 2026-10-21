@@ -1,0 +1,171 @@
+<div class="content-section introduction">
+  <div>
+    <span class="feature-title">Classifiche</span>
+    <span>Vista schede delle classifiche</span>
+  </div>
+</div>
+
+<p-accordion value="-1">
+  <p-accordion-panel value="0">
+    <p-accordion-header>
+      Introduzione
+    </p-accordion-header>
+    <p-accordion-content>
+      <p>
+        La vista contiene da una a tre schede:
+      </p>
+      <ul>
+        <li>Gironi all'italiana</li>
+        <li>Playoff</li>
+        <li>Eliminazioni dirette</li>
+      </ul>
+      <h4>Gironi all'italiana</h4>
+      <p>
+        La scheda dei gironi all'italiana, visualizza la classifica di tutte le squadre girone per girone.
+      </p>
+
+      <h4>Playoff</h4>
+      <p>
+        La scheda dei playoff è come quella dei gironi all'italiana: visualizza la classifica di tutti i gironi
+        che compongono i playoff.
+      </p>
+      <h4>Eliminazioni dirette</h4>
+      <p>
+        La scheda delle eliminazioni dirette invece contiene i livelli di accesso alle eliminatorie
+        da quello più alto, esempio: 16°, 8° di finale, alla finalissima: 1° e 2° posto e finalina: 3° e 4° posto.
+        Occorre selezione il livllo per accedere alla classifica delle coppie di squadre che hanno superato il turno.
+      </p>
+      <p>
+        Se la vista è vuota, significa che non è stata giocata ancora alcuna partita.
+      </p>
+    </p-accordion-content>
+  </p-accordion-panel>
+</p-accordion>
+
+<h3>
+  Torneo: {{selectedTourney.tourneyName}}
+</h3>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+  <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+</div>
+
+<p-tabs [value]="activeIndex" (valueChange)="onTabChange($event)">
+  @if (containsRound()) {
+    <p-tab value="1" title="Gironi">
+      <p-table [columns]="cols"
+        [value]="roundRows"
+        responsiveLayout="scroll">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            @for (col of columns; track col) {
+              <th>
+                {{col.header}}
+              </th>
+            }
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          @if (rowData.rowspanSize) {
+            <tr class="ui-widget-header">
+              <td colspan="9">
+                <span class="roundNames">{{rowData.roundName}}</span>
+              </td>
+            </tr>
+          }
+          <tr [pSelectableRow]="rowData">
+            @for (col of columns; track col) {
+              <td>
+                {{rowData[col.field]}}
+              </td>
+            }
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tab>
+  }
+
+  @if (containsPlayoff()) {
+    <p-tab value="2" title="Playoff">
+      @if (incompleteEliminatoryConfiguration) {
+        <div style="margin-top:30px">
+          <p-message severity="error"
+            text="Attenzione! Le regole del passaggio di turno ai playoff non sono complete!">
+          </p-message>
+        </div>
+      }
+      @if (!incompleteEliminatoryConfiguration) {
+        <p-table [columns]="cols"
+          [value]="playoffRows"
+          responsiveLayout="scroll">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              @for (col of columns; track col) {
+                <th>
+                  {{col.header}}
+                </th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            @if (rowData.rowspanSize) {
+              <tr class="ui-widget-header">
+                <td colspan="9">
+                  <span class="roundNames">{{rowData.roundName}}</span>
+                </td>
+              </tr>
+            }
+            <tr [pSelectableRow]="rowData">
+              @for (col of columns; track col) {
+                <td>
+                  {{rowData[col.field]}}
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </p-tab>
+  }
+
+  @if (containsEliminatory()) {
+    <p-tab value="3" title="Eliminazioni Dirette">
+      <div style="margin-top:30px">
+        @if (incompleteConfiguration) {
+          <p-message
+            severity="error"
+            text="Attenzione! Non non è stato inserito ancora nessun risultato!">
+          </p-message>
+        }
+      </div>
+      @if (!incompleteConfiguration) {
+        <p-table
+          [columns]="eliminatoryCols"
+          [value]="eliminatoryLevelRows"
+          responsiveLayout="scroll"
+          selectionMode="single"
+          [(selection)]="selectedRow"
+          (onRowSelect)="onEliminatoryRowSelect($event)">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              @for (col of columns; track col) {
+                <th>
+                  {{col.header}}
+                </th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData">
+              @for (col of columns; track col) {
+                <td>
+                  {{rowData[col.field]}}
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </p-tab>
+  }
+</p-tabs>

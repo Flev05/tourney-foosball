@@ -1,0 +1,91 @@
+<div class="home">
+    <div class="introduction">
+        <h1>Tourney Online</h1>
+        <h2>Il Portale per la gestione dei tornei</h2>
+
+        <a class="home-button" [routerLink]="['/admintourney/newdv']">
+            Crea QUI il tuo torneo
+        </a>
+    </div>
+
+    <div class="features">
+        <h3>Perchè Tourney Online?</h3>
+        <p class="features-tagline">
+            Congratulazioni! 🎉 Hai scoperto il miglior programma online per la gestione dei tornei
+        </p>
+
+        <p class="features-description">
+            Tourney Online è stato pensato e creato per gestire qualsiasi tipo di torneo a squadre o individuale:
+            dal calcio, al tennis, al volley, al basket, al calcio balilla, ecc.
+        </p>
+
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-component.svg" />
+                <span class="feature-name">Campionato</span>
+                <p>
+                    Tutti i tipi di campionato, di sola andata o andata e ritorno, con qualiasi numero di squadre 
+                    e partite che terminano a tempo o a punti
+                </p>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                    <img src="assets/showcase/images/home/icon-themes.svg" />
+                    <span class="feature-name">Fase a gironi</span>
+                    <p>
+                        Gestione dei gironi di qualificazione. 
+                        Potete definire qualsiasi numero di gironi all'italiana, ciascuno con le proprie squadre, risultati e classifiche.
+                    </p>
+                </div>
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-opensource.svg" />
+                <span class="feature-name">Playoff</span>
+                <p>
+                    Gestione dei playoff del torneo. 
+                    Potete prevedere gironi di playoff in cascata ai gironi all'italiana,
+                    configurabili in funzione dei risultati conseguiti nella fase a gironi precedente.
+                </p>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-productive.svg" />
+                <span class="feature-name">Eliminazione diretta</span>
+                <p>
+                    Gestione di tornei con fasi ad eliminazione diretta.
+                    Possono essere creati fasi ad eliminazione diretta autonome, senza gironi di qualificazione
+                    o dipendenti dai risultati conseguiti nei gironi di qualificazione e playoff precedenti</p>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-mobile.svg" />
+                <span class="feature-name">Tempo Reale</span>
+                <p>Consultazione in tempo reale. Puoi seguire e far seguire da Computer o Smart Phone 
+                    i risultati e le classifiche delle gare in corso
+                    <a [routerLink]="['/realtime']">Leggi tutto...</a>
+                </p>
+            </div>    
+
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-community.svg" />
+                <span class="feature-name">Demo</span>
+                <p>
+                    Versione DEMO online. Permette la gestione temporanea di un torneo senza la persistenza dei dati
+                    <a [routerLink]="['/demo']">Leggi tutto...</a>
+                </p>
+            </div>            
+            <div class="ui-g-12 ui-md-4">
+                <img src="assets/showcase/images/home/icon-component.svg" />
+                <span class="feature-name">Noleggio</span>
+                <p>
+                    Versione a Noleggio. Permette la gestione persistente del torneo.
+                    Il sistema salva su un proprio database i tuoi tornei che puoi riprendere o solo rivedere quando vuoi.                
+                    <a [routerLink]="['/lease']">Leggi tutto...</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="whouses">
+        <h3>Gestore Tornei</h3>
+        <p>Utilizzato da <a href="https://www.calciobalillapregnana.it">www.calciobalillapregnana.it</a> 
+            Sito ufficiale Calcio Balilla Pregnana Milanese
+        </p>
+    </div>
+</div>

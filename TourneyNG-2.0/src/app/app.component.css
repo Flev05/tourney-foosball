@@ -1,0 +1,51 @@
+/* The Mask Overlay */
+.layout-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+    z-index: 998; /* Just below the sidebar */
+    transition: opacity 0.3s;
+}
+
+/* Ensure your sidebar has a higher z-index than the mask */
+#layout-sidebar {
+    z-index: 999;
+    /* ... your other sidebar styles ... */
+    transition: transform 0.3s; /* Smooth sliding */
+    color: var(--text-color);
+}
+
+/* Ensure labels inside the grid are visible */
+#layout-sidebar .grid {
+    color: var(--text-color);
+}
+
+#layout-topbar {
+    background-color: #20272a;
+    display: block;
+    padding: 0;
+    height: 70px; 
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Highest priority */
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .3);
+}
+
+/* Target the span and icon inside an active menu item */
+.active-menuitem span, 
+.active-menuitem i {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
+
+/* Optional: if the active background is too bright, 
+   you can force a subtle background instead */
+.active-menuitem {
+    background-color: var(--surface-hover) !important;
+}

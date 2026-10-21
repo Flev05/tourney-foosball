@@ -1,0 +1,146 @@
+<div class="content-section introduction">
+  <div>
+    <h3>Torneo: {{selectedTourney.tourneyName}}, Girone: {{selectedRound.name}}</h3>
+  </div>
+</div>
+
+<div class="content-section documentation">
+  <p-accordion value="-1">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        Introduzione/Istruzioni
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>
+          Vista di dettaglio girone.
+          In questa vista potete vedere le squadre che compongono il girone selezionato.
+        </p>
+        <p>
+          Il girone deve essere inteso come un semplice contenitore di squadre, nulla deve essere assunto
+          relativamente agli incontri di andata e ritorno che sono documentati nella vista degli incontri
+          accessibile con il bottone "Incontri".
+        </p>
+
+        <p>
+          L'utente può eseguire 4 operazioni.
+        </p>
+        <h4>Tornare alla vista precedente</h4>
+        <p>
+          Con un click sul bottone Indietro si torna alla scheda Gironi del torneo.
+        </p>
+        <h4>Accedere alla vista degli incontri</h4>
+        <p>
+          Con un click sul bottone Incontri, si accede alla vista di tutti gli incontri previsti per il girone
+          selezionato. L'azione non rigenera gli accoppiamenti ma li mostra per eventuali modifiche puntuali.
+        </p>
+        <h4>Ricreare tutti degli incontri del girone</h4>
+        <p>
+          Il bottone, abilitato solo per i tornei in modalità Manuale, rigenera tutti gli incontri
+          sulla base delle squadre definite nel girone al momento del click.
+          Per eseguire l'operazione, dovete confermare l'azione.
+        </p>
+        <h4>Selezionare la squadra</h4>
+        <p>
+          Con un click su una riga nella lista delle squadre si acceda alla vista di dettaglio corrispondente,
+          per eventuali modifiche puntuali all'anagrafica della squadra.
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+  @if (isRoundAutoGen=='false') {
+    <div class="grid">
+      <div class="grid">
+        <div class="col-1">
+          Girone:
+        </div>
+        <div class="col-3" pTooltip="Nome del girone.">
+          <input pInputText type="text" [(ngModel)]="selectedRound.name"/>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="Indietro"></button>
+    <button type="button"
+      icon="pi pi-calendar"
+      pButton (click)="goMeeting()"
+      label="Giornate"
+      title="Visualizza gli incontri delle squadre su base giornate, girone di andata e ritorno se c'è"
+      class="ui-button-success">
+    </button>
+    @if (isRoundAutoGen=='false') {
+      <button type="button"
+        icon="pi pi-user-plus"
+        pButton (click)="redoMeetings()"
+        label="Ricrea Incontri"
+        class="ui-button-danger">
+      </button>
+    }
+  </div>
+   
+  <p-table [columns]="cols"
+    [value]="teams"
+    [scrollable]="true"
+    scrollHeight="500px">
+    <ng-template pTemplate="caption">
+      <div style="text-align:center">
+        Torneo: {{selectedTourney.tourneyName}}, Girone: {{selectedRound.name}}, Squadre ({{teams.length}})
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 15mm;">N°</th>
+        @for (col of columns; track col) {
+          <th>
+            {{col.header}}
+          </th>
+        }
+        <!-- New Column for Action Buttons -->
+        <th style="width: 150px; text-align: center;">Azioni</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 15mm; text-align: center;">{{rowIndex+1}}</td>
+        @for (col of columns; track col) {
+          <td>
+            {{rowData[col.field]}}
+          </td>
+        }
+        <!-- Action Buttons Column -->
+        <td style="text-align: center;">
+          <button pButton type="button" icon="pi pi-angle-double-up" class="p-button-text p-button-sm" 
+                  (click)="moveToTop(rowIndex)" [disabled]="rowIndex === 0" title="Sposta in cima"></button>
+          <button pButton type="button" icon="pi pi-angle-up" class="p-button-text p-button-sm" 
+                  (click)="moveUp(rowIndex)" [disabled]="rowIndex === 0" title="Sposta su"></button>
+          <button pButton type="button" icon="pi pi-angle-down" class="p-button-text p-button-sm" 
+                  (click)="moveDown(rowIndex)" [disabled]="rowIndex === teams.length - 1" title="Sposta giù"></button>
+          <button pButton type="button" icon="pi pi-angle-double-down" class="p-button-text p-button-sm" 
+                  (click)="moveToBottom(rowIndex)" [disabled]="rowIndex === teams.length - 1" title="Sposta in fondo"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button"
+      icon="pi pi-user-plus"
+      pButton (click)="saveRound()"
+      label="Save"
+      class="ui-button-success">
+    </button>
+    <button pButton icon="pi pi-user-plus" 
+      type="button" 
+      (click)="addTeamToRound()" 
+      label="Aggiungi TEAM" 
+      title="Aggiunge una squadra in corso d'opera senza rifare gli incontri esistenti ma crea i nuovi incontri con le altre squadre">
+    </button>
+    @if (selectedRound.addedTeamInProgressList.length > 0) {
+        <button class="ui-button-success"
+          label="Stampa TEAMS aggiunti"
+          pButton icon="pi pi-file-pdf"
+          pTooltip="Stampa solo la lista dei nuovi incontri aggiunti in corso d'opera"
+          (click)="printPdfInProgressMeeting()">
+        </button>
+    }
+  </div>

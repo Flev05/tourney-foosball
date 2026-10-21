@@ -1,0 +1,141 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Observable, of} from 'rxjs';
+
+import { UserService } from '../../../service/user-service';
+import { TableCols } from '../../../domain/table-cols';
+import { UserVO } from '../../../domain/user-vo';
+import { AbstractListView } from '../../../components/common/abstract-listview';
+import { TourneyService } from '../../../service/tourney-service';
+import { LoginService } from '../../../service/login-service';
+import { CountryService } from '../../../service/country-service';
+
+const redirect = '/users/userdv';
+
+@Component({
+    templateUrl: './user-listview.html',
+    standalone: false
+})
+export class UserListView extends AbstractListView {
+
+    selectedUser: UserVO = new UserVO();
+
+    users: UserVO[] = [];
+
+    cols: TableCols[]  = this.userService.cols;
+
+    onLoadUserError: boolean = false;
+    onDeleteError: boolean = false;
+    loggedUsername: string = "";
+
+    constructor(        
+            protected override tourneyService: TourneyService
+          , private loginService: LoginService
+          , private userService: UserService
+          , public override router: Router
+          , protected override location: Location
+          , protected countryService: CountryService
+        ) 
+    {        
+        super(redirect, tourneyService, router, location);
+        console.log("UserListView.constructor()");
+    }
+
+    override ngOnInit() {
+        console.log("UserListView.ngOnInit()");
+        this.countryService.loadAllCountries(() => this.onLoadAllCountriesComplete());
+        this.userService.newUser = false;
+        this.onLoadUserError = false;
+        let loggedUserId = this.loginService.userLogged.id;
+        this.loggedUsername = this.loginService.userLogged.username;
+        const subscriber = this.userService.loadAllUsers(loggedUserId, this.loadUsersErrorHandler('loadAllUsers()'));
+        subscriber.subscribe(cs => this.onLoadUserNext(cs), e => this.onError(e));
+    }
+
+    private onLoadUserNext(cs: UserVO[])   {
+        this.users = cs;
+        for( let u of this.users ) {
+            u.disabled="enabled";
+            if( u.id == this.loginService.userLogged.id ) {
+                u.disabled="disabled";
+            }
+        }
+    }
+
+    private onLoadAllCountriesComplete(): void {
+        this.countries = this.countryService.countries;
+    }
+
+    private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            this.onLoadUserError = true;
+            console.log(`${operation} failed`);
+            console.error(error); // log to console instead     
+            return of(result as T);
+        };
+    }
+
+    create() {
+        this.userService.newUser = true;
+        this.gotoDetailView();
+    }
+
+    onRowSelect(event : any ) {
+        console.log(event.data);
+        this.userService.selectedUser = this.selectedUser;
+        this.userService.newUser = false;
+        this.gotoDetailView();
+    }
+ 
+    doDelete(user: UserVO) {
+        console.log(user);
+        this.selectedUser = user;
+        let name =  user.username;
+        let popup = "Sicuro di voler rimuovere l'utente: [" + name + "]?";
+
+        this.onDeleteError = false;
+        if( user.id == this.loginService.userLogged.id ) {
+            alert("Non puoi rimuovere te stesso!");
+            return;
+        }
+        if(confirm(popup)) {
+            const subscr = this.userService.deleteUser(this.selectedUser.id, this.deleteErrorHandler('deleteUser()'));
+            subscr.subscribe(n => super.next(n), e => this.onError(e), () => this.onDeleteComplete());
+        }
+    }
+    
+    private onDeleteComplete(): void {
+        console.log("onDeleteComplete()");
+
+        let index: number = -1;
+
+        for( let i=0; i<this.users.length; i++ ) {
+            let uvo = this.users[i];
+            if( uvo.id == this.selectedUser.id ) {
+                index = i;
+                break;
+            }
+        }
+
+        if(index > -1 ) {
+            this.users.splice(index, 1);
+        }
+    }
+
+    private deleteErrorHandler<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+            this.onDeleteError = true;
+            console.log(`${operation} failed!`);
+            console.error(error); // log to console instead
+            // Let the app keep running by returning an empty result.
+            return of(result as T);
+        };
+    }
+    
+    override onError(e:any) {
+        console.log("onError()");
+        console.log(e);
+        this.onLoadUserError = true;
+    }
+ }

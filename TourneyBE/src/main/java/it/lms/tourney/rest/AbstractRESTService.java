@@ -15,51 +15,46 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractRESTService extends AbstractLogger {
 
-    protected String getUserAgent() {
+	protected String getUserAgent() {
+		String userAgent = request.getHeader("User-Agent");
+		return userAgent;
+	}
 
-        String userAgent = request.getHeader("User-Agent");
-        return userAgent;
-    }
+	protected void printAuthentication() {
+		String host = request.getRemoteHost();
+		log.info(logId() + "RemoteHost=" + host);
 
-    protected void printAuthentication() {
+		String addr = request.getRemoteAddr();
+		log.info(logId() + "RemoteAddr=" + addr);
 
-        String host = request.getRemoteHost();
-        log.debug(logId() + "RemoteHost=" + host);
+		String path = request.getContextPath();
+		log.info(logId() + "PATH=" + path);
 
-        String addr = request.getRemoteAddr();
-        log.debug(logId() + "RemoteAddr=" + addr);
+		String uri = request.getRequestURI();
+		log.info(logId() + "URI=" + uri);
 
-        String path = request.getContextPath();
-        log.debug(logId() + "PATH=" + path);
+		String url = request.getRequestURI();
+		log.info(logId() + "URL=" + url);
 
-        String uri = request.getRequestURI();
-        log.debug(logId() + "URI=" + uri);
+		String authType = request.getAuthType();
+		log.info(logId() + "AuthType=" + authType);
 
-        String url = request.getRequestURI();
-        log.debug(logId() + "URL=" + url);
+		String remoteUser = request.getRemoteUser();
+		log.info(logId() + "RemoteUser=" + remoteUser);
 
-        String authType = request.getAuthType();
-        log.debug(logId() + "AuthType=" + authType);
+		Principal principal = getPrincipal();
+		log.info(logId() + "Principal=" + principal);
+		if (principal != null) {
+			log.info(logId() + "Principal.getName()=" + principal.getName());
+		}
+	}
 
-        String remoteUser = request.getRemoteUser();
-        log.debug(logId() + "RemoteUser=" + remoteUser);
+	private Principal getPrincipal() {
+		Principal principal = request.getUserPrincipal();
+		return principal;
+	}
 
-        Principal principal = getPrincipal();
-        log.debug(logId() + "Principal=" + principal);
-        if (principal != null) {
-            log.debug(logId() + "Principal.getName()=" + principal.getName());
-        }
-    }
-
-    private Principal getPrincipal() {
-
-        Principal principal = request.getUserPrincipal();
-        return principal;
-    }
-
-    protected void invalidateSession() {
-
-        request.getSession().invalidate();
-    }
-
+	protected void invalidateSession() {
+		request.getSession().invalidate();
+	}
 }

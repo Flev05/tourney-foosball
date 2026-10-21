@@ -9,5 +9,6 @@ export interface Player
     address?        : string;
     phoneNumber?    : string;
     email?          : string;
+    isNew?          : boolean;
     country?        : Country;
 }

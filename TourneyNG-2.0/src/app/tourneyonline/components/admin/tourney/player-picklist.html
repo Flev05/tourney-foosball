@@ -1,0 +1,77 @@
+<div class="content-section introduction">
+    <div>
+        <span class="feature-title">Pickup list per aggiornare la lista di giocatori di una squadra</span>
+        <h3><span>Torneo: {{selectedTourney.tourneyName}}</span></h3>
+        <h4><span>Squadra: {{selectedTeam.teamName}}</span></h4>
+    </div>
+</div>
+
+<div class="content-section documentation">
+<p-accordion value="-1">
+    <p-accordion-panel value="0">         
+        <p-accordion-header>
+            Introduzione
+        </p-accordion-header>
+        <p-accordion-content>
+            <p>
+                Da questa vista potete aggiungere o rimuovere i giocatori di una squadra selezionandoli da quelli disponibili.
+            </p>
+    
+            <p>
+                L'area di destra "Selezionati", elenca i giocatori che compongono la Squadra
+                mentre quella di sinistra "Disponibili", elenca tutti i giocatori disponibili.
+            </p>
+            <p>
+                Potete spostare i giocatori dall'area di destra 
+                all'area di sinistra e viceversa sempicemnte trascinando il nome del giocatore, oppure potete seleazionare il giocatore
+                di interesse ed usare uno dei bottoni di fianco preposto per l'operazione desiderata.           
+            </p>
+            <h4>Nuovo Giocatore</h4>
+            <p>
+                Con il bottone Nuovo Giocatore, si apre la vista di dettaglio di anagrafica del giocatore nella quale 
+                potete inserire i suoi dati e salvarli nella lista dei disponibili. La stessa operazione può essere eseguita anche 
+                a livello globale al link:
+                <a class="home-button" [routerLink]="['/adminplayer']">Giocatori</a>    
+            </p>
+        </p-accordion-content>           
+    </p-accordion-panel>
+</p-accordion>
+</div>
+
+<div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" label="{{returnLabel}}"></button>
+</div>                  
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <div class="grid">
+        <div class="col-3">
+            <button pButton class="ui-button-success" 
+                icon="pi pi-plus" 
+                type="button" 
+                (click)="newPlayer()" 
+                label="Nuovo Giocatore" >
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
+    <p-pickList  [source]="availablePlayers" 
+        [target]="targetPlayers" 
+        sourceHeader="Disponibili {{availablePlayers.length}}" 
+        targetHeader="Selezionati {{targetPlayers.length}}" 
+        responsiveLayout="scroll"
+        dragdrop="true" 
+        dragdropScope="players" 
+        (onMoveToTarget)="onMoveToTarget($event)"
+        (onMoveToSource)="onMoveToSource($event)"
+        [sourceStyle]="{'height':'400px'}" 
+        [targetStyle]="{'height':'400px'}">
+
+        <ng-template let-player pTemplate="item">
+            <div class="ui-helper-clearfix">
+                <div>{{player}}</div>
+            </div>
+        </ng-template>
+    </p-pickList>
+</div>
+

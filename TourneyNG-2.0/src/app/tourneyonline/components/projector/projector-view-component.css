@@ -1,0 +1,262 @@
+/* Force full screen layout without scrolling */
+.projector-container {
+  background-color: #121212; /* Dark background to prevent projector blinding glare */
+  color: #ffffff;
+  height: 100vh;
+  width: 100vw;
+  padding: 0.5rem 2rem 2rem 2rem;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif; /* Clean, ultra-readable font */
+}
+
+/* Ultra-slim header banner */
+.projector-header {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  position: relative;      
+  border-bottom: 2px solid #3b82f6; 
+  padding-bottom: 0.1rem;           /* Shrunk to near zero */
+  margin-bottom: 0.5rem;            /* Shrunk from 1rem to tightly pull up the main content */
+  min-height: auto;                 
+}
+
+/* Slightly smaller title to save vertical height */
+.projector-header h1 {
+  font-size: 1.8rem;                /* Shrunk from 2.2rem */
+  margin: 0;
+  text-transform: uppercase;
+  color: #f8fafc;
+  text-align: center;      
+  line-height: 1.1;
+}
+
+/* Slimmed down live indicator badge */
+.live-indicator {
+  position: absolute;
+  right: 0;                
+  background-color: #ef4444;
+  color: white;
+  padding: 0.3rem 1rem;             /* Tighter padding */
+  font-weight: bold;
+  font-size: 0.9rem;                /* Smaller badge font */
+  border-radius: 4px;
+}
+
+/* Two-column master grid */
+.projector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  height: calc(100vh - 120px);
+}
+
+.projector-section h2 {
+  font-size: 1.0rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #60a5fa;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.projector-section .match-card span {
+  font-size: 1.5rem; /* Adjust this value as needed (e.g., 12px, 14px) */
+}
+
+.projector-table {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* 1. Ultra-slim Table Headers */
+.projector-table ::vdeep .p-datatable-thead > tr > th {
+  font-size: 1.15rem !important;    /* Exact same size as team names on the left */
+  padding: 0.35rem 0.5rem !important; /* Micro-padding matching the match-cards */
+  line-height: 1 !important;
+  text-align: center;                /* Center header text for stats columns */
+  background-color: #0f172a;         /* Darker background matching day banner */
+  color: #94a3b8;
+  border-bottom: 2px solid #334155;
+}
+
+/* Align the "Squadra" header to the left to match the content alignment */
+.projector-table ::vdeep .p-datatable-thead > tr > th:nth-child(2) {
+  text-align: left;
+}
+
+/* 2. Ultra-slim Table Body Rows & Cells */
+.projector-table ::vdeep .p-datatable-tbody > tr > td {
+  font-size: 3.15rem !important;    /* Match character size across both sections */
+  padding: 0.35rem 0.5rem !important; /* Shrunk vertical footprint significantly */
+  line-height: 1 !important;
+  text-align: center;                /* Center-align digits for perfect readability */
+  border-bottom: 1px solid #334155;
+}
+
+/* Match the exact left-alignment style for the team name text column */
+.projector-table ::vdeep .p-datatable-tbody > tr > .team-cell {
+  text-align: left;
+  font-size: 1.4rem !important;  /* Enlarged from 1.15rem to make it pop */
+  font-weight: bold;             /* Made bold so the names are instantly recognizable */
+  color: #f8fafc;                /* Crisp off-white color */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Make the Points column stand out beautifully like the scores box */
+.projector-table ::vdeep .p-datatable-tbody > tr > .points-cell {
+  color: #f59e0b;                    /* Match the Amber yellow tone of match-score */
+  font-weight: bold;
+}
+
+/* Highlight style for top-tier qualified teams (rowIndex < 2) */
+.projector-table ::vdeep .p-datatable-tbody > tr.top-team {
+  background-color: rgba(59, 130, 246, 0.08) !important; /* Subtle blue tint for promotion zone */
+}
+
+/* Container adjustments */
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0px; 
+  border-left: 4px solid #3b82f6; 
+  background-color: #1e293b; /* Gives a solid background matching the cards */
+  border-radius: 6px;
+  overflow: hidden; 
+}
+
+.day-group-header {
+  background-color: #0f172a; 
+  padding: 0.2rem 1.2rem;    /* Reduced vertical padding from 0.4rem to 0.2rem */
+  font-weight: bold;
+  font-size: 1rem;          /* Slipped down from 1.1rem */
+  color: #3b82f6;           
+  letter-spacing: 1px;
+  border-bottom: 1px solid #1e293b;
+  line-height: 1.1;
+}
+
+/* Micro-compact match rows */
+.match-card {
+  background-color: #1e293b;
+  padding: 0.35rem 1.2rem;   /* Shrunk vertical padding significantly from 0.6rem to 0.35rem */
+  display: grid;
+  grid-template-columns: 35px 1fr auto 1fr; /* Slightly narrowed index number column */
+  align-items: center;
+  gap: 0.75rem;              /* Reduced gap between columns from 1rem to 0.75rem */
+  border-bottom: 1px solid #334155; 
+  font-size: 3rem;
+}
+
+/* Remove bottom borders right before a divider to avoid line doubling */
+.match-card:last-of-type {
+  border-bottom: none;
+}
+
+/* Elegant day separator line */
+.day-divider {
+  height: 4px;
+  background-color: #3b82f6; /* Matching the main structural theme line */
+  width: 100%;
+  opacity: 0.8;
+}
+
+.match-number {
+  font-size: 2rem;          /* Shrunk from 1.1rem */
+  color: #94a3b8;        
+  font-weight: bold;
+  text-align: left;
+  border-right: 1px solid #334155; 
+  padding-right: 0.4rem;
+  line-height: 1;
+}
+
+/* Sleeker team typography */
+.team-name.home, .team-name.away {
+  font-size: 2.0rem;       /* Shrunk from 1.3rem to optimize row height */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.team-name.home {
+  text-align: right;
+}
+
+.team-name.away {
+  text-align: left;
+}
+
+/* Tighter score badge */
+.match-score {
+  background-color: #334155;
+  padding: 0.1rem 0.8rem;   /* Reduced vertical padding from 0.2rem to 0.1rem */
+  border-radius: 4px;
+  font-weight: bold;
+  color: #f59e0b;
+  font-size: 3.0rem;       /* Matched to the new text font size */
+  text-align: center;
+  min-width: 60px;          /* Narrowed down from 70px */
+  display: inline-block;
+  line-height: 1.2;
+}
+
+/* PrimeNG Table Tweaks for Old Projectors */
+::v-deep .projector-table .p-datatable-thead > tr > th {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+  font-size: 1.6rem !important;
+  padding: 1rem !important;
+}
+
+::v-deep .projector-table .p-datatable-tbody > tr {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  font-size: 1.6rem !important;
+}
+
+::v-deep .projector-table .p-datatable-tbody > tr.top-team {
+  background-color: #172554 !important; /* Slightly distinct color highlighting qualification zones */
+}
+
+::v-deep .projector-table .p-datatable-tbody > tr > td {
+  padding: 1.2rem 1rem !important;
+  border-bottom: 1px solid #475569 !important;
+}
+
+.team-cell {
+  font-weight: bold;
+  font-size: 2.5rem;
+}
+
+.points-cell {
+  font-weight: bold;
+  color: #4ade80; /* Bright green points */
+  font-size: 3.0rem;
+}
+
+.classification-data {
+  font-weight: bold;
+  font-size: 2.0rem;
+}
+
+.projector-single-view {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Subtle fade animation when views swap */
+.full-screen-fade {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -9,6 +9,7 @@ import { Observable, of } from 'rxjs';
 
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
+// import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export abstract class AbstractView implements OnInit {
@@ -22,9 +23,9 @@ export abstract class AbstractView implements OnInit {
     tourneyAlreadyExists: boolean = false;
     badRequest: boolean = false;
     
-    constructor(
-         protected tourneyService: TourneyService
+    constructor(protected tourneyService: TourneyService
          , protected location: Location
+         // , protected translateService: TranslateService
     ) {}
 
     ngOnInit() {
@@ -57,6 +58,7 @@ export abstract class AbstractView implements OnInit {
         invalidDate.setDate(today.getDate() - 1);
 
         registerLocaleData(localeIt);
+        // this.translateService.use('it');
     }
     
     protected serverUnreachableHandler<T> (operation = 'operation', result?: T) {

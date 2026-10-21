@@ -140,7 +140,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
      */
     public getHeaderOneway() : string {
         let rn = this.selectedRound.name;
-        return this.onewayCurrentDay + "/" + this.roundDaysNo + "(" + (this.onewayCurrentDay ) + "/" + this.allDaysNo + ") " + rn;
+        return this.onewayCurrentDay + "°/" + this.roundDaysNo + "(" + (this.onewayCurrentDay ) + "°/" + this.allDaysNo + ") " + rn;
     }
 
     /**
@@ -150,7 +150,7 @@ export class RoundResultListView extends AbstractRoundResultListView {
      */
     public getHeaderRoundtrip() : string {
         let rn = this.selectedRound.name;
-        return this.roundtripCurrentDay + "/" + this.roundDaysNo + "(" + (this.roundDaysNo + this.roundtripCurrentDay) + "/" + this.allDaysNo + ") " + rn;
+        return this.roundtripCurrentDay + "°/" + this.roundDaysNo + "(" + (this.roundDaysNo + this.roundtripCurrentDay) + "°/" + this.allDaysNo + ") " + rn;
     }
 
     prevOnewayDay() : void {

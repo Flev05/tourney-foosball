@@ -565,34 +565,40 @@ export class MeetingRoundService extends MeetingService {
     private doPrintPdfMeeting(selectedTourney: Tourney, rounds: Round[], both: boolean, roundName: string) {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
-
-        // --- SECTION 1: ANDATA (HOME) ---
         if( both ) {
             this.printFullDirection(doc, rounds, roundName, "Andata", false);
         } else {
             this.printFullDirection(doc, rounds, roundName, null, false);
         }
-
-        // --- SECTION 2: RITORNO (AWAY) ---
         if (both) {
             doc.addPage(); // Start Away meetings on a fresh page
             this.printFullDirection(doc, rounds, roundName, "Ritorno", false);
         }
-
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
     }
 
     public printFullDirection(doc: jsPDF, rounds: Round[], roundBaseName: string, directionLabel: string | null, fillpage: boolean) {
-        let lastY = 20;
-        
-        // Initial Title
-        doc.setFontSize(20);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        for (let i = 0; i < rounds.length; i++) {
+            const r = rounds[i];
+            let yPosition = 10;
+            doc.setFontSize(20);
+            if( directionLabel ) {
+                doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, pageWidth/2, yPosition, { align: 'center' });
+            } else {
+                doc.text(`${this.selectedTourney.tourneyName}`, pageWidth/2, yPosition, { align: 'center' });           
+            }
+            this.printRoundTeamsPage(doc, r);
+            doc.addPage();
+        }
+
         if( directionLabel ) {
             doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
         } else {
             doc.text(`${this.selectedTourney.tourneyName}`, 14, 15);           
         }
-
+        let lastY = 20;
+        doc.setFontSize(20);
         for (let i = 0; i < rounds.length; i++) {
             const r = rounds[i];
             if (!fillpage) {
@@ -601,15 +607,12 @@ export class MeetingRoundService extends MeetingService {
                 }
                 lastY = 20;
             }
-
             this.prepareMeetingsMap(r);
             let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
-
             for (let md = 1; md <= r.daysNo; md++) {
                 let meetingList: Meeting[] = (directionLabel == null || directionLabel === "Andata") 
                     ? this.getOnewayMeetingsOfDay(md) 
                     : this.getRoundtripMeetingsOfDay(md);
-
                 if (meetingList.length > 0) {
                     let currentDayMeetings: any[] = [];
                     if( directionLabel ) {
@@ -617,11 +620,8 @@ export class MeetingRoundService extends MeetingService {
                     } else {
                         this.collectMeetingData(currentDayMeetings, meetingList, currentRoundName, null, md, r.daysNo);
                     }
-
                     const estimatedTableHeight = 10 + (currentDayMeetings.length * 10);
                     const pageHeight = doc.internal.pageSize.getHeight();
-
-                    // Logic to check if we need a new page
                     if (lastY + estimatedTableHeight > pageHeight - 20 && lastY > 20) {
                         doc.addPage(); // Uncommented this to actually create the page
                         lastY = 20;
@@ -632,18 +632,46 @@ export class MeetingRoundService extends MeetingService {
                             doc.text(`${this.selectedTourney.tourneyName}`, 14, 15);
                         }
                     }
-
-                    // --- HEADER LOGIC ---
-                    // Show header ONLY if we are at the top of a page (lastY is 20)
                     const shouldShowHeader = (lastY === 20);
-                    
                     this.printMeetingsByDirection(doc, currentDayMeetings, lastY, shouldShowHeader);
-                    
-                    // Update lastY for the next table
                     lastY = (doc as any).lastAutoTable.finalY + 10;
                 }
             }
         }
+    }
+
+    /**
+     * Helper method to extract unique team names from a Round and print them on the current page.
+     */
+    private printRoundTeamsPage(doc: jsPDF, round: Round): void {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        doc.setFontSize(40);
+        const titleText = `${round.name || round.label || 'Round ' + round.id}`;
+        let yPosition = 30;
+        doc.text(titleText, pageWidth / 2, yPosition, { align: 'center' });
+        const allMeetings = [...round.onewayMeetings, ...round.roundtripMeetings];
+        const teamSet = new Set<string>();
+        allMeetings.forEach(meeting => {
+            if (meeting.teamName1 && meeting.teamName1 !== "(Riposo)") teamSet.add(meeting.teamName1);
+            if (meeting.teamName2 && meeting.teamName2 !== "(Riposo)") teamSet.add(meeting.teamName2);
+        });
+        const teamList = teamSet.size > 0 ? Array.from(teamSet) : round.teamNames;
+        yPosition = 47;
+        const lineHeight = 18;
+        const pageHeight = doc.internal.pageSize.getHeight();
+        doc.setFontSize(20);
+        if (teamList.length === 0) {
+            doc.text("No teams registered for this round.", 14, yPosition);
+            return;
+        }
+        teamList.forEach((teamName, idx) => {
+            if (yPosition + lineHeight > pageHeight - 15) {
+                doc.addPage();
+                yPosition = 20;
+            }
+            doc.text(`${idx + 1}. ${teamName}`, 14, yPosition);
+            yPosition += lineHeight;
+        });
     }
 
     /**

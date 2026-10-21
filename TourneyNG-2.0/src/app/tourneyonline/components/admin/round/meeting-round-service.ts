@@ -19,6 +19,7 @@ import { ClientService } from 'app/tourneyonline/service/client-service';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MeetingDto } from './meeting-dto';
+import { Team } from 'app/tourneyonline/domain/team';
 
 @Injectable({
   providedIn: 'root'
@@ -243,22 +244,16 @@ export class MeetingRoundService extends MeetingService {
 
     createRoundMeeting( tourney: Tourney, round : Round ) : void {
         this.selectedTourney = tourney;
-
         round.onewayMeetings = [];
         round.roundtripMeetings = [];
-
         this.prepareMeetings(round);
-
         this.onewayDaysNo = 1;
         this.shiftOnewayDay(this.onewayDaysNo);
-
         this.roundtripDaysNo = 1;
         this.shiftRoundtripDay(this.roundtripDaysNo);
-
         let allDaysNo = this.onewayMeetingDaysMap.size;
         let meetingsNo = round.onewayMeetings.length;
         this.isRoundTrip = false;
-
         this.prepareCaption(meetingsNo, allDaysNo, round);
     }
 
@@ -285,97 +280,121 @@ export class MeetingRoundService extends MeetingService {
      * Prepares the meetings only if there was the changes in the teams or in the round configurations
      */
     private prepareMeetings(round : Round) {
-        let teams: string[] = [...round.teamNames];
-        if( teams.length % 2 > 0 ) {
-            let dummyTeam = MeetingService.SKIPING_TEAM;
-            teams.push(dummyTeam);
+        let teamNames: string[] = [...round.teamNames];
+        const teams : Team[] = [];
+        for( let tn of teamNames ) {
+            const t : Team | undefined = this.selectedTourney.teams.find( e => e.teamName === tn);
+            if( t != undefined) {
+                teams.push(t);
+            }                    
         }
-        this.applyBergerAlgorithm(round, teams);
+        // if (this.selectedTourney.teamsWeightEnabled === "group") {
+        //     const teamsByAsd = new Map<string, Team[]>();
+        //     for (const team of teams) { // Group teams by ASD.
+        //         const asd = team.asd ?? "";
+        //         if (!teamsByAsd.has(asd)) {
+        //             teamsByAsd.set(asd, []);
+        //         }
+        //         teamsByAsd.get(asd)!.push(team);
+        //     }
+            // Sort ASD groups by number of teams, descending.
+            // const sortedGroups = [...teamsByAsd.entries()].sort((a, b) => b[1].length - a[1].length);
+            // for (const [asd, asdTeams] of sortedGroups) {
+            //     grouppedTeams.push(...asdTeams);
+            // }
+
+            // const teamsByAsd = new Map<string, Team[]>();
+            // for (const team of teams) {
+            //     const asd = team.asd ?? "";
+            //     if (!teamsByAsd.has(asd)) {
+            //         teamsByAsd.set(asd, []);
+            //     }
+            //     teamsByAsd.get(asd)!.push(team);
+            // }
+            // // Sort ASD groups by number of teams, descending.
+            // const sortedGroups = [...teamsByAsd.entries()].sort(
+            //     (a, b) => b[1].length - a[1].length
+            // );
+            // const grouppedTeams: Team[] = new Array(teams.length);
+            // let left = 0;
+            // let right = teams.length - 1;
+            // for (const [, asdTeams] of sortedGroups) {
+            //     for (let i = 0; i < asdTeams.length; i++) {
+            //         grouppedTeams[left++] = asdTeams[i];
+            //         grouppedTeams[right--] = asdTeams[asdTeams.length - i - 1];
+            //     }
+            // }
+        // } else {
+        //     grouppedTeams = teams;
+        // }
+
+
+        let grouppedTeams : Team[] = teams;
+
+        if( grouppedTeams.length % 2 != 0 ) {
+            const dummyTeam : Team = new Team();
+            dummyTeam.teamName = MeetingService.SKIPING_TEAM;
+            grouppedTeams.push(dummyTeam);
+        }
+        this.applyBergerAlgorithm(round, grouppedTeams);
         this.completeMeetings(round);
         round.pageSize = round.onewayMeetings.length / round.daysNo
+
         console.log("[Meetings " + round.onewayMeetings.length + "]");
         console.log("[Days     " + round.daysNo + "]");
         console.log("[PageSize " + round.pageSize + "]");
     }
-
+   
     /**
      * Prepares the meetings of the teams using the Berger algorithm
      */
-    private applyBergerAlgorithm(round: Round, teams: string[]): void {
+    private applyBergerAlgorithm(round: Round, teams : Team[]): void {
         let teamsNo = teams.length;
         round.daysNo = teamsNo - 1;
-
-        /* crea gli array per le due liste in casa e fuori */
-        let home : Array<string>  = new Array<string>(teamsNo / 2);
-        let away : Array<string>  = new Array<string>(teamsNo / 2);
-
+        const halfTeams : number =  teamsNo / 2;
+        let home : Array<Team>  = new Array<Team>(halfTeams);
+        let away : Array<Team>  = new Array<Team>(halfTeams);
         for (let i = 0; i < teamsNo / 2; i++) {
             home[i] = teams[i];
             away[i] = teams[teamsNo - 1 - i];
         }
-
         this.onewayMeetingDaysMap = new Map<number, Meeting[]>();
-
         for (let i = 0; i < round.daysNo; i++) {
-            /* stampa le partite di questa giornata */
-            let key: number = i + 1;
-            console.log( key + "° Giornata");
-            if(!this.onewayMeetingDaysMap.has(key)) {
+            let day: number = i + 1;
+            if(!this.onewayMeetingDaysMap.has(day)) {
                 let emptyList: Meeting[] = [];
-                this.onewayMeetingDaysMap.set(key, emptyList);
+                this.onewayMeetingDaysMap.set(day, emptyList);
             }
-
-            let meetingList = this.onewayMeetingDaysMap.get(key);
+            let meetingList = this.onewayMeetingDaysMap.get(day);
             if( !meetingList ) continue;
-
-            /* alterna le partite in casa e fuori */
             if (i % 2 == 0) {
-                for (let j = 0; j < teamsNo / 2; j++) {
-                    let t1: string = home[j];
-                    let t2: string = away[j];
-                    let day = j + 1;
-                    console.log( day + " " + t2  + " - " + t1 );
-
-                    let mfound = round.onewayMeetings.find( m => this.whereCondition(m, t2, t1));
-
+                for (let j = 0; j < halfTeams; j++) {
+                    let t1: Team = home[j];
+                    let t2: Team = away[j];
+                    console.log( day + "° Giornata: " + t2.teamName  + " <-> " + t1.teamName );
+                    let mfound = round.onewayMeetings.find(m => this.whereCondition(m, t2.teamName, t1.teamName));
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t2, t1, key, Direction.OneWay);
+                        mfound = this.newMeeting(t2.teamName, t1.teamName, day, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
             } else {
-                for (let j = 0; j < teamsNo / 2; j++) {
-                    let t1: string = home[j];
-                    let t2: string = away[j];
-                    let day = j + 1;
-                    // console.log( day + " " + t1  + " - " + t2 );
-
-                    let mfound = round.onewayMeetings.find( m => this.whereCondition(m, t1, t2));
-
+                for (let j = 0; j < halfTeams; j++) {
+                    let t1: Team = home[j];
+                    let t2: Team = away[j];
+                    console.log( day + "° Giornata: " + t1.teamName  + " <-> " + t2.teamName );
+                    let mfound = round.onewayMeetings.find(m => this.whereCondition(m, t1.teamName, t2.teamName));
                     if( mfound == undefined ) {
-                        mfound = this.newMeeting(t1, t2, key, Direction.OneWay);
+                        mfound = this.newMeeting(t1.teamName, t2.teamName, day, Direction.OneWay);
                     }
                     meetingList.push(mfound);
                 }
             }
-
             meetingList = MeetingService.sortMeetings(meetingList);
-
-            // Ruota gli elementi delle liste, tenendo fisso il primo elemento
-            // Salva l'elemento fisso
-            let pivot : string  = home[0];
-
-            /*
-             * sposta in avanti gli elementi di "trasferta" inserendo all'inizio l'elemento casa[1] e salva l'elemento
-             * uscente in "riporto"
-             */
-            let riporto : string  = away[away.length - 1];
+            let pivot : Team  = home[0];
+            let riporto : Team  = away[away.length - 1];
             away = this.shiftRight(away, home[1]);
-
-            //  sposta a sinistra gli elementi di "casa" inserendo all'ultimo posto l'elemento "riporto"
             home = this.shiftLeft(home, riporto);
-
-            // ripristina l'elemento fisso
             home[0] = pivot;
         }
     }
@@ -396,15 +415,10 @@ export class MeetingRoundService extends MeetingService {
             let onewayMeetings  = this.onewayMeetingDaysMap.get(key);
             if( !onewayMeetings ) continue;
             for( let m of onewayMeetings ) {   
-                // m.dateAndTime = this.dateFormatPipe.transform(m.datetime);
-    
                 let rtm = round.roundtripMeetings.find( i => this.whereCondition(m, m.teamName2, m.teamName1));
-
                 if( rtm == undefined ) {
                     rtm = this.newMeeting(m.teamName2, m.teamName1, m.day, Direction.RoundTrip);
-                    // rtm.dateAndTime = this.dateFormatPipe.transform(rtm.datetime);
                 }
-
                 if( !this.roundtripMeetingDaysMap.has(key) ) {
                     let emptyList: Meeting[] = [];
                     this.roundtripMeetingDaysMap.set(key, emptyList);
@@ -413,7 +427,6 @@ export class MeetingRoundService extends MeetingService {
                 if( dayList )
                     dayList.push(rtm);
             }
-
             round.onewayMeetings = round.onewayMeetings.concat(onewayMeetings);
         }
          
@@ -436,10 +449,8 @@ export class MeetingRoundService extends MeetingService {
         return "";
     }
 
-    private shiftLeft(data : string[] , add: string ) : string[] {
-
-        let temp : Array<string>  = new Array<string>(data.length);
-
+    private shiftLeft(data : Team[] , add: Team ) : Team[] {
+        let temp : Array<Team>  = new Array<Team>(data.length);
         for (let i = 0; i < data.length - 1; i++) {
             temp[i] = data[i + 1];
         }
@@ -447,14 +458,12 @@ export class MeetingRoundService extends MeetingService {
         return temp;
     }
 
-    private shiftRight(data : string[] , add: string ): string[] {
-        let temp : Array<string>  = new Array<string>(data.length);
-
+    private shiftRight(data : Team[] , add: Team ): Team[] {
+        let temp : Array<Team>  = new Array<Team>(data.length);
         for (let i = 1; i < data.length; i++) {
             temp[i] = data[i - 1];
         }
         temp[0] = add;
-
         return temp;
     }
 
@@ -556,34 +565,40 @@ export class MeetingRoundService extends MeetingService {
     private doPrintPdfMeeting(selectedTourney: Tourney, rounds: Round[], both: boolean, roundName: string) {
         const doc = new jsPDF();
         this.selectedTourney = selectedTourney;
-
-        // --- SECTION 1: ANDATA (HOME) ---
         if( both ) {
             this.printFullDirection(doc, rounds, roundName, "Andata", false);
         } else {
             this.printFullDirection(doc, rounds, roundName, null, false);
         }
-
-        // --- SECTION 2: RITORNO (AWAY) ---
         if (both) {
             doc.addPage(); // Start Away meetings on a fresh page
             this.printFullDirection(doc, rounds, roundName, "Ritorno", false);
         }
-
         doc.save(`Meetings-${roundName}-${this.selectedTourney.tourneyName}.pdf`);
     }
 
     public printFullDirection(doc: jsPDF, rounds: Round[], roundBaseName: string, directionLabel: string | null, fillpage: boolean) {
-        let lastY = 20;
-        
-        // Initial Title
-        doc.setFontSize(20);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        for (let i = 0; i < rounds.length; i++) {
+            const r = rounds[i];
+            let yPosition = 10;
+            doc.setFontSize(20);
+            if( directionLabel ) {
+                doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, pageWidth/2, yPosition, { align: 'center' });
+            } else {
+                doc.text(`${this.selectedTourney.tourneyName}`, pageWidth/2, yPosition, { align: 'center' });           
+            }
+            this.printRoundTeamsPage(doc, r);
+            doc.addPage();
+        }
+
         if( directionLabel ) {
             doc.text(`${this.selectedTourney.tourneyName} - ${directionLabel}`, 14, 15);
         } else {
             doc.text(`${this.selectedTourney.tourneyName}`, 14, 15);           
         }
-
+        let lastY = 20;
+        doc.setFontSize(20);
         for (let i = 0; i < rounds.length; i++) {
             const r = rounds[i];
             if (!fillpage) {
@@ -592,15 +607,12 @@ export class MeetingRoundService extends MeetingService {
                 }
                 lastY = 20;
             }
-
             this.prepareMeetingsMap(r);
             let currentRoundName = roundBaseName + " " + String.fromCharCode(65 + i);
-
             for (let md = 1; md <= r.daysNo; md++) {
                 let meetingList: Meeting[] = (directionLabel == null || directionLabel === "Andata") 
                     ? this.getOnewayMeetingsOfDay(md) 
                     : this.getRoundtripMeetingsOfDay(md);
-
                 if (meetingList.length > 0) {
                     let currentDayMeetings: any[] = [];
                     if( directionLabel ) {
@@ -608,11 +620,8 @@ export class MeetingRoundService extends MeetingService {
                     } else {
                         this.collectMeetingData(currentDayMeetings, meetingList, currentRoundName, null, md, r.daysNo);
                     }
-
                     const estimatedTableHeight = 10 + (currentDayMeetings.length * 10);
                     const pageHeight = doc.internal.pageSize.getHeight();
-
-                    // Logic to check if we need a new page
                     if (lastY + estimatedTableHeight > pageHeight - 20 && lastY > 20) {
                         doc.addPage(); // Uncommented this to actually create the page
                         lastY = 20;
@@ -623,18 +632,46 @@ export class MeetingRoundService extends MeetingService {
                             doc.text(`${this.selectedTourney.tourneyName}`, 14, 15);
                         }
                     }
-
-                    // --- HEADER LOGIC ---
-                    // Show header ONLY if we are at the top of a page (lastY is 20)
                     const shouldShowHeader = (lastY === 20);
-                    
                     this.printMeetingsByDirection(doc, currentDayMeetings, lastY, shouldShowHeader);
-                    
-                    // Update lastY for the next table
                     lastY = (doc as any).lastAutoTable.finalY + 10;
                 }
             }
         }
+    }
+
+    /**
+     * Helper method to extract unique team names from a Round and print them on the current page.
+     */
+    private printRoundTeamsPage(doc: jsPDF, round: Round): void {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        doc.setFontSize(40);
+        const titleText = `${round.name || round.label || 'Round ' + round.id}`;
+        let yPosition = 30;
+        doc.text(titleText, pageWidth / 2, yPosition, { align: 'center' });
+        const allMeetings = [...round.onewayMeetings, ...round.roundtripMeetings];
+        const teamSet = new Set<string>();
+        allMeetings.forEach(meeting => {
+            if (meeting.teamName1 && meeting.teamName1 !== "(Riposo)") teamSet.add(meeting.teamName1);
+            if (meeting.teamName2 && meeting.teamName2 !== "(Riposo)") teamSet.add(meeting.teamName2);
+        });
+        const teamList = teamSet.size > 0 ? Array.from(teamSet) : round.teamNames;
+        yPosition = 47;
+        const lineHeight = 18;
+        const pageHeight = doc.internal.pageSize.getHeight();
+        doc.setFontSize(20);
+        if (teamList.length === 0) {
+            doc.text("No teams registered for this round.", 14, yPosition);
+            return;
+        }
+        teamList.forEach((teamName, idx) => {
+            if (yPosition + lineHeight > pageHeight - 15) {
+                doc.addPage();
+                yPosition = 20;
+            }
+            doc.text(`${idx + 1}. ${teamName}`, 14, yPosition);
+            yPosition += lineHeight;
+        });
     }
 
     /**

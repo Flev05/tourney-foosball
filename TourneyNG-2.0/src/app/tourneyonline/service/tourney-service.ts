@@ -108,9 +108,9 @@ export class TourneyService extends AbstractService {
     detachedClassificationRows: any[] = [];
 
     static roundCols: TableCols[] = [
-        { field: 'name',       header: 'Gironi' },
-        { field: 'teamNo',     header: 'Squadre/Girone' },
-        { field: 'teamNames',  header: 'Squadre' },
+        { field: 'name',       header: 'GIRONI' },
+        { field: 'teamNo',     header: 'S/G' },
+        { field: 'teamNames',  header: 'Squadre/Girone' },
     ];
 
     static playoffCols: TableCols[] = [
@@ -1062,7 +1062,6 @@ export class TourneyService extends AbstractService {
                 }
             }
         }
-        round.normalizedClassification = this.sortTeamsDesc(round.normalizedClassification);
     }
 
     private reset(c: Classification) {
@@ -1119,7 +1118,7 @@ export class TourneyService extends AbstractService {
         let classificationList: Classification[] = this.prepareClassificationList(teamNames, meetings, null);
         round.classification = classificationList;
         if( toDetach ) {
-            round.detachedClassification = this.createDetachedClassification(classificationList, meetings, true);
+            round.detachedClassification = this.createDetachedClassification(round, meetings, true);
         }
         return classificationList;
     }
@@ -1140,56 +1139,95 @@ export class TourneyService extends AbstractService {
             this.updateClassification(el);
         }
     }
-
+ 
     /**
-     * It creates the detached classification list when there are 2 or more teams having the same number of points.
-     * In that case, it computes the separate detached classification only on the teams having the same points. 
-     * After that, updates the original classification.
-     * 
-     * @param classificationList the original classification list
-     * @param meetings the list of meetings of all teams in the same round
-     * @returns the new corrected classification
+     * Creates a detached classification for teams having the same number
+     * of points. When merge is true, it also updates the original
+     * classification with the detached ordering.
+     *
+     * @param originalClassificationList the original classification list
+     * @param meetings the meetings of all teams in the same round
+     * @param merge whether to merge the detached ordering into the original classification
+     * @returns the detached classification list
      */
-    private createDetachedClassification(classificationList:  Classification[], meetings: Meeting[], merge : boolean): Array<Classification>  {
-        let pointsMap: Map<number, Meeting[]> = this.preparePointMap(classificationList, meetings);
-        let sortedClassification: Classification[] = [];
-        let step : number = 1;
-        for(let i=0; i < classificationList.length; i+=step) {
-            let c : Classification = classificationList[i];
-            let key = c.points;
-            if( merge ) {
-                if(!pointsMap.has(key)) {
-                    sortedClassification.push(c);
-                    step=1;
+    private createDetachedClassification(
+        round: Round,
+        meetings: Meeting[],
+        merge: boolean
+    ): Classification[] {
+        let originalClassificationList: Classification[] = round.classification;
+        const pointsMap = this.preparePointMap(
+            originalClassificationList,
+            meetings
+        );
+        const sortedDetachedClassification: Classification[] = [];
+        let i = 0;
+        while (i < originalClassificationList.length) {
+            const current = originalClassificationList[i];
+            const points = current.points;
+
+            // Find the complete group of consecutive teams with the same points.
+            let j = i + 1;
+            while (
+                j < originalClassificationList.length &&
+                originalClassificationList[j].points === points
+            ) {
+                j++;
+            }
+            const originalGroup = originalClassificationList.slice(i, j);
+            const meetingSubList = pointsMap.get(points);
+            if (!meetingSubList || meetingSubList.length === 0) {
+                i = j;
+                continue;
+            }
+            const teamNamesSet = new Set<string>();
+            for (const meeting of meetingSubList) {
+                if (
+                    meeting.teamName1 == null ||
+                    meeting.teamName2 == null
+                ) {
                     continue;
                 }
-            } 
-            let meetingSubList: Meeting[] | undefined = pointsMap.get(key);
-            if( !meetingSubList || meetingSubList.length === 0 ) {
-                continue
-            };
-            const teamNamesSet: Set<string> = new Set();
-            for(let m of meetingSubList) {
-                if( m.teamName1 == null || m.teamName2 == null ) continue;
-                teamNamesSet.add(m.teamName1);
-                teamNamesSet.add(m.teamName2);
+                teamNamesSet.add(meeting.teamName1);
+                teamNamesSet.add(meeting.teamName2);
             }
-            let teamNames: string[] = Array.from(teamNamesSet);
-            let sortedSubList: Classification[] = this.prepareClassificationList(teamNames, meetingSubList, classificationList);
-            if( merge ) {
-                for( let j=0; j<sortedSubList.length; j++ ) {
-                    let sc = sortedSubList[j];
-                    let fi = classificationList.findIndex(e => e.teamName === sc.teamName);
-                    let originalClassification = classificationList[fi];
-                    sortedClassification.push(originalClassification);
+            const sortedSubList = this.prepareClassificationList(
+                Array.from(teamNamesSet),
+                meetingSubList,
+                originalClassificationList
+            );
+            if (merge) {
+                const originalByTeam = new Map(
+                    originalGroup.map(c => [c.teamName, c])
+                );
+                const mergedGroup: Classification[] = [];
+                const addedTeams = new Set<string>();
+                for (const detached of sortedSubList) {
+                    const original = originalByTeam.get(detached.teamName);
+
+                    if (original && !addedTeams.has(original.teamName)) {
+                        mergedGroup.push(original);
+                        addedTeams.add(original.teamName);
+                    }
                 }
+                // Update the original classification only.
+                // Do not add non-detached teams to the returned list.
+                originalClassificationList.splice(
+                    i,
+                    originalGroup.length,
+                    ...mergedGroup,
+                    ...originalGroup.filter(c => !addedTeams.has(c.teamName))
+                );
+                // Return only teams in the detached group.
+                sortedDetachedClassification.push(...sortedSubList);
+                round.classification = originalClassificationList;
             } else {
-                sortedClassification = sortedClassification.concat(sortedSubList);
+                sortedDetachedClassification.push(...sortedSubList);
             }
-            step = sortedSubList.length;
+            i = j;
         }
-        return sortedClassification;
-    }
+        return sortedDetachedClassification;
+    }    
 
     // Group classifications by points
     // Both teams must be in the same points group
@@ -1338,9 +1376,9 @@ export class TourneyService extends AbstractService {
         return rows;
     }
     
-    public extractDetachedClassification( round: Round): Classification[] {
+    public extractDetachedClassification( round: Round ): Classification[] {
         let meetings: Meeting[] = round.onewayMeetings.concat(round.roundtripMeetings);
-        const detachedClassification : Classification[] = this.createDetachedClassification(round.classification, meetings, false);
+        const detachedClassification : Classification[] = this.createDetachedClassification(round, meetings, false);
         round.detachedClassification = detachedClassification;
         return detachedClassification;
     }

@@ -18,6 +18,8 @@ export class Meeting {
     status          : MeetingStatus = MeetingStatus.ToPlay;
     points1         : number = 0;
     points2         : number = 0;
+    matches1        : number = 0;
+    matches2        : number = 0;
     vpoints1        : number = 0;
     vpoints2        : number = 0;
     matches         : Match[] = [];

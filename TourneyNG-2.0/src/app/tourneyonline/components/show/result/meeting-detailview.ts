@@ -346,6 +346,8 @@ export class MeetingDetailView extends AbstractDetailView {
         let goals1 = 0;
         let goals2 = 0;
 
+        this.selectedMeeting.matches1 = 0;
+        this.selectedMeeting.matches2 = 0;
         for(let i=0; i<this.matches.length; i++) {
             let m = this.matches[i];
             m.status = this.selectedMeeting.status;
@@ -353,6 +355,7 @@ export class MeetingDetailView extends AbstractDetailView {
             goals2 = m.score2;
 
             if (goals1 > goals2) {
+                this.selectedMeeting.matches1++;
                 if (this.selectedTourney.tourneyType == TourneyType.Score) {
                     if (goals1==this.abstractRoundVO.pointsNeededToWin && (goals1 == goals2 + 1)) {
                         this.selectedMeeting.points1 += this.abstractRoundVO.pointsGoldenGoalTieBreakWin;
@@ -366,6 +369,7 @@ export class MeetingDetailView extends AbstractDetailView {
             } 
                         
             if (goals2 > goals1) {
+                this.selectedMeeting.matches2++;
                 if (this.selectedTourney.tourneyType == TourneyType.Score) {
                     if (goals2==this.abstractRoundVO.pointsNeededToWin && (goals2 == goals1 + 1)) {
                         this.selectedMeeting.points2 += this.abstractRoundVO.pointsGoldenGoalTieBreakWin;

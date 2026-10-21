@@ -5,7 +5,7 @@
         <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
       </td>
       <td>
-        <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}({{selectedTourney.roundTabName}})</p>
+        <p style="text-align: center;font-weight: bold; font-size: 2em;">{{selectedTourney.tourneyName}} ({{selectedTourney.roundTabName}})</p>
       </td>
       <td style="text-align: right;">
         <button type="button" icon="pi pi-refresh" pButton (click)="refresh()"></button>
@@ -16,7 +16,9 @@
 
 @if (serverUnreachable) {
   <div style="margin-top:30px">
-    <p-message severity="error" text="Servizio momentaneamente non disponibie. Riprovare più tardi."></p-message>
+    <p-message severity="error">
+      Servizio momentaneamente non disponibie. Riprovare più tardi.
+    </p-message>
   </div>
 }
 
@@ -34,12 +36,12 @@
       <p-tabpanel [value]="0" title="Andata">
         <div class="flex flex-column align-items-center w-full mt-2">
           @for (entry of roundtripMeetingDaysMap | keyvalue; track entry.key; let isLast = $last; let idx = $index) {
-            <div class="flex align-items-center w-full">
-              <div class="flex-grow-1 border-top-1 border-300"></div>
-              <span class="px-3 font-bold uppercase bg-black">
-                {{ tourneyService.selectedRound.name }}: Giornata {{ idx + 1 }}/{{ tourneyService.selectedRound.daysNo }}
+            <div class="flex align-items-center w-full day-divider">
+              <div class="double-line flex-grow-1"></div>
+              <span class="px-3 font-bold uppercase bg-black text-2xl day-label">
+                {{ tourneyService.selectedRound.name }} - Giornata {{ idx + 1 }}/{{ tourneyService.selectedRound.daysNo }}
               </span>
-              <div class="flex-grow-1 border-top-1 border-300"></div>
+              <div class="double-line flex-grow-1"></div>
             </div>
 
             <p-table 
@@ -125,14 +127,14 @@
                 <td class="leftTeamName" style="width: 35%; text-align: right;">
                   {{rowData.teamName1}}
                 </td>
-                <td class="centralPoints" style="width: 30%; text-align: center;">
+                <td class="centralPoints" style="width: 30%; text-align: center;" pTooltip="Numero di partite vinte (numero di punti reali acquisiti)">
                   <div>
                     <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
                   </div>
                   <div style="text-align: center; font-weight: bold;">
-                    {{rowData.vpoints1}} - {{rowData.vpoints2}}
+                    {{rowData.matches1}} - {{rowData.matches2}} ({{rowData.vpoints1}}:{{rowData.vpoints2}})
                   </div>
-                    <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
+                  <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
                             ,'inProgress': rowData.status === 'In Corso'
                             ,'terminated': rowData.status === 'Terminata'
                             ,'confirmed': rowData.status === 'Convalidata'}">
@@ -177,12 +179,12 @@
                   <td class="leftTeamName" style="width: 35%; text-align: right;">
                     {{rowData.teamName1}}
                   </td>
-                  <td class="centralPoints" style="width: 30%; text-align: center;">
+                  <td class="centralPoints" style="width: 30%; text-align: center;" pTooltip="Numero di partite vinte (numero di punti reali acquisiti)">
                     <div>
                       <span>{{rowData.datetime | date: 'EEE dd/MM/y HH:mm'}}</span>
                     </div>
-                    <div>
-                      <span style="text-align: center; font-weight: bold;">{{rowData.vpoints1}} - {{rowData.vpoints2}}</span>
+                    <div style="text-align: center; font-weight: bold;">
+                      {{rowData.matches1}} - {{rowData.matches2}} ({{rowData.vpoints1}}:{{rowData.vpoints2}})
                     </div>
                     <div [ngClass]="{'toplay': rowData.status === 'Da Giocare'
                                       ,'inProgress': rowData.status === 'In Corso'
@@ -210,7 +212,7 @@
         (onRowSelect)="onClassifcationRowSelect($event)" >
         <ng-template pTemplate="caption">
           <div class="text-center w-full block font-bold text-xl">
-            {{selectedRound.name}}
+            {{selectedRound.name}} (Classifica Finale)
           </div>
         </ng-template>
         <ng-template pTemplate="header" let-columns>
@@ -247,7 +249,7 @@
           (onRowSelect)="onDetachedClassifcationRowSelect($event)">
           <ng-template pTemplate="caption">
             <div class="text-center w-full block font-bold text-xl">
-              {{selectedRound.name}}. Classifica Avulsa
+              {{selectedRound.name}} (Classifica Avulsa)
             </div>
           </ng-template>
           <ng-template pTemplate="header" let-columns>
@@ -280,7 +282,7 @@
           (onRowSelect)="onClassifcationRowSelect($event)">
           <ng-template pTemplate="caption">
             <div class="text-center w-full block font-bold text-xl">
-              {{selectedRound.name}}. Classifica Normalizzata
+              {{selectedRound.name}} (Classifica Normalizzata)
             </div>
           </ng-template>
           <ng-template pTemplate="header" let-columns>

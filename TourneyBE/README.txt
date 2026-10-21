@@ -43,8 +43,8 @@ ng serve
 
 ###################### Ambiente di PRODUZIONE su erebus-soft.com ##################################
 1) Per la produzione lanciare il contenuto dello script:
-TourneyBE/deploy/build-project-prod.cmd 
-come descritto sopra
+TourneyBE-2.0/deploy/build-project-prod.cmd 
+come descritto sopra nella Versione di Sviluppo
 
 2) Per produrre il .war di produzione, spostarsi sotto TourneyBE e lanciare lo script:
 

@@ -1,29 +1,20 @@
-
-
-@if (!loginService.isFollower()) {
-  <p-table >
-    <ng-template pTemplate="header">
-      <tr>
-        <td>
-          <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()" ></button>
-        </td>
-        <td>
-          <p style="text-align: center;font-weight: bold;">{{selectedTourney.tourneyName}}</p>
-        </td>
-        <td>
-          <p-button label="Start Projector Mode" 
-            icon="pi pi-images" 
-            severity="success"
-            (onClick)="openProjectorMode()">
-          </p-button>
-        </td>
-        <td style="text-align: right;">
-          <button type="button" icon="pi pi-arrow-left" pButton (click)="goBack()"></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-}
+<section class="results-page">
+  <header class="results-hero">
+    <div class="results-hero__title">
+      <span class="results-hero__icon"><i class="pi pi-trophy"></i></span>
+      <div>
+        <p class="results-hero__eyebrow">CENTRO RISULTATI</p>
+        <h1>{{ selectedTourney.tourneyName }}</h1>
+        <p>Consulta incontri, classifiche e tabelloni del torneo.</p>
+      </div>
+    </div>
+    @if (!loginService.isFollower()) {
+      <div class="results-hero__actions">
+        <button type="button" icon="pi pi-arrow-left" pButton label="Indietro" class="p-button-outlined" (click)="goBack()"></button>
+        <p-button label="Modalità proiettore" icon="pi pi-images" severity="success" (onClick)="openProjectorMode()"></p-button>
+      </div>
+    }
+  </header>
 
 @if (serverUnreachable) {
   <div style="margin-top:30px">
@@ -31,7 +22,7 @@
   </div>
 }
 
-<p-tabs [value]="meetingService.selectedResultTabIndex" (valueChange)="onTabChange($event)">
+<p-tabs class="results-tabs" [value]="meetingService.selectedResultTabIndex" (valueChange)="onTabChange($event)">
     <p-tablist>
         @if (containsRound()) {
           <p-tab [value]="0">{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})</p-tab>
@@ -53,26 +44,22 @@
     <p-tabpanels>
       @if (containsRound()) {
         <p-tabpanel [value]="0" title="{{selectedTourney.roundTabName==null?'Gironi':selectedTourney.roundTabName}}({{roundCount}})" >
-          <p-table [columns]="roundCols"
+          <div class="results-panel-heading">
+            <div><span class="results-panel-heading__eyebrow">FASE A GIRONI</span><h2>Scegli un girone</h2><p>Apri il girone per vedere calendario, risultati e classifica.</p></div>
+          </div>
+          <p-table styleClass="result-table" [columns]="roundCols"
             [value]="roundRows"
-            selectionMode="single"
-            [(selection)]="selectedRound"
-            (onRowSelect)="onRoundRowSelect($event)">
+            dataKey="id">
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 40mm; text-align: center;">
-                  Gironi
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  N° Squadre
-                </th>
-                <th>
-                  Squadre
-                </th>
+                <th style="width: 40mm; text-align: center;">Gironi</th>
+                <th style="width: 20mm; text-align: center;">N° Squadre</th>
+                <th>Squadre</th>
+                <th class="result-table__action-heading">Risultati</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns">
-              <tr [pSelectableRow]="rowData">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+              <tr class="result-table__row">
                 @for (col of columns; track col) {
                   <td [style.text-align]="col.field !== 'teamNames' ? 'center' : 'left'"
                       [ngClass]="{
@@ -80,13 +67,36 @@
                         'text-orange-500': rowData.status === 'In Corso',
                         'text-green-500': rowData.status === 'Terminata'
                       }">
-                    {{ rowData[col.field] }}
+                    @if (col.field === 'teamNames') {
+                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                    } @else {
+                      {{ rowData[col.field] }}
+                    }
                   </td>                
                 }
+                <td class="result-table__action">
+                  <button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onRoundRowSelect({ data: rowData })"></button>
+                </td>
               </tr>
             </ng-template>
+            <ng-template pTemplate="expandedrow" let-rowData let-columns="columns">
+                <tr>
+                    <td colspan="4">
+                        <div class="expanded-teams-container">
+                            <p class="expanded-teams-title">Squadre nel girone:</p>
+                            <div class="expanded-teams-grid">
+                                @for (team of getTeamNames(rowData.teamNames); track $index) {
+                                    @if (team.trim()) {
+                                        <span class="expanded-team-badge"><i class="pi pi-users"></i> {{ team.trim() }}</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
             <ng-template pTemplate="summary">
-              <div style="margin-bottom: 10px;">
+              <div class="results-toolbar">
                 @if (loginService.isUserAllowed()) {
                   <p-checkbox name="terminatedRoundsGroupname"
                     inputId="terminatedRoundsGroupnameId"
@@ -95,22 +105,22 @@
                     [(ngModel)]="selectedTourney.terminatedRounds"
                     (onChange)="onTerminateRoundChange($event)" >
                   </p-checkbox>
-                  <label for="terminatedPlayoffsGroupnameId" class="mb-0">
-                    Gironi terminati
+                  <label for="terminatedRoundsGroupnameId" class="mb-0">
+                    Fase a gironi conclusa
                   </label>
+                  <small class="phase-status-help">Impostazione organizzativa: dichiara conclusi tutti i gironi. Non filtra i risultati.</small>
                 }
                 <button type="button"
                   icon="pi pi-file-pdf"
                   pButton (click)="printPdfMeeting()"
                   label="Stampa Incontri"
-                  class="ui-button-success">
+                  class="p-button-outlined">
                 </button>
                 <button type="button"
                   icon="pi pi-file-pdf"
                   pButton (click)="printPdfClassification()"
                   label="Stampa Classifica"
-                  class="ui-button-success"
-                  style="margin-left: 5mm;">
+                  class="p-button-outlined">
                 </button>
               </div>
             </ng-template>
@@ -119,35 +129,51 @@
       }
       @if (containsPlayoff()) {
         <p-tabpanel [value]="1" title="{{selectedTourney.playoffTabName==null?'Play Off':selectedTourney.playoffTabName}}({{playoffCount}})" >
-          <p-table [columns]="playoffCols"
+          <div class="results-panel-heading"><div><span class="results-panel-heading__eyebrow">ELIMINAZIONE DIRETTA</span><h2>Scegli un tabellone</h2><p>Apri il tabellone per seguire gli incontri.</p></div></div>
+          <p-table styleClass="result-table" [columns]="playoffCols"
             [value]="playoffRows"
-            selectionMode="single"
-            [(selection)]="selectedPlayoff"
-            (onRowSelect)="onPlayoffRowSelect($event)">s
+            dataKey="id">
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 40mm; text-align: center;">
-                  Gironi
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  N° Squadre
-                </th>
-                <th>
-                  Squadre
-                </th>
+                <th style="width: 40mm; text-align: center;">Gironi</th>
+                <th style="width: 20mm; text-align: center;">N° Squadre</th>
+                <th>Squadre</th>
+                <th class="result-table__action-heading">Risultati</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns">
-              <tr [pSelectableRow]="rowData">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+              <tr class="result-table__row">
                 @for (col of columns; track col) {
                   <td>
-                    {{rowData[col.field]}}
+                    @if (col.field === 'teamNames') {
+                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                    } @else {
+                      {{rowData[col.field]}}
+                    }
                   </td>
                 }
+                <td class="result-table__action"><button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onPlayoffRowSelect({ data: rowData })"></button></td>
               </tr>
             </ng-template>
-            @if (loginService.isUserAllowed()) {
-              <ng-template pTemplate="summary">
+            <ng-template pTemplate="expandedrow" let-rowData let-columns="columns">
+                <tr>
+                    <td colspan="4">
+                        <div class="expanded-teams-container">
+                            <p class="expanded-teams-title">Squadre nel tabellone:</p>
+                            <div class="expanded-teams-grid">
+                                @for (team of getTeamNames(rowData.teamNames); track $index) {
+                                    @if (team.trim()) {
+                                        <span class="expanded-team-badge"><i class="pi pi-users"></i> {{ team.trim() }}</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+              <div class="results-toolbar">
+              @if (loginService.isUserAllowed()) {
                 <p-checkbox name="terminatedPlayoffsGroupname"
                   inputId="terminatedPlayoffsGroupnameId"
                   title="Selezionare solo quando tutti i gironi di PLAYOFF sono terminati"
@@ -158,56 +184,69 @@
                 <label for="terminatedPlayoffsGroupnameId" class="mb-0">
                   Playoff terminati
                 </label>
-              </ng-template>
-            }
-            <ng-template pTemplate="summary">
+              }
               <button type="button"
                 icon="pi pi-file-excel-o"
                 title="Stampa la lista degli incontri del girone di PLAYOFF"
                 pButton (click)="printPdfPlayoffMeeting()"
                 label="Stampa Incontri"
-                class="ui-button-success">
+                class="p-button-outlined">
               </button>
               <button type="button"
                 icon="pi pi-file-excel-o"
                 pButton (click)="printPdfPlayoffClassification()"
                 title="Stampa la classifica delle squadre del girone di PLAYOFF"
                 label="Stampa Classifica"
-                class="ui-button-success"
-                style="margin-left: 5mm;">
+                class="p-button-outlined">
               </button>
+              </div>
             </ng-template>
           </p-table>
         </p-tabpanel>
       }
       @if (containsPlayout()) {
         <p-tabpanel [value]="2" title="{{selectedTourney.playoutTabName==null?'Play Out':selectedTourney.playoutTabName}}({{playoutCount}})" >
-          <p-table [columns]="playoffCols"
+          <div class="results-panel-heading"><div><span class="results-panel-heading__eyebrow">FASE PLAY OUT</span><h2>Scegli un tabellone</h2><p>Apri il tabellone per seguire gli incontri.</p></div></div>
+          <p-table styleClass="result-table" [columns]="playoffCols"
             [value]="playoutRows"
-            selectionMode="single"
-            [(selection)]="selectedPlayout"
-            (onRowSelect)="onPlayoutRowSelect($event)">
+            dataKey="id">
             <ng-template pTemplate="header">
               <tr>
-                <th style="width: 40mm; text-align: center;">
-                  Gironi
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  N° Squadre
-                </th>
-                <th>
-                  Squadre
-                </th>
+                <th style="width: 40mm; text-align: center;">Gironi</th>
+                <th style="width: 20mm; text-align: center;">N° Squadre</th>
+                <th>Squadre</th>
+                <th class="result-table__action-heading">Risultati</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns">
-              <tr [pSelectableRow]="rowData">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+              <tr class="result-table__row">
                 @for (col of columns; track col) {
                   <td>
-                    {{rowData[col.field]}}
+                    @if (col.field === 'teamNames') {
+                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                    } @else {
+                      {{rowData[col.field]}}
+                    }
                   </td>
                 }
+                <td class="result-table__action"><button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onPlayoutRowSelect({ data: rowData })"></button></td>
               </tr>
+            </ng-template>
+            <ng-template pTemplate="expandedrow" let-rowData let-columns="columns">
+                <tr>
+                    <td colspan="4">
+                        <div class="expanded-teams-container">
+                            <p class="expanded-teams-title">Squadre nel tabellone:</p>
+                            <div class="expanded-teams-grid">
+                                @for (team of getTeamNames(rowData.teamNames); track $index) {
+                                    @if (team.trim()) {
+                                        <span class="expanded-team-badge"><i class="pi pi-users"></i> {{ team.trim() }}</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </ng-template>
             <ng-template pTemplate="summary">
               <button type="button"
@@ -215,15 +254,14 @@
                 title="Stampa la lista degli incontri del girone di PLAYOUT"
                 pButton (click)="printPdfPlayoutMeeting()"
                 label="Stampa Incontri"
-                class="ui-button-success">
+                class="p-button-outlined">
               </button>
               <button type="button"
                 icon="pi pi-file-excel-o"
                 pButton (click)="printPdfPlayoutClassification()"
                 title="Stampa la classifica delle squadre del girone di PLAYOUT"
                 label="Stampa Classifica"
-                class="ui-button-success"
-                style="margin-left: 5mm;">
+                class="p-button-outlined">
               </button>
             </ng-template>
           </p-table>
@@ -231,78 +269,86 @@
       }
       @if (containsEliminatory()) {
         <p-tabpanel [value]="3" title="{{selectedTourney.eliminatoryTabName}}({{eliminatoryCount}})"  >
-          <p-table [columns]="eliminatoryLevelCols"
+          <div class="results-panel-heading"><div><span class="results-panel-heading__eyebrow">TABELLONE</span><h2>Scegli un livello</h2><p>Apri un livello del tabellone per vederne i risultati.</p></div></div>
+          <p-table styleClass="result-table" [columns]="eliminatoryLevelCols"
             [value]="eliminatoryLevelRows"
-            selectionMode="single"
-            [(selection)]="selectedEliminatoryLevel"
-            (onRowSelect)="onEliminatoryRowSelect($event)">
+            dataKey="name">
             <ng-template pTemplate="header" let-columns>
               <tr>
-                <th>
-                  Livello
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  N° Squadre
-                </th>
-                <th>
-                  Squadre
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  Lista
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  T.one
-                </th>
+                <th>Livello</th>
+                <th style="width: 20mm; text-align: center;">N° Squadre</th>
+                <th>Squadre</th>
+                <th class="result-table__action-heading">Risultati</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-              <tr [pSelectableRow]="rowData">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
+              <tr class="result-table__row">
+                <td>{{rowData['name']}}</td>
+                <td style="width: 20mm; text-align: center;">{{rowData['level']}}</td>
                 <td>
-                  {{rowData['name']}}
+                  <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                 </td>
-                <td style="width: 20mm; text-align: center;">
-                  {{rowData['level']}}
-                </td>
-                <td>
-                  {{rowData['teams']}}
-                </td>
+                <td class="result-table__action"><button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onEliminatoryRowSelect({ data: rowData })"></button></td>
               </tr>
+            </ng-template>
+            <ng-template pTemplate="expandedrow" let-rowData let-columns="columns">
+                <tr>
+                    <td colspan="4">
+                        <div class="expanded-teams-container">
+                            <p class="expanded-teams-title">Squadre in questo livello:</p>
+                            <div class="expanded-teams-grid">
+                                @for (team of getTeamNames(rowData.teams); track $index) {
+                                    @if (team.trim()) {
+                                        <span class="expanded-team-badge"><i class="pi pi-users"></i> {{ team.trim() }}</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </ng-template>
           </p-table>
         </p-tabpanel>
       }
       @if (containsEliminatoryB()) {
         <p-tabpanel [value]="4" title="{{selectedTourney.eliminatoryBTabName}}({{eliminatoryBCount}})"  >
-          <p-table [columns]="eliminatoryLevelCols"
+          <div class="results-panel-heading"><div><span class="results-panel-heading__eyebrow">TABELLONE</span><h2>Scegli un livello</h2><p>Apri un livello del tabellone per vederne i risultati.</p></div></div>
+          <p-table styleClass="result-table" [columns]="eliminatoryLevelCols"
             [value]="eliminatoryBLevelRows"
-            selectionMode="single"
-            [(selection)]="selectedEliminatoryBLevel"
-            (onRowSelect)="onEliminatoryBRowSelect($event)">
+            dataKey="name">
             <ng-template pTemplate="header" let-columns>
               <tr>
-                <th>
-                  Livello
-                </th>
-                <th style="width: 20mm; text-align: center;">
-                  N° Squadre
-                </th>
-                <th>
-                  Squadre
-                </th>
+                <th>Livello</th>
+                <th style="width: 20mm; text-align: center;">N° Squadre</th>
+                <th>Squadre</th>
+                <th class="result-table__action-heading">Risultati</th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-              <tr [pSelectableRow]="rowData">
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
+              <tr class="result-table__row">
+                <td>{{rowData['name']}}</td>
+                <td style="width: 20mm; text-align: center;">{{rowData['level']}}</td>
                 <td>
-                  {{rowData['name']}}
+                  <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                 </td>
-                <td style="width: 20mm; text-align: center;">
-                  {{rowData['level']}}
-                </td>
-                <td>
-                  {{rowData['teams']}}
-                </td>
+                <td class="result-table__action"><button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onEliminatoryBRowSelect({ data: rowData })"></button></td>
               </tr>
+            </ng-template>
+            <ng-template pTemplate="expandedrow" let-rowData let-columns="columns">
+                <tr>
+                    <td colspan="4">
+                        <div class="expanded-teams-container">
+                            <p class="expanded-teams-title">Squadre in questo livello:</p>
+                            <div class="expanded-teams-grid">
+                                @for (team of getTeamNames(rowData.teams); track $index) {
+                                    @if (team.trim()) {
+                                        <span class="expanded-team-badge"><i class="pi pi-users"></i> {{ team.trim() }}</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </ng-template>
           </p-table>
         </p-tabpanel>
@@ -312,3 +358,4 @@
       </p-tabpanel>
     </p-tabpanels>
 </p-tabs>
+</section>

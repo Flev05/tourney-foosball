@@ -28,6 +28,7 @@ const REDIRECT_TO_PROJECTOR      = 'result/projector';
 
 @Component({
     templateUrl: './tab-result-listview.html',
+    styleUrls: ['./tab-result-listview.css'],
     standalone: false
 })
 export class TabResultListView extends AbstractTabResultListView {
@@ -67,8 +68,13 @@ export class TabResultListView extends AbstractTabResultListView {
         this.badRequest = false;
     }
      
+    getTeamNames(value: string[] | string | null | undefined): string[] {
+        const names = Array.isArray(value) ? value : (value ?? '').split(',');
+        return names.map(name => name.trim()).filter(Boolean);
+    }
+
     onRoundRowSelect(event : any) {
-        console.log(event.data);
+        this.selectedRound = event.data;
         for(let i=0;i<this.selectedRound.teamNames.length; i++ ) {
             this.selectedRound.teamNames[i] = this.selectedRound.teamNames[i].replace(/\(\d+\)/g, '');
         }
@@ -89,6 +95,8 @@ export class TabResultListView extends AbstractTabResultListView {
     }
 
     onPlayoffRowSelect(event : any)  {
+        this.selectedPlayoff = event.data;
+        this.tourneyService.selectedPlayout = null;
         this.tourneyService.selectedPlayoff = this.selectedPlayoff;
         this.meetingService.selectedRound = this.selectedPlayoff.round;
 
@@ -113,6 +121,7 @@ export class TabResultListView extends AbstractTabResultListView {
     }
     
     onPlayoutRowSelect(event : any) {
+        this.selectedPlayout = event.data;
         this.tourneyService.selectedPlayoff = null;
         this.tourneyService.selectedPlayout = this.selectedPlayout;
         this.meetingService.selectedRound = this.selectedPlayout.round;
@@ -218,7 +227,7 @@ export class TabResultListView extends AbstractTabResultListView {
 
     private updateTourney(): void {
         console.log("Entering updateTourney()");
-        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(this.selectedTourney, this.clientService.selectedClient, true);
+        let tvo : TourneyVO = this.tourneyService.prepareTourneyVO(structuredClone(this.selectedTourney), this.clientService.selectedClient, true);
         const subscriber = this.tourneyService.saveTourney(tvo, this.saveTourneyErrorHandler('Create Tourney operation'));
         subscriber.subscribe(cs => {}, e => this.subscribeErrorHandler(e), () => {});
     }

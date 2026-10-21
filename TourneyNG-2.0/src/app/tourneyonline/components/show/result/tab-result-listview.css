@@ -1,0 +1,223 @@
+:host {
+    display: block;
+    color: #243b5c;
+}
+
+.results-page {
+    min-height: 100%;
+    padding: 1.5rem clamp(1rem, 3vw, 3rem) 2.5rem;
+}
+
+.results-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem clamp(1.25rem, 3vw, 2.5rem);
+    color: #fff;
+    border-radius: 1rem;
+    background: linear-gradient(120deg, #17283b, #243b5c);
+}
+
+.results-hero__title,
+.results-hero__actions,
+.results-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.results-hero__icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    color: #fff;
+    font-size: 1.5rem;
+    border-radius: 0.9rem;
+    background: #00b879;
+}
+
+.results-hero h1 {
+    margin: 0.15rem 0;
+    color: #fff;
+    font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.results-hero p,
+.results-panel-heading p {
+    margin: 0;
+    color: #dce7f2;
+}
+
+.results-hero__eyebrow,
+.results-panel-heading__eyebrow {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.results-hero__eyebrow {
+    color: #63dfb7 !important;
+}
+
+.results-panel-heading {
+    padding: 0.5rem 0 1.25rem;
+}
+
+.results-panel-heading h2 {
+    margin: 0.25rem 0;
+    font-size: 1.35rem;
+}
+
+.results-panel-heading p {
+    color: #62738b;
+}
+
+.results-panel-heading__eyebrow,
+::ng-deep .results-tabs .p-tab-active {
+    color: #00a86e;
+}
+
+::ng-deep .results-tabs .p-tablist {
+    margin-bottom: 1.25rem;
+    border: 0;
+    border-radius: 0.8rem;
+    background: #fff;
+}
+
+::ng-deep .results-tabs .p-tab {
+    padding: 1rem 1.15rem;
+    font-weight: 700;
+    color: #61718a;
+}
+
+::ng-deep .results-tabs .p-tabpanels {
+    padding: clamp(1rem, 3vw, 2rem);
+    border-radius: 1rem;
+    background: #fff;
+}
+
+::ng-deep .result-table .p-datatable-thead > tr > th {
+    padding: 0.5rem 1rem;
+    color: #60718a;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border: 0;
+    background: transparent;
+}
+
+::ng-deep .result-table .p-datatable-tbody > tr > td {
+    padding: 1rem;
+    color: #243b5c;
+}
+
+/* === MODIFICHE CHIAVE PER I PULSANTI E L'ALLINEAMENTO === */
+
+/* 1. Rimuoviamo il layout fisso che ora causa problemi senza il testo lungo */
+::ng-deep .result-table table {
+    table-layout: auto !important; 
+}
+
+/* 2. Blindiamo TUTTI i pulsanti della tabella in modo che non si schiaccino MAI */
+::ng-deep .result-table .p-button {
+    white-space: nowrap !important;
+    min-width: max-content !important;
+}
+
+/* 3. Centriamo il pulsante "Vedi risultati" invece di tenerlo incollato a destra */
+::ng-deep .result-table__action,
+::ng-deep .result-table__action-heading {
+    width: auto !important;
+    text-align: center !important; 
+    padding: 1rem 2rem !important; /* Diamo un po' di spazio laterale per l'estetica */
+}
+
+/* 4. Centriamo anche la colonna "Squadre" per rendere la tabella bella simmetrica */
+::ng-deep .result-table .p-datatable-thead > tr > th:nth-child(3),
+::ng-deep .result-table .p-datatable-tbody > tr > td:nth-child(3) {
+    text-align: center !important;
+}
+
+/* =========================================
+   STILI PER L'ESPANSIONE DELLE SQUADRE
+   ========================================= */
+
+.expanded-teams-container {
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
+    border: 1px dashed #cbd5e1;
+    text-align: left; /* Mantiene i badge allineati a sinistra all'interno del pannello */
+}
+
+.expanded-teams-title {
+    margin: 0 0 1rem 0 !important;
+    font-weight: 700;
+    color: #475569 !important;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.expanded-teams-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.expanded-team-badge {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    color: #1e293b;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.expanded-team-badge:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.expanded-team-badge i {
+    color: #00a86e;
+}
+
+.results-toolbar {
+    flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+    .results-page {
+        padding: 1rem 0.75rem 2rem;
+    }
+    .results-hero {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    ::ng-deep .results-tabs .p-tablist,
+    ::ng-deep .result-table .p-datatable-wrapper {
+        overflow-x: auto;
+    }
+}
+/* La navigazione avviene esclusivamente tramite il pulsante esplicito. */
+.result-table__row { cursor: default; }
+.results-open-button {
+    min-height: 3rem;
+    padding: .85rem 1.4rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: .65rem;
+    box-shadow: 0 4px 12px #00a86e30;
+}
+.results-open-button:focus-visible { outline: 3px solid #243b5c; outline-offset: 3px; }
+.phase-status-help { flex-basis: 100%; color: #62738b; }

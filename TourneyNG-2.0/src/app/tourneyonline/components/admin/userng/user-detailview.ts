@@ -3,18 +3,18 @@ import { Location } from '@angular/common'
 import { Md5 } from 'md5-typescript';
 import { Observable, of } from 'rxjs';
 ;
-import { UserVO } from '../../../domain/user-vo';
-import { UserService } from '../../../service/user-service';
-import { TourneyService } from '../../../service/tourney-service';
-import { CountryService } from '../../../service/country-service';
-import { AbstractDetailView } from '../../../components/common/abstract-detailview';
-import { UrcService } from '../../../service/urc-service';
-import { UserRoleClientVO } from '../../../domain/urc-vo';
-import { ClientService } from '../../../service/client-service';
-import { RoleService } from '../../../service/role-service';
-import { ERoles } from '../../../domain/enumerations';
-import { RoleVO } from '../../../domain/role-vo';
-import { LoginService } from '../../../service/login-service';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
+import { AbstractDetailView } from 'app/tourneyonline/components/common/abstract-detailview';
+import { UrcService } from 'app/tourneyonline/service/urc-service';
+import { UserRoleClientVO } from 'app/tourneyonline/domain/urc-vo';
+import { ClientService } from 'app/tourneyonline/service/client-service';
+import { RoleService } from 'app/tourneyonline/service/role-service';
+import { ERoles } from 'app/tourneyonline/domain/enumerations';
+import { RoleVO } from 'app/tourneyonline/domain/role-vo';
+import { LoginService } from 'app/tourneyonline/service/login-service';
 
 @Component({
     templateUrl: './user-detailview.html',
@@ -22,7 +22,6 @@ import { LoginService } from '../../../service/login-service';
 })
 export class UserDetailView extends AbstractDetailView {
     selectedUser: UserVO = new UserVO();
-    ;
     selectedUrc: UserRoleClientVO = new UserRoleClientVO(); 
     onSaveUserError: any;
     userAlreadyExists: boolean = false;
@@ -81,7 +80,7 @@ export class UserDetailView extends AbstractDetailView {
     
     enableSaveButton() : string {
         let un = this.selectedUser.username;
-        let userEnable:   boolean = un.trim() == "";
+        let userEnable:   boolean = un?.trim() == "";
 
         let fn = this.selectedUser.firstname == undefined ? "" : this.selectedUser.firstname;
         let ln = this.selectedUser.lastname == undefined ? "" : this.selectedUser.lastname;
@@ -178,7 +177,7 @@ export class UserDetailView extends AbstractDetailView {
         return rvo;
     }
 
-    private onVerifyForCreateNext(existingUser: UserVO): void {
+    protected onVerifyForCreateNext(existingUser: UserVO): void {
         if( existingUser == null ) {
             this.createNewUser();
             return;
@@ -268,4 +267,5 @@ export class UserDetailView extends AbstractDetailView {
             return of(result as T);
         };
     }
+
 }

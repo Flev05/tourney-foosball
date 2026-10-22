@@ -47,6 +47,7 @@ const REDIRECT_ROUND_DV     = REDIRECT_ADMIN_TOURNEY + '/dv/round';
 const REDIRECT_PLAYOFF_DV   = REDIRECT_ADMIN_TOURNEY + '/dv/playoff';
 
 const REDIRECT_OPERATORS_PL = 'adminoperator/pl';
+const REDIRECT_OPERATORS_DETAIL_VIEW = 'adminoperator/dv';
 
 const ROUND_CHANGE_GEN_MODE_POPUP = 'ATTENZIONE! Se si cambia il metodo di generazione dei gironi, si perdono tutte le impostazioni preesistenti. Confermi?';
 const ROUND_CHANGE_TEAMS_POPUP = 'ATTENZIONE! Se si cambia il numero complessivo di squadre del torneo, si perdono tutte le impostazioni preesistenti. Confermi?';
@@ -730,8 +731,10 @@ export class TourneyDetailView extends AbstractDetailView {
                 this.userService.selectedUser = this.selectedOperator;
                 let op : OperatorsVO = this.operatorVo;
                 op.selectedOperators = [...this.operators];
-                const subscriber = this.urcService.mergeOperators(op, this.loadUsersErrorHandler('mergeOperators()'));
-                subscriber.subscribe(cs => this.next(cs), e => this.onError(e) );
+                if( op.clientId )   {
+                    const subscriber = this.userService.deleteOperator(uvo.id, op.clientId, op.tourneyId, this.loadUsersErrorHandler('mergeOperators()'));
+                    subscriber.subscribe(cs => this.next(cs), e => this.onError(e) );
+                }
             }
         }
     }
@@ -804,6 +807,12 @@ export class TourneyDetailView extends AbstractDetailView {
         this.userService.newUser = false;
         this.tourneyService.operatorVo = this.operatorVo;
         this.router.navigate([REDIRECT_OPERATORS_PL]);
+    }
+
+    newOperator() {
+        this.userService.newUser = true;
+        this.tourneyService.operatorVo = this.operatorVo;
+        this.router.navigate([REDIRECT_OPERATORS_DETAIL_VIEW]);
     }
 
     onTeamRowSelect(event : any ) {

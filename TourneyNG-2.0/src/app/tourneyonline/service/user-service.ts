@@ -27,6 +27,7 @@ export class UserService {
         { field: 'lastname',    header: 'Cognome' },
         { field: 'email',       header: 'Email' },
     ];
+    users: UserVO[] = [];
     newUser : boolean = false;
     selectedUser: UserVO = new UserVO();
 

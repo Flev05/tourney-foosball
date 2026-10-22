@@ -115,7 +115,8 @@ export abstract class AbstractView implements OnInit {
         this.filteredCountriesSingle = [...this.filterCountry(query, this.countries)];
     }
 
-    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    // In a real application, make a request to a remote url with the query and return filtered results, 
+    // for demo we filter at client side
     private filterCountry(query : any, countries: Country[]) : Country[] {
         let filtered : Country[] = [];
         for(let i = 0; i < countries.length; i++) {
@@ -155,5 +156,4 @@ export abstract class AbstractView implements OnInit {
             return of(result as T);
         };
     }
-
 }

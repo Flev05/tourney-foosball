@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable, of} from 'rxjs';
 
-import { UserService } from '../../../service/user-service';
-import { TableCols } from '../../../domain/table-cols';
-import { UserVO } from '../../../domain/user-vo';
-import { AbstractListView } from '../../../components/common/abstract-listview';
-import { TourneyService } from '../../../service/tourney-service';
-import { LoginService } from '../../../service/login-service';
-import { CountryService } from '../../../service/country-service';
+import { UserService } from 'app/tourneyonline/service/user-service';
+import { TableCols } from 'app/tourneyonline/domain/table-cols';
+import { UserVO } from 'app/tourneyonline/domain/user-vo';
+import { AbstractListView } from 'app/tourneyonline/components/common/abstract-listview';
+import { TourneyService } from 'app/tourneyonline/service/tourney-service';
+import { LoginService } from 'app/tourneyonline/service/login-service';
+import { CountryService } from 'app/tourneyonline/service/country-service';
 
 const redirect = '/users/userdv';
 
@@ -55,6 +55,7 @@ export class UserListView extends AbstractListView {
 
     private onLoadUserNext(cs: UserVO[])   {
         this.users = cs;
+        this.userService.users = cs;
         for( let u of this.users ) {
             u.disabled="enabled";
             if( u.id == this.loginService.userLogged.id ) {

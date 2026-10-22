@@ -30,6 +30,22 @@
 </div>
 
 <p-fieldset legend="Utente Operatore">
+  <div class="grid">
+    <div class="col-2">
+      Username*:
+    </div>
+    <div class="col-6">
+      <p-autoComplete id="operator-id"
+        [(ngModel)]="selectedUserToAdd"
+        [suggestions]="filteredUsersSingle"
+        (completeMethod)="searchUser($event)"
+        field="username"
+        optionLabel="username"
+        placeholder="Username"
+        [minLength]="1">
+      </p-autoComplete>      
+    </div>
+  </div>
   <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <div class="grid">
       <div class="col-2">
@@ -48,25 +64,7 @@
         <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
       </div>
     </div>
-
-    <div class="grid">
-      <div class="col-2">
-        Username*:
-      </div>
-      <div class="col-6">
-        <input pInputText type="text" [(ngModel)]="selectedUser.username" placeholder="Obbligatoria"/>
-      </div>
-    </div>
-    @if (userAlreadyExists) {
-      <div>
-        <div class="ui-message ui-messages-error ui-corner-all">
-          <p-message severity="error">
-            Esiste già un utente con lo stesso nome, cognome e username. Se non è l'utente atteso, modificare la username!
-          </p-message>
-        </div>
-      </div>
-    }
-
+    
     @if (urcService.newUser) {
       <div class="grid">
         <div class="col-2">

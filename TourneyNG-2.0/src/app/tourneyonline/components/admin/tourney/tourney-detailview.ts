@@ -691,6 +691,7 @@ export class TourneyDetailView extends AbstractDetailView {
             if(index == -1) {
                 return;
             }
+            this.userService.newUser = false;
             this.selectedOperator = dvo;
             this.userService.selectedUser = this.selectedOperator;
             this.router.navigate([OperatorDetailView.redirect]);

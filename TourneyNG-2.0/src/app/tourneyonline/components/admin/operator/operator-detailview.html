@@ -34,7 +34,7 @@
     <div class="col-2">
       Username*:
     </div>
-    <div class="col-6">
+    <div class="col-10">
       <p-autoComplete id="operator-id"
         [(ngModel)]="selectedUserToAdd"
         [suggestions]="filteredUsersSingle"
@@ -46,12 +46,13 @@
       </p-autoComplete>      
     </div>
   </div>
+
   <div class="ui-grid responsive pad ui-fluid" style="margin: 10px 0px">
     <div class="grid">
       <div class="col-2">
         Nome*:
       </div>
-      <div  class="col-6">
+      <div  class="col-10">
         <input pInputText type="text" [(ngModel)]="selectedUser.firstname" placeholder="Obbligatorio"/>
       </div>
     </div>
@@ -60,7 +61,7 @@
       <div class="col-2">
         Cognome*:
       </div>
-      <div class="col-6">
+      <div class="col-10">
         <input pInputText type="text" [(ngModel)]="selectedUser.lastname" placeholder="Obbligatorio"/>
       </div>
     </div>
@@ -70,7 +71,7 @@
         <div class="col-2">
           Password:
         </div>
-        <div class="col-6">
+        <div class="col-10">
           {{currentPassword}} (Temporanea, da cambiare al primo accesso)
         </div>
       </div>
@@ -80,7 +81,7 @@
       <div class="col-2">
         Via*:
       </div>
-      <div class="col-5">
+      <div class="col-10">
         <input pInputText type="text" [(ngModel)]="selectedUser.address"/>
       </div>
     </div>
@@ -89,7 +90,7 @@
       <div class="col-2">
         Indirizzo:
       </div>
-      <div class="col-8">
+      <div class="col-10">
         {{selectedUser != undefined && selectedUser.country != undefined ? selectedUser.address  + " - " +
         selectedUser.country.zipCode + " " + selectedUser.country.city
         + " (" + selectedUser.country.provinceCode +")" : ""}}
@@ -100,7 +101,7 @@
       <div class="col-2">
         <label for="country-id">Comune*:</label>
       </div>
-      <div class="col-5">
+      <div class="col-10">
         <p-autoComplete id="country-id"
           [(ngModel)]="selectedUser.country"
           [suggestions]="filteredCountriesSingle"
@@ -117,17 +118,17 @@
       <div class="col-2">
         Telefono*:
       </div>
-      <div class="col-5">
+      <div class="col-10">
         <input pInputText type="text" [(ngModel)]="selectedUser.phoneNumber" placeholder="Obbligatorio"/>
       </div>
     </div>
 
-    <div class="grid">
-      <div class="col-2">
+    <div class="grid align-items-center mb-3">
+      <div class="col-12 md:col-2">
         E-mail*:
       </div>
-      <div class="col-5">
-        <input pInputText type="text" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
+      <div class="col-12 md:col-10">
+        <input pInputText type="text" class="w-full" [(ngModel)]="selectedUser.email" placeholder="Obbligatoria"/>
       </div>
     </div>
 
@@ -135,7 +136,7 @@
       <div class="col-2">
         Descrizione:
       </div>
-      <div class="col-5">
+      <div class="col-10">
         <input pInputText type="text" [(ngModel)]="selectedUser.description"/>
       </div>
     </div>

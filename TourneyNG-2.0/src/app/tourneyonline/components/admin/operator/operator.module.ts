@@ -27,7 +27,6 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
 import { TabsModule } from 'primeng/tabs';
-import { OperatorDetailComponent } from './operator-detail.component';
 
 @NgModule({
 	imports: [
@@ -57,7 +56,6 @@ import { OperatorDetailComponent } from './operator-detail.component';
     ],
 	declarations: [
         OperatorListView,
-        OperatorDetailComponent,
         OperatorDetailView,
         OperatorPickList
     ]

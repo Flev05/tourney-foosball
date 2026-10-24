@@ -9,7 +9,8 @@
 @import "@fortawesome/fontawesome-free/css/all.css";
 
 #layout-content {
-    margin-top: 70px;
+    padding-top: 85px;       /* Pushes content safely below the fixed topbar */
+    box-sizing: border-box;
 }
 
 /* You can add global styles to this file, and also import other style files */

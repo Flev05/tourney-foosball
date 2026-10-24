@@ -27,7 +27,7 @@
               "node_modules/primeicons/primeicons.css"
               ,"node_modules/primeflex/primeflex.css"
               ,"node_modules/highlight.js/styles/github.css"
-              ,"src/styles.css"
+              ,"src/styles.scss"
             ],
             "scripts": []
           },
@@ -88,7 +88,7 @@
               "node_modules/primeicons/primeicons.css"
               ,"node_modules/primeflex/primeflex.css"
               ,"node_modules/highlight.js/styles/github.css"
-              ,"src/styles.css"
+              ,"src/styles.scss"
             ],
             "scripts": []
           }

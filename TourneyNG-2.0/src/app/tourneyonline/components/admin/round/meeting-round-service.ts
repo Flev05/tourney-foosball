@@ -645,10 +645,29 @@ export class MeetingRoundService extends MeetingService {
      */
     private printRoundTeamsPage(doc: jsPDF, round: Round): void {
         const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        // 1. Extract the last character of round.name and ensure it's a capital letter (A, B, C...)
+        const roundName = round.name || '';
+        const lastChar = roundName.trim().slice(-1).toUpperCase();
+
+        // 2. Print full-page background watermark if lastChar is a valid letter A-Z
+        if (lastChar && /^[A-Z]$/.test(lastChar)) {
+            doc.setTextColor(190, 190, 190); // Very light gray so it looks like a subtle background watermark
+            doc.setFontSize(750);           // Extra-large font size for the page
+            // Center the watermark on the page (pageHeight / 2 + offset compensates for font baseline)
+            doc.text(lastChar, pageWidth / 2, pageHeight / 2 + 90, { align: 'center' });
+            // Reset text color back to default (black) for the foreground content
+            doc.setTextColor(0, 0, 0);
+        }
+
+        // 3. Render Title
         doc.setFontSize(40);
         const titleText = `${round.name || round.label || 'Round ' + round.id}`;
         let yPosition = 30;
         doc.text(titleText, pageWidth / 2, yPosition, { align: 'center' });
+
+        // 4. Gather Teams
         const allMeetings = [...round.onewayMeetings, ...round.roundtripMeetings];
         const teamSet = new Set<string>();
         allMeetings.forEach(meeting => {
@@ -656,14 +675,17 @@ export class MeetingRoundService extends MeetingService {
             if (meeting.teamName2 && meeting.teamName2 !== "(Riposo)") teamSet.add(meeting.teamName2);
         });
         const teamList = teamSet.size > 0 ? Array.from(teamSet) : round.teamNames;
+
         yPosition = 47;
         const lineHeight = 18;
-        const pageHeight = doc.internal.pageSize.getHeight();
         doc.setFontSize(20);
+
         if (teamList.length === 0) {
             doc.text("No teams registered for this round.", 14, yPosition);
             return;
         }
+
+        // 5. Render Team List
         teamList.forEach((teamName, idx) => {
             if (yPosition + lineHeight > pageHeight - 15) {
                 doc.addPage();

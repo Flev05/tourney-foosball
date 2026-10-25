@@ -133,7 +133,6 @@ export class OperatorDetailView extends UserDetailView {
     protected override onSaveComplete( urc : UserRoleClientVO ) {
         console.log("Entering onSaveComplete()");
         this.userService.newUser = false;
-        this.tourneyService.operatorVo.selectedOperators.push(urc.userVo);
         this.tourneyService.operatorVo.allOperators.push(urc.userVo);
         this.updateOpList(urc.userVo.username);
         if( !this.onSaveUserError ) {

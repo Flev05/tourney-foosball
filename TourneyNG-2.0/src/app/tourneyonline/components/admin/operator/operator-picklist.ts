@@ -42,11 +42,7 @@ export class OperatorPickList extends AbstractListView {
     }
     
     private prepareAvailableOperators(): void {
-        this.targetOperators = [];
-        for(let op of this.tourneyService.operatorVo.selectedOperators) {
-            this.targetOperators.push(op.username);
-        }
-        
+        this.targetOperators = [];        
         this.availableOperators = [];
         for(let op of this.tourneyService.operatorVo.allOperators) {
             let tn = this.targetOperators.find(x => x == op.username);
@@ -113,7 +109,6 @@ export class OperatorPickList extends AbstractListView {
             }
             toList.push(op);
         }       
-        this.tourneyService.operatorVo.selectedOperators = toList;
 
         let op : OperatorsVO = this.tourneyService.operatorVo;
         const subscriber = this.urcService.mergeOperators(op, this.loadUsersErrorHandler('mergeOperators()'));

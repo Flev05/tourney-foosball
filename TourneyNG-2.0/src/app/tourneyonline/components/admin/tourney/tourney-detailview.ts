@@ -108,6 +108,7 @@ export class TourneyDetailView extends AbstractDetailView {
     playoutCount: number = 0;
     eliminatoryCount: number = 0;
     eliminatoryBCount: number = 0;
+    operatorCount: number = 0;
 
     atLeastOneRound: boolean = true;
     playoffsCombobox: Combobox[] = [];
@@ -323,7 +324,8 @@ export class TourneyDetailView extends AbstractDetailView {
 
     private onLoadNext(op: OperatorsVO): void {
         this.operatorVo = op;
-        this.operators = op.selectedOperators;
+        this.operators = op.allOperators;
+        this.operatorCount = this.operators.length;
         this.tourneyService.operatorVo = this.operatorVo;
     }
     
@@ -731,7 +733,6 @@ export class TourneyDetailView extends AbstractDetailView {
                 this.selectedOperator = dvo;
                 this.userService.selectedUser = this.selectedOperator;
                 let op : OperatorsVO = this.operatorVo;
-                op.selectedOperators = [...this.operators];
                 if( op.clientId )   {
                     const subscriber = this.userService.deleteOperator(uvo.id, op.clientId, op.tourneyId, this.loadUsersErrorHandler('mergeOperators()'));
                     subscriber.subscribe(cs => this.next(cs), e => this.onError(e) );

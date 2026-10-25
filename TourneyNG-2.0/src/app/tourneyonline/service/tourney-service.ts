@@ -165,6 +165,7 @@ export class TourneyService extends AbstractService {
         { field: 'username',  header: 'Username' },
         { field: 'firstname', header: 'Nome' },
         { field: 'lastname',  header: 'Cognome' },
+        { field: 'asd',       header: 'ASD' },
     ];
     
     private tvo: TourneyVO = new TourneyVO();

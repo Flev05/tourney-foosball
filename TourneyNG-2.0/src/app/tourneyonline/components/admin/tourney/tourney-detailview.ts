@@ -327,6 +327,17 @@ export class TourneyDetailView extends AbstractDetailView {
         this.operators = op.allOperators;
         this.operatorCount = this.operators.length;
         this.tourneyService.operatorVo = this.operatorVo;
+        for(let o of this.operators)  {
+            for( let t of this.selectedTourney.teams ) {
+                for( let p of t.players ) {
+                    let pn1 = o.firstname?.toUpperCase() + " " + o.lastname?.toUpperCase();
+                    let pn2 = o.lastname?.toUpperCase() + " " + o.firstname?.toUpperCase();
+                    if( p.playerName === pn1 || p.playerName === pn2 ) {
+                        o.asd = t.asd;
+                    }
+                }
+            }
+        }
     }
     
     private loadUsersErrorHandler<T> (operation = 'operation', result?: T) {

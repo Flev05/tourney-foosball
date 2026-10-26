@@ -56,7 +56,6 @@ export class OperatorDetailView extends UserDetailView {
             );
     }
 
-    // @Override
     override ngOnInit() {
         super.ngOnInit();
         this.selectedTourney = this.tourneyService.selectedTourney;
@@ -100,19 +99,16 @@ export class OperatorDetailView extends UserDetailView {
         return rvo;
     }
   
-    // @Override
     protected override createUserAndUrc(urc: UserRoleClientVO) {
         urc.tourneyId = this.selectedTourney.id;
         const subscriber = this.urcService.insertUrcOperator(urc, this.saveUserErrorHandler('Create Operator operation'));
         return subscriber;
     }
     
-    // @Override
     protected override createUrc(urc: UserRoleClientVO) {
         return this.createUserAndUrc(urc);
     }
 
-    // @Override
     protected override prepareUrcVO(existingUser: UserVO, rvo: RoleVO): UserRoleClientVO {
         let urc = new UserRoleClientVO();
         urc.userVo = existingUser;
@@ -122,14 +118,12 @@ export class OperatorDetailView extends UserDetailView {
         return urc;
     }
 
-    // @Override
     protected override onUpdateNext(cs: UserVO): void {
         console.log("Entering onUpdateNext()");
         this.updateOpList(cs.username);
         this.goBack();
     }
 
-    // @Override
     protected override onSaveComplete( urc : UserRoleClientVO ) {
         console.log("Entering onSaveComplete()");
         this.userService.newUser = false;

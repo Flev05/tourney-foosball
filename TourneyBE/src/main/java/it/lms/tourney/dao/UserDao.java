@@ -23,6 +23,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
@@ -275,30 +276,37 @@ public class UserDao extends BaseJPACrudDao<User, Integer> {
 	}
 
 	public List<User> findAllUsersAtLeastOperator() {
-
-		CriteriaQuery<User> cq = getCb().createQuery(User.class);
-
-		Root<User> root = cq.from(User.class);
-
-		Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet);
-		Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role);
-
-		Predicate p1 = roleJoin.get(Role_.name).in(Role.ROLES.DEVELOPER.name(), Role.ROLES.OWNER.name(),
-				Role.ROLES.ADMIN.name(), Role.ROLES.OPERATOR.name());
-
-		Predicate pAndQ = getCb().and(p1);
-		cq = cq.select(root);
-		cq = cq.where(pAndQ);
-
-		TypedQuery<User> nq = getEm().createQuery(cq);
-
-		List<User> poList = nq.getResultList();
-		String info = "[Found " + poList.size() + " User(s)] ";
-		log.info(logId() + info);
-
-		return poList;
+	    CriteriaBuilder cb = getCb();
+	    CriteriaQuery<User> cq = cb.createQuery(User.class);
+	    Root<User> root = cq.from(User.class);
+	    
+	    Join<User, UserRoleClient> urcJoin = root.join(User_.urcSet, JoinType.LEFT);
+	    Join<UserRoleClient, Role> roleJoin = urcJoin.join(UserRoleClient_.role, JoinType.LEFT);
+	    Predicate p1 = cb.isNull(urcJoin.get(UserRoleClient_.id));
+	    Predicate p2 = cb.isNull(roleJoin.get(Role_.id));
+	    
+	    Predicate p3 = roleJoin.get(Role_.name).in(
+	        Role.ROLES.DEVELOPER.name(), 
+	        Role.ROLES.OWNER.name(),
+	        Role.ROLES.ADMIN.name(), 
+	        Role.ROLES.OPERATOR.name()
+	    );
+	    Predicate or = cb.or(p1, p2, p3);
+	    
+	    cq.select(root).where(or);
+	    
+	    TypedQuery<User> nq = getEm().createQuery(cq);
+	    List<User> poList = nq.getResultList();
+	    
+	    String info = "[Before: Found " + poList.size() + " User(s)] ";
+	    log.info(logId() + info);
+	    poList.removeIf(user -> user.getUsername() != null && user.getUsername().matches("\\d+"));
+	    info = "[After: Found " + poList.size() + " User(s)] ";
+	    log.info(logId() + info);
+	    
+	    return poList;
 	}
-
+	
 	/**
 	 * Selects all users having ADMIN and USER role type and role name not SYS admin
 	 * 

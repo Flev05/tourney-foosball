@@ -70,7 +70,7 @@
                         'text-green-500': rowData.status === 'Terminata'
                       }">
                     @if (col.field === 'teamNames') {
-                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="results-teams-button" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                     } @else {
                       {{ rowData[col.field] }}
                     }
@@ -148,7 +148,7 @@
                 @for (col of columns; track col) {
                   <td>
                     @if (col.field === 'teamNames') {
-                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="results-teams-button" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                     } @else {
                       {{rowData[col.field]}}
                     }
@@ -225,7 +225,7 @@
                 @for (col of columns; track col) {
                   <td>
                     @if (col.field === 'teamNames') {
-                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                      <button type="button" pButton pRipple [pRowToggler]="rowData" class="results-teams-button" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                     } @else {
                       {{rowData[col.field]}}
                     }
@@ -288,7 +288,7 @@
                 <td>{{rowData['name']}}</td>
                 <td style="width: 20mm; text-align: center;">{{rowData['level']}}</td>
                 <td>
-                  <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                  <button type="button" pButton pRipple [pRowToggler]="rowData" class="results-teams-button" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                 </td>
                 <td class="result-table__action"><button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onEliminatoryRowSelect({ data: rowData })"></button></td>
               </tr>
@@ -331,7 +331,7 @@
                 <td>{{rowData['name']}}</td>
                 <td style="width: 20mm; text-align: center;">{{rowData['level']}}</td>
                 <td>
-                  <button type="button" pButton pRipple [pRowToggler]="rowData" class="p-button-outlined p-button-sm p-button-secondary" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
+                  <button type="button" pButton pRipple [pRowToggler]="rowData" class="results-teams-button" [label]="expanded ? 'Nascondi' : 'Mostra squadre'" [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" (click)="$event.stopPropagation()"></button>
                 </td>
                 <td class="result-table__action"><button type="button" pButton icon="pi pi-arrow-right" iconPos="right" label="Vedi risultati" class="results-open-button" (click)="$event.stopPropagation(); onEliminatoryBRowSelect({ data: rowData })"></button></td>
               </tr>

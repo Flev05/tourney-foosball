@@ -1,27 +1,47 @@
-# TourneyNG20
+# Tourney — Angular Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+The current web interface for Tourney, a foosball tournament management platform. Built with Angular 21, TypeScript, RxJS, and PrimeNG.
 
-## Development server
+See the [project overview](../README.md) for the backend, database, repository layout, and contributor information.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Prerequisites
 
-## Code scaffolding
+- Node.js and npm compatible with the Angular CLI version resolved in `package-lock.json`.
+- A running Tourney backend and configured database for authentication and tournament data.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Install and run
+
+Run these commands inside `TourneyNG-2.0/`:
+
+```sh
+npm ci
+npm start
+```
+
+Open the local URL reported by the Angular development server. The application is configured with a `/TourneyBE/` base path.
+
+`npm start` enables the development proxy in `proxy.conf.json`. It forwards `/TourneyBE/api` requests to `http://127.0.0.1:8082`. Also review `src/environments/environment.ts`, which currently sets `serverUri` to `http://localhost:8082/`; requests using an absolute backend URL are not handled by the development proxy.
+
+Adjust these settings to match your local backend. Environment files are applied according to `angular.json`; the existence of `environment.prod.ts` alone does not enable an automatic production replacement.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```sh
+npm run build
+```
 
-## Running unit tests
+This runs the production build configured in `angular.json`. Deployment must serve the generated application under the configured `/TourneyBE/` base path, or use a build configuration adapted to the target location.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Unit tests
 
-## Running end-to-end tests
+```sh
+npm test
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+The project configures Karma and Jasmine for unit tests. A suitable browser is required for browser-based test execution.
 
-## Further help
+## Main areas
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Administration: tournaments, players, teams, operators, rounds, elimination stages, and playoffs.
+- Presentation: tournament lists, matches, results, standings, and brackets.
+- Authentication and real-time tournament views.
